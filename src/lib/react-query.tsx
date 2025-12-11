@@ -1,0 +1,45 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import type { AxiosError } from 'axios'
+import { useState } from 'react'
+
+declare module '@tanstack/react-query' {
+  interface Register {
+    // TODO: replace with the correct type
+    defaultError: AxiosError<{ code: string; message: string }>
+  }
+}
+
+export default function ReactQueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: (failureCount, error) => {
+              // Don't retry on 400/401/403/404/500
+              if (
+                error.response?.status === 400 ||
+                error.response?.status === 401 ||
+                error.response?.status === 403 ||
+                error.response?.status === 404 ||
+                error.response?.status === 500
+              )
+                return false
+
+              return failureCount < 1
+            },
+            retryDelay: 3000,
+            staleTime: 1000 * 60 * 5
+          }
+        }
+      })
+  )
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  )
+}
