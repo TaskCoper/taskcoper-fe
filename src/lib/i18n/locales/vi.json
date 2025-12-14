@@ -1,5 +1,21 @@
 {
-  "projectDetail": {
-    "title": "Chi tiết dự án"
+  "project": {
+    "sidebar": {
+      "aboutProject": "Thông tin dự án",
+      "tasks": "Công việc",
+      "calendar": "Lịch",
+      "chat": "Tin nhắn",
+      "note": "Ghi chú",
+      "settings": "Cài đặt"
+    }
+  },
+  "language": {
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt"
+  },
+  "account": {
+    "account": "Tài khoản",
+    "language": "Ngôn ngữ",
+    "logout": "Đăng xuất"
   }
 }

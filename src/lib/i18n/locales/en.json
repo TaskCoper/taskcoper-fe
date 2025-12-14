@@ -1,5 +1,21 @@
 {
-  "projectDetail": {
-    "title": "Project Detail"
+  "project": {
+    "sidebar": {
+      "aboutProject": "About Project",
+      "tasks": "Tasks",
+      "calendar": "Calendar",
+      "chat": "Chat",
+      "note": "Note",
+      "settings": "Settings"
+    }
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Vietnamese"
+  },
+  "account": {
+    "account": "Account",
+    "language": "Language",
+    "logout": "Logout"
   }
 }
