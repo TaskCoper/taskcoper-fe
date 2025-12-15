@@ -14,8 +14,6 @@ FROM nginx:stable-alpine AS production
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-USER nginx
-
 EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
