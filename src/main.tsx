@@ -1,5 +1,5 @@
 import { Toaster } from '@/components/ui/sonner'
-import { protectedRoutes } from '@/routes/protected.route'
+// import { protectedRoutes } from '@/routes/protected.route'
 import { publicRoutes } from '@/routes/public.route'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -12,7 +12,7 @@ import './index.css'
 
 const router = createBrowserRouter([
   ...publicRoutes,
-  ...protectedRoutes,
+  // ...protectedRoutes,
   {
     path: '*',
     element: <NotFoundPage />
