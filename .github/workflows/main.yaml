@@ -1,0 +1,50 @@
+name: Deploy Application
+on:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+jobs:
+  build-application:
+    name: Build / Client
+    uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+
+  deploy-client-dev:
+    name: Deploy / Dev / Client
+    needs: build-application
+    permissions:
+      contents: read
+      packages: write
+    if: ${{ github.ref == 'refs/heads/dev' }}
+    uses: ./.github/workflows/deploy-application.yaml
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      profile: dev
+      environment: dev
+      tag: dev-latest
+    secrets: inherit
+
+  deploy-client-prod:
+    name: Deploy / Prod / Client
+    needs: build-application
+    permissions:
+      contents: read
+      packages: write
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/deploy-application.yaml
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      profile: prod
+      environment: prod
+      tag: prod-latest
+    secrets: inherit
