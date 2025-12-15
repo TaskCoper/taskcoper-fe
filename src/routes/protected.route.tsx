@@ -3,13 +3,14 @@ import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
+const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
     element: <ProjectLayout />,
     children: [
       {
-        path: '/projects/:id',
+        path: '/projects/:projectId',
         children: [
           {
             index: true,
@@ -21,7 +22,13 @@ export const protectedRoutes: RouteObject[] = [
           },
           {
             path: 'tasks',
-            element: <ProjectTasksPage />
+            element: <ProjectTasksPage />,
+            children: [
+              {
+                path: ':taskId',
+                element: <TaskDetailDialogPage />
+              }
+            ]
           },
           {
             path: 'calendar',

@@ -7,6 +7,10 @@
       "chat": "Chat",
       "note": "Note",
       "settings": "Settings"
+    },
+    "tasks": {
+      "addTask": "Add new task",
+      "addMilestone": "Add another milestone"
     }
   },
   "language": {

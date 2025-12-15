@@ -30,7 +30,7 @@ import { Link, useLocation, useParams } from 'react-router'
 
 export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation()
-  const { id } = useParams()
+  const { projectId } = useParams<{ projectId: string }>()
   const location = useLocation()
 
   const data = {
@@ -158,14 +158,14 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
   const [mails, setMails] = useState(data.mails)
   const { setOpen } = useSidebar()
 
-  const getCurrentUrl = () => {
+  const getActiveSegment = () => {
     const pathname = location.pathname
-    const match = pathname.match(/\/projects\/[^/]+\/(.+)/)
+    const match = pathname.match(/\/projects\/[^/]+\/([^/]+)/)
     return match ? match[1] : 'tasks'
   }
 
-  const currentUrl = getCurrentUrl()
-  const activeItem = data.navMain.find((item) => item.url === currentUrl) || data.navMain[1]
+  const activeSegment = getActiveSegment()
+  const activeItem = data.navMain.find((item) => item.url === activeSegment) || data.navMain[1]
 
   return (
     <Sidebar collapsible='icon' className='overflow-hidden *:data-[sidebar=sidebar]:flex-row' {...props}>
@@ -196,7 +196,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
               <SidebarMenu>
                 {data.navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <Link to={`/projects/${id}/${item.url}`}>
+                    <Link to={`/projects/${projectId}/${item.url}`}>
                       <SidebarMenuButton
                         tooltip={{
                           children: item.title,
@@ -207,7 +207,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
                           setMails(mail.slice(0, Math.max(5, Math.floor(Math.random() * 10) + 1)))
                           setOpen(true)
                         }}
-                        className={cn('px-2.5 md:px-2', currentUrl === item.url && 'bg-primary/15 text-primary')}
+                        className={cn('px-2.5 md:px-2', activeSegment === item.url && 'bg-primary/15 text-primary')}
                       >
                         <item.icon />
                         <span>{item.title}</span>

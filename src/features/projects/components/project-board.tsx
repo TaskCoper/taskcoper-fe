@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import MilestoneColumn from '@/features/milestones/components/milestone-column'
 import TaskCard from '@/features/tasks/components/task-card'
 import { hasDraggableData } from '@/shared/utils'
@@ -9,32 +10,23 @@ import {
   DragOverlay,
   KeyboardSensor,
   MouseSensor,
+  pointerWithin,
   rectIntersection,
   TouchSensor,
   useSensor,
   useSensors,
   type Announcements,
-  type Collision,
+  type CollisionDetection,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
   type UniqueIdentifier
 } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { PlusIcon } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import ProjectContainer from './project-container'
-
-function customCollisionDetection(args: Parameters<typeof rectIntersection>[0]): Collision[] {
-  const collisions = rectIntersection(args)
-
-  // If the dragged item is still intersecting its own droppable, return only that collision.
-  const selfCollision = collisions.find((collision) => collision.id === args.active.id)
-  if (selfCollision) {
-    return [selfCollision]
-  }
-
-  return collisions
-}
 
 const defaultCols = [
   {
@@ -133,26 +125,47 @@ const initialTasks: TaskCardVM[] = [
   }
 ]
 
+const customCollisionDetection: CollisionDetection = (args) => {
+  // First, let's see if there are any collisions with the pointer
+  const pointerCollisions = pointerWithin(args)
+
+  // Collision detection algorithms return an array of collisions
+  if (pointerCollisions.length > 0) {
+    return pointerCollisions
+  }
+
+  // If there are no collisions with the pointer, return rectangle intersections
+  return rectIntersection(args)
+}
+
 export default function ProjectBoard() {
+  const { t } = useTranslation()
   const [columns, setColumns] = useState<MilestoneColumnVM[]>(defaultCols)
   const pickedUpTaskColumn = useRef<ColumnId | null>(null)
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns])
 
   const [tasks, setTasks] = useState<TaskCardVM[]>(initialTasks)
-
   const [activeColumn, setActiveColumn] = useState<MilestoneColumnVM | null>(null)
-
   const [activeTask, setActiveTask] = useState<TaskCardVM | null>(null)
 
   const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(TouchSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 6
+      }
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5
+      }
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: defaultKeyboardCoordinateGetter
     })
   )
 
-  function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
+  const getDraggingTaskData = (taskId: UniqueIdentifier, columnId: ColumnId) => {
     const tasksInColumn = tasks.filter((task) => task.columnId === columnId)
     const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId)
     const column = columns.find((col) => col.id === columnId)
@@ -227,40 +240,7 @@ export default function ProjectBoard() {
     }
   }
 
-  return (
-    <DndContext
-      accessibility={{
-        announcements
-      }}
-      collisionDetection={customCollisionDetection}
-      sensors={sensors}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-    >
-      <ProjectContainer>
-        <SortableContext items={columnsId}>
-          <div className='flex items-start gap-3'>
-            {columns.map((col) => (
-              <MilestoneColumn key={col.id} column={col} tasks={tasks.filter((task) => task.columnId === col.id)} />
-            ))}
-          </div>
-        </SortableContext>
-      </ProjectContainer>
-      <DragOverlay>
-        {activeColumn && (
-          <MilestoneColumn
-            isOverlay
-            column={activeColumn}
-            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
-          />
-        )}
-        {activeTask && <TaskCard task={activeTask} isOverlay />}
-      </DragOverlay>
-    </DndContext>
-  )
-
-  function onDragStart(event: DragStartEvent) {
+  const onDragStart = (event: DragStartEvent) => {
     if (!hasDraggableData(event.active)) return
     const data = event.active.data.current
     if (data?.type === 'MilestoneColumn') {
@@ -274,7 +254,7 @@ export default function ProjectBoard() {
     }
   }
 
-  function onDragEnd(event: DragEndEvent) {
+  const onDragEnd = (event: DragEndEvent) => {
     setActiveColumn(null)
     setActiveTask(null)
 
@@ -302,7 +282,7 @@ export default function ProjectBoard() {
     })
   }
 
-  function onDragOver(event: DragOverEvent) {
+  const onDragOver = (event: DragOverEvent) => {
     const { active, over } = event
     if (!over) return
 
@@ -352,4 +332,41 @@ export default function ProjectBoard() {
       })
     }
   }
+
+  return (
+    <DndContext
+      accessibility={{
+        announcements
+      }}
+      collisionDetection={customCollisionDetection}
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+    >
+      <ProjectContainer>
+        <SortableContext items={columnsId}>
+          <div className='flex items-start gap-3'>
+            {columns.map((col) => (
+              <MilestoneColumn key={col.id} column={col} tasks={tasks.filter((task) => task.columnId === col.id)} />
+            ))}
+          </div>
+        </SortableContext>
+        <Button variant='secondary' className='w-64 justify-start bg-muted/30 text-white'>
+          <PlusIcon />
+          {t('project.tasks.addMilestone')}
+        </Button>
+      </ProjectContainer>
+      <DragOverlay>
+        {activeColumn && (
+          <MilestoneColumn
+            isOverlay
+            column={activeColumn}
+            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+          />
+        )}
+        {activeTask && <TaskCard task={activeTask} isOverlay />}
+      </DragOverlay>
+    </DndContext>
+  )
 }
