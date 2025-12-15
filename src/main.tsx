@@ -4,12 +4,20 @@ import { publicRoutes } from '@/routes/public.route'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
+import ReactQueryProvider from './lib/react-query'
+import NotFoundPage from './pages/not-found.page'
 
 import '@/lib/i18n/i18n'
 import './index.css'
-import ReactQueryProvider from './lib/react-query'
 
-const router = createBrowserRouter([...publicRoutes, ...protectedRoutes])
+const router = createBrowserRouter([
+  ...publicRoutes,
+  ...protectedRoutes,
+  {
+    path: '*',
+    element: <NotFoundPage />
+  }
+])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
