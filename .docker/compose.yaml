@@ -1,0 +1,38 @@
+x-client-base: &client-base
+  image: ${REGISTRY}/taskcoper-client:${TAG:-latest}
+  restart: unless-stopped
+  build:
+    context: ..
+    dockerfile: Dockerfile
+  environment:
+    TZ: UTC
+
+services:
+  taskcoper-client-dev:
+    <<: *client-base
+    container_name: taskcoper-client-dev
+    hostname: taskcoper-client-dev
+    networks: [taskcoper-network-dev]
+    profiles: [dev, client-dev, client]
+
+  taskcoper-client-prod:
+    <<: *client-base
+    container_name: taskcoper-client-prod
+    hostname: taskcoper-client-prod
+    networks: [taskcoper-network-prod]
+    profiles: [prod, client-prod, client]
+
+networks:
+  taskcoper-network-prod:
+    name: taskcoper-network-prod
+    driver: bridge
+    external: true
+    ipam:
+      driver: default
+
+  taskcoper-network-dev:
+    name: taskcoper-network-dev
+    driver: bridge
+    external: true
+    ipam:
+      driver: default
