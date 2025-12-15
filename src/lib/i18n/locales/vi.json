@@ -13,6 +13,67 @@
       "addMilestone": "Thêm danh sách khác"
     }
   },
+
+  "task": {
+    "date": {
+      "notSetDate": "N/T/NNNN",
+      "notSetTime": "G:pp",
+      "date": "Ngày",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày hết hạn",
+      "reminderSetting": "Thiết lập Nhắc nhở",
+      "selectReminderTime": "Chọn thời gian nhắc nhở",
+      "reminderDescription": "Nhắc nhở sẽ được gửi đến tất cả các thành viên và người theo dõi thẻ này.",
+      "save": "Lưu",
+      "remove": "Gỡ bỏ",
+      "none": "Không có",
+      "expiredDate": "Vào thời điểm ngày hết hạn",
+      "fiveMinutesBefore": "5 phút trước",
+      "tenMinutesBefore": "10 phút trước",
+      "fifteenMinutesBefore": "15 phút trước",
+      "oneHourBefore": "1 giờ trước",
+      "twoHoursBefore": "2 giờ trước",
+      "oneDayBefore": "1 ngày trước",
+      "twoDaysBefore": "2 ngày trước"
+    },
+    "label": {
+      "label": "Nhãn",
+      "createLabel": "Tạo nhãn mới",
+      "findLabel": "Tìm nhãn..."
+    },
+    "subtask": {
+      "subtask": "Việc cần làm",
+      "subtaskTitle": "Thêm danh sách công việc",
+      "title": "Tiêu đề",
+      "addSubtask": "Thêm"
+    },
+    "assignee": {
+      "assignee": "Thành viên",
+      "findAssignee": "Tìm kiếm các thành viên...",
+      "boardAssignee": "Thành viên của bảng"
+    },
+    "attachment": {
+      "attachment": "Đính kèm",
+      "cancel": "Hủy",
+      "insert": "Chèn",
+      "attachmentTitle": "Đính kèm tệp từ máy tính của bạn",
+      "attachmentDescription": "Bạn cũng có thể kéo và thả tệp để tải chúng lên.",
+      "chooseAttachment": "Chọn tệp",
+      "attachmentValue": "Tìm kiếm hoặc dán liên kết",
+      "attachmentValuePlaceholder": "Tìm các liên kết cần đây hoặc dán một liên kết mới",
+      "attachmentDisplay": "Văn bản hiển thị (không bắt buộc)",
+      "attachmentDisplayPlaceholder": "Văn bản cần hiển thị",
+      "attachmentDisplayDescription": "Cung cấp tiêu đề hoặc mô tả cho liên kết này"
+    },
+    "description": {
+      "description": "Mô tả",
+      "addDescription": "Thêm mô tả chi tiết hơn..."
+    },
+    "comment": {
+      "comment": "Bình luận và Hoạt động",
+      "addComment": "Viết bình luận..."
+    }
+  },
   "language": {
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt"

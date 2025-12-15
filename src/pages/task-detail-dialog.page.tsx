@@ -4,6 +4,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import AssigneePopover from '@/features/assignees/components/assignee-popover'
+import AttachmentPopover from '@/features/attachments/components/attachment-popover'
+import LabelPopover from '@/features/labels/components/label-popover'
+import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
+import DatePopover from '@/features/tasks/components/date-popover'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
   ChevronDownIcon,
@@ -20,9 +25,11 @@ import {
   XIcon
 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
 export default function TaskDetailDialogPage() {
+  const { t } = useTranslation()
   const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>()
 
   const [open, setOpen] = useState(true)
@@ -41,7 +48,7 @@ export default function TaskDetailDialogPage() {
       <DialogContent
         showCloseButton={false}
         position='top-center'
-        className='md:min-w-3xl lg:min-w-5xl xl:min-w-6xl p-0 gap-0'
+        className='min-w-6xl p-0 gap-0'
         onInteractOutside={handleClose}
       >
         <VisuallyHidden>
@@ -86,26 +93,36 @@ export default function TaskDetailDialogPage() {
 
                 {/* Action Buttons */}
                 <div className='flex items-center gap-2 flex-wrap'>
-                  <Button variant='outline' size='sm'>
-                    <TagIcon />
-                    Nhãn
-                  </Button>
-                  <Button variant='outline' size='sm'>
-                    <ClockIcon />
-                    Ngày
-                  </Button>
-                  <Button variant='outline' size='sm'>
-                    <SquareCheckBigIcon />
-                    Việc cần làm
-                  </Button>
-                  <Button variant='outline' size='sm'>
-                    <UserRoundPlusIcon />
-                    Thành viên
-                  </Button>
-                  <Button variant='outline' size='sm'>
-                    <PaperclipIcon />
-                    Đính kèm
-                  </Button>
+                  <LabelPopover>
+                    <Button variant='outline' size='sm'>
+                      <TagIcon />
+                      {t('task.label.label')}
+                    </Button>
+                  </LabelPopover>
+                  <DatePopover>
+                    <Button variant='outline' size='sm'>
+                      <ClockIcon />
+                      {t('task.date.date')}
+                    </Button>
+                  </DatePopover>
+                  <SubtaskPopover>
+                    <Button variant='outline' size='sm'>
+                      <SquareCheckBigIcon />
+                      {t('task.subtask.subtask')}
+                    </Button>
+                  </SubtaskPopover>
+                  <AssigneePopover>
+                    <Button variant='outline' size='sm'>
+                      <UserRoundPlusIcon />
+                      {t('task.assignee.assignee')}
+                    </Button>
+                  </AssigneePopover>
+                  <AttachmentPopover>
+                    <Button variant='outline' size='sm'>
+                      <PaperclipIcon />
+                      {t('task.attachment.attachment')}
+                    </Button>
+                  </AttachmentPopover>
                 </div>
               </div>
             </div>
@@ -113,9 +130,12 @@ export default function TaskDetailDialogPage() {
             <div className='flex gap-3 mt-10'>
               <TextAlignStartIcon className='mt-1 size-4' />
               <div className='w-full'>
-                <p className='font-semibold'>Mô tả</p>
+                <p className='font-semibold'>{t('task.description.description')}</p>
 
-                <Textarea placeholder='Thêm mô tả chi tiết hơn...' className='resize-none w-full font-semibold mt-4' />
+                <Textarea
+                  placeholder={t('task.description.addDescription')}
+                  className='resize-none w-full font-semibold mt-4'
+                />
               </div>
             </div>
           </div>
@@ -123,11 +143,11 @@ export default function TaskDetailDialogPage() {
           <div className='col-span-5 p-6 bg-muted'>
             <div className='flex items-center gap-2 mb-4'>
               <MessageSquareText className='size-4' />
-              <p className='text-sm font-bold'>Nhận xét và hoạt động</p>
+              <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
             </div>
 
             <Input
-              placeholder='Viết bình luận...'
+              placeholder={t('task.comment.addComment')}
               className='font-semibold bg-background'
               // value={comment}
               // onChange={(e) => setComment(e.target.value)}
