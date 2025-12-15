@@ -74,6 +74,51 @@
       "addComment": "Viết bình luận..."
     }
   },
+  "richTextEditor": {
+    "placeholder": "Mẹo chuyên nghiệp: Nhấn 'Enter' để xuống dòng và 'Shift + Enter' để ngắt dòng đơn giản.",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "heading": {
+      "label": "Tiêu đề",
+      "ariaLabel": "Định dạng văn bản làm tiêu đề",
+      "heading1": "Tiêu đề 1",
+      "heading2": "Tiêu đề 2",
+      "heading3": "Tiêu đề 3",
+      "heading4": "Tiêu đề 4",
+      "heading5": "Tiêu đề 5",
+      "heading6": "Tiêu đề 6"
+    },
+    "mark": {
+      "bold": "Đậm",
+      "italic": "Nghiêng",
+      "strike": "Gạch ngang",
+      "code": "Mã"
+    },
+    "list": {
+      "label": "Danh sách",
+      "ariaLabel": "Tùy chọn danh sách",
+      "bulletList": "Danh sách dấu đầu dòng",
+      "orderedList": "Danh sách được đánh số",
+      "taskList": "Danh sách công việc"
+    },
+    "link": {
+      "label": "Liên kết",
+      "ariaLabel": "Liên kết",
+      "placeholder": "Dán liên kết...",
+      "applyLink": "Áp dụng liên kết",
+      "openInNewWindow": "Mở trong cửa sổ mới",
+      "removeLink": "Xóa liên kết"
+    },
+    "blockquote": {
+      "label": "Trích dẫn"
+    },
+    "codeBlock": {
+      "label": "Khối mã"
+    },
+    "image": {
+      "label": "Hình ảnh"
+    }
+  },
   "language": {
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt"

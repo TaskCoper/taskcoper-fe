@@ -73,6 +73,51 @@
       "addComment": "Add comment..."
     }
   },
+  "richTextEditor": {
+    "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "heading": {
+      "label": "Heading",
+      "ariaLabel": "Format text as heading",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "heading4": "Heading 4",
+      "heading5": "Heading 5",
+      "heading6": "Heading 6"
+    },
+    "mark": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strike": "Strike",
+      "code": "Code"
+    },
+    "list": {
+      "label": "List",
+      "ariaLabel": "List options",
+      "bulletList": "Bullet list",
+      "orderedList": "Numbered list",
+      "taskList": "Task list"
+    },
+    "link": {
+      "label": "Link",
+      "ariaLabel": "Link",
+      "placeholder": "Paste a link...",
+      "applyLink": "Apply link",
+      "openInNewWindow": "Open in new window",
+      "removeLink": "Remove link"
+    },
+    "blockquote": {
+      "label": "Blockquote"
+    },
+    "codeBlock": {
+      "label": "Code Block"
+    },
+    "image": {
+      "label": "Image"
+    }
+  },
   "language": {
     "english": "English",
     "vietnamese": "Vietnamese"

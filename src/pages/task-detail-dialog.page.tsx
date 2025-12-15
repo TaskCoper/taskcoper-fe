@@ -1,3 +1,4 @@
+import RichTextEditor from '@/components/rich-text-editor'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -31,6 +32,7 @@ import { useNavigate, useParams } from 'react-router'
 export default function TaskDetailDialogPage() {
   const { t } = useTranslation()
   const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>()
+  const [isEditDescription, setIsEditDescription] = useState(false)
 
   const [open, setOpen] = useState(true)
 
@@ -129,13 +131,30 @@ export default function TaskDetailDialogPage() {
 
             <div className='flex gap-3 mt-10'>
               <TextAlignStartIcon className='mt-1 size-4' />
-              <div className='w-full'>
+              <div className='w-full space-y-4'>
                 <p className='font-semibold'>{t('task.description.description')}</p>
 
-                <Textarea
-                  placeholder={t('task.description.addDescription')}
-                  className='resize-none w-full font-semibold mt-4'
-                />
+                {isEditDescription ? (
+                  <RichTextEditor
+                    isDisplay={true}
+                    onSave={() => {
+                      setIsEditDescription(false)
+                    }}
+                    onCancel={() => {
+                      setIsEditDescription(false)
+                    }}
+                    isSaving={false}
+                    content={''}
+                    onChange={() => {}}
+                  />
+                ) : (
+                  <Textarea
+                    placeholder={t('task.description.addDescription')}
+                    className='resize-none w-full font-semibold'
+                    readOnly
+                    onClick={() => setIsEditDescription(true)}
+                  />
+                )}
               </div>
             </div>
           </div>
