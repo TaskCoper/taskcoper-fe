@@ -1,5 +1,130 @@
 {
-  "projectDetail": {
-    "title": "Project Detail"
+  "project": {
+    "sidebar": {
+      "aboutProject": "About Project",
+      "tasks": "Tasks",
+      "calendar": "Calendar",
+      "chat": "Chat",
+      "note": "Note",
+      "settings": "Settings"
+    },
+    "tasks": {
+      "addTask": "Add new task",
+      "addMilestone": "Add another milestone"
+    }
+  },
+  "task": {
+    "date": {
+      "notSetDate": "DD/MM/YYYY",
+      "notSetTime": "H:mm",
+      "date": "Date",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "reminderSetting": "Reminder Setting",
+      "selectReminderTime": "Select reminder time",
+      "reminderDescription": "Reminder will be sent to all members and followers of this card.",
+      "save": "Save",
+      "remove": "Remove",
+      "none": "None",
+      "expiredDate": "At expiration date",
+      "fiveMinutesBefore": "5 minutes before",
+      "tenMinutesBefore": "10 minutes before",
+      "fifteenMinutesBefore": "15 minutes before",
+      "oneHourBefore": "1 hour before",
+      "twoHoursBefore": "2 hours before",
+      "oneDayBefore": "1 day before",
+      "twoDaysBefore": "2 days before"
+    },
+    "label": {
+      "label": "Label",
+      "createLabel": "Create new label",
+      "findLabel": "Find label..."
+    },
+    "subtask": {
+      "subtask": "Subtask",
+      "subtaskTitle": "Add a list of tasks",
+      "title": "Title",
+      "addSubtask": "Add"
+    },
+    "assignee": {
+      "assignee": "Assignee",
+      "findAssignee": "Find assignee...",
+      "boardAssignee": "Board assignee"
+    },
+    "attachment": {
+      "attachment": "Attachment",
+      "cancel": "Cancel",
+      "insert": "Insert",
+      "attachmentTitle": "Attach files from your computer",
+      "attachmentDescription": "You can also drag and drop files to upload them.",
+      "chooseAttachment": "Choose file",
+      "attachmentValue": "Search or paste link",
+      "attachmentValuePlaceholder": "Search recent links or paste a new link",
+      "attachmentDisplay": "Display text (optional)",
+      "attachmentDisplayPlaceholder": "Text to display",
+      "attachmentDisplayDescription": "Provide a title or description for this link"
+    },
+    "description": {
+      "description": "Description",
+      "addDescription": "Add more detailed description..."
+    },
+    "comment": {
+      "comment": "Comments and Activity",
+      "addComment": "Add comment..."
+    }
+  },
+  "richTextEditor": {
+    "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "heading": {
+      "label": "Heading",
+      "ariaLabel": "Format text as heading",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "heading4": "Heading 4",
+      "heading5": "Heading 5",
+      "heading6": "Heading 6"
+    },
+    "mark": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strike": "Strike",
+      "code": "Code"
+    },
+    "list": {
+      "label": "List",
+      "ariaLabel": "List options",
+      "bulletList": "Bullet list",
+      "orderedList": "Numbered list",
+      "taskList": "Task list"
+    },
+    "link": {
+      "label": "Link",
+      "ariaLabel": "Link",
+      "placeholder": "Paste a link...",
+      "applyLink": "Apply link",
+      "openInNewWindow": "Open in new window",
+      "removeLink": "Remove link"
+    },
+    "blockquote": {
+      "label": "Blockquote"
+    },
+    "codeBlock": {
+      "label": "Code Block"
+    },
+    "image": {
+      "label": "Image"
+    }
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Vietnamese"
+  },
+  "account": {
+    "account": "Account",
+    "language": "Language",
+    "logout": "Logout"
   }
 }

@@ -1,0 +1,372 @@
+import { Button } from '@/components/ui/button'
+import MilestoneColumn from '@/features/milestones/components/milestone-column'
+import TaskCard from '@/features/tasks/components/task-card'
+import { hasDraggableData } from '@/shared/utils'
+import type { MilestoneColumnVM } from '@/types/milestone.type'
+import type { TaskCardVM } from '@/types/task.type'
+import {
+  defaultKeyboardCoordinateGetter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  MouseSensor,
+  pointerWithin,
+  rectIntersection,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type CollisionDetection,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+  type UniqueIdentifier
+} from '@dnd-kit/core'
+import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { PlusIcon } from 'lucide-react'
+import { useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import ProjectContainer from './project-container'
+
+const defaultCols = [
+  {
+    id: 'todo' as const,
+    title: 'Todo'
+  },
+  {
+    id: 'in-progress' as const,
+    title: 'In progress'
+  },
+  {
+    id: 'done' as const,
+    title: 'Done'
+  },
+  {
+    id: 'backlog' as const,
+    title: 'Backlog'
+  },
+  {
+    id: 'icebox' as const,
+    title: 'Icebox'
+  },
+  {
+    id: 'cancelled' as const,
+    title: 'Cancelled'
+  }
+] satisfies MilestoneColumnVM[]
+
+export type ColumnId = (typeof defaultCols)[number]['id']
+
+const initialTasks: TaskCardVM[] = [
+  {
+    id: 'task1',
+    columnId: 'done',
+    content: 'Project initiation and planning'
+  },
+  {
+    id: 'task2',
+    columnId: 'done',
+    content: 'Gather requirements from stakeholders'
+  },
+  {
+    id: 'task3',
+    columnId: 'done',
+    content: 'Create wireframes and mockups'
+  },
+  {
+    id: 'task4',
+    columnId: 'in-progress',
+    content: 'Develop homepage layout'
+  },
+  {
+    id: 'task5',
+    columnId: 'in-progress',
+    content: 'Design color scheme and typography'
+  },
+  {
+    id: 'task6',
+    columnId: 'todo',
+    content: 'Implement user authentication'
+  },
+  {
+    id: 'task7',
+    columnId: 'todo',
+    content: 'Build contact us page'
+  },
+  {
+    id: 'task8',
+    columnId: 'todo',
+    content: 'Create product catalog'
+  },
+  {
+    id: 'task9',
+    columnId: 'todo',
+    content: 'Develop about us page'
+  },
+  {
+    id: 'task10',
+    columnId: 'todo',
+    content: 'Optimize website for mobile devices'
+  },
+  {
+    id: 'task11',
+    columnId: 'todo',
+    content: 'Integrate payment gateway'
+  },
+  {
+    id: 'task12',
+    columnId: 'todo',
+    content: 'Perform testing and bug fixing'
+  },
+  {
+    id: 'task13',
+    columnId: 'todo',
+    content: 'Launch website and deploy to server'
+  }
+]
+
+const customCollisionDetection: CollisionDetection = (args) => {
+  // First, let's see if there are any collisions with the pointer
+  const pointerCollisions = pointerWithin(args)
+
+  // Collision detection algorithms return an array of collisions
+  if (pointerCollisions.length > 0) {
+    return pointerCollisions
+  }
+
+  // If there are no collisions with the pointer, return rectangle intersections
+  return rectIntersection(args)
+}
+
+export default function ProjectBoard() {
+  const { t } = useTranslation()
+  const [columns, setColumns] = useState<MilestoneColumnVM[]>(defaultCols)
+  const pickedUpTaskColumn = useRef<ColumnId | null>(null)
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns])
+
+  const [tasks, setTasks] = useState<TaskCardVM[]>(initialTasks)
+  const [activeColumn, setActiveColumn] = useState<MilestoneColumnVM | null>(null)
+  const [activeTask, setActiveTask] = useState<TaskCardVM | null>(null)
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 6
+      }
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5
+      }
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: defaultKeyboardCoordinateGetter
+    })
+  )
+
+  const getDraggingTaskData = (taskId: UniqueIdentifier, columnId: ColumnId) => {
+    const tasksInColumn = tasks.filter((task) => task.columnId === columnId)
+    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId)
+    const column = columns.find((col) => col.id === columnId)
+    return {
+      tasksInColumn,
+      taskPosition,
+      column
+    }
+  }
+
+  const announcements: Announcements = {
+    onDragStart({ active }) {
+      if (!hasDraggableData(active)) return
+      if (active.data.current?.type === 'MilestoneColumn') {
+        const startColumnIdx = columnsId.findIndex((id) => id === active.id)
+        const startColumn = columns[startColumnIdx]
+        return `Picked up Column ${startColumn?.title} at position: ${startColumnIdx + 1} of ${columnsId.length}`
+      } else if (active.data.current?.type === 'TaskCard') {
+        pickedUpTaskColumn.current = active.data.current.task.columnId
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(active.id, pickedUpTaskColumn.current)
+        return `Picked up Task ${active.data.current.task.content} at position: ${taskPosition + 1} of ${
+          tasksInColumn.length
+        } in column ${column?.title}`
+      }
+    },
+    onDragOver({ active, over }) {
+      if (!hasDraggableData(active) || !hasDraggableData(over)) return
+
+      if (active.data.current?.type === 'MilestoneColumn' && over.data.current?.type === 'MilestoneColumn') {
+        const overColumnIdx = columnsId.findIndex((id) => id === over.id)
+        return `Column ${active.data.current.column.title} was moved over ${
+          over.data.current.column.title
+        } at position ${overColumnIdx + 1} of ${columnsId.length}`
+      } else if (active.data.current?.type === 'TaskCard' && over.data.current?.type === 'TaskCard') {
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(over.id, over.data.current.task.columnId)
+        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+          return `Task ${active.data.current.task.content} was moved over column ${column?.title} in position ${
+            taskPosition + 1
+          } of ${tasksInColumn.length}`
+        }
+        return `Task was moved over position ${taskPosition + 1} of ${tasksInColumn.length} in column ${column?.title}`
+      }
+    },
+    onDragEnd({ active, over }) {
+      if (!hasDraggableData(active) || !hasDraggableData(over)) {
+        pickedUpTaskColumn.current = null
+        return
+      }
+      if (active.data.current?.type === 'MilestoneColumn' && over.data.current?.type === 'MilestoneColumn') {
+        const overColumnPosition = columnsId.findIndex((id) => id === over.id)
+
+        return `Column ${active.data.current.column.title} was dropped into position ${overColumnPosition + 1} of ${
+          columnsId.length
+        }`
+      } else if (active.data.current?.type === 'TaskCard' && over.data.current?.type === 'TaskCard') {
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(over.id, over.data.current.task.columnId)
+        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+          return `Task was dropped into column ${column?.title} in position ${
+            taskPosition + 1
+          } of ${tasksInColumn.length}`
+        }
+        return `Task was dropped into position ${taskPosition + 1} of ${
+          tasksInColumn.length
+        } in column ${column?.title}`
+      }
+      pickedUpTaskColumn.current = null
+    },
+    onDragCancel({ active }) {
+      pickedUpTaskColumn.current = null
+      if (!hasDraggableData(active)) return
+      return `Dragging ${active.data.current?.type} cancelled.`
+    }
+  }
+
+  const onDragStart = (event: DragStartEvent) => {
+    if (!hasDraggableData(event.active)) return
+    const data = event.active.data.current
+    if (data?.type === 'MilestoneColumn') {
+      setActiveColumn(data.column)
+      return
+    }
+
+    if (data?.type === 'TaskCard') {
+      setActiveTask(data.task)
+      return
+    }
+  }
+
+  const onDragEnd = (event: DragEndEvent) => {
+    setActiveColumn(null)
+    setActiveTask(null)
+
+    const { active, over } = event
+    if (!over) return
+
+    const activeId = active.id
+    const overId = over.id
+
+    if (!hasDraggableData(active)) return
+
+    const activeData = active.data.current
+
+    if (activeId === overId) return
+
+    const isActiveAColumn = activeData?.type === 'MilestoneColumn'
+    if (!isActiveAColumn) return
+
+    setColumns((columns) => {
+      const activeColumnIndex = columns.findIndex((col) => col.id === activeId)
+
+      const overColumnIndex = columns.findIndex((col) => col.id === overId)
+
+      return arrayMove(columns, activeColumnIndex, overColumnIndex)
+    })
+  }
+
+  const onDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
+    if (!over) return
+
+    const activeId = active.id
+    const overId = over.id
+
+    if (activeId === overId) return
+
+    if (!hasDraggableData(active) || !hasDraggableData(over)) return
+
+    const activeData = active.data.current
+    const overData = over.data.current
+
+    const isActiveATask = activeData?.type === 'TaskCard'
+    const isOverATask = overData?.type === 'TaskCard'
+
+    if (!isActiveATask) return
+
+    // Im dropping a Task over another Task
+    if (isActiveATask && isOverATask) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId)
+        const overIndex = tasks.findIndex((t) => t.id === overId)
+        const activeTask = tasks[activeIndex]
+        const overTask = tasks[overIndex]
+        if (activeTask && overTask && activeTask.columnId !== overTask.columnId) {
+          activeTask.columnId = overTask.columnId
+          return arrayMove(tasks, activeIndex, overIndex - 1)
+        }
+
+        return arrayMove(tasks, activeIndex, overIndex)
+      })
+    }
+
+    const isOverAColumn = overData?.type === 'MilestoneColumn'
+
+    // Im dropping a Task over a column
+    if (isActiveATask && isOverAColumn) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId)
+        const activeTask = tasks[activeIndex]
+        if (activeTask) {
+          activeTask.columnId = overId as ColumnId
+          return arrayMove(tasks, activeIndex, activeIndex)
+        }
+        return tasks
+      })
+    }
+  }
+
+  return (
+    <DndContext
+      accessibility={{
+        announcements
+      }}
+      collisionDetection={customCollisionDetection}
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+    >
+      <ProjectContainer>
+        <SortableContext items={columnsId}>
+          <div className='flex items-start gap-3'>
+            {columns.map((col) => (
+              <MilestoneColumn key={col.id} column={col} tasks={tasks.filter((task) => task.columnId === col.id)} />
+            ))}
+          </div>
+        </SortableContext>
+        <Button variant='secondary' className='w-64 justify-start bg-muted/30 text-white'>
+          <PlusIcon />
+          {t('project.tasks.addMilestone')}
+        </Button>
+      </ProjectContainer>
+      <DragOverlay>
+        {activeColumn && (
+          <MilestoneColumn
+            isOverlay
+            column={activeColumn}
+            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+          />
+        )}
+        {activeTask && <TaskCard task={activeTask} isOverlay />}
+      </DragOverlay>
+    </DndContext>
+  )
+}
