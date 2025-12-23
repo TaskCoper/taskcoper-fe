@@ -126,5 +126,81 @@
     "account": "Account",
     "language": "Language",
     "logout": "Logout"
+  },
+  "auth": {
+    "signIn": {
+      "label": "Sign in",
+      "button": "Let's go!",
+      "title": "Welcome back to Taskcoper",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "description": "Sign in to your account to continue",
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Invalid email address"
+        },
+        "password": {
+          "minLength": "Password must be at least 8 characters long"
+        }
+      }
+    },
+    "signUp": {
+      "label": "Sign up",
+      "title": "Welcome to Taskcoper",
+      "description": "Sign up today and unlock a world of possibilities. Your journey begins here.",
+      "button": "Create your account",
+      "haveAccount": "Already have an account?",
+      "verifyEmail": {
+        "title": "Verify your email",
+        "description": "Enter the code sent to your email",
+        "button": "Verify code",
+        "resendCode": "Resend"
+      },
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Invalid email address"
+        },
+        "password": {
+          "minLength": "Password must be at least 8 characters long",
+          "strong": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
+        },
+        "firstName": {
+          "minLength": "First name is required",
+          "maxLength": "Max 20 characters"
+        },
+        "lastName": {
+          "minLength": "Last name is required",
+          "maxLength": "Max 20 characters"
+        },
+        "role": {
+          "invalid": "Invalid role"
+        }
+      }
+    }
+  },
+  "error": {
+    "somethingWentWrong": "Something went wrong!"
   }
 }

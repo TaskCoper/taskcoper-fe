@@ -13,7 +13,7 @@ import ProjectSidebar from '@/features/projects/components/sidebar/project-sideb
 import { Suspense } from 'react'
 import { Outlet } from 'react-router'
 
-export default function ProjectLayout() {
+export default function ProjectDetailLayout() {
   return (
     <SidebarProvider
       style={

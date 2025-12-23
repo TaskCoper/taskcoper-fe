@@ -127,5 +127,82 @@
     "account": "Tài khoản",
     "language": "Ngôn ngữ",
     "logout": "Đăng xuất"
+  },
+
+  "auth": {
+    "signIn": {
+      "label": "Đăng nhập",
+      "button": "Vào thôi!",
+      "title": "Chào mừng trở lại với Taskcoper",
+      "forgotPassword": "Quên mật khẩu?",
+      "noAccount": "Chưa có tài khoản?",
+      "description": "Đăng nhập để tiếp tục sử dụng tài khoản của bạn",
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Mật khẩu",
+          "placeholder": "Nhập mật khẩu của bạn"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Email không hợp lệ"
+        },
+        "password": {
+          "minLength": "Mật khẩu phải có ít nhất 8 ký tự"
+        }
+      }
+    },
+    "signUp": {
+      "label": "Đăng ký",
+      "title": "Chào mừng đến với Taskcoper",
+      "description": "Đăng ký ngay hôm nay để khám phá vô vàn tiện ích. Hành trình của bạn bắt đầu từ đây!",
+      "button": "Tạo tài khoản",
+      "haveAccount": "Đã có tài khoản?",
+      "verifyEmail": {
+        "title": "Xác nhận email",
+        "description": "Nhập mã xác nhận đã được gửi đến email của bạn",
+        "button": "Xác nhận mã",
+        "resendCode": "Gửi lại mã"
+      },
+      "fields": {
+        "firstName": "Họ",
+        "lastName": "Tên",
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Mật khẩu",
+          "placeholder": "Nhập mật khẩu"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Email không hợp lệ"
+        },
+        "password": {
+          "minLength": "Mật khẩu phải có ít nhất 8 ký tự",
+          "strong": "Mật khẩu cần ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và một số"
+        },
+        "firstName": {
+          "minLength": "Vui lòng nhập họ",
+          "maxLength": "Tối đa 20 ký tự"
+        },
+        "lastName": {
+          "minLength": "Vui lòng nhập tên",
+          "maxLength": "Tối đa 20 ký tự"
+        },
+        "role": {
+          "invalid": "Vai trò không hợp lệ"
+        }
+      }
+    }
+  },
+  "error": {
+    "somethingWentWrong": "Có lỗi xảy ra!"
   }
 }

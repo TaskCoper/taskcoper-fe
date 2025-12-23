@@ -1,50 +1,50 @@
-import ProjectLayout from '@/layouts/project.layout'
+import GuardLayout from '@/layouts/guard.layout'
+import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
+const ProjectsPage = lazy(() => import('@/pages/projects.page'))
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
-    element: <ProjectLayout />,
+    element: <GuardLayout requiresAuth={true} />,
     children: [
       {
-        path: '/projects/:projectId',
+        path: '/projects',
         children: [
           {
             index: true,
-            element: <ProjectTasksPage />
+            element: <ProjectsPage />
           },
           {
-            path: 'info',
-            element: <div>Info</div>
-          },
-          {
-            path: 'tasks',
-            element: <ProjectTasksPage />,
+            path: ':projectId',
+            element: <ProjectDetailLayout />,
             children: [
               {
-                path: ':taskId',
-                element: <TaskDetailDialogPage />
-              }
+                index: true,
+                element: <ProjectTasksPage />
+              },
+              {
+                path: 'info',
+                element: <div>Info</div>
+              },
+              {
+                path: 'tasks',
+                element: <ProjectTasksPage />,
+                children: [
+                  {
+                    path: ':taskId',
+                    element: <TaskDetailDialogPage />
+                  }
+                ]
+              },
+              { path: 'calendar', element: <div>Calendar</div> },
+              { path: 'chat', element: <div>Chat</div> },
+              { path: 'note', element: <div>Note</div> },
+              { path: 'settings', element: <div>Settings</div> }
             ]
-          },
-          {
-            path: 'calendar',
-            element: <div>Calendar</div>
-          },
-          {
-            path: 'chat',
-            element: <div>Chat</div>
-          },
-          {
-            path: 'note',
-            element: <div>Note</div>
-          },
-          {
-            path: 'settings',
-            element: <div>Settings</div>
           }
         ]
       }

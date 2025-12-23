@@ -2,11 +2,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { AxiosError } from 'axios'
 import { useState } from 'react'
+import type { ErrorResponse } from './axios'
 
 declare module '@tanstack/react-query' {
   interface Register {
     // TODO: replace with the correct type
-    defaultError: AxiosError<{ code: string; message: string }>
+    defaultError: AxiosError<ErrorResponse>
   }
 }
 

@@ -1,0 +1,41 @@
+import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '@/features/auth/validations'
+import api, { type BaseResponse } from '@/lib/axios'
+
+class UserService {
+  private readonly baseUrl = '/users'
+
+  signUp = async ({ body }: { body: SignUpFormValues }) => {
+    const { data } = await api.post(`${this.baseUrl}/register`, body)
+    return data
+  }
+
+  signIn = async ({ body }: { body: SignInFormValues }) => {
+    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+      `${this.baseUrl}/login`,
+      body
+    )
+
+    return data.value
+  }
+
+  resendCode = async ({ email }: { email: string }) => {
+    const { data } = await api.post<BaseResponse<string>>(`${this.baseUrl}/resend_verify_account_code?email=${email}`)
+
+    return data.value
+  }
+
+  verifyEmail = async ({ body }: { body: VerifyEmailFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`${this.baseUrl}/verify_account`, body)
+
+    return data.value
+  }
+
+  getMe = async () => {
+    const { data } = await api.get<BaseResponse<unknown>>(`${this.baseUrl}/me`)
+
+    return data.value
+  }
+}
+
+const userService = new UserService()
+export default userService
