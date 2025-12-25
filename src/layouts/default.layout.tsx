@@ -16,7 +16,7 @@ const navigations = [
   {
     id: 200,
     label: 'header.featuredProjects',
-    url: '/projects/featured'
+    url: '/featured-projects'
   },
   {
     id: 300,
