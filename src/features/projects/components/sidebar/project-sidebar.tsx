@@ -12,7 +12,9 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
 import { cn } from '@/shared/utils'
 import {
@@ -32,6 +34,8 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
   const location = useLocation()
+
+  const { me, isGettingMe } = useGetMe()
 
   const data = {
     user: {
@@ -219,9 +223,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          <NavUser user={data.user} />
-        </SidebarFooter>
+        <SidebarFooter>{isGettingMe ? <Skeleton /> : <NavUser user={me} />}</SidebarFooter>
       </Sidebar>
 
       {/* This is the second sidebar */}

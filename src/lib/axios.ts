@@ -1,12 +1,27 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import i18n from './i18n/i18n'
 import { useAuthStore } from './zustand/auth.store'
 
-if (!import.meta.env.VITE_API_URL) {
-  throw new Error('VITE_API_URL is not set')
+if (!import.meta.env.VITE_API_BASE_URL) {
+  throw new Error('VITE_API_BASE_URL is not set')
+}
+
+export interface BaseResponse<T> {
+  error: { code: string; message: string }
+  isFailure: boolean
+  isSuccess: true
+  value: T
+}
+
+export interface ErrorResponse {
+  title: string
+  status: number
+  detail: string
+  errors: string[] | null
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL as string,
+  baseURL: import.meta.env.VITE_API_BASE_URL as string,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json'
@@ -29,8 +44,11 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
+  const currentLanguage = i18n.language || 'en'
+  config.headers['Accept-Language'] = currentLanguage
+
   const { accessToken } = useAuthStore.getState()
-  if (accessToken && !config.url?.includes('/auth/refresh-token')) {
+  if (accessToken && !config.url?.includes('/users/refresh_token')) {
     config.headers.Authorization = `Bearer ${accessToken}`
   }
 
@@ -38,19 +56,20 @@ api.interceptors.request.use((config) => {
 })
 
 const refreshAccessToken = async (): Promise<string | null> => {
-  const { refreshToken } = useAuthStore.getState()
-  if (!refreshToken) {
+  const { refreshToken, accessToken } = useAuthStore.getState()
+  if (!refreshToken || !accessToken) {
     return null
   }
 
   try {
-    // TODO: replace this with actual api payload
-    const { data } = await axios.post<{
-      access_token: string
-      refresh_token?: string
-    }>(
-      `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
-      { refresh_token: refreshToken },
+    const { data } = await axios.post<
+      BaseResponse<{
+        accessToken: string
+        refreshToken: string
+      }>
+    >(
+      `${import.meta.env.VITE_API_BASE_URL}/users/refresh_token`,
+      { accessToken, refreshToken },
       {
         headers: {
           'Content-Type': 'application/json'
@@ -59,11 +78,11 @@ const refreshAccessToken = async (): Promise<string | null> => {
     )
 
     useAuthStore.getState().updateTokens({
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token
+      accessToken: data.value.accessToken,
+      refreshToken: data.value.refreshToken
     })
 
-    return data.access_token
+    return data.value.accessToken
   } catch (err) {
     console.error('Token refresh failed', err)
     useAuthStore.getState().signOut()
@@ -88,11 +107,16 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
-    // TODO: replace this with actual api error
+    // TODO: need more check instead of just the status
     const isUnauthorized = error.response?.status === 401
-    const isInvalidTokenError = (error.response?.data as { error?: string })?.error === 'Error.InvalidAccessToken'
 
-    if (!originalRequest || !isUnauthorized || !isInvalidTokenError) {
+    // 2. IMPORTANT: Don't try to refresh if the failed request WAS the refresh token endpoint
+    const isRefreshRequest = originalRequest.url?.includes('/users/refresh_token')
+
+    if (!originalRequest || !isUnauthorized || isRefreshRequest) {
+      if (isRefreshRequest) {
+        useAuthStore.getState().signOut()
+      }
       return Promise.reject(error)
     }
 
@@ -119,8 +143,7 @@ api.interceptors.response.use(
     isRefreshing = false
 
     if (!newToken) {
-      // TODO: replace this with actual redirect
-      window.location.href = '/auth/sign-in'
+      window.location.href = '/'
       return Promise.reject(error)
     }
 
