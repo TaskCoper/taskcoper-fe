@@ -21,9 +21,10 @@ export default function ProjectDetailLayout() {
           '--sidebar-width': '360px'
         } as React.CSSProperties
       }
+      className='w-full h-full'
     >
       <ProjectSidebar />
-      <SidebarInset className='flex flex-col h-screen overflow-hidden'>
+      <SidebarInset className='flex flex-col h-full overflow-hidden'>
         <header className='bg-background flex shrink-0 items-center gap-2 border-b p-4'>
           <SidebarTrigger className='-ml-1' />
           <Separator orientation='vertical' className='mr-2 data-[orientation=vertical]:h-4' />

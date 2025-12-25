@@ -2,7 +2,6 @@ import { Label } from '@/components/ui/label'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -12,10 +11,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import NavUser from '@/features/projects/components/sidebar/nav-user'
 import { cn } from '@/shared/utils'
 import {
   CalendarClockIcon,
@@ -34,8 +30,6 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
   const location = useLocation()
-
-  const { me, isGettingMe } = useGetMe()
 
   const data = {
     user: {
@@ -172,7 +166,15 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
   const activeItem = data.navMain.find((item) => item.url === activeSegment) || data.navMain[1]
 
   return (
-    <Sidebar collapsible='icon' className='overflow-hidden *:data-[sidebar=sidebar]:flex-row' {...props}>
+    <Sidebar
+      collapsible='icon'
+      className={cn(
+        'overflow-hidden *:data-[sidebar=sidebar]:flex-row',
+        'top-14 h-[calc(100svh-3.5rem)]! border-r-0',
+        props.className
+      )}
+      {...props}
+    >
       {/* This is the first sidebar */}
       {/* We disable collapsible and adjust width to icon. */}
       {/* This will make the sidebar appear as icons. */}
@@ -223,7 +225,6 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>{isGettingMe ? <Skeleton /> : <NavUser user={me} />}</SidebarFooter>
       </Sidebar>
 
       {/* This is the second sidebar */}

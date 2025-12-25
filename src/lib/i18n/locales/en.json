@@ -1,4 +1,12 @@
 {
+  "header": {
+    "home": "Home",
+    "featuredProjects": "Featured Projects",
+    "expertNetwork": "Expert Network",
+    "startupCommunity": "Startup Community",
+    "news": "News",
+    "myProjects": "Go to My Projects"
+  },
   "project": {
     "sidebar": {
       "aboutProject": "About Project",

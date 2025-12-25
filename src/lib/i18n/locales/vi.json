@@ -1,4 +1,12 @@
 {
+  "header": {
+    "home": "Trang chủ",
+    "featuredProjects": "Dự án nổi bật",
+    "expertNetwork": "Kết nối chuyên gia",
+    "startupCommunity": "Cộng đồng khởi nghiệp",
+    "news": "Tin tức",
+    "myProjects": "Dự án của tôi"
+  },
   "project": {
     "sidebar": {
       "aboutProject": "Thông tin dự án",

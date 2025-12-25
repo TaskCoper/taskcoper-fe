@@ -1,3 +1,4 @@
+import DefaultLayout from '@/layouts/default.layout'
 import GuardLayout from '@/layouts/guard.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import { lazy } from 'react'
@@ -10,45 +11,50 @@ const VerifyEmailPage = lazy(() => import('@/pages/verify-email.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
-    element: <GuardLayout requiresAuth={true} />,
+    element: <DefaultLayout />,
     children: [
       {
-        path: '/verify-email',
-        element: <VerifyEmailPage />
-      },
-      {
-        path: '/projects',
+        element: <GuardLayout requiresAuth={true} />,
         children: [
           {
-            index: true,
-            element: <ProjectsPage />
+            path: '/verify-email',
+            element: <VerifyEmailPage />
           },
           {
-            path: ':projectId',
-            element: <ProjectDetailLayout />,
+            path: '/projects',
             children: [
               {
                 index: true,
-                element: <ProjectTasksPage />
+                element: <ProjectsPage />
               },
               {
-                path: 'info',
-                element: <div>Info</div>
-              },
-              {
-                path: 'tasks',
-                element: <ProjectTasksPage />,
+                path: ':projectId',
+                element: <ProjectDetailLayout />,
                 children: [
                   {
-                    path: ':taskId',
-                    element: <TaskDetailDialogPage />
-                  }
+                    index: true,
+                    element: <ProjectTasksPage />
+                  },
+                  {
+                    path: 'info',
+                    element: <div>Info</div>
+                  },
+                  {
+                    path: 'tasks',
+                    element: <ProjectTasksPage />,
+                    children: [
+                      {
+                        path: ':taskId',
+                        element: <TaskDetailDialogPage />
+                      }
+                    ]
+                  },
+                  { path: 'calendar', element: <div>Calendar</div> },
+                  { path: 'chat', element: <div>Chat</div> },
+                  { path: 'note', element: <div>Note</div> },
+                  { path: 'settings', element: <div>Settings</div> }
                 ]
-              },
-              { path: 'calendar', element: <div>Calendar</div> },
-              { path: 'chat', element: <div>Chat</div> },
-              { path: 'note', element: <div>Note</div> },
-              { path: 'settings', element: <div>Settings</div> }
+              }
             ]
           }
         ]
