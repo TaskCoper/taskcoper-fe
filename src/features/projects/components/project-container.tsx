@@ -22,7 +22,7 @@ export default function ProjectContainer({ children }: ProjectContainerProps) {
       className={variations({
         dragging: dndContext.active ? 'active' : 'default',
         className:
-          'overflow-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 p-4 flex items-start gap-3 bg-linear-to-br from-sky-400 via-teal-500 to-blue-600'
+          'overflow-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 p-4 flex items-start gap-3 bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'
       })}
     >
       {children}

@@ -6,11 +6,16 @@ import { type RouteObject } from 'react-router'
 const ProjectsPage = lazy(() => import('@/pages/projects.page'))
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
+const VerifyEmailPage = lazy(() => import('@/pages/verify-email.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
     element: <GuardLayout requiresAuth={true} />,
     children: [
+      {
+        path: '/verify-email',
+        element: <VerifyEmailPage />
+      },
       {
         path: '/projects',
         children: [

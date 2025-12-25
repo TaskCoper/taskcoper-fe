@@ -1,17 +1,22 @@
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useAuthStore } from '@/lib/zustand/auth.store'
-import { Navigate, Outlet } from 'react-router'
+import { Navigate, Outlet, useLocation } from 'react-router'
 
 interface GuardLayoutProps {
   requiresAuth: boolean
 }
 
 export default function GuardLayout({ requiresAuth }: GuardLayoutProps) {
-  const { isAuthenticated } = useAuthStore()
-  const { me, isMeLoading } = useGetMe(isAuthenticated)
+  const { isAuthenticated, isVerificationRequired } = useAuthStore()
 
-  if (isAuthenticated && isMeLoading) {
+  const { me, isGettingMe } = useGetMe()
+
+  const location = useLocation()
+
+  const isOnVerifyPage = location.pathname === '/verify-email'
+
+  if (isAuthenticated && isGettingMe) {
     return (
       <div className='h-screen flex items-center justify-center'>
         <Spinner />
@@ -19,21 +24,25 @@ export default function GuardLayout({ requiresAuth }: GuardLayoutProps) {
     )
   }
 
+  if (isAuthenticated && isVerificationRequired && !isOnVerifyPage) {
+    return <Navigate to='/verify-email' state={{ from: location }} replace />
+  }
+
   if (requiresAuth) {
-    // No valid session → redirect to login
-    if (!isAuthenticated || !me) {
-      return <Navigate to='/' replace />
+    if (!isAuthenticated) {
+      return <Navigate to='/sign-in' replace />
     }
 
-    // Valid user → show protected content
+    if (!me && !isOnVerifyPage) {
+      return <Navigate to='/sign-in' replace />
+    }
+
     return <Outlet />
   }
 
-  // If user is already logged in → redirect to /projects
-  if (isAuthenticated && me) {
+  if (isAuthenticated && me && !isVerificationRequired && !isOnVerifyPage) {
     return <Navigate to='/projects' replace />
   }
 
-  // Not logged in → show login/signup page
   return <Outlet />
 }

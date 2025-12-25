@@ -23,7 +23,7 @@ export const useSignUp = () => {
     resolver: zodResolver(createSignUpSchema(t))
   })
 
-  const { mutate: signUp, isPending: isSignUpPending } = useMutation({
+  const { mutate: signUp, isPending: isSigningUp } = useMutation({
     mutationFn: userService.signUp,
     onSuccess: () => {
       setStage('verifyEmail')
@@ -36,5 +36,5 @@ export const useSignUp = () => {
     }
   })
 
-  return { signUpMethods, signUp, isSignUpPending, stage, setStage }
+  return { signUpMethods, signUp, isSigningUp, stage, setStage }
 }

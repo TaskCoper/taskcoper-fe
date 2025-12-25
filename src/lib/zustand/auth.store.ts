@@ -4,11 +4,12 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 export const STORAGE_KEY = 'auth'
 
-interface UserPayload extends JwtPayload {
-  id: string
-  email: string
-  name: string
-  role: string
+export interface UserPayload extends JwtPayload {
+  Role: string
+  UserId: string
+  OrganizationId: string
+  IsVerified: string
+  Email: string
 }
 
 interface AuthState {
@@ -16,6 +17,8 @@ interface AuthState {
   accessToken: string | null
   refreshToken: string | null
   user: UserPayload | null
+  isVerificationRequired: boolean
+  setVerificationRequired: (required: boolean) => void
   signIn: (accessToken: string, refreshToken: string) => void
   signOut: () => void
   updateTokens: (tokens: { accessToken: string; refreshToken?: string }) => void
@@ -28,14 +31,18 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       user: null,
+      isVerificationRequired: false,
+      setVerificationRequired: (required: boolean) => set({ isVerificationRequired: required }),
       signIn: (accessToken: string, refreshToken: string) => {
         const user = jwtDecode<UserPayload>(accessToken)
+        const isVerified = user.IsVerified === 'true'
 
         set({
           isAuthenticated: true,
           accessToken,
           refreshToken,
-          user
+          user,
+          isVerificationRequired: !isVerified
         })
       },
       signOut: () => {
@@ -71,11 +78,13 @@ export const useAuthStore = create<AuthState>()(
             const user = jwtDecode<UserPayload>(state.accessToken)
             state.user = user
             state.isAuthenticated = true
+            state.isVerificationRequired = user.IsVerified === 'false'
           } catch {
             state.accessToken = null
             state.refreshToken = null
             state.user = null
             state.isAuthenticated = false
+            state.isVerificationRequired = false
           }
         }
       }

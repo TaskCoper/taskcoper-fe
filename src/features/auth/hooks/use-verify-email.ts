@@ -1,9 +1,9 @@
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { createVerifyEmailSchema, type VerifyEmailFormValues } from '../validations'
 
@@ -14,7 +14,7 @@ interface UseVerifyEmailProps {
 
 export const useVerifyEmail = ({ email, onSuccess }: UseVerifyEmailProps) => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { signIn } = useAuthStore()
 
   const verifyEmailMethods = useForm<VerifyEmailFormValues>({
     defaultValues: {
@@ -24,11 +24,11 @@ export const useVerifyEmail = ({ email, onSuccess }: UseVerifyEmailProps) => {
     resolver: zodResolver(createVerifyEmailSchema(t))
   })
 
-  const { mutate: verifyEmail, isPending: isVerifyEmailPending } = useMutation({
+  const { mutate: verifyEmail, isPending: isVerifyingEmail } = useMutation({
     mutationFn: userService.verifyEmail,
-    onSuccess: (message) => {
-      toast.success(message)
-      navigate('/sign-in')
+    onSuccess: ({ accessToken, refreshToken }) => {
+      signIn(accessToken, refreshToken)
+      verifyEmailMethods.reset()
       onSuccess?.()
     },
     onError: (error) => {
@@ -36,5 +36,5 @@ export const useVerifyEmail = ({ email, onSuccess }: UseVerifyEmailProps) => {
     }
   })
 
-  return { verifyEmailMethods, verifyEmail, isVerifyEmailPending }
+  return { verifyEmailMethods, verifyEmail, isVerifyingEmail }
 }

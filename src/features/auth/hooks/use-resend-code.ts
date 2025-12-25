@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 export const useResendCode = () => {
-  const { mutate: resendCode, isPending: isResendCodePending } = useMutation({
+  const { mutate: resendCode, isPending: isResendingCode } = useMutation({
     mutationFn: userService.resendCode,
     onSuccess: (message) => {
       toast.success(message)
@@ -13,5 +13,5 @@ export const useResendCode = () => {
     }
   })
 
-  return { resendCode, isResendCodePending }
+  return { resendCode, isResendingCode }
 }

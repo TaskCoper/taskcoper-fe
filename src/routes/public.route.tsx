@@ -3,26 +3,24 @@ import HomePage from '@/pages/home.page'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
-const SignUpDialogPage = lazy(() => import('@/pages/sign-up-dialog.page'))
-const SignInDialogPage = lazy(() => import('@/pages/sign-in-dialog.page'))
+const SignUpPage = lazy(() => import('@/pages/sign-up.page'))
+const SignInPage = lazy(() => import('@/pages/sign-in.page'))
 
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <HomePage />,
+    element: <HomePage />
+  },
+  {
+    element: <GuardLayout requiresAuth={false} />,
     children: [
       {
-        element: <GuardLayout requiresAuth={false} />,
-        children: [
-          {
-            path: 'sign-in',
-            element: <SignInDialogPage />
-          },
-          {
-            path: 'sign-up',
-            element: <SignUpDialogPage />
-          }
-        ]
+        path: '/sign-in',
+        element: <SignInPage />
+      },
+      {
+        path: '/sign-up',
+        element: <SignUpPage />
       }
     ]
   }

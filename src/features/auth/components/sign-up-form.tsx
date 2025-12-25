@@ -13,13 +13,13 @@ export default function SignUpForm() {
   const { t } = useTranslation()
 
   return (
-    <div className='mt-6 space-y-1'>
-      <div className='flex items-center gap-4'>
+    <div className='space-y-1'>
+      <div className='flex flex-col sm:flex-row sm:gap-4'>
         <Controller
           name='firstName'
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
               <FieldLabel htmlFor={field.name}>{t('auth.signUp.fields.firstName')}</FieldLabel>
               <Input
                 {...field}
@@ -27,6 +27,7 @@ export default function SignUpForm() {
                 aria-invalid={fieldState.invalid}
                 autoComplete='off'
                 spellCheck={false}
+                autoFocus
               />
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -39,7 +40,7 @@ export default function SignUpForm() {
           name='lastName'
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
               <FieldLabel htmlFor={field.name}>{t('auth.signUp.fields.lastName')}</FieldLabel>
               <Input
                 {...field}

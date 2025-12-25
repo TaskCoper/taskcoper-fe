@@ -133,7 +133,7 @@
     "signIn": {
       "label": "Đăng nhập",
       "button": "Vào thôi!",
-      "title": "Chào mừng trở lại với Taskcoper",
+      "title": "Chào mừng trở lại!",
       "forgotPassword": "Quên mật khẩu?",
       "noAccount": "Chưa có tài khoản?",
       "description": "Đăng nhập để tiếp tục sử dụng tài khoản của bạn",
@@ -166,7 +166,8 @@
         "title": "Xác nhận email",
         "description": "Nhập mã xác nhận đã được gửi đến email của bạn",
         "button": "Xác nhận mã",
-        "resendCode": "Gửi lại mã"
+        "resendCode": "Gửi lại mã",
+        "useDifferentAccount": "Sử dụng tài khoản khác"
       },
       "fields": {
         "firstName": "Họ",

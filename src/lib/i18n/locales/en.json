@@ -131,7 +131,7 @@
     "signIn": {
       "label": "Sign in",
       "button": "Let's go!",
-      "title": "Welcome back to Taskcoper",
+      "title": "Welcome back!",
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
       "description": "Sign in to your account to continue",
@@ -164,7 +164,8 @@
         "title": "Verify your email",
         "description": "Enter the code sent to your email",
         "button": "Verify code",
-        "resendCode": "Resend"
+        "resendCode": "Resend",
+        "useDifferentAccount": "Use a different account"
       },
       "fields": {
         "firstName": "First Name",

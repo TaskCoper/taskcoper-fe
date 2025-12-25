@@ -14,7 +14,7 @@ export default function SignInForm() {
   const { control } = useFormContext<SignInFormValues>()
 
   return (
-    <div className='mt-6 space-y-1'>
+    <div className='space-y-1'>
       <Controller
         name='email'
         control={control}
@@ -28,6 +28,7 @@ export default function SignInForm() {
               placeholder={t('auth.signUp.fields.email.placeholder')}
               autoComplete='off'
               spellCheck={false}
+              autoFocus
             />
             <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}

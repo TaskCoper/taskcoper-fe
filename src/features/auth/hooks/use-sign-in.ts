@@ -1,7 +1,8 @@
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useAuthStore, type UserPayload } from '@/lib/zustand/auth.store'
 import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { jwtDecode } from 'jwt-decode'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -21,12 +22,18 @@ export const useSignIn = () => {
     resolver: zodResolver(createSignInSchema(t))
   })
 
-  const { mutate: signIn, isPending: isSignInPending } = useMutation({
+  const { mutate: signIn, isPending: isSigningIn } = useMutation({
     mutationFn: userService.signIn,
     onSuccess: (data) => {
       signInAuth(data.accessToken, data.refreshToken)
+      const user = jwtDecode<UserPayload>(data.accessToken)
+      if (user.IsVerified === 'false') {
+        navigate('/')
+      } else {
+        navigate('/projects', { replace: true })
+      }
+
       signInMethods.reset()
-      navigate('/projects')
     },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
@@ -35,5 +42,5 @@ export const useSignIn = () => {
     }
   })
 
-  return { signInMethods, isSignInPending, signIn }
+  return { signInMethods, isSigningIn, signIn }
 }
