@@ -26,6 +26,7 @@ on:
 jobs:
   deploy-application:
     runs-on: ${{ inputs.run-on }}
+    environment: ${{ inputs.environment }}
     env:
       REGISTRY: ghcr.io/${{ inputs.repository }}
       TAG: ${{ inputs.tag }}

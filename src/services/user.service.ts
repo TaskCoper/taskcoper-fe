@@ -6,13 +6,13 @@ class UserService {
   private readonly baseUrl = '/users'
 
   signUp = async ({ body }: { body: SignUpFormValues }) => {
-    const { data } = await api.post(`${this.baseUrl}/register`, body)
+    const { data } = await api.post(`/v1/${this.baseUrl}/register`, body)
     return data
   }
 
   signIn = async ({ body }: { body: SignInFormValues }) => {
     const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
-      `${this.baseUrl}/login`,
+      `/v1/${this.baseUrl}/login`,
       body
     )
 
@@ -20,20 +20,22 @@ class UserService {
   }
 
   signOut = async ({ email }: { email: string }) => {
-    const { data } = await api.post<BaseResponse<string>>(`${this.baseUrl}/logout`, { email })
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/logout`, { email })
 
     return data.value
   }
 
   resendCode = async ({ email }: { email: string }) => {
-    const { data } = await api.post<BaseResponse<string>>(`${this.baseUrl}/resend_verify_account_code?email=${email}`)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/resend_verify_account_code?email=${email}`
+    )
 
     return data.value
   }
 
   verifyEmail = async ({ body }: { body: VerifyEmailFormValues }) => {
     const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
-      `${this.baseUrl}/verify_account`,
+      `/v1/${this.baseUrl}/verify_account`,
       body
     )
 
@@ -41,7 +43,7 @@ class UserService {
   }
 
   getMe = async () => {
-    const { data } = await api.get<BaseResponse<UserEntity>>(`${this.baseUrl}/me`)
+    const { data } = await api.get<BaseResponse<UserEntity>>(`/v1/${this.baseUrl}/me`)
 
     return data.value
   }
