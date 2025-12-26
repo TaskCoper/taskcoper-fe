@@ -42,6 +42,7 @@ jobs:
         env:
           PROFILE: ${{ env.PROFILE }}
           TAG: ${{ env.TAG }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
           docker compose -f .docker/compose.yaml --profile "$PROFILE" push
