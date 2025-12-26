@@ -11,15 +11,15 @@ const VerifyEmailPage = lazy(() => import('@/pages/verify-email.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
-    element: <DefaultLayout />,
+    element: <GuardLayout requiresAuth={true} />,
     children: [
       {
-        element: <GuardLayout requiresAuth={true} />,
+        path: '/verify-email',
+        element: <VerifyEmailPage />
+      },
+      {
+        element: <DefaultLayout />,
         children: [
-          {
-            path: '/verify-email',
-            element: <VerifyEmailPage />
-          },
           {
             path: '/projects',
             children: [

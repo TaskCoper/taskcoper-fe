@@ -8,6 +8,8 @@
     "myProjects": "Go to My Projects"
   },
   "project": {
+    "title": "My Projects",
+    "description": "Manage your projects and tasks",
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "Tasks",
@@ -19,6 +21,57 @@
     "tasks": {
       "addTask": "Add new task",
       "addMilestone": "Add another milestone"
+    },
+    "createProject": {
+      "button": "Create project",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "title": "New project",
+      "description": "Create a new project to get started",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter project description",
+          "description": "This will be displayed on the project page."
+        },
+        "startDate": {
+          "label": "Start date",
+          "placeholder": "Pick a start date"
+        },
+        "endDate": {
+          "label": "End date",
+          "placeholder": "Pick a end date"
+        },
+        "domain": {
+          "label": "Domain",
+          "placeholder": "Select a domain",
+          "searchPlaceholder": "Search domain..."
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Project name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "startDate": {
+          "invalid": "Start date is required"
+        },
+        "endDate": {
+          "invalid": "End date is required",
+          "mustBeGreater": "End date must be greater than start date"
+        },
+        "domainIds": {
+          "invalid": "Domain is required",
+          "minLength": "At least one domain is required"
+        }
+      }
     }
   },
   "task": {
@@ -143,7 +196,7 @@
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
       "description": "Sign in to your account to continue",
-      "fields": {
+      "field": {
         "email": {
           "label": "Email",
           "placeholder": "example@gmail.com"
@@ -175,7 +228,7 @@
         "resendCode": "Resend",
         "useDifferentAccount": "Use a different account"
       },
-      "fields": {
+      "field": {
         "firstName": "First Name",
         "lastName": "Last Name",
         "email": {
@@ -205,11 +258,32 @@
         },
         "role": {
           "invalid": "Invalid role"
+        },
+        "code": {
+          "minLength": "Code must be 6 characters",
+          "maxLength": "Code must be 6 characters"
         }
       }
     }
   },
   "error": {
     "somethingWentWrong": "Something went wrong!"
+  },
+  "comboboxField": {
+    "placeholder": "Select option",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No option found."
+  },
+  "datePickerField": {
+    "placeholder": "Select date"
+  },
+  "comboboxMultiField": {
+    "placeholder": "Select options",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No options found."
+  },
+  "common": {
+    "selected": "selected",
+    "characters": "characters"
   }
 }
