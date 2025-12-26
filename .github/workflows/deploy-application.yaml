@@ -29,6 +29,7 @@ jobs:
     env:
       REGISTRY: ghcr.io/${{ inputs.repository }}
       TAG: ${{ inputs.tag }}
+      VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -42,7 +43,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Lowercase Repository Name
         run: |
           REPO_LOWER=$(echo "${{ inputs.repository }}" | tr '[:upper:]' '[:lower:]')
