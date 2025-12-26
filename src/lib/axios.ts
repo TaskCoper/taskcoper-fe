@@ -3,9 +3,9 @@ import i18n from './i18n/i18n'
 import { useAuthStore } from './zustand/auth.store'
 import config from '@/constants/config'
 
-if (!import.meta.env.VITE_API_BASE_URL) {
-  throw new Error('VITE_API_BASE_URL is not set')
-}
+// if (!import.meta.env.VITE_API_BASE_URL) {
+//   throw new Error('VITE_API_BASE_URL is not set')
+// }
 
 export interface BaseResponse<T> {
   error: { code: string; message: string }
@@ -69,7 +69,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
         refreshToken: string
       }>
     >(
-      `${import.meta.env.VITE_API_BASE_URL}/users/refresh_token`,
+      `${config.baseURL}/api/v1/users/refresh_token`,
       { accessToken, refreshToken },
       {
         headers: {
