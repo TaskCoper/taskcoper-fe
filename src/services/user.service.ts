@@ -3,7 +3,7 @@ import api, { type BaseResponse } from '@/lib/axios'
 import type { UserEntity } from '@/types/user.type'
 
 class UserService {
-  private readonly baseUrl = '/users'
+  private readonly baseUrl = 'users'
 
   signUp = async ({ body }: { body: SignUpFormValues }) => {
     const { data } = await api.post(`/v1/${this.baseUrl}/register`, body)
