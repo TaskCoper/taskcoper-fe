@@ -1,10 +1,11 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import i18n from './i18n/i18n'
 import { useAuthStore } from './zustand/auth.store'
+import config from '@/constants/config'
 
-if (!import.meta.env.VITE_API_BASE_URL) {
-  throw new Error('VITE_API_BASE_URL is not set')
-}
+// if (!import.meta.env.VITE_API_BASE_URL) {
+//   throw new Error('VITE_API_BASE_URL is not set')
+// }
 
 interface ApiResponse {
   isSuccess: boolean
@@ -38,7 +39,7 @@ export interface ErrorResponse {
 }
 
 export const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL as string) + '/api',
+  baseURL: `${config.baseURL}/api`,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json'
@@ -85,7 +86,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
         refreshToken: string
       }>
     >(
-      `${import.meta.env.VITE_API_BASE_URL}/api/v1/users/refresh_token`,
+      `${config.baseURL}/api/v1/users/refresh_token`,
       { accessToken, refreshToken },
       {
         headers: {

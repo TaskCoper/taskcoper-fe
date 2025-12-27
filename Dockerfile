@@ -2,16 +2,16 @@ FROM node:22-alpine AS build
 
 WORKDIR /usr/src/app
 
-# Accept VITE_API_BASE_URL as build argument
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
-
-# Copy only package.json and yarn.lock (exclude package-lock.json)
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
 COPY ./ ./
+
+ARG VITE_API_BASE_URL
+
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+
 RUN yarn build
 
 FROM nginx:alpine AS runner
