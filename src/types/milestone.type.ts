@@ -1,19 +1,18 @@
-import type { UniqueIdentifier } from '@dnd-kit/core'
-
-export interface MilestoneEntity {
-  // TODO: Add actual DB fields when backend is ready
+export interface Milestone {
   id: string
-  title: string
+  name: string
+  position: number
 }
 
-export interface MilestoneColumnVM {
-  id: UniqueIdentifier
-  title: string
+export interface ParentMilestone {
+  id: string
+  name: string
+  position: number
 }
 
 export type MilestoneColumnType = 'MilestoneColumn'
 
 export interface MilestoneColumnDragData {
   type: MilestoneColumnType
-  column: MilestoneColumnVM
+  column: Milestone
 }

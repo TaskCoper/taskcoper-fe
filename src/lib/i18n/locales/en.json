@@ -8,6 +8,8 @@
     "myProjects": "Go to My Projects"
   },
   "project": {
+    "title": "My Projects",
+    "description": "Manage your projects and tasks",
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "Tasks",
@@ -19,9 +21,70 @@
     "tasks": {
       "addTask": "Add new task",
       "addMilestone": "Add another milestone"
+    },
+    "createProject": {
+      "button": "Create project",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "title": "New project",
+      "description": "Create a new project to get started",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter project description",
+          "description": "This will be displayed on the project page."
+        },
+        "startDate": {
+          "label": "Start date",
+          "placeholder": "Pick a start date"
+        },
+        "endDate": {
+          "label": "End date",
+          "placeholder": "Pick a end date"
+        },
+        "domain": {
+          "label": "Domain",
+          "placeholder": "Select a domain",
+          "searchPlaceholder": "Search domain..."
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Project name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "startDate": {
+          "invalid": "Start date is required"
+        },
+        "endDate": {
+          "invalid": "End date is required",
+          "mustBeGreater": "End date must be greater than start date"
+        },
+        "domainIds": {
+          "invalid": "Domain is required",
+          "minLength": "At least one domain is required"
+        }
+      }
     }
   },
   "task": {
+    "addTask": {
+      "title": "Task",
+      "description": "Add a task to your milestone",
+      "field": {
+        "name": {
+          "label": "Task name",
+          "placeholder": "Enter task name..."
+        }
+      }
+    },
     "date": {
       "notSetDate": "DD/MM/YYYY",
       "notSetTime": "H:mm",
@@ -143,7 +206,7 @@
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
       "description": "Sign in to your account to continue",
-      "fields": {
+      "field": {
         "email": {
           "label": "Email",
           "placeholder": "example@gmail.com"
@@ -164,7 +227,7 @@
     },
     "signUp": {
       "label": "Sign up",
-      "title": "Welcome to Taskcoper",
+      "title": "Welcome to TaskCoper",
       "description": "Sign up today and unlock a world of possibilities. Your journey begins here.",
       "button": "Create your account",
       "haveAccount": "Already have an account?",
@@ -175,7 +238,7 @@
         "resendCode": "Resend",
         "useDifferentAccount": "Use a different account"
       },
-      "fields": {
+      "field": {
         "firstName": "First Name",
         "lastName": "Last Name",
         "email": {
@@ -205,11 +268,64 @@
         },
         "role": {
           "invalid": "Invalid role"
+        },
+        "code": {
+          "minLength": "Code must be 6 characters",
+          "maxLength": "Code must be 6 characters"
         }
       }
     }
   },
   "error": {
-    "somethingWentWrong": "Something went wrong!"
+    "somethingWentWrong": "Something went wrong!",
+    "somethingWentWrongDescription": "An unexpected error occurred. Please try again later.",
+    "back": "Back",
+    "home": "Home",
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "The page you're looking for doesn't seem to exist.",
+    "apiError": "API error",
+    "apiErrorDescription": "Something went wrong with the API request.",
+    "genericError": "Generic error",
+    "genericErrorDescription": "Something went wrong with the request."
+  },
+  "comboboxField": {
+    "placeholder": "Select option",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No option found."
+  },
+  "datePickerField": {
+    "placeholder": "Select date"
+  },
+  "comboboxMultiField": {
+    "placeholder": "Select options",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No options found."
+  },
+  "common": {
+    "selected": "selected",
+    "characters": "characters",
+    "add": "Add"
+  },
+  "milestone": {
+    "addParentMilestone": {
+      "title": "Parent milestone",
+      "description": "Add a parent milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name"
+        }
+      }
+    },
+    "addMilestone": {
+      "title": "Milestone",
+      "description": "Add a milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name..."
+        }
+      }
+    }
   }
 }

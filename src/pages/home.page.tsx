@@ -7,7 +7,7 @@ export default function HomePage() {
         </h1>
 
         <p className='mx-auto mb-2 max-w-2xl text-[0.95rem] leading-relaxed text-gray-600'>
-          Taskcoper nền tảng quản trị toàn diện dành cho doanh nghiêp vừa và nhỏ (SME) - giải pháp số về quản trị cho
+          TaskCoper nền tảng quản trị toàn diện dành cho doanh nghiêp vừa và nhỏ (SME) - giải pháp số về quản trị cho
           doanh nghiệp giáo dục triển khai mô hình Project Based Learning.
         </p>
 

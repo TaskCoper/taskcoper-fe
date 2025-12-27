@@ -1,7 +1,7 @@
-import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { Navigate, Outlet, useLocation } from 'react-router'
+import logo from '/images/taskcoper.png'
 
 interface GuardLayoutProps {
   requiresAuth: boolean
@@ -19,7 +19,7 @@ export default function GuardLayout({ requiresAuth }: GuardLayoutProps) {
   if (isAuthenticated && isGettingMe) {
     return (
       <div className='h-screen flex items-center justify-center'>
-        <Spinner />
+        <img src={logo} alt='TaskCoper' className='size-60' />
       </div>
     )
   }

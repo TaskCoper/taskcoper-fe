@@ -11,15 +11,15 @@ const VerifyEmailPage = lazy(() => import('@/pages/verify-email.page'))
 
 export const protectedRoutes: RouteObject[] = [
   {
-    element: <DefaultLayout />,
+    element: <GuardLayout requiresAuth={true} />,
     children: [
       {
-        element: <GuardLayout requiresAuth={true} />,
+        path: '/verify-email',
+        element: <VerifyEmailPage />
+      },
+      {
+        element: <DefaultLayout />,
         children: [
-          {
-            path: '/verify-email',
-            element: <VerifyEmailPage />
-          },
           {
             path: '/projects',
             children: [
@@ -33,22 +33,23 @@ export const protectedRoutes: RouteObject[] = [
                 children: [
                   {
                     index: true,
-                    element: <ProjectTasksPage />
+                    element: null
                   },
                   {
-                    path: 'info',
-                    element: <div>Info</div>
+                    path: 'milestones',
+                    element: null
                   },
                   {
-                    path: 'tasks',
+                    path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,
                     children: [
                       {
-                        path: ':taskId',
+                        path: 'tasks/:taskId',
                         element: <TaskDetailDialogPage />
                       }
                     ]
                   },
+                  { path: 'info', element: <div>Info</div> },
                   { path: 'calendar', element: <div>Calendar</div> },
                   { path: 'chat', element: <div>Chat</div> },
                   { path: 'note', element: <div>Note</div> },

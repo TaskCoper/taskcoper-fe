@@ -8,6 +8,8 @@
     "myProjects": "Dự án của tôi"
   },
   "project": {
+    "title": "Dự án của tôi",
+    "description": "Quản lý dự án và công việc của bạn",
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc",
@@ -19,10 +21,70 @@
     "tasks": {
       "addTask": "Thêm thẻ",
       "addMilestone": "Thêm danh sách khác"
+    },
+    "createProject": {
+      "button": "Tạo dự án",
+      "cancel": "Hủy",
+      "submit": "Xác nhận",
+      "title": "Dự án mới",
+      "description": "Tạo một dự án mới để bắt đầu",
+      "field": {
+        "name": {
+          "label": "Tên dự án",
+          "placeholder": "Nhập tên dự án"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả dự án",
+          "description": "Thông tin này sẽ được hiển thị trên trang dự án."
+        },
+        "startDate": {
+          "label": "Ngày bắt đầu",
+          "placeholder": "Chọn ngày bắt đầu"
+        },
+        "endDate": {
+          "label": "Ngày kết thúc",
+          "placeholder": "Chọn ngày kết thúc"
+        },
+        "domain": {
+          "label": "Lĩnh vực",
+          "placeholder": "Chọn lĩnh vực",
+          "searchPlaceholder": "Tìm kiếm lĩnh vực..."
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Vui lòng nhập tên dự án",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "startDate": {
+          "invalid": "Vui lòng chọn ngày bắt đầu"
+        },
+        "endDate": {
+          "invalid": "Vui lòng chọn ngày kết thúc",
+          "mustBeGreater": "Ngày kết thúc phải lớn hơn ngày bắt đầu"
+        },
+        "domainIds": {
+          "invalid": "Vui lòng chọn lĩnh vực",
+          "minLength": "Vui lòng chọn ít nhất một lĩnh vực"
+        }
+      }
     }
   },
-
   "task": {
+    "addTask": {
+      "title": "Thẻ",
+      "description": "Thêm một thẻ vào danh sách của bạn",
+      "field": {
+        "name": {
+          "label": "Tên thẻ",
+          "placeholder": "Nhập tên thẻ..."
+        }
+      }
+    },
     "date": {
       "notSetDate": "N/T/NNNN",
       "notSetTime": "G:pp",
@@ -145,7 +207,7 @@
       "forgotPassword": "Quên mật khẩu?",
       "noAccount": "Chưa có tài khoản?",
       "description": "Đăng nhập để tiếp tục sử dụng tài khoản của bạn",
-      "fields": {
+      "field": {
         "email": {
           "label": "Email",
           "placeholder": "example@gmail.com"
@@ -166,7 +228,7 @@
     },
     "signUp": {
       "label": "Đăng ký",
-      "title": "Chào mừng đến với Taskcoper",
+      "title": "Chào mừng đến với TaskCoper",
       "description": "Đăng ký ngay hôm nay để khám phá vô vàn tiện ích. Hành trình của bạn bắt đầu từ đây!",
       "button": "Tạo tài khoản",
       "haveAccount": "Đã có tài khoản?",
@@ -177,7 +239,7 @@
         "resendCode": "Gửi lại mã",
         "useDifferentAccount": "Sử dụng tài khoản khác"
       },
-      "fields": {
+      "field": {
         "firstName": "Họ",
         "lastName": "Tên",
         "email": {
@@ -207,11 +269,64 @@
         },
         "role": {
           "invalid": "Vai trò không hợp lệ"
+        },
+        "code": {
+          "minLength": "Mã phải có 6 ký tự",
+          "maxLength": "Mã phải có 6 ký tự"
         }
       }
     }
   },
   "error": {
-    "somethingWentWrong": "Có lỗi xảy ra!"
+    "somethingWentWrong": "Có lỗi xảy ra!",
+    "somethingWentWrongDescription": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
+    "back": "Quay lại",
+    "home": "Trang chủ",
+    "pageNotFound": "Không tìm thấy trang",
+    "pageNotFoundDescription": "Trang bạn đang tìm kiếm có vẻ không tồn tại.",
+    "apiError": "Lỗi API",
+    "apiErrorDescription": "Đã xảy ra lỗi với yêu cầu API.",
+    "genericError": "Lỗi chung",
+    "genericErrorDescription": "Đã xảy ra lỗi với yêu cầu."
+  },
+  "comboboxField": {
+    "placeholder": "Chọn tùy chọn",
+    "searchPlaceholder": "Tìm kiếm...",
+    "emptyMessage": "Không tìm thấy tùy chọn."
+  },
+  "datePickerField": {
+    "placeholder": "Chọn ngày"
+  },
+  "comboboxMultiField": {
+    "placeholder": "Chọn tùy chọn",
+    "searchPlaceholder": "Tìm kiếm...",
+    "emptyMessage": "Không tìm thấy tùy chọn."
+  },
+  "common": {
+    "selected": "đã chọn",
+    "characters": "ký tự",
+    "add": "Thêm"
+  },
+  "milestone": {
+    "addParentMilestone": {
+      "title": "Tab",
+      "description": "Thêm tab mới cho dự án",
+      "field": {
+        "milestoneName": {
+          "label": "Tên tab",
+          "placeholder": "Nhập tên tab..."
+        }
+      }
+    },
+    "addMilestone": {
+      "title": "Danh sách khác",
+      "description": "Thêm danh sách khác cho dự án",
+      "field": {
+        "milestoneName": {
+          "label": "Tên danh sách khác",
+          "placeholder": "Nhập tên danh sách..."
+        }
+      }
+    }
   }
 }

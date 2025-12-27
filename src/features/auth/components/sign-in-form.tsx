@@ -20,12 +20,12 @@ export default function SignInForm() {
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid} className='gap-1'>
-            <FieldLabel htmlFor={field.name}>{t('auth.signUp.fields.email.label')}</FieldLabel>
+            <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.email.label')}</FieldLabel>
             <Input
               {...field}
               id={field.name}
               aria-invalid={fieldState.invalid}
-              placeholder={t('auth.signUp.fields.email.placeholder')}
+              placeholder={t('auth.signUp.field.email.placeholder')}
               autoComplete='off'
               spellCheck={false}
               autoFocus
@@ -42,14 +42,14 @@ export default function SignInForm() {
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid} className='gap-1'>
-            <FieldLabel htmlFor={field.name}>{t('auth.signUp.fields.password.label')}</FieldLabel>
+            <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.password.label')}</FieldLabel>
             <div className='relative'>
               <Input
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
                 type={isVisible ? 'text' : 'password'}
-                placeholder={t('auth.signUp.fields.password.placeholder')}
+                placeholder={t('auth.signUp.field.password.placeholder')}
                 autoComplete='off'
                 spellCheck={false}
               />

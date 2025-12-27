@@ -1,14 +1,15 @@
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/shared/utils'
-import type { TaskCardDragData, TaskCardVM } from '@/types/task.type'
+import type { Task, TaskCardDragData } from '@/types/task.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
 import { SquarePenIcon } from 'lucide-react'
+import { Link } from 'react-router'
 
 interface TaskCardProps {
-  task: TaskCardVM
+  task: Task
   isOverlay?: boolean
 }
 
@@ -41,31 +42,35 @@ export default function TaskCard({ task, isOverlay }: TaskCardProps) {
   })
 
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={variants({
-        dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
-        className: 'gap-2 p-3 rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group'
-      })}
-    >
-      <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover:block' />
-      <div className='flex items-start gap-2'>
-        <Checkbox
-          className={cn(
-            'rounded-full border-foreground mt-0.5',
-            isCompleted
-              ? 'data-[state=checked]:bg-lime-600 data-[state=checked]:border-lime-600'
-              : 'hidden group-hover:block'
-          )}
-          checked={isCompleted}
-          onCheckedChange={() => {}}
-          onClick={(e) => e.stopPropagation()}
-        />
-        <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>{task.content}</p>
-      </div>
-    </Card>
+    <Link to={`tasks/${task.id}`}>
+      <Card
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className={variants({
+          dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
+          className: 'gap-2 p-3 rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group'
+        })}
+      >
+        <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover:block' />
+        <div className='flex items-start gap-2'>
+          <Checkbox
+            className={cn(
+              'rounded-full border-foreground mt-0.5',
+              isCompleted
+                ? 'data-[state=checked]:bg-lime-600 data-[state=checked]:border-lime-600'
+                : 'hidden group-hover:block'
+            )}
+            checked={isCompleted}
+            onCheckedChange={() => {}}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>
+            {task.name} <span className='font-mono text-xs text-rose-600'>({task.position})</span>
+          </p>
+        </div>
+      </Card>
+    </Link>
   )
 }

@@ -7,18 +7,35 @@ import config from '@/constants/config'
 //   throw new Error('VITE_API_BASE_URL is not set')
 // }
 
-export interface BaseResponse<T> {
-  error: { code: string; message: string }
+interface ApiResponse {
+  isSuccess: boolean
   isFailure: boolean
-  isSuccess: true
+  error: {
+    code: string
+    message: string
+  }
+}
+
+export interface BaseResponse<T> extends ApiResponse {
   value: T
+}
+
+export interface BasePaginationResponse<T> extends ApiResponse {
+  value: {
+    items: T[]
+    pageIndex: number
+    pageSize: number
+    totalCount: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
 }
 
 export interface ErrorResponse {
   title: string
   status: number
   detail: string
-  errors: string[] | null
+  errors: Record<string, unknown>[] | null
 }
 
 export const api = axios.create({

@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import type { UserEntity } from '@/types/user.type'
+import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +26,7 @@ interface NavUserProps {
 }
 
 export default function NavUser({ user }: NavUserProps) {
+  const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
   const [language, setLanguage] = useState(i18n.language)
 
@@ -36,9 +38,10 @@ export default function NavUser({ user }: NavUserProps) {
     signOut({ email: user.email })
   }
 
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = async (value: string) => {
     setLanguage(value)
-    i18n.changeLanguage(value)
+    await i18n.changeLanguage(value)
+    queryClient.invalidateQueries()
   }
 
   return (
@@ -82,7 +85,7 @@ export default function NavUser({ user }: NavUserProps) {
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup value={language} onValueChange={handleLanguageChange}>
+                <DropdownMenuRadioGroup value={language || 'en-US'} onValueChange={handleLanguageChange}>
                   <DropdownMenuRadioItem value='en-US'>{t('language.english')}</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value='vi-VN'>{t('language.vietnamese')}</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
