@@ -85,7 +85,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
         refreshToken: string
       }>
     >(
-      `${import.meta.env.VITE_API_BASE_URL}/users/refresh_token`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/users/refresh_token`,
       { accessToken, refreshToken },
       {
         headers: {

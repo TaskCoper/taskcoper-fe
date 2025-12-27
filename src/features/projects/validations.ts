@@ -10,8 +10,8 @@ export const createProjectSchema = (t: (key: string) => string) => {
         .min(1, t('project.createProject.validation.name.minLength'))
         .max(255, t('project.createProject.validation.name.maxLength')),
       description: z.string().max(255, t('project.createProject.validation.description.maxLength')),
-      startDate: z.iso.datetime({ message: t('project.createProject.validation.startDate.invalid') }).or(z.literal('')),
-      endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }).or(z.literal('')),
+      startDate: z.iso.datetime({ message: t('project.createProject.validation.startDate.invalid') }),
+      endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }),
       domainIds: z
         .array(z.string())
         .min(1, t('project.createProject.validation.domainIds.minLength'))

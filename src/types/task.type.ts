@@ -1,22 +1,21 @@
-import type { ColumnId } from '@/features/projects/components/project-board'
-import type { UniqueIdentifier } from '@dnd-kit/core'
-
-export interface TaskEntity {
-  // TODO: Add actual DB fields when backend is ready
+export interface Task {
   id: string
-  content: string
+  name: string
   milestoneId: string
-}
-
-export interface TaskCardVM {
-  id: UniqueIdentifier
-  columnId: ColumnId
-  content: string
+  position: number
+  startDate: string | null
+  endDate: string | null
+  members: string[]
+  totalSubtasks: number
+  completedSubtasks: number
+  totalComments: number
+  totalResources: number
+  progressPercentage: number
 }
 
 export type TaskCardType = 'TaskCard'
 
 export interface TaskCardDragData {
   type: TaskCardType
-  task: TaskCardVM
+  task: Task
 }

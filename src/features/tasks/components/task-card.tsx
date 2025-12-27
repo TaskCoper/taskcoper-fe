@@ -1,14 +1,14 @@
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/shared/utils'
-import type { TaskCardDragData, TaskCardVM } from '@/types/task.type'
+import type { Task, TaskCardDragData } from '@/types/task.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
 import { SquarePenIcon } from 'lucide-react'
 
 interface TaskCardProps {
-  task: TaskCardVM
+  task: Task
   isOverlay?: boolean
 }
 
@@ -64,7 +64,7 @@ export default function TaskCard({ task, isOverlay }: TaskCardProps) {
           onCheckedChange={() => {}}
           onClick={(e) => e.stopPropagation()}
         />
-        <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>{task.content}</p>
+        <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>{task.name}</p>
       </div>
     </Card>
   )

@@ -19,7 +19,7 @@ export default function GuardLayout({ requiresAuth }: GuardLayoutProps) {
   if (isAuthenticated && isGettingMe) {
     return (
       <div className='h-screen flex items-center justify-center'>
-        <img src={logo} alt='Taskcoper' className='size-60' />
+        <img src={logo} alt='TaskCoper' className='size-60' />
       </div>
     )
   }

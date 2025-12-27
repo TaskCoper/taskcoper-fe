@@ -17,6 +17,7 @@ export default function ReactQueryProvider({ children }: { children: React.React
       new QueryClient({
         defaultOptions: {
           queries: {
+            throwOnError: true,
             retry: (failureCount, error) => {
               // Don't retry on 400/401/403/404/500
               if (

@@ -75,6 +75,16 @@
     }
   },
   "task": {
+    "addTask": {
+      "title": "Task",
+      "description": "Add a task to your milestone",
+      "field": {
+        "name": {
+          "label": "Task name",
+          "placeholder": "Enter task name..."
+        }
+      }
+    },
     "date": {
       "notSetDate": "DD/MM/YYYY",
       "notSetTime": "H:mm",
@@ -217,7 +227,7 @@
     },
     "signUp": {
       "label": "Sign up",
-      "title": "Welcome to Taskcoper",
+      "title": "Welcome to TaskCoper",
       "description": "Sign up today and unlock a world of possibilities. Your journey begins here.",
       "button": "Create your account",
       "haveAccount": "Already have an account?",
@@ -267,7 +277,16 @@
     }
   },
   "error": {
-    "somethingWentWrong": "Something went wrong!"
+    "somethingWentWrong": "Something went wrong!",
+    "somethingWentWrongDescription": "An unexpected error occurred. Please try again later.",
+    "back": "Back",
+    "home": "Home",
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "The page you're looking for doesn't seem to exist.",
+    "apiError": "API error",
+    "apiErrorDescription": "Something went wrong with the API request.",
+    "genericError": "Generic error",
+    "genericErrorDescription": "Something went wrong with the request."
   },
   "comboboxField": {
     "placeholder": "Select option",
@@ -284,6 +303,29 @@
   },
   "common": {
     "selected": "selected",
-    "characters": "characters"
+    "characters": "characters",
+    "add": "Add"
+  },
+  "milestone": {
+    "addParentMilestone": {
+      "title": "Parent milestone",
+      "description": "Add a parent milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name"
+        }
+      }
+    },
+    "addMilestone": {
+      "title": "Milestone",
+      "description": "Add a milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name..."
+        }
+      }
+    }
   }
 }

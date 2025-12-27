@@ -75,6 +75,16 @@
     }
   },
   "task": {
+    "addTask": {
+      "title": "Thẻ",
+      "description": "Thêm một thẻ vào danh sách của bạn",
+      "field": {
+        "name": {
+          "label": "Tên thẻ",
+          "placeholder": "Nhập tên thẻ..."
+        }
+      }
+    },
     "date": {
       "notSetDate": "N/T/NNNN",
       "notSetTime": "G:pp",
@@ -218,7 +228,7 @@
     },
     "signUp": {
       "label": "Đăng ký",
-      "title": "Chào mừng đến với Taskcoper",
+      "title": "Chào mừng đến với TaskCoper",
       "description": "Đăng ký ngay hôm nay để khám phá vô vàn tiện ích. Hành trình của bạn bắt đầu từ đây!",
       "button": "Tạo tài khoản",
       "haveAccount": "Đã có tài khoản?",
@@ -268,7 +278,16 @@
     }
   },
   "error": {
-    "somethingWentWrong": "Có lỗi xảy ra!"
+    "somethingWentWrong": "Có lỗi xảy ra!",
+    "somethingWentWrongDescription": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
+    "back": "Quay lại",
+    "home": "Trang chủ",
+    "pageNotFound": "Không tìm thấy trang",
+    "pageNotFoundDescription": "Trang bạn đang tìm kiếm có vẻ không tồn tại.",
+    "apiError": "Lỗi API",
+    "apiErrorDescription": "Đã xảy ra lỗi với yêu cầu API.",
+    "genericError": "Lỗi chung",
+    "genericErrorDescription": "Đã xảy ra lỗi với yêu cầu."
   },
   "comboboxField": {
     "placeholder": "Chọn tùy chọn",
@@ -285,6 +304,29 @@
   },
   "common": {
     "selected": "đã chọn",
-    "characters": "ký tự"
+    "characters": "ký tự",
+    "add": "Thêm"
+  },
+  "milestone": {
+    "addParentMilestone": {
+      "title": "Tab",
+      "description": "Thêm tab mới cho dự án",
+      "field": {
+        "milestoneName": {
+          "label": "Tên tab",
+          "placeholder": "Nhập tên tab..."
+        }
+      }
+    },
+    "addMilestone": {
+      "title": "Danh sách khác",
+      "description": "Thêm danh sách khác cho dự án",
+      "field": {
+        "milestoneName": {
+          "label": "Tên danh sách khác",
+          "placeholder": "Nhập tên danh sách..."
+        }
+      }
+    }
   }
 }

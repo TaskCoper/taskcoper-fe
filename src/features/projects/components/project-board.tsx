@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button'
+import AddMilestoneButton from '@/features/milestones/components/add-milestone-button'
 import MilestoneColumn from '@/features/milestones/components/milestone-column'
 import TaskCard from '@/features/tasks/components/task-card'
 import { hasDraggableData } from '@/shared/utils'
-import type { MilestoneColumnVM } from '@/types/milestone.type'
-import type { TaskCardVM } from '@/types/task.type'
+import type { Milestone } from '@/types/milestone.type'
+import type { Task } from '@/types/task.type'
 import {
   defaultKeyboardCoordinateGetter,
   DndContext,
@@ -15,115 +15,20 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-  type Announcements,
   type CollisionDetection,
   type DragEndEvent,
   type DragOverEvent,
-  type DragStartEvent,
-  type UniqueIdentifier
+  type DragStartEvent
 } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { PlusIcon } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useMemo, useState } from 'react'
+import { useParams } from 'react-router'
 import ProjectContainer from './project-container'
 
-const defaultCols = [
-  {
-    id: 'todo' as const,
-    title: 'Todo'
-  },
-  {
-    id: 'in-progress' as const,
-    title: 'In progress'
-  },
-  {
-    id: 'done' as const,
-    title: 'Done'
-  },
-  {
-    id: 'backlog' as const,
-    title: 'Backlog'
-  },
-  {
-    id: 'icebox' as const,
-    title: 'Icebox'
-  },
-  {
-    id: 'cancelled' as const,
-    title: 'Cancelled'
-  }
-] satisfies MilestoneColumnVM[]
-
-export type ColumnId = (typeof defaultCols)[number]['id']
-
-const initialTasks: TaskCardVM[] = [
-  {
-    id: 'task1',
-    columnId: 'done',
-    content: 'Project initiation and planning'
-  },
-  {
-    id: 'task2',
-    columnId: 'done',
-    content: 'Gather requirements from stakeholders'
-  },
-  {
-    id: 'task3',
-    columnId: 'done',
-    content: 'Create wireframes and mockups'
-  },
-  {
-    id: 'task4',
-    columnId: 'in-progress',
-    content: 'Develop homepage layout'
-  },
-  {
-    id: 'task5',
-    columnId: 'in-progress',
-    content: 'Design color scheme and typography'
-  },
-  {
-    id: 'task6',
-    columnId: 'todo',
-    content: 'Implement user authentication'
-  },
-  {
-    id: 'task7',
-    columnId: 'todo',
-    content: 'Build contact us page'
-  },
-  {
-    id: 'task8',
-    columnId: 'todo',
-    content: 'Create product catalog'
-  },
-  {
-    id: 'task9',
-    columnId: 'todo',
-    content: 'Develop about us page'
-  },
-  {
-    id: 'task10',
-    columnId: 'todo',
-    content: 'Optimize website for mobile devices'
-  },
-  {
-    id: 'task11',
-    columnId: 'todo',
-    content: 'Integrate payment gateway'
-  },
-  {
-    id: 'task12',
-    columnId: 'todo',
-    content: 'Perform testing and bug fixing'
-  },
-  {
-    id: 'task13',
-    columnId: 'todo',
-    content: 'Launch website and deploy to server'
-  }
-]
+interface ProjectBoardProps {
+  initialColumns: Milestone[]
+  initialTasks: Task[]
+}
 
 const customCollisionDetection: CollisionDetection = (args) => {
   // First, let's see if there are any collisions with the pointer
@@ -138,15 +43,15 @@ const customCollisionDetection: CollisionDetection = (args) => {
   return rectIntersection(args)
 }
 
-export default function ProjectBoard() {
-  const { t } = useTranslation()
-  const [columns, setColumns] = useState<MilestoneColumnVM[]>(defaultCols)
-  const pickedUpTaskColumn = useRef<ColumnId | null>(null)
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns])
+export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
+  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
 
-  const [tasks, setTasks] = useState<TaskCardVM[]>(initialTasks)
-  const [activeColumn, setActiveColumn] = useState<MilestoneColumnVM | null>(null)
-  const [activeTask, setActiveTask] = useState<TaskCardVM | null>(null)
+  const [columns, setColumns] = useState<Milestone[]>(initialColumns)
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns])
+  const [tasks, setTasks] = useState<Task[]>(initialTasks)
+
+  const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
+  const [activeTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -164,81 +69,6 @@ export default function ProjectBoard() {
       coordinateGetter: defaultKeyboardCoordinateGetter
     })
   )
-
-  const getDraggingTaskData = (taskId: UniqueIdentifier, columnId: ColumnId) => {
-    const tasksInColumn = tasks.filter((task) => task.columnId === columnId)
-    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId)
-    const column = columns.find((col) => col.id === columnId)
-    return {
-      tasksInColumn,
-      taskPosition,
-      column
-    }
-  }
-
-  const announcements: Announcements = {
-    onDragStart({ active }) {
-      if (!hasDraggableData(active)) return
-      if (active.data.current?.type === 'MilestoneColumn') {
-        const startColumnIdx = columnsId.findIndex((id) => id === active.id)
-        const startColumn = columns[startColumnIdx]
-        return `Picked up Column ${startColumn?.title} at position: ${startColumnIdx + 1} of ${columnsId.length}`
-      } else if (active.data.current?.type === 'TaskCard') {
-        pickedUpTaskColumn.current = active.data.current.task.columnId
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(active.id, pickedUpTaskColumn.current)
-        return `Picked up Task ${active.data.current.task.content} at position: ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`
-      }
-    },
-    onDragOver({ active, over }) {
-      if (!hasDraggableData(active) || !hasDraggableData(over)) return
-
-      if (active.data.current?.type === 'MilestoneColumn' && over.data.current?.type === 'MilestoneColumn') {
-        const overColumnIdx = columnsId.findIndex((id) => id === over.id)
-        return `Column ${active.data.current.column.title} was moved over ${
-          over.data.current.column.title
-        } at position ${overColumnIdx + 1} of ${columnsId.length}`
-      } else if (active.data.current?.type === 'TaskCard' && over.data.current?.type === 'TaskCard') {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(over.id, over.data.current.task.columnId)
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
-          return `Task ${active.data.current.task.content} was moved over column ${column?.title} in position ${
-            taskPosition + 1
-          } of ${tasksInColumn.length}`
-        }
-        return `Task was moved over position ${taskPosition + 1} of ${tasksInColumn.length} in column ${column?.title}`
-      }
-    },
-    onDragEnd({ active, over }) {
-      if (!hasDraggableData(active) || !hasDraggableData(over)) {
-        pickedUpTaskColumn.current = null
-        return
-      }
-      if (active.data.current?.type === 'MilestoneColumn' && over.data.current?.type === 'MilestoneColumn') {
-        const overColumnPosition = columnsId.findIndex((id) => id === over.id)
-
-        return `Column ${active.data.current.column.title} was dropped into position ${overColumnPosition + 1} of ${
-          columnsId.length
-        }`
-      } else if (active.data.current?.type === 'TaskCard' && over.data.current?.type === 'TaskCard') {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(over.id, over.data.current.task.columnId)
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
-          return `Task was dropped into column ${column?.title} in position ${
-            taskPosition + 1
-          } of ${tasksInColumn.length}`
-        }
-        return `Task was dropped into position ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`
-      }
-      pickedUpTaskColumn.current = null
-    },
-    onDragCancel({ active }) {
-      pickedUpTaskColumn.current = null
-      if (!hasDraggableData(active)) return
-      return `Dragging ${active.data.current?.type} cancelled.`
-    }
-  }
 
   const onDragStart = (event: DragStartEvent) => {
     if (!hasDraggableData(event.active)) return
@@ -308,8 +138,8 @@ export default function ProjectBoard() {
         const overIndex = tasks.findIndex((t) => t.id === overId)
         const activeTask = tasks[activeIndex]
         const overTask = tasks[overIndex]
-        if (activeTask && overTask && activeTask.columnId !== overTask.columnId) {
-          activeTask.columnId = overTask.columnId
+        if (activeTask && overTask && activeTask.milestoneId !== overTask.milestoneId) {
+          activeTask.milestoneId = overTask.milestoneId
           return arrayMove(tasks, activeIndex, overIndex - 1)
         }
 
@@ -325,7 +155,7 @@ export default function ProjectBoard() {
         const activeIndex = tasks.findIndex((t) => t.id === activeId)
         const activeTask = tasks[activeIndex]
         if (activeTask) {
-          activeTask.columnId = overId as ColumnId
+          activeTask.milestoneId = overData.column.id
           return arrayMove(tasks, activeIndex, activeIndex)
         }
         return tasks
@@ -335,9 +165,6 @@ export default function ProjectBoard() {
 
   return (
     <DndContext
-      accessibility={{
-        announcements
-      }}
       collisionDetection={customCollisionDetection}
       sensors={sensors}
       onDragStart={onDragStart}
@@ -346,23 +173,26 @@ export default function ProjectBoard() {
     >
       <ProjectContainer>
         <SortableContext items={columnsId}>
-          <div className='flex items-start gap-3'>
-            {columns.map((col) => (
-              <MilestoneColumn key={col.id} column={col} tasks={tasks.filter((task) => task.columnId === col.id)} />
-            ))}
-          </div>
+          {initialColumns.length > 0 && (
+            <div className='flex items-start gap-3'>
+              {initialColumns.map((col) => (
+                <MilestoneColumn
+                  key={col.id}
+                  column={col}
+                  tasks={initialTasks.filter((task) => task.milestoneId === col.id)}
+                />
+              ))}
+            </div>
+          )}
         </SortableContext>
-        <Button variant='secondary' className='w-64 justify-start bg-muted/30 text-white'>
-          <PlusIcon />
-          {t('project.tasks.addMilestone')}
-        </Button>
+        {projectId && milestoneId ? <AddMilestoneButton projectId={projectId} parentId={milestoneId} /> : null}
       </ProjectContainer>
       <DragOverlay>
         {activeColumn && (
           <MilestoneColumn
             isOverlay
             column={activeColumn}
-            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+            tasks={tasks.filter((task) => task.milestoneId === activeColumn.id)}
           />
         )}
         {activeTask && <TaskCard task={activeTask} isOverlay />}

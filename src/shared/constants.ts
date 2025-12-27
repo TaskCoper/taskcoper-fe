@@ -1,2 +1,5 @@
 export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 10
+
+export const INITIAL_POSITION = 16384
+export const POSITION_INCREMENT = 65536

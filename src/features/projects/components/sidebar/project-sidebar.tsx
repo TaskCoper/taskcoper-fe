@@ -45,7 +45,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
       },
       {
         title: t('project.sidebar.tasks'),
-        url: 'tasks',
+        url: '',
         icon: ListTodoIcon
       },
       {

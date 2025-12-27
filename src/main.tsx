@@ -4,7 +4,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import AppLayout from './layouts/app.layout'
-import NotFoundPage from './pages/not-found.page'
+import ErrorPage from './pages/error.page'
 
 import '@/lib/i18n/i18n'
 import './index.css'
@@ -12,14 +12,8 @@ import './index.css'
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
-    children: [
-      ...publicRoutes,
-      ...protectedRoutes,
-      {
-        path: '*',
-        element: <NotFoundPage />
-      }
-    ]
+    errorElement: <ErrorPage />,
+    children: [...publicRoutes, ...protectedRoutes]
   }
 ])
 

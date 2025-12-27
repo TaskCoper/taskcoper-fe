@@ -6,12 +6,14 @@ import { useGetMyProjects } from '@/features/projects/hooks/use-get-my-projects'
 import { PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+const responsiveColSpan = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
+
 export default function ProjectsPage() {
   const { t } = useTranslation()
   const { myProjects, isLoadingMyProjects } = useGetMyProjects({})
 
   return (
-    <div className='w-4xl mx-auto p-4 space-y-4'>
+    <div className='max-w-4xl w-full mx-auto p-4 space-y-4'>
       <div>
         <p className='text-xl font-bold'>{t('project.title')}</p>
         <p className='text-sm text-muted-foreground'>{t('project.description')}</p>
@@ -21,17 +23,19 @@ export default function ProjectsPage() {
         {isLoadingMyProjects ? (
           <>
             {[1, 2, 3].map((item) => (
-              <Skeleton key={item} className='rounded-xl col-span-3 h-24' />
+              <Skeleton key={item} className={`rounded-xl h-24 ${responsiveColSpan}`} />
             ))}
           </>
         ) : (
           <>
             {myProjects.value.items.map((project) => (
-              <ProjectPreviewCard key={project.projectId} project={project} />
+              <div key={project.projectId} className={`h-24 ${responsiveColSpan}`}>
+                <ProjectPreviewCard project={project} />
+              </div>
             ))}
 
             <CreateProjectDialog>
-              <Button variant='outline' className='border-dashed col-span-3 h-24 rounded-xl'>
+              <Button variant='outline' className={`border-dashed h-24 rounded-xl ${responsiveColSpan}`}>
                 <PlusIcon />
                 {t('project.createProject.button')}
               </Button>

@@ -1,25 +1,22 @@
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import AddTaskButton from '@/features/tasks/components/add-task-button'
 import TaskCard from '@/features/tasks/components/task-card'
-import type { MilestoneColumnDragData, MilestoneColumnVM } from '@/types/milestone.type'
-import type { TaskCardVM } from '@/types/task.type'
+import type { Milestone, MilestoneColumnDragData } from '@/types/milestone.type'
+import type { Task } from '@/types/task.type'
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
-import { PlusIcon } from 'lucide-react'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 
 interface MilestoneColumnProps {
-  column: MilestoneColumnVM
-  tasks: TaskCardVM[]
+  column: Milestone
+  tasks: Task[]
   isOverlay?: boolean
 }
 
 export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneColumnProps) {
-  const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
 
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id)
@@ -32,7 +29,7 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
       column
     } satisfies MilestoneColumnDragData,
     attributes: {
-      roleDescription: `Column: ${column.title}`
+      roleDescription: `Column: ${column.name}`
     }
   })
 
@@ -63,14 +60,14 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
       })}
     >
       <div className='px-3 pt-3 shrink-0'>
-        <p className='font-medium text-sm'>{column.title}</p>
+        <p className='font-medium text-sm'>{column.name}</p>
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>
         <div className='flex flex-col gap-2 p-2'>
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <Link to={`/projects/${projectId}/tasks/${task.id}`} key={task.id}>
+              <Link to={`tasks/${task.id}`} key={task.id}>
                 <TaskCard task={task} />
               </Link>
             ))}
@@ -78,12 +75,11 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
         </div>
       </div>
 
-      <div className='px-2 pb-2'>
-        <Button className='w-full justify-start hover:bg-muted-foreground/10' variant='ghost'>
-          <PlusIcon />
-          {t('project.tasks.addTask')}
-        </Button>
-      </div>
+      {column.id && projectId && milestoneId ? (
+        <div className='px-2 pb-2'>
+          <AddTaskButton milestoneId={column.id as string} projectId={projectId} parentMilestoneId={milestoneId} />
+        </div>
+      ) : null}
     </Card>
   )
 }

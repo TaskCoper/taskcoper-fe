@@ -33,22 +33,19 @@ export const protectedRoutes: RouteObject[] = [
                 children: [
                   {
                     index: true,
-                    element: <ProjectTasksPage />
+                    element: null
                   },
                   {
-                    path: 'info',
-                    element: <div>Info</div>
-                  },
-                  {
-                    path: 'tasks',
+                    path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,
                     children: [
                       {
-                        path: ':taskId',
+                        path: 'tasks/:taskId',
                         element: <TaskDetailDialogPage />
                       }
                     ]
                   },
+                  { path: 'info', element: <div>Info</div> },
                   { path: 'calendar', element: <div>Calendar</div> },
                   { path: 'chat', element: <div>Chat</div> },
                   { path: 'note', element: <div>Note</div> },

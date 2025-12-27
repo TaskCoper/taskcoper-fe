@@ -64,6 +64,7 @@ export default function CreateProjectForm() {
           name='startDate'
           label='project.createProject.field.startDate.label'
           placeholder='project.createProject.field.startDate.placeholder'
+          isRequired
         />
 
         <DatePickerField
@@ -71,6 +72,7 @@ export default function CreateProjectForm() {
           name='endDate'
           label='project.createProject.field.endDate.label'
           placeholder='project.createProject.field.endDate.placeholder'
+          isRequired
         />
       </div>
 
