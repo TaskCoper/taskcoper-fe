@@ -4,7 +4,7 @@ import type { TaskCardDragData } from '@/types/task.type'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, INITIAL_POSITION, POSITION_INCREMENT } from './constants'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, INITIAL_POSITION, POSITION_GAP } from './constants'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -50,22 +50,50 @@ export function getDefaultPaginationResponse<T>(): BasePaginationResponse<T> {
 }
 
 /**
- * Calculate position for a new parent milestone
- * - First milestone ever: 16384
- * - Adding at the end: last position + 65536
+ * Calculate position for a new item
+ * - First item ever: 140737488355328
+ * - Adding at the end: last position + 16384
  */
-export const calculatePosition = (existingItems: Array<{ position: number }>): number => {
+export const calculateNewItemPosition = (existingItems: Array<{ position: number }>): number => {
   if (existingItems.length === 0) {
     return INITIAL_POSITION
   }
 
-  // Sort by position to get the last one
   const sortedMilestones = [...existingItems].sort((a, b) => a.position - b.position)
   const lastPosition = sortedMilestones[sortedMilestones.length - 1].position
 
-  // Add at the end: last position + increment
-  const newPosition = lastPosition + POSITION_INCREMENT
+  const newPosition = lastPosition + POSITION_GAP
 
-  // Round to 5 decimal places
   return Math.round(newPosition * 100000) / 100000
+}
+
+/**
+ * Calculate position for a reordered item
+ * - If the item is the first one: next item's position - POSITION_GAP
+ * - If the item is the last one: prev item's position + POSITION_GAP
+ * - If the item is in the middle: (prev + next) / 2
+ * - If the item is the only one: INITIAL_POSITION
+ */
+export const calculateReorderPosition = (items: { position: number }[], newIndex: number): number => {
+  const prevItem = items[newIndex - 1]
+  const nextItem = items[newIndex + 1]
+
+  let newPosition: number
+
+  if (!prevItem && nextItem) {
+    newPosition = nextItem.position - POSITION_GAP
+  } else if (prevItem && !nextItem) {
+    newPosition = prevItem.position + POSITION_GAP
+  } else if (prevItem && nextItem) {
+    newPosition = (prevItem.position + nextItem.position) / 2
+  } else {
+    newPosition = INITIAL_POSITION
+  }
+
+  if ((prevItem && newPosition === prevItem.position) || (nextItem && newPosition === nextItem.position)) {
+    alert('Need to rebalance positions.')
+    return prevItem.position + 0.0000000001
+  }
+
+  return newPosition
 }

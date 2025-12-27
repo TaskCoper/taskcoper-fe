@@ -7,7 +7,7 @@ import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
 import { useMemo } from 'react'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 
 interface MilestoneColumnProps {
   column: Milestone
@@ -56,20 +56,20 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
       {...listeners}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
-        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-5.75rem)] overflow-hidden bg-muted'
+        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-5.75rem)] overflow-hidden bg-muted cursor-pointer'
       })}
     >
       <div className='px-3 pt-3 shrink-0'>
-        <p className='font-medium text-sm'>{column.name}</p>
+        <p className='font-medium text-sm'>
+          {column.name} <span className='font-mono text-xs text-green-600'>({column.position})</span>
+        </p>
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>
         <div className='flex flex-col gap-2 p-2'>
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <Link to={`tasks/${task.id}`} key={task.id}>
-                <TaskCard task={task} />
-              </Link>
+              <TaskCard task={task} key={task.id} />
             ))}
           </SortableContext>
         </div>

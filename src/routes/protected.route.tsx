@@ -36,6 +36,10 @@ export const protectedRoutes: RouteObject[] = [
                     element: null
                   },
                   {
+                    path: 'milestones',
+                    element: null
+                  },
+                  {
                     path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,
                     children: [

@@ -31,6 +31,12 @@ export default function AddMilestoneForm({ onBlur }: AddMilestoneFormProps) {
                 if (field.value) return
                 onBlur()
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if (field.value) return
+                  onBlur()
+                }
+              }}
             />
           </Field>
         )}

@@ -1,6 +1,6 @@
 import { useGetMilestones } from '@/features/projects/hooks/use-get-milestones'
 import taskService from '@/services/task.service'
-import { calculatePosition } from '@/shared/utils'
+import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -23,8 +23,11 @@ export const useAddTask = ({
   const [isTriggered, setIsTriggered] = useState(false)
   const { milestones } = useGetMilestones({ projectId, parentMilestoneId })
 
-  const existingTasks = useMemo(() => milestones?.tasks ?? [], [milestones])
-  const calculatedPosition = useMemo(() => calculatePosition(existingTasks), [existingTasks])
+  const existingTasks = useMemo(
+    () => milestones?.tasks.filter((task) => task.milestoneId === milestoneId) ?? [],
+    [milestones, milestoneId]
+  )
+  const calculatedPosition = useMemo(() => calculateNewItemPosition(existingTasks), [existingTasks])
 
   const methods = useForm<AddTaskFormValues>({
     defaultValues: {
@@ -37,7 +40,7 @@ export const useAddTask = ({
 
   useEffect(() => {
     if (isTriggered) {
-      const newPosition = calculatePosition(existingTasks)
+      const newPosition = calculateNewItemPosition(existingTasks)
       methods.setValue('position', newPosition)
     }
   }, [isTriggered, existingTasks, methods])
@@ -46,7 +49,7 @@ export const useAddTask = ({
     mutationFn: taskService.addTask,
     onSuccess: (message) => {
       toast.success(message)
-      const newPosition = calculatePosition(existingTasks)
+      const newPosition = calculateNewItemPosition(existingTasks)
       methods.reset({
         milestoneId,
         name: '',
@@ -65,7 +68,7 @@ export const useAddTask = ({
   })
 
   const recalculatePosition = () => {
-    const newPosition = calculatePosition(existingTasks)
+    const newPosition = calculateNewItemPosition(existingTasks)
     methods.setValue('position', newPosition)
   }
 

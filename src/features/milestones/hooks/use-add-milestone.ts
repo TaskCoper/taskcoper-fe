@@ -1,6 +1,6 @@
 import { useGetMilestones } from '@/features/projects/hooks/use-get-milestones'
 import milestoneService from '@/services/milestone.service'
-import { calculatePosition } from '@/shared/utils'
+import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,7 +16,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
   const { milestones } = useGetMilestones({ projectId, parentMilestoneId: parentId })
 
   const existingMilestones = useMemo(() => milestones?.milestones ?? [], [milestones])
-  const calculatedPosition = useMemo(() => calculatePosition(existingMilestones), [existingMilestones])
+  const calculatedPosition = useMemo(() => calculateNewItemPosition(existingMilestones), [existingMilestones])
 
   const methods = useForm<AddMilestoneFormValues>({
     defaultValues: {
@@ -29,7 +29,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
   })
 
   useEffect(() => {
-    const newPosition = calculatePosition(existingMilestones)
+    const newPosition = calculateNewItemPosition(existingMilestones)
     methods.reset({
       parentId,
       projectId,
@@ -40,7 +40,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
 
   useEffect(() => {
     if (isTriggered) {
-      const newPosition = calculatePosition(existingMilestones)
+      const newPosition = calculateNewItemPosition(existingMilestones)
       methods.setValue('position', newPosition)
     }
   }, [isTriggered, existingMilestones, methods])
@@ -49,7 +49,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
     mutationFn: milestoneService.addMilestone,
     onSuccess: (message) => {
       toast.success(message)
-      const newPosition = calculatePosition(existingMilestones)
+      const newPosition = calculateNewItemPosition(existingMilestones)
       methods.reset({
         parentId,
         projectId,
@@ -69,7 +69,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
   })
 
   const recalculatePosition = () => {
-    const newPosition = calculatePosition(existingMilestones)
+    const newPosition = calculateNewItemPosition(existingMilestones)
     methods.setValue('position', newPosition)
   }
 

@@ -1,6 +1,6 @@
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
 import milestoneService from '@/services/milestone.service'
-import { calculatePosition } from '@/shared/utils'
+import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,7 +16,10 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
   const { parentMilestones } = useGetParentMilestones({ projectId })
 
   const existingParentMilestones = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
-  const calculatedPosition = useMemo(() => calculatePosition(existingParentMilestones), [existingParentMilestones])
+  const calculatedPosition = useMemo(
+    () => calculateNewItemPosition(existingParentMilestones),
+    [existingParentMilestones]
+  )
 
   const methods = useForm<AddParentMilestoneFormValues>({
     defaultValues: {
@@ -29,7 +32,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
 
   useEffect(() => {
     if (open) {
-      const newPosition = calculatePosition(existingParentMilestones)
+      const newPosition = calculateNewItemPosition(existingParentMilestones)
       methods.setValue('position', newPosition)
     }
   }, [open, existingParentMilestones, methods])
@@ -38,7 +41,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
     mutationFn: milestoneService.addParentMilestone,
     onSuccess: (message) => {
       toast.success(message)
-      const newPosition = calculatePosition(existingParentMilestones)
+      const newPosition = calculateNewItemPosition(existingParentMilestones)
       methods.reset({
         milestoneName: '',
         projectId,
@@ -57,7 +60,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
   })
 
   const recalculatePosition = () => {
-    const newPosition = calculatePosition(existingParentMilestones)
+    const newPosition = calculateNewItemPosition(existingParentMilestones)
     methods.setValue('position', newPosition)
   }
 

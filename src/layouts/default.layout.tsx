@@ -61,7 +61,7 @@ export default function DefaultLayout() {
     <div className='flex h-screen w-full flex-col overflow-hidden'>
       <header className='flex h-14 items-center gap-2 px-4 border-b shrink-0 bg-background z-50 relative'>
         <Link to='/' className='shrink-0'>
-          <img src={logo} alt='TaskCoper' className='h-32 w-auto object-contain' />
+          <img src={logo} alt='TaskCoper' className='h-14 w-auto object-contain' />
         </Link>
 
         <div className='hidden md:flex items-center gap-2'>

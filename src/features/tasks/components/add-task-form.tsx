@@ -33,7 +33,13 @@ export default function AddTaskForm({ onBlur }: AddTaskFormProps) {
               }}
               onMouseDown={(e) => e.stopPropagation()}
               onPointerDown={(e) => e.stopPropagation()}
-              onKeyDown={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                e.stopPropagation()
+                if (e.key === 'Enter') {
+                  if (field.value) return
+                  onBlur()
+                }
+              }}
             />
           </Field>
         )}

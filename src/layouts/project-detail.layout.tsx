@@ -12,45 +12,68 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import AddParentMilestonePopover from '@/features/milestones/components/add-parent-milestone-popover'
 import ProjectSidebar from '@/features/projects/components/sidebar/project-sidebar'
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
 import { PlusIcon } from 'lucide-react'
-import { Suspense, useEffect, useMemo } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
+
+const secondSidebarItems = ['milestones']
 
 export default function ProjectDetailLayout() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const location = useLocation()
 
-  const shouldDisplayTabs = location.pathname.includes('/milestones/')
-  const currentMilestoneId = location.pathname.split('/milestones/')[1]?.split('/')[0]
+  const activeSegment = useMemo(() => {
+    const parts = location.pathname.split('/')
+    const projectIndex = parts.findIndex((p) => p === 'projects')
+    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
+      return parts[projectIndex + 2]
+    }
+
+    return 'milestones'
+  }, [location.pathname])
+
+  const hasSecondSidebar = secondSidebarItems.includes(activeSegment)
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(hasSecondSidebar)
+
+  useEffect(() => {
+    setIsSidebarOpen(hasSecondSidebar)
+  }, [hasSecondSidebar])
 
   const { parentMilestones, isLoading } = useGetParentMilestones({ projectId })
   const items = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
+
+  useEffect(() => {
+    const isProjectRoot =
+      location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
+    const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
+
+    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot)) {
+      navigate(`milestones/${items[0].id}`, { replace: true })
+    }
+  }, [isLoading, items, location.pathname, projectId, navigate])
+
+  const shouldDisplayTabs = activeSegment === 'milestones'
+  const currentMilestoneId = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
+  const activeTabValue = currentMilestoneId || items[0]?.id || ''
 
   const handleTabChange = (milestoneId: string) => {
     navigate(`milestones/${milestoneId}`)
   }
 
-  // if at root /projects/:id, go to first milestone
-  useEffect(() => {
-    const isProjectRoot =
-      location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
-
-    if (!isLoading && items.length > 0 && isProjectRoot) {
-      navigate(`milestones/${items[0].id}`, { replace: true })
-    }
-  }, [isLoading, items, location.pathname, projectId, navigate])
-
-  const activeTabValue = currentMilestoneId || items[0]?.id || ''
-
   return (
     <SidebarProvider
+      open={isSidebarOpen}
+      onOpenChange={setIsSidebarOpen}
       style={
         {
-          '--sidebar-width': '360px'
+          '--sidebar-width': hasSecondSidebar ? '390px' : '48px',
+          '--sidebar-width-icon': '48px'
         } as React.CSSProperties
       }
       className='w-full h-full'
@@ -58,21 +81,45 @@ export default function ProjectDetailLayout() {
       <ProjectSidebar />
       <SidebarInset className='flex flex-col h-full overflow-hidden'>
         <header className='bg-background flex shrink-0 items-center gap-2 border-b p-4 h-14'>
-          <SidebarTrigger className='-ml-1' />
-          <Separator orientation='vertical' className='mr-2 data-[orientation=vertical]:h-4' />
+          {hasSecondSidebar ? (
+            <>
+              <SidebarTrigger className='-ml-1' />
+              <Separator orientation='vertical' className='data-[orientation=vertical]:h-4' />
+            </>
+          ) : null}
 
           {shouldDisplayTabs ? (
             <>
+              {projectId ? (
+                <div className='shrink-0'>
+                  <AddParentMilestonePopover projectId={projectId}>
+                    <Button variant='ghost' size='icon' className='size-7'>
+                      <PlusIcon className='size-4' />
+                    </Button>
+                  </AddParentMilestonePopover>
+                </div>
+              ) : null}
+
               {isLoading ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
                 <div className='flex-1 min-w-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
                   <div className='flex items-center gap-2'>
                     <Tabs value={activeTabValue} onValueChange={handleTabChange}>
-                      <TabsList className='flex-nowrap'>
+                      <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
                         {items.map((milestone) => (
-                          <TabsTrigger key={milestone.id} value={milestone.id} className='w-24'>
-                            <p className='truncate'>{milestone.name}</p>
+                          <TabsTrigger
+                            value={milestone.id}
+                            className='w-24 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
+                          >
+                            <Tooltip key={milestone.id}>
+                              <TooltipTrigger className='w-full cursor-pointer'>
+                                <p className='truncate'>{milestone.name}</p>
+                              </TooltipTrigger>
+                              <TooltipContent side='bottom'>
+                                <p>{milestone.name}</p>
+                              </TooltipContent>
+                            </Tooltip>
                           </TabsTrigger>
                         ))}
                       </TabsList>
@@ -80,16 +127,6 @@ export default function ProjectDetailLayout() {
                   </div>
                 </div>
               )}
-
-              {projectId ? (
-                <div className='shrink-0 ml-1'>
-                  <AddParentMilestonePopover projectId={projectId}>
-                    <Button variant='ghost' size='icon-sm'>
-                      <PlusIcon className='size-4' />
-                    </Button>
-                  </AddParentMilestonePopover>
-                </div>
-              ) : null}
             </>
           ) : (
             <Breadcrumb>

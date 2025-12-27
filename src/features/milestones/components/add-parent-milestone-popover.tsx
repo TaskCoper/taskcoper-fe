@@ -29,7 +29,7 @@ export default function AddParentMilestonePopover({ children, projectId }: AddPa
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className='w-72 p-4 mt-1' align='end'>
+      <PopoverContent className='w-72 p-4 mt-1' align='start'>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className='w-full space-y-2'>
             <AddParentMilestoneForm />
