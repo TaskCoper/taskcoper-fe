@@ -5,18 +5,59 @@
     "expertNetwork": "Expert Network",
     "startupCommunity": "Startup Community",
     "news": "News",
-    "myProjects": "Go to My Projects"
+    "manageProjects": "Manage"
+  },
+  "role": {
+    "owner": "Owner",
+    "editor": "Editor"
   },
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
+    "info": {
+      "members": "Members",
+      "memberDescription": "Number of members in the project currently",
+      "inviteMembers": "Invite members"
+    },
+    "inviteMembers": {
+      "title": "New members",
+      "description": "Add new members to your project to collaborate and share tasks.",
+      "invitedUsers": "Invited users",
+      "comboboxPlaceholder": "Click to invite",
+      "search": "Type email to search...",
+      "searchLabel": "Member",
+      "validation": {
+        "inviteMembers": {
+          "minLength": "At least one member is required"
+        },
+        "users": {
+          "userId": {
+            "invalid": "Invalid user"
+          }
+        },
+        "dateRequired": "Expiration date is required when expiration is enabled",
+        "dateInvalid": "Expiration date must be greater than today"
+      },
+      "field": {
+        "hasExpiration": {
+          "label": "Expiration",
+          "description": "Enable expiration to set a date for the invite to expire"
+        },
+        "expirationDate": {
+          "label": "Expiration date",
+          "placeholder": "Select expiration date"
+        }
+      }
+    },
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "Tasks",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
-      "settings": "Settings"
+      "settings": "Settings",
+      "myProjects": "My Projects",
+      "myCalendar": "My Calendar"
     },
     "tasks": {
       "addTask": "Add new task",
@@ -304,7 +345,12 @@
   "common": {
     "selected": "selected",
     "characters": "characters",
-    "add": "Add"
+    "add": "Add",
+    "search": "Search...",
+    "noResults": "No results found.",
+    "viewOnly": "View only",
+    "canEdit": "Can edit",
+    "invite": "Invite"
   },
   "milestone": {
     "addParentMilestone": {

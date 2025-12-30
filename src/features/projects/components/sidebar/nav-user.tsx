@@ -15,14 +15,14 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
-import type { UserEntity } from '@/types/user.type'
+import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface NavUserProps {
-  user?: UserEntity
+  user?: User
 }
 
 export default function NavUser({ user }: NavUserProps) {

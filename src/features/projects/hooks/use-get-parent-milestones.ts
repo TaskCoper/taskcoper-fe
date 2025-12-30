@@ -3,7 +3,7 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ParentMilestone } from '@/types/milestone.type'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetParentMilestones = ({ projectId }: { projectId?: string }) => {
+export const useGetParentMilestones = ({ projectId, enabled = true }: { projectId?: string; enabled?: boolean }) => {
   const {
     data: parentMilestones = {
       ...getDefaultPaginationResponse<ParentMilestone>()
@@ -13,7 +13,7 @@ export const useGetParentMilestones = ({ projectId }: { projectId?: string }) =>
   } = useQuery({
     queryKey: ['parent-milestones', projectId],
     queryFn: () => projectService.getParentMilestones({ projectId }),
-    enabled: !!projectId
+    enabled: !!projectId && enabled
   })
 
   return { parentMilestones, isLoading, error }

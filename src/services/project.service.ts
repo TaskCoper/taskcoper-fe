@@ -2,8 +2,8 @@ import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-mile
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { CreateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { ParentMilestone } from '@/types/milestone.type'
-import type { MilestoneWithTasks, ProjectPreview } from '@/types/project.type'
+import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
+import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview } from '@/types/project.type'
 
 class ProjectService {
   private readonly baseUrl = 'projects'
@@ -42,6 +42,26 @@ class ProjectService {
     const { data } = await api.get<BaseResponse<MilestoneWithTasks>>(
       `/v1/${this.baseUrl}/${projectId}/milestones/${parentMilestoneId}`
     )
+
+    return data.value
+  }
+
+  getProjectMembers = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`)
+
+    return data
+  }
+
+  getProject = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${projectId}`)
+
+    return data.value
+  }
+
+  inviteMembers = async ({ body }: { body: InviteMembersPayload }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/invite`, body)
 
     return data.value
   }

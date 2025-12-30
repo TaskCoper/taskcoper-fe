@@ -6,8 +6,7 @@ import TaskCard from '@/features/tasks/components/task-card'
 import { useMoveTask } from '@/features/tasks/hooks/use-move-task'
 import { moveTaskSchema } from '@/features/tasks/validations'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
-import type { Milestone } from '@/types/milestone.type'
-import type { MilestoneWithTasks } from '@/types/project.type'
+import type { Milestone, MilestoneWithTasks } from '@/types/milestone.type'
 import type { Task } from '@/types/task.type'
 import {
   DndContext,
@@ -60,8 +59,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
-  const { moveMilestone } = useMoveMilestone({ projectId, parentMilestoneId: milestoneId })
-  const { moveTask } = useMoveTask({ projectId, parentMilestoneId: milestoneId })
+  const { moveMilestone } = useMoveMilestone()
+  const { moveTask } = useMoveTask()
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),

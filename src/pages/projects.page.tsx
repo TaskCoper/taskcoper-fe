@@ -29,7 +29,7 @@ export default function ProjectsPage() {
         ) : (
           <>
             {myProjects.value.items.map((project) => (
-              <div key={project.projectId} className={`h-24 ${responsiveColSpan}`}>
+              <div key={project.id} className={`h-24 ${responsiveColSpan}`}>
                 <ProjectPreviewCard project={project} />
               </div>
             ))}

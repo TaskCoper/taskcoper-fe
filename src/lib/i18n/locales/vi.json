@@ -5,18 +5,59 @@
     "expertNetwork": "Kết nối chuyên gia",
     "startupCommunity": "Cộng đồng khởi nghiệp",
     "news": "Tin tức",
-    "myProjects": "Dự án của tôi"
+    "manageProjects": "Quản lý"
+  },
+  "role": {
+    "owner": "Chủ dự án",
+    "editor": "Người chỉnh sửa"
   },
   "project": {
     "title": "Dự án của tôi",
     "description": "Quản lý dự án và công việc của bạn",
+    "info": {
+      "members": "Thành viên",
+      "memberDescription": "Số lượng thành viên trong dự án hiện tại",
+      "inviteMembers": "Mời thành viên"
+    },
+    "inviteMembers": {
+      "title": "Thêm thành viên",
+      "description": "Thêm thành viên mới vào dự án của bạn để hợp tác và chia sẻ công việc.",
+      "invitedUsers": "Thành viên đã mời",
+      "comboboxPlaceholder": "Nhấn để mời",
+      "search": "Nhập email để tìm kiếm...",
+      "searchLabel": "Thành viên",
+      "validation": {
+        "inviteMembers": {
+          "minLength": "Vui lòng mời ít nhất một thành viên"
+        },
+        "users": {
+          "userId": {
+            "invalid": "Thành viên không hợp lệ"
+          }
+        },
+        "dateRequired": "Ngày hết hạn là bắt buộc khi hạn chế thời gian được bật",
+        "dateInvalid": "Ngày hết hạn phải lớn hơn ngày hiện tại"
+      },
+      "field": {
+        "hasExpiration": {
+          "label": "Hạn chế thời gian",
+          "description": "Bật hạn chế thời gian để đặt ngày hết hạn cho mời"
+        },
+        "expirationDate": {
+          "label": "Ngày hết hạn",
+          "placeholder": "Chọn ngày hết hạn"
+        }
+      }
+    },
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
-      "settings": "Cài đặt"
+      "settings": "Cài đặt",
+      "myProjects": "Dự án của tôi",
+      "myCalendar": "Lịch của tôi"
     },
     "tasks": {
       "addTask": "Thêm thẻ",
@@ -305,7 +346,12 @@
   "common": {
     "selected": "đã chọn",
     "characters": "ký tự",
-    "add": "Thêm"
+    "add": "Thêm",
+    "search": "Tìm kiếm...",
+    "noResults": "Không tìm thấy kết quả.",
+    "viewOnly": "Chỉ xem",
+    "canEdit": "Có thể chỉnh sửa",
+    "invite": "Mời"
   },
   "milestone": {
     "addParentMilestone": {

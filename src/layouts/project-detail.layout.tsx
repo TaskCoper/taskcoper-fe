@@ -14,8 +14,9 @@ import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import AddParentMilestonePopover from '@/features/milestones/components/add-parent-milestone-popover'
-import ProjectSidebar from '@/features/projects/components/sidebar/project-sidebar'
+import ProjectDetailSidebar from '@/features/projects/components/sidebar/project-detail-sidebar'
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { PlusIcon } from 'lucide-react'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
@@ -24,6 +25,7 @@ const secondSidebarItems = ['milestones']
 
 export default function ProjectDetailLayout() {
   const { projectId } = useParams<{ projectId: string }>()
+  const isMobile = useIsMobile()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -33,30 +35,33 @@ export default function ProjectDetailLayout() {
     if (projectIndex !== -1 && parts.length > projectIndex + 2) {
       return parts[projectIndex + 2]
     }
-
     return 'milestones'
   }, [location.pathname])
 
   const hasSecondSidebar = secondSidebarItems.includes(activeSegment)
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(hasSecondSidebar)
 
   useEffect(() => {
     setIsSidebarOpen(hasSecondSidebar)
   }, [hasSecondSidebar])
 
-  const { parentMilestones, isLoading } = useGetParentMilestones({ projectId })
+  const isProjectRoot =
+    location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
+
+  const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
+
+  const { parentMilestones, isLoading } = useGetParentMilestones({
+    projectId,
+    enabled: isProjectRoot || isMilestonesRoot
+  })
+
   const items = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
 
   useEffect(() => {
-    const isProjectRoot =
-      location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
-    const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
-
     if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot)) {
       navigate(`milestones/${items[0].id}`, { replace: true })
     }
-  }, [isLoading, items, location.pathname, projectId, navigate])
+  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate])
 
   const shouldDisplayTabs = activeSegment === 'milestones'
   const currentMilestoneId = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
@@ -78,10 +83,10 @@ export default function ProjectDetailLayout() {
       }
       className='w-full h-full'
     >
-      <ProjectSidebar />
+      <ProjectDetailSidebar />
       <SidebarInset className='flex flex-col h-full overflow-hidden'>
         <header className='bg-background flex shrink-0 items-center gap-2 border-b p-4 h-14'>
-          {hasSecondSidebar ? (
+          {isMobile || hasSecondSidebar ? (
             <>
               <SidebarTrigger className='-ml-1' />
               <Separator orientation='vertical' className='data-[orientation=vertical]:h-4' />
@@ -109,11 +114,12 @@ export default function ProjectDetailLayout() {
                       <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
                         {items.map((milestone) => (
                           <TabsTrigger
+                            key={milestone.id}
                             value={milestone.id}
                             className='w-24 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
                           >
-                            <Tooltip key={milestone.id}>
-                              <TooltipTrigger className='w-full cursor-pointer'>
+                            <Tooltip>
+                              <TooltipTrigger asChild className='w-full cursor-pointer'>
                                 <p className='truncate'>{milestone.name}</p>
                               </TooltipTrigger>
                               <TooltipContent side='bottom'>

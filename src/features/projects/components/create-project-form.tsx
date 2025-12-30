@@ -1,8 +1,6 @@
 import { ComboboxMultiField } from '@/components/combobox-multifield'
-import { DatePickerField } from '@/components/date-picker-field'
-import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { useGetDomains } from '@/hooks/use-get-domains'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +56,7 @@ export default function CreateProjectForm() {
         modal
       />
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+      {/* <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
         <DatePickerField
           control={control}
           name='startDate'
@@ -74,9 +72,9 @@ export default function CreateProjectForm() {
           placeholder='project.createProject.field.endDate.placeholder'
           isRequired
         />
-      </div>
+      </div> */}
 
-      <Controller
+      {/* <Controller
         name='description'
         control={control}
         render={({ field, fieldState }) => (
@@ -100,7 +98,7 @@ export default function CreateProjectForm() {
             <FieldDescription>{t('project.createProject.field.description.description')}</FieldDescription>
           </Field>
         )}
-      />
+      /> */}
     </div>
   )
 }

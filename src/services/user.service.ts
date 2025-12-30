@@ -1,6 +1,7 @@
 import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '@/features/auth/validations'
-import api, { type BaseResponse } from '@/lib/axios'
-import type { UserEntity } from '@/types/user.type'
+import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { User } from '@/types/user.type'
 
 class UserService {
   private readonly baseUrl = 'users'
@@ -43,9 +44,21 @@ class UserService {
   }
 
   getMe = async () => {
-    const { data } = await api.get<BaseResponse<UserEntity>>(`/v1/${this.baseUrl}/me`)
+    const { data } = await api.get<BaseResponse<User>>(`/v1/${this.baseUrl}/me`)
 
     return data.value
+  }
+
+  getUsers = async ({ searchTerm, pageIndex, pageSize }: GetUsersParams) => {
+    const { data } = await api.get<BasePaginationResponse<User>>(`/v1/${this.baseUrl}`, {
+      params: {
+        searchTerm,
+        pageIndex,
+        pageSize
+      }
+    })
+
+    return data
   }
 }
 

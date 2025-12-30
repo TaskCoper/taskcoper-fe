@@ -77,7 +77,7 @@ export default function DefaultLayout() {
         <div className='flex items-center gap-2 sm:gap-3'>
           <div className='flex items-center gap-1 sm:gap-2'>
             <Button size='sm' asChild className='hidden md:flex'>
-              <Link to='/projects'>{t('header.myProjects')}</Link>
+              <Link to='/projects'>{t('header.manageProjects')}</Link>
             </Button>
 
             <Button size='icon-sm' variant='ghost'>
@@ -125,7 +125,7 @@ export default function DefaultLayout() {
 
                 <div className='px-2'>
                   <Button asChild onClick={() => setOpen(false)} className='w-full'>
-                    <Link to='/projects'>{t('header.myProjects')}</Link>
+                    <Link to='/projects'>{t('header.manageProjects')}</Link>
                   </Button>
                 </div>
               </div>

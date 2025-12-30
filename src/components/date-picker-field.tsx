@@ -6,17 +6,25 @@ import { cn } from '@/shared/utils'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
+import type { Matcher } from 'react-day-picker'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-interface DatePickerFieldProps<T extends FieldValues> {
+interface DateConstraints {
+  minDate?: Date
+  maxDate?: Date
+  disabled?: Matcher | Matcher[]
+}
+
+interface DatePickerFieldProps<T extends FieldValues> extends DateConstraints {
   name: Path<T>
   label: string
   control?: Control<T>
   placeholder?: string
   isRequired?: boolean
-  disabled?: boolean
+  isDisabled?: boolean
   className?: string
+  displayError?: boolean
 }
 
 export function DatePickerField<T extends FieldValues>({
@@ -25,8 +33,12 @@ export function DatePickerField<T extends FieldValues>({
   control: propsControl,
   placeholder = 'datePickerField.placeholder',
   isRequired = false,
-  disabled = false,
-  className
+  isDisabled = false,
+  className,
+  displayError = true,
+  minDate = new Date('1900-01-01'),
+  maxDate = new Date(new Date().getFullYear() + 10, 11, 31),
+  disabled
 }: DatePickerFieldProps<T>) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -37,6 +49,12 @@ export function DatePickerField<T extends FieldValues>({
   if (!control) {
     throw new Error('DatePickerField must be used within a FormProvider or passed a control prop')
   }
+
+  const disabledDays: Matcher[] = [
+    ...(Array.isArray(disabled) ? disabled : disabled ? [disabled] : []),
+    { before: minDate },
+    { after: maxDate }
+  ]
 
   return (
     <Controller
@@ -57,34 +75,39 @@ export function DatePickerField<T extends FieldValues>({
                 role='combobox'
                 aria-expanded={open}
                 aria-invalid={fieldState.invalid}
-                disabled={disabled}
+                disabled={isDisabled}
                 className={cn(
                   'w-full justify-between px-3 text-left font-normal',
                   !field.value && 'text-muted-foreground',
                   fieldState.invalid && 'border-destructive focus-visible:ring-destructive'
                 )}
               >
-                {field.value ? format(field.value, 'PPP') : <span>{t(placeholder)}</span>}
+                {field.value ? format(new Date(field.value), 'PPP') : <span>{t(placeholder)}</span>}
                 <CalendarIcon className='ml-2 h-4 w-4 opacity-50' />
               </Button>
             </PopoverTrigger>
             <PopoverContent className='w-auto p-0' align='start'>
               <Calendar
                 mode='single'
-                selected={field.value}
+                selected={field.value ? new Date(field.value) : undefined}
                 onSelect={(date) => {
                   field.onChange(date?.toISOString())
                   setOpen(false)
                 }}
-                disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                disabled={disabledDays}
+                startMonth={minDate}
+                endMonth={maxDate}
                 captionLayout='dropdown'
+                defaultMonth={field.value ? new Date(field.value) : new Date()}
               />
             </PopoverContent>
           </Popover>
 
-          <div className='min-h-4'>
-            {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-          </div>
+          {displayError && (
+            <div className='min-h-4'>
+              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+            </div>
+          )}
         </Field>
       )}
     />

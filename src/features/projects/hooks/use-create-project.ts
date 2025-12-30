@@ -9,9 +9,9 @@ import { createProjectSchema, type CreateProjectFormValues } from '../validation
 
 const defaultValues: CreateProjectFormValues = {
   name: '',
-  description: '',
-  startDate: '',
-  endDate: '',
+  // description: '',
+  // startDate: '',
+  // endDate: '',
   domainIds: []
 }
 
