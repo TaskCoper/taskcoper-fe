@@ -3,7 +3,10 @@ import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import NotificationsPopover from '@/features/notifications/components/notifications-popover'
+import { useGetMyNotifications } from '@/features/notifications/hooks/use-get-my-notifications'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
+import { cn } from '@/shared/utils'
 import {
   BellIcon,
   FolderClosedIcon,
@@ -54,8 +57,11 @@ const navigations = [
 
 export default function DefaultLayout() {
   const { t } = useTranslation()
-  const { me, isGettingMe } = useGetMe()
   const [open, setOpen] = useState(false)
+  const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
+
+  const { me, isGettingMe } = useGetMe()
+  const { notifications, isLoadingNotifications } = useGetMyNotifications({})
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
@@ -74,19 +80,37 @@ export default function DefaultLayout() {
 
         <div className='flex-1' />
 
-        <div className='flex items-center gap-2 sm:gap-3'>
-          <div className='flex items-center gap-1 sm:gap-2'>
+        <div className='flex items-center gap-2 sm:gap-4'>
+          <div className='flex items-center gap-1 sm:gap-3'>
             <Button size='sm' asChild className='hidden md:flex'>
               <Link to='/projects'>{t('header.manageProjects')}</Link>
             </Button>
 
-            <Button size='icon-sm' variant='ghost'>
+            <Button size='icon-sm' variant='ghost' className='relative'>
               <MessageCircleIcon className='size-4 sm:size-5' />
+              <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
+                <p className='text-xs text-white'>2</p>
+              </div>
             </Button>
 
-            <Button size='icon-sm' variant='ghost'>
-              <BellIcon className='size-4 sm:size-5' />
-            </Button>
+            <NotificationsPopover
+              notifications={notifications}
+              isLoadingNotifications={isLoadingNotifications}
+              open={openNotificationsPopover}
+              onOpenChange={setOpenNotificationsPopover}
+            >
+              <Button
+                size='icon-sm'
+                variant='ghost'
+                disabled={isLoadingNotifications}
+                className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
+              >
+                <BellIcon className='size-4 sm:size-5' />
+                <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
+                  <p className='text-xs text-white'>9</p>
+                </div>
+              </Button>
+            </NotificationsPopover>
           </div>
 
           {isGettingMe ? <Skeleton className='size-8 rounded-full' /> : <NavUser user={me} />}

@@ -65,6 +65,25 @@ class ProjectService {
 
     return data.value
   }
+
+  respondToInvitation = async ({
+    projectId,
+    notificationId,
+    isAccepted
+  }: {
+    projectId: string
+    notificationId: string
+    isAccepted: boolean
+  }) => {
+    const { data } = await api.get<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/response-invite`, {
+      params: {
+        notificationId,
+        isAccepted
+      }
+    })
+
+    return data.value
+  }
 }
 
 const projectService = new ProjectService()

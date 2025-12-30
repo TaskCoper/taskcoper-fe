@@ -9,7 +9,8 @@
   },
   "role": {
     "owner": "Chủ dự án",
-    "editor": "Người chỉnh sửa"
+    "editor": "Người chỉnh sửa",
+    "viewer": "Người xem"
   },
   "project": {
     "title": "Dự án của tôi",
@@ -351,7 +352,9 @@
     "noResults": "Không tìm thấy kết quả.",
     "viewOnly": "Chỉ xem",
     "canEdit": "Có thể chỉnh sửa",
-    "invite": "Mời"
+    "invite": "Mời",
+    "accept": "Chấp nhận",
+    "decline": "Từ chối"
   },
   "milestone": {
     "addParentMilestone": {
@@ -373,6 +376,19 @@
           "placeholder": "Nhập tên danh sách..."
         }
       }
+    }
+  },
+  "notification": {
+    "popover": {
+      "title": "Thông báo",
+      "description": "Bạn không có thông báo nào",
+      "markAllAsRead": "Xem tất cả"
+    },
+    "type": {
+      "task": "Công việc",
+      "chat": "Tin nhắn",
+      "project": "Dự án",
+      "system": "Hệ thống"
     }
   }
 }

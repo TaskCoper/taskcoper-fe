@@ -65,7 +65,11 @@ export default function ProjectInfoPage() {
                       <p className='text-sm font-medium truncate'>{member.fullName}</p>
 
                       <p className='text-xs text-muted-foreground'>
-                        ({member.isMain ? t('role.owner') : member.isEditor ? t('role.editor') : null})
+                        {member.isMain
+                          ? `(${t('role.owner')})`
+                          : member.isEditor
+                            ? `(${t('role.editor')})`
+                            : `(${t('role.viewer')})`}
                       </p>
                     </div>
                     <p className='text-xs text-muted-foreground truncate'>{member.email}</p>

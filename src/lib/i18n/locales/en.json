@@ -9,7 +9,8 @@
   },
   "role": {
     "owner": "Owner",
-    "editor": "Editor"
+    "editor": "Editor",
+    "viewer": "Viewer"
   },
   "project": {
     "title": "My Projects",
@@ -350,7 +351,9 @@
     "noResults": "No results found.",
     "viewOnly": "View only",
     "canEdit": "Can edit",
-    "invite": "Invite"
+    "invite": "Invite",
+    "accept": "Accept",
+    "decline": "Decline"
   },
   "milestone": {
     "addParentMilestone": {
@@ -372,6 +375,19 @@
           "placeholder": "Enter milestone name..."
         }
       }
+    }
+  },
+  "notification": {
+    "popover": {
+      "title": "Notifications",
+      "description": "You have no notifications",
+      "markAllAsRead": "Mark all as read"
+    },
+    "type": {
+      "task": "Task",
+      "chat": "Chat",
+      "project": "Project",
+      "system": "System"
     }
   }
 }
