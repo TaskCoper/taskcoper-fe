@@ -20,8 +20,8 @@ export default function ProjectPreviewCard({ project }: ProjectPreviewCardProps)
             </div>
           )}
         </div>
-        <div className='w-full h-2/6 flex flex-col items-start justify-center px-2'>
-          <p className='text-sm font-medium'>{project.name}</p>
+        <div className='h-2/6 flex flex-col items-start justify-center px-2 w-full'>
+          <p className='text-sm font-medium truncate w-full'>{project.name}</p>
         </div>
       </Card>
     </Link>

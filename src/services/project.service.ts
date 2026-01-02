@@ -1,6 +1,6 @@
 import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
-import type { CreateProjectFormValues } from '@/features/projects/validations'
+import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview } from '@/types/project.type'
@@ -81,6 +81,12 @@ class ProjectService {
         isAccepted
       }
     })
+
+    return data.value
+  }
+
+  updateProject = async ({ body }: { body: UpdateProjectFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}`, body)
 
     return data.value
   }

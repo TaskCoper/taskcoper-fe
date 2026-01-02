@@ -62,8 +62,11 @@ export default function SanitizedHtml({ html, className, as: Component = 'div' }
 
   return (
     <ElementType
-      className={`tiptap ProseMirror prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl overflow-auto ${className ?? ''}`}
-      // This is safe because the input 'html' has been thoroughly sanitized by DOMPurify.
+      className={`
+        tiptap ProseMirror prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl overflow-auto
+        prose-pre:whitespace-pre-wrap prose-pre:break-words break-all
+        ${className ?? ''}
+      `}
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
     />
   )

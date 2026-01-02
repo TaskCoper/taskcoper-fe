@@ -15,10 +15,40 @@
   "project": {
     "title": "Dự án của tôi",
     "description": "Quản lý dự án và công việc của bạn",
+    "addCoverImage": "Thêm ảnh bìa",
+    "addLogoImage": "Thêm logo",
     "info": {
+      "general": "Tổng quan",
+      "generalDescription": "Thông tin cơ bản về dự án",
+      "domains": "Lĩnh vực",
+      "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",
+      "teamSize": "Quy mô nhóm",
+      "teamSizeDescription": "Số lượng thành viên trong dự án hiện tại",
+      "teamContact": "Liên hệ nhóm",
+      "teamContactDescription": "Thông tin liên hệ của nhóm",
+      "teamEmail": "Email nhóm",
+      "teamEmailDescription": "Địa chỉ email của nhóm",
+      "schoolSubject": "Môn học",
+      "schoolSubjectDescription": "Môn học mà dự án liên quan đến",
       "members": "Thành viên",
       "memberDescription": "Số lượng thành viên trong dự án hiện tại",
-      "inviteMembers": "Mời thành viên"
+      "inviteMembers": "Mời thành viên",
+      "timeline": "Thời gian",
+      "timelineDescription": "Thời gian bắt đầu và kết thúc dự án dự kiến",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "progress": "Tiến độ",
+      "progressDescription": "Tiến độ tổng thể của dự án"
+    },
+    "updateProjectInfo": {
+      "title": "Tổng quan dự án",
+      "description": "Chỉnh sửa tên và tóm tắt dự án",
+      "field": {
+        "name": {
+          "label": "Tên dự án",
+          "placeholder": "Nhập tên dự án"
+        }
+      }
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
@@ -42,7 +72,7 @@
       "field": {
         "hasExpiration": {
           "label": "Hạn chế thời gian",
-          "description": "Bật hạn chế thời gian để đặt ngày hết hạn cho mời"
+          "description": "Bật hạn chế thời gian để đặt ngày hết hạn cho lời mời"
         },
         "expirationDate": {
           "label": "Ngày hết hạn",
@@ -188,8 +218,6 @@
   },
   "richTextEditor": {
     "placeholder": "Mẹo chuyên nghiệp: Nhấn 'Enter' để xuống dòng và 'Shift + Enter' để ngắt dòng đơn giản.",
-    "save": "Lưu",
-    "cancel": "Hủy",
     "heading": {
       "label": "Tiêu đề",
       "ariaLabel": "Định dạng văn bản làm tiêu đề",
@@ -345,6 +373,7 @@
     "emptyMessage": "Không tìm thấy tùy chọn."
   },
   "common": {
+    "edit": "Chỉnh sửa",
     "selected": "đã chọn",
     "characters": "ký tự",
     "add": "Thêm",
@@ -354,7 +383,9 @@
     "canEdit": "Có thể chỉnh sửa",
     "invite": "Mời",
     "accept": "Chấp nhận",
-    "decline": "Từ chối"
+    "decline": "Từ chối",
+    "save": "Lưu",
+    "cancel": "Hủy"
   },
   "milestone": {
     "addParentMilestone": {

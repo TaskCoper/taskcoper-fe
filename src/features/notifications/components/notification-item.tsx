@@ -54,7 +54,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
         </p>
       </div>
 
-      {payload ? (
+      {!notification.isInteract ? (
         <div className='flex items-center gap-2 mt-2'>
           <Button
             variant='secondary'

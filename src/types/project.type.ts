@@ -21,6 +21,27 @@ export interface ProjectMember {
 
 export interface Project {
   id: string
+  name: string
+  description: string | null
+  startDate: string | null
+  endDate: string | null
+  coverImage: string | null
+  logoImage: string | null
+  teamSize: number | null
+  teamContact: string | null
+  teamEmail: string | null
+  progress: number
+  schoolSubject: string | null
+  organizationId: string | null
+  organizationName: string | null
+  organizationLogo: string | null
+  domains: ProjectDomain[]
+}
+
+export interface ProjectDomain {
+  id: string
+  domainId: string
+  name: string
 }
 
 // APIs

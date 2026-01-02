@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
-import { useGetMyNotifications } from '@/features/notifications/hooks/use-get-my-notifications'
+import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
 import { cn } from '@/shared/utils'
 import {
@@ -61,13 +61,13 @@ export default function DefaultLayout() {
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
   const { me, isGettingMe } = useGetMe()
-  const { notifications, isLoadingNotifications } = useGetMyNotifications({})
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
-      <header className='flex h-14 items-center gap-2 px-4 border-b shrink-0 bg-background z-50 relative'>
+      <header className='flex h-14 items-center gap-3 px-4 border-b shrink-0 bg-background z-50 relative'>
         <Link to='/' className='shrink-0'>
-          <img src={logo} alt='TaskCoper' className='h-14 w-auto object-contain' />
+          <img src={logo} alt='TaskCoper' className='h-8 w-auto bject-contain' />
         </Link>
 
         <div className='hidden md:flex items-center gap-2'>
@@ -88,27 +88,20 @@ export default function DefaultLayout() {
 
             <Button size='icon-sm' variant='ghost' className='relative'>
               <MessageCircleIcon className='size-4 sm:size-5' />
-              <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
-                <p className='text-xs text-white'>2</p>
-              </div>
             </Button>
 
-            <NotificationsPopover
-              notifications={notifications}
-              isLoadingNotifications={isLoadingNotifications}
-              open={openNotificationsPopover}
-              onOpenChange={setOpenNotificationsPopover}
-            >
+            <NotificationsPopover open={openNotificationsPopover} onOpenChange={setOpenNotificationsPopover}>
               <Button
                 size='icon-sm'
                 variant='ghost'
-                disabled={isLoadingNotifications}
                 className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
               >
                 <BellIcon className='size-4 sm:size-5' />
-                <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
-                  <p className='text-xs text-white'>9</p>
-                </div>
+                {isLoadingUnreadCount ? null : (
+                  <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
+                    <p className='text-xs text-white'>{unreadCount}</p>
+                  </div>
+                )}
               </Button>
             </NotificationsPopover>
           </div>

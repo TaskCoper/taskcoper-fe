@@ -2,28 +2,20 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { BasePaginationResponse } from '@/lib/axios'
-import type { Notification } from '@/types/notification.type'
 import { MessageCircleQuestionMarkIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useGetMyNotifications } from '../hooks/use-get-my-notifications'
 import NotificationItem from './notification-item'
 
 interface NotificationsPopoverProps {
   children: React.ReactNode
-  notifications: BasePaginationResponse<Notification>
-  isLoadingNotifications: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export default function NotificationsPopover({
-  children,
-  notifications,
-  isLoadingNotifications,
-  open,
-  onOpenChange
-}: NotificationsPopoverProps) {
+export default function NotificationsPopover({ children, open, onOpenChange }: NotificationsPopoverProps) {
   const { t } = useTranslation()
+  const { notifications, isLoadingNotifications } = useGetMyNotifications({})
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
@@ -41,7 +33,7 @@ export default function NotificationsPopover({
         <Separator />
 
         {isLoadingNotifications ? (
-          <div className='flex flex-col gap-2 items-center justify-center'>
+          <div className='flex flex-col gap-2 items-center justify-center p-2'>
             <Skeleton className='size-10 w-full' />
             <Skeleton className='size-10 w-full' />
             <Skeleton className='size-10 w-full' />

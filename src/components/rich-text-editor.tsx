@@ -22,24 +22,19 @@ import { ImageUploadButton } from './tiptap-ui/image-upload-button'
 import { LinkPopover } from './tiptap-ui/link-popover'
 import { ListDropdownMenu } from './tiptap-ui/list-dropdown-menu'
 import { MarkButton } from './tiptap-ui/mark-button'
-import { Button } from './ui/button'
 
 interface RichTextEditorProps {
-  isDisplay: boolean
+  isDisplay?: boolean
+  isInitialFocus?: boolean
   content: string
-  isSaving: boolean
   onChange: (html: string) => void
-  onSave: () => void
-  onCancel: () => void
 }
 
 export default function RichTextEditor({
   content,
-  isSaving,
-  isDisplay,
-  onChange,
-  onSave,
-  onCancel
+  isDisplay = true,
+  isInitialFocus = false,
+  onChange
 }: RichTextEditorProps) {
   const { t } = useTranslation()
   // const { uploadFilesAction } = useUploadFiles({})
@@ -70,7 +65,7 @@ export default function RichTextEditor({
     ],
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48'
+        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
       }
     },
     content,
@@ -86,12 +81,12 @@ export default function RichTextEditor({
   })
 
   useEffect(() => {
-    if (isDisplay && editor) {
+    if (isDisplay && isInitialFocus && editor) {
       setTimeout(() => {
         editor.commands.focus('end')
       }, 0)
     }
-  }, [isDisplay, editor])
+  }, [isDisplay, isInitialFocus, editor])
 
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
@@ -169,18 +164,9 @@ export default function RichTextEditor({
                 />
               </div>
             </div>
-            <EditorContent editor={editor} role='presentation' />
+            <EditorContent editor={editor} />
           </div>
         </EditorContext.Provider>
-
-        <div className='flex items-center gap-2'>
-          <Button onClick={onSave} disabled={isSaving}>
-            {t('richTextEditor.save')}
-          </Button>
-          <Button variant='ghost' onClick={onCancel} disabled={isSaving}>
-            {t('richTextEditor.cancel')}
-          </Button>
-        </div>
       </div>
     )
   }

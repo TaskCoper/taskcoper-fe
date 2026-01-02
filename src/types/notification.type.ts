@@ -22,6 +22,7 @@ export interface Notification {
   notificationType: NotificationType
   title: string
   message: string
+  isInteract: boolean
   isRead: boolean
   payloadJson: string
   createdAt: string

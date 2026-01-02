@@ -10,6 +10,7 @@ export interface GetMyNotificationsParams {
   pageSize?: number
 }
 
+// TODO: change to use infinite query
 export const useGetMyNotifications = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE

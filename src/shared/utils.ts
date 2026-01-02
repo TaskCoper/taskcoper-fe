@@ -1,3 +1,4 @@
+import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { BasePaginationResponse } from '@/lib/axios'
 import type { MilestoneColumnDragData } from '@/types/milestone.type'
 import type { TaskCardDragData } from '@/types/task.type'
@@ -96,4 +97,26 @@ export const calculateReorderPosition = (items: { position: number }[], newIndex
   }
 
   return newPosition
+}
+
+/**
+ * Generates a clean, unique key and identifies the content type
+ */
+export const prepareFileUpload = (file: File, folder: string = 'general'): GetPresignedUrlParams => {
+  const extension = file.name.split('.').pop()
+
+  const nameSlug = file.name
+    .split('.')[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '-')
+    .replace(/-+/g, '-')
+
+  const uniqueId = Math.random().toString(36).substring(2, 8)
+
+  const key = `${folder}/${uniqueId}-${nameSlug}.${extension}`
+
+  return {
+    key,
+    contentType: file.type || 'application/octet-stream'
+  }
 }

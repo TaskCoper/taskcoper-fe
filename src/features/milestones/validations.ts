@@ -2,7 +2,7 @@ import z from 'zod'
 
 export const addParentMilestoneSchema = z
   .object({
-    milestoneName: z.string().min(1).max(255),
+    milestoneName: z.string().trim().min(1).max(255),
     projectId: z.uuid(),
     position: z.number()
   })
@@ -11,7 +11,7 @@ export const addParentMilestoneSchema = z
 export const addMilestoneSchema = z
   .object({
     parentId: z.uuid(),
-    milestoneName: z.string().min(1).max(255),
+    milestoneName: z.string().trim().min(1).max(255),
     projectId: z.uuid(),
     position: z.number()
   })
@@ -21,7 +21,7 @@ export const moveMilestoneSchema = z
   .object({
     milestoneId: z.uuid(),
     parentId: z.uuid(),
-    milestoneName: z.string(),
+    milestoneName: z.string().trim(),
     position: z.number()
   })
   .strict()

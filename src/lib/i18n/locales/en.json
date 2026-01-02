@@ -15,10 +15,40 @@
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
+    "addCoverImage": "Add cover image",
+    "addLogoImage": "Add logo image",
     "info": {
+      "general": "General",
+      "generalDescription": "Basic information about the project",
+      "domains": "Domains",
+      "domainDescription": "Help classify your project better",
+      "teamSize": "Team size",
+      "teamSizeDescription": "Number of team members in the project currently",
+      "teamContact": "Team contact",
+      "teamContactDescription": "Contact information for the team",
+      "teamEmail": "Team email",
+      "teamEmailDescription": "Email address for the team",
+      "schoolSubject": "School subject",
+      "schoolSubjectDescription": "Subject of the school the project is related to",
       "members": "Members",
       "memberDescription": "Number of members in the project currently",
-      "inviteMembers": "Invite members"
+      "inviteMembers": "Invite members",
+      "timeline": "Timeline",
+      "timelineDescription": "The planned start and end of the project",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "progress": "Progress",
+      "progressDescription": "Overall project progress"
+    },
+    "updateProjectInfo": {
+      "title": "Project overview",
+      "description": "Edit the project name and summary",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        }
+      }
     },
     "inviteMembers": {
       "title": "New members",
@@ -188,8 +218,6 @@
   },
   "richTextEditor": {
     "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
-    "save": "Save",
-    "cancel": "Cancel",
     "heading": {
       "label": "Heading",
       "ariaLabel": "Format text as heading",
@@ -344,6 +372,7 @@
     "emptyMessage": "No options found."
   },
   "common": {
+    "edit": "Edit",
     "selected": "selected",
     "characters": "characters",
     "add": "Add",
@@ -353,7 +382,9 @@
     "canEdit": "Can edit",
     "invite": "Invite",
     "accept": "Accept",
-    "decline": "Decline"
+    "decline": "Decline",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "milestone": {
     "addParentMilestone": {

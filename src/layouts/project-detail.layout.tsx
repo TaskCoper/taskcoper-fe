@@ -17,6 +17,7 @@ import AddParentMilestonePopover from '@/features/milestones/components/add-pare
 import ProjectDetailSidebar from '@/features/projects/components/sidebar/project-detail-sidebar'
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { cn } from '@/shared/utils'
 import { PlusIcon } from 'lucide-react'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
@@ -108,7 +109,7 @@ export default function ProjectDetailLayout() {
               {isLoading ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
-                <div className='flex-1 min-w-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+                <div className='flex-1 max-w-xl overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
                   <div className='flex items-center gap-2'>
                     <Tabs value={activeTabValue} onValueChange={handleTabChange}>
                       <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
@@ -116,7 +117,10 @@ export default function ProjectDetailLayout() {
                           <TabsTrigger
                             key={milestone.id}
                             value={milestone.id}
-                            className='w-24 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
+                            className={cn(
+                              'relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold',
+                              activeTabValue === milestone.id ? 'w-auto' : 'w-24'
+                            )}
                           >
                             <Tooltip>
                               <TooltipTrigger asChild className='w-full cursor-pointer'>
@@ -156,7 +160,7 @@ export default function ProjectDetailLayout() {
             </div>
           }
         >
-          <div className='flex-1 overflow-hidden'>
+          <div className='flex-1 overflow-auto'>
             <Outlet />
           </div>
         </Suspense>

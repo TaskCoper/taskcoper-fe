@@ -1,5 +1,5 @@
 import type { GetMyNotificationsParams } from '@/features/notifications/hooks/use-get-my-notifications'
-import api, { type BasePaginationResponse } from '@/lib/axios'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Notification } from '@/types/notification.type'
 
 class NotificationService {
@@ -14,6 +14,12 @@ class NotificationService {
     })
 
     return data
+  }
+
+  getUnreadCount = async () => {
+    const { data } = await api.get<BaseResponse<{ count: number }>>(`/v1/${this.baseUrl}/unread-count`)
+
+    return data.value.count
   }
 }
 

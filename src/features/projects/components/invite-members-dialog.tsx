@@ -81,7 +81,15 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          methods.reset()
+        }
+        setOpen(open)
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent position='top-center' className='min-w-sm sm:min-w-lg' onInteractOutside={onClose}>
         <DialogHeader>
@@ -120,11 +128,13 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
                 control={control}
                 render={({ field, fieldState }) => (
                   <Field orientation='horizontal' data-invalid={fieldState.invalid}>
-                    <FieldContent>
+                    <FieldContent className='gap-0'>
                       <FieldLabel htmlFor={field.name}>
                         {t('project.inviteMembers.field.hasExpiration.label')}
                       </FieldLabel>
-                      <FieldDescription>{t('project.inviteMembers.field.hasExpiration.description')}</FieldDescription>
+                      <FieldDescription className='text-xs'>
+                        {t('project.inviteMembers.field.hasExpiration.description')}
+                      </FieldDescription>
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </FieldContent>
                     <Switch

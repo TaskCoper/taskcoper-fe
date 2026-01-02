@@ -33,7 +33,15 @@ export default function CreateProjectDialog({ children }: CreateProjectDialogPro
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          methods.reset()
+        }
+        setOpen(open)
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         showCloseButton={false}

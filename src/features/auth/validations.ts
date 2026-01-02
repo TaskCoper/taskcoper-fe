@@ -3,9 +3,10 @@ import { z } from 'zod'
 export const createSignUpSchema = (t: (key: string) => string) => {
   return z
     .object({
-      email: z.email(t('auth.signUp.validation.email.invalid')),
+      email: z.email(t('auth.signUp.validation.email.invalid')).trim(),
       password: z
         .string()
+        .trim()
         .min(8, t('auth.signUp.validation.password.minLength'))
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
@@ -29,7 +30,7 @@ export const createSignUpSchema = (t: (key: string) => string) => {
 export const createVerifyEmailSchema = (t: (key: string) => string) => {
   return z
     .object({
-      email: z.email(t('auth.signUp.validation.email.invalid')),
+      email: z.email(t('auth.signUp.validation.email.invalid')).trim(),
       code: z
         .string()
         .trim()
@@ -42,8 +43,8 @@ export const createVerifyEmailSchema = (t: (key: string) => string) => {
 export const createSignInSchema = (t: (key: string) => string) => {
   return z
     .object({
-      email: z.email(t('auth.signIn.validation.email.invalid')),
-      password: z.string().min(8, t('auth.signIn.validation.password.minLength'))
+      email: z.email(t('auth.signIn.validation.email.invalid')).trim(),
+      password: z.string().trim().min(8, t('auth.signIn.validation.password.minLength'))
     })
     .strict()
 }

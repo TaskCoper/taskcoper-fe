@@ -46,7 +46,15 @@ export default function TaskDetailDialogPage() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          handleClose()
+        }
+        setOpen(open)
+      }}
+    >
       <DialogContent
         showCloseButton={false}
         position='top-center'
@@ -135,18 +143,7 @@ export default function TaskDetailDialogPage() {
                 <p className='font-semibold'>{t('task.description.description')}</p>
 
                 {isEditDescription ? (
-                  <RichTextEditor
-                    isDisplay={true}
-                    onSave={() => {
-                      setIsEditDescription(false)
-                    }}
-                    onCancel={() => {
-                      setIsEditDescription(false)
-                    }}
-                    isSaving={false}
-                    content={''}
-                    onChange={() => {}}
-                  />
+                  <RichTextEditor isDisplay={true} content='' onChange={() => {}} />
                 ) : (
                   <Textarea
                     placeholder={t('task.description.addDescription')}
