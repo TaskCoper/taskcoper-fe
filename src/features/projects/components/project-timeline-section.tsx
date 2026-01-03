@@ -4,10 +4,12 @@ import { format, type Locale } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { ChevronsRightIcon, SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import UpdateProjectTimelineDialog from './update-project-timeline-dialog'
 
 interface ProjectTimelineSectionProps {
   startDate: string
   endDate: string
+  isPending: boolean
 }
 
 const DATE_LOCALES: Record<string, Locale> = {
@@ -15,7 +17,7 @@ const DATE_LOCALES: Record<string, Locale> = {
   en: enUS
 }
 
-export default function ProjectTimelineSection({ startDate, endDate }: ProjectTimelineSectionProps) {
+export default function ProjectTimelineSection({ startDate, endDate, isPending }: ProjectTimelineSectionProps) {
   const { t, i18n } = useTranslation()
 
   const currentLocale = DATE_LOCALES[i18n.language] || enUS
@@ -29,9 +31,11 @@ export default function ProjectTimelineSection({ startDate, endDate }: ProjectTi
           <p className='text-xs text-muted-foreground'>{t('project.info.timelineDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm' type='button'>
-          <SettingsIcon />
-        </Button>
+        <UpdateProjectTimelineDialog isPending={isPending}>
+          <Button variant='ghost' size='icon-sm' type='button'>
+            <SettingsIcon />
+          </Button>
+        </UpdateProjectTimelineDialog>
       </div>
 
       <Card className='p-4 border-dashed shadow-none flex-row items-center justify-between gap-4 cursor-pointer hover:bg-muted/30'>

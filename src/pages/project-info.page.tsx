@@ -16,7 +16,7 @@ import type { UpdateProjectFormValues } from '@/features/projects/validations'
 import { useGetPresignedUrl } from '@/hooks/use-get-presigned-url'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useAuthStore } from '@/lib/zustand/auth.store'
-import { cn, prepareFileUpload } from '@/shared/utils'
+import { prepareFileUpload } from '@/shared/utils'
 import axios from 'axios'
 import { CameraIcon, EditIcon, ImageOffIcon } from 'lucide-react'
 import { useEffect } from 'react'
@@ -90,12 +90,7 @@ export default function ProjectInfoPage() {
   }
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6',
-        isMobile ? 'pb-20' : 'pb-12'
-      )}
-    >
+    <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-20'>
       {/* progress bar section */}
       <div className='col-span-1 lg:col-span-12'>
         <Card className='p-4 gap-3 border-dashed shadow-none'>
@@ -206,7 +201,11 @@ export default function ProjectInfoPage() {
 
             <ProjectDomainsSection domains={project?.domains ?? []} />
 
-            <ProjectTimelineSection startDate={project?.startDate ?? ''} endDate={project?.endDate ?? ''} />
+            <ProjectTimelineSection
+              startDate={project?.startDate ?? ''}
+              endDate={project?.endDate ?? ''}
+              isPending={isUpdatingProject}
+            />
 
             <ProjectMembersSection
               members={members?.value.items ?? []}

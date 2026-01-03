@@ -96,7 +96,7 @@
       "memberDescription": "Số lượng thành viên trong dự án hiện tại",
       "inviteMembers": "Mời thành viên",
       "timeline": "Thời gian",
-      "timelineDescription": "Thời gian bắt đầu và kết thúc dự án dự kiến",
+      "timelineDescription": "Thời gian bắt đầu và kết thúc dự kiến",
       "startDate": "Ngày bắt đầu",
       "endDate": "Ngày kết thúc",
       "progress": "Tiến độ",
@@ -179,6 +179,10 @@
           "invalid": "Lĩnh vực không hợp lệ"
         }
       }
+    },
+    "updateProjectTimeline": {
+      "title": "Thời gian dự kiến",
+      "description": "Chỉnh sửa thời gian dự kiến của dự án"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",

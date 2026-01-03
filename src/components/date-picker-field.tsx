@@ -4,7 +4,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/shared/utils'
 import { format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { Matcher } from 'react-day-picker'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
@@ -82,8 +82,25 @@ export function DatePickerField<T extends FieldValues>({
                   fieldState.invalid && 'border-destructive focus-visible:ring-destructive'
                 )}
               >
-                {field.value ? format(new Date(field.value), 'PPP') : <span>{t(placeholder)}</span>}
-                <CalendarIcon className='ml-2 h-4 w-4 opacity-50' />
+                <span className='flex items-center gap-2 truncate'>
+                  <CalendarIcon className='opacity-50 size-4' />
+                  {field.value ? format(new Date(field.value), 'PPP') : <span>{t(placeholder)}</span>}
+                </span>
+
+                {field.value && !isDisabled && (
+                  <div
+                    role='button'
+                    tabIndex={0}
+                    className='hover:bg-accent hover:text-accent-foreground rounded-sm cursor-pointer'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      field.onChange(null)
+                    }}
+                  >
+                    <XCircleIcon className='size-4 opacity-50 hover:opacity-100' />
+                    <span className='sr-only'>Clear</span>
+                  </div>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className='w-auto p-0' align='start'>

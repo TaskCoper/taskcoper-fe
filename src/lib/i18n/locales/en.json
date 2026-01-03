@@ -96,7 +96,7 @@
       "memberDescription": "Number of members in the project currently",
       "inviteMembers": "Invite members",
       "timeline": "Timeline",
-      "timelineDescription": "The planned start and end of the project",
+      "timelineDescription": "The planned start and end time",
       "startDate": "Start date",
       "endDate": "End date",
       "progress": "Progress",
@@ -179,6 +179,10 @@
           "invalid": "Invalid domain"
         }
       }
+    },
+    "updateProjectTimeline": {
+      "title": "Project timeline",
+      "description": "Edit the project timeline"
     },
     "inviteMembers": {
       "title": "New members",
