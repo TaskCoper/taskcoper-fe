@@ -64,7 +64,7 @@ export default function SanitizedHtml({ html, className, as: Component = 'div' }
     <ElementType
       className={`
         tiptap ProseMirror prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl overflow-auto
-        prose-pre:whitespace-pre-wrap prose-pre:break-words break-all
+        prose-pre:whitespace-pre-wrap prose-pre:break-words wrap-break-word
         ${className ?? ''}
       `}
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}

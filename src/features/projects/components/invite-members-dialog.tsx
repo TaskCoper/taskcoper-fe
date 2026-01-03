@@ -1,4 +1,6 @@
+import AsyncMultiSelectField from '@/components/async-multi-select-field'
 import { DatePickerField } from '@/components/date-picker-field'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,7 +13,6 @@ import {
 import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
-import UsersComboboxField, { type ComboboxUserItem } from '@/features/users/components/users-combobox-field'
 import { useGetUsers } from '@/features/users/hooks/use-get-users'
 import type { InviteMembersPayload } from '@/types/project.type'
 import { addDays } from 'date-fns'
@@ -22,6 +23,13 @@ import { useDebounce } from 'use-debounce'
 import { useInviteMembers } from '../hooks/use-invite-members'
 import type { InviteMemberItem, InviteMembersFormValues } from '../validations'
 import InviteMembersForm from './invite-members-form'
+
+interface ComboboxUserItem {
+  id: string
+  email: string
+  fullName: string
+  avatar: string | null
+}
 
 interface InviteMembersDialogProps {
   children: React.ReactNode
@@ -104,7 +112,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
 
         <FormProvider {...methods}>
           <form id='invite-members-form' onSubmit={handleFormSubmit}>
-            <UsersComboboxField<InviteMembersFormValues, InviteMemberItem>
+            <AsyncMultiSelectField<InviteMembersFormValues, InviteMemberItem, ComboboxUserItem>
               name='inviteMembers'
               items={userItems}
               isLoading={isLoadingUsers}
@@ -113,7 +121,9 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
               label='project.inviteMembers.searchLabel'
               isRequired
               displayError={false}
+              getId={(user) => user.id}
               getValueId={(item) => item.userId}
+              getLabel={(user) => user.fullName}
               createValue={(user) => ({
                 userId: user.id,
                 email: user.email,
@@ -122,6 +132,18 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
                 isEditor: false,
                 inviteExpireDate: null
               })}
+              renderOption={(user) => (
+                <>
+                  <Avatar className='size-8'>
+                    <AvatarImage src={user.avatar ?? ''} />
+                    <AvatarFallback>{user.fullName.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className='flex-1 overflow-hidden'>
+                    <p className='text-sm font-medium truncate'>{user.fullName}</p>
+                    <p className='text-xs text-muted-foreground truncate'>{user.email}</p>
+                  </div>
+                </>
+              )}
               onChange={(val) => replace(val)}
             />
 

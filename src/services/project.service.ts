@@ -85,7 +85,7 @@ class ProjectService {
     return data.value
   }
 
-  updateProject = async ({ body }: { body: UpdateProjectFormValues }) => {
+  updateProject = async ({ body }: { body: Omit<UpdateProjectFormValues, 'domainIds'> & { domainIds: string[] } }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}`, body)
 
     return data.value

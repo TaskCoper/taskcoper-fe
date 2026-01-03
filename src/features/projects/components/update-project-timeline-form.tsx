@@ -12,7 +12,6 @@ export default function UpdateProjectTimelineForm() {
         name='startDate'
         label='common.field.startDate'
         placeholder='project.createProject.field.startDate.placeholder'
-        isRequired
       />
 
       <DatePickerField
@@ -20,7 +19,6 @@ export default function UpdateProjectTimelineForm() {
         name='endDate'
         label='common.field.endDate'
         placeholder='project.createProject.field.endDate.placeholder'
-        isRequired
       />
     </div>
   )

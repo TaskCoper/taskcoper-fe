@@ -14,27 +14,10 @@ export const createProjectSchema = (t: (key: string) => string) => {
       // startDate: z.iso.datetime({ message: t('project.createProject.validation.startDate.invalid') }),
       // endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }),
       domainIds: z
-        .array(z.string())
+        .array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
         .min(1, t('project.createProject.validation.domainIds.minLength'))
-        .refine((ids) => ids.every((id) => UUID_REGEX.test(id)), {
-          message: t('project.createProject.validation.domainIds.invalid')
-        })
     })
     .strict()
-  // .refine(
-  //   (data) => {
-  //     if (!data.startDate || !data.endDate) return true
-
-  //     const start = new Date(data.startDate)
-  //     const end = new Date(data.endDate)
-
-  //     return end > start
-  //   },
-  //   {
-  //     message: t('project.createProject.validation.endDate.mustBeGreater'),
-  //     path: ['endDate']
-  //   }
-  // )
 }
 
 export const memberSchema = (t: (key: string) => string) => {
@@ -47,6 +30,13 @@ export const memberSchema = (t: (key: string) => string) => {
     inviteExpireDate: z.iso
       .datetime({ message: t('project.inviteMembers.validation.users.inviteExpireDate.invalid') })
       .nullable()
+  })
+}
+
+export const domainSchema = (t: (key: string) => string) => {
+  return z.object({
+    id: z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')),
+    name: z.string().trim().min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
   })
 }
 
@@ -79,69 +69,80 @@ export const inviteMembersSchema = (t: (key: string) => string) => {
 }
 
 export const updateProjectSchema = (t: (key: string) => string) => {
-  return z.object({
-    projectId: z.uuid(t('project.updateProject.validation.projectId.invalid')),
-    name: z
-      .string()
-      .trim()
-      .min(1, t('project.updateProject.validation.name.minLength'))
-      .max(255, t('project.updateProject.validation.name.maxLength')),
-    description: z
-      .string()
-      .trim()
-      .max(10_000, t('project.updateProject.validation.description.maxLength'))
-      .nullable()
-      .transform((val) => (val === '' ? null : val)),
-    startDate: z.iso
-      .datetime({ offset: true, message: t('project.updateProject.validation.startDate.invalid') })
-      .nullable(),
-    endDate: z.iso
-      .datetime({ offset: true, message: t('project.updateProject.validation.endDate.invalid') })
-      .nullable(),
-    coverImage: z
-      .url({ message: t('project.updateProject.validation.coverImage.invalid') })
-      .trim()
-      .nullable(),
-    logoImage: z
-      .url({ message: t('project.updateProject.validation.logoImage.invalid') })
-      .trim()
-      .nullable(),
-    teamSize: z
-      .string()
-      .trim()
-      .max(255, t('project.updateProject.validation.teamSize.maxLength'))
-      .nullable()
-      .transform((val) => (val === '' ? null : val)),
-    teamContact: z
-      .string()
-      .trim()
-      .max(255, t('project.updateProject.validation.teamContact.maxLength'))
-      .nullable()
-      .transform((val) => (val === '' ? null : val)),
-    teamEmail: z
-      .string()
-      .trim()
-      .nullable()
-      .transform((v) => (v === '' ? null : v))
-      .refine((v) => v === null || z.email().safeParse(v).success, {
-        error: t('common.validation.email.invalid')
-      }),
-    domainIds: z
-      .array(z.string())
-      .min(1, t('project.updateProject.validation.domainIds.minLength'))
-      .refine((ids) => ids.every((id) => UUID_REGEX.test(id)), {
-        message: t('project.updateProject.validation.domainIds.invalid')
-      }),
-    schoolSubject: z
-      .string()
-      .trim()
-      .max(255, t('project.updateProject.validation.schoolSubject.maxLength'))
-      .nullable()
-      .transform((val) => (val === '' ? null : val))
-  })
+  return z
+    .object({
+      projectId: z.uuid(t('project.updateProject.validation.projectId.invalid')),
+      name: z
+        .string()
+        .trim()
+        .min(1, t('project.updateProject.validation.name.minLength'))
+        .max(255, t('project.updateProject.validation.name.maxLength')),
+      description: z
+        .string()
+        .trim()
+        .max(10_000, t('project.updateProject.validation.description.maxLength'))
+        .nullable()
+        .transform((val) => (val === '' ? null : val)),
+      startDate: z.iso
+        .datetime({ offset: true, message: t('project.updateProject.validation.startDate.invalid') })
+        .nullable(),
+      endDate: z.iso
+        .datetime({ offset: true, message: t('project.updateProject.validation.endDate.invalid') })
+        .nullable(),
+      coverImage: z
+        .url({ message: t('project.updateProject.validation.coverImage.invalid') })
+        .trim()
+        .nullable(),
+      logoImage: z
+        .url({ message: t('project.updateProject.validation.logoImage.invalid') })
+        .trim()
+        .nullable(),
+      teamSize: z
+        .string()
+        .trim()
+        .max(255, t('project.updateProject.validation.teamSize.maxLength'))
+        .nullable()
+        .transform((val) => (val === '' ? null : val)),
+      teamContact: z
+        .string()
+        .trim()
+        .max(255, t('project.updateProject.validation.teamContact.maxLength'))
+        .nullable()
+        .transform((val) => (val === '' ? null : val)),
+      teamEmail: z
+        .string()
+        .trim()
+        .nullable()
+        .transform((v) => (v === '' ? null : v))
+        .refine((v) => v === null || z.email().safeParse(v).success, {
+          error: t('common.validation.email.invalid')
+        }),
+      domainIds: z.array(domainSchema(t)).min(1, t('project.updateProject.validation.domainIds.minLength')),
+      schoolSubject: z
+        .string()
+        .trim()
+        .max(255, t('project.updateProject.validation.schoolSubject.maxLength'))
+        .nullable()
+        .transform((val) => (val === '' ? null : val))
+    })
+    .refine(
+      (data) => {
+        if (!data.startDate || !data.endDate) return true
+
+        const start = new Date(data.startDate)
+        const end = new Date(data.endDate)
+
+        return end > start
+      },
+      {
+        message: t('project.createProject.validation.endDate.mustBeGreater'),
+        path: ['endDate']
+      }
+    )
 }
 
 export type CreateProjectFormValues = z.infer<ReturnType<typeof createProjectSchema>>
 export type InviteMembersFormValues = z.infer<ReturnType<typeof inviteMembersSchema>>
 export type InviteMemberItem = z.infer<ReturnType<typeof memberSchema>>
+export type DomainItem = z.infer<ReturnType<typeof domainSchema>>
 export type UpdateProjectFormValues = z.infer<ReturnType<typeof updateProjectSchema>>

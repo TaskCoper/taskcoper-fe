@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import {
@@ -18,41 +17,34 @@ import { useState } from 'react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-export interface ComboboxUserItem {
-  id: string
-  email: string
-  fullName: string
-  avatar: string | null
-}
-
-interface UsersComboboxFieldProps<TForm extends FieldValues, TArrayItem> {
+// TForm: whole form values
+// TValue: form item that use useFieldArray
+// TData: API data type
+interface MultiSelectComboboxFieldProps<TForm extends FieldValues, TValue, TData> {
   name: Path<TForm>
   label?: string
   control?: Control<TForm>
-  items: ComboboxUserItem[]
+  items: TData[]
   isLoading?: boolean
   searchValue: string
   onSearchChange: (value: string) => void
   isRequired?: boolean
   placeholder?: string
   displayError?: boolean
-  /**
-   * extract unique id
-   * eg: (item) => item.userId
-   */
-  getValueId: (item: TArrayItem) => string
-  /**
-   * create a new form value from a selected user.
-   * eg: (user) => ({ userId: user.id, isEditor: false })
-   */
-  createValue: (user: ComboboxUserItem) => TArrayItem
-  /**
-   * optional override for useFieldArray compatibility
-   */
-  onChange?: (value: TArrayItem[]) => void
+  // Get the unique ID from data (API)
+  getId: (item: TData) => string
+  // Get the unique ID from form value (to check if selected)
+  getValueId: (item: TValue) => string
+  // Get the text label (for button text / aria-labels)
+  getLabel: (item: TData) => string
+  // Transform data (API) into form value
+  createValue: (item: TData) => TValue
+  // Render the specific look of the item in the list
+  renderOption: (item: TData) => React.ReactNode
+  onChange?: (value: TValue[]) => void
 }
 
-export default function UsersComboboxField<TForm extends FieldValues, TArrayItem>({
+export default function AsyncMultiSelectField<TForm extends FieldValues, TValue, TData>({
   name,
   label,
   control: propsControl,
@@ -60,13 +52,16 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
   isLoading,
   searchValue,
   onSearchChange,
+  getId,
   getValueId,
+  getLabel,
   createValue,
+  renderOption,
   isRequired = false,
-  placeholder = 'project.inviteMembers.comboboxPlaceholder',
+  placeholder = 'common.ui.selectPlaceholder',
   displayError = true,
   onChange: customOnChange
-}: UsersComboboxFieldProps<TForm, TArrayItem>) {
+}: MultiSelectComboboxFieldProps<TForm, TValue, TData>) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -75,7 +70,7 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
   const control = propsControl || context?.control
 
   if (!control) {
-    throw new Error('UsersComboboxField must be used within a FormProvider or passed a control prop')
+    throw new Error('MultiSelectComboboxField must be used within a FormProvider or passed a control prop')
   }
 
   return (
@@ -83,18 +78,18 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        const currentValues = (Array.isArray(field.value) ? field.value : []) as TArrayItem[]
+        const currentValues = (Array.isArray(field.value) ? field.value : []) as TValue[]
+        const selectedIds = currentValues.map((v) => getValueId(v))
 
-        const selectedUserIds = currentValues.map((v) => getValueId(v))
-
-        const handleSelect = (user: ComboboxUserItem) => {
-          const isSelected = selectedUserIds.includes(user.id)
-          let newValues: TArrayItem[]
+        const handleSelect = (item: TData) => {
+          const itemId = getId(item)
+          const isSelected = selectedIds.includes(itemId)
+          let newValues: TValue[]
 
           if (isSelected) {
-            newValues = currentValues.filter((v) => getValueId(v) !== user.id)
+            newValues = currentValues.filter((v) => getValueId(v) !== itemId)
           } else {
-            const newItem = createValue(user)
+            const newItem = createValue(item)
             newValues = [...currentValues, newItem]
           }
 
@@ -109,19 +104,21 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
         }
 
         const getButtonText = () => {
-          if (selectedUserIds.length === 0) return t(placeholder)
-          if (selectedUserIds.length === 1) return `${selectedUserIds.length} ${t('common.ui.selected')}`
-          return `${selectedUserIds.length} ${t('common.ui.selected')}`
+          if (selectedIds.length === 0) return t(placeholder)
+          return `${selectedIds.length} ${t('common.ui.selected')}`
         }
 
         const listProps = {
           items,
-          selectedUserIds,
+          selectedIds,
           isLoading,
           onSelect: handleSelect,
           onSearchChange,
           searchValue,
-          setOpen
+          setOpen,
+          getId,
+          getLabel,
+          renderOption
         }
 
         return (
@@ -134,7 +131,7 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
             )}
 
             {isDesktop ? (
-              <Popover open={open} onOpenChange={setOpen}>
+              <Popover open={open} onOpenChange={setOpen} modal>
                 <PopoverTrigger asChild>
                   <Button
                     variant='outline'
@@ -143,7 +140,7 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
                     aria-invalid={fieldState.invalid}
                     className={cn(
                       'w-full justify-between px-3 font-normal',
-                      selectedUserIds.length === 0 ? 'text-muted-foreground' : '',
+                      selectedIds.length === 0 ? 'text-muted-foreground' : '',
                       fieldState.invalid && 'border-destructive focus-visible:ring-destructive'
                     )}
                   >
@@ -155,7 +152,7 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className='p-0' style={{ width: 'var(--radix-popover-trigger-width)' }} align='start'>
-                  <UserList {...listProps} />
+                  <ComboboxList {...listProps} />
                 </PopoverContent>
               </Popover>
             ) : (
@@ -168,7 +165,7 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
                     aria-invalid={fieldState.invalid}
                     className={cn(
                       'w-full justify-between px-3 font-normal',
-                      selectedUserIds.length === 0 ? 'text-muted-foreground' : '',
+                      selectedIds.length === 0 ? 'text-muted-foreground' : '',
                       fieldState.invalid && 'border-destructive focus-visible:ring-destructive'
                     )}
                   >
@@ -182,10 +179,10 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
                 <DrawerContent className='min-h-72'>
                   <div className='mt-4 border-t'>
                     <DrawerHeader className='sr-only'>
-                      <DrawerTitle>{t('project.inviteMembers.search')}</DrawerTitle>
-                      <DrawerDescription>Search user</DrawerDescription>
+                      <DrawerTitle>{t(label ?? 'common.ui.search')}</DrawerTitle>
+                      <DrawerDescription>Search...</DrawerDescription>
                     </DrawerHeader>
-                    <UserList {...listProps} />
+                    <ComboboxList {...listProps} />
                   </div>
                 </DrawerContent>
               </Drawer>
@@ -203,29 +200,35 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
   )
 }
 
-interface UserListProps {
-  items: ComboboxUserItem[]
-  selectedUserIds: string[]
+interface ComboboxListProps<TData> {
+  items: TData[]
+  selectedIds: string[]
   isLoading?: boolean
-  onSelect: (user: ComboboxUserItem) => void
+  onSelect: (item: TData) => void
   onSearchChange: (value: string) => void
   searchValue: string
   setOpen: (open: boolean) => void
+  getId: (item: TData) => string
+  getLabel: (item: TData) => string
+  renderOption: (item: TData) => React.ReactNode
 }
 
-function UserList({
+function ComboboxList<TData>({
   items,
-  selectedUserIds,
+  selectedIds,
   isLoading,
   onSelect,
   onSearchChange,
   searchValue,
-  setOpen
-}: UserListProps) {
+  setOpen,
+  getId,
+  getLabel,
+  renderOption
+}: ComboboxListProps<TData>) {
   const { t } = useTranslation()
 
-  const handleSelect = (user: ComboboxUserItem) => {
-    onSelect(user)
+  const handleSelect = (item: TData) => {
+    onSelect(item)
     setOpen(false)
     onSearchChange('')
   }
@@ -233,44 +236,26 @@ function UserList({
   return (
     <Command shouldFilter={false} className='w-full'>
       <CommandInput
-        placeholder={t('project.inviteMembers.search')}
+        placeholder={t('common.ui.search')}
         value={searchValue}
         onValueChange={onSearchChange}
         className='h-9'
       />
-
       <CommandList className={items.length > 0 ? 'border-t' : ''}>
-        {/* {isLoading && (
-          <CommandItem className='flex items-center justify-center pb-6' disabled>
-            <Spinner />
-          </CommandItem>
-        )}
-
-        {!isLoading && items.length === 0 && searchValue.length > 0 && (
-          <CommandItem className='flex items-center justify-center pb-6' disabled>
-            <p className='text-sm text-muted-foreground'>{t('common.ui.noResults')}</p>
-          </CommandItem>
-        )} */}
-
         {!isLoading && items.length > 0 && (
           <CommandGroup>
-            {items.map((user) => {
-              const isSelected = selectedUserIds.includes(user.id)
+            {items.map((item) => {
+              const id = getId(item)
+              const isSelected = selectedIds.includes(id)
               return (
                 <CommandItem
-                  key={user.id}
-                  value={user.email}
-                  onSelect={() => handleSelect(user)}
+                  key={id}
+                  value={getLabel(item)}
+                  onSelect={() => handleSelect(item)}
                   className='cursor-pointer gap-3'
                 >
-                  <Avatar className='size-8'>
-                    <AvatarImage src={user.avatar ?? ''} />
-                    <AvatarFallback>{user.fullName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className='flex-1 overflow-hidden'>
-                    <p className='text-sm font-medium truncate'>{user.fullName}</p>
-                    <p className='text-xs text-muted-foreground truncate'>{user.email}</p>
-                  </div>
+                  <div className='flex-1 overflow-hidden flex items-center gap-2'>{renderOption(item)}</div>
+
                   <CheckIcon
                     className={cn(
                       'ml-auto size-4 text-primary transition-opacity',

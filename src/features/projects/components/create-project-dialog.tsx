@@ -66,11 +66,11 @@ export default function CreateProjectDialog({ children }: CreateProjectDialogPro
                 className='w-full sm:w-auto'
                 disabled={isCreatingProject}
               >
-                {t('project.createProject.cancel')}
+                {t('common.button.cancel')}
               </Button>
               <Button type='submit' className='w-full sm:w-auto' disabled={isCreatingProject}>
                 {isCreatingProject ? <Spinner /> : null}
-                {t('project.createProject.submit')}
+                {t('common.button.submit')}
               </Button>
             </div>
           </form>

@@ -37,7 +37,7 @@ interface ComboboxMultiFieldProps<T extends FieldValues> {
   isRequired?: boolean
 }
 
-export function ComboboxMultiField<T extends FieldValues>({
+export default function MultiSelectField<T extends FieldValues>({
   name,
   label,
   options,

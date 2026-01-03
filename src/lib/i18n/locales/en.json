@@ -68,6 +68,7 @@
       "selected": "selected",
       "characters": "characters",
       "search": "Search...",
+      "selectPlaceholder": "Select option",
       "noResults": "No results found.",
       "viewOnly": "View only",
       "canEdit": "Can edit",
@@ -183,6 +184,12 @@
     "updateProjectTimeline": {
       "title": "Project timeline",
       "description": "Edit the project timeline"
+    },
+    "updateProjectDomains": {
+      "title": "Project domains",
+      "description": "Edit the project domains",
+      "searchLabel": "Domains",
+      "selectedDomains": "Selected domains"
     },
     "inviteMembers": {
       "title": "New members",

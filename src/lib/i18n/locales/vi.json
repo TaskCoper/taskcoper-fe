@@ -68,6 +68,7 @@
       "selected": "đã chọn",
       "characters": "ký tự",
       "search": "Tìm kiếm...",
+      "selectPlaceholder": "Chọn tùy chọn",
       "noResults": "Không tìm thấy kết quả.",
       "viewOnly": "Chỉ xem",
       "canEdit": "Có thể chỉnh sửa",
@@ -183,6 +184,12 @@
     "updateProjectTimeline": {
       "title": "Thời gian dự kiến",
       "description": "Chỉnh sửa thời gian dự kiến của dự án"
+    },
+    "updateProjectDomains": {
+      "title": "Lĩnh vực dự án",
+      "description": "Chỉnh sửa lĩnh vực dự án",
+      "searchLabel": "Lĩnh vực",
+      "selectedDomains": "Lĩnh vực đã chọn"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",

@@ -1,4 +1,4 @@
-import { ComboboxMultiField } from '@/components/combobox-multifield'
+import MultiSelectField from '@/components/multi-select-field'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useGetDomains } from '@/hooks/use-get-domains'
@@ -10,7 +10,7 @@ export default function CreateProjectForm() {
   const { t } = useTranslation()
   const { control } = useFormContext<CreateProjectFormValues>()
 
-  const { domains, isLoadingDomains } = useGetDomains()
+  const { domains, isLoadingDomains } = useGetDomains({})
 
   return (
     <div className='flex flex-col gap-2 w-full'>
@@ -41,7 +41,7 @@ export default function CreateProjectForm() {
         )}
       />
 
-      <ComboboxMultiField
+      <MultiSelectField
         control={control}
         name='domainIds'
         label='project.createProject.field.domain.label'
@@ -86,7 +86,7 @@ export default function CreateProjectForm() {
                 id={field.name}
                 placeholder={t('project.createProject.field.description.placeholder')}
                 rows={6}
-                className='min-h-24 resize-none break-all'
+                className='min-h-24 resize-none wrap-break-word'
                 aria-invalid={fieldState.invalid}
               />
               <InputGroupAddon align='block-end'>

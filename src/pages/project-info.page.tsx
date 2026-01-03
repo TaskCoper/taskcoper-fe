@@ -48,7 +48,10 @@ export default function ProjectInfoPage() {
         logoImage: project.logoImage,
         startDate: project.startDate,
         endDate: project.endDate,
-        domainIds: project.domains.map((domain) => domain.domainId),
+        domainIds: project.domains.map((domain) => ({
+          id: domain.domainId,
+          name: domain.name
+        })),
         schoolSubject: project.schoolSubject,
         teamContact: project.teamContact,
         teamEmail: project.teamEmail,
@@ -76,7 +79,12 @@ export default function ProjectInfoPage() {
   }
 
   const onSubmit: SubmitHandler<UpdateProjectFormValues> = (body) => {
-    updateProject({ body })
+    updateProject({
+      body: {
+        ...body,
+        domainIds: body.domainIds.map((domain) => domain.id)
+      }
+    })
   }
 
   if (isLoadingProject || isLoadingMembers) {
@@ -199,7 +207,7 @@ export default function ProjectInfoPage() {
               isPending={isUpdatingProject}
             />
 
-            <ProjectDomainsSection domains={project?.domains ?? []} />
+            <ProjectDomainsSection domains={project?.domains ?? []} isPending={isUpdatingProject} />
 
             <ProjectTimelineSection
               startDate={project?.startDate ?? ''}
