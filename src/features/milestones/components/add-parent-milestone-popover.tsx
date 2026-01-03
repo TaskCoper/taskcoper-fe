@@ -35,7 +35,7 @@ export default function AddParentMilestonePopover({ children, projectId }: AddPa
             <AddParentMilestoneForm />
             <Button type='submit' disabled={isAddingParentMilestone}>
               {isAddingParentMilestone ? <Spinner /> : null}
-              {t('common.add')}
+              {t('common.button.add')}
             </Button>
           </form>
         </FormProvider>

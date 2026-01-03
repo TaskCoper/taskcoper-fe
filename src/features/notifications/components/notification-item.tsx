@@ -63,11 +63,11 @@ export default function NotificationItem({ notification }: NotificationItemProps
             onClick={() => onRespond(false)}
             disabled={isRespondingToInvitation}
           >
-            {t('common.decline')}
+            {t('common.button.decline')}
           </Button>
 
           <Button size='sm' className='h-7' onClick={() => onRespond(true)} disabled={isRespondingToInvitation}>
-            {t('common.accept')}
+            {t('common.button.accept')}
           </Button>
         </div>
       ) : null}

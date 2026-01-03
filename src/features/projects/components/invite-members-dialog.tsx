@@ -75,6 +75,11 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
     inviteMembers({ body })
   }
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.stopPropagation()
+    handleSubmit(onSubmit)(e)
+  }
+
   const onClose = () => {
     methods.reset()
     setOpen(false)
@@ -98,7 +103,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
         </DialogHeader>
 
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form id='invite-members-form' onSubmit={handleFormSubmit}>
             <UsersComboboxField<InviteMembersFormValues, InviteMemberItem>
               name='inviteMembers'
               items={userItems}
@@ -161,9 +166,9 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
               )}
             </div>
 
-            <Button type='submit' className='w-full mt-4' disabled={isInvitingMembers}>
+            <Button type='submit' form='invite-members-form' className='w-full mt-4' disabled={isInvitingMembers}>
               {isInvitingMembers ? <Spinner /> : null}
-              {t('common.invite')}
+              {t('common.button.invite')}
             </Button>
           </form>
         </FormProvider>

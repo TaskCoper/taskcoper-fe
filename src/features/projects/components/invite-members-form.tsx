@@ -54,8 +54,8 @@ export default function InviteMembersForm({ fields, remove }: InviteMembersFormP
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='view'>{t('common.viewOnly')}</SelectItem>
-                        <SelectItem value='edit'>{t('common.canEdit')}</SelectItem>
+                        <SelectItem value='view'>{t('common.ui.viewOnly')}</SelectItem>
+                        <SelectItem value='edit'>{t('common.ui.canEdit')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </Field>

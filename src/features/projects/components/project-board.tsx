@@ -28,6 +28,7 @@ import {
 import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import ProjectContainer from './project-container'
 
@@ -52,6 +53,7 @@ const customCollisionDetection: CollisionDetection = (args) => {
 export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const queryKey = ['milestones', projectId, milestoneId]
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
@@ -187,7 +189,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, milestones: newMilestones }
       })
 
-      const validated = moveMilestoneSchema.safeParse({
+      const validated = moveMilestoneSchema(t).safeParse({
         milestoneId: activeId,
         parentId: milestoneId,
         milestoneName: activeData.column.name,
@@ -222,7 +224,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, tasks: newTasks }
       })
 
-      const validated = moveTaskSchema.safeParse({
+      const validated = moveTaskSchema(t).safeParse({
         id: activeId,
         targetMilestoneId: currentTask.milestoneId,
         targetPosition: newPosition

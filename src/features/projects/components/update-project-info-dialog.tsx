@@ -16,18 +16,16 @@ import UpdateProjectInfoForm from './update-project-info-form'
 
 interface UpdateProjectInfoDialogProps {
   children: React.ReactNode
-  isDirty?: boolean
-  isPending?: boolean
+  isPending: boolean
 }
 
-export default function UpdateProjectInfoDialog({
-  children,
-  isDirty = false,
-  isPending = false
-}: UpdateProjectInfoDialogProps) {
+export default function UpdateProjectInfoDialog({ children, isPending }: UpdateProjectInfoDialogProps) {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
-  const { reset } = useFormContext<UpdateProjectFormValues>()
+  const {
+    reset,
+    formState: { isDirty }
+  } = useFormContext<UpdateProjectFormValues>()
 
   const onClose = () => {
     setOpen(false)
@@ -45,23 +43,23 @@ export default function UpdateProjectInfoDialog({
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className='min-w-2xl overflow-hidden p-0' position='top-center' onInteractOutside={onClose}>
+      <DialogContent className='min-w-2xl p-0' position='top-center' onInteractOutside={onClose}>
         <DialogHeader className='px-6 pt-6'>
           <DialogTitle>{t('project.updateProjectInfo.title')}</DialogTitle>
           <DialogDescription>{t('project.updateProjectInfo.description')}</DialogDescription>
         </DialogHeader>
 
-        <div className='px-6 pb-2 space-y-4 max-h-[calc(100vh-18rem)] overflow-auto'>
+        <div className='px-6 pb-2 space-y-4'>
           <UpdateProjectInfoForm />
         </div>
 
         <div className='flex items-center justify-end gap-2 px-6 pb-6'>
           <Button variant='ghost' type='button' onClick={onClose} disabled={isPending}>
-            {t('common.cancel')}
+            {t('common.button.cancel')}
           </Button>
           <Button type='submit' form='update-project-info-form' disabled={!isDirty || isPending}>
             {isPending ? <Spinner /> : null}
-            {t('common.save')}
+            {t('common.button.save')}
           </Button>
         </div>
       </DialogContent>

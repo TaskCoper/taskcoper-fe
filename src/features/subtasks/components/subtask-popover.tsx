@@ -38,7 +38,7 @@ export default function SubtaskPopover({ children }: SubtaskPopoverProps) {
               {t('task.subtask.title')}
             </Label>
             <Input id='subtask-title' defaultValue={t('task.subtask.subtask')} autoFocus />
-            <Button>{t('task.subtask.addSubtask')}</Button>
+            <Button>{t('common.button.add')}</Button>
           </div>
         </div>
       </PopoverContent>

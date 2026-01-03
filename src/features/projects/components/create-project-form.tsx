@@ -91,7 +91,7 @@ export default function CreateProjectForm() {
               />
               <InputGroupAddon align='block-end'>
                 <InputGroupText className='tabular-nums text-xs'>
-                  {field.value.length}/255 {t('common.characters')}
+                  {field.value.length}/255 {t('common.ui.characters')}
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>

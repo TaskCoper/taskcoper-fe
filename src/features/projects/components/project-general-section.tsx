@@ -2,19 +2,22 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { BookOpenIcon, MailIcon, PhoneIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import UpdateProjectGeneralDialog from './update-project-general-dialog'
 
 interface ProjectGeneralSectionProps {
-  teamSize: number | null
+  teamSize: string | null
   teamContact: string | null
   teamEmail: string | null
   schoolSubject: string | null
+  isPending: boolean
 }
 
 export default function ProjectGeneralSection({
   teamSize,
   teamContact,
   teamEmail,
-  schoolSubject
+  schoolSubject,
+  isPending
 }: ProjectGeneralSectionProps) {
   const { t } = useTranslation()
 
@@ -49,9 +52,11 @@ export default function ProjectGeneralSection({
           <p className='text-xs text-muted-foreground'>{t('project.info.generalDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm'>
-          <SettingsIcon />
-        </Button>
+        <UpdateProjectGeneralDialog isPending={isPending}>
+          <Button variant='ghost' size='icon-sm' type='button' disabled={isPending}>
+            <SettingsIcon />
+          </Button>
+        </UpdateProjectGeneralDialog>
       </div>
 
       <Card className='shadow-none p-0'>
@@ -68,9 +73,9 @@ export default function ProjectGeneralSection({
                 <span className='text-xs font-medium'>{item.label}</span>
               </div>
 
-              <span className='text-xs font-semibold text-foreground max-w-[140px] truncate' title={String(item.value)}>
+              <p className='text-xs font-semibold text-foreground max-w-[60%] truncate' title={String(item.value)}>
                 {item.value ?? <span className='text-muted-foreground/40'>—</span>}
-              </span>
+              </p>
             </div>
           ))}
         </div>

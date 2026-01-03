@@ -86,7 +86,7 @@ export function ComboboxMultiField<T extends FieldValues>({
               {selectedValues.length > 0 ? (
                 selectedValues.length > 3 ? (
                   <p>
-                    {selectedValues.length} {t('common.selected')}
+                    {selectedValues.length} {t('common.ui.selected')}
                   </p>
                 ) : (
                   selectedOptions.map((option) => (

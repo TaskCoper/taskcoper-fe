@@ -5,7 +5,7 @@ export interface ProjectPreview {
   endDate: string
   coverImage: string | null
   logoImage: string | null
-  teamSize: number | null
+  teamSize: string | null
   schoolSubject: string | null
 }
 
@@ -27,7 +27,7 @@ export interface Project {
   endDate: string | null
   coverImage: string | null
   logoImage: string | null
-  teamSize: number | null
+  teamSize: string | null
   teamContact: string | null
   teamEmail: string | null
   progress: number

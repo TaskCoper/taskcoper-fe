@@ -43,6 +43,10 @@ export default function UpdateProjectInfoForm() {
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              {t('project.updateProjectInfo.field.description.label')}
+            </FieldLabel>
+
             <RichTextEditor content={field.value ?? ''} onChange={field.onChange} />
           </Field>
         )}

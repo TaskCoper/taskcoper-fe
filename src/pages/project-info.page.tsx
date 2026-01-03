@@ -83,8 +83,8 @@ export default function ProjectInfoPage() {
     return (
       <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10'>
         <Skeleton className='h-24 col-span-1 lg:col-span-12' />
-        <Skeleton className='h-52 col-span-1 lg:col-span-8' />
-        <Skeleton className='h-32 col-span-1 lg:col-span-4' />
+        <Skeleton className='h-60 col-span-1 lg:col-span-8' />
+        <Skeleton className='h-28 col-span-1 lg:col-span-4' />
       </div>
     )
   }
@@ -134,7 +134,12 @@ export default function ProjectInfoPage() {
                   </div>
                 )}
 
-                <Button variant='outline' size='sm' className='hidden group-hover/cover:flex absolute bottom-2 right-2'>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  type='button'
+                  className='hidden group-hover/cover:flex absolute bottom-2 right-2'
+                >
                   <CameraIcon />
                   {t('project.addCoverImage')}
                 </Button>
@@ -160,20 +165,23 @@ export default function ProjectInfoPage() {
                 <Button
                   variant='outline'
                   size='icon-sm'
+                  type='button'
                   className='hidden group-hover/logo:flex absolute bottom-2 right-2'
                 >
                   <CameraIcon />
                 </Button>
               </FileDropzone>
 
-              <UpdateProjectInfoDialog isDirty={methods.formState.isDirty} isPending={isUpdatingProject}>
+              <UpdateProjectInfoDialog isPending={isUpdatingProject}>
                 <Button
+                  type='button'
                   className='absolute -bottom-10 right-0 z-10'
                   size={isMobile ? 'icon-sm' : 'sm'}
                   variant='secondary'
+                  disabled={isUpdatingProject}
                 >
                   <EditIcon />
-                  {isMobile ? null : t('common.edit')}
+                  {isMobile ? null : t('common.button.edit')}
                 </Button>
               </UpdateProjectInfoDialog>
             </div>
@@ -193,6 +201,7 @@ export default function ProjectInfoPage() {
               teamContact={project?.teamContact ?? null}
               teamEmail={project?.teamEmail ?? null}
               schoolSubject={project?.schoolSubject ?? null}
+              isPending={isUpdatingProject}
             />
 
             <ProjectDomainsSection domains={project?.domains ?? []} />

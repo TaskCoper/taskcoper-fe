@@ -36,14 +36,14 @@ export default function LabelPopover({ children }: LabelPopoverProps) {
       >
         <div className='p-4 space-y-4'>
           <div className='flex items-center justify-center relative'>
-            <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('task.label.label')}</p>
+            <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('common.field.label')}</p>
             <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={handleClose} />
           </div>
 
           <Input placeholder={t('task.label.findLabel')} />
 
           <div className='flex flex-col gap-2'>
-            <p className='text-sm font-bold w-full text-foreground/60'>{t('task.label.label')}</p>
+            <p className='text-sm font-bold w-full text-foreground/60'>{t('common.field.label')}</p>
 
             <div className='space-y-1'>
               {defaultDisplayLabels.map((label) => (

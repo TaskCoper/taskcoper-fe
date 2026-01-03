@@ -27,7 +27,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
       projectId,
       position: calculatedPosition
     },
-    resolver: zodResolver(addParentMilestoneSchema)
+    resolver: zodResolver(addParentMilestoneSchema(t))
   })
 
   useEffect(() => {

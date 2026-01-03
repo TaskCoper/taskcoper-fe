@@ -18,7 +18,7 @@ export default function ProjectDomainsSection({ domains }: ProjectDomainsSection
           <p className='text-xs text-muted-foreground'>{t('project.info.domainDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm'>
+        <Button variant='ghost' size='icon-sm' type='button'>
           <SettingsIcon />
         </Button>
       </div>

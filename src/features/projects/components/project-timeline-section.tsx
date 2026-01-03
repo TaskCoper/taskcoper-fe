@@ -29,7 +29,7 @@ export default function ProjectTimelineSection({ startDate, endDate }: ProjectTi
           <p className='text-xs text-muted-foreground'>{t('project.info.timelineDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm'>
+        <Button variant='ghost' size='icon-sm' type='button'>
           <SettingsIcon />
         </Button>
       </div>

@@ -110,8 +110,8 @@ export default function UsersComboboxField<TForm extends FieldValues, TArrayItem
 
         const getButtonText = () => {
           if (selectedUserIds.length === 0) return t(placeholder)
-          if (selectedUserIds.length === 1) return `${selectedUserIds.length} ${t('common.selected')}`
-          return `${selectedUserIds.length} ${t('common.selected')}`
+          if (selectedUserIds.length === 1) return `${selectedUserIds.length} ${t('common.ui.selected')}`
+          return `${selectedUserIds.length} ${t('common.ui.selected')}`
         }
 
         const listProps = {
@@ -248,7 +248,7 @@ function UserList({
 
         {!isLoading && items.length === 0 && searchValue.length > 0 && (
           <CommandItem className='flex items-center justify-center pb-6' disabled>
-            <p className='text-sm text-muted-foreground'>{t('common.noResults')}</p>
+            <p className='text-sm text-muted-foreground'>{t('common.ui.noResults')}</p>
           </CommandItem>
         )} */}
 

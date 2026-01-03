@@ -25,7 +25,7 @@ export default function ProjectMembersSection({ members, totalMembers, projectId
           <p className='text-xs text-muted-foreground'>{t('project.info.memberDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm'>
+        <Button variant='ghost' size='icon-sm' type='button'>
           <SettingsIcon />
         </Button>
       </div>
@@ -68,7 +68,7 @@ export default function ProjectMembersSection({ members, totalMembers, projectId
 
         {projectId ? (
           <InviteMembersDialog projectId={projectId}>
-            <Button className='w-full'>
+            <Button type='button' className='w-full'>
               <UserRoundPlusIcon />
               {t('project.info.inviteMembers')}
             </Button>
