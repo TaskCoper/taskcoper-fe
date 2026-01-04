@@ -1,6 +1,7 @@
+import type { TFunction } from 'i18next'
 import z from 'zod'
 
-export const addParentMilestoneSchema = (t: (key: string) => string) => {
+export const addParentMilestoneSchema = (t: TFunction) => {
   return z
     .object({
       milestoneName: z
@@ -14,7 +15,7 @@ export const addParentMilestoneSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const addMilestoneSchema = (t: (key: string) => string) => {
+export const addMilestoneSchema = (t: TFunction) => {
   return z
     .object({
       parentId: z.uuid(t('milestone.validation.parentId.invalid')),
@@ -29,7 +30,7 @@ export const addMilestoneSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const moveMilestoneSchema = (t: (key: string) => string) => {
+export const moveMilestoneSchema = (t: TFunction) => {
   return z
     .object({
       milestoneId: z.uuid(t('milestone.validation.milestoneId.invalid')),

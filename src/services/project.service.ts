@@ -90,6 +90,27 @@ class ProjectService {
 
     return data.value
   }
+
+  toggleEditor = async ({ projectId, userId, isEditor }: { projectId: string; userId: string; isEditor: boolean }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+      projectId,
+      userId,
+      isEditor
+    })
+
+    return data.value
+  }
+
+  deleteMember = async ({ projectId, userId }: { projectId: string; userId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+      data: {
+        projectId,
+        userId
+      }
+    })
+
+    return data.value
+  }
 }
 
 const projectService = new ProjectService()

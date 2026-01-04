@@ -32,6 +32,8 @@ export default function NotificationItem({ notification }: NotificationItemProps
     })
   }
 
+  console.log(payload)
+
   return (
     <div className='space-y-1 relative p-3 hover:bg-blue-50/50 cursor-pointer last:rounded-b-md'>
       {!notification.isRead && <div className='absolute top-3 right-3 size-2 rounded-full bg-primary' />}
@@ -54,7 +56,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
         </p>
       </div>
 
-      {!notification.isInteract ? (
+      {!notification.isInteract && payload ? (
         <div className='flex items-center gap-2 mt-2'>
           <Button
             variant='secondary'

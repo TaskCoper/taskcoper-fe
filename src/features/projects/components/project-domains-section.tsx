@@ -7,9 +7,10 @@ import UpdateProjectDomainsDialog from './update-project-domains-dialog'
 interface ProjectDomainsSectionProps {
   domains: ProjectDomain[]
   isPending: boolean
+  isCurrentUserMain: boolean
 }
 
-export default function ProjectDomainsSection({ domains, isPending }: ProjectDomainsSectionProps) {
+export default function ProjectDomainsSection({ domains, isPending, isCurrentUserMain }: ProjectDomainsSectionProps) {
   const { t } = useTranslation()
 
   return (
@@ -20,11 +21,13 @@ export default function ProjectDomainsSection({ domains, isPending }: ProjectDom
           <p className='text-xs text-muted-foreground'>{t('project.info.domainDescription')}</p>
         </div>
 
-        <UpdateProjectDomainsDialog isPending={isPending}>
-          <Button variant='ghost' size='icon-sm' type='button'>
-            <SettingsIcon />
-          </Button>
-        </UpdateProjectDomainsDialog>
+        {isCurrentUserMain ? (
+          <UpdateProjectDomainsDialog isPending={isPending}>
+            <Button variant='ghost' size='icon-sm' type='button'>
+              <SettingsIcon />
+            </Button>
+          </UpdateProjectDomainsDialog>
+        ) : null}
       </div>
 
       <div className='flex items-center gap-2 flex-wrap'>

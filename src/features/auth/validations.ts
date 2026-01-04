@@ -1,6 +1,7 @@
+import type { TFunction } from 'i18next'
 import { z } from 'zod'
 
-export const createSignUpSchema = (t: (key: string) => string) => {
+export const createSignUpSchema = (t: TFunction) => {
   return z
     .object({
       email: z.email(t('common.validation.email.invalid')).trim(),
@@ -27,7 +28,7 @@ export const createSignUpSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const createVerifyEmailSchema = (t: (key: string) => string) => {
+export const createVerifyEmailSchema = (t: TFunction) => {
   return z
     .object({
       email: z.email(t('common.validation.email.invalid')).trim(),
@@ -40,7 +41,7 @@ export const createVerifyEmailSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const createSignInSchema = (t: (key: string) => string) => {
+export const createSignInSchema = (t: TFunction) => {
   return z
     .object({
       email: z.email(t('common.validation.email.invalid')).trim(),

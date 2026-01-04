@@ -1,6 +1,8 @@
 import { cn } from '@/shared/utils'
 import { useCallback, useEffect, useState } from 'react'
-import { useDropzone, type DropzoneOptions } from 'react-dropzone'
+import { useDropzone, type DropzoneOptions, type FileRejection } from 'react-dropzone'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface FileDropzoneProps extends Omit<DropzoneOptions, 'onDrop'> {
   value?: File | string | null
@@ -20,6 +22,7 @@ export default function FileDropzone({
   className,
   ...dropzoneProps
 }: FileDropzoneProps) {
+  const { t } = useTranslation()
   const [internalFile, setInternalFile] = useState<File | string | null>(defaultValue || null)
   const currentFile = value !== undefined ? value : internalFile
 
@@ -48,14 +51,28 @@ export default function FileDropzone({
   }, [currentFile])
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const file = acceptedFiles[0]
       if (file) {
         setInternalFile(file)
         onFileChange?.(file)
       }
+
+      if (fileRejections.length > 0) {
+        const rejection = fileRejections[0]
+
+        if (rejection.errors[0].code === 'file-invalid-type') {
+          toast.error(t('common.ui.invalidFileType'), {
+            description: t('common.ui.pleaseUploadValidFileFormat')
+          })
+        } else if (rejection.errors[0].code === 'file-too-large') {
+          toast.error(t('common.ui.fileTooLarge'), {
+            description: t('common.ui.pleaseUploadSmallerFile')
+          })
+        }
+      }
     },
-    [onFileChange]
+    [onFileChange, t]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

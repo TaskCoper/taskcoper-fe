@@ -97,11 +97,11 @@ export default function DefaultLayout() {
                 className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
               >
                 <BellIcon className='size-4 sm:size-5' />
-                {isLoadingUnreadCount ? null : (
+                {isLoadingUnreadCount ? null : unreadCount > 0 ? (
                   <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
                     <p className='text-xs text-white'>{unreadCount}</p>
                   </div>
-                )}
+                ) : null}
               </Button>
             </NotificationsPopover>
           </div>

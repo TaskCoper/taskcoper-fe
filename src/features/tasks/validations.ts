@@ -1,6 +1,7 @@
+import type { TFunction } from 'i18next'
 import z from 'zod'
 
-export const addTaskSchema = (t: (key: string) => string) => {
+export const addTaskSchema = (t: TFunction) => {
   return z
     .object({
       milestoneId: z.uuid(t('task.validation.milestoneId.invalid')),
@@ -10,7 +11,7 @@ export const addTaskSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const moveTaskSchema = (t: (key: string) => string) => {
+export const moveTaskSchema = (t: TFunction) => {
   return z
     .object({
       id: z.uuid(t('task.validation.id.invalid')),

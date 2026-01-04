@@ -2,17 +2,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/utils'
 import type { ProjectMember } from '@/types/project.type'
-import { SettingsIcon, UserRoundPlusIcon } from 'lucide-react'
+import { MoreHorizontalIcon, SettingsIcon, UserRoundPlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import InviteMembersDialog from './invite-members-dialog'
+import UpdateProjectMembersDialog from './update-project-members-dialog'
 
 interface ProjectMembersSectionProps {
   members: ProjectMember[]
+  isCurrentUserMain: boolean
   totalMembers: number
   projectId?: string
 }
 
-export default function ProjectMembersSection({ members, totalMembers, projectId }: ProjectMembersSectionProps) {
+export default function ProjectMembersSection({
+  members,
+  isCurrentUserMain,
+  totalMembers,
+  projectId
+}: ProjectMembersSectionProps) {
   const { t } = useTranslation()
 
   return (
@@ -25,9 +32,13 @@ export default function ProjectMembersSection({ members, totalMembers, projectId
           <p className='text-xs text-muted-foreground'>{t('project.info.memberDescription')}</p>
         </div>
 
-        <Button variant='ghost' size='icon-sm' type='button'>
-          <SettingsIcon />
-        </Button>
+        {projectId ? (
+          <UpdateProjectMembersDialog projectId={projectId} isCurrentUserMain={isCurrentUserMain}>
+            <Button variant='ghost' size='icon-sm' type='button'>
+              {isCurrentUserMain ? <SettingsIcon /> : <MoreHorizontalIcon />}
+            </Button>
+          </UpdateProjectMembersDialog>
+        ) : null}
       </div>
 
       <div className='space-y-2'>
@@ -66,7 +77,7 @@ export default function ProjectMembersSection({ members, totalMembers, projectId
           ))}
         </div>
 
-        {projectId ? (
+        {projectId && isCurrentUserMain ? (
           <InviteMembersDialog projectId={projectId}>
             <Button type='button' className='w-full'>
               <UserRoundPlusIcon />

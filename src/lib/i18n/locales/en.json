@@ -72,12 +72,24 @@
       "noResults": "No results found.",
       "viewOnly": "View only",
       "canEdit": "Can edit",
-      "none": "None"
+      "none": "None",
+      "uploading": "Uploading...",
+      "pleaseWait": "Please wait...",
+      "uploadSuccess": "Upload successful",
+      "invalidFileType": "Invalid file type",
+      "pleaseUploadValidFileFormat": "Please upload a valid file format.",
+      "fileTooLarge": "File too large",
+      "pleaseUploadSmallerFile": "Please upload a smaller file.",
+      "me": "me",
+      "yes": "Yes",
+      "no": "No"
     }
   },
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
+    "memberProjects": "Other projects",
+    "memberProjectsDescription": "Projects assigned to you as a team member",
     "addCoverImage": "Add cover image",
     "addLogoImage": "Add logo image",
     "info": {
@@ -190,6 +202,26 @@
       "description": "Edit the project domains",
       "searchLabel": "Domains",
       "selectedDomains": "Selected domains"
+    },
+    "updateProjectMembers": {
+      "title": "Project members",
+      "description": "Edit the project members",
+      "confirm": {
+        "title": "Remove member",
+        "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "confirmText": "Remove",
+        "cancelText": "Cancel"
+      },
+      "column": {
+        "member": "Member",
+        "role": "Role",
+        "permission": "Permission",
+        "canEdit": "Editor"
+      },
+      "role": {
+        "mentor": "Mentor",
+        "student": "Student"
+      }
     },
     "inviteMembers": {
       "title": "New members",

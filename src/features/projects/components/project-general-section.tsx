@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { BookOpenIcon, MailIcon, PhoneIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import UpdateProjectGeneralDialog from './update-project-general-dialog'
@@ -10,6 +10,7 @@ interface ProjectGeneralSectionProps {
   teamEmail: string | null
   schoolSubject: string | null
   isPending: boolean
+  isCurrentUserMain: boolean
 }
 
 export default function ProjectGeneralSection({
@@ -17,32 +18,40 @@ export default function ProjectGeneralSection({
   teamContact,
   teamEmail,
   schoolSubject,
-  isPending
+  isPending,
+  isCurrentUserMain
 }: ProjectGeneralSectionProps) {
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
-  const items = [
-    {
-      label: t('project.info.teamSize'),
-      value: teamSize,
-      icon: UsersIcon
-    },
-    {
-      label: t('project.info.teamContact'),
-      value: teamContact,
-      icon: PhoneIcon
-    },
-    {
-      label: t('project.info.teamEmail'),
-      value: teamEmail,
-      icon: MailIcon
-    },
-    {
-      label: t('project.info.schoolSubject'),
-      value: schoolSubject,
-      icon: BookOpenIcon
-    }
-  ]
+  const getItems = () => {
+    return [
+      {
+        label: t('project.info.teamSize'),
+        value: teamSize,
+        icon: UsersIcon
+      },
+      {
+        label: t('project.info.teamContact'),
+        value: teamContact,
+        icon: PhoneIcon
+      },
+      {
+        label: t('project.info.teamEmail'),
+        value: teamEmail,
+        icon: MailIcon
+      },
+      ...(user?.OrganizationId
+        ? [
+            {
+              label: t('project.info.schoolSubject'),
+              value: schoolSubject,
+              icon: BookOpenIcon
+            }
+          ]
+        : [])
+    ]
+  }
 
   return (
     <div className='space-y-2'>
@@ -52,34 +61,29 @@ export default function ProjectGeneralSection({
           <p className='text-xs text-muted-foreground'>{t('project.info.generalDescription')}</p>
         </div>
 
-        <UpdateProjectGeneralDialog isPending={isPending}>
-          <Button variant='ghost' size='icon-sm' type='button' disabled={isPending}>
-            <SettingsIcon />
-          </Button>
-        </UpdateProjectGeneralDialog>
+        {isCurrentUserMain ? (
+          <UpdateProjectGeneralDialog isPending={isPending}>
+            <Button variant='ghost' size='icon-sm' type='button' disabled={isPending}>
+              <SettingsIcon />
+            </Button>
+          </UpdateProjectGeneralDialog>
+        ) : null}
       </div>
 
-      <Card className='shadow-none p-0'>
-        <div className='divide-y divide-border/50'>
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className='flex items-center justify-between pl-2 pr-3 py-2 hover:bg-muted/40 transition-colors group'
-            >
-              <div className='flex items-center gap-2.5 text-muted-foreground'>
-                <div className='p-1.5 rounded-sm bg-muted/50 group-hover:bg-background transition-colors'>
-                  <item.icon className='size-3.5' />
-                </div>
-                <span className='text-xs font-medium'>{item.label}</span>
-              </div>
-
-              <p className='text-xs font-semibold text-foreground max-w-[60%] truncate' title={String(item.value)}>
-                {item.value ?? <span className='text-muted-foreground/40'>—</span>}
-              </p>
+      <div className='space-y-4 mt-4'>
+        {getItems().map((item, index) => (
+          <div key={index} className='flex items-center justify-between hover:bg-muted/40 transition-colors group'>
+            <div className='flex items-center gap-2.5 text-muted-foreground'>
+              <item.icon className='size-4' />
+              <p className='text-xs font-medium'>{item.label}</p>
             </div>
-          ))}
-        </div>
-      </Card>
+
+            <p className='text-xs font-semibold max-w-[70%] truncate' title={String(item.value)}>
+              {item.value ?? <span className='text-muted-foreground/40'>—</span>}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

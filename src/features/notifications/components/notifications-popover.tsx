@@ -39,7 +39,7 @@ export default function NotificationsPopover({ children, open, onOpenChange }: N
             <Skeleton className='size-10 w-full' />
           </div>
         ) : notifications.value.totalCount === 0 ? (
-          <div className='flex flex-col gap-2 items-center justify-center h-32'>
+          <div className='flex flex-col gap-2 items-center justify-center h-60'>
             <MessageCircleQuestionMarkIcon className='size-10 text-muted-foreground' />
             <p className='text-sm text-muted-foreground'>{t('notification.popover.description')}</p>
           </div>

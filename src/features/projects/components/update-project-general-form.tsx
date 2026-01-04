@@ -1,10 +1,12 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateProjectFormValues } from '../validations'
 
 export default function UpdateProjectGeneralForm() {
+  const { user } = useAuthStore()
   const { t } = useTranslation()
   const { control } = useFormContext<UpdateProjectFormValues>()
 
@@ -82,29 +84,33 @@ export default function UpdateProjectGeneralForm() {
         )}
       />
 
-      <Controller
-        name='schoolSubject'
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid} className='gap-1'>
-            <FieldLabel htmlFor={field.name}>{t('project.updateProjectGeneral.field.schoolSubject.label')}</FieldLabel>
+      {user?.OrganizationId ? (
+        <Controller
+          name='schoolSubject'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel htmlFor={field.name}>
+                {t('project.updateProjectGeneral.field.schoolSubject.label')}
+              </FieldLabel>
 
-            <Input
-              {...field}
-              id={field.name}
-              aria-invalid={fieldState.invalid}
-              placeholder={t('project.updateProjectGeneral.field.schoolSubject.placeholder')}
-              autoComplete='off'
-              spellCheck={false}
-              value={field.value ?? ''}
-            />
+              <Input
+                {...field}
+                id={field.name}
+                aria-invalid={fieldState.invalid}
+                placeholder={t('project.updateProjectGeneral.field.schoolSubject.placeholder')}
+                autoComplete='off'
+                spellCheck={false}
+                value={field.value ?? ''}
+              />
 
-            <div className='min-h-4'>
-              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
-          </Field>
-        )}
-      />
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
+      ) : null}
     </div>
   )
 }

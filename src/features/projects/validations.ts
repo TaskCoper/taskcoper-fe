@@ -1,8 +1,9 @@
+import type { TFunction } from 'i18next'
 import z from 'zod'
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 
-export const createProjectSchema = (t: (key: string) => string) => {
+export const createProjectSchema = (t: TFunction) => {
   return z
     .object({
       name: z
@@ -20,7 +21,7 @@ export const createProjectSchema = (t: (key: string) => string) => {
     .strict()
 }
 
-export const memberSchema = (t: (key: string) => string) => {
+export const memberSchema = (t: TFunction) => {
   return z.object({
     userId: z.uuid(t('project.inviteMembers.validation.users.userId.invalid')),
     email: z.email(t('project.inviteMembers.validation.users.email.invalid')).trim(),
@@ -33,14 +34,14 @@ export const memberSchema = (t: (key: string) => string) => {
   })
 }
 
-export const domainSchema = (t: (key: string) => string) => {
+export const domainSchema = (t: TFunction) => {
   return z.object({
     id: z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')),
     name: z.string().trim().min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
   })
 }
 
-export const inviteMembersSchema = (t: (key: string) => string) => {
+export const inviteMembersSchema = (t: TFunction) => {
   return z
     .object({
       projectId: z.uuid(t('project.inviteMembers.validation.projectId.invalid')),
@@ -68,7 +69,7 @@ export const inviteMembersSchema = (t: (key: string) => string) => {
     )
 }
 
-export const updateProjectSchema = (t: (key: string) => string) => {
+export const updateProjectSchema = (t: TFunction) => {
   return z
     .object({
       projectId: z.uuid(t('project.updateProject.validation.projectId.invalid')),

@@ -10,6 +10,7 @@ interface ProjectTimelineSectionProps {
   startDate: string
   endDate: string
   isPending: boolean
+  isCurrentUserMain: boolean
 }
 
 const DATE_LOCALES: Record<string, Locale> = {
@@ -17,7 +18,12 @@ const DATE_LOCALES: Record<string, Locale> = {
   en: enUS
 }
 
-export default function ProjectTimelineSection({ startDate, endDate, isPending }: ProjectTimelineSectionProps) {
+export default function ProjectTimelineSection({
+  startDate,
+  endDate,
+  isPending,
+  isCurrentUserMain
+}: ProjectTimelineSectionProps) {
   const { t, i18n } = useTranslation()
 
   const currentLocale = DATE_LOCALES[i18n.language] || enUS
@@ -31,11 +37,13 @@ export default function ProjectTimelineSection({ startDate, endDate, isPending }
           <p className='text-xs text-muted-foreground'>{t('project.info.timelineDescription')}</p>
         </div>
 
-        <UpdateProjectTimelineDialog isPending={isPending}>
-          <Button variant='ghost' size='icon-sm' type='button'>
-            <SettingsIcon />
-          </Button>
-        </UpdateProjectTimelineDialog>
+        {isCurrentUserMain ? (
+          <UpdateProjectTimelineDialog isPending={isPending}>
+            <Button variant='ghost' size='icon-sm' type='button'>
+              <SettingsIcon />
+            </Button>
+          </UpdateProjectTimelineDialog>
+        ) : null}
       </div>
 
       <Card className='p-4 border-dashed shadow-none flex-row items-center justify-between gap-4 cursor-pointer hover:bg-muted/30'>

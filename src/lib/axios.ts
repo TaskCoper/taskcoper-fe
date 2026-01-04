@@ -1,11 +1,7 @@
+import config from '@/shared/config'
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import i18n from './i18n/i18n'
 import { useAuthStore } from './zustand/auth.store'
-import config from '@/constants/config'
-
-// if (!import.meta.env.VITE_API_BASE_URL) {
-//   throw new Error('VITE_API_BASE_URL is not set')
-// }
 
 interface ApiResponse {
   isSuccess: boolean
@@ -48,10 +44,14 @@ export const api = axios.create({
     const searchParams = new URLSearchParams()
 
     Object.entries(params).forEach(([key, value]) => {
-      if (value === null || value === undefined) return
+      if (value === null || value === undefined) {
+        return
+      }
 
       if (Array.isArray(value)) {
-        value.forEach((item) => searchParams.append(key, String(item)))
+        value.forEach((item) => {
+          searchParams.append(key, item)
+        })
       } else {
         searchParams.append(key, String(value))
       }
