@@ -5,18 +5,278 @@
     "expertNetwork": "Expert Network",
     "startupCommunity": "Startup Community",
     "news": "News",
-    "myProjects": "Go to My Projects"
+    "manageProjects": "Manage"
+  },
+  "role": {
+    "owner": "Owner",
+    "editor": "Editor",
+    "viewer": "Viewer"
+  },
+  "common": {
+    "button": {
+      "add": "Add",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "invite": "Invite",
+      "accept": "Accept",
+      "decline": "Decline",
+      "remove": "Remove",
+      "insert": "Insert"
+    },
+    "field": {
+      "label": "Label",
+      "description": "Description",
+      "title": "Title",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "date": "Date"
+    },
+    "validation": {
+      "email": {
+        "invalid": "Invalid email address"
+      },
+      "required": "This field is required",
+      "maxLength": {
+        "255": "Max 255 characters",
+        "10000": "Max 10000 characters",
+        "20": "Max 20 characters"
+      },
+      "minLength": {
+        "1": "This field is required",
+        "8": "Must be at least 8 characters long",
+        "6": "Must be 6 characters"
+      },
+      "url": {
+        "invalid": "Invalid URL"
+      },
+      "number": {
+        "positive": "Must be a positive number",
+        "invalid": "Must be a valid number"
+      },
+      "date": {
+        "invalid": "Invalid date format",
+        "required": "Date is required",
+        "mustBeGreater": "End date must be greater than start date"
+      }
+    },
+    "ui": {
+      "selected": "selected",
+      "characters": "characters",
+      "search": "Search...",
+      "selectPlaceholder": "Select option",
+      "noResults": "No results found.",
+      "viewOnly": "View only",
+      "canEdit": "Can edit",
+      "none": "None",
+      "uploading": "Uploading...",
+      "pleaseWait": "Please wait...",
+      "uploadSuccess": "Upload successful",
+      "invalidFileType": "Invalid file type",
+      "pleaseUploadValidFileFormat": "Please upload a valid file format.",
+      "fileTooLarge": "File too large",
+      "pleaseUploadSmallerFile": "Please upload a smaller file.",
+      "me": "me",
+      "yes": "Yes",
+      "no": "No"
+    }
   },
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
+    "memberProjects": "Other projects",
+    "memberProjectsDescription": "Projects assigned to you as a team member",
+    "addCoverImage": "Add cover image",
+    "addLogoImage": "Add logo image",
+    "info": {
+      "general": "General",
+      "generalDescription": "Basic information about the project",
+      "domains": "Domains",
+      "domainDescription": "Help classify your project better",
+      "teamSize": "Team size",
+      "teamSizeDescription": "Number of team members in the project currently",
+      "teamContact": "Team contact",
+      "teamContactDescription": "Contact information for the team",
+      "teamEmail": "Team email",
+      "teamEmailDescription": "Email address for the team",
+      "schoolSubject": "School subject",
+      "schoolSubjectDescription": "Subject of the school the project is related to",
+      "members": "Members",
+      "memberDescription": "Number of members in the project currently",
+      "inviteMembers": "Invite members",
+      "timeline": "Timeline",
+      "timelineDescription": "The planned start and end time",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "progress": "Progress",
+      "progressDescription": "Overall project progress"
+    },
+    "updateProjectInfo": {
+      "title": "Project overview",
+      "description": "Edit the project name and summary",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter project description"
+        }
+      }
+    },
+    "updateProjectGeneral": {
+      "title": "Project general",
+      "description": "Edit the project general information",
+      "field": {
+        "teamSize": {
+          "label": "Team size",
+          "placeholder": "Enter team size"
+        },
+        "teamContact": {
+          "label": "Team contact",
+          "placeholder": "Enter team contact"
+        },
+        "teamEmail": {
+          "label": "Team email",
+          "placeholder": "Enter team email"
+        },
+        "schoolSubject": {
+          "label": "School subject",
+          "placeholder": "Enter school subject"
+        }
+      }
+    },
+    "updateProject": {
+      "validation": {
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "name": {
+          "minLength": "Project name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 10000 characters"
+        },
+        "startDate": {
+          "invalid": "Invalid start date format"
+        },
+        "endDate": {
+          "invalid": "Invalid end date format"
+        },
+        "coverImage": {
+          "invalid": "Invalid cover image URL"
+        },
+        "logoImage": {
+          "invalid": "Invalid logo image URL"
+        },
+        "teamSize": {
+          "maxLength": "Max 255 characters"
+        },
+        "teamContact": {
+          "maxLength": "Max 255 characters"
+        },
+        "teamEmail": {
+          "invalid": "Invalid email address"
+        },
+        "schoolSubject": {
+          "maxLength": "Max 255 characters"
+        },
+        "domainIds": {
+          "minLength": "At least one domain is required",
+          "invalid": "Invalid domain"
+        }
+      }
+    },
+    "updateProjectTimeline": {
+      "title": "Project timeline",
+      "description": "Edit the project timeline"
+    },
+    "updateProjectDomains": {
+      "title": "Project domains",
+      "description": "Edit the project domains",
+      "searchLabel": "Domains",
+      "selectedDomains": "Selected domains"
+    },
+    "updateProjectMembers": {
+      "title": "Project members",
+      "description": "Edit the project members",
+      "confirm": {
+        "title": "Remove member",
+        "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "confirmText": "Remove",
+        "cancelText": "Cancel"
+      },
+      "column": {
+        "member": "Member",
+        "role": "Role",
+        "permission": "Permission",
+        "canEdit": "Editor"
+      },
+      "role": {
+        "mentor": "Mentor",
+        "student": "Student"
+      }
+    },
+    "inviteMembers": {
+      "title": "New members",
+      "description": "Add new members to your project to collaborate and share tasks.",
+      "invitedUsers": "Invited users",
+      "comboboxPlaceholder": "Click to invite",
+      "search": "Type email to search...",
+      "searchLabel": "Member",
+      "validation": {
+        "inviteMembers": {
+          "minLength": "At least one member is required"
+        },
+        "users": {
+          "userId": {
+            "invalid": "Invalid user ID"
+          },
+          "email": {
+            "invalid": "Invalid email address"
+          },
+          "fullName": {
+            "required": "Full name is required"
+          },
+          "avatar": {
+            "invalid": "Invalid avatar URL"
+          },
+          "inviteExpireDate": {
+            "invalid": "Invalid expiration date format"
+          }
+        },
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "dateRequired": "Expiration date is required when expiration is enabled",
+        "dateInvalid": "Expiration date must be greater than today"
+      },
+      "field": {
+        "hasExpiration": {
+          "label": "Expiration",
+          "description": "Enable expiration to set a date for the invite to expire"
+        },
+        "expirationDate": {
+          "label": "Expiration date",
+          "placeholder": "Select expiration date"
+        }
+      }
+    },
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "Tasks",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
-      "settings": "Settings"
+      "settings": "Settings",
+      "myProjects": "My Projects",
+      "myCalendar": "My Calendar"
     },
     "tasks": {
       "addTask": "Add new task",
@@ -24,8 +284,6 @@
     },
     "createProject": {
       "button": "Create project",
-      "cancel": "Cancel",
-      "submit": "Submit",
       "title": "New project",
       "description": "Create a new project to get started",
       "field": {
@@ -85,18 +343,33 @@
         }
       }
     },
+    "validation": {
+      "name": {
+        "minLength": "Task name is required",
+        "maxLength": "Max 255 characters"
+      },
+      "milestoneId": {
+        "invalid": "Invalid milestone"
+      },
+      "id": {
+        "invalid": "Invalid task ID"
+      },
+      "targetMilestoneId": {
+        "invalid": "Invalid target milestone"
+      },
+      "position": {
+        "invalid": "Invalid position"
+      },
+      "targetPosition": {
+        "invalid": "Invalid target position"
+      }
+    },
     "date": {
       "notSetDate": "DD/MM/YYYY",
       "notSetTime": "H:mm",
-      "date": "Date",
-      "startDate": "Start date",
-      "endDate": "End date",
       "reminderSetting": "Reminder Setting",
       "selectReminderTime": "Select reminder time",
       "reminderDescription": "Reminder will be sent to all members and followers of this card.",
-      "save": "Save",
-      "remove": "Remove",
-      "none": "None",
       "expiredDate": "At expiration date",
       "fiveMinutesBefore": "5 minutes before",
       "tenMinutesBefore": "10 minutes before",
@@ -107,25 +380,19 @@
       "twoDaysBefore": "2 days before"
     },
     "label": {
-      "label": "Label",
       "createLabel": "Create new label",
       "findLabel": "Find label..."
     },
     "subtask": {
       "subtask": "Subtask",
-      "subtaskTitle": "Add a list of tasks",
-      "title": "Title",
-      "addSubtask": "Add"
+      "subtaskTitle": "Add a list of tasks"
     },
     "assignee": {
-      "assignee": "Assignee",
       "findAssignee": "Find assignee...",
       "boardAssignee": "Board assignee"
     },
     "attachment": {
       "attachment": "Attachment",
-      "cancel": "Cancel",
-      "insert": "Insert",
       "attachmentTitle": "Attach files from your computer",
       "attachmentDescription": "You can also drag and drop files to upload them.",
       "chooseAttachment": "Choose file",
@@ -136,7 +403,6 @@
       "attachmentDisplayDescription": "Provide a title or description for this link"
     },
     "description": {
-      "description": "Description",
       "addDescription": "Add more detailed description..."
     },
     "comment": {
@@ -146,8 +412,6 @@
   },
   "richTextEditor": {
     "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
-    "save": "Save",
-    "cancel": "Cancel",
     "heading": {
       "label": "Heading",
       "ariaLabel": "Format text as heading",
@@ -301,11 +565,6 @@
     "searchPlaceholder": "Search...",
     "emptyMessage": "No options found."
   },
-  "common": {
-    "selected": "selected",
-    "characters": "characters",
-    "add": "Add"
-  },
   "milestone": {
     "addParentMilestone": {
       "title": "Parent milestone",
@@ -326,6 +585,37 @@
           "placeholder": "Enter milestone name..."
         }
       }
+    },
+    "validation": {
+      "milestoneName": {
+        "minLength": "Milestone name is required",
+        "maxLength": "Max 255 characters"
+      },
+      "projectId": {
+        "invalid": "Invalid project ID"
+      },
+      "parentId": {
+        "invalid": "Invalid parent milestone"
+      },
+      "milestoneId": {
+        "invalid": "Invalid milestone ID"
+      },
+      "position": {
+        "invalid": "Invalid position"
+      }
+    }
+  },
+  "notification": {
+    "popover": {
+      "title": "Notifications",
+      "description": "You have no notifications",
+      "markAllAsRead": "Mark all as read"
+    },
+    "type": {
+      "task": "Task",
+      "chat": "Chat",
+      "project": "Project",
+      "system": "System"
     }
   }
 }

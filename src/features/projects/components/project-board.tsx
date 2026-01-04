@@ -6,8 +6,7 @@ import TaskCard from '@/features/tasks/components/task-card'
 import { useMoveTask } from '@/features/tasks/hooks/use-move-task'
 import { moveTaskSchema } from '@/features/tasks/validations'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
-import type { Milestone } from '@/types/milestone.type'
-import type { MilestoneWithTasks } from '@/types/project.type'
+import type { Milestone, MilestoneWithTasks } from '@/types/milestone.type'
 import type { Task } from '@/types/task.type'
 import {
   DndContext,
@@ -29,6 +28,7 @@ import {
 import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import ProjectContainer from './project-container'
 
@@ -53,6 +53,7 @@ const customCollisionDetection: CollisionDetection = (args) => {
 export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const queryKey = ['milestones', projectId, milestoneId]
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
@@ -60,8 +61,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
-  const { moveMilestone } = useMoveMilestone({ projectId, parentMilestoneId: milestoneId })
-  const { moveTask } = useMoveTask({ projectId, parentMilestoneId: milestoneId })
+  const { moveMilestone } = useMoveMilestone()
+  const { moveTask } = useMoveTask()
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
@@ -188,7 +189,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, milestones: newMilestones }
       })
 
-      const validated = moveMilestoneSchema.safeParse({
+      const validated = moveMilestoneSchema(t).safeParse({
         milestoneId: activeId,
         parentId: milestoneId,
         milestoneName: activeData.column.name,
@@ -223,7 +224,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, tasks: newTasks }
       })
 
-      const validated = moveTaskSchema.safeParse({
+      const validated = moveTaskSchema(t).safeParse({
         id: activeId,
         targetMilestoneId: currentTask.milestoneId,
         targetPosition: newPosition

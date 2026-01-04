@@ -5,18 +5,278 @@
     "expertNetwork": "Kết nối chuyên gia",
     "startupCommunity": "Cộng đồng khởi nghiệp",
     "news": "Tin tức",
-    "myProjects": "Dự án của tôi"
+    "manageProjects": "Quản lý"
+  },
+  "role": {
+    "owner": "Chủ dự án",
+    "editor": "Người chỉnh sửa",
+    "viewer": "Người xem"
+  },
+  "common": {
+    "button": {
+      "add": "Thêm",
+      "edit": "Chỉnh sửa",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "submit": "Xác nhận",
+      "invite": "Mời",
+      "accept": "Chấp nhận",
+      "decline": "Từ chối",
+      "remove": "Gỡ bỏ",
+      "insert": "Chèn"
+    },
+    "field": {
+      "label": "Nhãn",
+      "description": "Mô tả",
+      "title": "Tiêu đề",
+      "name": "Tên",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "date": "Ngày"
+    },
+    "validation": {
+      "email": {
+        "invalid": "Email không hợp lệ"
+      },
+      "required": "Trường này là bắt buộc",
+      "maxLength": {
+        "255": "Tối đa 255 ký tự",
+        "10000": "Tối đa 10000 ký tự",
+        "20": "Tối đa 20 ký tự"
+      },
+      "minLength": {
+        "1": "Trường này là bắt buộc",
+        "8": "Phải có ít nhất 8 ký tự",
+        "6": "Phải có 6 ký tự"
+      },
+      "url": {
+        "invalid": "URL không hợp lệ"
+      },
+      "number": {
+        "positive": "Phải là số dương",
+        "invalid": "Phải là số hợp lệ"
+      },
+      "date": {
+        "invalid": "Định dạng ngày không hợp lệ",
+        "required": "Ngày là bắt buộc",
+        "mustBeGreater": "Ngày kết thúc phải lớn hơn ngày bắt đầu"
+      }
+    },
+    "ui": {
+      "selected": "đã chọn",
+      "characters": "ký tự",
+      "search": "Tìm kiếm...",
+      "selectPlaceholder": "Chọn tùy chọn",
+      "noResults": "Không tìm thấy kết quả.",
+      "viewOnly": "Chỉ xem",
+      "canEdit": "Có thể chỉnh sửa",
+      "none": "Không có",
+      "uploading": "Đang tải lên...",
+      "pleaseWait": "Vui lòng đợi...",
+      "uploadSuccess": "Tải lên thành công",
+      "invalidFileType": "Loại tệp không hợp lệ",
+      "pleaseUploadValidFileFormat": "Vui lòng tải lên định dạng tệp hợp lệ.",
+      "fileTooLarge": "Tệp quá lớn",
+      "pleaseUploadSmallerFile": "Vui lòng tải lên tệp nhỏ hơn.",
+      "me": "tôi",
+      "yes": "Có",
+      "no": "Không"
+    }
   },
   "project": {
     "title": "Dự án của tôi",
     "description": "Quản lý dự án và công việc của bạn",
+    "memberProjects": "Dự án khác",
+    "memberProjectsDescription": "Các dự án bạn tham gia với vai trò thành viên",
+    "addCoverImage": "Thêm ảnh bìa",
+    "addLogoImage": "Thêm logo",
+    "info": {
+      "general": "Tổng quan",
+      "generalDescription": "Thông tin cơ bản về dự án",
+      "domains": "Lĩnh vực",
+      "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",
+      "teamSize": "Quy mô",
+      "teamSizeDescription": "Số lượng thành viên trong dự án hiện tại",
+      "teamContact": "Liên hệ",
+      "teamContactDescription": "Thông tin liên hệ của nhóm",
+      "teamEmail": "Email",
+      "teamEmailDescription": "Địa chỉ email của nhóm",
+      "schoolSubject": "Môn học",
+      "schoolSubjectDescription": "Môn học mà dự án liên quan đến",
+      "members": "Thành viên",
+      "memberDescription": "Số lượng thành viên trong dự án hiện tại",
+      "inviteMembers": "Mời thành viên",
+      "timeline": "Thời gian",
+      "timelineDescription": "Thời gian bắt đầu và kết thúc dự kiến",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "progress": "Tiến độ",
+      "progressDescription": "Tiến độ tổng thể của dự án"
+    },
+    "updateProjectInfo": {
+      "title": "Tổng quan dự án",
+      "description": "Chỉnh sửa tên và tóm tắt dự án",
+      "field": {
+        "name": {
+          "label": "Tên dự án",
+          "placeholder": "Nhập tên dự án"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả dự án"
+        }
+      }
+    },
+    "updateProjectGeneral": {
+      "title": "Thông tin chung dự án",
+      "description": "Chỉnh sửa thông tin chung của dự án",
+      "field": {
+        "teamSize": {
+          "label": "Quy mô",
+          "placeholder": "Nhập quy mô nhóm"
+        },
+        "teamContact": {
+          "label": "Liên hệ",
+          "placeholder": "Nhập liên hệ nhóm"
+        },
+        "teamEmail": {
+          "label": "Email",
+          "placeholder": "Nhập email nhóm"
+        },
+        "schoolSubject": {
+          "label": "Môn học",
+          "placeholder": "Nhập môn học"
+        }
+      }
+    },
+    "updateProject": {
+      "validation": {
+        "projectId": {
+          "invalid": "ID dự án không hợp lệ"
+        },
+        "name": {
+          "minLength": "Vui lòng nhập tên dự án",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 10000 ký tự"
+        },
+        "startDate": {
+          "invalid": "Định dạng ngày bắt đầu không hợp lệ"
+        },
+        "endDate": {
+          "invalid": "Định dạng ngày kết thúc không hợp lệ"
+        },
+        "coverImage": {
+          "invalid": "URL ảnh bìa không hợp lệ"
+        },
+        "logoImage": {
+          "invalid": "URL logo không hợp lệ"
+        },
+        "teamSize": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "teamContact": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "teamEmail": {
+          "invalid": "Địa chỉ email không hợp lệ"
+        },
+        "schoolSubject": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "domainIds": {
+          "minLength": "Vui lòng chọn ít nhất một lĩnh vực",
+          "invalid": "Lĩnh vực không hợp lệ"
+        }
+      }
+    },
+    "updateProjectTimeline": {
+      "title": "Thời gian dự kiến",
+      "description": "Chỉnh sửa thời gian dự kiến của dự án"
+    },
+    "updateProjectDomains": {
+      "title": "Lĩnh vực dự án",
+      "description": "Chỉnh sửa lĩnh vực dự án",
+      "searchLabel": "Lĩnh vực",
+      "selectedDomains": "Lĩnh vực đã chọn"
+    },
+    "updateProjectMembers": {
+      "title": "Thành viên dự án",
+      "description": "Chỉnh sửa thành viên dự án",
+      "confirm": {
+        "title": "Gỡ bỏ thành viên",
+        "description": "Bạn có chắc chắn muốn gỡ bỏ {{fullName}} khỏi dự án?",
+        "confirmText": "Gỡ bỏ",
+        "cancelText": "Hủy"
+      },
+      "column": {
+        "member": "Thành viên",
+        "role": "Vai trò",
+        "permission": "Quyền",
+        "canEdit": "Người chỉnh sửa"
+      },
+      "role": {
+        "mentor": "Người hướng dẫn",
+        "student": "Sinh viên"
+      }
+    },
+    "inviteMembers": {
+      "title": "Thêm thành viên",
+      "description": "Thêm thành viên mới vào dự án của bạn để hợp tác và chia sẻ công việc.",
+      "invitedUsers": "Thành viên đã mời",
+      "comboboxPlaceholder": "Nhấn để mời",
+      "search": "Nhập email để tìm kiếm...",
+      "searchLabel": "Thành viên",
+      "validation": {
+        "inviteMembers": {
+          "minLength": "Vui lòng mời ít nhất một thành viên"
+        },
+        "users": {
+          "userId": {
+            "invalid": "ID thành viên không hợp lệ"
+          },
+          "email": {
+            "invalid": "Địa chỉ email không hợp lệ"
+          },
+          "fullName": {
+            "required": "Họ tên là bắt buộc"
+          },
+          "avatar": {
+            "invalid": "URL avatar không hợp lệ"
+          },
+          "inviteExpireDate": {
+            "invalid": "Định dạng ngày hết hạn không hợp lệ"
+          }
+        },
+        "projectId": {
+          "invalid": "ID dự án không hợp lệ"
+        },
+        "dateRequired": "Ngày hết hạn là bắt buộc khi hạn chế thời gian được bật",
+        "dateInvalid": "Ngày hết hạn phải lớn hơn ngày hiện tại"
+      },
+      "field": {
+        "hasExpiration": {
+          "label": "Hạn chế thời gian",
+          "description": "Bật hạn chế thời gian để đặt ngày hết hạn cho lời mời"
+        },
+        "expirationDate": {
+          "label": "Ngày hết hạn",
+          "placeholder": "Chọn ngày hết hạn"
+        }
+      }
+    },
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
-      "settings": "Cài đặt"
+      "settings": "Cài đặt",
+      "myProjects": "Dự án của tôi",
+      "myCalendar": "Lịch của tôi"
     },
     "tasks": {
       "addTask": "Thêm thẻ",
@@ -24,8 +284,6 @@
     },
     "createProject": {
       "button": "Tạo dự án",
-      "cancel": "Hủy",
-      "submit": "Xác nhận",
       "title": "Dự án mới",
       "description": "Tạo một dự án mới để bắt đầu",
       "field": {
@@ -85,18 +343,33 @@
         }
       }
     },
+    "validation": {
+      "name": {
+        "minLength": "Vui lòng nhập tên thẻ",
+        "maxLength": "Tối đa 255 ký tự"
+      },
+      "milestoneId": {
+        "invalid": "Danh sách không hợp lệ"
+      },
+      "id": {
+        "invalid": "ID thẻ không hợp lệ"
+      },
+      "targetMilestoneId": {
+        "invalid": "Danh sách đích không hợp lệ"
+      },
+      "position": {
+        "invalid": "Vị trí không hợp lệ"
+      },
+      "targetPosition": {
+        "invalid": "Vị trí đích không hợp lệ"
+      }
+    },
     "date": {
       "notSetDate": "N/T/NNNN",
       "notSetTime": "G:pp",
-      "date": "Ngày",
-      "startDate": "Ngày bắt đầu",
-      "endDate": "Ngày hết hạn",
       "reminderSetting": "Thiết lập Nhắc nhở",
       "selectReminderTime": "Chọn thời gian nhắc nhở",
       "reminderDescription": "Nhắc nhở sẽ được gửi đến tất cả các thành viên và người theo dõi thẻ này.",
-      "save": "Lưu",
-      "remove": "Gỡ bỏ",
-      "none": "Không có",
       "expiredDate": "Vào thời điểm ngày hết hạn",
       "fiveMinutesBefore": "5 phút trước",
       "tenMinutesBefore": "10 phút trước",
@@ -107,25 +380,19 @@
       "twoDaysBefore": "2 ngày trước"
     },
     "label": {
-      "label": "Nhãn",
       "createLabel": "Tạo nhãn mới",
       "findLabel": "Tìm nhãn..."
     },
     "subtask": {
       "subtask": "Việc cần làm",
-      "subtaskTitle": "Thêm danh sách công việc",
-      "title": "Tiêu đề",
-      "addSubtask": "Thêm"
+      "subtaskTitle": "Thêm danh sách công việc"
     },
     "assignee": {
-      "assignee": "Thành viên",
       "findAssignee": "Tìm kiếm các thành viên...",
       "boardAssignee": "Thành viên của bảng"
     },
     "attachment": {
       "attachment": "Đính kèm",
-      "cancel": "Hủy",
-      "insert": "Chèn",
       "attachmentTitle": "Đính kèm tệp từ máy tính của bạn",
       "attachmentDescription": "Bạn cũng có thể kéo và thả tệp để tải chúng lên.",
       "chooseAttachment": "Chọn tệp",
@@ -136,7 +403,6 @@
       "attachmentDisplayDescription": "Cung cấp tiêu đề hoặc mô tả cho liên kết này"
     },
     "description": {
-      "description": "Mô tả",
       "addDescription": "Thêm mô tả chi tiết hơn..."
     },
     "comment": {
@@ -146,8 +412,6 @@
   },
   "richTextEditor": {
     "placeholder": "Mẹo chuyên nghiệp: Nhấn 'Enter' để xuống dòng và 'Shift + Enter' để ngắt dòng đơn giản.",
-    "save": "Lưu",
-    "cancel": "Hủy",
     "heading": {
       "label": "Tiêu đề",
       "ariaLabel": "Định dạng văn bản làm tiêu đề",
@@ -198,7 +462,6 @@
     "language": "Ngôn ngữ",
     "logout": "Đăng xuất"
   },
-
   "auth": {
     "signIn": {
       "label": "Đăng nhập",
@@ -302,11 +565,6 @@
     "searchPlaceholder": "Tìm kiếm...",
     "emptyMessage": "Không tìm thấy tùy chọn."
   },
-  "common": {
-    "selected": "đã chọn",
-    "characters": "ký tự",
-    "add": "Thêm"
-  },
   "milestone": {
     "addParentMilestone": {
       "title": "Tab",
@@ -327,6 +585,37 @@
           "placeholder": "Nhập tên danh sách..."
         }
       }
+    },
+    "validation": {
+      "milestoneName": {
+        "minLength": "Vui lòng nhập tên danh sách",
+        "maxLength": "Tối đa 255 ký tự"
+      },
+      "projectId": {
+        "invalid": "ID dự án không hợp lệ"
+      },
+      "parentId": {
+        "invalid": "Danh sách cha không hợp lệ"
+      },
+      "milestoneId": {
+        "invalid": "ID danh sách không hợp lệ"
+      },
+      "position": {
+        "invalid": "Vị trí không hợp lệ"
+      }
+    }
+  },
+  "notification": {
+    "popover": {
+      "title": "Thông báo",
+      "description": "Bạn không có thông báo nào",
+      "markAllAsRead": "Xem tất cả"
+    },
+    "type": {
+      "task": "Công việc",
+      "chat": "Tin nhắn",
+      "project": "Dự án",
+      "system": "Hệ thống"
     }
   }
 }

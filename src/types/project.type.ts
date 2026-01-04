@@ -1,19 +1,55 @@
-import type { Milestone } from './milestone.type'
-import type { Task } from './task.type'
-
 export interface ProjectPreview {
-  projectId: string
-  projectName: string
-  description: string
-  projectStartDate: string
-  projectEndDate: string
+  id: string
+  name: string
+  startDate: string
+  endDate: string
   coverImage: string | null
-  projectTeamSize: number | null
-  projectSchoolSubject: string | null
+  logoImage: string | null
+  teamSize: string | null
+  schoolSubject: string | null
 }
 
-export interface MilestoneWithTasks {
-  parentId: string
-  milestones: Milestone[]
-  tasks: Task[]
+export interface ProjectMember {
+  userId: string
+  fullName: string
+  email: string
+  avatar: string | null
+  role: number
+  isMain: boolean
+  isEditor: boolean
+}
+
+export interface Project {
+  id: string
+  name: string
+  description: string | null
+  startDate: string | null
+  endDate: string | null
+  coverImage: string | null
+  logoImage: string | null
+  teamSize: string | null
+  teamContact: string | null
+  teamEmail: string | null
+  progress: number
+  schoolSubject: string | null
+  organizationId: string | null
+  organizationName: string | null
+  organizationLogo: string | null
+  domains: ProjectDomain[]
+}
+
+export interface ProjectDomain {
+  id: string
+  domainId: string
+  name: string
+}
+
+// APIs
+export interface InviteMembersPayload {
+  projectId: string
+  inviteMembers: {
+    userId: string
+    isEditor: boolean
+    inviteExpireDate: string | null
+  }[]
 }

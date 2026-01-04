@@ -1,4 +1,4 @@
-export interface DomainEntity {
+export interface Domain {
   id: string
   name: string
 }

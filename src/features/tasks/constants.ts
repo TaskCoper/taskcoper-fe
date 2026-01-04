@@ -1,5 +1,5 @@
 export const TaskReminder = {
-  NONE: 'task.date.none',
+  NONE: 'common.ui.none',
   EXPIRED_DATE: 'task.date.expiredDate',
   FIVE_MINUTES_BEFORE: 'task.date.fiveMinutesBefore',
   TEN_MINUTES_BEFORE: 'task.date.tenMinutesBefore',

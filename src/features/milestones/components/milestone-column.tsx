@@ -56,7 +56,7 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
       {...listeners}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
-        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-5.75rem)] overflow-hidden bg-muted cursor-pointer'
+        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-9rem)] overflow-hidden bg-muted cursor-pointer'
       })}
     >
       <div className='px-3 pt-3 shrink-0'>

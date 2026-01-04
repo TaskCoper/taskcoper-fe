@@ -3,7 +3,10 @@ import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import NotificationsPopover from '@/features/notifications/components/notifications-popover'
+import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
+import { cn } from '@/shared/utils'
 import {
   BellIcon,
   FolderClosedIcon,
@@ -54,14 +57,17 @@ const navigations = [
 
 export default function DefaultLayout() {
   const { t } = useTranslation()
-  const { me, isGettingMe } = useGetMe()
   const [open, setOpen] = useState(false)
+  const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
+
+  const { me, isGettingMe } = useGetMe()
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
-      <header className='flex h-14 items-center gap-2 px-4 border-b shrink-0 bg-background z-50 relative'>
+      <header className='flex h-14 items-center gap-3 px-4 border-b shrink-0 bg-background z-50 relative'>
         <Link to='/' className='shrink-0'>
-          <img src={logo} alt='TaskCoper' className='h-14 w-auto object-contain' />
+          <img src={logo} alt='TaskCoper' className='h-8 w-auto bject-contain' />
         </Link>
 
         <div className='hidden md:flex items-center gap-2'>
@@ -74,19 +80,30 @@ export default function DefaultLayout() {
 
         <div className='flex-1' />
 
-        <div className='flex items-center gap-2 sm:gap-3'>
-          <div className='flex items-center gap-1 sm:gap-2'>
+        <div className='flex items-center gap-2 sm:gap-4'>
+          <div className='flex items-center gap-1 sm:gap-3'>
             <Button size='sm' asChild className='hidden md:flex'>
-              <Link to='/projects'>{t('header.myProjects')}</Link>
+              <Link to='/projects'>{t('header.manageProjects')}</Link>
             </Button>
 
-            <Button size='icon-sm' variant='ghost'>
+            <Button size='icon-sm' variant='ghost' className='relative'>
               <MessageCircleIcon className='size-4 sm:size-5' />
             </Button>
 
-            <Button size='icon-sm' variant='ghost'>
-              <BellIcon className='size-4 sm:size-5' />
-            </Button>
+            <NotificationsPopover open={openNotificationsPopover} onOpenChange={setOpenNotificationsPopover}>
+              <Button
+                size='icon-sm'
+                variant='ghost'
+                className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
+              >
+                <BellIcon className='size-4 sm:size-5' />
+                {isLoadingUnreadCount ? null : unreadCount > 0 ? (
+                  <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
+                    <p className='text-xs text-white'>{unreadCount}</p>
+                  </div>
+                ) : null}
+              </Button>
+            </NotificationsPopover>
           </div>
 
           {isGettingMe ? <Skeleton className='size-8 rounded-full' /> : <NavUser user={me} />}
@@ -125,7 +142,7 @@ export default function DefaultLayout() {
 
                 <div className='px-2'>
                   <Button asChild onClick={() => setOpen(false)} className='w-full'>
-                    <Link to='/projects'>{t('header.myProjects')}</Link>
+                    <Link to='/projects'>{t('header.manageProjects')}</Link>
                   </Button>
                 </div>
               </div>

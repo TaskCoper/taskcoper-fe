@@ -1,8 +1,6 @@
-import { ComboboxMultiField } from '@/components/combobox-multifield'
-import { DatePickerField } from '@/components/date-picker-field'
-import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
+import MultiSelectField from '@/components/multi-select-field'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { useGetDomains } from '@/hooks/use-get-domains'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +10,7 @@ export default function CreateProjectForm() {
   const { t } = useTranslation()
   const { control } = useFormContext<CreateProjectFormValues>()
 
-  const { domains, isLoadingDomains } = useGetDomains()
+  const { domains, isLoadingDomains } = useGetDomains({})
 
   return (
     <div className='flex flex-col gap-2 w-full'>
@@ -43,7 +41,7 @@ export default function CreateProjectForm() {
         )}
       />
 
-      <ComboboxMultiField
+      <MultiSelectField
         control={control}
         name='domainIds'
         label='project.createProject.field.domain.label'
@@ -58,7 +56,7 @@ export default function CreateProjectForm() {
         modal
       />
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+      {/* <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
         <DatePickerField
           control={control}
           name='startDate'
@@ -74,9 +72,9 @@ export default function CreateProjectForm() {
           placeholder='project.createProject.field.endDate.placeholder'
           isRequired
         />
-      </div>
+      </div> */}
 
-      <Controller
+      {/* <Controller
         name='description'
         control={control}
         render={({ field, fieldState }) => (
@@ -88,19 +86,19 @@ export default function CreateProjectForm() {
                 id={field.name}
                 placeholder={t('project.createProject.field.description.placeholder')}
                 rows={6}
-                className='min-h-24 resize-none break-all'
+                className='min-h-24 resize-none wrap-break-word'
                 aria-invalid={fieldState.invalid}
               />
               <InputGroupAddon align='block-end'>
                 <InputGroupText className='tabular-nums text-xs'>
-                  {field.value.length}/255 {t('common.characters')}
+                  {field.value.length}/255 {t('common.ui.characters')}
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
             <FieldDescription>{t('project.createProject.field.description.description')}</FieldDescription>
           </Field>
         )}
-      />
+      /> */}
     </div>
   )
 }

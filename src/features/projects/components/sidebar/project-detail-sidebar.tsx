@@ -14,7 +14,6 @@ import { Switch } from '@/components/ui/switch'
 import { cn } from '@/shared/utils'
 import {
   CalendarClockIcon,
-  Command,
   InfoIcon,
   ListTodoIcon,
   MessageCircleIcon,
@@ -43,7 +42,7 @@ const mails = [
   }
 ]
 
-export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export default function ProjectDetailSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
   const location = useLocation()
@@ -112,7 +111,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
       {...props}
     >
       <Sidebar collapsible='none' className='w-[calc(var(--sidebar-width-icon)+1px)]! border-r'>
-        <SidebarHeader>
+        {/* <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size='lg' asChild className='md:h-8 md:p-0'>
@@ -128,7 +127,7 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarHeader>
+        </SidebarHeader> */}
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent className='px-1.5 md:px-0'>
@@ -155,7 +154,6 @@ export default function ProjectSidebar({ ...props }: React.ComponentProps<typeof
         </SidebarContent>
       </Sidebar>
 
-      {/* 2. Secondary Sidebar (Conditional) */}
       {activeItem.hasSecondSidebar ? (
         <Sidebar collapsible='none' className='hidden flex-1 md:flex'>
           <SidebarHeader className='gap-3.5 border-b p-4'>

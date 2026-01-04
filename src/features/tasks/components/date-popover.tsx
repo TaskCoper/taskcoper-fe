@@ -58,7 +58,7 @@ export default function DatePopover({ children }: DatePopoverProps) {
       <PopoverContent side='bottom' align='start' className='p-0' onInteractOutside={handleClose} sideOffset={8}>
         <div className='p-4'>
           <div className='flex items-center justify-center relative mb-4'>
-            <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('task.date.date')}</p>
+            <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('common.field.date')}</p>
             <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={handleClose} />
           </div>
 
@@ -98,7 +98,7 @@ export default function DatePopover({ children }: DatePopoverProps) {
 
           <div className='space-y-2'>
             <div>
-              <p className='font-semibold text-xs py-1'>{t('task.date.startDate')}</p>
+              <p className='font-semibold text-xs py-1'>{t('common.field.startDate')}</p>
               <div className='flex items-center gap-2'>
                 <Checkbox checked={!!startDate} onClick={toggleStartDate} />
                 <Input
@@ -111,7 +111,7 @@ export default function DatePopover({ children }: DatePopoverProps) {
             </div>
 
             <div>
-              <p className='font-semibold text-xs py-1'>{t('task.date.endDate')}</p>
+              <p className='font-semibold text-xs py-1'>{t('common.field.endDate')}</p>
               <div className='flex items-center gap-2'>
                 <Checkbox checked={!!(endDate && endTime)} onClick={toggleEndDate} />
                 <Input
@@ -150,9 +150,9 @@ export default function DatePopover({ children }: DatePopoverProps) {
               <p className='text-xs text-muted-foreground my-2'>{t('task.date.reminderDescription')}</p>
             </div>
 
-            <Button className='w-full'>{t('task.date.save')}</Button>
+            <Button className='w-full'>{t('common.button.save')}</Button>
             <Button className='w-full' variant='secondary'>
-              {t('task.date.remove')}
+              {t('common.button.remove')}
             </Button>
           </div>
         </div>

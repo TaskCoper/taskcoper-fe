@@ -37,7 +37,7 @@ interface ComboboxMultiFieldProps<T extends FieldValues> {
   isRequired?: boolean
 }
 
-export function ComboboxMultiField<T extends FieldValues>({
+export default function MultiSelectField<T extends FieldValues>({
   name,
   label,
   options,
@@ -86,7 +86,7 @@ export function ComboboxMultiField<T extends FieldValues>({
               {selectedValues.length > 0 ? (
                 selectedValues.length > 3 ? (
                   <p>
-                    {selectedValues.length} {t('common.selected')}
+                    {selectedValues.length} {t('common.ui.selected')}
                   </p>
                 ) : (
                   selectedOptions.map((option) => (

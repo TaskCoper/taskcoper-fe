@@ -46,7 +46,15 @@ export default function TaskDetailDialogPage() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          handleClose()
+        }
+        setOpen(open)
+      }}
+    >
       <DialogContent
         showCloseButton={false}
         position='top-center'
@@ -98,13 +106,13 @@ export default function TaskDetailDialogPage() {
                   <LabelPopover>
                     <Button variant='outline' size='sm'>
                       <TagIcon />
-                      {t('task.label.label')}
+                      {t('common.field.label')}
                     </Button>
                   </LabelPopover>
                   <DatePopover>
                     <Button variant='outline' size='sm'>
                       <ClockIcon />
-                      {t('task.date.date')}
+                      {t('common.field.date')}
                     </Button>
                   </DatePopover>
                   <SubtaskPopover>
@@ -132,21 +140,10 @@ export default function TaskDetailDialogPage() {
             <div className='flex gap-3 mt-10'>
               <TextAlignStartIcon className='mt-1 size-4' />
               <div className='w-full space-y-4'>
-                <p className='font-semibold'>{t('task.description.description')}</p>
+                <p className='font-semibold'>{t('common.field.description')}</p>
 
                 {isEditDescription ? (
-                  <RichTextEditor
-                    isDisplay={true}
-                    onSave={() => {
-                      setIsEditDescription(false)
-                    }}
-                    onCancel={() => {
-                      setIsEditDescription(false)
-                    }}
-                    isSaving={false}
-                    content={''}
-                    onChange={() => {}}
-                  />
+                  <RichTextEditor isDisplay={true} content='' onChange={() => {}} />
                 ) : (
                   <Textarea
                     placeholder={t('task.description.addDescription')}

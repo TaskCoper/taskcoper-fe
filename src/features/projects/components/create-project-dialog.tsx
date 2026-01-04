@@ -33,10 +33,17 @@ export default function CreateProjectDialog({ children }: CreateProjectDialogPro
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          methods.reset()
+        }
+        setOpen(open)
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        showCloseButton={false}
         position='top-center'
         className='w-[95vw] sm:w-full sm:max-w-xl max-h-[90vh] overflow-y-auto p-4 sm:p-6'
         onInteractOutside={onClose}
@@ -58,11 +65,11 @@ export default function CreateProjectDialog({ children }: CreateProjectDialogPro
                 className='w-full sm:w-auto'
                 disabled={isCreatingProject}
               >
-                {t('project.createProject.cancel')}
+                {t('common.button.cancel')}
               </Button>
               <Button type='submit' className='w-full sm:w-auto' disabled={isCreatingProject}>
                 {isCreatingProject ? <Spinner /> : null}
-                {t('project.createProject.submit')}
+                {t('common.button.submit')}
               </Button>
             </div>
           </form>

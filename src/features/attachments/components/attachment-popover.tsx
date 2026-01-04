@@ -62,8 +62,8 @@ export default function AttachmentPopover({ children }: AttachmentPopoverProps) 
           </div>
 
           <div className='space-x-2 ml-auto mt-2'>
-            <Button variant='secondary'>{t('task.attachment.cancel')}</Button>
-            <Button>{t('task.attachment.insert')}</Button>
+            <Button variant='secondary'>{t('common.button.cancel')}</Button>
+            <Button>{t('common.button.insert')}</Button>
           </div>
         </div>
       </PopoverContent>

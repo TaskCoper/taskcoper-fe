@@ -73,6 +73,7 @@ function DialogContent({
         data-slot='dialog-content'
         className={cn(
           'fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 sm:max-w-lg',
+          'max-h-[calc(100vh-6rem)] overflow-y-auto',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           positionClasses[position],
           className

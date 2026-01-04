@@ -38,7 +38,7 @@ export default function AddTaskButton({ milestoneId, projectId, parentMilestoneI
 
           <Button type='submit' className='w-fit' disabled={isAddingTask} onClick={(e) => e.stopPropagation()}>
             {isAddingTask ? <Spinner /> : null}
-            {t('common.add')}
+            {t('common.button.add')}
           </Button>
         </form>
       </FormProvider>

@@ -39,7 +39,7 @@ export default function AddMilestoneButton({ parentId, projectId }: AddMilestone
 
             <Button type='submit' className='w-full' disabled={isAddingMilestone}>
               {isAddingMilestone ? <Spinner /> : null}
-              {t('common.add')}
+              {t('common.button.add')}
             </Button>
           </form>
         </FormProvider>

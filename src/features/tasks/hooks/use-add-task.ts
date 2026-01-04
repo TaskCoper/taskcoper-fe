@@ -35,7 +35,7 @@ export const useAddTask = ({
       name: '',
       position: calculatedPosition
     },
-    resolver: zodResolver(addTaskSchema)
+    resolver: zodResolver(addTaskSchema(t))
   })
 
   useEffect(() => {

@@ -6,7 +6,6 @@ import type { ErrorResponse } from './axios'
 
 declare module '@tanstack/react-query' {
   interface Register {
-    // TODO: replace with the correct type
     defaultError: AxiosError<ErrorResponse>
   }
 }
