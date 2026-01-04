@@ -28,3 +28,6 @@ package-lock.json
 
 # Env
 .env*
+
+# Yarn
+.yarn/install-state.gz
