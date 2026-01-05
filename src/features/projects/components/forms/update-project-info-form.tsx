@@ -3,7 +3,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { type UpdateProjectFormValues } from '../validations'
+import { type UpdateProjectFormValues } from '../../validations'
 
 export default function UpdateProjectInfoForm() {
   const { t } = useTranslation()

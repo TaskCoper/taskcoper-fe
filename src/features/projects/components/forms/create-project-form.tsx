@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { useGetDomains } from '@/hooks/use-get-domains'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { CreateProjectFormValues } from '../validations'
+import type { CreateProjectFormValues } from '../../validations'
 
 export default function CreateProjectForm() {
   const { t } = useTranslation()

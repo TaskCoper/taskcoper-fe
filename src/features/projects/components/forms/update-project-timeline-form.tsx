@@ -1,6 +1,6 @@
 import { DatePickerField } from '@/components/date-picker-field'
 import { useFormContext } from 'react-hook-form'
-import type { UpdateProjectFormValues } from '../validations'
+import type { UpdateProjectFormValues } from '../../validations'
 
 export default function UpdateProjectTimelineForm() {
   const { control } = useFormContext<UpdateProjectFormValues>()

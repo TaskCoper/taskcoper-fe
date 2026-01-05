@@ -3,8 +3,7 @@ import type { Transaction } from '@tiptap/pm/state'
 import { AllSelection, NodeSelection, Selection, TextSelection } from '@tiptap/pm/state'
 import { cellAround, CellSelection } from '@tiptap/pm/tables'
 import { findParentNodeClosestToPos, type Editor, type NodeWithPos } from '@tiptap/react'
-
-export const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+import { MAX_UPLOAD_IMAGE_SIZE } from './constants'
 
 export const MAC_SYMBOLS: Record<string, string> = {
   mod: '⌘',
@@ -334,8 +333,8 @@ export const handleImageUpload = async (
     throw new Error('No file provided')
   }
 
-  if (file.size > MAX_FILE_SIZE) {
-    throw new Error(`File size exceeds maximum allowed (${MAX_FILE_SIZE / (1024 * 1024)}MB)`)
+  if (file.size > MAX_UPLOAD_IMAGE_SIZE) {
+    throw new Error(`File size exceeds maximum allowed (${MAX_UPLOAD_IMAGE_SIZE / (1024 * 1024)}MB)`)
   }
 
   // For demo/testing: Simulate upload progress. In production, replace the following code

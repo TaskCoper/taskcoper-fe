@@ -8,20 +8,25 @@ import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 
 import { BlockquoteButton } from '@/components/tiptap-ui/blockquote-button'
-import { MAX_FILE_SIZE } from '@/shared/tiptap-utils'
+import { CodeBlockButton } from '@/components/tiptap-ui/code-block-button'
+import { HeadingDropdownMenu } from '@/components/tiptap-ui/heading-dropdown-menu'
+import { ImageUploadButton } from '@/components/tiptap-ui/image-upload-button'
+import { LinkPopover } from '@/components/tiptap-ui/link-popover'
+import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
+import { MarkButton } from '@/components/tiptap-ui/mark-button'
+import { useUploadFile } from '@/hooks/use-upload-file'
+import type { ErrorResponse } from '@/lib/axios'
+import { MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
 import { Image } from '@tiptap/extension-image'
 import { Placeholder } from '@tiptap/extensions'
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
+import type { AxiosError } from 'axios'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { ImageUploadNode } from './tiptap-node/image-upload-node'
-import { CodeBlockButton } from './tiptap-ui/code-block-button'
-import { HeadingDropdownMenu } from './tiptap-ui/heading-dropdown-menu'
-import { ImageUploadButton } from './tiptap-ui/image-upload-button'
-import { LinkPopover } from './tiptap-ui/link-popover'
-import { ListDropdownMenu } from './tiptap-ui/list-dropdown-menu'
-import { MarkButton } from './tiptap-ui/mark-button'
+import { Progress } from './ui/progress'
 
 interface RichTextEditorProps {
   isDisplay?: boolean
@@ -37,7 +42,7 @@ export default function RichTextEditor({
   onChange
 }: RichTextEditorProps) {
   const { t } = useTranslation()
-  // const { uploadFilesAction } = useUploadFiles({})
+  const { uploadFileAsync } = useUploadFile()
 
   const editor = useEditor({
     extensions: [
@@ -45,13 +50,52 @@ export default function RichTextEditor({
       Image,
       ImageUploadNode.configure({
         accept: 'image/*',
-        maxSize: MAX_FILE_SIZE,
-        limit: 1
-        // upload: async (file) => {
-        //   const uploadedFiles = await uploadFilesAction.executeAsync({ files: [file], folder: FILE_FOLDER.TIPTAP })
-        //   return uploadedFiles.data?.[0]?.url || ''
-        // },
-        // onError: (error) => console.error('Upload failed:', error)
+        maxSize: MAX_UPLOAD_IMAGE_SIZE,
+        limit: 1,
+        upload: async (file) => {
+          const toastId = toast.loading(t('common.ui.uploading'), {
+            description: t('common.ui.pleaseWait')
+          })
+
+          try {
+            const url = await uploadFileAsync({
+              file,
+              onProgress: (progress) => {
+                toast.loading(t('common.ui.uploading'), {
+                  id: toastId,
+                  description: (
+                    <div className='w-full min-w-72 space-y-1'>
+                      <Progress value={progress} className='w-full' />
+                      <p className='text-xs text-muted-foreground'>{progress}%</p>
+                    </div>
+                  )
+                })
+              }
+            })
+
+            if (url) {
+              toast.success(t('common.ui.uploadSuccess'), {
+                id: toastId,
+                description: null
+              })
+              return url
+            }
+
+            toast.dismiss(toastId)
+            return ''
+          } catch (error) {
+            toast.error(t('error.somethingWentWrong'), {
+              id: toastId,
+              description: (error as AxiosError<ErrorResponse>).response?.data?.detail
+            })
+            return ''
+          }
+        },
+        onError: (error) => {
+          if (error instanceof Error) {
+            toast.error(error.message)
+          }
+        }
       }),
       Placeholder.configure({
         placeholder: ({ editor }) => {

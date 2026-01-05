@@ -6,33 +6,26 @@
   }
 }
 
-/* =====================
-     BLOCKQUOTE
-     ===================== */
 .tiptap.ProseMirror {
   blockquote {
     position: relative;
-    padding-left: 1em;
-    padding-top: 0.375em;
-    padding-bottom: 0.375em;
-    margin: 1.5rem 0;
+    padding-left: 0.875rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 
     p {
-      font-size: 0.875rem;
-      margin-top: 0;
+      font-size: inherit;
+      margin: 0;
     }
 
-    &::before,
-    &.is-empty::before {
+    &::before {
       position: absolute;
-      bottom: 0;
       left: 0;
       top: 0;
-      height: 100%;
-      width: 0.15em;
+      bottom: 0;
+      width: 3px;
       background-color: var(--blockquote-bg-color);
       content: '';
-      border-radius: 0;
     }
   }
 }

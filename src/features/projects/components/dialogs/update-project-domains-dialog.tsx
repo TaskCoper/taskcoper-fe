@@ -14,8 +14,8 @@ import { useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
-import type { DomainItem, UpdateProjectFormValues } from '../validations'
-import UpdateProjectDomainsForm from './update-project-domains-form'
+import type { DomainItem, UpdateProjectFormValues } from '../../validations'
+import UpdateProjectDomainsForm from '../forms/update-project-domains-form'
 
 interface UpdateProjectDomainsDialogProps {
   children: React.ReactNode
@@ -40,7 +40,8 @@ export default function UpdateProjectDomainsDialog({ children, isPending }: Upda
   const [debouncedSearchQuery] = useDebounce(searchTerm, 500)
 
   const { domains, isLoadingDomains } = useGetDomains({
-    searchTerm: debouncedSearchQuery
+    searchTerm: debouncedSearchQuery || undefined,
+    enabled: open
   })
 
   const { fields, remove, replace } = useFieldArray({

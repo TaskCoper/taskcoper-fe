@@ -4,7 +4,7 @@ import { format, type Locale } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { ChevronsRightIcon, SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import UpdateProjectTimelineDialog from './update-project-timeline-dialog'
+import UpdateProjectTimelineDialog from '../dialogs/update-project-timeline-dialog'
 
 interface ProjectTimelineSectionProps {
   startDate: string

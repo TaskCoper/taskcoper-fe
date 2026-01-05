@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { XIcon } from 'lucide-react'
 import { type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateProjectFormValues } from '../validations'
+import type { UpdateProjectFormValues } from '../../validations'
 
 interface UpdateProjectDomainsFormProps {
   fields: FieldArrayWithId<UpdateProjectFormValues, 'domainIds'>[]

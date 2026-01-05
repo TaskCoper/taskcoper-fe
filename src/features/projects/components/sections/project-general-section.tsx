@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { BookOpenIcon, MailIcon, PhoneIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import UpdateProjectGeneralDialog from './update-project-general-dialog'
+import UpdateProjectGeneralDialog from '../dialogs/update-project-general-dialog'
 
 interface ProjectGeneralSectionProps {
   teamSize: string | null

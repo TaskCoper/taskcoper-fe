@@ -18,9 +18,9 @@ import type { TFunction } from 'i18next'
 import { EditIcon, EyeIcon, Trash2Icon, UserCircleIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDeleteMember } from '../hooks/use-delete-member'
-import { useGetProjectMembers } from '../hooks/use-get-project-members'
-import { useToggleEditor } from '../hooks/use-toggle-editor'
+import { useDeleteMember } from '../../hooks/use-delete-member'
+import { useGetProjectMembers } from '../../hooks/use-get-project-members'
+import { useToggleEditor } from '../../hooks/use-toggle-editor'
 
 interface UpdateProjectMembersDialogProps {
   projectId: string
@@ -81,7 +81,7 @@ const getColumns = ({
             return (
               <div className='flex justify-center'>
                 <Badge className='rounded-sm'>
-                  <UserCircleIcon className='mr-1' />
+                  <UserCircleIcon className='mr-0.5' />
                   {t('project.updateProjectMembers.role.mentor')}
                 </Badge>
               </div>
@@ -90,7 +90,7 @@ const getColumns = ({
             return (
               <div className='flex justify-center'>
                 <Badge variant='outline' className='rounded-sm'>
-                  <UserCircleIcon className='mr-1' />
+                  <UserCircleIcon className='mr-0.5' />
                   {t('project.updateProjectMembers.role.student')}
                 </Badge>
               </div>

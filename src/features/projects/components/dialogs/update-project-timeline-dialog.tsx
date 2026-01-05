@@ -11,25 +11,25 @@ import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateProjectFormValues } from '../validations'
-import UpdateProjectGeneralForm from './update-project-general-form'
+import type { UpdateProjectFormValues } from '../../validations'
+import UpdateProjectTimelineForm from '../forms/update-project-timeline-form'
 
-interface UpdateProjectGeneralDialogProps {
+interface UpdateProjectTimelineDialogProps {
   children: React.ReactNode
   isPending: boolean
 }
 
-export default function UpdateProjectGeneralDialog({ children, isPending }: UpdateProjectGeneralDialogProps) {
-  const { t } = useTranslation()
+export default function UpdateProjectTimelineDialog({ children, isPending }: UpdateProjectTimelineDialogProps) {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
   const {
     reset,
     formState: { isDirty }
   } = useFormContext<UpdateProjectFormValues>()
 
   const onClose = () => {
-    reset()
     setOpen(false)
+    reset()
   }
 
   return (
@@ -45,11 +45,11 @@ export default function UpdateProjectGeneralDialog({ children, isPending }: Upda
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='min-w-md' position='top-center'>
         <DialogHeader>
-          <DialogTitle>{t('project.updateProjectGeneral.title')}</DialogTitle>
-          <DialogDescription>{t('project.updateProjectGeneral.description')}</DialogDescription>
+          <DialogTitle>{t('project.updateProjectTimeline.title')}</DialogTitle>
+          <DialogDescription>{t('project.updateProjectTimeline.description')}</DialogDescription>
         </DialogHeader>
 
-        <UpdateProjectGeneralForm />
+        <UpdateProjectTimelineForm />
 
         <div className='flex items-center justify-end gap-2'>
           <Button variant='ghost' type='button' onClick={onClose} disabled={isPending}>

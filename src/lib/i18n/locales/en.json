@@ -388,6 +388,7 @@
       "subtaskTitle": "Add a list of tasks"
     },
     "assignee": {
+      "assignee": "Assignee",
       "findAssignee": "Find assignee...",
       "boardAssignee": "Board assignee"
     },

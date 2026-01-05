@@ -20,9 +20,9 @@ import { useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
-import { useInviteMembers } from '../hooks/use-invite-members'
-import type { InviteMemberItem, InviteMembersFormValues } from '../validations'
-import InviteMembersForm from './invite-members-form'
+import { useInviteMembers } from '../../hooks/use-invite-members'
+import type { InviteMemberItem, InviteMembersFormValues } from '../../validations'
+import InviteMembersForm from '../forms/invite-members-form'
 
 interface ComboboxUserItem {
   id: string
@@ -123,7 +123,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
               displayError={false}
               getId={(user) => user.id}
               getValueId={(item) => item.userId}
-              getLabel={(user) => user.fullName}
+              getLabel={(user) => user.email}
               createValue={(user) => ({
                 userId: user.id,
                 email: user.email,

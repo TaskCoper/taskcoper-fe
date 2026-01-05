@@ -52,8 +52,8 @@ export function getDefaultPaginationResponse<T>(): BasePaginationResponse<T> {
 
 /**
  * Calculate position for a new item
- * - First item ever: 140737488355328
- * - Adding at the end: last position + 16384
+ * - First item ever: INITIAL_POSITION
+ * - Adding at the end: last position + POSITION_GAP
  */
 export const calculateNewItemPosition = (existingItems: Array<{ position: number }>): number => {
   if (existingItems.length === 0) {

@@ -8,12 +8,14 @@ import { useQuery } from '@tanstack/react-query'
 export interface GetMyNotificationsParams {
   pageIndex?: number
   pageSize?: number
+  enabled?: boolean
 }
 
-// TODO: change to use infinite query
+// TODO: use useInfiniteQuery
 export const useGetMyNotifications = ({
   pageIndex = DEFAULT_PAGE_INDEX,
-  pageSize = DEFAULT_PAGE_SIZE
+  pageSize = DEFAULT_PAGE_SIZE,
+  enabled = true
 }: GetMyNotificationsParams) => {
   const { user } = useAuthStore()
 
@@ -23,7 +25,8 @@ export const useGetMyNotifications = ({
     error
   } = useQuery({
     queryKey: ['notifications', user?.UserId, pageIndex, pageSize],
-    queryFn: () => notificationService.getMyNotifications({ pageIndex, pageSize })
+    queryFn: () => notificationService.getMyNotifications({ pageIndex, pageSize }),
+    enabled
   })
 
   return { notifications, isLoadingNotifications, error }
