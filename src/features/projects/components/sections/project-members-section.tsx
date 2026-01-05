@@ -4,8 +4,8 @@ import { cn } from '@/shared/utils'
 import type { ProjectMember } from '@/types/project.type'
 import { MoreHorizontalIcon, SettingsIcon, UserRoundPlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import InviteMembersDialog from './invite-members-dialog'
-import UpdateProjectMembersDialog from './update-project-members-dialog'
+import InviteMembersDialog from '../dialogs/invite-members-dialog'
+import UpdateProjectMembersDialog from '../dialogs/update-project-members-dialog'
 
 interface ProjectMembersSectionProps {
   members: ProjectMember[]

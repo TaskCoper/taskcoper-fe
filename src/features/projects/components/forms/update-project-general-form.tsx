@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateProjectFormValues } from '../validations'
+import type { UpdateProjectFormValues } from '../../validations'
 
 export default function UpdateProjectGeneralForm() {
   const { user } = useAuthStore()

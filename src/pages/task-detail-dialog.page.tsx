@@ -31,17 +31,16 @@ import { useNavigate, useParams } from 'react-router'
 
 export default function TaskDetailDialogPage() {
   const { t } = useTranslation()
-  const { taskId } = useParams<{ taskId: string }>()
-  const [isEditDescription, setIsEditDescription] = useState(false)
-
-  const [open, setOpen] = useState(true)
-
+  const { projectId, milestoneId, taskId } = useParams<{ projectId: string; milestoneId: string; taskId: string }>()
   const navigate = useNavigate()
+
+  const [isEditDescription, setIsEditDescription] = useState(false)
+  const [open, setOpen] = useState(true)
 
   const handleClose = () => {
     setOpen(false)
     setTimeout(() => {
-      navigate(-1)
+      navigate(`/projects/${projectId}/milestones/${milestoneId}`)
     }, 300)
   }
 

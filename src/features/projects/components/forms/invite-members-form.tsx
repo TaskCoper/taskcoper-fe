@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { InviteMembersFormValues } from '../validations'
+import type { InviteMembersFormValues } from '../../validations'
 
 interface InviteMembersFormProps {
   fields: FieldArrayWithId<InviteMembersFormValues, 'inviteMembers'>[]

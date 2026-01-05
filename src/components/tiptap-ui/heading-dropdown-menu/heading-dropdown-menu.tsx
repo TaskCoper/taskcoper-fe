@@ -42,6 +42,7 @@ export interface HeadingDropdownMenuProps extends Omit<ButtonProps, 'type'>, Use
  *
  * For custom dropdown implementations, use the `useHeadingDropdownMenu` hook instead.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const HeadingDropdownMenu = React.forwardRef<HTMLButtonElement, HeadingDropdownMenuProps>(
   (
     {

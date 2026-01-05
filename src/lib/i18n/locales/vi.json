@@ -388,6 +388,7 @@
       "subtaskTitle": "Thêm danh sách công việc"
     },
     "assignee": {
+      "assignee": "Thành viên",
       "findAssignee": "Tìm kiếm các thành viên...",
       "boardAssignee": "Thành viên của bảng"
     },

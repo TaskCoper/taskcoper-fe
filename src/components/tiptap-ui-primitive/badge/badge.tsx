@@ -12,6 +12,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   trimText?: boolean
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ variant, size = 'default', appearance = 'default', trimText = false, className, children, ...props }, ref) => {
     return (

@@ -1,7 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 'use client'
 
-import type { Editor } from '@tiptap/react'
 import * as React from 'react'
+import type { Editor } from '@tiptap/react'
 import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
@@ -21,10 +22,10 @@ import { useLinkPopover } from '@/components/tiptap-ui/link-popover'
 // --- UI Primitives ---
 import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { Button, ButtonGroup } from '@/components/tiptap-ui-primitive/button'
-import { Card, CardBody, CardItemGroup } from '@/components/tiptap-ui-primitive/card'
-import { Input, InputGroup } from '@/components/tiptap-ui-primitive/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/tiptap-ui-primitive/popover'
 import { Separator } from '@/components/tiptap-ui-primitive/separator'
+import { Card, CardBody, CardItemGroup } from '@/components/tiptap-ui-primitive/card'
+import { Input, InputGroup } from '@/components/tiptap-ui-primitive/input'
 
 export interface LinkMainProps {
   /**
@@ -70,7 +71,6 @@ export interface LinkPopoverProps extends Omit<ButtonProps, 'type'>, UseLinkPopo
  */
 export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, children, ...props }, ref) => {
   const { t } = useTranslation()
-
   return (
     <Button
       type='button'

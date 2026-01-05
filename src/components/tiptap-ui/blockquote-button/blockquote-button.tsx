@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Tiptap UI ---
 import type { UseBlockquoteConfig } from '@/components/tiptap-ui/blockquote-button'
@@ -39,6 +38,7 @@ export function BlockquoteShortcutBadge({ shortcutKeys = BLOCKQUOTE_SHORTCUT_KEY
  *
  * For custom button implementations, use the `useBlockquote` hook instead.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const BlockquoteButton = React.forwardRef<HTMLButtonElement, BlockquoteButtonProps>(
   (
     {
@@ -53,7 +53,6 @@ export const BlockquoteButton = React.forwardRef<HTMLButtonElement, BlockquoteBu
     },
     ref
   ) => {
-    const { t } = useTranslation()
     const { editor } = useTiptapEditor(providedEditor)
     const { isVisible, canToggle, isActive, handleToggle, label, shortcutKeys, Icon } = useBlockquote({
       editor,
@@ -85,7 +84,7 @@ export const BlockquoteButton = React.forwardRef<HTMLButtonElement, BlockquoteBu
         data-disabled={!canToggle}
         aria-label={label}
         aria-pressed={isActive}
-        tooltip={t('richTextEditor.blockquote.label')}
+        tooltip={label}
         onClick={handleClick}
         {...buttonProps}
         ref={ref}

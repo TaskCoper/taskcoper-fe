@@ -15,7 +15,7 @@ interface NotificationsPopoverProps {
 
 export default function NotificationsPopover({ children, open, onOpenChange }: NotificationsPopoverProps) {
   const { t } = useTranslation()
-  const { notifications, isLoadingNotifications } = useGetMyNotifications({})
+  const { notifications, isLoadingNotifications } = useGetMyNotifications({ enabled: open })
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>

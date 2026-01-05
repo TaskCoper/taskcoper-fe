@@ -10,9 +10,9 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useCreateProject } from '../hooks/use-create-project'
-import type { CreateProjectFormValues } from '../validations'
-import CreateProjectForm from './create-project-form'
+import { useCreateProject } from '../../hooks/use-create-project'
+import type { CreateProjectFormValues } from '../../validations'
+import CreateProjectForm from '../forms/create-project-form'
 
 interface CreateProjectDialogProps {
   children: React.ReactNode

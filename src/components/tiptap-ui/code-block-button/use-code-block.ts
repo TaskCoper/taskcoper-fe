@@ -180,9 +180,9 @@ export function shouldShowButton(props: { editor: Editor | null; hideWhenUnavail
  * ```
  */
 export function useCodeBlock(config?: UseCodeBlockConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onToggled } = config || {}
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canToggleState = canToggle(editor)
