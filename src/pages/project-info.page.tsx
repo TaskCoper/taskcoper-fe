@@ -21,7 +21,7 @@ import { useAuthStore } from '@/lib/zustand/auth.store'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import type { AxiosError } from 'axios'
-import { CameraIcon, EditIcon, ImageOffIcon } from 'lucide-react'
+import { BookOpenIcon, CameraIcon, EditIcon, ImageOffIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { FormProvider, type Path, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -133,6 +133,7 @@ export default function ProjectInfoPage() {
           id='update-project-info-form'
           className='col-span-1 lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 lg:gap-8'
         >
+          {/* Left column */}
           <div className='col-span-1 lg:col-span-8'>
             <div className='relative h-48 sm:h-52'>
               <FileDropzone
@@ -173,7 +174,7 @@ export default function ProjectInfoPage() {
               <FileDropzone
                 onFileChange={(file) => handleUpload(file, 'logoImage')}
                 className={cn(
-                  'absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl border-4 border-background bg-muted shadow-sm',
+                  'absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl border-4 border-background bg-muted shadow-sm',
                   !isCurrentUserMain && 'cursor-default'
                 )}
                 maxSize={MAX_LOGO_SIZE}
@@ -223,55 +224,33 @@ export default function ProjectInfoPage() {
               ) : null}
             </div>
 
-            <div className='mt-14 mb-8 px-0 lg:px-8 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4'>
-              <h1 className='text-3xl sm:text-4xl font-bold text-foreground wrap-break-word w-full'>{project?.name}</h1>
-              <div className='w-full text-sm sm:text-base text-left'>
-                <SanitizedHtml html={project?.description ?? ''} />
+            <div className='mt-16 mb-8 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4'>
+              <div className='lg:px-6 w-full'>
+                <h1 className='text-2xl sm:text-3xl font-semibold wrap-break-word'>{project?.name}</h1>
+              </div>
+
+              <div className='w-full'>
+                <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0'>
+                  <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-xl'>
+                    <BookOpenIcon className='size-4 text-muted-foreground' />
+                    <p className='text-sm font-semibold text-muted-foreground'>README</p>
+                  </div>
+                  <Separator />
+                  <div className='p-4'>
+                    {project?.description ? (
+                      <SanitizedHtml html={project?.description} />
+                    ) : (
+                      <p className='text-xs text-muted-foreground text-center'>{t('common.ui.noDescription')}</p>
+                    )}
+                  </div>
+                </Card>
               </div>
             </div>
           </div>
 
-          <div className='col-span-1 lg:col-span-4 space-y-8'>
-            <Card className='p-0 gap-0 h-fit shadow-none'>
-              <div className='p-4'>
-                <ProjectGeneralSection
-                  teamSize={project?.teamSize ?? null}
-                  teamContact={project?.teamContact ?? null}
-                  teamEmail={project?.teamEmail ?? null}
-                  schoolSubject={project?.schoolSubject ?? null}
-                  isPending={isUpdatingProject}
-                  isCurrentUserMain={isCurrentUserMain}
-                />
-              </div>
-              <Separator />
-              <div className='p-4'>
-                <ProjectDomainsSection
-                  domains={project?.domains ?? []}
-                  isPending={isUpdatingProject}
-                  isCurrentUserMain={isCurrentUserMain}
-                />
-              </div>
-              <Separator />
-              <div className='p-4'>
-                <ProjectTimelineSection
-                  startDate={project?.startDate ?? ''}
-                  endDate={project?.endDate ?? ''}
-                  isPending={isUpdatingProject}
-                  isCurrentUserMain={isCurrentUserMain}
-                />
-              </div>
-              <Separator />
-              <div className='p-4'>
-                <ProjectMembersSection
-                  members={members?.value.items ?? []}
-                  totalMembers={members?.value.items.length ?? 0}
-                  projectId={projectId}
-                  isCurrentUserMain={isCurrentUserMain}
-                />
-              </div>
-            </Card>
-
-            <Card className='p-4 gap-3 border-dashed shadow-none'>
+          {/* Right column */}
+          <div className='col-span-1 lg:col-span-4 space-y-6'>
+            <div className='space-y-2'>
               <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1'>
                 <div>
                   <p className='font-semibold'>
@@ -281,7 +260,38 @@ export default function ProjectInfoPage() {
                 </div>
               </div>
               <Progress value={project?.progress ?? 0} className='h-2' />
-            </Card>
+            </div>
+            <Separator />
+            <div className='space-y-6'>
+              <ProjectGeneralSection
+                teamSize={project?.teamSize ?? null}
+                teamContact={project?.teamContact ?? null}
+                teamEmail={project?.teamEmail ?? null}
+                schoolSubject={project?.schoolSubject ?? null}
+                isPending={isUpdatingProject}
+                isCurrentUserMain={isCurrentUserMain}
+              />
+              <Separator />
+              <ProjectDomainsSection
+                domains={project?.domains ?? []}
+                isPending={isUpdatingProject}
+                isCurrentUserMain={isCurrentUserMain}
+              />
+              <Separator />
+              <ProjectTimelineSection
+                startDate={project?.startDate ?? ''}
+                endDate={project?.endDate ?? ''}
+                isPending={isUpdatingProject}
+                isCurrentUserMain={isCurrentUserMain}
+              />
+              <Separator />
+              <ProjectMembersSection
+                members={members?.value.items ?? []}
+                totalMembers={members?.value.items.length ?? 0}
+                projectId={projectId}
+                isCurrentUserMain={isCurrentUserMain}
+              />
+            </div>
           </div>
         </form>
       </FormProvider>
