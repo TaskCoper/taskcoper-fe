@@ -80,6 +80,9 @@
       "pleaseUploadValidFileFormat": "Vui lòng tải lên định dạng tệp hợp lệ.",
       "fileTooLarge": "Tệp quá lớn",
       "pleaseUploadSmallerFile": "Vui lòng tải lên tệp nhỏ hơn.",
+      "loading": "Đang tải...",
+      "viewMore": "Xem thêm",
+      "noDescription": "Không có mô tả",
       "me": "tôi",
       "yes": "Có",
       "no": "Không"

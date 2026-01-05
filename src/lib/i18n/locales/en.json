@@ -80,6 +80,9 @@
       "pleaseUploadValidFileFormat": "Please upload a valid file format.",
       "fileTooLarge": "File too large",
       "pleaseUploadSmallerFile": "Please upload a smaller file.",
+      "loading": "Loading...",
+      "viewMore": "View more",
+      "noDescription": "No description provided",
       "me": "me",
       "yes": "Yes",
       "no": "No"

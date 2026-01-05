@@ -1,6 +1,6 @@
 import type { GetMyNotificationsParams } from '@/features/notifications/hooks/use-get-my-notifications'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Notification } from '@/types/notification.type'
+import { NotificationMarkedType, type Notification } from '@/types/notification.type'
 
 class NotificationService {
   private readonly baseUrl = 'notifications'
@@ -20,6 +20,23 @@ class NotificationService {
     const { data } = await api.get<BaseResponse<{ count: number }>>(`/v1/${this.baseUrl}/unread-count`)
 
     return data.value.count
+  }
+
+  readNotification = async ({
+    notificationId,
+    markedType
+  }: {
+    notificationId?: string
+    markedType: NotificationMarkedType
+  }) => {
+    const url =
+      markedType === NotificationMarkedType.Single
+        ? `notificationId=${notificationId}&markedType=${markedType}`
+        : `markedType=${markedType}`
+
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/read?${url}`)
+
+    return data.value
   }
 }
 

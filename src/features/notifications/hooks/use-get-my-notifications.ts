@@ -1,9 +1,7 @@
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import notificationService from '@/services/notification.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
-import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { Notification } from '@/types/notification.type'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 export interface GetMyNotificationsParams {
   pageIndex?: number
@@ -11,23 +9,38 @@ export interface GetMyNotificationsParams {
   enabled?: boolean
 }
 
-// TODO: use useInfiniteQuery
 export const useGetMyNotifications = ({
-  pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   enabled = true
-}: GetMyNotificationsParams) => {
+}: GetMyNotificationsParams = {}) => {
   const { user } = useAuthStore()
 
-  const {
-    data: notifications = { ...getDefaultPaginationResponse<Notification>() },
-    isLoading: isLoadingNotifications,
-    error
-  } = useQuery({
-    queryKey: ['notifications', user?.UserId, pageIndex, pageSize],
-    queryFn: () => notificationService.getMyNotifications({ pageIndex, pageSize }),
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
+    queryKey: ['notifications', user?.UserId, pageSize],
+    queryFn: ({ pageParam = DEFAULT_PAGE_INDEX }) =>
+      notificationService.getMyNotifications({ pageIndex: pageParam, pageSize }),
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.value) return undefined
+
+      const { pageIndex, totalCount, items } = lastPage.value
+      const currentLoaded = (pageIndex - 1) * pageSize + items.length
+
+      return currentLoaded < totalCount ? pageIndex + 1 : undefined
+    },
+    initialPageParam: 1,
     enabled
   })
 
-  return { notifications, isLoadingNotifications, error }
+  const notifications = data?.pages.flatMap((page) => page.value.items) || []
+  const totalCount = data?.pages[0]?.value.totalCount || 0
+
+  return {
+    notifications,
+    totalCount,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error
+  }
 }

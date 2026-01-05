@@ -42,11 +42,11 @@ export default function ProjectMembersSection({
       </div>
 
       <div className='space-y-2'>
-        <div>
+        <div className='space-y-3 p-2'>
           {members.map((member) => (
             <div
               key={member.userId}
-              className='flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors cursor-pointer'
+              className='flex items-center gap-3 rounded-md hover:bg-muted/50 transition-colors cursor-pointer'
             >
               <Avatar
                 className={cn(
