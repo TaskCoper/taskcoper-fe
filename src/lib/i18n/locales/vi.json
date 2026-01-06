@@ -580,6 +580,12 @@
         }
       }
     },
+    "deleteMilestone": {
+      "title": "Xóa tab",
+      "description": "Bạn có chắc chắn muốn xóa {{milestoneName}}?",
+      "confirmText": "Xóa",
+      "cancelText": "Hủy"
+    },
     "addMilestone": {
       "title": "Danh sách khác",
       "description": "Thêm danh sách khác cho dự án",

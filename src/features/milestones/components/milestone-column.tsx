@@ -60,9 +60,7 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
       })}
     >
       <div className='px-3 pt-3 shrink-0'>
-        <p className='font-medium text-sm'>
-          {column.name} <span className='font-mono text-xs text-green-600'>({column.position})</span>
-        </p>
+        <p className='font-semibold text-sm'>{column.name}</p>
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>

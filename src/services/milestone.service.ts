@@ -1,7 +1,7 @@
 import type {
   AddMilestoneFormValues,
   AddParentMilestoneFormValues,
-  MoveMilestoneFormValues
+  UpdateMilestoneFormValues
 } from '@/features/milestones/validations'
 import api, { type BaseResponse } from '@/lib/axios'
 
@@ -20,7 +20,7 @@ class MilestoneService {
     return data.value
   }
 
-  moveMilestone = async ({ body }: { body: MoveMilestoneFormValues }) => {
+  updateMilestone = async ({ body }: { body: UpdateMilestoneFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.milestoneId}`, body)
 
     return data.value

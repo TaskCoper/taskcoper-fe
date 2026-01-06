@@ -30,11 +30,11 @@ export const addMilestoneSchema = (t: TFunction) => {
     .strict()
 }
 
-export const moveMilestoneSchema = (t: TFunction) => {
+export const updateMilestoneSchema = (t: TFunction) => {
   return z
     .object({
       milestoneId: z.uuid(t('milestone.validation.milestoneId.invalid')),
-      parentId: z.uuid(t('milestone.validation.parentId.invalid')),
+      parentId: z.uuid(t('milestone.validation.parentId.invalid')).nullable(),
       milestoneName: z.string().trim().min(1, t('milestone.validation.milestoneName.minLength')),
       position: z.number({ message: t('milestone.validation.position.invalid') })
     })
@@ -43,4 +43,4 @@ export const moveMilestoneSchema = (t: TFunction) => {
 
 export type AddParentMilestoneFormValues = z.infer<ReturnType<typeof addParentMilestoneSchema>>
 export type AddMilestoneFormValues = z.infer<ReturnType<typeof addMilestoneSchema>>
-export type MoveMilestoneFormValues = z.infer<ReturnType<typeof moveMilestoneSchema>>
+export type UpdateMilestoneFormValues = z.infer<ReturnType<typeof updateMilestoneSchema>>

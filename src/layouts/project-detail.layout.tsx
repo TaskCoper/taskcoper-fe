@@ -1,3 +1,5 @@
+import { customCollisionDetection } from '@/components/dnd/collision-detection'
+import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,66 +13,54 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tabs, TabsList } from '@/components/ui/tabs'
 import AddParentMilestonePopover from '@/features/milestones/components/add-parent-milestone-popover'
+import { SortableMilestoneTab } from '@/features/milestones/components/sortable-milestone-tab'
+import { useParentMilestoneDragDrop } from '@/features/milestones/hooks/use-parent-milestone-drag-drop'
 import ProjectDetailSidebar from '@/features/projects/components/sidebar/project-detail-sidebar'
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
+import { useProjectRouting } from '@/features/projects/hooks/use-project-routing'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { cn } from '@/shared/utils'
-import { PlusIcon } from 'lucide-react'
-import { Suspense, useEffect, useMemo, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
+import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import { FolderIcon, PlusIcon } from 'lucide-react'
+import React, { Fragment, Suspense, useEffect, useMemo, useState } from 'react'
+import { Outlet, useParams } from 'react-router'
 
 const secondSidebarItems = ['milestones']
 
 export default function ProjectDetailLayout() {
   const { projectId } = useParams<{ projectId: string }>()
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const sensors = useDndSensors()
 
-  const activeSegment = useMemo(() => {
-    const parts = location.pathname.split('/')
-    const projectIndex = parts.findIndex((p) => p === 'projects')
-    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
-      return parts[projectIndex + 2]
-    }
-    return 'milestones'
-  }, [location.pathname])
+  const { parentMilestones, isLoading } = useGetParentMilestones({
+    projectId,
+    enabled: true
+  })
+
+  const items = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
+  const itemsId = useMemo(() => items.map((item) => item.id), [items])
+
+  const { activeSegment, shouldDisplayTabs, activeTabValue, handleTabChange } = useProjectRouting({
+    projectId,
+    items,
+    isLoading
+  })
 
   const hasSecondSidebar = secondSidebarItems.includes(activeSegment)
   const [isSidebarOpen, setIsSidebarOpen] = useState(hasSecondSidebar)
 
+  const queryKey = ['parent-milestones', projectId]
+
+  const { activeMilestone, onDragStart, onDragOver, onDragEnd } = useParentMilestoneDragDrop({
+    items,
+    queryKey
+  })
+
   useEffect(() => {
     setIsSidebarOpen(hasSecondSidebar)
   }, [hasSecondSidebar])
-
-  const isProjectRoot =
-    location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
-
-  const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
-
-  const { parentMilestones, isLoading } = useGetParentMilestones({
-    projectId,
-    enabled: isProjectRoot || isMilestonesRoot
-  })
-
-  const items = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
-
-  useEffect(() => {
-    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot)) {
-      navigate(`milestones/${items[0].id}`, { replace: true })
-    }
-  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate])
-
-  const shouldDisplayTabs = activeSegment === 'milestones'
-  const currentMilestoneId = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
-  const activeTabValue = currentMilestoneId || items[0]?.id || ''
-
-  const handleTabChange = (milestoneId: string) => {
-    navigate(`milestones/${milestoneId}`)
-  }
 
   return (
     <SidebarProvider
@@ -86,7 +76,7 @@ export default function ProjectDetailLayout() {
     >
       <ProjectDetailSidebar />
       <SidebarInset className='flex flex-col h-full overflow-hidden'>
-        <header className='bg-background flex shrink-0 items-center gap-2 border-b p-4 h-14'>
+        <header className='bg-muted/30 flex shrink-0 items-center gap-2 border-b p-4 h-14'>
           {isMobile || hasSecondSidebar ? (
             <>
               <SidebarTrigger className='-ml-1' />
@@ -109,31 +99,45 @@ export default function ProjectDetailLayout() {
               {isLoading ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
-                <div className='flex-1 max-w-xl overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+                <div className='flex-1 max-w-3/4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
                   <div className='flex items-center gap-2'>
-                    <Tabs value={activeTabValue} onValueChange={handleTabChange}>
-                      <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
-                        {items.map((milestone) => (
-                          <TabsTrigger
-                            key={milestone.id}
-                            value={milestone.id}
-                            className={cn(
-                              'relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold',
-                              activeTabValue === milestone.id ? 'w-auto' : 'w-24'
-                            )}
-                          >
-                            <Tooltip>
-                              <TooltipTrigger asChild className='w-full cursor-pointer'>
-                                <p className='truncate'>{milestone.name}</p>
-                              </TooltipTrigger>
-                              <TooltipContent side='bottom'>
-                                <p>{milestone.name}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-                    </Tabs>
+                    <DndContext
+                      collisionDetection={customCollisionDetection}
+                      sensors={sensors}
+                      onDragStart={onDragStart}
+                      onDragEnd={onDragEnd}
+                      onDragOver={onDragOver}
+                      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+                    >
+                      <Tabs value={activeTabValue} onValueChange={handleTabChange}>
+                        <SortableContext items={itemsId} strategy={horizontalListSortingStrategy}>
+                          <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
+                            {items.map((milestone, index) => (
+                              <Fragment key={milestone.id}>
+                                <SortableMilestoneTab
+                                  key={milestone.id}
+                                  milestone={milestone}
+                                  isActive={activeTabValue === milestone.id}
+                                  queryKey={queryKey}
+                                />
+                                {index < items.length - 1 ? (
+                                  <Separator orientation='vertical' className='h-4!' />
+                                ) : null}
+                              </Fragment>
+                            ))}
+                          </TabsList>
+                        </SortableContext>
+                      </Tabs>
+
+                      <DragOverlay>
+                        {activeMilestone && (
+                          <div className='w-52 flex items-center gap-2 border-2 border-primary bg-background px-2 py-1 shadow-lg rounded-md'>
+                            <FolderIcon className='size-4' />
+                            <p className='truncate font-medium'>{activeMilestone.name}</p>
+                          </div>
+                        )}
+                      </DragOverlay>
+                    </DndContext>
                   </div>
                 </div>
               )}

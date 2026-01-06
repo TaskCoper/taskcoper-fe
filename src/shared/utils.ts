@@ -1,6 +1,6 @@
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { BasePaginationResponse } from '@/lib/axios'
-import type { MilestoneColumnDragData } from '@/types/milestone.type'
+import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
 import type { TaskCardDragData } from '@/types/task.type'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type DraggableData = MilestoneColumnDragData | TaskCardDragData
+type DraggableData = MilestoneColumnDragData | TaskCardDragData | MilestoneTabDragData
 
 export function hasDraggableData<T extends Active | Over>(
   entry: T | null | undefined
@@ -24,7 +24,7 @@ export function hasDraggableData<T extends Active | Over>(
 
   const data = entry.data.current
 
-  if (data?.type === 'MilestoneColumn' || data?.type === 'TaskCard') {
+  if (data?.type === 'MilestoneColumn' || data?.type === 'TaskCard' || data?.type === 'MilestoneTab') {
     return true
   }
 

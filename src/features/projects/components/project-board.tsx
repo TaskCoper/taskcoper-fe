@@ -1,7 +1,9 @@
+import { customCollisionDetection } from '@/components/dnd/collision-detection'
+import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import AddMilestoneButton from '@/features/milestones/components/add-milestone-button'
 import MilestoneColumn from '@/features/milestones/components/milestone-column'
-import { useMoveMilestone } from '@/features/milestones/hooks/use-move-milestone'
-import { moveMilestoneSchema } from '@/features/milestones/validations'
+import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
+import { updateMilestoneSchema } from '@/features/milestones/validations'
 import TaskCard from '@/features/tasks/components/task-card'
 import { useMoveTask } from '@/features/tasks/hooks/use-move-task'
 import { moveTaskSchema } from '@/features/tasks/validations'
@@ -11,16 +13,7 @@ import type { Task } from '@/types/task.type'
 import {
   DndContext,
   DragOverlay,
-  KeyboardSensor,
   MeasuringStrategy,
-  MouseSensor,
-  TouchSensor,
-  defaultKeyboardCoordinateGetter,
-  pointerWithin,
-  rectIntersection,
-  useSensor,
-  useSensors,
-  type CollisionDetection,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent
@@ -37,19 +30,6 @@ interface ProjectBoardProps {
   initialTasks: Task[]
 }
 
-const customCollisionDetection: CollisionDetection = (args) => {
-  // First, let's see if there are any collisions with the pointer
-  const pointerCollisions = pointerWithin(args)
-
-  // Collision detection algorithms return an array of collisions
-  if (pointerCollisions.length > 0) {
-    return pointerCollisions
-  }
-
-  // If there are no collisions with the pointer, return rectangle intersections
-  return rectIntersection(args)
-}
-
 export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const queryClient = useQueryClient()
@@ -61,14 +41,10 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
-  const { moveMilestone } = useMoveMilestone()
+  const { updateMilestone } = useUpdateMilestone()
   const { moveTask } = useMoveTask()
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: defaultKeyboardCoordinateGetter })
-  )
+  const sensors = useDndSensors()
 
   // set active column or task for overlay
   const onDragStart = (event: DragStartEvent) => {
@@ -189,7 +165,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, milestones: newMilestones }
       })
 
-      const validated = moveMilestoneSchema(t).safeParse({
+      const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: activeId,
         parentId: milestoneId,
         milestoneName: activeData.column.name,
@@ -197,7 +173,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
       })
 
       if (validated.success) {
-        moveMilestone({ body: validated.data })
+        updateMilestone({ body: validated.data })
       }
       return
     }

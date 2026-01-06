@@ -19,6 +19,13 @@ export interface MilestoneColumnDragData {
   column: Milestone
 }
 
+export type MilestoneTabType = 'MilestoneTab'
+
+export interface MilestoneTabDragData {
+  type: MilestoneTabType
+  milestone: Milestone
+}
+
 export interface MilestoneWithTasks {
   parentId: string
   milestones: Milestone[]
