@@ -1,4 +1,7 @@
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
+import { updateMilestoneSchema } from '@/features/milestones/validations'
 import AddTaskButton from '@/features/tasks/components/add-task-button'
 import TaskCard from '@/features/tasks/components/task-card'
 import type { Milestone, MilestoneColumnDragData } from '@/types/milestone.type'
@@ -6,17 +9,24 @@ import type { Task } from '@/types/task.type'
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
-interface MilestoneColumnProps {
+interface SortableMilestoneColumnProps {
   column: Milestone
   tasks: Task[]
   isOverlay?: boolean
+  queryKey: unknown[]
 }
 
-export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneColumnProps) {
+export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {
+  const { t } = useTranslation()
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const [isEditing, setIsEditing] = useState(false)
+  const [editValue, setEditValue] = useState(column.name)
+
+  const { updateMilestone } = useUpdateMilestone({ queryKey })
 
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id)
@@ -48,19 +58,66 @@ export default function MilestoneColumn({ column, tasks, isOverlay }: MilestoneC
     }
   })
 
+  const handleClick = () => {
+    setIsEditing(true)
+    setEditValue(column.name)
+  }
+
+  const handleEditComplete = () => {
+    const trimmedValue = editValue.trim()
+
+    if (trimmedValue && trimmedValue !== column.name) {
+      const validated = updateMilestoneSchema(t).safeParse({
+        milestoneId: column.id,
+        parentId: milestoneId,
+        milestoneName: trimmedValue,
+        position: column.position
+      })
+
+      if (validated.success) {
+        updateMilestone({ body: validated.data })
+      }
+    }
+
+    setIsEditing(false)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleEditComplete()
+    } else if (e.key === 'Escape') {
+      setEditValue(column.name)
+      setIsEditing(false)
+    }
+  }
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
+      {...(isEditing ? {} : { ...attributes, ...listeners })}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
         className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-9rem)] overflow-hidden bg-muted cursor-pointer'
       })}
     >
       <div className='px-3 pt-3 shrink-0'>
-        <p className='font-semibold text-sm'>{column.name}</p>
+        {isEditing ? (
+          <Input
+            type='text'
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={handleEditComplete}
+            onKeyDown={handleKeyDown}
+            onFocus={(e) => e.target.select()}
+            className='h-8 text-sm font-semibold'
+            autoFocus
+          />
+        ) : (
+          <p className='font-semibold text-sm cursor-text' onClick={handleClick}>
+            {column.name}
+          </p>
+        )}
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>
