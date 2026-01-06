@@ -66,9 +66,7 @@ export default function TaskCard({ task, isOverlay }: TaskCardProps) {
             onCheckedChange={() => {}}
             onClick={(e) => e.stopPropagation()}
           />
-          <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>
-            {task.name} <span className='font-mono text-xs text-rose-600'>({task.position})</span>
-          </p>
+          <p className={cn('text-sm w-[85%]', isCompleted ? 'text-muted-foreground' : '')}>{task.name}</p>
         </div>
       </Card>
     </Link>

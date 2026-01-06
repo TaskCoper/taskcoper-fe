@@ -580,6 +580,12 @@
         }
       }
     },
+    "deleteMilestone": {
+      "title": "Delete milestone",
+      "description": "Are you sure you want to delete {{milestoneName}}?",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    },
     "addMilestone": {
       "title": "Milestone",
       "description": "Add a milestone to your project",
