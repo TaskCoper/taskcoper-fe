@@ -21,16 +21,20 @@ import ProjectDetailSidebar from '@/features/projects/components/sidebar/project
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
 import { useProjectRouting } from '@/features/projects/hooks/use-project-routing'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { FolderIcon, PlusIcon } from 'lucide-react'
-import { Suspense, useEffect, useMemo, useState } from 'react'
-import { Outlet, useParams } from 'react-router'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { Outlet, useNavigate, useParams } from 'react-router'
 
 const secondSidebarItems = ['milestones']
 
 export default function ProjectDetailLayout() {
+  const navigate = useNavigate()
   const { projectId } = useParams<{ projectId: string }>()
+  const { removeLastActiveMilestone } = useMilestonePreferencesStore()
+
   const isMobile = useIsMobile()
   const sensors = useDndSensors()
 
@@ -61,6 +65,31 @@ export default function ProjectDetailLayout() {
   useEffect(() => {
     setIsSidebarOpen(hasSecondSidebar)
   }, [hasSecondSidebar])
+
+  const createDeleteHandler = useCallback(
+    (milestoneId: string) => () => {
+      const currentIndex = items.findIndex((item) => item.id === milestoneId)
+      if (currentIndex === -1) return
+
+      // If this is the last remaining tab, navigate to project root
+      if (items.length === 1) {
+        if (projectId) {
+          removeLastActiveMilestone(projectId)
+        }
+        navigate(`/projects/${projectId}/info`)
+        return
+      }
+
+      // Navigate to previous tab, or next if deleting the first one
+      const targetIndex = currentIndex > 0 ? currentIndex - 1 : 1
+      const targetMilestone = items[targetIndex]
+
+      if (targetMilestone) {
+        handleTabChange(targetMilestone.id)
+      }
+    },
+    [items, handleTabChange, projectId, removeLastActiveMilestone, navigate]
+  )
 
   return (
     <SidebarProvider
@@ -109,6 +138,7 @@ export default function ProjectDetailLayout() {
                       onDragOver={onDragOver}
                       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
                     >
+                      {/* TODO: should add auto scroll to the activeTabValue */}
                       <Tabs value={activeTabValue} onValueChange={handleTabChange}>
                         <SortableContext items={itemsId} strategy={horizontalListSortingStrategy}>
                           <TabsList className='inline-flex h-9 items-center gap-2 text-muted-foreground w-full justify-start rounded-none bg-transparent p-0'>
@@ -118,6 +148,8 @@ export default function ProjectDetailLayout() {
                                 milestone={milestone}
                                 isActive={activeTabValue === milestone.id}
                                 queryKey={queryKey}
+                                onDeleteSuccess={createDeleteHandler(milestone.id)}
+                                canDelete={items.length > 1}
                               />
                             ))}
                           </TabsList>

@@ -23,6 +23,7 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "delete": "Xóa",
       "insert": "Chèn"
     },
     "field": {
@@ -85,7 +86,8 @@
       "noDescription": "Không có mô tả",
       "me": "tôi",
       "yes": "Có",
-      "no": "Không"
+      "no": "Không",
+      "action": "Thao tác"
     }
   },
   "project": {
@@ -581,7 +583,8 @@
       }
     },
     "deleteMilestone": {
-      "title": "Xóa tab",
+      "title": "Xóa Tab",
+      "milestoneTitle": "Xóa Milestone",
       "description": "Bạn có chắc chắn muốn xóa {{milestoneName}}?",
       "confirmText": "Xóa",
       "cancelText": "Hủy"

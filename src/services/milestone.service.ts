@@ -25,6 +25,16 @@ class MilestoneService {
 
     return data.value
   }
+
+  deleteMilestone = async ({ milestoneId }: { milestoneId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${milestoneId}`, {
+      data: {
+        milestoneId
+      }
+    })
+
+    return data.value
+  }
 }
 
 const milestoneService = new MilestoneService()

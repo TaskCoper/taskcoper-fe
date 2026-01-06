@@ -23,6 +23,7 @@
       "accept": "Accept",
       "decline": "Decline",
       "remove": "Remove",
+      "delete": "Delete",
       "insert": "Insert"
     },
     "field": {
@@ -85,7 +86,8 @@
       "noDescription": "No description provided",
       "me": "me",
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "action": "Action"
     }
   },
   "project": {
@@ -581,7 +583,8 @@
       }
     },
     "deleteMilestone": {
-      "title": "Delete milestone",
+      "title": "Delete Tab",
+      "milestoneTitle": "Delete Milestone",
       "description": "Are you sure you want to delete {{milestoneName}}?",
       "confirmText": "Delete",
       "cancelText": "Cancel"
