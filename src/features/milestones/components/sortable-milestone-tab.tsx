@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/input'
 import { TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
@@ -67,6 +68,9 @@ export const SortableMilestoneTab = ({ milestone, isActive, queryKey }: Sortable
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent arrow keys and other keys from propagating to Tabs
+    e.stopPropagation()
+
     if (e.key === 'Enter') {
       handleEditComplete()
     } else if (e.key === 'Escape') {
@@ -90,52 +94,57 @@ export const SortableMilestoneTab = ({ milestone, isActive, queryKey }: Sortable
     }
   }
 
-  return (
-    <TabsTrigger
-      ref={setNodeRef}
-      style={style}
-      asChild
-      {...(isEditing ? {} : { ...attributes, ...listeners })}
-      value={milestone.id}
-      className='shadow-none! data-[state=active]:border-2 data-[state=active]:border-primary'
-    >
-      {isEditing ? (
-        <input
+  if (isEditing) {
+    return (
+      <div ref={setNodeRef} style={style} className='inline-flex h-9 items-center justify-center rounded-md px-2 py-1'>
+        <Input
           type='text'
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleEditComplete}
           onKeyDown={handleKeyDown}
           onFocus={(e) => e.target.select()}
-          className='w-full font-medium'
+          className='h-8'
           autoFocus
         />
-      ) : (
-        <div className={cn('flex justify-start items-center gap-2 w-full', isActive ? 'w-auto' : 'w-52')}>
-          <FolderIcon />
-          <Tooltip>
-            <TooltipTrigger asChild onDoubleClick={handleDoubleClick}>
-              <p className='truncate font-medium'>{milestone.name}</p>
-            </TooltipTrigger>
-            <TooltipContent side='bottom'>
-              <p>{milestone.name}</p>
-            </TooltipContent>
-          </Tooltip>
-          <div className='flex-1' />
-          {isActive ? (
-            <button
-              type='button'
-              className='pointer-events-auto cursor-pointer hover:text-destructive'
-              onClick={(e) => {
-                e.stopPropagation()
-                handleDelete()
-              }}
-            >
-              <XIcon className='size-4' />
-            </button>
-          ) : null}
-        </div>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <TabsTrigger
+      ref={setNodeRef}
+      style={style}
+      asChild
+      {...attributes}
+      {...listeners}
+      value={milestone.id}
+      className='inline-flex items-center data-[state=active]:bg-transparent justify-center whitespace-nowrap p-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative h-9 rounded-none border-b-2 border-b-transparent font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none'
+    >
+      <div className={cn('flex justify-start items-center gap-2 w-full', isActive ? 'w-auto' : 'w-48')}>
+        <FolderIcon />
+        <Tooltip>
+          <TooltipTrigger asChild onDoubleClick={handleDoubleClick}>
+            <p className='truncate font-medium w-full'>{milestone.name}</p>
+          </TooltipTrigger>
+          <TooltipContent side='bottom'>
+            <p>{milestone.name}</p>
+          </TooltipContent>
+        </Tooltip>
+        <div className='flex-1' />
+        {isActive ? (
+          <button
+            type='button'
+            className='pointer-events-auto cursor-pointer opacity-80 hover:opacity-100'
+            onClick={(e) => {
+              e.stopPropagation()
+              handleDelete()
+            }}
+          >
+            <XIcon className='size-4' />
+          </button>
+        ) : null}
+      </div>
     </TabsTrigger>
   )
 }

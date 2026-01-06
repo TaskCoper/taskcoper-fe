@@ -1,3 +1,4 @@
+import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import type { ParentMilestone } from '@/types/milestone.type'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -11,6 +12,7 @@ interface UseProjectRoutingProps {
 export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRoutingProps) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { getLastActiveMilestone, setLastActiveMilestone } = useMilestonePreferencesStore()
 
   const activeSegment = useMemo(() => {
     const parts = location.pathname.split('/')
@@ -31,15 +33,24 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
   const activeTabValue = currentMilestoneId || (items[0] as any)?.id || ''
 
   const handleTabChange = (milestoneId: string) => {
+    if (projectId) {
+      setLastActiveMilestone(projectId, milestoneId)
+    }
     navigate(`milestones/${milestoneId}`)
   }
 
-  // Auto-navigate to first milestone when landing on project or milestones root
+  // Auto-navigate to saved milestone or first milestone when landing on project or milestones root
   useEffect(() => {
-    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot)) {
-      navigate(`milestones/${items[0].id}`, { replace: true })
+    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot) && projectId) {
+      const savedMilestoneId = getLastActiveMilestone(projectId)
+      const milestoneExists = savedMilestoneId && items.some((item) => item.id === savedMilestoneId)
+
+      // Use saved milestone if it exists, otherwise fall back to first milestone
+      const targetMilestoneId = milestoneExists ? savedMilestoneId : items[0].id
+
+      navigate(`milestones/${targetMilestoneId}`, { replace: true })
     }
-  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate])
+  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, projectId, getLastActiveMilestone])
 
   return {
     activeSegment,

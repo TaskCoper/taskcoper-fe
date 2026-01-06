@@ -24,7 +24,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { FolderIcon, PlusIcon } from 'lucide-react'
-import React, { Fragment, Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { Outlet, useParams } from 'react-router'
 
 const secondSidebarItems = ['milestones']
@@ -111,19 +111,14 @@ export default function ProjectDetailLayout() {
                     >
                       <Tabs value={activeTabValue} onValueChange={handleTabChange}>
                         <SortableContext items={itemsId} strategy={horizontalListSortingStrategy}>
-                          <TabsList className='flex-nowrap not-[]:justify-start rounded-none p-0 bg-transparent'>
-                            {items.map((milestone, index) => (
-                              <Fragment key={milestone.id}>
-                                <SortableMilestoneTab
-                                  key={milestone.id}
-                                  milestone={milestone}
-                                  isActive={activeTabValue === milestone.id}
-                                  queryKey={queryKey}
-                                />
-                                {index < items.length - 1 ? (
-                                  <Separator orientation='vertical' className='h-4!' />
-                                ) : null}
-                              </Fragment>
+                          <TabsList className='inline-flex h-9 items-center gap-2 text-muted-foreground w-full justify-start rounded-none bg-transparent p-0'>
+                            {items.map((milestone) => (
+                              <SortableMilestoneTab
+                                key={milestone.id}
+                                milestone={milestone}
+                                isActive={activeTabValue === milestone.id}
+                                queryKey={queryKey}
+                              />
                             ))}
                           </TabsList>
                         </SortableContext>
@@ -132,8 +127,8 @@ export default function ProjectDetailLayout() {
                       <DragOverlay>
                         {activeMilestone && (
                           <div className='w-52 flex items-center gap-2 border-2 border-primary bg-background px-2 py-1 shadow-lg rounded-md'>
-                            <FolderIcon className='size-4' />
-                            <p className='truncate font-medium'>{activeMilestone.name}</p>
+                            <FolderIcon className='size-4 shrink-0' />
+                            <p className='truncate text-sm font-medium'>{activeMilestone.name}</p>
                           </div>
                         )}
                       </DragOverlay>

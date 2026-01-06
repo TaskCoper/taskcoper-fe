@@ -1,7 +1,7 @@
 import { customCollisionDetection } from '@/components/dnd/collision-detection'
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import AddMilestoneButton from '@/features/milestones/components/add-milestone-button'
-import MilestoneColumn from '@/features/milestones/components/milestone-column'
+import SortableMilestoneColumn from '@/features/milestones/components/sortable-milestone-column'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
 import TaskCard from '@/features/tasks/components/task-card'
@@ -228,10 +228,11 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
           {initialColumns.length > 0 && (
             <div className='flex items-start gap-3'>
               {initialColumns.map((col) => (
-                <MilestoneColumn
+                <SortableMilestoneColumn
                   key={col.id}
                   column={col}
                   tasks={initialTasks.filter((task) => task.milestoneId === col.id)}
+                  queryKey={queryKey}
                 />
               ))}
             </div>
@@ -242,10 +243,11 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
 
       <DragOverlay>
         {activeColumn && (
-          <MilestoneColumn
+          <SortableMilestoneColumn
             isOverlay
             column={activeColumn}
             tasks={initialTasks.filter((task) => task.milestoneId === activeColumn.id)}
+            queryKey={queryKey}
           />
         )}
         {activeTask && <TaskCard task={activeTask} isOverlay />}
