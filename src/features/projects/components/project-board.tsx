@@ -4,12 +4,12 @@ import AddMilestoneButton from '@/features/milestones/components/add-milestone-b
 import SortableMilestoneColumn from '@/features/milestones/components/sortable-milestone-column'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
-import TaskCard from '@/features/tasks/components/task-card'
+import SortableTaskCard from '@/features/tasks/components/sortable-task-card'
 import { useMoveTask } from '@/features/tasks/hooks/use-move-task'
 import { moveTaskSchema } from '@/features/tasks/validations'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
 import type { Milestone, MilestoneWithTasks } from '@/types/milestone.type'
-import type { Task } from '@/types/task.type'
+import type { TaskPreview } from '@/types/task.type'
 import {
   DndContext,
   DragOverlay,
@@ -27,7 +27,7 @@ import ProjectContainer from './project-container'
 
 interface ProjectBoardProps {
   initialColumns: Milestone[]
-  initialTasks: Task[]
+  initialTasks: TaskPreview[]
 }
 
 export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
@@ -39,7 +39,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
 
   const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
-  const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [activeTask, setActiveTask] = useState<TaskPreview | null>(null)
 
   const { updateMilestone } = useUpdateMilestone()
   const { moveTask } = useMoveTask()
@@ -250,7 +250,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
             queryKey={queryKey}
           />
         )}
-        {activeTask && <TaskCard task={activeTask} isOverlay />}
+        {activeTask && <SortableTaskCard task={activeTask} isOverlay />}
       </DragOverlay>
     </DndContext>
   )

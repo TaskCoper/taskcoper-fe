@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { format, type Locale } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
+import { DATE_LOCALES } from '@/shared/constants'
+import { format } from 'date-fns'
+import { enUS } from 'date-fns/locale'
 import { ChevronsRightIcon, SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import UpdateProjectTimelineDialog from '../dialogs/update-project-timeline-dialog'
@@ -11,11 +12,6 @@ interface ProjectTimelineSectionProps {
   endDate: string
   isPending: boolean
   isCurrentUserMain: boolean
-}
-
-const DATE_LOCALES: Record<string, Locale> = {
-  vi: vi,
-  en: enUS
 }
 
 export default function ProjectTimelineSection({

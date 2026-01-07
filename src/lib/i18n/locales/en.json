@@ -83,6 +83,7 @@
       "pleaseUploadSmallerFile": "Please upload a smaller file.",
       "loading": "Loading...",
       "viewMore": "View more",
+      "viewLess": "View less",
       "noDescription": "No description provided",
       "me": "me",
       "yes": "Yes",
@@ -206,7 +207,13 @@
       "title": "Project domains",
       "description": "Edit the project domains",
       "searchLabel": "Domains",
-      "selectedDomains": "Selected domains"
+      "selectedDomains": "Selected domains",
+      "validation": {
+        "domainIds": {
+          "invalid": "Invalid domain",
+          "minLength": "At least one domain is required"
+        }
+      }
     },
     "updateProjectMembers": {
       "title": "Project members",
@@ -275,7 +282,7 @@
     },
     "sidebar": {
       "aboutProject": "About Project",
-      "tasks": "Tasks",
+      "tasks": "My Tasks",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
@@ -389,13 +396,34 @@
       "findLabel": "Find label..."
     },
     "subtask": {
+      "title": "Title",
       "subtask": "Subtask",
-      "subtaskTitle": "Add a list of tasks"
+      "subtaskTitle": "Add a list of tasks",
+      "addItem": "Add an item",
+      "addItemPlaceholder": "Add an item",
+      "showCompletedItems": "Show completed items",
+      "hideCompletedItems": "Hide completed items",
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "name": {
+          "minLength": "Subtask name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "index": {
+          "invalid": "Invalid index"
+        },
+        "parentId": {
+          "invalid": "Invalid parent ID"
+        }
+      }
     },
     "assignee": {
       "assignee": "Assignee",
       "findAssignee": "Find assignee...",
-      "boardAssignee": "Board assignee"
+      "taskAssignee": "Task assignee",
+      "boardAssignee": "Project assignee"
     },
     "attachment": {
       "attachment": "Attachment",
@@ -413,7 +441,36 @@
     },
     "comment": {
       "comment": "Comments and Activity",
-      "addComment": "Add comment..."
+      "addComment": "Add comment...",
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "content": {
+          "minLength": "Comment content is required",
+          "maxLength": "Max 10000 characters"
+        },
+        "commentResources": {
+          "fileUrl": {
+            "invalid": "Invalid file URL"
+          },
+          "storageKey": {
+            "minLength": "Storage key is required"
+          },
+          "fileName": {
+            "minLength": "File name is required"
+          },
+          "fileType": {
+            "minLength": "File type is required"
+          },
+          "fileSize": {
+            "positive": "File size must be positive"
+          },
+          "fileExtension": {
+            "minLength": "File extension is required"
+          }
+        }
+      }
     }
   },
   "richTextEditor": {
@@ -625,7 +682,7 @@
       "markAllAsRead": "Mark all as read"
     },
     "type": {
-      "task": "Task",
+      "task": "Tasks",
       "chat": "Chat",
       "project": "Project",
       "system": "System"

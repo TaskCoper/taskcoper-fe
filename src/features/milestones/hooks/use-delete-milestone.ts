@@ -15,7 +15,7 @@ export const useDeleteMilestone = ({ queryKey, onSuccessCallback }: DeleteMilest
   const { mutate: deleteMilestone, isPending: isDeletingMilestone } = useMutation({
     mutationFn: milestoneService.deleteMilestone,
     onSuccess: (message) => {
-      toast(message)
+      toast.success(message)
       onSuccessCallback?.()
     },
     onError: (error) => {

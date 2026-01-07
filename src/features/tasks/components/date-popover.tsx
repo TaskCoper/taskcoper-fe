@@ -5,61 +5,161 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/shared/utils'
-import { addDays, format, parse } from 'date-fns'
+import { addDays, format } from 'date-fns'
 import { XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { TaskReminder } from '../constants'
+import { minutesToReminder, reminderToMinutes, TaskReminder } from '../constants'
 
 interface DatePopoverProps {
   children: React.ReactNode
+  onSubmit: () => void
+  onRemove: () => void
+}
+
+interface DateUpdates {
+  startDate?: string | null
+  endDate?: string | null
+  announceBeforeMinutes?: number | null
 }
 
 const dateFormat = 'MM/dd/yyyy'
-const defaultStartDate = format(new Date(), dateFormat)
-const defaultEndDate = format(addDays(new Date(), 1), dateFormat)
-const defaultEndTime = format(new Date(), 'H:mm')
+const minDate = new Date('1900-01-01')
+const maxDate = new Date(new Date().getFullYear() + 10, 11, 31)
 
-export default function DatePopover({ children }: DatePopoverProps) {
+export default function DatePopover({ children, onSubmit, onRemove }: DatePopoverProps) {
   const { t } = useTranslation()
-  const [reminderType, setReminderType] = useState<keyof typeof TaskReminder>('NONE')
-  const [startDate, setStartDate] = useState<string | null>(defaultStartDate)
-  const [endDate, setEndDate] = useState<string | null>(defaultEndDate)
-  const [endTime, setEndTime] = useState<string | null>(defaultEndTime)
   const [open, setOpen] = useState(false)
 
+  const { watch, setValue } = useFormContext()
+  const startDateValue = watch('startDate')
+  const endDateValue = watch('endDate')
+  const announceBeforeMinutes = watch('announceBeforeMinutes')
+
+  const reminderType = useMemo(() => minutesToReminder(announceBeforeMinutes || 0), [announceBeforeMinutes])
+
+  const { startDate, startTime, endDate, endTime } = useMemo(() => {
+    let startDate = null
+    let startTime = null
+    let endDate = null
+    let endTime = null
+
+    if (startDateValue) {
+      const date = new Date(startDateValue)
+      startDate = format(date, dateFormat)
+      startTime = format(date, 'HH:mm')
+    }
+
+    if (endDateValue) {
+      const date = new Date(endDateValue)
+      endDate = format(date, dateFormat)
+      endTime = format(date, 'HH:mm')
+    }
+
+    return { startDate, startTime, endDate, endTime }
+  }, [startDateValue, endDateValue])
+
   const dateRange = useMemo(() => {
-    if (startDate && endDate)
-      return { from: parse(startDate, dateFormat, new Date()), to: parse(endDate, dateFormat, new Date()) }
-    if (endDate) return { from: undefined, to: parse(endDate, dateFormat, new Date()) }
-    if (startDate) return { from: parse(startDate, dateFormat, new Date()), to: undefined }
+    return {
+      from: startDateValue ? new Date(startDateValue) : undefined,
+      to: endDateValue ? new Date(endDateValue) : undefined
+    }
+  }, [startDateValue, endDateValue])
 
-    return { from: undefined, to: undefined }
-  }, [startDate, endDate])
+  const isDateRange = !!(startDate && endDate && startTime && endTime)
 
-  const isDateRange = !!(startDate && endDate && endTime)
+  const handleUpdateDates = (updates: DateUpdates) => {
+    if ('startDate' in updates) setValue('startDate', updates.startDate)
+    if ('endDate' in updates) setValue('endDate', updates.endDate)
+    if ('announceBeforeMinutes' in updates) setValue('announceBeforeMinutes', updates.announceBeforeMinutes)
+  }
+
+  const handleCalendarSelect = (range: { from?: Date; to?: Date } | Date | undefined) => {
+    if (!range) return
+
+    if (range instanceof Date) {
+      // Single date mode selection
+      if (startDateValue) {
+        const newDate = new Date(range)
+        newDate.setHours(new Date().getHours())
+        newDate.setMinutes(new Date().getMinutes())
+        handleUpdateDates({ startDate: newDate.toISOString(), endDate: null })
+      } else {
+        const newDate = new Date(range)
+        newDate.setHours(new Date().getHours())
+        newDate.setMinutes(new Date().getMinutes())
+        handleUpdateDates({ endDate: newDate.toISOString() })
+      }
+      return
+    }
+
+    // Range mode selection
+    const start = range.from
+    const end = range.to
+
+    const updates: DateUpdates = {}
+    if (start) {
+      const newStart = new Date(start)
+      newStart.setHours(new Date().getHours())
+      newStart.setMinutes(new Date().getMinutes())
+      updates.startDate = newStart.toISOString()
+    } else {
+      updates.startDate = null
+    }
+
+    if (end) {
+      const newEnd = new Date(end)
+      newEnd.setHours(new Date().getHours())
+      newEnd.setMinutes(new Date().getMinutes())
+      updates.endDate = newEnd.toISOString()
+    } else {
+      updates.endDate = null
+    }
+
+    handleUpdateDates(updates)
+  }
 
   const toggleStartDate = () => {
-    setStartDate(startDate ? null : defaultStartDate)
+    if (startDateValue) {
+      handleUpdateDates({ startDate: null })
+    } else {
+      const date = new Date()
+      handleUpdateDates({ startDate: date.toISOString() })
+    }
   }
 
   const toggleEndDate = () => {
-    setEndDate(endDate ? null : defaultEndDate)
-    setEndTime(endTime ? null : defaultEndTime)
+    if (endDateValue) {
+      handleUpdateDates({ endDate: null })
+    } else {
+      const date = addDays(new Date(), 1)
+      handleUpdateDates({ endDate: date.toISOString() })
+    }
   }
 
-  const handleClose = () => {
+  const handleRemove = () => {
+    setValue('startDate', null)
+    setValue('endDate', null)
+    setValue('announceBeforeMinutes', null)
+
+    onRemove()
+    setOpen(false)
+  }
+
+  const handleSave = () => {
+    onSubmit()
     setOpen(false)
   }
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent side='bottom' align='start' className='p-0' onInteractOutside={handleClose} sideOffset={8}>
+      <PopoverContent side='bottom' align='start' className='p-0' sideOffset={8}>
         <div className='p-4'>
           <div className='flex items-center justify-center relative mb-4'>
             <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('common.field.date')}</p>
-            <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={handleClose} />
+            <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={() => setOpen(false)} />
           </div>
 
           {isDateRange ? (
@@ -67,11 +167,9 @@ export default function DatePopover({ children }: DatePopoverProps) {
               mode='range'
               defaultMonth={dateRange?.to || dateRange?.from}
               selected={dateRange}
-              onSelect={(range) => {
-                setStartDate(range?.from ? format(range.from, dateFormat) : null)
-                setEndDate(range?.to ? format(range.to, dateFormat) : null)
-                setEndTime(format(new Date(), 'H:mm'))
-              }}
+              onSelect={(range) => handleCalendarSelect(range)}
+              startMonth={minDate}
+              endMonth={maxDate}
               captionLayout='dropdown'
               className='w-full p-0'
             />
@@ -80,17 +178,9 @@ export default function DatePopover({ children }: DatePopoverProps) {
               mode='single'
               defaultMonth={dateRange?.to || dateRange?.from}
               selected={dateRange?.from || dateRange?.to}
-              onSelect={(date) => {
-                if (dateRange?.from) {
-                  setStartDate(date ? format(date, dateFormat) : null)
-                  setEndDate(null)
-                  setEndTime(null)
-                } else {
-                  setStartDate(null)
-                  setEndDate(date ? format(date, dateFormat) : null)
-                  setEndTime(format(new Date(), 'H:mm'))
-                }
-              }}
+              onSelect={(date) => handleCalendarSelect(date)}
+              startMonth={minDate}
+              endMonth={maxDate}
               captionLayout='dropdown'
               className='w-full p-0'
             />
@@ -100,12 +190,18 @@ export default function DatePopover({ children }: DatePopoverProps) {
             <div>
               <p className='font-semibold text-xs py-1'>{t('common.field.startDate')}</p>
               <div className='flex items-center gap-2'>
-                <Checkbox checked={!!startDate} onClick={toggleStartDate} />
+                <Checkbox checked={!!(startDate && startTime)} onClick={toggleStartDate} />
                 <Input
                   className='w-28'
                   value={startDate || t('task.date.notSetDate')}
                   disabled={!startDate}
                   readOnly={!!startDate}
+                />
+                <Input
+                  className='w-28'
+                  value={startTime || t('task.date.notSetTime')}
+                  disabled={!startTime}
+                  readOnly={!!startTime}
                 />
               </div>
             </div>
@@ -132,7 +228,10 @@ export default function DatePopover({ children }: DatePopoverProps) {
             <div>
               <p className='font-semibold text-xs py-1'>{t('task.date.reminderSetting')}</p>
               <Select
-                onValueChange={(value) => setReminderType(value as keyof typeof TaskReminder)}
+                onValueChange={(value) => {
+                  const minutes = reminderToMinutes(value as keyof typeof TaskReminder)
+                  handleUpdateDates({ announceBeforeMinutes: minutes === 0 ? null : minutes })
+                }}
                 value={reminderType}
               >
                 <SelectTrigger className={cn('w-full')}>
@@ -150,8 +249,10 @@ export default function DatePopover({ children }: DatePopoverProps) {
               <p className='text-xs text-muted-foreground my-2'>{t('task.date.reminderDescription')}</p>
             </div>
 
-            <Button className='w-full'>{t('common.button.save')}</Button>
-            <Button className='w-full' variant='secondary'>
+            <Button className='w-full' onClick={handleSave}>
+              {t('common.button.save')}
+            </Button>
+            <Button className='w-full' variant='secondary' onClick={handleRemove}>
               {t('common.button.remove')}
             </Button>
           </div>

@@ -1,4 +1,3 @@
-import { Label } from '@/components/ui/label'
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +9,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
-import { Switch } from '@/components/ui/switch'
+import { Skeleton } from '@/components/ui/skeleton'
+import TaskCard from '@/features/tasks/components/task-card'
+import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigned-tasks'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import {
   CalendarClockIcon,
@@ -18,33 +20,21 @@ import {
   ListTodoIcon,
   MessageCircleIcon,
   NotebookPenIcon,
-  SettingsIcon
+  SettingsIcon,
+  SmileIcon
 } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useParams } from 'react-router'
 
-const mails = [
-  {
-    name: 'William Smith',
-    email: 'williamsmith@example.com',
-    subject: 'Meeting Tomorrow',
-    date: '09:34 AM',
-    teaser:
-      'Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.'
-  },
-  {
-    name: 'Alice Smith',
-    email: 'alicesmith@example.com',
-    subject: 'Re: Project Update',
-    date: 'Yesterday',
-    teaser: "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps."
-  }
-]
+interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  onTaskCountChange?: (count: number, isLoading: boolean) => void
+}
 
-export default function ProjectDetailSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
+  const { user } = useAuthStore()
   const location = useLocation()
 
   const navMain = useMemo(
@@ -99,6 +89,18 @@ export default function ProjectDetailSidebar({ ...props }: React.ComponentProps<
   }, [location.pathname])
 
   const activeItem = navMain.find((item) => item.url === activeSegment) || navMain[1]
+
+  const { assignedTasks, isLoadingAssignedTasks } = useGetMyAssignedTasks({
+    projectId,
+    userId: user?.UserId,
+    enabled: activeItem.hasSecondSidebar
+  })
+
+  useEffect(() => {
+    if (onTaskCountChange) {
+      onTaskCountChange(assignedTasks?.value.totalCount ?? 0, isLoadingAssignedTasks)
+    }
+  }, [assignedTasks?.value.totalCount, isLoadingAssignedTasks, onTaskCountChange])
 
   return (
     <Sidebar
@@ -155,33 +157,32 @@ export default function ProjectDetailSidebar({ ...props }: React.ComponentProps<
       </Sidebar>
 
       {activeItem.hasSecondSidebar ? (
-        <Sidebar collapsible='none' className='hidden flex-1 md:flex'>
+        <Sidebar collapsible='none' className='hidden w-[340px] md:flex shrink-0'>
           <SidebarHeader className='gap-3.5 border-b p-4'>
             <div className='flex w-full items-center justify-between'>
               <div className='text-foreground text-base font-medium'>{activeItem?.title}</div>
-              <Label className='flex items-center gap-2 text-sm'>
-                <span>Unreads</span>
-                <Switch className='shadow-none' />
-              </Label>
             </div>
-            <SidebarInput placeholder='Type to search...' />
+            <SidebarInput placeholder={t('common.ui.search')} />
           </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup className='px-0'>
+          <SidebarContent className='bg-muted'>
+            <SidebarGroup className='p-0'>
               <SidebarGroupContent>
-                {mails.map((mail) => (
-                  <a
-                    href='#'
-                    key={mail.email}
-                    className='hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0'
-                  >
-                    <div className='flex w-full items-center gap-2'>
-                      <span>{mail.name}</span> <span className='ml-auto text-xs'>{mail.date}</span>
+                <div className='p-4 flex flex-col gap-4 shrink-0'>
+                  {isLoadingAssignedTasks ? (
+                    <>
+                      <Skeleton className='h-20' />
+                      <Skeleton className='h-20' />
+                      <Skeleton className='h-20' />
+                    </>
+                  ) : assignedTasks?.value.totalCount === 0 ? (
+                    <div className='flex flex-col justify-center items-center gap-3 mt-10'>
+                      <SmileIcon className='size-14 text-muted-foreground' />
+                      <p className='text-muted-foreground text-sm'>Yay! You have no pending tasks</p>
                     </div>
-                    <span className='font-medium'>{mail.subject}</span>
-                    <span className='line-clamp-2 w-[260px] text-xs whitespace-break-spaces'>{mail.teaser}</span>
-                  </a>
-                ))}
+                  ) : (
+                    assignedTasks?.value.items.map((task) => <TaskCard key={task.id} task={task} />)
+                  )}
+                </div>
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>

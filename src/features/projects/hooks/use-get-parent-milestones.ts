@@ -8,7 +8,7 @@ export const useGetParentMilestones = ({ projectId, enabled = true }: { projectI
     data: parentMilestones = {
       ...getDefaultPaginationResponse<ParentMilestone>()
     },
-    isLoading,
+    isLoading: isLoadingParentMilestones,
     error
   } = useQuery({
     queryKey: ['parent-milestones', projectId],
@@ -16,5 +16,5 @@ export const useGetParentMilestones = ({ projectId, enabled = true }: { projectI
     enabled: !!projectId && enabled
   })
 
-  return { parentMilestones, isLoading, error }
+  return { parentMilestones, isLoadingParentMilestones, error }
 }

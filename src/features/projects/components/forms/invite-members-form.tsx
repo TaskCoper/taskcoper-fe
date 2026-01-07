@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getAvatarFallback } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +32,7 @@ export default function InviteMembersForm({ fields, remove }: InviteMembersFormP
           <div key={field.id} className='flex items-center gap-3'>
             <Avatar className='size-9'>
               <AvatarImage src={field.avatar ?? ''} />
-              <AvatarFallback>{field.fullName ? field.fullName.charAt(0) : field.email.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{getAvatarFallback(field.fullName)}</AvatarFallback>
             </Avatar>
 
             <div className='flex-1 w-32'>
