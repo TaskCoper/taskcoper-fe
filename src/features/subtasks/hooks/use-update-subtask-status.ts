@@ -1,4 +1,5 @@
 import type { BasePaginationResponse } from '@/lib/axios'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,9 +9,16 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { updateSubtaskStatusSchema, type UpdateSubtaskStatusFormValues } from '../validations'
 
-export const useUpdateSubtaskStatus = ({ taskId }: { taskId?: string } = {}) => {
+interface UseUpdateSubtaskStatusProps {
+  taskId?: string
+  projectId?: string
+  parentMilestoneId?: string
+}
+
+export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateSubtaskStatusProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
   const methods = useForm<UpdateSubtaskStatusFormValues>({
     resolver: zodResolver(updateSubtaskStatusSchema(t))
@@ -58,6 +66,14 @@ export const useUpdateSubtaskStatus = ({ taskId }: { taskId?: string } = {}) => 
     onSettled: () => {
       if (taskId) {
         queryClient.invalidateQueries({ queryKey })
+      }
+
+      if (projectId && parentMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+      }
+
+      if (projectId && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
       }
     }
   })

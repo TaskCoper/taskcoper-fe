@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,6 +29,7 @@ export const useAddSubtask = ({
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const { subtasks } = useGetSubtasks({ taskId })
+  const { user } = useAuthStore()
 
   const existingSubtasks = useMemo(
     () => subtasks?.value.items.filter((subtask) => !subtask.parentId) || [],
@@ -84,6 +86,10 @@ export const useAddSubtask = ({
 
       if (projectId && parentMilestoneId) {
         queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+      }
+
+      if (projectId && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
       }
     }
   })

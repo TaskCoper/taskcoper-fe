@@ -44,7 +44,7 @@ export default function ParentSubtaskCard({
     projectId,
     parentMilestoneId
   })
-  const { deleteSubtask, isDeletingSubtask } = useDeleteSubtask({ taskId })
+  const { deleteSubtask, isDeletingSubtask } = useDeleteSubtask({ taskId, projectId, parentMilestoneId })
 
   const displayedChildren = toggleViewCompleted
     ? subtask.children
@@ -106,7 +106,13 @@ export default function ParentSubtaskCard({
 
           <div className='space-y-1'>
             {displayedChildren.map((children) => (
-              <SubtaskCard key={children.id} subtask={children} taskId={taskId} />
+              <SubtaskCard
+                key={children.id}
+                subtask={children}
+                taskId={taskId}
+                projectId={projectId}
+                parentMilestoneId={parentMilestoneId}
+              />
             ))}
           </div>
 

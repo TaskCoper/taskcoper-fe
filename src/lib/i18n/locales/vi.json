@@ -88,7 +88,9 @@
       "me": "tôi",
       "yes": "Có",
       "no": "Không",
-      "action": "Thao tác"
+      "action": "Thao tác",
+      "members": "Thành viên",
+      "date": "Ngày"
     }
   },
   "project": {

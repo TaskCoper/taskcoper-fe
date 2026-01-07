@@ -323,7 +323,7 @@ export default function TaskDetailDialogPage() {
                 {/* Assigned members section */}
                 {(taskMembers?.value.totalCount ?? 0) > 0 ? (
                   <div className='space-y-1'>
-                    <p className='text-sm font-semibold text-muted-foreground'>Thành viên</p>
+                    <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.members')}</p>
 
                     <div className='flex items-center gap-1'>
                       {taskMembers?.value.items.map((member) => (
@@ -347,7 +347,7 @@ export default function TaskDetailDialogPage() {
                 {/* Date section */}
                 {task?.taskStartDate || task?.taskEndDate ? (
                   <div className='space-y-1'>
-                    <p className='text-sm font-semibold text-muted-foreground'>Ngày</p>
+                    <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.date')}</p>
 
                     <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
                       <Button variant='secondary' size='sm'>
