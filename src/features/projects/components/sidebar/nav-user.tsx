@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
+import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
@@ -49,7 +50,9 @@ export default function NavUser({ user }: NavUserProps) {
       <DropdownMenuTrigger>
         <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full cursor-pointer'>
           <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
-          <AvatarFallback className='rounded-lg'>{user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+          <AvatarFallback className='rounded-lg'>
+            {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -62,7 +65,9 @@ export default function NavUser({ user }: NavUserProps) {
           <div className='flex items-center gap-3 text-left text-sm'>
             <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full'>
               <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
-              <AvatarFallback className='rounded-lg'>{user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarFallback className='rounded-lg'>
+                {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
+              </AvatarFallback>
             </Avatar>
             <div className='grid flex-1 text-left text-sm leading-tight'>
               <span className='truncate font-medium'>

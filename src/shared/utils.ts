@@ -120,3 +120,9 @@ export const prepareFileUpload = (file: File, folder: string = 'general'): GetPr
     contentType: file.type || 'application/octet-stream'
   }
 }
+
+export const getAvatarFallback = (fullName: string) =>
+  fullName
+    .split(' ')
+    .map((n) => n[0])
+    .join('')

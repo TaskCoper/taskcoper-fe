@@ -3,7 +3,13 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetProjectMembers = ({ projectId }: { projectId?: string }) => {
+export interface UseGetProjectMembersParams {
+  projectId?: string
+  searchTerm?: string
+}
+
+// TODO: add pagination
+export const useGetProjectMembers = ({ projectId, searchTerm }: UseGetProjectMembersParams) => {
   const {
     data: members = {
       ...getDefaultPaginationResponse<ProjectMember>()
@@ -11,8 +17,8 @@ export const useGetProjectMembers = ({ projectId }: { projectId?: string }) => {
     isLoading: isLoadingMembers,
     error
   } = useQuery({
-    queryKey: ['members', projectId],
-    queryFn: () => projectService.getProjectMembers({ projectId }),
+    queryKey: ['members', projectId, searchTerm],
+    queryFn: () => projectService.getProjectMembers({ projectId, searchTerm }),
     enabled: !!projectId
   })
 

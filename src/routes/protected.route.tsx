@@ -58,10 +58,38 @@ export const protectedRoutes: RouteObject[] = [
                 ]
               },
               { path: 'info', element: <ProjectInfoPage /> },
-              { path: 'calendar', element: <div>Project Specific Calendar</div> },
-              { path: 'chat', element: <div>Chat</div> },
-              { path: 'note', element: <div>Note</div> },
-              { path: 'settings', element: <div>Settings</div> }
+              {
+                path: 'calendar',
+                element: (
+                  <div className='flex items-center justify-center mt-24'>
+                    <p className='text-2xl font-bold'>Calendar Comming Soon </p>
+                  </div>
+                )
+              },
+              {
+                path: 'chat',
+                element: (
+                  <div className='flex items-center justify-center mt-24'>
+                    <p className='text-2xl font-bold'>Chat Comming Soon </p>
+                  </div>
+                )
+              },
+              {
+                path: 'note',
+                element: (
+                  <div className='flex items-center justify-center mt-24'>
+                    <p className='text-2xl font-bold'>Note Comming Soon </p>
+                  </div>
+                )
+              },
+              {
+                path: 'settings',
+                element: (
+                  <div className='flex items-center justify-center mt-24'>
+                    <p className='text-2xl font-bold'>Settings Comming Soon </p>
+                  </div>
+                )
+              }
             ]
           }
         ]

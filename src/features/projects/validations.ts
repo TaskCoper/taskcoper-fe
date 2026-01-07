@@ -16,29 +16,33 @@ export const createProjectSchema = (t: TFunction) => {
       // endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }),
       domainIds: z
         .array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
-        .min(1, t('project.createProject.validation.domainIds.minLength'))
+        .min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
     })
     .strict()
 }
 
 export const memberSchema = (t: TFunction) => {
-  return z.object({
-    userId: z.uuid(t('project.inviteMembers.validation.users.userId.invalid')),
-    email: z.email(t('project.inviteMembers.validation.users.email.invalid')).trim(),
-    fullName: z.string().trim().min(1, t('project.inviteMembers.validation.users.fullName.required')),
-    avatar: z.url({ message: t('project.inviteMembers.validation.users.avatar.invalid') }).nullable(),
-    isEditor: z.boolean(),
-    inviteExpireDate: z.iso
-      .datetime({ message: t('project.inviteMembers.validation.users.inviteExpireDate.invalid') })
-      .nullable()
-  })
+  return z
+    .object({
+      userId: z.uuid(t('project.inviteMembers.validation.users.userId.invalid')),
+      email: z.email(t('project.inviteMembers.validation.users.email.invalid')).trim(),
+      fullName: z.string().trim().min(1, t('project.inviteMembers.validation.users.fullName.required')),
+      avatar: z.url({ message: t('project.inviteMembers.validation.users.avatar.invalid') }).nullable(),
+      isEditor: z.boolean(),
+      inviteExpireDate: z.iso
+        .datetime({ message: t('project.inviteMembers.validation.users.inviteExpireDate.invalid') })
+        .nullable()
+    })
+    .strict()
 }
 
 export const domainSchema = (t: TFunction) => {
-  return z.object({
-    id: z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')),
-    name: z.string().trim().min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
-  })
+  return z
+    .object({
+      id: z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')),
+      name: z.string().trim().min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
+    })
+    .strict()
 }
 
 export const inviteMembersSchema = (t: TFunction) => {
@@ -67,6 +71,7 @@ export const inviteMembersSchema = (t: TFunction) => {
         path: ['expirationDate']
       }
     )
+    .strict()
 }
 
 export const updateProjectSchema = (t: TFunction) => {
@@ -118,7 +123,7 @@ export const updateProjectSchema = (t: TFunction) => {
         .refine((v) => v === null || z.email().safeParse(v).success, {
           error: t('common.validation.email.invalid')
         }),
-      domainIds: z.array(domainSchema(t)).min(1, t('project.updateProject.validation.domainIds.minLength')),
+      domainIds: z.array(domainSchema(t)).min(1, t('project.updateProjectDomains.validation.domainIds.minLength')),
       schoolSubject: z
         .string()
         .trim()
@@ -140,6 +145,7 @@ export const updateProjectSchema = (t: TFunction) => {
         path: ['endDate']
       }
     )
+    .strict()
 }
 
 export type CreateProjectFormValues = z.infer<ReturnType<typeof createProjectSchema>>

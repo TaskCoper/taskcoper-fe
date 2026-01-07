@@ -1,4 +1,4 @@
-import type { Task } from './task.type'
+import type { TaskPreview } from './task.type'
 
 export interface Milestone {
   id: string
@@ -29,5 +29,5 @@ export interface MilestoneTabDragData {
 export interface MilestoneWithTasks {
   parentId: string
   milestones: Milestone[]
-  tasks: Task[]
+  tasks: TaskPreview[]
 }

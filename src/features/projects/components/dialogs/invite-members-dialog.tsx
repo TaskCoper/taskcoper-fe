@@ -14,6 +14,7 @@ import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { useGetUsers } from '@/features/users/hooks/use-get-users'
+import { getAvatarFallback } from '@/shared/utils'
 import type { InviteMembersPayload } from '@/types/project.type'
 import { addDays } from 'date-fns'
 import { useState } from 'react'
@@ -136,7 +137,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
                 <>
                   <Avatar className='size-8'>
                     <AvatarImage src={user.avatar ?? ''} />
-                    <AvatarFallback>{user.fullName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{getAvatarFallback(user.fullName)}</AvatarFallback>
                   </Avatar>
                   <div className='flex-1 overflow-hidden'>
                     <p className='text-sm font-medium truncate'>{user.fullName}</p>

@@ -1,9 +1,11 @@
 import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
+import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview } from '@/types/project.type'
+import type { TaskPreview } from '@/types/task.type'
 
 class ProjectService {
   private readonly baseUrl = 'projects'
@@ -46,9 +48,13 @@ class ProjectService {
     return data.value
   }
 
-  getProjectMembers = async ({ projectId }: { projectId?: string }) => {
+  getProjectMembers = async ({ projectId, searchTerm }: UseGetProjectMembersParams) => {
     if (!projectId) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`)
+    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+      params: {
+        searchTerm
+      }
+    })
 
     return data
   }
@@ -110,6 +116,15 @@ class ProjectService {
     })
 
     return data.value
+  }
+
+  getMyAssignedTasks = async ({ projectId, userId }: { projectId?: string; userId?: string }) => {
+    if (!projectId || !userId) return null
+    const { data } = await api.get<BasePaginationResponse<TaskPreview>>(
+      `/v1/${this.baseUrl}/${projectId}/members/${userId}/tasks`
+    )
+
+    return data
   }
 }
 

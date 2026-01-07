@@ -1,21 +1,26 @@
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
 import AddTaskButton from '@/features/tasks/components/add-task-button'
-import TaskCard from '@/features/tasks/components/task-card'
+import SortableTaskCard from '@/features/tasks/components/sortable-task-card'
+import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { cn } from '@/shared/utils'
 import type { Milestone, MilestoneColumnDragData } from '@/types/milestone.type'
-import type { Task } from '@/types/task.type'
+import type { TaskPreview } from '@/types/task.type'
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cva } from 'class-variance-authority'
+import { MoreHorizontalIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import MilestoneColumnDropdown from './milestone-column-dropdown'
 
 interface SortableMilestoneColumnProps {
   column: Milestone
-  tasks: Task[]
+  tasks: TaskPreview[]
   isOverlay?: boolean
   queryKey: unknown[]
 }
@@ -23,10 +28,26 @@ interface SortableMilestoneColumnProps {
 export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {
   const { t } = useTranslation()
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
-  const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState(column.name)
+  const [openDropdown, setOpenDropdown] = useState(false)
 
   const { updateMilestone } = useUpdateMilestone({ queryKey })
+
+  const { isEditing, inputProps, triggerProps } = useInlineEdit({
+    initialValue: column.name,
+    clickType: 'single',
+    onSave: (newName) => {
+      const validated = updateMilestoneSchema(t).safeParse({
+        milestoneId: column.id,
+        parentId: milestoneId,
+        milestoneName: newName,
+        position: column.position
+      })
+
+      if (validated.success) {
+        updateMilestone({ body: validated.data })
+      }
+    }
+  })
 
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id)
@@ -58,39 +79,6 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     }
   })
 
-  const handleClick = () => {
-    setIsEditing(true)
-    setEditValue(column.name)
-  }
-
-  const handleEditComplete = () => {
-    const trimmedValue = editValue.trim()
-
-    if (trimmedValue && trimmedValue !== column.name) {
-      const validated = updateMilestoneSchema(t).safeParse({
-        milestoneId: column.id,
-        parentId: milestoneId,
-        milestoneName: trimmedValue,
-        position: column.position
-      })
-
-      if (validated.success) {
-        updateMilestone({ body: validated.data })
-      }
-    }
-
-    setIsEditing(false)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleEditComplete()
-    } else if (e.key === 'Escape') {
-      setEditValue(column.name)
-      setIsEditing(false)
-    }
-  }
-
   return (
     <Card
       ref={setNodeRef}
@@ -101,30 +89,32 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
         className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-9rem)] overflow-hidden bg-muted cursor-pointer'
       })}
     >
-      <div className='px-3 pt-3 shrink-0'>
+      <div className='flex items-center justify-between gap-2 shrink-0 pl-3 pr-2 pt-2'>
         {isEditing ? (
-          <Input
-            type='text'
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            onBlur={handleEditComplete}
-            onKeyDown={handleKeyDown}
-            onFocus={(e) => e.target.select()}
-            className='h-8 text-sm font-semibold'
-            autoFocus
-          />
+          <Input type='text' className='h-8 text-sm font-semibold' {...inputProps} />
         ) : (
-          <p className='font-semibold text-sm cursor-text' onClick={handleClick}>
+          <p className='font-semibold text-sm cursor-text' {...triggerProps}>
             {column.name}
           </p>
         )}
+
+        <MilestoneColumnDropdown
+          columnId={column.id}
+          columnName={column.name}
+          open={openDropdown}
+          setOpen={setOpenDropdown}
+        >
+          <Button variant='ghost' size='icon-sm' className={cn(openDropdown ? 'bg-primary/10 text-primary' : '')}>
+            <MoreHorizontalIcon />
+          </Button>
+        </MilestoneColumnDropdown>
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>
         <div className='flex flex-col gap-2 p-2'>
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <TaskCard task={task} key={task.id} />
+              <SortableTaskCard task={task} key={task.id} />
             ))}
           </SortableContext>
         </div>

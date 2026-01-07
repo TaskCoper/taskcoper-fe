@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/shared/utils'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import type { ProjectMember } from '@/types/project.type'
 import { MoreHorizontalIcon, SettingsIcon, UserRoundPlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -56,7 +56,7 @@ export default function ProjectMembersSection({
                 )}
               >
                 <AvatarImage src={member.avatar ?? ''} />
-                <AvatarFallback>{member.fullName.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{getAvatarFallback(member.fullName)}</AvatarFallback>
               </Avatar>
 
               <div>

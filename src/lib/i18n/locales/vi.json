@@ -23,6 +23,7 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "delete": "Xóa",
       "insert": "Chèn"
     },
     "field": {
@@ -82,10 +83,12 @@
       "pleaseUploadSmallerFile": "Vui lòng tải lên tệp nhỏ hơn.",
       "loading": "Đang tải...",
       "viewMore": "Xem thêm",
+      "viewLess": "Thu gọn",
       "noDescription": "Không có mô tả",
       "me": "tôi",
       "yes": "Có",
-      "no": "Không"
+      "no": "Không",
+      "action": "Thao tác"
     }
   },
   "project": {
@@ -204,7 +207,13 @@
       "title": "Lĩnh vực dự án",
       "description": "Chỉnh sửa lĩnh vực dự án",
       "searchLabel": "Lĩnh vực",
-      "selectedDomains": "Lĩnh vực đã chọn"
+      "selectedDomains": "Lĩnh vực đã chọn",
+      "validation": {
+        "domainIds": {
+          "invalid": "Lĩnh vực không hợp lệ",
+          "minLength": "Vui lòng chọn ít nhất một lĩnh vực"
+        }
+      }
     },
     "updateProjectMembers": {
       "title": "Thành viên dự án",
@@ -273,7 +282,7 @@
     },
     "sidebar": {
       "aboutProject": "Thông tin dự án",
-      "tasks": "Công việc",
+      "tasks": "Công việc của tôi",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
@@ -387,13 +396,34 @@
       "findLabel": "Tìm nhãn..."
     },
     "subtask": {
+      "title": "Tiêu đề",
       "subtask": "Việc cần làm",
-      "subtaskTitle": "Thêm danh sách công việc"
+      "subtaskTitle": "Thêm danh sách công việc",
+      "addItem": "Thêm một mục",
+      "addItemPlaceholder": "Thêm một mục",
+      "showCompletedItems": "Hiển thị những mục đã chọn",
+      "hideCompletedItems": "Ẩn các mục đã chọn",
+      "validation": {
+        "taskId": {
+          "invalid": "ID thẻ không hợp lệ"
+        },
+        "name": {
+          "minLength": "Vui lòng nhập tên công việc",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "index": {
+          "invalid": "Vị trí không hợp lệ"
+        },
+        "parentId": {
+          "invalid": "ID cha không hợp lệ"
+        }
+      }
     },
     "assignee": {
       "assignee": "Thành viên",
       "findAssignee": "Tìm kiếm các thành viên...",
-      "boardAssignee": "Thành viên của bảng"
+      "taskAssignee": "Thành viên của thẻ",
+      "boardAssignee": "Thành viên của dự án"
     },
     "attachment": {
       "attachment": "Đính kèm",
@@ -411,7 +441,36 @@
     },
     "comment": {
       "comment": "Bình luận và Hoạt động",
-      "addComment": "Viết bình luận..."
+      "addComment": "Viết bình luận...",
+      "validation": {
+        "taskId": {
+          "invalid": "ID thẻ không hợp lệ"
+        },
+        "content": {
+          "minLength": "Vui lòng nhập nội dung bình luận",
+          "maxLength": "Tối đa 10000 ký tự"
+        },
+        "commentResources": {
+          "fileUrl": {
+            "invalid": "URL tệp không hợp lệ"
+          },
+          "storageKey": {
+            "minLength": "Khóa lưu trữ là bắt buộc"
+          },
+          "fileName": {
+            "minLength": "Tên tệp là bắt buộc"
+          },
+          "fileType": {
+            "minLength": "Loại tệp là bắt buộc"
+          },
+          "fileSize": {
+            "positive": "Kích thước tệp phải là số dương"
+          },
+          "fileExtension": {
+            "minLength": "Phần mở rộng tệp là bắt buộc"
+          }
+        }
+      }
     }
   },
   "richTextEditor": {
@@ -581,7 +640,8 @@
       }
     },
     "deleteMilestone": {
-      "title": "Xóa tab",
+      "title": "Xóa Tab",
+      "milestoneTitle": "Xóa Milestone",
       "description": "Bạn có chắc chắn muốn xóa {{milestoneName}}?",
       "confirmText": "Xóa",
       "cancelText": "Hủy"
