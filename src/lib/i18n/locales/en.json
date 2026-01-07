@@ -88,7 +88,9 @@
       "me": "me",
       "yes": "Yes",
       "no": "No",
-      "action": "Action"
+      "action": "Action",
+      "members": "Members",
+      "date": "Date"
     }
   },
   "project": {

@@ -1,13 +1,21 @@
 import type { BasePaginationResponse } from '@/lib/axios'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useDeleteSubtask = ({ taskId }: { taskId?: string } = {}) => {
+interface UseDeleteSubtaskProps {
+  taskId?: string
+  projectId?: string
+  parentMilestoneId?: string
+}
+
+export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDeleteSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
   const queryKey = ['subtasks', taskId]
 
@@ -49,6 +57,14 @@ export const useDeleteSubtask = ({ taskId }: { taskId?: string } = {}) => {
     onSettled: () => {
       if (taskId) {
         queryClient.invalidateQueries({ queryKey })
+      }
+
+      if (projectId && parentMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+      }
+
+      if (projectId && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
       }
     }
   })
