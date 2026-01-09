@@ -357,6 +357,12 @@
         }
       }
     },
+    "deleteTask": {
+      "title": "Delete task",
+      "description": "Are you sure you want to delete {{taskName}}?",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    },
     "validation": {
       "name": {
         "minLength": "Task name is required",
@@ -405,6 +411,7 @@
       "addItemPlaceholder": "Add an item",
       "showCompletedItems": "Show completed items",
       "hideCompletedItems": "Hide completed items",
+      "allCompletedItems": "Everything on this subtask has been completed!",
       "validation": {
         "taskId": {
           "invalid": "Invalid task ID"

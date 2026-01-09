@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 'use client'
 
-import * as React from 'react'
 import type { Editor } from '@tiptap/react'
+import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
@@ -22,10 +22,10 @@ import { useLinkPopover } from '@/components/tiptap-ui/link-popover'
 // --- UI Primitives ---
 import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { Button, ButtonGroup } from '@/components/tiptap-ui-primitive/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/tiptap-ui-primitive/popover'
-import { Separator } from '@/components/tiptap-ui-primitive/separator'
 import { Card, CardBody, CardItemGroup } from '@/components/tiptap-ui-primitive/card'
 import { Input, InputGroup } from '@/components/tiptap-ui-primitive/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/tiptap-ui-primitive/popover'
+import { Separator } from '@/components/tiptap-ui-primitive/separator'
 
 export interface LinkMainProps {
   /**
@@ -261,7 +261,10 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
           </LinkButton>
         </PopoverTrigger>
 
-        <PopoverContent>
+        <PopoverContent
+          className='max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+          sideOffset={8}
+        >
           <LinkMain
             url={url}
             setUrl={setUrl}

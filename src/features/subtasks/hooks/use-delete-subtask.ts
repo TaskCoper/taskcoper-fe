@@ -10,9 +10,17 @@ interface UseDeleteSubtaskProps {
   taskId?: string
   projectId?: string
   parentMilestoneId?: string
+  isParent?: boolean
+  children?: Subtask[]
 }
 
-export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDeleteSubtaskProps = {}) => {
+export const useDeleteSubtask = ({
+  taskId,
+  projectId,
+  parentMilestoneId,
+  isParent = false,
+  children = []
+}: UseDeleteSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -31,7 +39,11 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
         queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
           if (!old) return old
 
-          const newItems = old.value.items.filter((item) => item.id !== variables.id)
+          // delete a parent will also remove all its children
+          const childrenIds = isParent ? children.map((child) => child.id) : []
+          const idsToRemove = [variables.id, ...childrenIds]
+
+          const newItems = old.value.items.filter((item) => !idsToRemove.includes(item.id))
 
           return {
             ...old,

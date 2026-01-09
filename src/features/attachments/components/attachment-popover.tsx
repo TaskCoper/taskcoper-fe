@@ -24,7 +24,7 @@ export default function AttachmentPopover({ children }: AttachmentPopoverProps) 
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         align='start'
-        className='p-0 min-w-80 overflow-auto'
+        className='p-0 min-w-80 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
         sideOffset={8}
         onInteractOutside={handleClose}
       >

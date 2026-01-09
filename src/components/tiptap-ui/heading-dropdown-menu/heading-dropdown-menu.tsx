@@ -99,7 +99,7 @@ export const HeadingDropdownMenu = React.forwardRef<HTMLButtonElement, HeadingDr
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='start' portal={portal}>
+        <DropdownMenuContent align='start' portal={portal} sideOffset={8}>
           <Card>
             <CardBody>
               <ButtonGroup>

@@ -16,7 +16,7 @@ import { MoreHorizontalIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
-import MilestoneColumnDropdown from './milestone-column-dropdown'
+import MilestoneColumnMenu from './milestone-column-menu'
 
 interface SortableMilestoneColumnProps {
   column: Milestone
@@ -98,7 +98,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
           </p>
         )}
 
-        <MilestoneColumnDropdown
+        <MilestoneColumnMenu
           columnId={column.id}
           columnName={column.name}
           open={openDropdown}
@@ -107,7 +107,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
           <Button variant='ghost' size='icon-sm' className={cn(openDropdown ? 'bg-primary/10 text-primary' : '')}>
             <MoreHorizontalIcon />
           </Button>
-        </MilestoneColumnDropdown>
+        </MilestoneColumnMenu>
       </div>
 
       <div className='overflow-auto scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 flex-1'>

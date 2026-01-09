@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 
-interface MilestoneColumnDropdownProps {
+interface MilestoneColumnMenuProps {
   columnId: string
   columnName: string
   children: React.ReactNode
@@ -20,13 +20,13 @@ interface MilestoneColumnDropdownProps {
   setOpen: (open: boolean) => void
 }
 
-export default function MilestoneColumnDropdown({
+export default function MilestoneColumnMenu({
   columnId,
   columnName,
   children,
   open,
   setOpen
-}: MilestoneColumnDropdownProps) {
+}: MilestoneColumnMenuProps) {
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
@@ -51,7 +51,7 @@ export default function MilestoneColumnDropdown({
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent align='start'>
+      <DropdownMenuContent align='start' sideOffset={8}>
         <DropdownMenuLabel>{t('common.ui.action')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem

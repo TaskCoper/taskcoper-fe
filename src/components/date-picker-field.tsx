@@ -103,7 +103,11 @@ export function DatePickerField<T extends FieldValues>({
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className='w-auto p-0' align='start'>
+            <PopoverContent
+              sideOffset={8}
+              className='w-auto p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+              align='start'
+            >
               <Calendar
                 mode='single'
                 selected={field.value ? new Date(field.value) : undefined}

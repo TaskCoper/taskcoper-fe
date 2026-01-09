@@ -117,7 +117,12 @@ export default function MultiSelectField<T extends FieldValues>({
             {isDesktop ? (
               <Popover open={open} onOpenChange={setOpen} modal={modal}>
                 <PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>
-                <PopoverContent className='p-0' align='start' style={{ width: 'var(--radix-popover-trigger-width)' }}>
+                <PopoverContent
+                  sideOffset={8}
+                  className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+                  align='start'
+                  style={{ width: 'var(--radix-popover-trigger-width)' }}
+                >
                   <MultiOptionList
                     options={options}
                     selectedValues={selectedValues}

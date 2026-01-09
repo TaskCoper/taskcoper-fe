@@ -59,7 +59,7 @@ export default function NavUser({ user }: NavUserProps) {
         className='w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-lg mt-1'
         side='bottom'
         align='end'
-        sideOffset={4}
+        sideOffset={8}
       >
         <DropdownMenuLabel className='px-3 font-normal'>
           <div className='flex items-center gap-3 text-left text-sm'>

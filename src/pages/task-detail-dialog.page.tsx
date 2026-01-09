@@ -1,3 +1,5 @@
+import { customCollisionDetection } from '@/components/dnd/collision-detection'
+import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -18,17 +20,34 @@ import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import LabelPopover from '@/features/labels/components/label-popover'
-import ParentSubtaskCard from '@/features/subtasks/components/parent-subtask-card'
+import SortableParentSubtaskCard from '@/features/subtasks/components/sortable-parent-subtask-card'
+import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask-card'
 import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
 import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
+import { useUpdateSubtask } from '@/features/subtasks/hooks/use-update-subtask'
+import { updateSubtaskSchema } from '@/features/subtasks/validations'
 import DatePopover from '@/features/tasks/components/date-popover'
+import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import type { BasePaginationResponse } from '@/lib/axios'
+import { calculateReorderPosition, cn, getAvatarFallback, hasDraggableData } from '@/shared/utils'
 import type { Subtask, SubtaskWithChildren } from '@/types/subtask.type'
+import type { Modifier } from '@dnd-kit/core'
+import {
+  defaultDropAnimation,
+  DndContext,
+  DragOverlay,
+  MeasuringStrategy,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent
+} from '@dnd-kit/core'
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import {
@@ -47,10 +66,28 @@ import {
   UserRoundPlusIcon,
   XIcon
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+
+const snapCenterToCursor: Modifier = ({ activatorEvent, draggingNodeRect, transform }) => {
+  if (activatorEvent && draggingNodeRect) {
+    const activatorCoordinates = activatorEvent as MouseEvent | TouchEvent
+    const x = 'clientX' in activatorCoordinates ? activatorCoordinates.clientX : 0
+    const y = 'clientY' in activatorCoordinates ? activatorCoordinates.clientY : 0
+
+    const offsetX = x - draggingNodeRect.left - draggingNodeRect.width / 2
+    const offsetY = y - draggingNodeRect.top - draggingNodeRect.height / 2
+
+    return {
+      ...transform,
+      x: transform.x + offsetX,
+      y: transform.y + offsetY
+    }
+  }
+  return transform
+}
 
 const transformSubtasks = (subtasks: Subtask[]): SubtaskWithChildren[] => {
   const map = new Map()
@@ -83,6 +120,13 @@ export default function TaskDetailDialogPage() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
+  const [openMenu, setOpenMenu] = useState(false)
+
+  const [activeParentSubtask, setActiveParentSubtask] = useState<SubtaskWithChildren | null>(null)
+  const [activeChildSubtask, setActiveChildSubtask] = useState<Subtask | null>(null)
+
+  const queryClient = useQueryClient()
+  const sensors = useDndSensors()
 
   const { task, isLoadingTask } = useGetTask({ taskId })
   const { comments, isLoadingComments } = useGetComments({ taskId })
@@ -102,6 +146,8 @@ export default function TaskDetailDialogPage() {
     isAddingComment
   } = useAddComment({ taskId, projectId, parentMilestoneId: milestoneId })
   const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
+
+  const { updateSubtask } = useUpdateSubtask({ taskId })
 
   const {
     isEditing: isEditingName,
@@ -129,12 +175,18 @@ export default function TaskDetailDialogPage() {
   })
 
   const groupedSubtasks = transformSubtasks(subtasks?.value.items || [])
+  const parentSubtasksIds = useMemo(() => groupedSubtasks.map((s) => s.id), [groupedSubtasks])
+  const queryKey = ['subtasks', taskId]
+
+  const goBack = () => {
+    navigate(`/projects/${projectId}/milestones/${milestoneId}`)
+  }
 
   const handleClose = () => {
     setOpen(false)
     setTimeout(() => {
-      navigate(`/projects/${projectId}/milestones/${milestoneId}`)
-    }, 500)
+      goBack()
+    }, 300)
   }
 
   useEffect(() => {
@@ -174,6 +226,163 @@ export default function TaskDetailDialogPage() {
 
   const onSubmitAddComment: SubmitHandler<AddTaskCommentFormValues> = (body) => {
     addComment({ body })
+  }
+
+  const onDragStart = (event: DragStartEvent) => {
+    if (!hasDraggableData(event.active)) return
+    const data = event.active.data.current
+
+    if (data?.type === 'ParentSubtask') {
+      setActiveParentSubtask(data.subtask)
+      return
+    }
+
+    if (data?.type === 'ChildSubtask') {
+      setActiveChildSubtask(data.subtask)
+      return
+    }
+  }
+
+  const onDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
+    if (!over) return
+
+    const activeId = active.id
+    const overId = over.id
+    if (activeId === overId) return
+
+    if (!hasDraggableData(active) || !hasDraggableData(over)) return
+
+    const activeData = active.data.current
+    const overData = over.data.current
+
+    const isActiveAParent = activeData?.type === 'ParentSubtask'
+    const isOverAParent = overData?.type === 'ParentSubtask'
+    const isActiveAChild = activeData?.type === 'ChildSubtask'
+    const isOverAChild = overData?.type === 'ChildSubtask'
+
+    // parent subtask over parent subtask
+    if (isActiveAParent && isOverAParent) {
+      queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
+        if (!old) return old
+        const activeIndex = old.value.items.findIndex((item) => item.id === activeId && item.parentId === null)
+        const overIndex = old.value.items.findIndex((item) => item.id === overId && item.parentId === null)
+        return {
+          ...old,
+          value: {
+            ...old.value,
+            items: arrayMove(old.value.items, activeIndex, overIndex)
+          }
+        }
+      })
+    }
+
+    if (!isActiveAChild) return
+
+    // child subtask over child subtask
+    if (isActiveAChild && isOverAChild) {
+      queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
+        if (!old) return old
+        const newItems = [...old.value.items]
+        const activeIndex = newItems.findIndex((t) => t.id === activeId)
+        const overIndex = newItems.findIndex((t) => t.id === overId)
+
+        const activeChild = newItems[activeIndex]
+        const overChild = newItems[overIndex]
+
+        // move child subtask between parent subtask
+        if (activeChild && overChild && activeChild.parentId !== overChild.parentId) {
+          newItems[activeIndex] = { ...activeChild, parentId: overChild.parentId }
+          return { ...old, value: { ...old.value, items: arrayMove(newItems, activeIndex, overIndex - 1) } }
+        }
+
+        // reorder within same parent subtask
+        return { ...old, value: { ...old.value, items: arrayMove(newItems, activeIndex, overIndex) } }
+      })
+    }
+
+    // child subtask over empty parent subtask
+    if (isActiveAChild && isOverAParent) {
+      queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
+        if (!old) return old
+        const newItems = [...old.value.items]
+        const activeIndex = newItems.findIndex((t) => t.id === activeId)
+
+        if (activeIndex !== -1) {
+          newItems[activeIndex] = { ...newItems[activeIndex], parentId: overData.subtask.id }
+          return { ...old, value: { ...old.value, items: newItems } }
+        }
+        return old
+      })
+    }
+  }
+
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active } = event
+
+    const originalParent = activeParentSubtask
+    const originalChild = activeChildSubtask
+
+    setActiveParentSubtask(null)
+    setActiveChildSubtask(null)
+
+    if (!hasDraggableData(active)) return
+
+    const activeId = active.id as string
+    const activeData = active.data.current
+    const allSubtasks = subtasks?.value.items || []
+
+    if (activeData?.type === 'ParentSubtask' && originalParent) {
+      const parents = allSubtasks.filter((s) => s.parentId === null)
+      const currentIndex = parents.findIndex((p) => p.id === activeId)
+      const newIndex = calculateReorderPosition(
+        parents.map((p) => ({ position: p.index })),
+        currentIndex
+      )
+
+      if (originalParent.index === newIndex) {
+        return
+      }
+
+      const validated = updateSubtaskSchema(t).safeParse({
+        id: activeId,
+        name: originalParent.name,
+        index: newIndex,
+        parentId: null
+      })
+
+      if (validated.success) {
+        updateSubtask({ body: validated.data })
+      }
+      return
+    }
+
+    if (activeData?.type === 'ChildSubtask' && originalChild) {
+      const currentChild = allSubtasks.find((s) => s.id === activeId)
+      if (!currentChild) return
+
+      const childrenInParent = allSubtasks.filter((s) => s.parentId === currentChild.parentId)
+      const indexInParent = childrenInParent.findIndex((s) => s.id === activeId)
+      const newIndex = calculateReorderPosition(
+        childrenInParent.map((c) => ({ position: c.index })),
+        indexInParent
+      )
+
+      if (originalChild.index === newIndex && originalChild.parentId === currentChild.parentId) {
+        return
+      }
+
+      const validated = updateSubtaskSchema(t).safeParse({
+        id: activeId,
+        name: originalChild.name,
+        index: newIndex,
+        parentId: currentChild.parentId
+      })
+
+      if (validated.success) {
+        updateSubtask({ body: validated.data })
+      }
+    }
   }
 
   if (isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers) {
@@ -252,9 +461,25 @@ export default function TaskDetailDialogPage() {
               <ImageIcon />
             </Button>
 
-            <Button className='rounded-full' variant='ghost' size='icon-sm'>
-              <MoreHorizontalIcon />
-            </Button>
+            {taskId && task?.taskName && projectId && milestoneId ? (
+              <TaskDetailMenu
+                projectId={projectId}
+                parentMilestoneId={milestoneId}
+                taskId={taskId}
+                taskName={task.taskName}
+                onDeleteSuccess={goBack}
+                open={openMenu}
+                setOpen={setOpenMenu}
+              >
+                <Button
+                  className={cn('rounded-full', openMenu ? 'bg-primary/10 text-primary' : '')}
+                  variant='ghost'
+                  size='icon-sm'
+                >
+                  <MoreHorizontalIcon />
+                </Button>
+              </TaskDetailMenu>
+            ) : null}
 
             <Button className='rounded-full' variant='ghost' size='icon-sm' onClick={handleClose}>
               <XIcon />
@@ -461,24 +686,58 @@ export default function TaskDetailDialogPage() {
               </div>
 
               {/* Subtasks */}
-              <div className='mt-10 space-y-8'>
-                {groupedSubtasks?.map((subtask) => {
-                  if (taskId && projectId && milestoneId) {
-                    return (
-                      <ParentSubtaskCard
-                        key={subtask.id}
-                        subtask={subtask}
-                        projectId={projectId}
-                        parentMilestoneId={milestoneId}
-                        taskId={taskId}
-                        editingSubtaskId={editingSubtaskId}
-                        setEditingSubtaskId={setEditingSubtaskId}
-                      />
-                    )
-                  }
-                  return null
-                })}
-              </div>
+              <DndContext
+                collisionDetection={customCollisionDetection}
+                sensors={sensors}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDragOver={onDragOver}
+                measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+              >
+                <SortableContext items={parentSubtasksIds} strategy={verticalListSortingStrategy}>
+                  <div className='mt-10 space-y-8 pb-6'>
+                    {groupedSubtasks?.map((subtask) => {
+                      if (taskId && projectId && milestoneId) {
+                        return (
+                          <SortableParentSubtaskCard
+                            key={subtask.id}
+                            subtask={subtask}
+                            projectId={projectId}
+                            parentMilestoneId={milestoneId}
+                            taskId={taskId}
+                            editingSubtaskId={editingSubtaskId}
+                            setEditingSubtaskId={setEditingSubtaskId}
+                          />
+                        )
+                      }
+                      return null
+                    })}
+                  </div>
+                </SortableContext>
+
+                <DragOverlay dropAnimation={defaultDropAnimation} modifiers={[snapCenterToCursor]}>
+                  {activeParentSubtask && taskId && projectId && milestoneId && (
+                    <SortableParentSubtaskCard
+                      isOverlay
+                      subtask={activeParentSubtask}
+                      projectId={projectId}
+                      parentMilestoneId={milestoneId}
+                      taskId={taskId}
+                      editingSubtaskId={editingSubtaskId}
+                      setEditingSubtaskId={setEditingSubtaskId}
+                    />
+                  )}
+                  {activeChildSubtask && taskId && projectId && milestoneId && (
+                    <SortableSubtaskCard
+                      isOverlay
+                      subtask={activeChildSubtask}
+                      taskId={taskId}
+                      projectId={projectId}
+                      parentMilestoneId={milestoneId}
+                    />
+                  )}
+                </DragOverlay>
+              </DndContext>
             </div>
           </FormProvider>
 
@@ -506,7 +765,7 @@ export default function TaskDetailDialogPage() {
               )}
             />
 
-            <div className='space-y-6'>
+            <div className='space-y-6 pb-6'>
               {comments?.value.items.map((comment) => (
                 <CommentCard key={comment.commentId} comment={comment} />
               ))}

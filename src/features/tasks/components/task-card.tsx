@@ -4,17 +4,31 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CircleCheckBigIcon, ClockIcon, MessageSquareIcon, PaperclipIcon, SquarePenIcon } from 'lucide-react'
-import { useState } from 'react'
+import { forwardRef, useState, type CSSProperties } from 'react'
 import { Link, useLocation } from 'react-router'
 
-interface TaskCardProps {
+const taskCardVariants = cva(
+  'gap-1 p-3 border-none rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group/card overflow-hidden',
+  {
+    variants: {
+      dragging: {
+        over: 'opacity-50',
+        overlay: 'ring-2 ring-primary'
+      }
+    }
+  }
+)
+
+interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
   task: TaskPreview
+  style?: CSSProperties
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, style, ...props }, ref) => {
   const location = useLocation()
   const isCompleted = false
 
@@ -30,7 +44,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 
   return (
     <Link to={`${location.pathname}/tasks/${task.id}`}>
-      <Card className='gap-1 p-3 border-none rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group/card overflow-hidden'>
+      <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props}>
         <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover/card:block' />
         <div className='flex items-start gap-2'>
           <Checkbox
@@ -79,7 +93,10 @@ export default function TaskCard({ task }: TaskCardProps) {
       </Card>
     </Link>
   )
-}
+})
+
+TaskCard.displayName = 'TaskCard'
+export default TaskCard
 
 const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDate: string | null }) => {
   return (

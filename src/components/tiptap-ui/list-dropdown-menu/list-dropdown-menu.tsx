@@ -1,7 +1,7 @@
 'use client'
 
-import * as React from 'react'
 import { type Editor } from '@tiptap/react'
+import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
@@ -18,13 +18,13 @@ import { useListDropdownMenu } from './use-list-dropdown-menu'
 // --- UI Primitives ---
 import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { Button, ButtonGroup } from '@/components/tiptap-ui-primitive/button'
+import { Card, CardBody } from '@/components/tiptap-ui-primitive/card'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from '@/components/tiptap-ui-primitive/dropdown-menu'
-import { Card, CardBody } from '@/components/tiptap-ui-primitive/card'
 
 export interface ListDropdownMenuProps extends Omit<ButtonProps, 'type'> {
   /**
@@ -101,7 +101,7 @@ export function ListDropdownMenu({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='start' portal={portal}>
+      <DropdownMenuContent align='start' portal={portal} sideOffset={8}>
         <Card>
           <CardBody>
             <ButtonGroup>

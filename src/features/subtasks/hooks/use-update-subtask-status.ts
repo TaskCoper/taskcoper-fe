@@ -13,9 +13,17 @@ interface UseUpdateSubtaskStatusProps {
   taskId?: string
   projectId?: string
   parentMilestoneId?: string
+  isParent?: boolean
+  children?: Subtask[]
 }
 
-export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateSubtaskStatusProps = {}) => {
+export const useUpdateSubtaskStatus = ({
+  taskId,
+  projectId,
+  parentMilestoneId,
+  isParent = false,
+  children = []
+}: UseUpdateSubtaskStatusProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -38,9 +46,19 @@ export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }:
         queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
           if (!old) return old
 
-          const newItems = old.value.items.map((item) =>
-            item.id === variables.body.id ? { ...item, isCompleted: variables.body.isCompleted } : item
-          )
+          const newItems = old.value.items.map((item) => {
+            // only update the children
+            if (item.id === variables.body.id) {
+              return { ...item, isCompleted: variables.body.isCompleted }
+            }
+
+            // update a parent and all of its children
+            if (isParent && children.some((child) => child.id === item.id)) {
+              return { ...item, isCompleted: variables.body.isCompleted }
+            }
+
+            return item
+          })
 
           return {
             ...old,

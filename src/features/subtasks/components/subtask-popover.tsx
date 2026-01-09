@@ -55,7 +55,7 @@ export default function SubtaskPopover({ children, taskId, projectId, parentMile
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         align='start'
-        className='p-0 max-h-[420px] overflow-auto'
+        className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
         onInteractOutside={handleClose}
         sideOffset={8}
       >

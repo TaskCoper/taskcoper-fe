@@ -28,7 +28,12 @@ export default function NotificationsPopover({ children, open, onOpenChange }: N
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent align='end' side='bottom' className='w-[400px] p-0'>
+      <PopoverContent
+        sideOffset={8}
+        align='end'
+        side='bottom'
+        className='w-[400px] p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+      >
         <div className='px-3 py-2 flex items-center justify-between'>
           <p className='text-lg font-semibold'>{t('notification.popover.title')}</p>
           <Button
