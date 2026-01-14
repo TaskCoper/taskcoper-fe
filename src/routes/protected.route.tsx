@@ -71,6 +71,14 @@ export const protectedRoutes: RouteObject[] = [
                 )
               },
               {
+                path: 'performance',
+                element: (
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Performance Comming Soon</p>
+                  </div>
+                )
+              },
+              {
                 path: 'chat',
                 element: (
                   <div className='w-full h-full flex justify-center items-center'>

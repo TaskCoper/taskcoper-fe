@@ -290,7 +290,8 @@
       "note": "Note",
       "settings": "Settings",
       "myProjects": "My Projects",
-      "myCalendar": "My Calendar"
+      "myCalendar": "My Calendar",
+      "performance": "Performance"
     },
     "tasks": {
       "addTask": "Add new task",
@@ -695,6 +696,83 @@
       "chat": "Chat",
       "project": "Project",
       "system": "System"
+    }
+  },
+  "home": {
+    "header": {
+      "signIn": "Sign In",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "Top Trusted Choice",
+      "title": "Project Management Platform",
+      "titleHighlight": "No. 1 in Vietnam",
+      "description": "TaskCoper helps teams organize work, track progress, and collaborate seamlessly. All in one powerful platform.",
+      "cta": "Start Your Journey",
+      "trustBadge": "Trusted by 500+ teams worldwide"
+    },
+    "stats": {
+      "projects": "Projects",
+      "tasksDone": "Tasks Done",
+      "uptime": "Uptime",
+      "support": "Support"
+    },
+    "cards": {
+      "taskCard": {
+        "title": "Design Review",
+        "subtitle": "UI/UX Sprint",
+        "status": "Completed",
+        "description": "Finalize dashboard components and design system tokens for v2.0 release.",
+        "priority": "High Priority",
+        "comments": "{{count}} comments",
+        "members": "{{count}} members"
+      },
+      "teamChat": {
+        "title": "Team Chat",
+        "message": "The new API is ready for testing...",
+        "timeAgo": "2 min ago",
+        "message2": "Great! I'll run the unit tests now",
+        "timeAgo2": "Just now",
+        "typing": "Sarah is typing...",
+        "viewAll": "View all"
+      },
+      "productivity": {
+        "title": "Productivity",
+        "change": "↑ 23% this week",
+        "tasksCompleted": "{{count}} tasks completed",
+        "streak": "🔥 {{days}} day streak",
+        "days": {
+          "mon": "Mon",
+          "wed": "Wed",
+          "fri": "Fri",
+          "sun": "Sun"
+        }
+      },
+      "teamActivity": {
+        "title": "Team Activity",
+        "live": "Live",
+        "alexCompleted": "Alex completed",
+        "apiIntegration": "API Integration",
+        "bethStarted": "Beth started",
+        "codeReview": "Code Review",
+        "online": "{{count}} online"
+      },
+      "timeline": {
+        "title": "Today's Timeline",
+        "events": "{{count}} events",
+        "sprintReview": "Sprint Review",
+        "sprintReviewTime": "9:00 AM - Done",
+        "teamStandup": "Team Standup",
+        "now": "Now",
+        "designSync": "Design Sync"
+      },
+      "sprint": {
+        "title": "Sprint 12",
+        "remaining": "{{count}} days remaining",
+        "toDo": "To Do",
+        "inProgress": "In Progress",
+        "done": "Done"
+      }
     }
   }
 }
