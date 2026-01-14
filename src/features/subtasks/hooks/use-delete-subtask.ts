@@ -5,22 +5,15 @@ import type { Subtask } from '@/types/subtask.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { recalculateParentStatus } from '../utils'
 
 interface UseDeleteSubtaskProps {
   taskId?: string
   projectId?: string
   parentMilestoneId?: string
-  isParent?: boolean
-  children?: Subtask[]
 }
 
-export const useDeleteSubtask = ({
-  taskId,
-  projectId,
-  parentMilestoneId,
-  isParent = false,
-  children = []
-}: UseDeleteSubtaskProps = {}) => {
+export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDeleteSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -39,18 +32,34 @@ export const useDeleteSubtask = ({
         queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
           if (!old) return old
 
-          // delete a parent will also remove all its children
-          const childrenIds = isParent ? children.map((child) => child.id) : []
-          const idsToRemove = [variables.id, ...childrenIds]
+          const targetItem = old.value.items.find((item) => item.id === variables.id)
+          if (!targetItem) return old
 
-          const newItems = old.value.items.filter((item) => !idsToRemove.includes(item.id))
+          let idsToDelete: string[] = [targetItem.id]
+
+          // check if the target is a parent
+          if (targetItem.parentId === null) {
+            // if yes, we must also delete all its direct children.
+            const childrenIds = old.value.items
+              .filter((item) => item.parentId === targetItem.id)
+              .map((child) => child.id)
+
+            idsToDelete = [...idsToDelete, ...childrenIds]
+          }
+          // else: it's a child. we only delete itself (already in idsToDelete).
+
+          // remove items from cache
+          const remainingItems = old.value.items.filter((item) => !idsToDelete.includes(item.id))
+
+          const parentId = targetItem.parentId
+          if (parentId) {
+            // recalculate parent status after child deletion
+            recalculateParentStatus(remainingItems, parentId)
+          }
 
           return {
             ...old,
-            value: {
-              ...old.value,
-              items: newItems
-            }
+            value: { ...old.value, items: remainingItems }
           }
         })
       }

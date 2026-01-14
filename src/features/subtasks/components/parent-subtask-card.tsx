@@ -52,16 +52,12 @@ export default function ParentSubtaskCard({
   const { updateSubtaskStatus } = useUpdateSubtaskStatus({
     taskId,
     projectId,
-    parentMilestoneId,
-    isParent: true,
-    children: subtask.children
+    parentMilestoneId
   })
   const { deleteSubtask, isDeletingSubtask } = useDeleteSubtask({
     taskId,
     projectId,
-    parentMilestoneId,
-    isParent: true,
-    children: subtask.children
+    parentMilestoneId
   })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
@@ -195,7 +191,10 @@ export default function ParentSubtaskCard({
                       autoFocus={true}
                       className='h-8'
                       {...field}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
                       onKeyDown={(e) => {
+                        e.stopPropagation()
                         if (e.key === 'Enter') {
                           methods.handleSubmit(onSubmit)()
                         }

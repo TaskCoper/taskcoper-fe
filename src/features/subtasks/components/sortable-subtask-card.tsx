@@ -38,7 +38,7 @@ export default function SortableSubtaskCard({
 
   if (isOverlay) {
     return (
-      <Card className='border-2 border-primary px-2 py-1 rounded-md'>
+      <Card className='border-2 border-primary p-2 rounded-md'>
         <SubtaskCard subtask={subtask} taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId} />
       </Card>
     )

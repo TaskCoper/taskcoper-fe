@@ -13,17 +13,9 @@ interface UseUpdateSubtaskStatusProps {
   taskId?: string
   projectId?: string
   parentMilestoneId?: string
-  isParent?: boolean
-  children?: Subtask[]
 }
 
-export const useUpdateSubtaskStatus = ({
-  taskId,
-  projectId,
-  parentMilestoneId,
-  isParent = false,
-  children = []
-}: UseUpdateSubtaskStatusProps = {}) => {
+export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateSubtaskStatusProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -46,25 +38,56 @@ export const useUpdateSubtaskStatus = ({
         queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
           if (!old) return old
 
-          const newItems = old.value.items.map((item) => {
-            // only update the children
-            if (item.id === variables.body.id) {
-              return { ...item, isCompleted: variables.body.isCompleted }
-            }
+          const targetItem = old.value.items.find((item) => item.id === variables.body.id)
+          if (!targetItem) return old
 
-            // update a parent and all of its children
-            if (isParent && children.some((child) => child.id === item.id)) {
-              return { ...item, isCompleted: variables.body.isCompleted }
-            }
+          const isParent = targetItem.parentId === null
+          const newStatus = variables.body.isCompleted
 
-            return item
-          })
+          // Helper to update items based on shouldUpdate condition
+          const updateItems = (items: Subtask[], shouldUpdate: (item: Subtask) => boolean, status: boolean) =>
+            items.map((item) => (shouldUpdate(item) ? { ...item, isCompleted: status } : item))
+
+          let updatedItems = [...old.value.items]
+
+          // parent decides children's statuses
+          if (isParent) {
+            // if parent is checked/unchecked -> Force ALL children to match.
+            updatedItems = updateItems(
+              updatedItems,
+              (item) => item.id === variables.body.id || item.parentId === variables.body.id,
+              newStatus
+            )
+          } else {
+            // children influence parent's status
+            const parentId = targetItem.parentId
+
+            // update the specific subtask first
+            updatedItems = updateItems(updatedItems, (item) => item.id === variables.body.id, newStatus)
+            const siblings = old.value.items.filter(
+              (item) => item.parentId === parentId && item.id !== variables.body.id
+            )
+
+            if (newStatus === true) {
+              // updated subtask marked as done
+              const allSiblingsCompleted = siblings.every((sibling) => sibling.isCompleted)
+
+              if (allSiblingsCompleted) {
+                // all siblings are true along with updated subtask is also true → parent becomes true
+                updatedItems = updateItems(updatedItems, (item) => item.id === parentId, true)
+              }
+            } else {
+              // updated subtask marked as false
+              // if a single child becomes incomplete, the parent MUST become incomplete immediately
+              updatedItems = updateItems(updatedItems, (item) => item.id === parentId, false)
+            }
+          }
 
           return {
             ...old,
             value: {
               ...old.value,
-              items: newItems
+              items: updatedItems
             }
           }
         })
