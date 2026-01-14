@@ -27,12 +27,18 @@ interface DateUpdates {
 const dateFormat = 'MM/dd/yyyy'
 const minDate = new Date('1900-01-01')
 const maxDate = new Date(new Date().getFullYear() + 10, 11, 31)
+const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/
 
 export default function DatePopover({ children, onSubmit, onRemove }: DatePopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
-  const { watch, setValue } = useFormContext()
+  const [localStartTime, setLocalStartTime] = useState('')
+  const [localEndTime, setLocalEndTime] = useState('')
+  const [startTimeInvalid, setStartTimeInvalid] = useState(false)
+  const [endTimeInvalid, setEndTimeInvalid] = useState(false)
+
+  const { watch, setValue, reset } = useFormContext()
   const startDateValue = watch('startDate')
   const endDateValue = watch('endDate')
   const announceBeforeMinutes = watch('announceBeforeMinutes')
@@ -70,9 +76,15 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
   const isDateRange = !!(startDate && endDate && startTime && endTime)
 
   const handleUpdateDates = (updates: DateUpdates) => {
-    if ('startDate' in updates) setValue('startDate', updates.startDate)
-    if ('endDate' in updates) setValue('endDate', updates.endDate)
-    if ('announceBeforeMinutes' in updates) setValue('announceBeforeMinutes', updates.announceBeforeMinutes)
+    if ('startDate' in updates) {
+      setValue('startDate', updates.startDate)
+    }
+    if ('endDate' in updates) {
+      setValue('endDate', updates.endDate)
+    }
+    if ('announceBeforeMinutes' in updates) {
+      setValue('announceBeforeMinutes', updates.announceBeforeMinutes)
+    }
   }
 
   const handleCalendarSelect = (range: { from?: Date; to?: Date } | Date | undefined) => {
@@ -138,6 +150,21 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
     }
   }
 
+  const validateTimeFormat = (time: string): boolean => {
+    if (!time) {
+      return true
+    }
+    return timeRegex.test(time)
+  }
+
+  const applyTimeToDate = (dateValue: string, timeValue: string): string => {
+    const [hours, minutes] = timeValue.split(':').map(Number)
+    const newDate = new Date(dateValue)
+    newDate.setHours(hours)
+    newDate.setMinutes(minutes)
+    return newDate.toISOString()
+  }
+
   const handleRemove = () => {
     setValue('startDate', null)
     setValue('endDate', null)
@@ -148,14 +175,52 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
   }
 
   const handleSave = () => {
+    setStartTimeInvalid(false)
+    setEndTimeInvalid(false)
+
+    if (startDate && localStartTime && !validateTimeFormat(localStartTime)) {
+      setStartTimeInvalid(true)
+      return
+    }
+
+    if (endDate && localEndTime && !validateTimeFormat(localEndTime)) {
+      setEndTimeInvalid(true)
+      return
+    }
+
+    if (startDate && localStartTime && localStartTime !== startTime) {
+      handleUpdateDates({ startDate: applyTimeToDate(startDateValue, localStartTime) })
+    }
+
+    if (endDate && localEndTime && localEndTime !== endTime) {
+      handleUpdateDates({ endDate: applyTimeToDate(endDateValue, localEndTime) })
+    }
+
     onSubmit()
     setOpen(false)
   }
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    if (newOpen) {
+      setLocalStartTime(startTime || '')
+      setLocalEndTime(endTime || '')
+      setStartTimeInvalid(false)
+      setEndTimeInvalid(false)
+    } else {
+      reset()
+    }
+  }
+
   return (
-    <Popover modal open={open} onOpenChange={setOpen}>
+    <Popover modal open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent side='bottom' align='start' className='p-0' sideOffset={8}>
+      <PopoverContent
+        side='bottom'
+        align='start'
+        className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+        sideOffset={8}
+      >
         <div className='p-4'>
           <div className='flex items-center justify-center relative mb-4'>
             <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('common.field.date')}</p>
@@ -199,9 +264,14 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
                 />
                 <Input
                   className='w-28'
-                  value={startTime || t('task.date.notSetTime')}
-                  disabled={!startTime}
-                  readOnly={!!startTime}
+                  value={localStartTime}
+                  placeholder='HH:mm'
+                  disabled={!startDate}
+                  aria-invalid={startTimeInvalid}
+                  onChange={(e) => {
+                    setLocalStartTime(e.target.value)
+                    setStartTimeInvalid(false)
+                  }}
                 />
               </div>
             </div>
@@ -218,9 +288,14 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
                 />
                 <Input
                   className='w-28'
-                  value={endTime || t('task.date.notSetTime')}
-                  disabled={!endTime}
-                  readOnly={!!endTime}
+                  value={localEndTime}
+                  placeholder='HH:mm'
+                  disabled={!endDate}
+                  aria-invalid={endTimeInvalid}
+                  onChange={(e) => {
+                    setLocalEndTime(e.target.value)
+                    setEndTimeInvalid(false)
+                  }}
                 />
               </div>
             </div>

@@ -151,7 +151,12 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
                     <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className='p-0' style={{ width: 'var(--radix-popover-trigger-width)' }} align='start'>
+                <PopoverContent
+                  sideOffset={8}
+                  className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+                  style={{ width: 'var(--radix-popover-trigger-width)' }}
+                  align='start'
+                >
                   <ComboboxList {...listProps} />
                 </PopoverContent>
               </Popover>

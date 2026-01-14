@@ -36,7 +36,7 @@ export default function ParentMilestonesMenu({ children, open, onOpenChange, ite
   return (
     <DropdownMenu modal open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className='w-64' side='bottom' align='start'>
+      <DropdownMenuContent className='w-64' side='bottom' align='start' sideOffset={8}>
         <DropdownMenuLabel>Tabs</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {items.map((item) => {

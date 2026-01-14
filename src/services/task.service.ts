@@ -28,6 +28,16 @@ class TaskService {
     return data.value
   }
 
+  deleteTask = async ({ taskId }: { taskId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}`, {
+      data: {
+        id: taskId
+      }
+    })
+
+    return data.value
+  }
+
   updateTask = async ({ body }: { body: UpdateTaskFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}`, body)
 

@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import { createElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet } from 'react-router'
+import { Link, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
 const navigations = [
@@ -57,6 +57,7 @@ const navigations = [
 
 export default function DefaultLayout() {
   const { t } = useTranslation()
+  const location = useLocation()
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
@@ -71,11 +72,21 @@ export default function DefaultLayout() {
         </Link>
 
         <div className='hidden md:flex items-center gap-2'>
-          {navigations.map((navigation) => (
-            <Button key={navigation.id} asChild size='sm' variant='ghost'>
-              <Link to={navigation.url}>{t(navigation.label)}</Link>
-            </Button>
-          ))}
+          {navigations.map((navigation) => {
+            const isActive = location.pathname === navigation.url
+
+            return (
+              <Button
+                key={navigation.id}
+                asChild
+                size='sm'
+                variant='ghost'
+                className={cn(isActive && 'bg-primary/10 text-primary')}
+              >
+                <Link to={navigation.url}>{t(navigation.label)}</Link>
+              </Button>
+            )
+          })}
         </div>
 
         <div className='flex-1' />
@@ -122,20 +133,23 @@ export default function DefaultLayout() {
 
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-2 px-2'>
-                  {navigations.map((navigation) => (
-                    <Button
-                      key={navigation.id}
-                      asChild
-                      variant='ghost'
-                      className='justify-start px-2'
-                      onClick={() => setOpen(false)}
-                    >
-                      <Link to={navigation.url} className='flex items-center gap-3'>
-                        {createElement(navigation.icon, { className: 'size-4' })}
-                        {t(navigation.label)}
-                      </Link>
-                    </Button>
-                  ))}
+                  {navigations.map((navigation) => {
+                    const isActive = location.pathname === navigation.url
+                    return (
+                      <Button
+                        key={navigation.id}
+                        asChild
+                        variant='ghost'
+                        className={cn('justify-start px-2', isActive && 'bg-primary/10 text-primary')}
+                        onClick={() => setOpen(false)}
+                      >
+                        <Link to={navigation.url} className='flex items-center gap-3'>
+                          {createElement(navigation.icon, { className: 'size-4' })}
+                          {t(navigation.label)}
+                        </Link>
+                      </Button>
+                    )
+                  })}
                 </div>
 
                 <Separator />

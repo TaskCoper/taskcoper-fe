@@ -96,7 +96,8 @@ export function ComboboxField<T extends FieldValues>({
               <Popover open={open} onOpenChange={setOpen} modal={modal}>
                 <PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>
                 <PopoverContent
-                  className='p-0'
+                  sideOffset={8}
+                  className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
                   align='start'
                   style={{ width: 'var(--radix-popover-trigger-width)' }}
                   onOpenAutoFocus={(e) => e.preventDefault()}

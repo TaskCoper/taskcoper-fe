@@ -1,3 +1,6 @@
+import { customCollisionDetection } from '@/components/dnd/collision-detection'
+import { snapCenterToCursor } from '@/components/dnd/modifiers'
+import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -18,16 +21,20 @@ import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import LabelPopover from '@/features/labels/components/label-popover'
-import ParentSubtaskCard from '@/features/subtasks/components/parent-subtask-card'
+import SortableParentSubtaskCard from '@/features/subtasks/components/sortable-parent-subtask-card'
+import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask-card'
 import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
 import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
+import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import DatePopover from '@/features/tasks/components/date-popover'
+import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import type { Subtask, SubtaskWithChildren } from '@/types/subtask.type'
+import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
@@ -52,27 +59,6 @@ import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
-const transformSubtasks = (subtasks: Subtask[]): SubtaskWithChildren[] => {
-  const map = new Map()
-
-  subtasks.forEach((s) => {
-    if (!map.has(s.id) && s.parentId === null) {
-      map.set(s.id, {
-        ...s,
-        children: []
-      })
-    }
-  })
-
-  subtasks.forEach((s) => {
-    if (map.has(s.parentId)) {
-      map.get(s.parentId)?.children.push(s)
-    }
-  })
-
-  return Array.from(map.values())
-}
-
 export default function TaskDetailDialogPage() {
   const navigate = useNavigate()
 
@@ -83,6 +69,9 @@ export default function TaskDetailDialogPage() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
+  const [openMenu, setOpenMenu] = useState(false)
+
+  const sensors = useDndSensors()
 
   const { task, isLoadingTask } = useGetTask({ taskId })
   const { comments, isLoadingComments } = useGetComments({ taskId })
@@ -102,6 +91,16 @@ export default function TaskDetailDialogPage() {
     isAddingComment
   } = useAddComment({ taskId, projectId, parentMilestoneId: milestoneId })
   const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
+
+  const {
+    onDragStart,
+    onDragOver,
+    onDragEnd,
+    activeParentSubtask,
+    activeChildSubtask,
+    groupedSubtasks,
+    parentSubtasksIds
+  } = useSubtaskDnd({ taskId, subtasks })
 
   const {
     isEditing: isEditingName,
@@ -128,13 +127,15 @@ export default function TaskDetailDialogPage() {
     }
   })
 
-  const groupedSubtasks = transformSubtasks(subtasks?.value.items || [])
+  const goBack = () => {
+    navigate(`/projects/${projectId}/milestones/${milestoneId}`)
+  }
 
   const handleClose = () => {
     setOpen(false)
     setTimeout(() => {
-      navigate(`/projects/${projectId}/milestones/${milestoneId}`)
-    }, 500)
+      goBack()
+    }, 300)
   }
 
   useEffect(() => {
@@ -252,9 +253,25 @@ export default function TaskDetailDialogPage() {
               <ImageIcon />
             </Button>
 
-            <Button className='rounded-full' variant='ghost' size='icon-sm'>
-              <MoreHorizontalIcon />
-            </Button>
+            {taskId && task?.taskName && projectId && milestoneId ? (
+              <TaskDetailMenu
+                projectId={projectId}
+                parentMilestoneId={milestoneId}
+                taskId={taskId}
+                taskName={task.taskName}
+                onDeleteSuccess={goBack}
+                open={openMenu}
+                setOpen={setOpenMenu}
+              >
+                <Button
+                  className={cn('rounded-full', openMenu ? 'bg-primary/10 text-primary' : '')}
+                  variant='ghost'
+                  size='icon-sm'
+                >
+                  <MoreHorizontalIcon />
+                </Button>
+              </TaskDetailMenu>
+            ) : null}
 
             <Button className='rounded-full' variant='ghost' size='icon-sm' onClick={handleClose}>
               <XIcon />
@@ -461,24 +478,58 @@ export default function TaskDetailDialogPage() {
               </div>
 
               {/* Subtasks */}
-              <div className='mt-10 space-y-8'>
-                {groupedSubtasks?.map((subtask) => {
-                  if (taskId && projectId && milestoneId) {
-                    return (
-                      <ParentSubtaskCard
-                        key={subtask.id}
-                        subtask={subtask}
-                        projectId={projectId}
-                        parentMilestoneId={milestoneId}
-                        taskId={taskId}
-                        editingSubtaskId={editingSubtaskId}
-                        setEditingSubtaskId={setEditingSubtaskId}
-                      />
-                    )
-                  }
-                  return null
-                })}
-              </div>
+              <DndContext
+                collisionDetection={customCollisionDetection}
+                sensors={sensors}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDragOver={onDragOver}
+                measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+              >
+                <SortableContext items={parentSubtasksIds} strategy={verticalListSortingStrategy}>
+                  <div className='mt-10 space-y-8 pb-6'>
+                    {groupedSubtasks?.map((subtask) => {
+                      if (taskId && projectId && milestoneId) {
+                        return (
+                          <SortableParentSubtaskCard
+                            key={subtask.id}
+                            subtask={subtask}
+                            projectId={projectId}
+                            parentMilestoneId={milestoneId}
+                            taskId={taskId}
+                            editingSubtaskId={editingSubtaskId}
+                            setEditingSubtaskId={setEditingSubtaskId}
+                          />
+                        )
+                      }
+                      return null
+                    })}
+                  </div>
+                </SortableContext>
+
+                <DragOverlay dropAnimation={defaultDropAnimation} modifiers={[snapCenterToCursor]}>
+                  {activeParentSubtask && taskId && projectId && milestoneId && (
+                    <SortableParentSubtaskCard
+                      isOverlay
+                      subtask={activeParentSubtask}
+                      projectId={projectId}
+                      parentMilestoneId={milestoneId}
+                      taskId={taskId}
+                      editingSubtaskId={editingSubtaskId}
+                      setEditingSubtaskId={setEditingSubtaskId}
+                    />
+                  )}
+                  {activeChildSubtask && taskId && projectId && milestoneId && (
+                    <SortableSubtaskCard
+                      isOverlay
+                      subtask={activeChildSubtask}
+                      taskId={taskId}
+                      projectId={projectId}
+                      parentMilestoneId={milestoneId}
+                    />
+                  )}
+                </DragOverlay>
+              </DndContext>
             </div>
           </FormProvider>
 
@@ -506,7 +557,7 @@ export default function TaskDetailDialogPage() {
               )}
             />
 
-            <div className='space-y-6'>
+            <div className='space-y-6 pb-6'>
               {comments?.value.items.map((comment) => (
                 <CommentCard key={comment.commentId} comment={comment} />
               ))}

@@ -17,9 +17,9 @@ type DialogPosition =
 
 const positionClasses: Record<DialogPosition, string> = {
   center: 'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]',
-  'top-left': 'top-12 left-12 translate-x-0 translate-y-0 origin-top-left',
-  'top-center': 'top-12 left-[50%] translate-x-[-50%] translate-y-0 origin-top',
-  'top-right': 'top-12 right-12 translate-x-0 translate-y-0 origin-top-right',
+  'top-left': 'top-6 left-6 translate-x-0 translate-y-0 origin-top-left',
+  'top-center': 'top-6 left-[50%] translate-x-[-50%] translate-y-0 origin-top',
+  'top-right': 'top-6 right-6 translate-x-0 translate-y-0 origin-top-right',
   'bottom-left': 'bottom-4 left-4 translate-x-0 translate-y-0 origin-bottom-left',
   'bottom-center': 'bottom-4 left-[50%] translate-x-[-50%] translate-y-0 origin-bottom',
   'bottom-right': 'bottom-4 right-4 translate-x-0 translate-y-0 origin-bottom-right',
@@ -73,7 +73,7 @@ function DialogContent({
         data-slot='dialog-content'
         className={cn(
           'fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 sm:max-w-lg',
-          'max-h-[calc(100vh-6rem)] overflow-y-auto',
+          'max-h-[calc(100vh-3rem)] overflow-y-auto',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           positionClasses[position],
           className

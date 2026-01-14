@@ -1,14 +1,6 @@
 import { customCollisionDetection } from '@/components/dnd/collision-detection'
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
@@ -170,7 +162,12 @@ export default function ProjectDetailLayout() {
       <ProjectDetailSidebar onTaskCountChange={handleTaskCountChange} />
 
       <SidebarInset className='flex flex-col h-full overflow-hidden'>
-        <header className='bg-muted/30 flex shrink-0 items-center gap-2 border-b p-4 h-14'>
+        <header
+          className={cn(
+            'bg-muted/30 flex shrink-0 items-center gap-2',
+            isMobile || hasSecondSidebar ? 'border-b p-4 h-14' : ''
+          )}
+        >
           {/* show sidebar toggle on mobile or when second sidebar exists */}
           {isMobile || hasSecondSidebar ? (
             <>
@@ -290,20 +287,7 @@ export default function ProjectDetailLayout() {
                 </UpdateProjectMembersDialog>
               ) : null}
             </>
-          ) : (
-            // TODO: implement breadcrumbs
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>All Inboxes</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Inbox</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          )}
+          ) : null}
         </header>
 
         <Suspense

@@ -31,7 +31,11 @@ export const protectedRoutes: RouteObject[] = [
               },
               {
                 path: 'calendar',
-                element: <div>Calendar</div>
+                element: (
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Calendar Comming Soon</p>
+                  </div>
+                )
               }
             ]
           },
@@ -61,36 +65,68 @@ export const protectedRoutes: RouteObject[] = [
               {
                 path: 'calendar',
                 element: (
-                  <div className='flex items-center justify-center mt-24'>
-                    <p className='text-2xl font-bold'>Calendar Comming Soon </p>
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Calendar Comming Soon</p>
                   </div>
                 )
               },
               {
                 path: 'chat',
                 element: (
-                  <div className='flex items-center justify-center mt-24'>
-                    <p className='text-2xl font-bold'>Chat Comming Soon </p>
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Chat Comming Soon</p>
                   </div>
                 )
               },
               {
                 path: 'note',
                 element: (
-                  <div className='flex items-center justify-center mt-24'>
-                    <p className='text-2xl font-bold'>Note Comming Soon </p>
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Note Comming Soon</p>
                   </div>
                 )
               },
               {
                 path: 'settings',
                 element: (
-                  <div className='flex items-center justify-center mt-24'>
-                    <p className='text-2xl font-bold'>Settings Comming Soon </p>
+                  <div className='w-full h-full flex justify-center items-center'>
+                    <p className='text-2xl font-bold'>Settings Comming Soon</p>
                   </div>
                 )
               }
             ]
+          },
+          {
+            path: 'featured-projects',
+            element: (
+              <div className='w-full h-full flex justify-center items-center'>
+                <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
+              </div>
+            )
+          },
+          {
+            path: 'network',
+            element: (
+              <div className='w-full h-full flex justify-center items-center'>
+                <p className='text-2xl font-bold'>Network Comming Soon</p>
+              </div>
+            )
+          },
+          {
+            path: 'community',
+            element: (
+              <div className='w-full h-full flex justify-center items-center'>
+                <p className='text-2xl font-bold'>Community Comming Soon</p>
+              </div>
+            )
+          },
+          {
+            path: 'news',
+            element: (
+              <div className='w-full h-full flex justify-center items-center'>
+                <p className='text-2xl font-bold'>News Comming Soon</p>
+              </div>
+            )
           }
         ]
       }

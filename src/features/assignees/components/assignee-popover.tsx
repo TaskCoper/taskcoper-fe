@@ -74,7 +74,12 @@ export default function AssigneePopover({ children, projectId, taskId, parentMil
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent align='start' className='p-0 max-h-[420px] overflow-auto' onInteractOutside={handleClose}>
+      <PopoverContent
+        sideOffset={8}
+        align='start'
+        className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+        onInteractOutside={handleClose}
+      >
         <div className='p-4 space-y-4'>
           <div className='flex items-center justify-center relative'>
             <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('task.assignee.assignee')}</p>
