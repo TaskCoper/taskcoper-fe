@@ -290,7 +290,8 @@
       "note": "Ghi chú",
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
-      "myCalendar": "Lịch của tôi"
+      "myCalendar": "Lịch của tôi",
+      "performance": "Hiệu suất"
     },
     "tasks": {
       "addTask": "Thêm thẻ",
@@ -695,6 +696,83 @@
       "chat": "Tin nhắn",
       "project": "Dự án",
       "system": "Hệ thống"
+    }
+  },
+  "home": {
+    "header": {
+      "signIn": "Đăng nhập",
+      "getStarted": "Bắt đầu"
+    },
+    "hero": {
+      "badge": "Được tin dùng hàng đầu",
+      "title": "Nền tảng Quản lý dự án",
+      "titleHighlight": "Số 1 Việt Nam",
+      "description": "TaskCoper giúp các nhóm tổ chức công việc, theo dõi tiến độ và cộng tác liền mạch. Tất cả trong một nền tảng mạnh mẽ.",
+      "cta": "Bắt đầu hành trình",
+      "trustBadge": "Được tin dùng bởi hơn 500 nhóm trên toàn thế giới"
+    },
+    "stats": {
+      "projects": "Dự án",
+      "tasksDone": "Việc đã xong",
+      "uptime": "Thời gian hoạt động",
+      "support": "Hỗ trợ"
+    },
+    "cards": {
+      "taskCard": {
+        "title": "Đánh giá thiết kế",
+        "subtitle": "Sprint UI/UX",
+        "status": "Hoàn thành",
+        "description": "Hoàn thiện các thành phần dashboard và token hệ thống thiết kế cho bản phát hành v2.0.",
+        "priority": "Ưu tiên cao",
+        "comments": "{{count}} bình luận",
+        "members": "{{count}} thành viên"
+      },
+      "teamChat": {
+        "title": "Chat nhóm",
+        "message": "API mới đã sẵn sàng để kiểm thử...",
+        "timeAgo": "2 phút trước",
+        "message2": "Tuyệt vời! Mình sẽ chạy unit test ngay",
+        "timeAgo2": "Vừa xong",
+        "typing": "Sarah đang nhập...",
+        "viewAll": "Xem tất cả"
+      },
+      "productivity": {
+        "title": "Năng suất",
+        "change": "↑ 23% tuần này",
+        "tasksCompleted": "{{count}} việc hoàn thành",
+        "streak": "🔥 {{days}} ngày liên tiếp",
+        "days": {
+          "mon": "T2",
+          "wed": "T4",
+          "fri": "T6",
+          "sun": "CN"
+        }
+      },
+      "teamActivity": {
+        "title": "Hoạt động nhóm",
+        "live": "Trực tiếp",
+        "alexCompleted": "Alex đã hoàn thành",
+        "apiIntegration": "Tích hợp API",
+        "bethStarted": "Beth đã bắt đầu",
+        "codeReview": "Xem xét mã",
+        "online": "{{count}} trực tuyến"
+      },
+      "timeline": {
+        "title": "Lịch hôm nay",
+        "events": "{{count}} sự kiện",
+        "sprintReview": "Đánh giá Sprint",
+        "sprintReviewTime": "9:00 SA - Xong",
+        "teamStandup": "Họp nhanh nhóm",
+        "now": "Bây giờ",
+        "designSync": "Đồng bộ thiết kế"
+      },
+      "sprint": {
+        "title": "Sprint 12",
+        "remaining": "Còn {{count}} ngày",
+        "toDo": "Cần làm",
+        "inProgress": "Đang làm",
+        "done": "Xong"
+      }
     }
   }
 }
