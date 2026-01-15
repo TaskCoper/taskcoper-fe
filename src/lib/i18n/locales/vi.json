@@ -571,6 +571,25 @@
           "invalid": "Số điện thoại không hợp lệ"
         }
       }
+    },
+    "password": {
+      "title": "Mật khẩu",
+      "description": "Thay đổi mật khẩu của bạn",
+      "saveChanges": "Lưu thay đổi"
+    },
+    "changePassword": {
+      "currentPassword": {
+        "label": "Mật khẩu hiện tại",
+        "placeholder": "Nhập mật khẩu hiện tại"
+      },
+      "newPassword": {
+        "label": "Mật khẩu mới",
+        "placeholder": "Nhập mật khẩu mới"
+      }
+    },
+    "profileDialog": {
+      "profileAndDisplay": "Hồ sơ và hiển thị",
+      "password": "Mật khẩu"
     }
   },
   "auth": {
@@ -652,6 +671,29 @@
           "invalid": "Số điện thoại không hợp lệ"
         }
       }
+    },
+    "forgotPassword": {
+      "title": "Quên mật khẩu",
+      "description": "Nhập địa chỉ email bạn đã sử dụng để tạo tài khoản, chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu qua email",
+      "sendEmail": "Gửi email",
+      "rememberPassword": "Nhớ mật khẩu?"
+    },
+    "verifyOtp": {
+      "title": "Xác thực OTP",
+      "emailSent": "Chúng tôi đã gửi email đến",
+      "checkInbox": "Kiểm tra hộp thư và nhập mã tại đây.",
+      "continue": "Tiếp tục",
+      "wrongEmail": "Sai email?",
+      "goBack": "Quay lại"
+    },
+    "resetPassword": {
+      "title": "Tạo mật khẩu mới",
+      "description": "Mật khẩu mới của bạn phải khác với các mật khẩu trước đó.",
+      "newPassword": {
+        "label": "Mật khẩu mới",
+        "placeholder": "Nhập mật khẩu mới"
+      },
+      "reset": "Đặt lại"
     }
   },
   "error": {

@@ -72,7 +72,7 @@ export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isL
   }
 
   return (
-    <div className='space-y-6 mt-10'>
+    <div className='space-y-6 mt-8'>
       <div className='space-y-8'>
         <div className='relative w-fit mx-auto'>
           <FileDropzone

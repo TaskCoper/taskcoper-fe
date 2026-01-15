@@ -87,8 +87,9 @@ export default function NavUser({ user }: NavUserProps) {
                 e.preventDefault()
                 setOpen(true)
               }}
+              className={open ? 'text-primary bg-primary/10' : ''}
             >
-              <UserRoundIcon />
+              <UserRoundIcon className={open ? 'text-primary' : ''} />
               {t('account.account')}
             </DropdownMenuItem>
             <DropdownMenuSub>

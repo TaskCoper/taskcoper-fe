@@ -571,6 +571,25 @@
           "invalid": "Invalid phone number format"
         }
       }
+    },
+    "password": {
+      "title": "Password",
+      "description": "Change your password",
+      "saveChanges": "Save changes"
+    },
+    "changePassword": {
+      "currentPassword": {
+        "label": "Current Password",
+        "placeholder": "Enter current password"
+      },
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter new password"
+      }
+    },
+    "profileDialog": {
+      "profileAndDisplay": "Profile and display",
+      "password": "Password"
     }
   },
   "auth": {
@@ -652,6 +671,29 @@
           "invalid": "Invalid phone number format"
         }
       }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter the email address you used to create the account, and we will email you instructions to reset your password",
+      "sendEmail": "Send Email",
+      "rememberPassword": "Remember Password?"
+    },
+    "verifyOtp": {
+      "title": "Verify OTP",
+      "emailSent": "We have sent you an email at",
+      "checkInbox": "Check your inbox and enter the code here.",
+      "continue": "Continue",
+      "wrongEmail": "Wrong email?",
+      "goBack": "Go back"
+    },
+    "resetPassword": {
+      "title": "Create New Password",
+      "description": "Your new password must be different from any of your previous passwords.",
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter your new password"
+      },
+      "reset": "Reset"
     }
   },
   "error": {

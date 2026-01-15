@@ -12,6 +12,8 @@ import {
 import { cn } from '@/shared/utils'
 import { CircleUserRoundIcon, LockKeyholeIcon, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import PasswordSection from './password-section'
 import ProfileSection from './profile-section'
 
 interface ProfileDetailDialogProps {
@@ -22,17 +24,18 @@ interface ProfileDetailDialogProps {
 
 interface NavItem {
   id: number
-  name: string
+  nameKey: string
   icon: LucideIcon
   content: React.ReactNode
 }
 
 const navItems: NavItem[] = [
-  { id: 1, name: 'Hồ sơ và hiển thị', icon: CircleUserRoundIcon, content: <ProfileSection /> },
-  { id: 100, name: 'Mật khẩu', icon: LockKeyholeIcon, content: <></> }
+  { id: 1, nameKey: 'user.profileDialog.profileAndDisplay', icon: CircleUserRoundIcon, content: <ProfileSection /> },
+  { id: 100, nameKey: 'user.profileDialog.password', icon: LockKeyholeIcon, content: <PasswordSection /> }
 ]
 
 export default function ProfileDetailDialog({ open, onOpenChange, children }: ProfileDetailDialogProps) {
+  const { t } = useTranslation()
   const [selected, setSelected] = useState<NavItem>(navItems[0])
 
   return (
@@ -56,7 +59,7 @@ export default function ProfileDetailDialog({ open, onOpenChange, children }: Pr
                         >
                           <div className='flex items-center gap-2'>
                             <item.icon />
-                            <span>{item.name}</span>
+                            <span>{t(item.nameKey)}</span>
                           </div>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

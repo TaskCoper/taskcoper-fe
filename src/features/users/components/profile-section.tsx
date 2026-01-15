@@ -41,7 +41,7 @@ export default function ProfileSection() {
   }
 
   useEffect(() => {
-    if (me) {
+    if (me && provinces.length > 0) {
       const matchedProvince = provinces.find((p) => p.name === me.city)
       const cityCode = matchedProvince?.code ?? -1
 

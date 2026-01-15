@@ -51,4 +51,56 @@ export const updateMeSchema = (t: TFunction) => {
     .strict()
 }
 
+export const changePasswordSchema = (t: TFunction) => {
+  return z
+    .object({
+      currentPassword: z.string().trim().min(8, t('auth.signIn.validation.password.minLength')),
+      newPassword: z
+        .string()
+        .trim()
+        .min(8, t('auth.signUp.validation.password.minLength'))
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          t('auth.signUp.validation.password.strong')
+        )
+    })
+    .strict()
+}
+
+export const forgotPasswordSchema = (t: TFunction) => {
+  return z
+    .object({
+      email: z.email(t('common.validation.email.invalid')).trim()
+    })
+    .strict()
+}
+
+export const verifyCodeSchema = (t: TFunction) => {
+  return z
+    .object({
+      email: z.email(t('common.validation.email.invalid')).trim(),
+      code: z.string().trim().min(6, t('auth.signIn.validation.code.minLength'))
+    })
+    .strict()
+}
+
+export const resetPasswordSchema = (t: TFunction) => {
+  return z
+    .object({
+      newPassword: z
+        .string()
+        .trim()
+        .min(8, t('auth.signUp.validation.password.minLength'))
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          t('auth.signUp.validation.password.strong')
+        )
+    })
+    .strict()
+}
+
 export type UpdateMeFormValues = z.infer<ReturnType<typeof updateMeSchema>>
+export type ChangePasswordFormValues = z.infer<ReturnType<typeof changePasswordSchema>>
+export type ForgotPasswordFormValues = z.infer<ReturnType<typeof forgotPasswordSchema>>
+export type VerifyCodeFormValues = z.infer<ReturnType<typeof verifyCodeSchema>>
+export type ResetPasswordFormValues = z.infer<ReturnType<typeof resetPasswordSchema>>
