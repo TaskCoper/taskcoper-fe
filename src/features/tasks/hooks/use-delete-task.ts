@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,11 +29,11 @@ export const useDeleteTask = ({ projectId, parentMilestoneId, onDeleteSuccess }:
     },
     onSettled: () => {
       if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })

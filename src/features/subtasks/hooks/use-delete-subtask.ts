@@ -1,4 +1,5 @@
 import type { BasePaginationResponse } from '@/lib/axios'
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
@@ -18,7 +19,7 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
   const { t } = useTranslation()
   const { user } = useAuthStore()
 
-  const queryKey = ['subtasks', taskId]
+  const queryKey = queryKeys.subtasks.byTask(taskId)
 
   const { mutate: deleteSubtask, isPending: isDeletingSubtask } = useMutation({
     mutationFn: subtaskService.deleteSubtask,
@@ -81,11 +82,11 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
       }
 
       if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })

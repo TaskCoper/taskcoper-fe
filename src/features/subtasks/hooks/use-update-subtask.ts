@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { BasePaginationResponse } from '@/lib/axios'
+import { queryKeys } from '@/lib/query-keys'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,7 +26,7 @@ export const useUpdateSubtask = ({ taskId }: { taskId?: string } = {}) => {
     resolver: zodResolver(updateSubtaskSchema(t))
   })
 
-  const queryKey = ['subtasks', taskId]
+  const queryKey = queryKeys.subtasks.byTask(taskId)
 
   const { mutate: updateSubtask, isPending: isUpdatingSubtask } = useMutation({
     mutationFn: ({ body }: UpdateSubtaskVariables) => subtaskService.updateSubtask({ body }),

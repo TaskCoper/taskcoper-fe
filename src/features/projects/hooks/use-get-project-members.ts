@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '@/types/project.type'
@@ -17,7 +18,7 @@ export const useGetProjectMembers = ({ projectId, searchTerm }: UseGetProjectMem
     isLoading: isLoadingMembers,
     error
   } = useQuery({
-    queryKey: ['members', projectId, searchTerm],
+    queryKey: queryKeys.projects.members.list(projectId, searchTerm),
     queryFn: () => projectService.getProjectMembers({ projectId, searchTerm }),
     enabled: !!projectId
   })

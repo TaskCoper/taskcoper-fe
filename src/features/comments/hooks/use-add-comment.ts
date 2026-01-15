@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -37,11 +38,11 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
     },
     onSettled: () => {
       if (taskId) {
-        queryClient.invalidateQueries({ queryKey: ['comments', taskId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       }
     }
   })

@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { useQuery } from '@tanstack/react-query'
 
@@ -7,7 +8,7 @@ export const useGetProject = ({ projectId }: { projectId?: string }) => {
     isLoading: isLoadingProject,
     isError: isErrorProject
   } = useQuery({
-    queryKey: ['project', projectId],
+    queryKey: queryKeys.projects.detail(projectId),
     queryFn: () => projectService.getProject({ projectId }),
     enabled: !!projectId
   })

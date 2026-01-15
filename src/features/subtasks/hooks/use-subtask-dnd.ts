@@ -1,4 +1,5 @@
 import type { BasePaginationResponse } from '@/lib/axios'
+import { queryKeys } from '@/lib/query-keys'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
 import type { Subtask, SubtaskWithChildren } from '@/types/subtask.type'
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
@@ -18,7 +19,7 @@ interface UseSubtaskDndProps {
 export const useSubtaskDnd = ({ taskId, subtasks }: UseSubtaskDndProps) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const queryKey = ['subtasks', taskId]
+  const queryKey = queryKeys.subtasks.byTask(taskId)
 
   const [activeParentSubtask, setActiveParentSubtask] = useState<SubtaskWithChildren | null>(null)
   const [activeChildSubtask, setActiveChildSubtask] = useState<Subtask | null>(null)

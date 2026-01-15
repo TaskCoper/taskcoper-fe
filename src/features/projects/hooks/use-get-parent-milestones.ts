@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ParentMilestone } from '@/types/milestone.type'
@@ -11,7 +12,7 @@ export const useGetParentMilestones = ({ projectId, enabled = true }: { projectI
     isLoading: isLoadingParentMilestones,
     error
   } = useQuery({
-    queryKey: ['parent-milestones', projectId],
+    queryKey: queryKeys.projects.parentMilestones(projectId),
     queryFn: () => projectService.getParentMilestones({ projectId }),
     enabled: !!projectId && enabled
   })

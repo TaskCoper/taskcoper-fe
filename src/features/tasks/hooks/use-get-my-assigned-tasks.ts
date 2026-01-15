@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { TaskPreview } from '@/types/task.type'
@@ -17,7 +18,7 @@ export const useGetMyAssignedTasks = ({ projectId, userId, enabled = true }: Get
     isLoading: isLoadingAssignedTasks,
     error
   } = useQuery({
-    queryKey: ['my-assigned-tasks', projectId, userId],
+    queryKey: queryKeys.tasks.myAssigned(projectId, userId),
     queryFn: () => projectService.getMyAssignedTasks({ projectId, userId }),
     enabled: !!projectId && !!userId && enabled
   })

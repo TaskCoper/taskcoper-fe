@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { useQuery } from '@tanstack/react-query'
 
@@ -7,7 +8,7 @@ export const useGetSubtasks = ({ taskId }: { taskId?: string }) => {
     isLoading: isLoadingSubtasks,
     error
   } = useQuery({
-    queryKey: ['subtasks', taskId],
+    queryKey: queryKeys.subtasks.byTask(taskId),
     queryFn: () => taskService.getSubtasks({ taskId }),
     enabled: !!taskId
   })

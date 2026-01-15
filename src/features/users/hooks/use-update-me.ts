@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -37,7 +38,7 @@ export const useUpdateMe = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['me'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me() })
     }
   })
 

@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +13,7 @@ export const useRespondToInvitation = () => {
     onSuccess: (message, variables) => {
       toast.success(message)
       if (variables.isAccepted) {
-        queryClient.invalidateQueries({ queryKey: ['my-projects'] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.all })
       }
     },
     onError: (error) => {
@@ -21,7 +22,7 @@ export const useRespondToInvitation = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
     }
   })
 
