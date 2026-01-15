@@ -2,7 +2,11 @@ import { useAuthStore } from '@/lib/zustand/auth.store'
 import notificationService from '@/services/notification.service'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetUnreadCount = () => {
+interface UseGetUnreadCountOptions {
+  enabled?: boolean
+}
+
+export const useGetUnreadCount = ({ enabled = true }: UseGetUnreadCountOptions = {}) => {
   const { user } = useAuthStore()
 
   const {
@@ -11,7 +15,8 @@ export const useGetUnreadCount = () => {
     error
   } = useQuery({
     queryKey: ['unread-count', user?.UserId],
-    queryFn: () => notificationService.getUnreadCount()
+    queryFn: () => notificationService.getUnreadCount(),
+    enabled
   })
 
   return { unreadCount, isLoadingUnreadCount, error }

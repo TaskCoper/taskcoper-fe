@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { useChangePassword } from '../hooks/use-change-password'
 import type { ChangePasswordFormValues } from '../validations'
 import ChangePasswordForm from './change-password-form'
@@ -30,7 +31,7 @@ export default function PasswordSection() {
 
           <div className='flex items-center justify-end gap-2'>
             <Button type='button' variant='link'>
-              {t('auth.signIn.forgotPassword')}
+              <Link to='/forgot-password'>{t('auth.signIn.forgotPassword')}</Link>
             </Button>
 
             <Button type='submit' disabled={!isDirty || isChangingPassword}>
