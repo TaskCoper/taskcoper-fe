@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { useQuery } from '@tanstack/react-query'
 
@@ -12,7 +13,7 @@ export const useGetMilestones = ({ projectId, parentMilestoneId }: GetMilestones
     isLoading: isLoadingMilestones,
     error
   } = useQuery({
-    queryKey: ['milestones', projectId, parentMilestoneId],
+    queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId),
     queryFn: () => projectService.getMilestones({ projectId, parentMilestoneId }),
     enabled: !!projectId && !!parentMilestoneId
   })

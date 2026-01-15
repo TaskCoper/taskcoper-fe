@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import notificationService from '@/services/notification.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
@@ -16,7 +17,7 @@ export const useGetMyNotifications = ({
   const { user } = useAuthStore()
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
-    queryKey: ['notifications', user?.UserId, pageSize],
+    queryKey: queryKeys.notifications.list(user?.UserId, pageSize),
     queryFn: ({ pageParam = DEFAULT_PAGE_INDEX }) =>
       notificationService.getMyNotifications({ pageIndex: pageParam, pageSize }),
     getNextPageParam: (lastPage) => {

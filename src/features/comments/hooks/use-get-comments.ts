@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { Comment } from '@/types/comment.type'
@@ -11,7 +12,7 @@ export const useGetComments = ({ taskId }: { taskId?: string }) => {
     isLoading: isLoadingComments,
     error
   } = useQuery({
-    queryKey: ['comments', taskId],
+    queryKey: queryKeys.comments.byTask(taskId),
     queryFn: () => taskService.getComments({ taskId }),
     enabled: !!taskId
   })

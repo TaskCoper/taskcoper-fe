@@ -20,7 +20,10 @@ export default function SignUpForm() {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
-              <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.firstName')}</FieldLabel>
+              <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                {t('auth.signUp.field.firstName')}
+                <span className='text-destructive font-semibold'>*</span>
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -41,7 +44,10 @@ export default function SignUpForm() {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
-              <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.lastName')}</FieldLabel>
+              <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                {t('auth.signUp.field.lastName')}
+                <span className='text-destructive font-semibold'>*</span>
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -62,7 +68,10 @@ export default function SignUpForm() {
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid} className='gap-1'>
-            <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.email.label')}</FieldLabel>
+            <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              {t('auth.signUp.field.email.label')}
+              <span className='text-destructive font-semibold'>*</span>
+            </FieldLabel>
             <Input
               {...field}
               id={field.name}
@@ -83,7 +92,10 @@ export default function SignUpForm() {
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid} className='gap-1'>
-            <FieldLabel htmlFor={field.name}>{t('auth.signUp.field.password.label')}</FieldLabel>
+            <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              {t('auth.signUp.field.password.label')}
+              <span className='text-destructive font-semibold'>*</span>
+            </FieldLabel>
             <div className='relative'>
               <Input
                 {...field}

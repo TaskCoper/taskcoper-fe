@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,7 @@ export const useDeleteMember = ({ projectId }: { projectId: string }) => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['members', projectId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(projectId) })
     }
   })
 

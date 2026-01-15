@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import notificationService from '@/services/notification.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -15,8 +16,8 @@ export const useReadNotification = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      queryClient.invalidateQueries({ queryKey: ['unread-count'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount.all() })
     }
   })
 

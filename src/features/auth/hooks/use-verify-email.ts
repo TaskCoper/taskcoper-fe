@@ -9,10 +9,9 @@ import { createVerifyEmailSchema, type VerifyEmailFormValues } from '../validati
 
 interface UseVerifyEmailProps {
   email: string
-  onSuccess?: () => void
 }
 
-export const useVerifyEmail = ({ email, onSuccess }: UseVerifyEmailProps) => {
+export const useVerifyEmail = ({ email }: UseVerifyEmailProps) => {
   const { t } = useTranslation()
   const { signIn } = useAuthStore()
 
@@ -29,7 +28,6 @@ export const useVerifyEmail = ({ email, onSuccess }: UseVerifyEmailProps) => {
     onSuccess: ({ accessToken, refreshToken }) => {
       signIn(accessToken, refreshToken)
       verifyEmailMethods.reset()
-      onSuccess?.()
     },
     onError: (error) => {
       toast.error(error.response?.data.detail)

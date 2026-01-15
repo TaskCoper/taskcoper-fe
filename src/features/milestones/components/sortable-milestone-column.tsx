@@ -22,7 +22,7 @@ interface SortableMilestoneColumnProps {
   column: Milestone
   tasks: TaskPreview[]
   isOverlay?: boolean
-  queryKey: unknown[]
+  queryKey: readonly unknown[]
 }
 
 export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {

@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import userService from '@/services/user.service'
 import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -18,7 +19,7 @@ export const useGetUsers = ({ searchTerm, pageIndex = DEFAULT_PAGE_INDEX, pageSi
     isLoading: isLoadingUsers,
     isError: isErrorUsers
   } = useQuery({
-    queryKey: ['users', searchTerm, pageIndex, pageSize],
+    queryKey: queryKeys.users.list(searchTerm, pageIndex, pageSize),
     queryFn: () => userService.getUsers({ searchTerm, pageIndex, pageSize }),
     enabled: !!searchTerm
   })

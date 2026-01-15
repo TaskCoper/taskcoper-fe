@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { TaskDetail } from '@/types/task.type'
@@ -23,7 +24,7 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
     resolver: zodResolver(updateTaskSchema(t))
   })
 
-  const queryKey = ['task', taskId]
+  const queryKey = queryKeys.tasks.detail(taskId)
 
   const { mutate: updateTask, isPending: isUpdatingTask } = useMutation({
     mutationFn: taskService.updateTask,
@@ -63,15 +64,15 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
     },
     onSettled: () => {
       if (taskId) {
-        queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
       }
 
       if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })

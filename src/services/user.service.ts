@@ -1,5 +1,12 @@
 import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '@/features/auth/validations'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import type {
+  ChangePasswordFormValues,
+  ForgotPasswordFormValues,
+  ResetPasswordFormValues,
+  UpdateMeFormValues,
+  VerifyCodeFormValues
+} from '@/features/users/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { User } from '@/types/user.type'
 
@@ -45,6 +52,39 @@ class UserService {
 
   getMe = async () => {
     const { data } = await api.get<BaseResponse<User>>(`/v1/${this.baseUrl}/me`)
+
+    return data.value
+  }
+
+  updateMe = async ({ body }: { body: Omit<UpdateMeFormValues, 'cityCode' | 'wardCode'> }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
+
+    return data.value
+  }
+
+  changePassword = async ({ body }: { body: ChangePasswordFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
+
+    return data.value
+  }
+
+  resetPassword = async ({ body }: { body: ResetPasswordFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
+
+    return data.value
+  }
+
+  forgotPassword = async ({ body }: { body: ForgotPasswordFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/forgot_password`, body)
+
+    return data.value
+  }
+
+  verifyForgotPasswordCode = async ({ body }: { body: VerifyCodeFormValues }) => {
+    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+      `/v1/${this.baseUrl}/verify_change_password_code`,
+      body
+    )
 
     return data.value
   }

@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import domainService from '@/services/domain.service'
 import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -24,7 +25,7 @@ export const useGetDomains = ({
     },
     isLoading: isLoadingDomains
   } = useQuery({
-    queryKey: ['domains', searchTerm, pageIndex, pageSize],
+    queryKey: queryKeys.location.domains(searchTerm, pageIndex, pageSize),
     queryFn: () => domainService.getDomains({ searchTerm, pageIndex, pageSize }),
     enabled
   })

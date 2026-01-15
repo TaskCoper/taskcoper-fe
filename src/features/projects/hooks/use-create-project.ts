@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -42,7 +43,7 @@ export const useCreateProject = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-projects'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all })
     }
   })
 

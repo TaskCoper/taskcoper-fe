@@ -7,6 +7,7 @@ import { updateMilestoneSchema } from '@/features/milestones/validations'
 import SortableTaskCard from '@/features/tasks/components/sortable-task-card'
 import { useMoveTask } from '@/features/tasks/hooks/use-move-task'
 import { moveTaskSchema } from '@/features/tasks/validations'
+import { queryKeys } from '@/lib/query-keys'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
 import type { Milestone, MilestoneWithTasks } from '@/types/milestone.type'
 import type { TaskPreview } from '@/types/task.type'
@@ -34,7 +35,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const queryKey = ['milestones', projectId, milestoneId]
+  const queryKey = queryKeys.milestones.byParent(projectId, milestoneId)
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
 

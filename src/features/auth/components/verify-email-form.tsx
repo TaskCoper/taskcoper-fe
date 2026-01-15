@@ -19,8 +19,7 @@ export default function VerifyEmailForm({ email, onSuccess, autoStart = true }: 
   const { t } = useTranslation()
 
   const { verifyEmailMethods, verifyEmail, isVerifyingEmail } = useVerifyEmail({
-    email,
-    onSuccess
+    email
   })
 
   const { resendCode, isResendingCode } = useResendCode()
@@ -30,7 +29,14 @@ export default function VerifyEmailForm({ email, onSuccess, autoStart = true }: 
   })
 
   const onVerifyEmail: SubmitHandler<VerifyEmailFormValues> = (data) => {
-    verifyEmail({ body: data })
+    verifyEmail(
+      { body: data },
+      {
+        onSuccess: () => {
+          onSuccess?.()
+        }
+      }
+    )
   }
 
   const handleResend = () => {

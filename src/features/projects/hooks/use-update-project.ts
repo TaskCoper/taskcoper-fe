@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -25,7 +26,7 @@ export const useUpdateProject = ({ projectId }: { projectId?: string }) => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) })
     }
   })
 

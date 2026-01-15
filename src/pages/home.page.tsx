@@ -3,18 +3,31 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import NotificationsPopover from '@/features/notifications/components/notifications-popover'
+import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
+import NavUser from '@/features/projects/components/sidebar/nav-user'
+import { cn } from '@/shared/utils'
 import {
   ArrowRight,
+  BellIcon,
   CalendarCheck,
   CheckCircle2,
+  FolderClosedIcon,
+  GlobeIcon,
+  HomeIcon,
+  MessageCircleIcon,
   MessageSquareIcon,
+  NewspaperIcon,
   Sparkles,
   TrendingUp,
   UsersRoundIcon,
   Zap
 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
 const cardBaseClass =
@@ -63,6 +76,21 @@ const customStyles = `
 
 export default function HomePage() {
   const { t } = useTranslation()
+  const location = useLocation()
+  const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
+
+  const { me, isGettingMe } = useGetMe()
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
+
+  const isLoggedIn = !!me
+
+  const navigations = [
+    { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
+    { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
+    { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
+    { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
+    { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
+  ]
 
   const stats = [
     { value: '10K+', label: t('home.stats.projects') },
@@ -78,19 +106,72 @@ export default function HomePage() {
         {/* Header */}
         <header className='fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200/50'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between'>
-            <img src={logo} alt='TaskCoper' className='h-8' />
-            <div className='flex items-center gap-2 sm:gap-3'>
-              <Link to='/sign-in'>
-                <Button variant='ghost' size='sm' className='text-slate-700 text-xs sm:text-sm'>
-                  {t('home.header.signIn')}
-                </Button>
-              </Link>
-              <Link to='/sign-up'>
-                <Button size='sm' className='shadow-lg shadow-primary/20 text-xs sm:text-sm'>
-                  {t('home.header.getStarted')}
-                </Button>
-              </Link>
+            <div className='flex items-center gap-4'>
+              <img src={logo} alt='TaskCoper' className='h-8' />
+
+              {isLoggedIn && (
+                <div className='hidden md:flex items-center gap-2'>
+                  {navigations.map((navigation) => {
+                    const isActive = location.pathname === navigation.url
+                    return (
+                      <Button
+                        key={navigation.id}
+                        asChild
+                        size='sm'
+                        variant='ghost'
+                        className={cn(isActive && 'bg-primary/10 text-primary')}
+                      >
+                        <Link to={navigation.url}>{t(navigation.label)}</Link>
+                      </Button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
+
+            {isLoggedIn ? (
+              <div className='flex items-center gap-2 sm:gap-4'>
+                <div className='flex items-center gap-1 sm:gap-3'>
+                  <Button size='sm' asChild className='hidden md:flex'>
+                    <Link to='/projects'>{t('header.manageProjects')}</Link>
+                  </Button>
+
+                  <Button size='icon-sm' variant='ghost' className='relative'>
+                    <MessageCircleIcon className='size-4 sm:size-5' />
+                  </Button>
+
+                  <NotificationsPopover open={openNotificationsPopover} onOpenChange={setOpenNotificationsPopover}>
+                    <Button
+                      size='icon-sm'
+                      variant='ghost'
+                      className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
+                    >
+                      <BellIcon className='size-4 sm:size-5' />
+                      {isLoadingUnreadCount ? null : unreadCount > 0 ? (
+                        <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
+                          <p className='text-xs text-white'>{unreadCount}</p>
+                        </div>
+                      ) : null}
+                    </Button>
+                  </NotificationsPopover>
+                </div>
+
+                {isGettingMe ? <Skeleton className='size-8 rounded-full' /> : <NavUser user={me} />}
+              </div>
+            ) : (
+              <div className='flex items-center gap-2 sm:gap-3'>
+                <Link to='/sign-in'>
+                  <Button variant='ghost' size='sm' className='text-slate-700 text-xs sm:text-sm'>
+                    {t('home.header.signIn')}
+                  </Button>
+                </Link>
+                <Link to='/sign-up'>
+                  <Button size='sm' className='shadow-lg shadow-primary/20 text-xs sm:text-sm'>
+                    {t('home.header.getStarted')}
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </header>
 

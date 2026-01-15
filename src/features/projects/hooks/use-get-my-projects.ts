@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import projectService from '@/services/project.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
@@ -27,7 +28,7 @@ export const useGetMyProjects = ({
     },
     isLoading: isLoadingMyProjects
   } = useQuery({
-    queryKey: ['my-projects', user?.UserId, status, searchTerm, pageIndex, pageSize],
+    queryKey: queryKeys.projects.list(user?.UserId, status, searchTerm, pageIndex, pageSize),
     queryFn: () => projectService.getMyProjects({ userId: user?.UserId, status, searchTerm, pageIndex, pageSize }),
     enabled: !!user?.UserId
   })

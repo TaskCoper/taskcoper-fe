@@ -1,4 +1,5 @@
 import { useGetMilestones } from '@/features/projects/hooks/use-get-milestones'
+import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -63,7 +64,7 @@ export const useAddTask = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
     }
   })
 

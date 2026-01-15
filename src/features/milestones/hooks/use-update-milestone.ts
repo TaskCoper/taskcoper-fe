@@ -12,7 +12,7 @@ export const useUpdateMilestone = ({
   queryKey
 }: {
   shouldInvalidate?: boolean
-  queryKey?: unknown[]
+  queryKey?: readonly unknown[]
 } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()

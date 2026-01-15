@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/query-keys'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { calculateNewItemPosition } from '@/shared/utils'
@@ -81,15 +82,15 @@ export const useAddSubtask = ({
     },
     onSettled: () => {
       if (taskId) {
-        queryClient.invalidateQueries({ queryKey: ['subtasks', taskId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: ['milestones', projectId, parentMilestoneId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: ['my-assigned-tasks', projectId, user?.UserId] })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })
