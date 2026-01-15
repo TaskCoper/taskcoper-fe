@@ -26,7 +26,6 @@ export default function SignInForm() {
               id={field.name}
               aria-invalid={fieldState.invalid}
               placeholder={t('auth.signUp.field.email.placeholder')}
-              autoComplete='off'
               spellCheck={false}
               autoFocus
             />
@@ -50,7 +49,6 @@ export default function SignInForm() {
                 aria-invalid={fieldState.invalid}
                 type={isVisible ? 'text' : 'password'}
                 placeholder={t('auth.signUp.field.password.placeholder')}
-                autoComplete='off'
                 spellCheck={false}
               />
               <Button

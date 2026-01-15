@@ -1,5 +1,6 @@
 import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '@/features/auth/validations'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import type { UpdateMeFormValues } from '@/features/users/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { User } from '@/types/user.type'
 
@@ -45,6 +46,12 @@ class UserService {
 
   getMe = async () => {
     const { data } = await api.get<BaseResponse<User>>(`/v1/${this.baseUrl}/me`)
+
+    return data.value
+  }
+
+  updateMe = async ({ body }: { body: Omit<UpdateMeFormValues, 'cityCode' | 'wardCode'> }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
 
     return data.value
   }

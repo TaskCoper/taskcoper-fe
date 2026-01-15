@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
+import ProfileDetailDialog from '@/features/users/components/profile-detail-dialog'
 import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
@@ -30,6 +31,7 @@ export default function NavUser({ user }: NavUserProps) {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
   const [language, setLanguage] = useState(i18n.language)
+  const [open, setOpen] = useState(false)
 
   const { signOut, isSigningOut } = useSignOut()
 
@@ -46,64 +48,73 @@ export default function NavUser({ user }: NavUserProps) {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full cursor-pointer'>
-          <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
-          <AvatarFallback className='rounded-lg'>
-            {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
-          </AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className='w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-lg mt-1'
-        side='bottom'
-        align='end'
-        sideOffset={8}
-      >
-        <DropdownMenuLabel className='px-3 font-normal'>
-          <div className='flex items-center gap-3 text-left text-sm'>
-            <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full'>
-              <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
-              <AvatarFallback className='rounded-lg'>
-                {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
-              </AvatarFallback>
-            </Avatar>
-            <div className='grid flex-1 text-left text-sm leading-tight'>
-              <span className='truncate font-medium'>
-                {user?.firstName} {user?.lastName}
-              </span>
-              <span className='truncate text-xs'>{user?.email}</span>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full cursor-pointer'>
+            <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
+            <AvatarFallback className='rounded-lg'>
+              {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className='w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-lg mt-1'
+          side='bottom'
+          align='end'
+          sideOffset={8}
+        >
+          <DropdownMenuLabel className='px-3 font-normal'>
+            <div className='flex items-center gap-3 text-left text-sm'>
+              <Avatar className='size-6 border ring-primary ring-offset-2 ring-2 rounded-full'>
+                <AvatarImage src={user?.avatar || undefined} alt={user?.email} />
+                <AvatarFallback className='rounded-lg'>
+                  {getAvatarFallback(`${user?.firstName} ${user?.lastName}`)}
+                </AvatarFallback>
+              </Avatar>
+              <div className='grid flex-1 text-left text-sm leading-tight'>
+                <span className='truncate font-medium'>
+                  {user?.firstName} {user?.lastName}
+                </span>
+                <span className='truncate text-xs'>{user?.email}</span>
+              </div>
             </div>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <UserRoundIcon />
-            {t('account.account')}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault()
+                setOpen(true)
+              }}
+            >
+              <UserRoundIcon />
+              {t('account.account')}
+            </DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <GlobeIcon />
+                {t('account.language')}
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <DropdownMenuRadioGroup value={language || 'en-US'} onValueChange={handleLanguageChange}>
+                    <DropdownMenuRadioItem value='en-US'>{t('language.english')}</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value='vi-VN'>{t('language.vietnamese')}</DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className='focus:text-destructive' onClick={onSignOut} disabled={isSigningOut}>
+            <LogOut className='focus:text-destructive' />
+            {t('account.logout')}
           </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <GlobeIcon />
-              {t('account.language')}
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup value={language || 'en-US'} onValueChange={handleLanguageChange}>
-                  <DropdownMenuRadioItem value='en-US'>{t('language.english')}</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value='vi-VN'>{t('language.vietnamese')}</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className='focus:text-destructive' onClick={onSignOut} disabled={isSigningOut}>
-          <LogOut className='focus:text-destructive' />
-          {t('account.logout')}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ProfileDetailDialog open={open} onOpenChange={setOpen} />
+    </>
   )
 }

@@ -90,7 +90,8 @@
       "no": "No",
       "action": "Action",
       "members": "Members",
-      "date": "Date"
+      "date": "Date",
+      "optional": "optional"
     }
   },
   "project": {
@@ -535,6 +536,43 @@
     "language": "Language",
     "logout": "Logout"
   },
+  "user": {
+    "updateProfile": {
+      "section": {
+        "contact": "Contact Information",
+        "other": "Other Information"
+      },
+      "field": {
+        "firstName": {
+          "label": "First Name"
+        },
+        "lastName": {
+          "label": "Last Name"
+        },
+        "phoneNumber": {
+          "label": "Phone Number"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "province": {
+          "label": "Province",
+          "placeholder": "Select province",
+          "searchPlaceholder": "Search province..."
+        },
+        "ward": {
+          "label": "Ward",
+          "placeholder": "Select ward",
+          "searchPlaceholder": "Search ward..."
+        }
+      },
+      "validation": {
+        "phoneNumber": {
+          "invalid": "Invalid phone number format"
+        }
+      }
+    }
+  },
   "auth": {
     "signIn": {
       "label": "Sign in",
@@ -609,6 +647,9 @@
         "code": {
           "minLength": "Code must be 6 characters",
           "maxLength": "Code must be 6 characters"
+        },
+        "phoneNumber": {
+          "invalid": "Invalid phone number format"
         }
       }
     }

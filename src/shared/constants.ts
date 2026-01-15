@@ -14,6 +14,9 @@ export const MAX_UPLOAD_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
 export const MAX_LOGO_SIZE = 5 * 1024 * 1024 // 5MB
 export const MAX_COVER_SIZE = 10 * 1024 * 1024 // 10MB
 
+// user info
+export const MAX_AVATAR_SIZE = 5 * 1024 * 1024 // 5MB
+
 // TODO: should apply this more on any dates using date-fns
 export const DATE_LOCALES: Record<string, Locale> = {
   ['vi-VN']: vi,

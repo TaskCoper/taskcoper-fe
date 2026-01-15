@@ -12,7 +12,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cn } from '@/shared/utils'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { CheckIcon, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -34,6 +34,7 @@ interface ComboboxFieldProps<T extends FieldValues> {
   className?: string
   modal?: boolean
   isRequired?: boolean
+  onChange?: (value: string) => void
 }
 
 export function ComboboxField<T extends FieldValues>({
@@ -47,7 +48,8 @@ export function ComboboxField<T extends FieldValues>({
   disabled = false,
   className,
   modal = false,
-  isRequired = false
+  isRequired = false,
+  onChange
 }: ComboboxFieldProps<T>) {
   const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
@@ -65,7 +67,9 @@ export function ComboboxField<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        const selectedOption = options.find((option) => option.value === field.value)
+        // Convert field.value to string for comparison (handles number fields)
+        const fieldValueStr = field.value != null ? String(field.value) : ''
+        const selectedOption = options.find((option) => option.value === fieldValueStr)
 
         const TriggerButton = (
           <Button
@@ -87,9 +91,16 @@ export function ComboboxField<T extends FieldValues>({
 
         return (
           <Field data-invalid={fieldState.invalid} className={cn('gap-1', className)}>
-            <FieldLabel htmlFor={field.name} className='gap-0.5'>
+            <FieldLabel
+              htmlFor={field.name}
+              className={cn(isRequired ? 'items-center gap-0.5' : 'items-baseline gap-1')}
+            >
               {t(label)}
-              {isRequired && <span className='text-destructive font-semibold'>*</span>}
+              {isRequired ? (
+                <span className='text-destructive font-semibold'>*</span>
+              ) : (
+                <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+              )}
             </FieldLabel>
 
             {isDesktop ? (
@@ -104,9 +115,13 @@ export function ComboboxField<T extends FieldValues>({
                 >
                   <OptionList
                     options={options}
-                    value={field.value}
+                    value={fieldValueStr}
                     onSelect={(val) => {
-                      field.onChange(val)
+                      if (onChange) {
+                        onChange(val)
+                      } else {
+                        field.onChange(val)
+                      }
                       setOpen(false)
                     }}
                     searchPlaceholder={t(searchPlaceholder)}
@@ -125,9 +140,13 @@ export function ComboboxField<T extends FieldValues>({
                     </DrawerHeader>
                     <OptionList
                       options={options}
-                      value={field.value}
+                      value={fieldValueStr}
                       onSelect={(val) => {
-                        field.onChange(val)
+                        if (onChange) {
+                          onChange(val)
+                        } else {
+                          field.onChange(val)
+                        }
                         setOpen(false)
                       }}
                       searchPlaceholder={t(searchPlaceholder)}
@@ -176,7 +195,9 @@ function OptionList({
               }}
             >
               {option.label}
-              <Check className={cn('ml-auto h-4 w-4', value === option.value ? 'opacity-100' : 'opacity-0')} />
+              <CheckIcon
+                className={cn('ml-auto h-4 w-4 text-primary', value === option.value ? 'opacity-100' : 'opacity-0')}
+              />
             </CommandItem>
           ))}
         </CommandGroup>
