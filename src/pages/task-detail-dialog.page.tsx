@@ -147,6 +147,7 @@ export default function TaskDetailDialogPage() {
         position: task.taskPosition,
         startDate: task.taskStartDate,
         endDate: task.taskEndDate,
+        isCompleted: task.isCompleted,
         targetMilestoneId: task.milestoneId,
         announceBeforeMinutes: task.announceBeforeMinutes
       })
@@ -286,13 +287,28 @@ export default function TaskDetailDialogPage() {
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
               {/* Task name + popovers */}
               <div className='flex gap-3'>
-                {/* TODO: call api to check for isCompleted */}
-                <Checkbox className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')} />
+                <Checkbox
+                  checked={task?.isCompleted}
+                  onCheckedChange={(checked) => {
+                    const result = updateTaskSchema(t).safeParse({
+                      ...updateTaskMethods.getValues(),
+                      isCompleted: checked as boolean
+                    })
+
+                    if (result.success) {
+                      updateTask({ body: result.data })
+                    }
+                  }}
+                  className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')}
+                />
                 <div className='space-y-4'>
                   {isEditingName ? (
                     <Input className='text-3xl! font-bold w-full h-14' {...nameInputProps} />
                   ) : (
-                    <p className='text-3xl font-bold cursor-text' {...nameTriggerProps}>
+                    <p
+                      className={cn('text-3xl font-bold cursor-text', task?.isCompleted ? 'text-muted-foreground' : '')}
+                      {...nameTriggerProps}
+                    >
                       {task?.taskName}
                     </p>
                   )}
@@ -354,7 +370,10 @@ export default function TaskDetailDialogPage() {
                       {task?.taskLabels.map((label) => (
                         <div
                           key={label.id}
-                          className={cn(label.color || 'bg-gray-200', 'h-8 px-3 rounded-md flex items-center min-w-0')}
+                          className={cn(
+                            label.color || 'bg-gray-200',
+                            'h-8 rounded-md flex justify-center items-center min-w-14 px-3'
+                          )}
                         >
                           {label.name ? (
                             <p className={cn('text-sm font-semibold truncate', getColorTextClass(label.color))}>

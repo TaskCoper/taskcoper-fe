@@ -424,7 +424,8 @@
         },
         "color": {
           "maxLength": "Tối đa 255 ký tự"
-        }
+        },
+        "nameOrColorRequired": "Nhãn phải có ít nhất tên hoặc màu"
       }
     },
     "subtask": {

@@ -49,6 +49,12 @@ class TaskService {
     return data.value
   }
 
+  updateTaskStatus = async ({ id, isCompleted }: { id: string; isCompleted: boolean }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/mark`, { id, isCompleted })
+
+    return data.value
+  }
+
   getComments = async ({ taskId }: { taskId?: string }) => {
     if (!taskId) return null
     const { data } = await api.get<BasePaginationResponse<Comment>>(`/v1/${this.baseUrl}/${taskId}/comments`)

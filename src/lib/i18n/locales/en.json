@@ -424,7 +424,8 @@
         },
         "color": {
           "maxLength": "Max 255 characters"
-        }
+        },
+        "nameOrColorRequired": "Label must have at least a name or a color"
       }
     },
     "subtask": {

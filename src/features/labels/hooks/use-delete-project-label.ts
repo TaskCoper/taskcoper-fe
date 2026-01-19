@@ -22,13 +22,15 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
   const { mutate: deleteProjectLabel, isPending: isDeletingProjectLabel } = useMutation({
     mutationFn: projectService.deleteLabel,
     onMutate: async (variables) => {
-      const queryKey = ['project-labels', projectId]
-      await queryClient.cancelQueries({ queryKey })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projects.labels(projectId) })
 
-      const previousData = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
+      const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(
+        queryKeys.projects.labels(projectId)
+      )
+      const previousTask = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskId))
 
-      if (previousData) {
-        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKey, (old) => {
+      if (previousLabels) {
+        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectId), (old) => {
           if (!old) return old
 
           return {
@@ -39,7 +41,9 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
             }
           }
         })
+      }
 
+      if (previousTask) {
         queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskId), (old) => {
           if (!old) return old
 
@@ -50,11 +54,15 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
         })
       }
 
-      return { previousData }
+      return { previousLabels, previousTask }
     },
     onError: (error, _variables, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousData)
+      if (context?.previousLabels) {
+        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousLabels)
+      }
+
+      if (context?.previousTask) {
+        queryClient.setQueryData(queryKeys.tasks.detail(taskId), context.previousTask)
       }
 
       toast(t('error.somethingWentWrong'), {

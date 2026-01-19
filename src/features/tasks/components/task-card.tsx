@@ -9,7 +9,8 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CircleCheckBigIcon, ClockIcon, MessageSquareIcon, PaperclipIcon, SquarePenIcon } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
-import { Link, useLocation } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { useUpdateTaskStatus } from '../hooks/use-update-task-status'
 
 const taskCardVariants = cva(
   'gap-1 p-3 border-none rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group/card overflow-hidden',
@@ -30,8 +31,15 @@ interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
 
 const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, style, ...props }, ref) => {
   const location = useLocation()
-  const isCompleted = false
-  const [areLabelsExpanded, setAreLabelsExpanded] = useState(false)
+  const navigate = useNavigate()
+
+  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const [areLabelsExpanded, setAreLabelsExpanded] = useState(true)
+  const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
+    taskId: task.id,
+    projectId,
+    parentMilestoneId: milestoneId
+  })
 
   const isDisplayIcons =
     task.startDate ||
@@ -49,85 +57,87 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
     setAreLabelsExpanded((prev) => !prev)
   }
 
+  const handleCardClick = () => {
+    navigate(`${location.pathname}/tasks/${task.id}`)
+  }
+
   return (
-    <Link to={`${location.pathname}/tasks/${task.id}`}>
-      <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props}>
-        {task.taskLabels?.length > 0 ? (
-          <div className='flex items-center gap-1 flex-wrap'>
-            {task.taskLabels.map((label) =>
-              areLabelsExpanded ? (
-                <div
-                  key={label.id}
-                  onClick={handleLabelClick}
-                  className={cn(
-                    label.color || 'bg-gray-200',
-                    'px-2 rounded-sm flex items-center cursor-pointer max-w-full transition-all duration-200 hover:saturate-80'
-                  )}
-                >
-                  <span className={cn('text-xs font-semibold truncate', getColorTextClass(label.color))}>
-                    {label.name}
-                  </span>
-                </div>
-              ) : (
-                <div
-                  key={label.id}
-                  onClick={handleLabelClick}
-                  className={cn(
-                    label.color || 'bg-gray-200',
-                    'h-2 rounded-full w-10 cursor-pointer transition-all duration-200 hover:saturate-80'
-                  )}
-                />
-              )
-            )}
-          </div>
-        ) : null}
-        <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover/card:block' />
-        <div className='flex items-start gap-2'>
-          <Checkbox
-            className={cn(
-              'rounded-full border-foreground mt-0.5',
-              isCompleted
-                ? 'data-[state=checked]:bg-lime-600 data-[state=checked]:border-lime-600'
-                : 'hidden group-hover/card:block'
-            )}
-            checked={isCompleted}
-            onCheckedChange={() => {}}
-            onClick={(e) => e.stopPropagation()}
-          />
-          <p className={cn('text-sm w-[80%]', isCompleted ? 'text-muted-foreground' : '')}>{task.name}</p>
-        </div>
-
-        {isDisplayIcons ? (
-          <div
-            className={cn(
-              'flex flex-wrap items-center gap-x-4 gap-y-2 mt-1',
-              task.progressPercentage > 0 ? 'mb-1' : ''
-            )}
-          >
-            {task.startDate || task.endDate ? <TaskDateChip startDate={task.startDate} endDate={task.endDate} /> : null}
-            {task.totalSubtasks > 0 ? (
-              <TaskSubtasksChip completedSubtasks={task.completedSubtasks} totalSubtasks={task.totalSubtasks} />
-            ) : null}
-            {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
-            {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
-            {task.members.length > 0 ? (
-              <div className='ml-auto'>
-                <TaskMembersChip members={task.members} />
+    <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props} onClick={handleCardClick}>
+      {task.taskLabels?.length > 0 ? (
+        <div className='flex items-center gap-1 flex-wrap w-[90%]'>
+          {task.taskLabels.map((label) =>
+            areLabelsExpanded ? (
+              <div
+                key={label.id}
+                onClick={handleLabelClick}
+                className={cn(
+                  label.color || 'bg-gray-200',
+                  'px-2 min-w-14 h-4 rounded-sm flex justify-center items-center cursor-pointer max-w-full transition-all duration-200 hover:saturate-80'
+                )}
+              >
+                <span className={cn('text-xs font-semibold truncate', getColorTextClass(label.color))}>
+                  {label.name}
+                </span>
               </div>
-            ) : null}
-          </div>
-        ) : null}
+            ) : (
+              <div
+                key={label.id}
+                onClick={handleLabelClick}
+                className={cn(
+                  label.color || 'bg-gray-200',
+                  'h-2 rounded-full w-10 cursor-pointer transition-all duration-200 hover:saturate-80'
+                )}
+              />
+            )
+          )}
+        </div>
+      ) : null}
+      <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover/card:block' />
+      <div className='flex items-start gap-2'>
+        <Checkbox
+          className={cn(
+            'rounded-full border-foreground z-10 mt-0.5',
+            !task.isCompleted && 'hidden group-hover/card:block'
+          )}
+          checked={task.isCompleted}
+          disabled={isUpdatingTaskStatus}
+          onCheckedChange={(checked) => {
+            updateTaskStatus({ id: task.id, isCompleted: checked as boolean })
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+        />
+        <p className={cn('text-sm w-[80%]', task.isCompleted ? 'text-muted-foreground' : '')}>{task.name}</p>
+      </div>
 
-        {task.progressPercentage > 0 && (
-          <div className='absolute bottom-0 left-0 right-0 h-1'>
-            <div
-              className='h-full bg-primary transition-all duration-300'
-              style={{ width: `${task.progressPercentage.toFixed(0)}%` }}
-            />
-          </div>
-        )}
-      </Card>
-    </Link>
+      {isDisplayIcons ? (
+        <div
+          className={cn('flex flex-wrap items-center gap-x-4 gap-y-2 mt-1', task.progressPercentage > 0 ? 'mb-1' : '')}
+        >
+          {task.startDate || task.endDate ? <TaskDateChip startDate={task.startDate} endDate={task.endDate} /> : null}
+          {task.totalSubtasks > 0 ? (
+            <TaskSubtasksChip completedSubtasks={task.completedSubtasks} totalSubtasks={task.totalSubtasks} />
+          ) : null}
+          {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
+          {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
+          {task.members.length > 0 ? (
+            <div className='ml-auto'>
+              <TaskMembersChip members={task.members} />
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {task.progressPercentage > 0 && (
+        <div className='absolute bottom-0 left-0 right-0 h-1'>
+          <div
+            className='h-full bg-primary transition-all duration-300'
+            style={{ width: `${task.progressPercentage.toFixed(0)}%` }}
+          />
+        </div>
+      )}
+    </Card>
   )
 })
 
