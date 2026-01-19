@@ -1,6 +1,11 @@
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import type { AddSubtaskFormValues } from '@/features/subtasks/validations'
-import type { AddTaskFormValues, MoveTaskFormValues, UpdateTaskFormValues } from '@/features/tasks/validations'
+import type {
+  AddTaskFormValues,
+  AddTaskLabelFormValues,
+  MoveTaskFormValues,
+  UpdateTaskFormValues
+} from '@/features/tasks/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Comment } from '@/types/comment.type'
 import type { Subtask } from '@/types/subtask.type'
@@ -89,6 +94,18 @@ class TaskService {
     const { data } = await api.get<BasePaginationResponse<TaskMember>>(`/v1/${this.baseUrl}/${taskId}/members`)
 
     return data
+  }
+
+  addLabel = async ({ body }: { body: AddTaskLabelFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.taskId}/labels`, body)
+
+    return data.value
+  }
+
+  deleteLabel = async ({ id }: { id: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/labels/${id}`)
+
+    return data.value
   }
 }
 

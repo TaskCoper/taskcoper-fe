@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { format } from 'date-fns'
@@ -31,6 +31,7 @@ interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
 const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, style, ...props }, ref) => {
   const location = useLocation()
   const isCompleted = false
+  const [areLabelsExpanded, setAreLabelsExpanded] = useState(false)
 
   const isDisplayIcons =
     task.startDate ||
@@ -42,9 +43,44 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
     task.totalResources > 0 ||
     task.totalSubtasks > 0
 
+  const handleLabelClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setAreLabelsExpanded((prev) => !prev)
+  }
+
   return (
     <Link to={`${location.pathname}/tasks/${task.id}`}>
       <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props}>
+        {task.taskLabels?.length > 0 ? (
+          <div className='flex items-center gap-1 flex-wrap'>
+            {task.taskLabels.map((label) =>
+              areLabelsExpanded ? (
+                <div
+                  key={label.id}
+                  onClick={handleLabelClick}
+                  className={cn(
+                    label.color || 'bg-gray-200',
+                    'px-2 rounded-sm flex items-center cursor-pointer max-w-full transition-all duration-200 hover:saturate-80'
+                  )}
+                >
+                  <span className={cn('text-xs font-semibold truncate', getColorTextClass(label.color))}>
+                    {label.name}
+                  </span>
+                </div>
+              ) : (
+                <div
+                  key={label.id}
+                  onClick={handleLabelClick}
+                  className={cn(
+                    label.color || 'bg-gray-200',
+                    'h-2 rounded-full w-10 cursor-pointer transition-all duration-200 hover:saturate-80'
+                  )}
+                />
+              )
+            )}
+          </div>
+        ) : null}
         <SquarePenIcon className='size-3.5 absolute right-2 top-2 hidden group-hover/card:block' />
         <div className='flex items-start gap-2'>
           <Checkbox

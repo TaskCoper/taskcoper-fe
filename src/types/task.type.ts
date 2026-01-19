@@ -1,3 +1,5 @@
+import type { TaskLabel } from './label.type'
+
 export interface TaskPreview {
   id: string
   name: string
@@ -11,6 +13,7 @@ export interface TaskPreview {
   totalComments: number
   totalResources: number
   progressPercentage: number
+  taskLabels: TaskLabel[]
 }
 
 export type TaskCardType = 'TaskCard'
@@ -30,6 +33,7 @@ export interface TaskDetail {
   taskStartDate: string | null
   taskEndDate: string | null
   announceBeforeMinutes: number | null
+  taskLabels: TaskLabel[]
 }
 
 export interface TaskMember {

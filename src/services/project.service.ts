@@ -1,8 +1,10 @@
+import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
 import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { Label } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview } from '@/types/project.type'
 import type { TaskPreview } from '@/types/task.type'
@@ -125,6 +127,31 @@ class ProjectService {
     )
 
     return data
+  }
+
+  getLabels = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<Label>>(`/v1/${this.baseUrl}/${projectId}/task-labels`)
+
+    return data
+  }
+
+  addLabel = async ({ body }: { body: AddProjectLabelFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/task-labels`, body)
+
+    return data.value
+  }
+
+  updateLabel = async ({ body }: { body: UpdateProjectLabelFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${body.id}`, body)
+
+    return data.value
+  }
+
+  deleteLabel = async ({ labelId }: { labelId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${labelId}`)
+
+    return data.value
   }
 }
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,6 +12,12 @@ import { toast } from 'sonner'
 import { recalculateParentStatus } from '../utils'
 import { type UpdateSubtaskFormValues, updateSubtaskSchema } from '../validations'
 
+interface UpdateSubtaskProps {
+  taskId?: string
+  projectId?: string
+  parentMilestoneId?: string
+}
+
 interface UpdateSubtaskVariables {
   body: UpdateSubtaskFormValues
   meta?: {
@@ -18,9 +25,10 @@ interface UpdateSubtaskVariables {
   }
 }
 
-export const useUpdateSubtask = ({ taskId }: { taskId?: string } = {}) => {
+export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: UpdateSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
   const methods = useForm<UpdateSubtaskFormValues>({
     resolver: zodResolver(updateSubtaskSchema(t))
@@ -121,6 +129,14 @@ export const useUpdateSubtask = ({ taskId }: { taskId?: string } = {}) => {
     onSettled: () => {
       if (taskId) {
         queryClient.invalidateQueries({ queryKey })
+      }
+
+      if (projectId && parentMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      }
+
+      if (projectId && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })

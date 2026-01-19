@@ -1,3 +1,4 @@
+import { sortedTaskLabelColors } from '@/features/labels/constants'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { BasePaginationResponse } from '@/lib/axios'
 import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
@@ -138,3 +139,10 @@ export const getAvatarFallback = (fullName: string) =>
     .split(' ')
     .map((n) => n[0])
     .join('')
+
+export const getColorTextClass = (color: string) => {
+  return (
+    sortedTaskLabelColors.flatMap((col) => col.shades).find((shade) => shade.value === color)?.textColor ||
+    'text-foreground'
+  )
+}

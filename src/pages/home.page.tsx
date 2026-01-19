@@ -105,7 +105,7 @@ export default function HomePage() {
       <div className='dot-bg h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 overflow-hidden flex flex-col'>
         {/* Header */}
         <header className='fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200/50'>
-          <div className='max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between'>
+          <div className='px-4 sm:px-6 h-14 flex items-center justify-between'>
             <div className='flex items-center gap-4'>
               <img src={logo} alt='TaskCoper' className='h-8' />
 
