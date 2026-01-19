@@ -32,7 +32,7 @@ import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -100,7 +100,7 @@ export default function TaskDetailDialogPage() {
     activeChildSubtask,
     groupedSubtasks,
     parentSubtasksIds
-  } = useSubtaskDnd({ taskId, subtasks })
+  } = useSubtaskDnd({ taskId, subtasks, projectId, parentMilestoneId: milestoneId })
 
   const {
     isEditing: isEditingName,
@@ -286,6 +286,7 @@ export default function TaskDetailDialogPage() {
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
               {/* Task name + popovers */}
               <div className='flex gap-3'>
+                {/* TODO: call api to check for isCompleted */}
                 <Checkbox className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')} />
                 <div className='space-y-4'>
                   {isEditingName ? (
@@ -298,12 +299,19 @@ export default function TaskDetailDialogPage() {
 
                   {/* Action Buttons */}
                   <div className='flex items-center gap-2 flex-wrap'>
-                    <LabelPopover>
-                      <Button variant='outline' size='sm'>
-                        <TagIcon />
-                        {t('common.field.label')}
-                      </Button>
-                    </LabelPopover>
+                    {projectId && taskId && milestoneId ? (
+                      <LabelPopover
+                        projectId={projectId}
+                        taskId={taskId}
+                        parentMilestoneId={milestoneId}
+                        taskLabels={task?.taskLabels ?? []}
+                      >
+                        <Button variant='outline' size='sm'>
+                          <TagIcon />
+                          {t('common.field.label')}
+                        </Button>
+                      </LabelPopover>
+                    ) : null}
                     <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
                       <Button variant='outline' size='sm'>
                         <ClockIcon />
@@ -336,7 +344,42 @@ export default function TaskDetailDialogPage() {
                 </div>
               </div>
 
-              <div className='flex items-center flex-wrap gap-10 px-6'>
+              <div className='flex items-center flex-wrap gap-10 pl-6'>
+                {/* Labels section */}
+                {(task?.taskLabels.length ?? 0) > 0 ? (
+                  <div className='space-y-1 max-w-full'>
+                    <p className='text-sm font-semibold text-muted-foreground'>Nhãn</p>
+
+                    <div className='flex flex-wrap items-center gap-1 text-foreground/60'>
+                      {task?.taskLabels.map((label) => (
+                        <div
+                          key={label.id}
+                          className={cn(label.color || 'bg-gray-200', 'h-8 px-3 rounded-md flex items-center min-w-0')}
+                        >
+                          {label.name ? (
+                            <p className={cn('text-sm font-semibold truncate', getColorTextClass(label.color))}>
+                              {label.name}
+                            </p>
+                          ) : null}
+                        </div>
+                      ))}
+
+                      {projectId && taskId && milestoneId ? (
+                        <LabelPopover
+                          projectId={projectId}
+                          taskId={taskId}
+                          parentMilestoneId={milestoneId}
+                          taskLabels={task?.taskLabels ?? []}
+                        >
+                          <Button variant='secondary' size='icon-sm'>
+                            <PlusIcon />
+                          </Button>
+                        </LabelPopover>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
                 {/* Assigned members section */}
                 {(taskMembers?.value.totalCount ?? 0) > 0 ? (
                   <div className='space-y-1'>

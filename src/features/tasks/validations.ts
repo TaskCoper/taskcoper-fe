@@ -47,6 +47,14 @@ export const updateTaskSchema = (t: TFunction) => {
     .strict()
 }
 
+export const addTaskLabelSchema = z
+  .object({
+    taskId: z.uuid(),
+    projectTaskLabelId: z.uuid()
+  })
+  .strict()
+
 export type AddTaskFormValues = z.infer<ReturnType<typeof addTaskSchema>>
 export type MoveTaskFormValues = z.infer<ReturnType<typeof moveTaskSchema>>
 export type UpdateTaskFormValues = z.infer<ReturnType<typeof updateTaskSchema>>
+export type AddTaskLabelFormValues = z.infer<typeof addTaskLabelSchema>

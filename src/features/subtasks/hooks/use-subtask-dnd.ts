@@ -13,10 +13,12 @@ import { useUpdateSubtask } from './use-update-subtask'
 
 interface UseSubtaskDndProps {
   taskId?: string
+  projectId?: string
+  parentMilestoneId?: string
   subtasks: BasePaginationResponse<Subtask> | null | undefined
 }
 
-export const useSubtaskDnd = ({ taskId, subtasks }: UseSubtaskDndProps) => {
+export const useSubtaskDnd = ({ taskId, projectId, parentMilestoneId, subtasks }: UseSubtaskDndProps) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const queryKey = queryKeys.subtasks.byTask(taskId)
@@ -24,7 +26,7 @@ export const useSubtaskDnd = ({ taskId, subtasks }: UseSubtaskDndProps) => {
   const [activeParentSubtask, setActiveParentSubtask] = useState<SubtaskWithChildren | null>(null)
   const [activeChildSubtask, setActiveChildSubtask] = useState<Subtask | null>(null)
 
-  const { updateSubtask } = useUpdateSubtask({ taskId })
+  const { updateSubtask } = useUpdateSubtask({ taskId, projectId, parentMilestoneId })
 
   const groupedSubtasks = transformSubtasks(subtasks?.value.items || [])
   const parentSubtasksIds = useMemo(() => groupedSubtasks.map((s) => s.id), [groupedSubtasks])

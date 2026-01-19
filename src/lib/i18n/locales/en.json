@@ -403,7 +403,29 @@
     },
     "label": {
       "createLabel": "Create new label",
-      "findLabel": "Find label..."
+      "findLabel": "Find label...",
+      "editLabel": "Edit label",
+      "updateLabel": "Update label",
+      "deleteLabel": "Delete label",
+      "deleteLabelConfirmation": "This will remove this label from all cards. There is no undo.",
+      "chooseColor": "Choose a color",
+      "removeColor": "Remove color",
+      "create": "Create",
+      "validation": {
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "id": {
+          "invalid": "Invalid label ID"
+        },
+        "name": {
+          "minLength": "Label name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "color": {
+          "maxLength": "Max 255 characters"
+        }
+      }
     },
     "subtask": {
       "title": "Title",

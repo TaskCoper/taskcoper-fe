@@ -20,7 +20,8 @@ export const queryKeys = {
       all: (projectId?: string) => ['members', projectId] as const,
       list: (projectId?: string, searchTerm?: string) => ['members', projectId, searchTerm] as const
     },
-    parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const
+    parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const,
+    labels: (projectId?: string) => ['project-labels', projectId]
   },
   // Milestones
   milestones: {

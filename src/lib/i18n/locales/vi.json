@@ -403,7 +403,29 @@
     },
     "label": {
       "createLabel": "Tạo nhãn mới",
-      "findLabel": "Tìm nhãn..."
+      "findLabel": "Tìm nhãn...",
+      "editLabel": "Chỉnh sửa nhãn",
+      "updateLabel": "Cập nhật nhãn",
+      "deleteLabel": "Xóa nhãn",
+      "deleteLabelConfirmation": "Việc này sẽ xóa nhãn này khỏi tất cả các thẻ. Không có hoàn tác.",
+      "chooseColor": "Chọn một màu",
+      "removeColor": "Gỡ bỏ màu",
+      "create": "Tạo mới",
+      "validation": {
+        "projectId": {
+          "invalid": "ID dự án không hợp lệ"
+        },
+        "id": {
+          "invalid": "ID nhãn không hợp lệ"
+        },
+        "name": {
+          "minLength": "Vui lòng nhập tên nhãn",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "color": {
+          "maxLength": "Tối đa 255 ký tự"
+        }
+      }
     },
     "subtask": {
       "title": "Tiêu đề",
