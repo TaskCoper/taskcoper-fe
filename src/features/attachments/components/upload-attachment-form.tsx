@@ -163,9 +163,9 @@ export default function UploadAttachmentForm({
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
-              <FieldLabel htmlFor={field.name} className='gap-1 items-baseline'>
+              <FieldLabel htmlFor={field.name} className='gap-0.5'>
                 {t('task.attachment.attachmentDisplay')}
-                <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+                <span className='text-destructive font-semibold'>*</span>
               </FieldLabel>
 
               <Input

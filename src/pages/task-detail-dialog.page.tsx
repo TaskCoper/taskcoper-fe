@@ -631,6 +631,7 @@ export default function TaskDetailDialogPage() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       handleSubmitComment(onSubmitAddComment)()
+                      addCommentMethods.reset()
                     }
                   }}
                 />

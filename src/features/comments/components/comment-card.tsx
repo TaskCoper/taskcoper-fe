@@ -11,21 +11,49 @@ interface CommentCardProps {
   comment: Comment
 }
 
-// const taskLogContent: Record<string, string> = {
-//   ['TaskMovedInTaskActivity']: 'Task moved to',
-//   ['CommentAddedToTaskActivity']: 'Comment added to task',
-//   ['TaskUpdatedActivity']: 'Task updated'
-// }
+const taskLogContent: Record<string, string> = {
+  FileAddedToTaskActivity: 'activities.FileAddedToTaskActivity',
+  FileAddedToTaskCommentActivity: 'activities.FileAddedToTaskCommentActivity',
+  FileUpdatedInTaskActivity: 'activities.FileUpdatedInTaskActivity',
+  FileRemovedInTaskActivity: 'activities.FileRemovedInTaskActivity',
+  TaskUpdatedActivity: 'activities.TaskUpdatedActivity',
+  TaskCreatedActivity: 'activities.TaskCreatedActivity',
+  TaskMovedInTaskActivity: 'activities.TaskMovedInTaskActivity',
+  TaskMarkedInTaskActivity: 'activities.TaskMarkedInTaskActivity',
+  TaskUnMarkedInTaskActivity: 'activities.TaskUnMarkedInTaskActivity',
+  UserAddedToTaskActivity: 'activities.UserAddedToTaskActivity',
+  UserRemovedInTaskActivity: 'activities.UserRemovedInTaskActivity',
+  SubTaskAddedToTaskActivity: 'activities.SubTaskAddedToTaskActivity',
+  SubtaskUpdatedInTaskActivity: 'activities.SubtaskUpdatedInTaskActivity',
+  SubtaskDeletedInTaskActivity: 'activities.SubtaskDeletedInTaskActivity',
+  LabelAddedToTaskActivity: 'activities.LabelAddedToTaskActivity',
+  LabelDeletedToTaskActivity: 'activities.LabelDeletedToTaskActivity'
+}
 
 export default function CommentCard({ comment }: CommentCardProps) {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const currentLocale = DATE_LOCALES[i18n.language] || enUS
 
   if (comment.isTaskLog) {
     return (
-      <div>
-        <p className='text-sm italic text-muted-foreground'>{comment.content}</p>
+      <div className='flex items-start gap-2'>
+        <Avatar>
+          <AvatarImage src={comment.avatar || ''} />
+          <AvatarFallback>{getAvatarFallback(`${comment.firstName} ${comment.lastName}`)}</AvatarFallback>
+        </Avatar>
+
+        <div className='w-full'>
+          <p className='text-sm text-foreground/70'>
+            <span className='font-semibold text-foreground'>
+              {comment.firstName} {comment.lastName}
+            </span>{' '}
+            {t(taskLogContent[comment.content])}
+          </p>
+          <p className='text-xs font-normal underline text-primary'>
+            {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
+          </p>
+        </div>
       </div>
     )
   }
