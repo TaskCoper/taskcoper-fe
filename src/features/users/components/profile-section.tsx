@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProvinces } from '@/hooks/use-get-provinces'
 import { useGetWards } from '@/hooks/use-get-wards'
-import { useEffect } from 'react'
+import { useUploadFile } from '@/hooks/use-upload-file'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { useUpdateMe } from '../hooks/use-update-me'
 import type { UpdateMeFormValues } from '../validations'
 import UpdateMeForm from './update-me-form'
@@ -15,6 +18,11 @@ export default function ProfileSection() {
   const { t } = useTranslation()
   const { me, isGettingMe } = useGetMe()
   const { methods, updateMe, isUpdatingMe } = useUpdateMe()
+  const { uploadFileAsync, isUploading } = useUploadFile()
+
+  const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null)
+  const [pendingAvatarPreview, setPendingAvatarPreview] = useState<string | null>(null)
+
   const {
     reset,
     handleSubmit,
@@ -27,14 +35,77 @@ export default function ProfileSection() {
   const cityCodeForm = watch('cityCode')
   const { wards, isLoadingWards } = useGetWards(cityCodeForm ?? -1)
 
-  const onSubmit: SubmitHandler<UpdateMeFormValues> = (body) => {
+  const handleAvatarChange = useCallback(
+    (file: File | null) => {
+      if (file) {
+        setPendingAvatarFile(file)
+        setPendingAvatarPreview(URL.createObjectURL(file))
+      } else {
+        if (pendingAvatarPreview) {
+          URL.revokeObjectURL(pendingAvatarPreview)
+        }
+        setPendingAvatarFile(null)
+        setPendingAvatarPreview(null)
+      }
+    },
+    [pendingAvatarPreview]
+  )
+
+  // clean up object url on unmount
+  useEffect(() => {
+    return () => {
+      if (pendingAvatarPreview) {
+        URL.revokeObjectURL(pendingAvatarPreview)
+      }
+    }
+  }, [pendingAvatarPreview])
+
+  const onSubmit: SubmitHandler<UpdateMeFormValues> = async (body) => {
+    let avatarUrl = body.avatar
+
+    // upload pending avatar if exists
+    if (pendingAvatarFile) {
+      const toastId = toast.loading(t('common.ui.uploading'), {
+        description: t('common.ui.pleaseWait')
+      })
+
+      try {
+        const url = await uploadFileAsync({
+          file: pendingAvatarFile,
+          onProgress: (progress) => {
+            toast.loading(t('common.ui.uploading'), {
+              id: toastId,
+              description: (
+                <div className='w-full min-w-72 space-y-1'>
+                  <Progress value={progress} className='w-full' />
+                  <p className='text-xs text-muted-foreground'>{progress}%</p>
+                </div>
+              )
+            })
+          }
+        })
+
+        if (url) {
+          toast.success(t('common.ui.uploadSuccess'), {
+            id: toastId,
+            description: null
+          })
+          avatarUrl = url
+        }
+      } catch {
+        toast.error(t('error.somethingWentWrong'), { id: toastId })
+        return
+      }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { cityCode, wardCode, ...rest } = body
     updateMe(
-      { body: rest },
+      { body: { ...rest, avatar: avatarUrl } },
       {
         onSuccess: () => {
-          reset(body, { keepValues: true })
+          reset({ ...body, avatar: avatarUrl }, { keepValues: true })
+          handleAvatarChange(null)
         }
       }
     )
@@ -82,6 +153,9 @@ export default function ProfileSection() {
       </div>
     )
 
+  const isFormDirty = isDirty || pendingAvatarFile !== null
+  const isSubmitting = isUpdatingMe || isUploading
+
   return (
     <div>
       <FormProvider {...methods}>
@@ -91,15 +165,25 @@ export default function ProfileSection() {
             wards={wards}
             isLoadingProvinces={isLoadingProvinces}
             isLoadingWards={isLoadingWards}
+            onAvatarChange={handleAvatarChange}
+            pendingAvatarPreview={pendingAvatarPreview}
           />
 
           <div className='flex items-center justify-end gap-2'>
-            <Button type='button' variant='outline' onClick={() => reset()} disabled={!isDirty || isUpdatingMe}>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => {
+                reset()
+                handleAvatarChange(null)
+              }}
+              disabled={!isFormDirty || isSubmitting}
+            >
               {t('common.button.cancel')}
             </Button>
 
-            <Button type='submit' disabled={!isDirty || isUpdatingMe}>
-              {isUpdatingMe ? <Spinner /> : null}
+            <Button type='submit' disabled={!isFormDirty || isSubmitting}>
+              {isSubmitting ? <Spinner /> : null}
               {t('common.button.save')}
             </Button>
           </div>

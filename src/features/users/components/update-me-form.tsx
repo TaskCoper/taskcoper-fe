@@ -3,17 +3,12 @@ import FileDropzone from '@/components/file-dropzone'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Progress } from '@/components/ui/progress'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
 import type { Province, Ward } from '@/services/map.service'
 import { MAX_AVATAR_SIZE } from '@/shared/constants'
 import { getAvatarFallback } from '@/shared/utils'
-import type { AxiosError } from 'axios'
 import { XIcon } from 'lucide-react'
-import { Controller, useFormContext, type Path } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import type { UpdateMeFormValues } from '../validations'
 
 interface UpdateMeFormProps {
@@ -21,54 +16,37 @@ interface UpdateMeFormProps {
   wards: Ward[]
   isLoadingProvinces: boolean
   isLoadingWards: boolean
+  onAvatarChange: (file: File | null) => void
+  pendingAvatarPreview: string | null
 }
 
-export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isLoadingWards }: UpdateMeFormProps) {
+export default function UpdateMeForm({
+  provinces,
+  wards,
+  isLoadingProvinces,
+  isLoadingWards,
+  onAvatarChange,
+  pendingAvatarPreview
+}: UpdateMeFormProps) {
   const { t } = useTranslation()
   const { control, setValue, watch } = useFormContext<UpdateMeFormValues>()
-  const { uploadFileAsync } = useUploadFile()
 
   const cityCodeForm = watch('cityCode')
   const avatarForm = watch('avatar')
   const nameForm = `${watch('firstName')} ${watch('lastName')}`
 
-  const handleUpload = async (file: File | null, name: Path<UpdateMeFormValues>) => {
-    if (!file) return
+  // use pending preview if available, otherwise use form avatar
+  const displayAvatar = pendingAvatarPreview ?? avatarForm
 
-    const toastId = toast.loading(t('common.ui.uploading'), {
-      description: t('common.ui.pleaseWait')
-    })
-
-    try {
-      const url = await uploadFileAsync({
-        file,
-        onProgress: (progress) => {
-          toast.loading(t('common.ui.uploading'), {
-            id: toastId,
-            description: (
-              <div className='w-full min-w-72 space-y-1'>
-                <Progress value={progress} className='w-full' />
-                <p className='text-xs text-muted-foreground'>{progress}%</p>
-              </div>
-            )
-          })
-        }
-      })
-
-      if (url) {
-        toast.success(t('common.ui.uploadSuccess'), {
-          id: toastId,
-          description: null
-        })
-
-        setValue(name, url, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
-      }
-    } catch (error) {
-      toast(t('error.somethingWentWrong'), {
-        id: toastId,
-        description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-      })
+  const handleAvatarSelect = (file: File | null) => {
+    if (file) {
+      onAvatarChange(file)
     }
+  }
+
+  const handleRemoveAvatar = () => {
+    onAvatarChange(null)
+    setValue('avatar', null, { shouldDirty: true })
   }
 
   return (
@@ -76,7 +54,7 @@ export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isL
       <div className='space-y-8'>
         <div className='relative w-fit mx-auto'>
           <FileDropzone
-            onFileChange={(file) => handleUpload(file, 'avatar')}
+            onFileChange={handleAvatarSelect}
             className='size-24 group/logo rounded-full border-4 border-background bg-muted shrink-0 flex justify-center items-center'
             maxSize={MAX_AVATAR_SIZE}
             accept={{
@@ -87,15 +65,15 @@ export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isL
             }}
           >
             <Avatar className='size-24'>
-              <AvatarImage src={avatarForm ?? ''} />
+              <AvatarImage src={displayAvatar ?? ''} />
               <AvatarFallback className='text-2xl'>{getAvatarFallback(nameForm)}</AvatarFallback>
             </Avatar>
           </FileDropzone>
 
-          {avatarForm && (
+          {displayAvatar && (
             <button
               type='button'
-              onClick={() => setValue('avatar', null, { shouldDirty: true })}
+              onClick={handleRemoveAvatar}
               className='cursor-pointer absolute bottom-0 right-2 size-5 rounded-full bg-destructive flex items-center justify-center hover:bg-destructive/90 transition-colors shadow-sm'
               aria-label='Remove avatar'
             >

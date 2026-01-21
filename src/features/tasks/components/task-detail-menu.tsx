@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/shared/utils'
 import { ChevronLeftIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDeleteTask } from '../hooks/use-delete-task'
-import { cn } from '@/shared/utils'
 
 interface TaskDetailMenuProps {
   taskId: string
@@ -49,12 +49,12 @@ export default function TaskDetailMenu({
       >
         {isDeleting ? (
           <div className='p-3 space-y-2'>
-            <div className='grid grid-cols-3 items-center'>
-              <Button variant='ghost' size='icon-sm' onClick={() => setIsDeleting(false)}>
+            <div className='flex items-center justify-center relative mt-1'>
+              <Button variant='ghost' size='icon-sm' onClick={() => setIsDeleting(false)} className='absolute left-0'>
                 <ChevronLeftIcon />
               </Button>
-              <p className='text-sm font-bold text-center'>{t('task.deleteTask.title')}</p>
-              <Button variant='ghost' size='icon-sm' onClick={onClose} className='ml-auto'>
+              <p className='text-sm font-bold whitespace-nowrap'>{t('task.deleteTask.title')}</p>
+              <Button variant='ghost' size='icon-sm' onClick={onClose} className='absolute right-0'>
                 <XIcon />
               </Button>
             </div>
@@ -80,8 +80,8 @@ export default function TaskDetailMenu({
               variant='ghost'
               onClick={() => setIsDeleting(true)}
             >
-              <Trash2Icon />
-              <p>{t('common.button.delete')}</p>
+              <Trash2Icon className='text-destructive' />
+              <p className='text-destructive'>{t('common.button.delete')}</p>
             </Button>
           </div>
         )}

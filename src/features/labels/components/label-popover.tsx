@@ -82,7 +82,7 @@ export default function LabelPopover({
     methods: addTaskLabelMethods,
     addTaskLabel,
     isAddingTaskLabel
-  } = useAddTaskLabel({ taskId, projectId, parentMilestoneId })
+  } = useAddTaskLabel({ taskId, projectId, parentMilestoneId, enabled: open })
   const onAddTaskLabel = () => {
     const result = addTaskLabelSchema.safeParse(addTaskLabelMethods.getValues())
 

@@ -1,70 +1,105 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Separator } from '@/components/ui/separator'
+import { Spinner } from '@/components/ui/spinner'
 import { XIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useUploadAttachment } from '../hooks/use-upload-attachment'
+import type { UploadAttachmentFormValues } from '../validations'
+import UploadAttachmentForm from './upload-attachment-form'
 
 interface AttachmentPopoverProps {
   children: React.ReactNode
+  taskId: string
+  projectId: string
+  parentMilestoneId: string
 }
 
-export default function AttachmentPopover({ children }: AttachmentPopoverProps) {
-  const [open, setOpen] = useState(false)
+export default function AttachmentPopover({ children, taskId, projectId, parentMilestoneId }: AttachmentPopoverProps) {
   const { t } = useTranslation()
+  const { methods, uploadAttachment, isUploadingAttachment, open, setOpen, recalculatePosition } = useUploadAttachment({
+    taskId,
+    projectId,
+    parentMilestoneId
+  })
 
-  const handleClose = () => {
-    setOpen(false)
+  const onSubmit: SubmitHandler<UploadAttachmentFormValues> = (body) => {
+    recalculatePosition()
+    const updatedBody = {
+      ...body,
+      position: methods.getValues('position')
+    }
+
+    uploadAttachment({ body: updatedBody })
   }
 
+  const onClose = () => {
+    setOpen(false)
+    methods.reset()
+  }
+
+  useEffect(() => {
+    if (taskId && open) {
+      methods.reset({
+        taskId,
+        commentId: null,
+        bytes: null,
+        position: 0,
+        isUpload: false,
+        mimeType: null,
+        storageKey: null,
+        name: '',
+        url: ''
+      })
+    }
+  }, [taskId, methods, open])
+
   return (
-    <Popover modal open={open} onOpenChange={setOpen}>
+    <Popover
+      modal
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          methods.reset()
+        }
+        setOpen(open)
+      }}
+    >
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 min-w-80 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
         sideOffset={8}
-        onInteractOutside={handleClose}
+        onInteractOutside={onClose}
       >
         <div className='p-4 flex flex-col gap-4'>
           <div className='flex items-center justify-center relative'>
             <p className='text-sm font-bold w-full text-center text-foreground/80'>{t('task.attachment.attachment')}</p>
-            <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={handleClose} />
+            <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={onClose} />
           </div>
 
-          <div className='space-y-2'>
-            <p className='text-sm font-semibold text-foreground/60'>{t('task.attachment.attachmentTitle')}</p>
-            <p className='text-xs text-muted-foreground'>{t('task.attachment.attachmentDescription')}</p>
-            <Button variant='secondary' className='w-full'>
-              {t('task.attachment.chooseAttachment')}
-            </Button>
-          </div>
+          <FormProvider {...methods}>
+            <form className='flex flex-col' onSubmit={methods.handleSubmit(onSubmit)}>
+              <UploadAttachmentForm
+                taskId={taskId}
+                projectId={projectId}
+                parentMilestoneId={parentMilestoneId}
+                onUploadComplete={onClose}
+              />
 
-          <Separator />
+              <div className='space-x-2 ml-auto'>
+                <Button type='button' variant='secondary' disabled={isUploadingAttachment} onClick={onClose}>
+                  {t('common.button.cancel')}
+                </Button>
 
-          <div className='space-y-1'>
-            <Label htmlFor='attachment-value'>
-              <span>
-                {' '}
-                {t('task.attachment.attachmentValue')}
-                <span className='text-destructive font-semibold'>*</span>
-              </span>
-            </Label>
-            <Input id='attachment-value' placeholder={t('task.attachment.attachmentValuePlaceholder')} />
-          </div>
-
-          <div className='space-y-1'>
-            <Label htmlFor='attachment-display'>{t('task.attachment.attachmentDisplay')}</Label>
-            <Input id='attachment-display' placeholder={t('task.attachment.attachmentDisplayPlaceholder')} />
-            <p className='text-xs text-muted-foreground'>{t('task.attachment.attachmentDisplayDescription')}</p>
-          </div>
-
-          <div className='space-x-2 ml-auto mt-2'>
-            <Button variant='secondary'>{t('common.button.cancel')}</Button>
-            <Button>{t('common.button.insert')}</Button>
-          </div>
+                <Button disabled={isUploadingAttachment}>
+                  {isUploadingAttachment ? <Spinner /> : null}
+                  {t('common.button.insert')}
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
         </div>
       </PopoverContent>
     </Popover>

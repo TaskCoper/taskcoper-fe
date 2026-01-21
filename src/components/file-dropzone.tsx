@@ -8,6 +8,7 @@ interface FileDropzoneProps extends Omit<DropzoneOptions, 'onDrop'> {
   value?: File | string | null
   defaultValue?: File | string | null
   onFileChange?: (file: File | null) => void
+  onFilesChange?: (files: File[]) => void
   children?:
     | React.ReactNode
     | ((props: { file: File | string | null; preview: string | null; isDragActive: boolean }) => React.ReactNode)
@@ -18,6 +19,7 @@ export default function FileDropzone({
   value,
   defaultValue,
   onFileChange,
+  onFilesChange,
   children,
   className,
   ...dropzoneProps
@@ -52,6 +54,12 @@ export default function FileDropzone({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      // Handle multiple files
+      if (onFilesChange && acceptedFiles.length > 0) {
+        onFilesChange(acceptedFiles)
+      }
+
+      // Handle single file
       const file = acceptedFiles[0]
       if (file) {
         setInternalFile(file)
@@ -72,7 +80,7 @@ export default function FileDropzone({
         }
       }
     },
-    [onFileChange, t]
+    [onFileChange, onFilesChange, t]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -24,7 +24,8 @@
       "decline": "Decline",
       "remove": "Remove",
       "delete": "Delete",
-      "insert": "Insert"
+      "insert": "Insert",
+      "download": "Download"
     },
     "field": {
       "label": "Label",
@@ -466,9 +467,48 @@
       "chooseAttachment": "Choose file",
       "attachmentValue": "Search or paste link",
       "attachmentValuePlaceholder": "Search recent links or paste a new link",
-      "attachmentDisplay": "Display text (optional)",
+      "attachmentDisplay": "Display text",
       "attachmentDisplayPlaceholder": "Text to display",
-      "attachmentDisplayDescription": "Provide a title or description for this link"
+      "attachmentDisplayDescription": "Provide a title or description for this link",
+      "deleteAttachment": {
+        "title": "Delete attachment",
+        "description": "Are you sure you want to delete {{attachmentName}}?",
+        "confirmText": "Delete"
+      },
+      "attachmentsSection": "Attachments",
+      "links": "Links",
+      "files": "Files",
+      "fileName": "File name",
+      "addedAt": "Added {{date}}",
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "commentId": {
+          "invalid": "Invalid comment ID"
+        },
+        "url": {
+          "invalid": "Invalid URL"
+        },
+        "position": {
+          "invalid": "Invalid position"
+        },
+        "storageKey": {
+          "minLength": "Storage key is required"
+        },
+        "mimeType": {
+          "minLength": "MIME type is required"
+        },
+        "bytes": {
+          "positive": "File size must be positive"
+        },
+        "projectResourceId": {
+          "invalid": "Invalid attachment ID"
+        },
+        "name": {
+          "minLength": "File name is required"
+        }
+      }
     },
     "description": {
       "addDescription": "Add more detailed description..."

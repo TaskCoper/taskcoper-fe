@@ -15,13 +15,14 @@ interface UseAddTaskLabelProps {
   taskId: string
   projectId: string
   parentMilestoneId: string
+  enabled?: boolean
 }
 
-export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId }: UseAddTaskLabelProps) => {
+export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled = true }: UseAddTaskLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
-  const { labels } = useGetProjectLabels({ projectId })
+  const { labels } = useGetProjectLabels({ projectId, enabled })
 
   const methods = useForm<AddTaskLabelFormValues>({
     resolver: zodResolver(addTaskLabelSchema)
