@@ -60,5 +60,9 @@ export const queryKeys = {
     wards: (provinceCode?: string) => ['wards', provinceCode] as const,
     domains: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
       ['domains', searchTerm, pageIndex, pageSize] as const
+  },
+  // Attachments
+  attachments: {
+    byTask: (taskId?: string) => ['attachments', taskId] as const
   }
 } as const

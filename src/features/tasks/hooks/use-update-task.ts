@@ -46,7 +46,8 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
             taskEndDate: variables.body.endDate,
             announceBeforeMinutes: variables.body.announceBeforeMinutes,
             milestoneId: variables.body.targetMilestoneId,
-            taskPosition: variables.body.position
+            taskPosition: variables.body.position,
+            isCompleted: variables.body.isCompleted
           }
         })
       }

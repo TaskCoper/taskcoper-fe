@@ -14,6 +14,7 @@ export interface TaskPreview {
   totalResources: number
   progressPercentage: number
   taskLabels: TaskLabel[]
+  isCompleted: boolean
 }
 
 export type TaskCardType = 'TaskCard'
@@ -34,6 +35,7 @@ export interface TaskDetail {
   taskEndDate: string | null
   announceBeforeMinutes: number | null
   taskLabels: TaskLabel[]
+  isCompleted: boolean
 }
 
 export interface TaskMember {

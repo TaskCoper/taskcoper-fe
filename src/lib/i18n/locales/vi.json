@@ -24,7 +24,8 @@
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
       "delete": "Xóa",
-      "insert": "Chèn"
+      "insert": "Chèn",
+      "download": "Tải xuống"
     },
     "field": {
       "label": "Nhãn",
@@ -424,7 +425,8 @@
         },
         "color": {
           "maxLength": "Tối đa 255 ký tự"
-        }
+        },
+        "nameOrColorRequired": "Nhãn phải có ít nhất tên hoặc màu"
       }
     },
     "subtask": {
@@ -465,9 +467,48 @@
       "chooseAttachment": "Chọn tệp",
       "attachmentValue": "Tìm kiếm hoặc dán liên kết",
       "attachmentValuePlaceholder": "Tìm các liên kết cần đây hoặc dán một liên kết mới",
-      "attachmentDisplay": "Văn bản hiển thị (không bắt buộc)",
+      "attachmentDisplay": "Văn bản hiển thị",
       "attachmentDisplayPlaceholder": "Văn bản cần hiển thị",
-      "attachmentDisplayDescription": "Cung cấp tiêu đề hoặc mô tả cho liên kết này"
+      "attachmentDisplayDescription": "Cung cấp tiêu đề hoặc mô tả cho liên kết này",
+      "deleteAttachment": {
+        "title": "Xóa tệp đính kèm",
+        "description": "Bạn có chắc chắn muốn xóa {{attachmentName}} không?",
+        "confirmText": "Xóa"
+      },
+      "attachmentsSection": "Các tập tin đính kèm",
+      "links": "Liên kết",
+      "files": "Tệp",
+      "fileName": "Tên tệp",
+      "addedAt": "Đã thêm {{date}}",
+      "validation": {
+        "taskId": {
+          "invalid": "ID thẻ không hợp lệ"
+        },
+        "commentId": {
+          "invalid": "ID bình luận không hợp lệ"
+        },
+        "url": {
+          "invalid": "URL không hợp lệ"
+        },
+        "position": {
+          "invalid": "Vị trí không hợp lệ"
+        },
+        "storageKey": {
+          "minLength": "Khóa lưu trữ là bắt buộc"
+        },
+        "mimeType": {
+          "minLength": "Loại MIME là bắt buộc"
+        },
+        "bytes": {
+          "positive": "Kích thước tệp phải là số dương"
+        },
+        "projectResourceId": {
+          "invalid": "ID tệp đính kèm không hợp lệ"
+        },
+        "name": {
+          "minLength": "Tên tệp là bắt buộc"
+        }
+      }
     },
     "description": {
       "addDescription": "Thêm mô tả chi tiết hơn..."

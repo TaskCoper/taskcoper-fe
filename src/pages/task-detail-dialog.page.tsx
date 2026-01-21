@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import AssigneePopover from '@/features/assignees/components/assignee-popover'
 import { useGetTaskMembers } from '@/features/assignees/hooks/use-get-task-members'
 import AttachmentPopover from '@/features/attachments/components/attachment-popover'
+import { useGetAttachments } from '@/features/attachments/hooks/use-get-attachments'
 import CommentCard from '@/features/comments/components/comment-card'
 import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
@@ -27,6 +28,7 @@ import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
 import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
 import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import DatePopover from '@/features/tasks/components/date-popover'
+import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
@@ -69,7 +71,7 @@ export default function TaskDetailDialogPage() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
-  const [openMenu, setOpenMenu] = useState(false)
+  const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
 
   const sensors = useDndSensors()
 
@@ -77,6 +79,10 @@ export default function TaskDetailDialogPage() {
   const { comments, isLoadingComments } = useGetComments({ taskId })
   const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId })
   const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId })
+  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId })
+
+  const isLoading =
+    isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
 
   const {
     methods: updateTaskMethods,
@@ -147,6 +153,7 @@ export default function TaskDetailDialogPage() {
         position: task.taskPosition,
         startDate: task.taskStartDate,
         endDate: task.taskEndDate,
+        isCompleted: task.isCompleted,
         targetMilestoneId: task.milestoneId,
         announceBeforeMinutes: task.announceBeforeMinutes
       })
@@ -177,7 +184,7 @@ export default function TaskDetailDialogPage() {
     addComment({ body })
   }
 
-  if (isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers) {
+  if (isLoading) {
     return (
       <Dialog open={true}>
         <DialogContent
@@ -260,11 +267,11 @@ export default function TaskDetailDialogPage() {
                 taskId={taskId}
                 taskName={task.taskName}
                 onDeleteSuccess={goBack}
-                open={openMenu}
-                setOpen={setOpenMenu}
+                open={openTaskDetailMenu}
+                setOpen={setOpenTaskDetailMenu}
               >
                 <Button
-                  className={cn('rounded-full', openMenu ? 'bg-primary/10 text-primary' : '')}
+                  className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}
                   variant='ghost'
                   size='icon-sm'
                 >
@@ -286,13 +293,28 @@ export default function TaskDetailDialogPage() {
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
               {/* Task name + popovers */}
               <div className='flex gap-3'>
-                {/* TODO: call api to check for isCompleted */}
-                <Checkbox className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')} />
+                <Checkbox
+                  checked={task?.isCompleted}
+                  onCheckedChange={(checked) => {
+                    const result = updateTaskSchema(t).safeParse({
+                      ...updateTaskMethods.getValues(),
+                      isCompleted: checked as boolean
+                    })
+
+                    if (result.success) {
+                      updateTask({ body: result.data })
+                    }
+                  }}
+                  className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')}
+                />
                 <div className='space-y-4'>
                   {isEditingName ? (
                     <Input className='text-3xl! font-bold w-full h-14' {...nameInputProps} />
                   ) : (
-                    <p className='text-3xl font-bold cursor-text' {...nameTriggerProps}>
+                    <p
+                      className={cn('text-3xl font-bold cursor-text', task?.isCompleted ? 'text-muted-foreground' : '')}
+                      {...nameTriggerProps}
+                    >
                       {task?.taskName}
                     </p>
                   )}
@@ -334,12 +356,14 @@ export default function TaskDetailDialogPage() {
                         </Button>
                       </AssigneePopover>
                     ) : null}
-                    <AttachmentPopover>
-                      <Button variant='outline' size='sm'>
-                        <PaperclipIcon />
-                        {t('task.attachment.attachment')}
-                      </Button>
-                    </AttachmentPopover>
+                    {taskId && projectId && milestoneId ? (
+                      <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={milestoneId}>
+                        <Button variant='outline' size='sm'>
+                          <PaperclipIcon />
+                          {t('task.attachment.attachment')}
+                        </Button>
+                      </AttachmentPopover>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -354,7 +378,10 @@ export default function TaskDetailDialogPage() {
                       {task?.taskLabels.map((label) => (
                         <div
                           key={label.id}
-                          className={cn(label.color || 'bg-gray-200', 'h-8 px-3 rounded-md flex items-center min-w-0')}
+                          className={cn(
+                            label.color || 'bg-gray-200',
+                            'h-8 rounded-md flex justify-center items-center min-w-14 px-3'
+                          )}
                         >
                           {label.name ? (
                             <p className={cn('text-sm font-semibold truncate', getColorTextClass(label.color))}>
@@ -519,6 +546,16 @@ export default function TaskDetailDialogPage() {
                   )}
                 </div>
               </div>
+
+              {/* Attachments */}
+              {(attachments?.value.totalCount ?? 0) > 0 && taskId && projectId && milestoneId ? (
+                <AttachmentsSection
+                  taskId={taskId}
+                  projectId={projectId}
+                  parentMilestoneId={milestoneId}
+                  attachments={attachments?.value.items ?? []}
+                />
+              ) : null}
 
               {/* Subtasks */}
               <DndContext

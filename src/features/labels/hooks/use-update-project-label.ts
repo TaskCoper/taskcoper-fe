@@ -37,9 +37,10 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
       const queryKey = ['project-labels', projectId]
       await queryClient.cancelQueries({ queryKey })
 
-      const previousData = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
+      const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
+      const previousTask = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskId))
 
-      if (previousData) {
+      if (previousLabels) {
         queryClient.setQueryData<BasePaginationResponse<Label>>(queryKey, (old) => {
           if (!old) return old
 
@@ -53,7 +54,9 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
             }
           }
         })
+      }
 
+      if (previousTask) {
         queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskId), (old) => {
           if (!old) return old
 
@@ -66,11 +69,15 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
         })
       }
 
-      return { previousData }
+      return { previousLabels, previousTask }
     },
     onError: (error, _variables, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousData)
+      if (context?.previousLabels) {
+        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousLabels)
+      }
+
+      if (context?.previousTask) {
+        queryClient.setQueryData(queryKeys.tasks.detail(taskId), context.previousTask)
       }
 
       toast(t('error.somethingWentWrong'), {

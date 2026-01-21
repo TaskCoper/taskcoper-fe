@@ -25,6 +25,7 @@ interface UpdateSubtaskVariables {
   }
 }
 
+// TODO: when update subtask at assigned tasks section but not in the parent milestone tab of that task, the UI will not be updated accordingly
 export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: UpdateSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()

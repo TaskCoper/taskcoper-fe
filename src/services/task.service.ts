@@ -1,3 +1,4 @@
+import type { UpdateAttachmentFormValues, UploadAttachmentFormValues } from '@/features/attachments/validations'
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import type { AddSubtaskFormValues } from '@/features/subtasks/validations'
 import type {
@@ -7,6 +8,7 @@ import type {
   UpdateTaskFormValues
 } from '@/features/tasks/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { Attachment } from '@/types/attachment.type'
 import type { Comment } from '@/types/comment.type'
 import type { Subtask } from '@/types/subtask.type'
 import type { TaskDetail, TaskMember } from '@/types/task.type'
@@ -45,6 +47,12 @@ class TaskService {
 
   updateTask = async ({ body }: { body: UpdateTaskFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}`, body)
+
+    return data.value
+  }
+
+  updateTaskStatus = async ({ id, isCompleted }: { id: string; isCompleted: boolean }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/mark`, { id, isCompleted })
 
     return data.value
   }
@@ -104,6 +112,34 @@ class TaskService {
 
   deleteLabel = async ({ id }: { id: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/labels/${id}`)
+
+    return data.value
+  }
+
+  getAttachments = async ({ taskId }: { taskId?: string }) => {
+    if (!taskId) return null
+    const { data } = await api.get<BasePaginationResponse<Attachment>>(`/v1/${this.baseUrl}/${taskId}/attachments`)
+
+    return data
+  }
+
+  uploadAttachment = async ({ body }: { body: UploadAttachmentFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.taskId}/attachments`, body)
+
+    return data.value
+  }
+
+  updateAttachment = async ({ body }: { body: UpdateAttachmentFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.taskId}/attachments/${body.projectResourceId}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteAttachment = async ({ id, taskId }: { id: string; taskId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/attachments/${id}`)
 
     return data.value
   }
