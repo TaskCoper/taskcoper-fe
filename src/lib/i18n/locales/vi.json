@@ -475,6 +475,9 @@
         "description": "Bạn có chắc chắn muốn xóa {{attachmentName}} không?",
         "confirmText": "Xóa"
       },
+      "editAttachment": {
+        "title": "Chỉnh sửa tệp đính kèm"
+      },
       "attachmentsSection": "Các tập tin đính kèm",
       "links": "Liên kết",
       "files": "Tệp",
@@ -516,6 +519,11 @@
     "comment": {
       "comment": "Bình luận và Hoạt động",
       "addComment": "Viết bình luận...",
+      "deleteComment": {
+        "title": "Bạn muốn xoá bình luận?",
+        "description": "Bình luận sẽ bị xóa vĩnh viễn và bạn không thể hoàn tác.",
+        "confirmText": "Xóa bình luận"
+      },
       "validation": {
         "taskId": {
           "invalid": "ID thẻ không hợp lệ"
@@ -549,6 +557,9 @@
   },
   "richTextEditor": {
     "placeholder": "Mẹo chuyên nghiệp: Nhấn 'Enter' để xuống dòng và 'Shift + Enter' để ngắt dòng đơn giản.",
+    "strikethrough": "Gạch ngang",
+    "inlineCode": "Mã nội tuyến",
+    "attachFile": "Đính kèm tệp",
     "heading": {
       "label": "Tiêu đề",
       "ariaLabel": "Định dạng văn bản làm tiêu đề",
@@ -920,5 +931,23 @@
         "done": "Xong"
       }
     }
+  },
+  "activities": {
+    "FileAddedToTaskActivity": "đã thêm tệp vào công việc",
+    "FileAddedToTaskCommentActivity": "đã thêm tệp vào bình luận của công việc",
+    "FileUpdatedInTaskActivity": "đã cập nhật tệp trong công việc",
+    "FileRemovedInTaskActivity": "đã xóa tệp khỏi công việc",
+    "TaskUpdatedActivity": "đã cập nhật công việc",
+    "TaskCreatedActivity": "đã tạo công việc",
+    "TaskMovedInTaskActivity": "đã di chuyển công việc",
+    "TaskMarkedInTaskActivity": "đã đánh dấu hoàn thành công việc",
+    "TaskUnMarkedInTaskActivity": "đã bỏ đánh dấu hoàn thành công việc",
+    "UserAddedToTaskActivity": "đã thêm người dùng vào công việc",
+    "UserRemovedInTaskActivity": "đã xóa người dùng khỏi công việc",
+    "SubTaskAddedToTaskActivity": "đã thêm công việc con vào công việc",
+    "SubtaskUpdatedInTaskActivity": "đã cập nhật công việc con",
+    "SubtaskDeletedInTaskActivity": "đã xóa công việc con",
+    "LabelAddedToTaskActivity": "đã thêm nhãn vào công việc",
+    "LabelDeletedToTaskActivity": "đã xóa nhãn khỏi công việc"
   }
 }

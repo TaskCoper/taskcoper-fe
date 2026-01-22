@@ -17,20 +17,27 @@ import { MarkButton } from '@/components/tiptap-ui/mark-button'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import type { ErrorResponse } from '@/lib/axios'
 import { MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
+import FileHandler from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import { Placeholder } from '@tiptap/extensions'
+import type { Editor } from '@tiptap/react'
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import type { AxiosError } from 'axios'
-import { useEffect } from 'react'
+import { MoreHorizontalIcon, PaperclipIcon } from 'lucide-react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { ImageUploadNode } from './tiptap-node/image-upload-node'
+import { Button } from './tiptap-ui-primitive/button'
+import { Card, CardBody } from './tiptap-ui-primitive/card'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from './tiptap-ui-primitive/dropdown-menu'
 import { Progress } from './ui/progress'
 
 interface RichTextEditorProps {
   isDisplay?: boolean
   isInitialFocus?: boolean
+  compact?: boolean
   content: string
   onChange: (html: string) => void
 }
@@ -39,15 +46,105 @@ export default function RichTextEditor({
   content,
   isDisplay = true,
   isInitialFocus = false,
+  compact = false,
   onChange
 }: RichTextEditorProps) {
   const { t } = useTranslation()
   const { uploadFileAsync } = useUploadFile()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleUploadAndInsertFile = useCallback(
+    async (editor: Editor, file: File, pos?: number) => {
+      const toastId = toast.loading(t('common.ui.uploading'), {
+        description: t('common.ui.pleaseWait')
+      })
+
+      try {
+        const url = await uploadFileAsync({
+          file,
+          onProgress: (progress) => {
+            toast.loading(t('common.ui.uploading'), {
+              id: toastId,
+              description: (
+                <div className='w-full min-w-72 space-y-1'>
+                  <Progress value={progress} className='w-full' />
+                  <p className='text-xs text-muted-foreground'>{progress}%</p>
+                </div>
+              )
+            })
+          }
+        })
+
+        if (url) {
+          toast.success(t('common.ui.uploadSuccess'), {
+            id: toastId,
+            description: null
+          })
+
+          const insertPos = pos ?? editor.state.selection.anchor
+          const isImage = file.type.startsWith('image/')
+
+          if (isImage) {
+            // Insert as image
+            editor
+              .chain()
+              .insertContentAt(insertPos, {
+                type: 'image',
+                attrs: { src: url }
+              })
+              .focus()
+              .run()
+          } else {
+            // Insert as link with filename
+            editor
+              .chain()
+              .insertContentAt(insertPos, {
+                type: 'text',
+                text: file.name,
+                marks: [
+                  {
+                    type: 'link',
+                    attrs: { href: url, target: '_blank' }
+                  }
+                ]
+              })
+              .focus()
+              .run()
+          }
+        } else {
+          toast.dismiss(toastId)
+        }
+      } catch (error) {
+        toast.error(t('error.somethingWentWrong'), {
+          id: toastId,
+          description: (error as AxiosError<ErrorResponse>).response?.data?.detail
+        })
+      }
+    },
+    [t, uploadFileAsync]
+  )
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Image,
+      FileHandler.configure({
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+        onDrop: (currentEditor, files, pos) => {
+          files.forEach((file) => {
+            handleUploadAndInsertFile(currentEditor, file, pos)
+          })
+        },
+        onPaste: (currentEditor, files, htmlContent) => {
+          if (htmlContent) {
+            // if there is htmlContent, let other extensions handle insertion via inputRule
+            return false
+          }
+          files.forEach((file) => {
+            handleUploadAndInsertFile(currentEditor, file)
+          })
+        }
+      }),
       ImageUploadNode.configure({
         accept: 'image/*',
         maxSize: MAX_UPLOAD_IMAGE_SIZE,
@@ -138,75 +235,185 @@ export default function RichTextEditor({
     }
   }, [content, editor])
 
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!editor || !e.target.files) return
+
+    const files = Array.from(e.target.files)
+    files.forEach((file) => {
+      handleUploadAndInsertFile(editor, file)
+    })
+
+    // Reset the input so the same file can be selected again
+    e.target.value = ''
+  }
+
   if (isDisplay && editor) {
     return (
       <div className='space-y-2'>
         <EditorContext.Provider value={{ editor }}>
-          <div className='rounded-md ring ring-foreground/60 focus-within:ring-2 focus-within:ring-primary'>
-            <div className='p-2 flex gap-2 border-b items-center'>
-              {/* Headings */}
-              <HeadingDropdownMenu
-                editor={editor}
-                levels={[1, 2, 3, 4, 5, 6]}
-                hideWhenUnavailable={true}
-                portal={false}
-                onOpenChange={(isOpen) => console.log('Dropdown', isOpen ? 'opened' : 'closed')}
-              />
+          <div className='rounded-md ring ring-foreground/60 focus-within:ring-2 focus-within:ring-primary bg-background'>
+            <div className='p-2 flex gap-2 border-b items-center flex-wrap'>
+              {compact ? (
+                // Compact toolbar for narrow spaces
+                <>
+                  <HeadingDropdownMenu
+                    editor={editor}
+                    levels={[1, 2, 3, 4, 5, 6]}
+                    hideWhenUnavailable={true}
+                    portal={false}
+                  />
 
-              <div className='w-px h-6 bg-border' />
+                  <div className='w-px h-6 bg-border' />
 
-              {/* Marks */}
-              <div className='flex gap-0.5'>
-                <MarkButton type='bold' />
-                <MarkButton type='italic' />
-                <MarkButton type='strike' />
-                <MarkButton type='code' />
-              </div>
+                  <div className='flex gap-0.5'>
+                    <MarkButton type='bold' />
+                    <MarkButton type='italic' />
+                  </div>
 
-              <div className='w-px h-6 bg-border' />
+                  <div className='w-px h-6 bg-border' />
 
-              {/* Lists */}
-              <ListDropdownMenu
-                editor={editor}
-                types={['bulletList', 'orderedList']}
-                hideWhenUnavailable={true}
-                portal={false}
-                onOpenChange={(isOpen) => console.log('Dropdown opened:', isOpen)}
-              />
+                  <div className='flex gap-0.5'>
+                    <LinkPopover editor={editor} hideWhenUnavailable={true} autoOpenOnLinkActive={true} />
 
-              <div className='w-px h-6 bg-border' />
+                    <ImageUploadButton editor={editor} hideWhenUnavailable={true} />
 
-              <div className='flex gap-0.5'>
-                {/* Links */}
-                <LinkPopover
-                  editor={editor}
-                  hideWhenUnavailable={true}
-                  autoOpenOnLinkActive={true}
-                  onSetLink={() => console.log('Link set!')}
-                  onOpenChange={(isOpen) => console.log('Popover opened:', isOpen)}
-                />
+                    <Button
+                      type='button'
+                      data-style='ghost'
+                      className='size-8'
+                      onClick={() => fileInputRef.current?.click()}
+                      title={t('richTextEditor.attachFile')}
+                    >
+                      <PaperclipIcon className='size-4' />
+                    </Button>
+                    <input
+                      ref={fileInputRef}
+                      type='file'
+                      multiple
+                      className='hidden'
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
 
-                {/* Images */}
-                <ImageUploadButton
-                  editor={editor}
-                  hideWhenUnavailable={true}
-                  onInserted={() => console.log('Image inserted!')}
-                />
-              </div>
+                  <div className='w-px h-6 bg-border' />
 
-              <div className='w-px h-6 bg-border' />
+                  <ListDropdownMenu
+                    editor={editor}
+                    types={['bulletList', 'orderedList']}
+                    hideWhenUnavailable={true}
+                    portal={false}
+                  />
 
-              <div className='flex gap-0.5'>
-                {/* Blockquotes */}
-                <BlockquoteButton editor={editor} />
+                  <div className='w-px h-6 bg-border' />
 
-                {/* Code blocks */}
-                <CodeBlockButton
-                  editor={editor}
-                  hideWhenUnavailable={true}
-                  onToggled={() => console.log('Code block toggled!')}
-                />
-              </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type='button' data-style='ghost' title={t('common.ui.more')}>
+                        <MoreHorizontalIcon className='tiptap-button-icon' />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align='end' sideOffset={8} className='min-w-0'>
+                      <Card>
+                        <CardBody className='flex flex-col gap-1'>
+                          <MarkButton type='strike' text={t('richTextEditor.strikethrough')} />
+                          <MarkButton type='code' text={t('richTextEditor.inlineCode')} />
+                          <BlockquoteButton editor={editor} text={t('richTextEditor.blockquote.label')} />
+                          <CodeBlockButton
+                            editor={editor}
+                            hideWhenUnavailable={true}
+                            text={t('richTextEditor.codeBlock.label')}
+                          />
+                        </CardBody>
+                      </Card>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                // Full toolbar
+                <>
+                  {/* Headings */}
+                  <HeadingDropdownMenu
+                    editor={editor}
+                    levels={[1, 2, 3, 4, 5, 6]}
+                    hideWhenUnavailable={true}
+                    portal={false}
+                    onOpenChange={(isOpen) => console.log('Dropdown', isOpen ? 'opened' : 'closed')}
+                  />
+
+                  <div className='w-px h-6 bg-border' />
+
+                  {/* Marks */}
+                  <div className='flex gap-0.5'>
+                    <MarkButton type='bold' />
+                    <MarkButton type='italic' />
+                    <MarkButton type='strike' />
+                    <MarkButton type='code' />
+                  </div>
+
+                  <div className='w-px h-6 bg-border' />
+
+                  {/* Lists */}
+                  <ListDropdownMenu
+                    editor={editor}
+                    types={['bulletList', 'orderedList']}
+                    hideWhenUnavailable={true}
+                    portal={false}
+                    onOpenChange={(isOpen) => console.log('Dropdown opened:', isOpen)}
+                  />
+
+                  <div className='w-px h-6 bg-border' />
+
+                  <div className='flex gap-0.5'>
+                    {/* Links */}
+                    <LinkPopover
+                      editor={editor}
+                      hideWhenUnavailable={true}
+                      autoOpenOnLinkActive={true}
+                      onSetLink={() => console.log('Link set!')}
+                      onOpenChange={(isOpen) => console.log('Popover opened:', isOpen)}
+                    />
+
+                    {/* Images */}
+                    <ImageUploadButton
+                      editor={editor}
+                      hideWhenUnavailable={true}
+                      onInserted={() => console.log('Image inserted!')}
+                    />
+
+                    {/* File Attachments */}
+                    <Button
+                      type='button'
+                      data-style='ghost'
+                      className='size-8'
+                      onClick={() => fileInputRef.current?.click()}
+                      title={t('richTextEditor.attachFile')}
+                    >
+                      <PaperclipIcon className='size-4' />
+                    </Button>
+                    <input
+                      ref={fileInputRef}
+                      type='file'
+                      multiple
+                      className='hidden'
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
+
+                  <div className='w-px h-6 bg-border' />
+
+                  <div className='flex gap-0.5'>
+                    {/* Blockquotes */}
+                    <BlockquoteButton editor={editor} />
+
+                    {/* Code blocks */}
+                    <CodeBlockButton
+                      editor={editor}
+                      hideWhenUnavailable={true}
+                      onToggled={() => console.log('Code block toggled!')}
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <EditorContent editor={editor} />
           </div>

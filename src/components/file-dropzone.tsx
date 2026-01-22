@@ -94,7 +94,7 @@ export default function FileDropzone({
       {...getRootProps()}
       className={cn(
         'relative cursor-pointer transition-all focus-visible:outline-none',
-        isDragActive && 'ring-2 ring-primary ring-offset-2',
+        isDragActive && 'border-2 border-dashed rounded-md border-primary',
         className
       )}
     >

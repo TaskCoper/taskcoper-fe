@@ -33,8 +33,10 @@ export default function TaskDetailMenu({
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, onDeleteSuccess })
 
   const onClose = () => {
-    setIsDeleting(false)
     setOpen(false)
+    setTimeout(() => {
+      setIsDeleting(false)
+    }, 300)
   }
 
   return (

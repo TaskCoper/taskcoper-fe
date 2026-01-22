@@ -44,9 +44,11 @@ export default function AttachmentMenu({
   }
 
   const onClose = () => {
-    setIsDeleting(false)
-    setIsEditing(false)
     setOpen(false)
+    setTimeout(() => {
+      setIsDeleting(false)
+      setIsEditing(false)
+    }, 300)
   }
 
   useEffect(() => {
@@ -79,8 +81,6 @@ export default function AttachmentMenu({
     }
   }, [isEditing, methods, attachment, taskId])
 
-  console.log(methods.formState.errors)
-
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -94,10 +94,10 @@ export default function AttachmentMenu({
         {isEditing ? (
           <div className='p-3 space-y-2'>
             <div className='flex items-center justify-center relative mt-1'>
-              <Button variant='ghost' size='icon-sm' onClick={() => setIsDeleting(false)} className='absolute left-0'>
+              <Button variant='ghost' size='icon-sm' onClick={() => setIsEditing(false)} className='absolute left-0'>
                 <ChevronLeftIcon />
               </Button>
-              <p className='text-sm font-bold whitespace-nowrap'>{t('task.attachment.deleteAttachment.title')}</p>
+              <p className='text-sm font-bold whitespace-nowrap'>{t('task.attachment.editAttachment.title')}</p>
               <Button variant='ghost' size='icon-sm' onClick={onClose} className='absolute right-0'>
                 <XIcon />
               </Button>

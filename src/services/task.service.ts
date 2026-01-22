@@ -1,5 +1,5 @@
 import type { UpdateAttachmentFormValues, UploadAttachmentFormValues } from '@/features/attachments/validations'
-import type { AddTaskCommentFormValues } from '@/features/comments/validations'
+import type { AddTaskCommentFormValues, UpdateTaskCommentFormValues } from '@/features/comments/validations'
 import type { AddSubtaskFormValues } from '@/features/subtasks/validations'
 import type {
   AddTaskFormValues,
@@ -66,6 +66,21 @@ class TaskService {
 
   addComment = async ({ body }: { body: AddTaskCommentFormValues }) => {
     const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.taskId}/comments`, body)
+
+    return data.value
+  }
+
+  updateComment = async ({ body }: { body: UpdateTaskCommentFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.taskId}/comments/${body.commentId}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteComment = async ({ commentId, taskId }: { commentId: string; taskId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/comments/${commentId}`)
 
     return data.value
   }

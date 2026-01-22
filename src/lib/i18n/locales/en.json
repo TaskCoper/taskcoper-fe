@@ -475,6 +475,9 @@
         "description": "Are you sure you want to delete {{attachmentName}}?",
         "confirmText": "Delete"
       },
+      "editAttachment": {
+        "title": "Edit attachment"
+      },
       "attachmentsSection": "Attachments",
       "links": "Links",
       "files": "Files",
@@ -516,6 +519,11 @@
     "comment": {
       "comment": "Comments and Activity",
       "addComment": "Add comment...",
+      "deleteComment": {
+        "title": "Delete comment?",
+        "description": "The comment will be permanently deleted and you cannot undo.",
+        "confirmText": "Delete comment"
+      },
       "validation": {
         "taskId": {
           "invalid": "Invalid task ID"
@@ -549,6 +557,9 @@
   },
   "richTextEditor": {
     "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
+    "strikethrough": "Strikethrough",
+    "inlineCode": "Inline Code",
+    "attachFile": "Attach file",
     "heading": {
       "label": "Heading",
       "ariaLabel": "Format text as heading",
@@ -920,5 +931,23 @@
         "done": "Done"
       }
     }
+  },
+  "activities": {
+    "FileAddedToTaskActivity": "added a file to the task",
+    "FileAddedToTaskCommentActivity": "added a file to a task comment",
+    "FileUpdatedInTaskActivity": "updated a file in the task",
+    "FileRemovedInTaskActivity": "removed a file from the task",
+    "TaskUpdatedActivity": "updated the task",
+    "TaskCreatedActivity": "created the task",
+    "TaskMovedInTaskActivity": "moved the task",
+    "TaskMarkedInTaskActivity": "marked the task as completed",
+    "TaskUnMarkedInTaskActivity": "unmarked the task as completed",
+    "UserAddedToTaskActivity": "added a user to the task",
+    "UserRemovedInTaskActivity": "removed a user from the task",
+    "SubTaskAddedToTaskActivity": "added a subtask to the task",
+    "SubtaskUpdatedInTaskActivity": "updated the subtask",
+    "SubtaskDeletedInTaskActivity": "deleted the subtask",
+    "LabelAddedToTaskActivity": "added a label to the task",
+    "LabelDeletedToTaskActivity": "removed a label from the task"
   }
 }
