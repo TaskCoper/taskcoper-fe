@@ -1,4 +1,5 @@
 import { queryKeys } from '@/lib/query-keys'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -16,6 +17,7 @@ interface UseAddCommentProps {
 export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCommentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
   const methods = useForm<AddTaskCommentFormValues>({
     resolver: zodResolver(addTaskCommentSchema(t))
@@ -27,8 +29,7 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
       const taskId = methods.getValues('taskId')
       methods.reset({
         taskId,
-        content: '',
-        commentResources: []
+        content: ''
       })
     },
     onError: (error) => {
@@ -43,6 +44,10 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
 
       if (projectId && parentMilestoneId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      }
+
+      if (projectId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       }
     }
   })

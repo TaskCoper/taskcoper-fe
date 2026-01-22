@@ -519,6 +519,11 @@
     "comment": {
       "comment": "Comments and Activity",
       "addComment": "Add comment...",
+      "deleteComment": {
+        "title": "Delete comment?",
+        "description": "The comment will be permanently deleted and you cannot undo.",
+        "confirmText": "Delete comment"
+      },
       "validation": {
         "taskId": {
           "invalid": "Invalid task ID"
@@ -552,6 +557,9 @@
   },
   "richTextEditor": {
     "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
+    "strikethrough": "Strikethrough",
+    "inlineCode": "Inline Code",
+    "attachFile": "Attach file",
     "heading": {
       "label": "Heading",
       "ariaLabel": "Format text as heading",

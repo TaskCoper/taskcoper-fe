@@ -519,6 +519,11 @@
     "comment": {
       "comment": "Bình luận và Hoạt động",
       "addComment": "Viết bình luận...",
+      "deleteComment": {
+        "title": "Bạn muốn xoá bình luận?",
+        "description": "Bình luận sẽ bị xóa vĩnh viễn và bạn không thể hoàn tác.",
+        "confirmText": "Xóa bình luận"
+      },
       "validation": {
         "taskId": {
           "invalid": "ID thẻ không hợp lệ"
@@ -552,6 +557,9 @@
   },
   "richTextEditor": {
     "placeholder": "Mẹo chuyên nghiệp: Nhấn 'Enter' để xuống dòng và 'Shift + Enter' để ngắt dòng đơn giản.",
+    "strikethrough": "Gạch ngang",
+    "inlineCode": "Mã nội tuyến",
+    "attachFile": "Đính kèm tệp",
     "heading": {
       "label": "Tiêu đề",
       "ariaLabel": "Định dạng văn bản làm tiêu đề",

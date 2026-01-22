@@ -69,6 +69,7 @@ export default function TaskDetailDialogPage() {
 
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const [isEditComment, setIsEditComment] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
   const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
@@ -164,8 +165,7 @@ export default function TaskDetailDialogPage() {
     if (open && task) {
       resetComment({
         taskId: task.taskId,
-        content: '',
-        commentResources: []
+        content: ''
       })
     }
   }, [open, task, resetComment])
@@ -457,9 +457,16 @@ export default function TaskDetailDialogPage() {
               </div>
 
               <div className='flex gap-3'>
-                <TextAlignStartIcon className='mt-1 size-4' />
+                <TextAlignStartIcon className='mt-0.5 size-4' />
                 <div className='w-full space-y-4'>
-                  <p className='font-semibold'>{t('common.field.description')}</p>
+                  <div className='flex items-start justify-between'>
+                    <p className='font-semibold'>{t('common.field.description')}</p>
+                    {!isEditDescription && task?.taskDescription ? (
+                      <Button variant='secondary' size='sm' onClick={() => setIsEditDescription(true)}>
+                        {t('common.button.edit')}
+                      </Button>
+                    ) : null}
+                  </div>
 
                   {isEditDescription ? (
                     <>
@@ -505,11 +512,7 @@ export default function TaskDetailDialogPage() {
                       <div className='relative'>
                         <div
                           role='button'
-                          onClick={() => setIsEditDescription(true)}
-                          className={cn(
-                            'cursor-pointer hover:bg-muted overflow-hidden transition-all',
-                            !isDescriptionExpanded && 'max-h-96'
-                          )}
+                          className={cn('overflow-hidden transition-all', !isDescriptionExpanded && 'max-h-96')}
                         >
                           <SanitizedHtml html={task.taskDescription} />
                         </div>
@@ -518,6 +521,7 @@ export default function TaskDetailDialogPage() {
                           <div className='absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-background to-transparent pointer-events-none' />
                         )}
                       </div>
+
                       <Button
                         variant='secondary'
                         className='w-full mt-1'
@@ -619,30 +623,67 @@ export default function TaskDetailDialogPage() {
               <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
             </div>
 
-            <Controller
-              name='content'
-              control={addCommentControl}
-              render={({ field }) => (
-                <Input
-                  placeholder={t('task.comment.addComment')}
-                  className='font-semibold bg-background'
-                  {...field}
-                  readOnly={isAddingComment}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSubmitComment(onSubmitAddComment)()
-                      addCommentMethods.reset()
-                    }
-                  }}
+            {isEditComment ? (
+              <div className='space-y-2'>
+                <Controller
+                  name='content'
+                  control={addCommentControl}
+                  render={({ field }) => (
+                    <div className='[&_.prose]:min-h-32 [&_.prose]:max-h-56'>
+                      <RichTextEditor
+                        isInitialFocus={true}
+                        compact={true}
+                        content={field.value ?? ''}
+                        onChange={field.onChange}
+                      />
+                    </div>
+                  )}
                 />
-              )}
-            />
+                <div className='flex items-center gap-2'>
+                  <Button
+                    onClick={() => {
+                      handleSubmitComment(onSubmitAddComment)()
+                      setIsEditComment(false)
+                    }}
+                    disabled={isAddingComment}
+                  >
+                    {isAddingComment ? <Spinner /> : null}
+                    {t('common.button.save')}
+                  </Button>
+                  <Button
+                    variant='outline'
+                    onClick={() => {
+                      setIsEditComment(false)
+                      resetComment()
+                    }}
+                    disabled={isAddingComment}
+                  >
+                    {t('common.button.cancel')}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Input
+                placeholder={t('task.comment.addComment')}
+                className='font-semibold bg-background'
+                readOnly
+                onClick={() => setIsEditComment(true)}
+              />
+            )}
 
-            <div className='space-y-6 pb-6'>
-              {comments?.value.items.map((comment) => (
-                <CommentCard key={comment.commentId} comment={comment} />
-              ))}
-            </div>
+            {taskId && projectId && milestoneId ? (
+              <div className='space-y-6 pb-6'>
+                {comments?.value.items.map((comment) => (
+                  <CommentCard
+                    key={comment.commentId}
+                    comment={comment}
+                    taskId={taskId}
+                    projectId={projectId}
+                    parentMilestoneId={milestoneId}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </DialogContent>

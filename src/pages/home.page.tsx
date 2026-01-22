@@ -74,6 +74,21 @@ const customStyles = `
   }
 `
 
+const navigations = [
+  { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
+  { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
+  { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
+  { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
+  { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
+]
+
+const stats = [
+  { value: '10K+', label: 'home.stats.projects' },
+  { value: '50K+', label: 'home.stats.tasksDone' },
+  { value: '99.9%', label: 'home.stats.uptime' },
+  { value: '24/7', label: 'home.stats.support' }
+]
+
 export default function HomePage() {
   const { t } = useTranslation()
   const location = useLocation()
@@ -82,34 +97,22 @@ export default function HomePage() {
   const { me, isGettingMe } = useGetMe()
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
-  const isLoggedIn = !!me
-
-  const navigations = [
-    { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
-    { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
-    { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
-    { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
-    { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
-  ]
-
-  const stats = [
-    { value: '10K+', label: t('home.stats.projects') },
-    { value: '50K+', label: t('home.stats.tasksDone') },
-    { value: '99.9%', label: t('home.stats.uptime') },
-    { value: '24/7', label: t('home.stats.support') }
-  ]
-
   return (
     <>
       <style>{customStyles}</style>
       <div className='dot-bg h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 overflow-hidden flex flex-col'>
         {/* Header */}
         <header className='fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200/50'>
-          <div className='px-4 sm:px-6 h-14 flex items-center justify-between'>
+          <div className='px-4 h-14 flex items-center justify-between'>
             <div className='flex items-center gap-4'>
               <img src={logo} alt='TaskCoper' className='h-8' />
 
-              {isLoggedIn && (
+              {isGettingMe ? (
+                <div className='hidden md:flex items-center gap-2'>
+                  <Skeleton className='w-20 h-8 rounded-md' />
+                  <Skeleton className='w-20 h-8 rounded-md' />
+                </div>
+              ) : me ? (
                 <div className='hidden md:flex items-center gap-2'>
                   {navigations.map((navigation) => {
                     const isActive = location.pathname === navigation.url
@@ -126,10 +129,15 @@ export default function HomePage() {
                     )
                   })}
                 </div>
-              )}
+              ) : null}
             </div>
 
-            {isLoggedIn ? (
+            {isGettingMe ? (
+              <div className='hidden md:flex items-center gap-2'>
+                <Skeleton className='w-20 h-8 rounded-md' />
+                <Skeleton className='size-8 rounded-full' />
+              </div>
+            ) : me ? (
               <div className='flex items-center gap-2 sm:gap-4'>
                 <div className='flex items-center gap-1 sm:gap-3'>
                   <Button size='sm' asChild className='hidden md:flex'>
@@ -156,7 +164,7 @@ export default function HomePage() {
                   </NotificationsPopover>
                 </div>
 
-                {isGettingMe ? <Skeleton className='size-8 rounded-full' /> : <NavUser user={me} />}
+                <NavUser user={me} />
               </div>
             ) : (
               <div className='flex items-center gap-2 sm:gap-3'>
@@ -571,7 +579,7 @@ export default function HomePage() {
                     <p className='text-xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent'>
                       {stat.value}
                     </p>
-                    <p className='text-[10px] sm:text-xs text-slate-500 mt-0.5'>{stat.label}</p>
+                    <p className='text-[10px] sm:text-xs text-slate-500 mt-0.5'>{t(stat.label)}</p>
                   </div>
                 ))}
               </div>

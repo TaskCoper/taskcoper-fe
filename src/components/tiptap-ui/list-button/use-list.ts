@@ -14,6 +14,7 @@ import { ListTodoIcon } from '@/components/tiptap-icons/list-todo-icon'
 
 // --- Lib ---
 import { findNodePosition, isNodeInSchema, isNodeTypeSelected, isValidPosition } from '@/shared/tiptap-utils'
+import { useTranslation } from 'react-i18next'
 
 export type ListType = 'bulletList' | 'orderedList' | 'taskList'
 

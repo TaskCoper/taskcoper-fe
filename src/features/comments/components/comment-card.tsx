@@ -1,14 +1,30 @@
+import RichTextEditor from '@/components/rich-text-editor'
+import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Field } from '@/components/ui/field'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Spinner } from '@/components/ui/spinner'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { DATE_LOCALES } from '@/shared/constants'
-import { getAvatarFallback } from '@/shared/utils'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import type { Comment } from '@/types/comment.type'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS } from 'date-fns/locale'
+import { XIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Controller, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useDeleteComment } from '../hooks/use-delete-comment'
+import { useUpdateComment } from '../hooks/use-update-comment'
+import type { UpdateTaskCommentFormValues } from '../validations'
 
 interface CommentCardProps {
   comment: Comment
+  taskId: string
+  projectId: string
+  parentMilestoneId: string
 }
 
 const taskLogContent: Record<string, string> = {
@@ -30,10 +46,36 @@ const taskLogContent: Record<string, string> = {
   LabelDeletedToTaskActivity: 'activities.LabelDeletedToTaskActivity'
 }
 
-export default function CommentCard({ comment }: CommentCardProps) {
+export default function CommentCard({ comment, taskId, projectId, parentMilestoneId }: CommentCardProps) {
   const { t, i18n } = useTranslation()
+  const { user } = useAuthStore()
+  const [isEditComment, setIsEditComment] = useState(false)
+  const [isDeleteComment, setIsDeleteComment] = useState(false)
+
+  const { methods, updateComment, isUpdatingComment } = useUpdateComment()
+  const { deleteComment, isDeletingComment } = useDeleteComment({
+    projectId,
+    parentMilestoneId
+  })
+
+  const { control, reset, handleSubmit } = methods
 
   const currentLocale = DATE_LOCALES[i18n.language] || enUS
+
+  const onSubmit: SubmitHandler<UpdateTaskCommentFormValues> = (body) => {
+    setIsEditComment(false)
+    updateComment({ body })
+  }
+
+  const onClose = () => {
+    setIsDeleteComment(false)
+  }
+
+  useEffect(() => {
+    if (isEditComment) {
+      reset({ content: comment.content, commentId: comment.commentId, taskId })
+    }
+  }, [isEditComment, reset, comment, taskId])
 
   if (comment.isTaskLog) {
     return (
@@ -74,9 +116,98 @@ export default function CommentCard({ comment }: CommentCardProps) {
             {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
           </p>
         </div>
-        <Card className='px-3 py-2 shadow-xs rounded-lg w-full'>
-          <p className='text-sm'>{comment.content}</p>
-        </Card>
+
+        {isEditComment ? (
+          <div className='space-y-2'>
+            <Controller
+              name='content'
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-1'>
+                  <RichTextEditor isInitialFocus={true} content={field.value ?? ''} onChange={field.onChange} compact />
+                </Field>
+              )}
+            />
+
+            <div className='flex items-center gap-2'>
+              <Button
+                onClick={() => {
+                  setIsEditComment(false)
+                  handleSubmit(onSubmit)()
+                }}
+                disabled={isUpdatingComment || !methods.formState.isDirty}
+              >
+                {methods.formState.isSubmitting ? <Spinner /> : null}
+                {t('common.button.save')}
+              </Button>
+              <Button
+                variant='outline'
+                onClick={() => {
+                  setIsEditComment(false)
+                  reset()
+                }}
+                disabled={isUpdatingComment}
+              >
+                {t('common.button.cancel')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Card className='px-3 py-2 shadow-xs rounded-lg w-full'>
+            <SanitizedHtml html={comment.content} />
+          </Card>
+        )}
+
+        {comment.userId === user?.UserId && !isEditComment ? (
+          <div className='flex items-center gap-2'>
+            <p
+              className='text-xs text-muted-foreground cursor-pointer underline'
+              role='button'
+              onClick={() => setIsEditComment(true)}
+            >
+              {t('common.button.edit')}
+            </p>
+
+            <Popover open={isDeleteComment} onOpenChange={setIsDeleteComment}>
+              <PopoverTrigger>
+                <p
+                  className={cn(
+                    'text-xs text-muted-foreground cursor-pointer underline',
+                    isDeleteComment && 'text-destructive'
+                  )}
+                  role='button'
+                >
+                  {t('common.button.delete')}
+                </p>
+              </PopoverTrigger>
+
+              <PopoverContent className='p-0' side='bottom' align='start' sideOffset={8} onInteractOutside={onClose}>
+                <div className='p-3 space-y-2'>
+                  <div className='flex items-center justify-center relative mt-1'>
+                    <p className='text-sm font-bold whitespace-nowrap'>{t('task.comment.deleteComment.title')}</p>
+                    <Button variant='ghost' size='icon-sm' onClick={onClose} className='absolute right-0'>
+                      <XIcon />
+                    </Button>
+                  </div>
+
+                  <p className='text-sm text-muted-foreground'>{t('task.comment.deleteComment.description')}</p>
+
+                  <Button
+                    variant='destructive'
+                    className='w-full'
+                    disabled={isDeletingComment}
+                    onClick={() => {
+                      deleteComment({ commentId: comment.commentId, taskId })
+                      onClose()
+                    }}
+                  >
+                    {t('task.comment.deleteComment.confirmText')}
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : null}
       </div>
     </div>
   )

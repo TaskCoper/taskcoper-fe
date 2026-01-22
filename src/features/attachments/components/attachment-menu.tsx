@@ -81,8 +81,6 @@ export default function AttachmentMenu({
     }
   }, [isEditing, methods, attachment, taskId])
 
-  console.log(methods.formState.errors)
-
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
