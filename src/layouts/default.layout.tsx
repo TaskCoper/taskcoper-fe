@@ -78,10 +78,10 @@ export default function DefaultLayout() {
 
         {org ? (
           <div className='flex items-center gap-4 mr-4'>
-            <Separator orientation='vertical' className='h-5!' />
+            <Separator orientation='vertical' className='h-5! bg-foreground/30' />
             <div className='flex items-center gap-2'>
               <Avatar className='size-6'>
-                <AvatarImage src='https://hatch-user-uploads-prod.s3.ap-southeast-2.amazonaws.com/public/company_000005ufA9VAacL1OSRLwyhjxIW/logo.png' />
+                <AvatarImage src={org.logo} />
                 <AvatarFallback>{getAvatarFallback(org.name)}</AvatarFallback>
               </Avatar>
 
@@ -90,7 +90,7 @@ export default function DefaultLayout() {
           </div>
         ) : null}
 
-        <div className='hidden md:flex items-center gap-2'>
+        <div className='hidden lg:flex items-center gap-2'>
           {navigations.map((navigation) => {
             const isActive = location.pathname === navigation.url
 
@@ -112,7 +112,7 @@ export default function DefaultLayout() {
 
         <div className='flex items-center gap-2 sm:gap-4'>
           <div className='flex items-center gap-1 sm:gap-3'>
-            <Button size='sm' asChild className='hidden md:flex'>
+            <Button size='sm' asChild className='hidden lg:flex'>
               <Link to='/projects'>{t('header.manageProjects')}</Link>
             </Button>
 
@@ -140,7 +140,7 @@ export default function DefaultLayout() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant='ghost' size='icon' className='md:hidden -mr-2'>
+              <Button variant='ghost' size='icon' className='lg:hidden -mr-2'>
                 <MenuIcon className='size-5' />
                 <span className='sr-only'>Toggle menu</span>
               </Button>
