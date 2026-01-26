@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -6,7 +7,9 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
-import { cn } from '@/shared/utils'
+import { useGetOrg } from '@/hooks/use-get-org'
+import { useAuthStore } from '@/lib/zustand/auth.store'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   BellIcon,
   FolderClosedIcon,
@@ -61,15 +64,31 @@ export default function DefaultLayout() {
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
+  const { user } = useAuthStore()
   const { me, isGettingMe } = useGetMe()
+  const { org } = useGetOrg({ orgId: user?.OrganizationId })
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
       <header className='flex h-14 items-center gap-3 px-4 border-b shrink-0 bg-background z-50 relative'>
         <Link to='/' className='shrink-0'>
-          <img src={logo} alt='TaskCoper' className='h-8 w-auto bject-contain' />
+          <img src={logo} alt='TaskCoper' className='h-7 w-auto object-contain' />
         </Link>
+
+        {org ? (
+          <div className='flex items-center gap-4 mr-4'>
+            <Separator orientation='vertical' className='h-5!' />
+            <div className='flex items-center gap-2'>
+              <Avatar className='size-6'>
+                <AvatarImage src='https://hatch-user-uploads-prod.s3.ap-southeast-2.amazonaws.com/public/company_000005ufA9VAacL1OSRLwyhjxIW/logo.png' />
+                <AvatarFallback>{getAvatarFallback(org.name)}</AvatarFallback>
+              </Avatar>
+
+              <p className='text-sm font-medium'>{org.name}</p>
+            </div>
+          </div>
+        ) : null}
 
         <div className='hidden md:flex items-center gap-2'>
           {navigations.map((navigation) => {

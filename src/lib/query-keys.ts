@@ -57,12 +57,20 @@ export const queryKeys = {
   // Location
   location: {
     provinces: () => ['provinces'] as const,
-    wards: (provinceCode?: string) => ['wards', provinceCode] as const,
-    domains: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
+    wards: (provinceCode?: string) => ['wards', provinceCode] as const
+  },
+  // Domains
+  domains: {
+    all: () => ['domains'] as const,
+    list: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
       ['domains', searchTerm, pageIndex, pageSize] as const
   },
   // Attachments
   attachments: {
     byTask: (taskId?: string) => ['attachments', taskId] as const
+  },
+  // Organizations
+  organizations: {
+    detail: (organizationId?: string) => ['organization', organizationId] as const
   }
 } as const

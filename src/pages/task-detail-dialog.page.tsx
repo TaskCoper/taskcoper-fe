@@ -117,16 +117,21 @@ export default function TaskDetailDialogPage() {
     initialValue: task?.taskName ?? '',
     clickType: 'single',
     onSave: (newName) => {
-      const validated = updateTaskSchema(t).safeParse({
-        id: task?.taskId,
+      if (!task) return
+
+      const values: UpdateTaskFormValues = {
+        id: task.taskId,
         name: newName,
-        description: task?.taskDescription,
-        position: task?.taskPosition,
-        startDate: task?.taskStartDate,
-        endDate: task?.taskEndDate,
-        targetMilestoneId: task?.milestoneId,
-        announceBeforeMinutes: task?.announceBeforeMinutes
-      })
+        isCompleted: task.isCompleted,
+        description: task.taskDescription,
+        position: task.taskPosition,
+        startDate: task.taskStartDate,
+        endDate: task.taskEndDate,
+        targetMilestoneId: task.milestoneId,
+        announceBeforeMinutes: task.announceBeforeMinutes
+      }
+
+      const validated = updateTaskSchema(t).safeParse(values)
 
       if (validated.success) {
         updateTask({ body: validated.data })
