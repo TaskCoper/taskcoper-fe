@@ -69,6 +69,7 @@ export const useUploadAttachment = ({ taskId, parentMilestoneId, projectId }: Us
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
     }
   })
 

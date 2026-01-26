@@ -75,6 +75,7 @@ export const useUpdateAttachment = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(variables.body.taskId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.taskId) })
     }
   })
 
