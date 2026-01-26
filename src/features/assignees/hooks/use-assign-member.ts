@@ -31,6 +31,7 @@ export const useAssignMember = ({ taskId, projectId, parentMilestoneId }: UseAss
         queryClient.invalidateQueries({
           queryKey: queryKeys.tasks.members(taskId)
         })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {

@@ -19,18 +19,16 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
   const { t } = useTranslation()
   const { user } = useAuthStore()
 
-  const queryKey = queryKeys.subtasks.byTask(taskId)
-
   const { mutate: deleteSubtask, isPending: isDeletingSubtask } = useMutation({
     mutationFn: subtaskService.deleteSubtask,
     onMutate: async (variables) => {
       if (!taskId) return
 
-      await queryClient.cancelQueries({ queryKey })
-      const previousData = queryClient.getQueryData<BasePaginationResponse<Subtask>>(queryKey)
+      await queryClient.cancelQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+      const previousData = queryClient.getQueryData<BasePaginationResponse<Subtask>>(queryKeys.subtasks.byTask(taskId))
 
       if (previousData) {
-        queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
+        queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKeys.subtasks.byTask(taskId), (old) => {
           if (!old) return old
 
           const targetItem = old.value.items.find((item) => item.id === variables.id)
@@ -69,7 +67,7 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
     },
     onError: (error, _variables, context) => {
       if (taskId && context?.previousData) {
-        queryClient.setQueryData(queryKey, context.previousData)
+        queryClient.setQueryData(queryKeys.subtasks.byTask(taskId), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -78,7 +76,8 @@ export const useDeleteSubtask = ({ taskId, projectId, parentMilestoneId }: UseDe
     },
     onSettled: () => {
       if (taskId) {
-        queryClient.invalidateQueries({ queryKey })
+        queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {

@@ -35,22 +35,20 @@ export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: Updat
     resolver: zodResolver(updateSubtaskSchema(t))
   })
 
-  const queryKey = queryKeys.subtasks.byTask(taskId)
-
   const { mutate: updateSubtask, isPending: isUpdatingSubtask } = useMutation({
     mutationFn: ({ body }: UpdateSubtaskVariables) => subtaskService.updateSubtask({ body }),
     onMutate: async ({ body, meta }) => {
       if (!taskId) return
 
-      await queryClient.cancelQueries({ queryKey })
-      const previousData = queryClient.getQueryData<BasePaginationResponse<Subtask>>(queryKey)
+      await queryClient.cancelQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+      const previousData = queryClient.getQueryData<BasePaginationResponse<Subtask>>(queryKeys.subtasks.byTask(taskId))
 
       if (previousData) {
         // we MUST check meta.oldParentId because we already optimistic update the parentId inside the onDragOver
         const isReparenting =
           body.parentId !== undefined && meta?.oldParentId !== undefined && meta.oldParentId !== body.parentId
 
-        queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKey, (old) => {
+        queryClient.setQueryData<BasePaginationResponse<Subtask>>(queryKeys.subtasks.byTask(taskId), (old) => {
           if (!old) return old
 
           // case 1: standard update (no move)
@@ -121,7 +119,7 @@ export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: Updat
     },
     onError: (error, _variables, context) => {
       if (taskId && context?.previousData) {
-        queryClient.setQueryData(queryKey, context.previousData)
+        queryClient.setQueryData(queryKeys.subtasks.byTask(taskId), context.previousData)
       }
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
@@ -129,7 +127,8 @@ export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: Updat
     },
     onSettled: () => {
       if (taskId) {
-        queryClient.invalidateQueries({ queryKey })
+        queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {

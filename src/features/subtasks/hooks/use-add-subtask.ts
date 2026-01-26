@@ -83,6 +83,7 @@ export const useAddSubtask = ({
     onSettled: () => {
       if (taskId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {

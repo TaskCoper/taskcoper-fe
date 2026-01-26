@@ -66,6 +66,7 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
     onSettled: () => {
       if (taskId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
       if (projectId && parentMilestoneId) {
