@@ -949,5 +949,45 @@
     "SubtaskDeletedInTaskActivity": "deleted the subtask",
     "LabelAddedToTaskActivity": "added a label to the task",
     "LabelDeletedToTaskActivity": "removed a label from the task"
+  },
+  "dataTable": {
+    "table": {
+      "noResults": "No results."
+    },
+    "pagination": {
+      "rowsSelected": "{{selected}} of {{total}} row(s) selected.",
+      "rowsPerPage": "Rows per page",
+      "pageXofY": "Page {{current}} of {{total}}",
+      "goToFirstPage": "Go to first page",
+      "goToPreviousPage": "Go to previous page",
+      "goToNextPage": "Go to next page",
+      "goToLastPage": "Go to last page"
+    },
+    "column": {
+      "asc": "Asc",
+      "desc": "Desc",
+      "hide": "Hide",
+      "reset": "Reset"
+    },
+    "toolbar": {
+      "reset": "Reset"
+    },
+    "filter": {
+      "noResultsFound": "No results found.",
+      "selected": "selected",
+      "clearFilters": "Clear filters",
+      "clearFilter": "Clear filter",
+      "clear": "Clear",
+      "selectDate": "Select date",
+      "selectDateRange": "Select date range",
+      "from": "From",
+      "to": "to"
+    },
+    "viewOptions": {
+      "view": "View",
+      "toggleColumns": "Toggle columns",
+      "searchColumns": "Search columns...",
+      "noColumnsFound": "No columns found."
+    }
   }
 }

@@ -949,5 +949,45 @@
     "SubtaskDeletedInTaskActivity": "đã xóa công việc con",
     "LabelAddedToTaskActivity": "đã thêm nhãn vào công việc",
     "LabelDeletedToTaskActivity": "đã xóa nhãn khỏi công việc"
+  },
+  "dataTable": {
+    "table": {
+      "noResults": "Không có kết quả."
+    },
+    "pagination": {
+      "rowsSelected": "{{selected}} trong {{total}} hàng được chọn.",
+      "rowsPerPage": "Số hàng mỗi trang",
+      "pageXofY": "Trang {{current}} / {{total}}",
+      "goToFirstPage": "Đến trang đầu",
+      "goToPreviousPage": "Trang trước",
+      "goToNextPage": "Trang sau",
+      "goToLastPage": "Đến trang cuối"
+    },
+    "column": {
+      "asc": "Tăng dần",
+      "desc": "Giảm dần",
+      "hide": "Ẩn",
+      "reset": "Đặt lại"
+    },
+    "toolbar": {
+      "reset": "Đặt lại"
+    },
+    "filter": {
+      "noResultsFound": "Không tìm thấy kết quả.",
+      "selected": "đã chọn",
+      "clearFilters": "Xóa bộ lọc",
+      "clearFilter": "Xóa bộ lọc",
+      "clear": "Xóa",
+      "selectDate": "Chọn ngày",
+      "selectDateRange": "Chọn khoảng ngày",
+      "from": "Từ",
+      "to": "đến"
+    },
+    "viewOptions": {
+      "view": "Hiển thị",
+      "toggleColumns": "Chuyển đổi cột",
+      "searchColumns": "Tìm kiếm cột...",
+      "noColumnsFound": "Không tìm thấy cột."
+    }
   }
 }
