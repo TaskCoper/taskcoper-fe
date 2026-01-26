@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
 import { cva, type VariantProps } from 'class-variance-authority'
@@ -34,7 +35,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
   const navigate = useNavigate()
 
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
-  const [areLabelsExpanded, setAreLabelsExpanded] = useState(true)
+  const { areLabelsExpanded, toggleLabelsExpanded } = useTaskUIStore()
   const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
     taskId: task.id,
     projectId,
@@ -54,7 +55,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
   const handleLabelClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setAreLabelsExpanded((prev) => !prev)
+    toggleLabelsExpanded()
   }
 
   const handleCardClick = () => {

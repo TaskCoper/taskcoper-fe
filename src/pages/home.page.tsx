@@ -1,14 +1,17 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import NavUser from '@/features/projects/components/sidebar/nav-user'
-import { cn } from '@/shared/utils'
+import { useGetOrg } from '@/hooks/use-get-org'
+import { useAuthStore } from '@/lib/zustand/auth.store'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   ArrowRight,
   BellIcon,
@@ -95,17 +98,35 @@ export default function HomePage() {
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
   const { me, isGettingMe } = useGetMe()
+  const { user } = useAuthStore()
+  const { org } = useGetOrg({ orgId: user?.OrganizationId })
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
   return (
     <>
       <style>{customStyles}</style>
-      <div className='dot-bg h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 overflow-hidden flex flex-col'>
+      <div className='dot-bg h-screen overflow-hidden flex flex-col'>
         {/* Header */}
-        <header className='fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200/50'>
+        <header className='fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background to-background/70'>
           <div className='px-4 h-14 flex items-center justify-between'>
-            <div className='flex items-center gap-4'>
-              <img src={logo} alt='TaskCoper' className='h-8' />
+            <div className='flex items-center gap-3'>
+              <Link to='/' className='shrink-0'>
+                <img src={logo} alt='TaskCoper' className='h-7' />
+              </Link>
+
+              {org ? (
+                <div className='flex items-center gap-4 mr-4'>
+                  <Separator orientation='vertical' className='h-5!' />
+                  <div className='flex items-center gap-2'>
+                    <Avatar className='size-6'>
+                      <AvatarImage src='https://hatch-user-uploads-prod.s3.ap-southeast-2.amazonaws.com/public/company_000005ufA9VAacL1OSRLwyhjxIW/logo.png' />
+                      <AvatarFallback>{getAvatarFallback(org.name)}</AvatarFallback>
+                    </Avatar>
+
+                    <p className='text-sm font-medium'>{org.name}</p>
+                  </div>
+                </div>
+              ) : null}
 
               {isGettingMe ? (
                 <div className='hidden md:flex items-center gap-2'>
@@ -189,7 +210,7 @@ export default function HomePage() {
           <div className='w-full max-w-[1600px] mx-auto h-full relative flex items-center justify-center'>
             {/* Decorative Orbs */}
             <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
+              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
             </div>
 
             {/* --- LEFT SIDE CARDS (Hidden on screens smaller than 2xl) --- */}

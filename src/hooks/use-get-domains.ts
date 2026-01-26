@@ -25,7 +25,7 @@ export const useGetDomains = ({
     },
     isLoading: isLoadingDomains
   } = useQuery({
-    queryKey: queryKeys.location.domains(searchTerm, pageIndex, pageSize),
+    queryKey: queryKeys.domains.list(searchTerm, pageIndex, pageSize),
     queryFn: () => domainService.getDomains({ searchTerm, pageIndex, pageSize }),
     enabled
   })
