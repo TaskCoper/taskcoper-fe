@@ -2,6 +2,7 @@ export interface Organization {
   id: string
   name: string
   contactEmail: string
+  logo: string
   contactAddress: string
   contactCity: string
   contactState: string
