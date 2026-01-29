@@ -553,6 +553,12 @@
           }
         }
       }
+    },
+    "detail": {
+      "title": "Chi tiết công việc",
+      "description": "Mô tả công việc",
+      "labels": "Nhãn",
+      "dateFormat": "HH:mm d 'thg' M, y"
     }
   },
   "richTextEditor": {
@@ -771,16 +777,17 @@
     }
   },
   "error": {
-    "somethingWentWrong": "Có lỗi xảy ra!",
-    "somethingWentWrongDescription": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
-    "back": "Quay lại",
-    "home": "Trang chủ",
-    "pageNotFound": "Không tìm thấy trang",
-    "pageNotFoundDescription": "Trang bạn đang tìm kiếm có vẻ không tồn tại.",
-    "apiError": "Lỗi API",
-    "apiErrorDescription": "Đã xảy ra lỗi với yêu cầu API.",
-    "genericError": "Lỗi chung",
-    "genericErrorDescription": "Đã xảy ra lỗi với yêu cầu."
+    "home": "Về trang chủ",
+    "pageNotFound": "Đã có lỗi xảy ra",
+    "pageNotFoundDescription": "Xin lỗi, chúng tôi không thể tìm thấy trang đó",
+    "unauthorized": "Không được phép",
+    "unauthorizedDescription": "Đã xảy ra lỗi trên máy chủ của trang web",
+    "forbidden": "Bị cấm",
+    "forbiddenDescription": "Bạn không có quyền truy cập trang hoặc tài nguyên này",
+    "serverError": "Trang này không hoạt động",
+    "serverErrorDescription": "Chúng tôi xin lỗi và đang khắc phục sự cố. Vui lòng thử lại sau.",
+    "maintenance": "Hệ thống đang bảo trì",
+    "maintenanceDescription": "Chúng tôi sẽ quay lại ngay!"
   },
   "comboboxField": {
     "placeholder": "Chọn tùy chọn",

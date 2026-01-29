@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { AxiosError } from 'axios'
-import { AlertCircle, ArrowLeftIcon, FileQuestion, HomeIcon, ServerCrash } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router'
 
@@ -9,68 +8,55 @@ export default function ErrorPage() {
   const error = useRouteError()
   const navigate = useNavigate()
 
-  let title = t('error.somethingWentWrong')
-  let message = t('error.somethingWentWrongDescription')
-  let Icon = AlertCircle
+  let title = t('error.maintenance')
+  let message = t('error.maintenanceDescription')
   let statusCode: string | number | null = null
 
   if (isRouteErrorResponse(error)) {
     statusCode = error.status
-    title = error.statusText
-    message = error.data?.message || t('error.pageNotFoundDescription')
-    if (error.status === 404) Icon = FileQuestion
+    if (error.status === 404) {
+      title = t('error.pageNotFound')
+      message = t('error.pageNotFoundDescription')
+    } else {
+      title = t('error.maintenance')
+      message = t('error.maintenanceDescription')
+    }
   } else if (error instanceof AxiosError) {
     statusCode = error.response?.status || 500
-    title = error.response?.statusText || t('error.apiError')
-    message = error.response?.data?.message || error.message
 
     if (statusCode === 404) {
-      Icon = FileQuestion
+      title = t('error.pageNotFound')
       message = t('error.pageNotFoundDescription')
-    } else if (statusCode === 401 || statusCode === 403) {
-      Icon = ServerCrash
-      message = t('error.apiErrorDescription')
+    } else if (statusCode === 401) {
+      title = t('error.unauthorized')
+      message = t('error.unauthorizedDescription')
+    } else if (statusCode === 403) {
+      title = t('error.forbidden')
+      message = t('error.forbiddenDescription')
+    } else if (statusCode >= 500) {
+      title = t('error.serverError')
+      message = t('error.serverErrorDescription')
     } else {
-      Icon = ServerCrash
+      title = t('error.maintenance')
+      message = t('error.maintenanceDescription')
     }
   } else if (error instanceof Error) {
-    title = t('error.genericError')
-    message = error.message
-    Icon = ServerCrash
+    title = t('error.maintenance')
+    message = t('error.maintenanceDescription')
   }
 
   return (
-    <div className='flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 text-center sm:p-8'>
-      <div className='absolute left-1/2 top-1/2 -z-10 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[80px] sm:h-[300px] sm:w-[300px] sm:blur-[100px]' />
+    <div className='flex h-screen w-full flex-col items-center justify-center bg-dot relative p-4'>
+      <div className='flex w-full max-w-xl flex-col items-center justify-center gap-8 rounded-3xl bg-background/45 p-6 text-center sm:px-12 sm:py-20'>
+        <p className='text-6xl font-bold text-primary sm:text-8xl'>{statusCode}</p>
 
-      <div className='w-full max-w-md space-y-6 sm:space-y-8'>
         <div className='flex flex-col items-center gap-2'>
-          <div className='flex h-16 w-16 items-center justify-center rounded-full bg-muted sm:h-20 sm:w-20'>
-            <Icon className='h-8 w-8 text-muted-foreground sm:h-10 sm:w-10' />
-          </div>
-          {statusCode && (
-            <span className='rounded-md bg-muted px-2 py-0.5 font-mono text-xs font-medium text-muted-foreground sm:text-sm'>
-              {statusCode}
-            </span>
-          )}
+          <p className='text-xl font-semibold sm:text-3xl'>{title}</p>
+          <p className='text-xs font-medium text-foreground/60 sm:text-base'>{message}</p>
         </div>
-
-        <div className='space-y-2 px-2 sm:px-0'>
-          <h1 className='text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl'>{title}</h1>
-          <p className='text-sm text-muted-foreground sm:text-base'>{message}</p>
-        </div>
-
-        <div className='flex flex-col gap-3 sm:flex-row sm:justify-center'>
-          <Button variant='outline' onClick={() => navigate(-1)} className='w-full gap-2 sm:w-auto'>
-            <ArrowLeftIcon />
-            {t('error.back')}
-          </Button>
-
-          <Button onClick={() => navigate('/', { replace: true })} className='w-full gap-2 sm:w-auto'>
-            <HomeIcon />
-            {t('error.home')}
-          </Button>
-        </div>
+        <Button onClick={() => navigate('/', { replace: true })} className='w-full sm:w-auto'>
+          {t('error.home')}
+        </Button>
       </div>
     </div>
   )

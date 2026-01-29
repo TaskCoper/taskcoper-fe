@@ -28,6 +28,7 @@ export default function SignInForm() {
               placeholder={t('auth.signUp.field.email.placeholder')}
               spellCheck={false}
               autoFocus
+              autoComplete='username'
             />
             <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -50,6 +51,7 @@ export default function SignInForm() {
                 type={isVisible ? 'text' : 'password'}
                 placeholder={t('auth.signUp.field.password.placeholder')}
                 spellCheck={false}
+                autoComplete='current-password'
               />
               <Button
                 variant='ghost'

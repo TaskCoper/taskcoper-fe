@@ -3,11 +3,11 @@ import { useAuthStore } from '@/lib/zustand/auth.store'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
-interface GuardLayoutProps {
+interface AuthGuardLayoutProps {
   requiresAuth: boolean
 }
 
-export default function GuardLayout({ requiresAuth }: GuardLayoutProps) {
+export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) {
   const { isAuthenticated, isVerificationRequired } = useAuthStore()
 
   const { me, isGettingMe } = useGetMe()

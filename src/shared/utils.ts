@@ -1,6 +1,7 @@
 import { sortedTaskLabelColors } from '@/features/labels/constants'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { BasePaginationResponse } from '@/lib/axios'
+import type { UserPayload } from '@/lib/zustand/auth.store'
 import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
 import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/types/subtask.type'
 import type { TaskCardDragData } from '@/types/task.type'
@@ -160,4 +161,12 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   } catch {
     return ''
   }
+}
+
+export const getUserType = (user: UserPayload | null) => {
+  if (!user) return null
+  if (user.Role === 'Admin' && !user.OrganizationId) return 'superAdmin'
+  if (user.Role === 'Admin' && user.OrganizationId) return 'orgAdmin'
+
+  return 'user'
 }
