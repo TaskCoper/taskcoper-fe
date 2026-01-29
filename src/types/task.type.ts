@@ -34,6 +34,8 @@ export interface TaskDetail {
   taskStartDate: string | null
   taskEndDate: string | null
   announceBeforeMinutes: number | null
+  backgroundImage: string | null
+  estimatedPoints: number | null
   taskLabels: TaskLabel[]
   isCompleted: boolean
 }

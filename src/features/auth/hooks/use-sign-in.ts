@@ -1,5 +1,6 @@
 import { useAuthStore, type UserPayload } from '@/lib/zustand/auth.store'
 import userService from '@/services/user.service'
+import { getUserType } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { jwtDecode } from 'jwt-decode'
@@ -27,8 +28,14 @@ export const useSignIn = () => {
     onSuccess: (data) => {
       signInAuth(data.accessToken, data.refreshToken)
       const user = jwtDecode<UserPayload>(data.accessToken)
+      const userType = getUserType(user)
+
       if (user.IsVerified === 'false') {
         navigate('/')
+      } else if (userType === 'superAdmin') {
+        navigate('/dashboard', { replace: true })
+      } else if (userType === 'orgAdmin') {
+        navigate('/manage', { replace: true })
       } else {
         navigate('/projects', { replace: true })
       }

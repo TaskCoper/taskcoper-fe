@@ -108,7 +108,7 @@ export default function HomePage() {
   return (
     <>
       <style>{customStyles}</style>
-      <div className='dot-bg h-screen overflow-hidden flex flex-col'>
+      <div className='bg-dot h-screen overflow-hidden flex flex-col'>
         {/* Header */}
         <header className='fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background to-background/70'>
           <div className='px-4 h-14 flex items-center justify-between'>

@@ -39,7 +39,7 @@ import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
+import { enUS, vi } from 'date-fns/locale'
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -64,8 +64,10 @@ import { useNavigate, useParams } from 'react-router'
 export default function TaskDetailDialogPage() {
   const navigate = useNavigate()
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { projectId, milestoneId, taskId } = useParams<{ projectId: string; milestoneId: string; taskId: string }>()
+
+  const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
 
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
@@ -200,8 +202,8 @@ export default function TaskDetailDialogPage() {
         >
           <VisuallyHidden>
             <DialogHeader>
-              <DialogTitle>Task Detail</DialogTitle>
-              <DialogDescription>Task Description</DialogDescription>
+              <DialogTitle>{t('task.detail.title')}</DialogTitle>
+              <DialogDescription>{t('task.detail.description')}</DialogDescription>
             </DialogHeader>
           </VisuallyHidden>
 
@@ -244,8 +246,8 @@ export default function TaskDetailDialogPage() {
       >
         <VisuallyHidden>
           <DialogHeader>
-            <DialogTitle>Task Detail</DialogTitle>
-            <DialogDescription>Task Description</DialogDescription>
+            <DialogTitle>{t('task.detail.title')}</DialogTitle>
+            <DialogDescription>{t('task.detail.description')}</DialogDescription>
           </DialogHeader>
         </VisuallyHidden>
         <div className='px-6 py-4 flex items-center justify-between gap-2'>
@@ -377,7 +379,7 @@ export default function TaskDetailDialogPage() {
                 {/* Labels section */}
                 {(task?.taskLabels.length ?? 0) > 0 ? (
                   <div className='space-y-1 max-w-full'>
-                    <p className='text-sm font-semibold text-muted-foreground'>Nhãn</p>
+                    <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.labels')}</p>
 
                     <div className='flex flex-wrap items-center gap-1 text-foreground/60'>
                       {task?.taskLabels.map((label) => (
@@ -445,13 +447,13 @@ export default function TaskDetailDialogPage() {
                       <Button variant='secondary' size='sm'>
                         {task?.taskStartDate ? (
                           <p className='font-semibold'>
-                            {format(new Date(task.taskStartDate), "HH:mm d 'thg' M, y", { locale: vi })}
+                            {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
                         ) : null}
                         {task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
                         {task?.taskEndDate ? (
                           <p className='font-semibold'>
-                            {format(new Date(task.taskEndDate), "HH:mm d 'thg' M, y", { locale: vi })}
+                            {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
                         ) : null}
                         <ChevronDownIcon />
