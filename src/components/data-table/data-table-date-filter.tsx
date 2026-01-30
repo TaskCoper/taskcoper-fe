@@ -15,10 +15,10 @@ function getIsDateRange(value: DateSelection): value is DateRange {
   return value && typeof value === 'object' && !Array.isArray(value)
 }
 
-function parseAsDate(timestamp: number | string | undefined): Date | undefined {
-  if (!timestamp) return undefined
-  const numericTimestamp = typeof timestamp === 'string' ? Number(timestamp) : timestamp
-  const date = new Date(numericTimestamp)
+function parseAsDate(value: number | string | undefined): Date | undefined {
+  if (!value) return undefined
+  // Handle both ISO strings and numeric timestamps
+  const date = new Date(value)
   return !Number.isNaN(date.getTime()) ? date : undefined
 }
 
@@ -79,11 +79,11 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
       }
 
       if (multiple && !('getTime' in date)) {
-        const from = date.from?.getTime()
-        const to = date.to?.getTime()
+        const from = date.from?.toISOString()
+        const to = date.to?.toISOString()
         column.setFilterValue(from || to ? [from, to] : undefined)
       } else if (!multiple && 'getTime' in date) {
-        column.setFilterValue(date.getTime())
+        column.setFilterValue(date.toISOString())
       }
     },
     [column, multiple]

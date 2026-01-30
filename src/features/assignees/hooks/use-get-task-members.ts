@@ -6,9 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const useGetTaskMembers = ({ taskId }: { taskId?: string }) => {
   const {
-    data: taskMembers = {
-      ...getDefaultPaginationResponse<TaskMember>()
-    },
+    data: taskMembers = getDefaultPaginationResponse<TaskMember>(),
     isLoading: isLoadingTaskMembers,
     error
   } = useQuery({

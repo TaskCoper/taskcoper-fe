@@ -10,3 +10,10 @@ export interface Organization {
   createdOnUtc: string
   modifiedOnUtc: string | null
 }
+
+export interface OrganizationStats {
+  organizationId: string
+  organizationName: string
+  totalProjects: number
+  totalUsers: number
+}

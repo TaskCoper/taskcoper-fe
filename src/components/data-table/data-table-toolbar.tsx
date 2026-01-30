@@ -1,20 +1,68 @@
-import { DataTableDateFilter } from '@/components/data-table/data-table-date-filter'
-import { DataTableFacetedFilter } from '@/components/data-table/data-table-faceted-filter'
-import { DataTableSliderFilter } from '@/components/data-table/data-table-slider-filter'
-import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { cn } from '@/shared/utils'
+import type { Option } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
+import { DataTableDateFilter } from './data-table-date-filter'
+import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import DataTableRadioFilter from './data-table-radio-filter'
+import { DataTableSliderFilter } from './data-table-slider-filter'
+import { DataTableViewOptions } from './data-table-view-options'
+
+const DEBOUNCE_MS = 300
+
+interface DebouncedInputProps extends Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> {
+  value: string
+  onValueChange: (value: string) => void
+  debounceMs?: number
+}
+
+function DebouncedInput({
+  value: externalValue,
+  onValueChange,
+  debounceMs = DEBOUNCE_MS,
+  ...props
+}: DebouncedInputProps) {
+  const [localValue, setLocalValue] = React.useState(externalValue)
+
+  const debouncedOnChange = useDebouncedCallback((value: string) => {
+    onValueChange(value)
+  }, debounceMs)
+
+  // Sync local value when external value changes (e.g., reset filters)
+  React.useLayoutEffect(() => {
+    setLocalValue(externalValue)
+  }, [externalValue])
+
+  const handleChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value
+      setLocalValue(newValue)
+      debouncedOnChange(newValue)
+    },
+    [debouncedOnChange]
+  )
+
+  return <Input {...props} value={localValue} onChange={handleChange} />
+}
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<'div'> {
   table: Table<TData>
+  /** Override filter options with updated counts - keyed by column.id */
+  filterOptionOverrides?: Record<string, Option[]>
 }
 
-export function DataTableToolbar<TData>({ table, children, className, ...props }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+  children,
+  className,
+  filterOptionOverrides,
+  ...props
+}: DataTableToolbarProps<TData>) {
   const { t } = useTranslation()
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -33,7 +81,11 @@ export function DataTableToolbar<TData>({ table, children, className, ...props }
     >
       <div className='flex flex-1 flex-wrap items-center gap-2'>
         {columns.map((column) => (
-          <DataTableToolbarFilter key={column.id} column={column} />
+          <DataTableToolbarFilter
+            key={column.id}
+            column={column}
+            optionsOverride={filterOptionOverrides?.[column.id]}
+          />
         ))}
         {isFiltered && (
           <Button aria-label='Reset filters' variant='outline' size='sm' className='border-dashed' onClick={onReset}>
@@ -51,74 +103,94 @@ export function DataTableToolbar<TData>({ table, children, className, ...props }
 }
 interface DataTableToolbarFilterProps<TData> {
   column: Column<TData>
+  optionsOverride?: Option[]
 }
 
-function DataTableToolbarFilter<TData>({ column }: DataTableToolbarFilterProps<TData>) {
-  {
-    const columnMeta = column.columnDef.meta
+function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToolbarFilterProps<TData>) {
+  const { t } = useTranslation()
+  const columnMeta = column.columnDef.meta
 
-    const onFilterRender = React.useCallback(() => {
-      if (!columnMeta?.variant) return null
+  // Use override options if provided, otherwise fall back to column meta options
+  const options = optionsOverride ?? columnMeta?.options ?? []
 
-      switch (columnMeta.variant) {
-        case 'text':
-          return (
-            <Input
-              placeholder={columnMeta.placeholder ?? columnMeta.label}
-              value={(column.getFilterValue() as string) ?? ''}
-              onChange={(event) => column.setFilterValue(event.target.value)}
-              className='h-8 w-40 lg:w-56'
-            />
-          )
+  if (!columnMeta?.variant) return null
 
-        case 'number':
-          return (
-            <div className='relative'>
-              <Input
-                type='number'
-                inputMode='numeric'
-                placeholder={columnMeta.placeholder ?? columnMeta.label}
-                value={(column.getFilterValue() as string) ?? ''}
-                onChange={(event) => column.setFilterValue(event.target.value)}
-                className={cn('h-8 w-[120px]', columnMeta.unit && 'pr-8')}
-              />
-              {columnMeta.unit && (
-                <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>
-                  {columnMeta.unit}
-                </span>
-              )}
+  const label = columnMeta.label ? t(columnMeta.label) : column.id
+  const placeholder = columnMeta.placeholder ? t(columnMeta.placeholder) : label
+
+  switch (columnMeta.variant) {
+    case 'text':
+      if (columnMeta.icon) {
+        return (
+          <div className='relative'>
+            <div className='text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50'>
+              {columnMeta.icon &&
+                React.createElement(columnMeta.icon, {
+                  className: 'size-4'
+                })}
+              <span className='sr-only'>{label}</span>
             </div>
-          )
 
-        case 'range':
-          return <DataTableSliderFilter column={column} title={columnMeta.label ?? column.id} />
-
-        case 'date':
-        case 'dateRange':
-          return (
-            <DataTableDateFilter
-              column={column}
-              title={columnMeta.label ?? column.id}
-              multiple={columnMeta.variant === 'dateRange'}
+            <DebouncedInput
+              placeholder={placeholder}
+              value={(column.getFilterValue() as string) ?? ''}
+              onValueChange={(value) => column.setFilterValue(value)}
+              className='h-8 min-w-64 peer pl-9'
+              spellCheck={false}
             />
-          )
-
-        case 'select':
-        case 'multiSelect':
-          return (
-            <DataTableFacetedFilter
-              column={column}
-              title={columnMeta.label ?? column.id}
-              options={columnMeta.options ?? []}
-              multiple={columnMeta.variant === 'multiSelect'}
-            />
-          )
-
-        default:
-          return null
+          </div>
+        )
       }
-    }, [column, columnMeta])
 
-    return onFilterRender()
+      return (
+        <DebouncedInput
+          placeholder={placeholder}
+          value={(column.getFilterValue() as string) ?? ''}
+          onValueChange={(value) => column.setFilterValue(value)}
+          className='h-8 w-40 lg:w-56'
+        />
+      )
+
+    case 'number':
+      return (
+        <div className='relative'>
+          <DebouncedInput
+            type='number'
+            inputMode='numeric'
+            placeholder={placeholder}
+            value={(column.getFilterValue() as string) ?? ''}
+            onValueChange={(value) => column.setFilterValue(value)}
+            className={cn('h-8 w-[120px]', columnMeta.unit && 'pr-8')}
+          />
+          {columnMeta.unit && (
+            <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>
+              {columnMeta.unit}
+            </span>
+          )}
+        </div>
+      )
+
+    case 'range':
+      return <DataTableSliderFilter column={column} title={label} />
+
+    case 'date':
+    case 'dateRange':
+      return <DataTableDateFilter column={column} title={label} multiple={columnMeta.variant === 'dateRange'} />
+
+    case 'select':
+    case 'multiSelect':
+      return (
+        <DataTableFacetedFilter
+          column={column}
+          title={label}
+          options={options}
+          multiple={columnMeta.variant === 'multiSelect'}
+        />
+      )
+
+    case 'radio':
+      return <DataTableRadioFilter column={column} title={label} options={options} />
+    default:
+      return null
   }
 }

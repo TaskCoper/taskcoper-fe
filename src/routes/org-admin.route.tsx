@@ -1,6 +1,7 @@
+import AdminDefaultLayout from '@/layouts/admin-default.layout'
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
-import OrgAdminManagePage from '@/pages/org-admins/org-admin.manage.page'
+import ManagePage from '@/pages/org-admins/manage.page'
 import type { RouteObject } from 'react-router'
 
 export const orgAdminRoutes: RouteObject[] = [
@@ -11,8 +12,14 @@ export const orgAdminRoutes: RouteObject[] = [
         element: <RoleGuardLayout allowedRoles={['orgAdmin']} />,
         children: [
           {
-            path: '/manage',
-            element: <OrgAdminManagePage />
+            path: 'manage',
+            element: <AdminDefaultLayout basePath='/manage' />,
+            children: [
+              {
+                index: true,
+                element: <ManagePage />
+              }
+            ]
           }
         ]
       }

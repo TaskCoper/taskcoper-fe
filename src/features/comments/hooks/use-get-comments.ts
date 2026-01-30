@@ -6,9 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const useGetComments = ({ taskId }: { taskId?: string }) => {
   const {
-    data: comments = {
-      ...getDefaultPaginationResponse<Comment>()
-    },
+    data: comments = getDefaultPaginationResponse<Comment>(),
     isLoading: isLoadingComments,
     error
   } = useQuery({

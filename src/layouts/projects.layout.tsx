@@ -1,6 +1,6 @@
+import ProjectsSidebar from '@/components/sidebar/users/projects-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Spinner } from '@/components/ui/spinner'
-import ProjectsSidebar from '@/features/projects/components/sidebar/projects-sidebar'
 import { Suspense } from 'react'
 import { Outlet } from 'react-router'
 

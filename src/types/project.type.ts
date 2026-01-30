@@ -38,6 +38,49 @@ export interface Project {
   domains: ProjectDomain[]
 }
 
+export interface SystemProject {
+  projectId: string
+  projectName: string
+  description: string | null
+  projectStartDate: string | null
+  projectEndDate: string | null
+  coverImage: string | null
+  projectTeamSize: string | null
+  projectSchoolSubject: string | null
+  organizationId: string
+  organizationName: string
+  organizationAvatar: string | null
+  members: SystemProjectMember[]
+  domains: ProjectDomain[]
+  createBy: SystemProjectCreateBy
+}
+
+export interface SystemProjectMember {
+  userId: string
+  fullName: string
+  email: string
+  avatar: string | null
+  role: number
+  isMain: boolean
+  isEditor: boolean
+}
+
+export interface SystemProjectDomain {
+  id: string
+  domainId: string
+  name: string
+}
+
+export interface SystemProjectCreateBy {
+  userId: string
+  fullName: string
+  email: string
+  avatar: string | null
+  role: number
+  isMain: boolean
+  isEditor: boolean
+}
+
 export interface ProjectDomain {
   id: string
   domainId: string

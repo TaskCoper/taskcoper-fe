@@ -1,4 +1,5 @@
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
+import RoleGuardLayout from '@/layouts/role-guard.layout'
 import HomePage from '@/pages/home.page'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
@@ -9,12 +10,17 @@ const ForgotPasswordPage = lazy(() => import('@/pages/users/forgot-password.page
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: '/',
-    element: <HomePage />
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPasswordPage />
+    element: <RoleGuardLayout allowedRoles={['user']} />,
+    children: [
+      {
+        path: '/',
+        element: <HomePage />
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />
+      }
+    ]
   },
   {
     element: <AuthGuardLayout requiresAuth={false} />,

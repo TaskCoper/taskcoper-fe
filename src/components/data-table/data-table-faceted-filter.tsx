@@ -112,7 +112,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-50 p-0' align='start'>
+      <PopoverContent className='w-60 p-0' align='start'>
         <Command>
           <CommandInput placeholder={title} />
           <CommandList className='max-h-full'>
@@ -133,7 +133,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     </div>
                     {option.icon && <option.icon />}
                     <span className='truncate'>{option.label}</span>
-                    {option.count && <span className='ml-auto font-mono text-xs'>{option.count}</span>}
+                    <span className='ml-auto font-mono text-xs'>{option.count}</span>
                   </CommandItem>
                 )
               })}

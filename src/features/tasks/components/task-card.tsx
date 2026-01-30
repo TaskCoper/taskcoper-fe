@@ -1,9 +1,9 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import AvatarWithTooltip from '@/components/avatar-with-tooltip'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
-import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
+import { cn, getColorTextClass } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { format } from 'date-fns'
@@ -181,24 +181,17 @@ const TaskMembersChip = ({ members }: { members: TaskMember[] }) => {
   return (
     <div role='button' className='flex items-center *:ring-2 *:ring-primary *:ring-offset-1 cursor-pointer'>
       {members.slice(0, 4).map((member, index) => (
-        <Tooltip key={member.userId}>
-          <TooltipTrigger asChild>
-            <Avatar
-              className={cn('size-4', `transition-transform ${activeIndex === index ? 'z-10 scale-110' : ''}`)}
-              onMouseEnter={() => setActiveIndex(index)}
-              onMouseLeave={() => setActiveIndex(null)}
-            >
-              <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
-              <AvatarFallback className='text-[10px]'>
-                {getAvatarFallback(`${member.firstName} ${member.lastName}`)}
-              </AvatarFallback>
-            </Avatar>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className='font-medium'>{`${member.firstName} ${member.lastName}`}</p>
-            <p className='text-xs text-muted-foreground'>{member.email}</p>
-          </TooltipContent>
-        </Tooltip>
+        <AvatarWithTooltip
+          key={member.userId}
+          avatar={member.avatar}
+          fullName={`${member.firstName} ${member.lastName}`}
+          email={member.email}
+          className='size-4'
+          fallbackClassName='text-[10px]'
+          isActive={activeIndex === index}
+          onMouseEnter={() => setActiveIndex(index)}
+          onMouseLeave={() => setActiveIndex(null)}
+        />
       ))}
       {members.length > 4 && (
         <Avatar className='z-10 text-sm font-medium text-muted-foreground size-6'>
