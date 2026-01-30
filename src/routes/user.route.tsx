@@ -1,12 +1,12 @@
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
-import DefaultLayout from '@/layouts/default.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
+import UserDefaultLayout from '@/layouts/user-default.layout'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
-const ProjectsPage = lazy(() => import('@/pages/projects.page'))
+const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
@@ -24,7 +24,7 @@ export const userRoutes: RouteObject[] = [
             element: <VerifyEmailPage />
           },
           {
-            element: <DefaultLayout />,
+            element: <UserDefaultLayout />,
             children: [
               {
                 element: <ProjectsLayout />,

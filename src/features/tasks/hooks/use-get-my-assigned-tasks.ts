@@ -12,9 +12,7 @@ export interface GetMyAssignedTasksParams {
 
 export const useGetMyAssignedTasks = ({ projectId, userId, enabled = true }: GetMyAssignedTasksParams) => {
   const {
-    data: assignedTasks = {
-      ...getDefaultPaginationResponse<TaskPreview>()
-    },
+    data: assignedTasks = getDefaultPaginationResponse<TaskPreview>(),
     isLoading: isLoadingAssignedTasks,
     error
   } = useQuery({

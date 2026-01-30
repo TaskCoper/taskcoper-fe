@@ -13,9 +13,7 @@ export interface GetUsersParams {
 
 export const useGetUsers = ({ searchTerm, pageIndex = DEFAULT_PAGE_INDEX, pageSize = 5 }: GetUsersParams) => {
   const {
-    data: users = {
-      ...getDefaultPaginationResponse<User>()
-    },
+    data: users = getDefaultPaginationResponse<User>(),
     isLoading: isLoadingUsers,
     isError: isErrorUsers
   } = useQuery({

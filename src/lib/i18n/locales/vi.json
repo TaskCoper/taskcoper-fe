@@ -996,5 +996,35 @@
       "searchColumns": "Tìm kiếm cột...",
       "noColumnsFound": "Không tìm thấy cột."
     }
+  },
+  "systemProjects": {
+    "createProject": "Tạo dự án",
+    "column": {
+      "selectAll": "Chọn tất cả",
+      "selectRow": "Chọn hàng",
+      "projectName": "Tên dự án",
+      "projectNamePlaceholder": "Nhập tên hoặc mã dự án...",
+      "organization": "Tổ chức",
+      "noOrganization": "Không có tổ chức",
+      "domain": "Lĩnh vực",
+      "teamSize": "Quy mô",
+      "notProvided": "Chưa cung cấp",
+      "schoolSubject": "Môn",
+      "createdBy": "Tạo bởi",
+      "noCreator": "Không có người tạo",
+      "members": "Thành viên",
+      "noMembers": "Chưa có thành viên",
+      "startDate": "Ngày bắt đầu",
+      "startDatePlaceholder": "Chọn ngày bắt đầu...",
+      "endDate": "Ngày kết thúc",
+      "endDatePlaceholder": "Chọn ngày kết thúc..."
+    },
+    "actions": {
+      "openMenu": "Mở menu",
+      "actions": "Thao tác",
+      "copyProjectId": "Sao chép ID dự án",
+      "viewProject": "Xem dự án",
+      "viewProjectDetails": "Xem chi tiết dự án"
+    }
   }
 }

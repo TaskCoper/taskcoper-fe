@@ -38,6 +38,7 @@ export function DataTable<TData>({
                     style={{
                       ...getColumnPinningStyle({ column: header.column })
                     }}
+                    className='bg-muted/50!'
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
@@ -61,7 +62,7 @@ export function DataTable<TData>({
                 </TableRow>
               ))
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -69,6 +70,7 @@ export function DataTable<TData>({
                       style={{
                         ...getColumnPinningStyle({ column: cell.column })
                       }}
+                      className={index % 2 !== 0 ? 'bg-muted/50!' : ''}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

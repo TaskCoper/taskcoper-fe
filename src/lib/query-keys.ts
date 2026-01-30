@@ -1,3 +1,5 @@
+import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
+
 export const queryKeys = {
   // Auth
   auth: {
@@ -12,9 +14,31 @@ export const queryKeys = {
   },
   // Projects
   projects: {
-    all: ['my-projects'] as const,
-    list: (userId?: string, status?: string[], searchTerm?: string, pageIndex?: number, pageSize?: number) =>
-      [...queryKeys.projects.all, userId, status, searchTerm, pageIndex, pageSize] as const,
+    all: ['projects'] as const,
+    allMy: ['my-projects'] as const,
+    list: ({
+      searchTerm,
+      pageIndex,
+      pageSize,
+      startDate,
+      endDate,
+      organizationId,
+      domainId,
+      sortBy
+    }: GetProjectsParams) =>
+      [
+        ...queryKeys.projects.all,
+        searchTerm,
+        pageIndex,
+        pageSize,
+        startDate,
+        endDate,
+        organizationId,
+        domainId,
+        sortBy
+      ] as const,
+    listMy: (userId?: string, status?: string[], searchTerm?: string, pageIndex?: number, pageSize?: number) =>
+      [...queryKeys.projects.allMy, userId, status, searchTerm, pageIndex, pageSize] as const,
     detail: (projectId?: string) => ['project', projectId] as const,
     members: {
       all: (projectId?: string) => ['members', projectId] as const,
@@ -63,7 +87,8 @@ export const queryKeys = {
   domains: {
     all: () => ['domains'] as const,
     list: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
-      ['domains', searchTerm, pageIndex, pageSize] as const
+      ['domains', searchTerm, pageIndex, pageSize] as const,
+    stats: () => ['domain-stats'] as const
   },
   // Attachments
   attachments: {
@@ -71,6 +96,7 @@ export const queryKeys = {
   },
   // Organizations
   organizations: {
-    detail: (organizationId?: string) => ['organization', organizationId] as const
+    detail: (organizationId?: string) => ['organization', organizationId] as const,
+    stats: () => ['organization-stats'] as const
   }
 } as const

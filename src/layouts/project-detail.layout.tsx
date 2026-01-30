@@ -1,26 +1,26 @@
+import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { customCollisionDetection } from '@/components/dnd/collision-detection'
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import ProjectDetailSidebar from '@/components/sidebar/project-detail-sidebar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList } from '@/components/ui/tabs'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import AddParentMilestonePopover from '@/features/milestones/components/add-parent-milestone-popover'
 import ParentMilestonesMenu from '@/features/milestones/components/parent-milestones-menu'
 import { SortableMilestoneTab } from '@/features/milestones/components/sortable-milestone-tab'
 import { useParentMilestoneDragDrop } from '@/features/milestones/hooks/use-parent-milestone-drag-drop'
 import UpdateProjectMembersDialog from '@/features/projects/components/dialogs/update-project-members-dialog'
-import ProjectDetailSidebar from '@/features/projects/components/sidebar/project-detail-sidebar'
 import { useGetParentMilestones } from '@/features/projects/hooks/use-get-parent-milestones'
 import { useGetProjectMembers } from '@/features/projects/hooks/use-get-project-members'
 import { useProjectRouting } from '@/features/projects/hooks/use-project-routing'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { MenuIcon, PlusIcon } from 'lucide-react'
@@ -255,25 +255,15 @@ export default function ProjectDetailLayout() {
                     className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'
                   >
                     {members?.value.items.slice(0, 4).map((member, index) => (
-                      <Tooltip key={member.userId}>
-                        <TooltipTrigger asChild>
-                          <Avatar
-                            className={cn(
-                              'size-6',
-                              `transition-transform ${activeIndex === index ? 'z-10 scale-110' : ''}`
-                            )}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onMouseLeave={() => setActiveIndex(null)}
-                          >
-                            <AvatarImage src={member.avatar || ''} alt={member.fullName} />
-                            <AvatarFallback>{getAvatarFallback(member.fullName)}</AvatarFallback>
-                          </Avatar>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='font-medium'>{member.fullName}</p>
-                          <p className='text-xs text-muted-foreground'>{member.email}</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <AvatarWithTooltip
+                        key={member.userId}
+                        avatar={member.avatar}
+                        fullName={member.fullName}
+                        email={member.email}
+                        isActive={activeIndex === index}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onMouseLeave={() => setActiveIndex(null)}
+                      />
                     ))}
 
                     {(members?.value.totalCount ?? 0) > 4 && (

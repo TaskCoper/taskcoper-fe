@@ -22,16 +22,12 @@ export const useGetMyProjects = ({
 }: GetMyProjectsParams) => {
   const { user } = useAuthStore()
 
-  const {
-    data: myProjects = {
-      ...getDefaultPaginationResponse<ProjectPreview>()
-    },
-    isLoading: isLoadingMyProjects
-  } = useQuery({
-    queryKey: queryKeys.projects.list(user?.UserId, status, searchTerm, pageIndex, pageSize),
-    queryFn: () => projectService.getMyProjects({ userId: user?.UserId, status, searchTerm, pageIndex, pageSize }),
-    enabled: !!user?.UserId
-  })
+  const { data: myProjects = getDefaultPaginationResponse<ProjectPreview>(), isLoading: isLoadingMyProjects } =
+    useQuery({
+      queryKey: queryKeys.projects.listMy(user?.UserId, status, searchTerm, pageIndex, pageSize),
+      queryFn: () => projectService.getMyProjects({ userId: user?.UserId, status, searchTerm, pageIndex, pageSize }),
+      enabled: !!user?.UserId
+    })
 
   return { myProjects, isLoadingMyProjects }
 }

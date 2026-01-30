@@ -6,9 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const useGetParentMilestones = ({ projectId, enabled = true }: { projectId?: string; enabled?: boolean }) => {
   const {
-    data: parentMilestones = {
-      ...getDefaultPaginationResponse<ParentMilestone>()
-    },
+    data: parentMilestones = getDefaultPaginationResponse<ParentMilestone>(),
     isLoading: isLoadingParentMilestones,
     error
   } = useQuery({

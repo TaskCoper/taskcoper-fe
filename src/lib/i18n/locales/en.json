@@ -996,5 +996,35 @@
       "searchColumns": "Search columns...",
       "noColumnsFound": "No columns found."
     }
+  },
+  "systemProjects": {
+    "createProject": "Create project",
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "projectName": "Project name",
+      "projectNamePlaceholder": "Enter project name or code...",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "domain": "Domain",
+      "teamSize": "Team size",
+      "notProvided": "Not provided",
+      "schoolSubject": "Subject",
+      "createdBy": "Created by",
+      "noCreator": "No creator",
+      "members": "Members",
+      "noMembers": "No members",
+      "startDate": "Start date",
+      "startDatePlaceholder": "Select start date...",
+      "endDate": "End date",
+      "endDatePlaceholder": "Select end date..."
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "copyProjectId": "Copy project ID",
+      "viewProject": "View project",
+      "viewProjectDetails": "View project details"
+    }
   }
 }

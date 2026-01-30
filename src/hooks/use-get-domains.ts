@@ -19,12 +19,7 @@ export const useGetDomains = ({
   pageSize = 50,
   enabled = true
 }: GetDomainsParams) => {
-  const {
-    data: domains = {
-      ...getDefaultPaginationResponse<Domain>()
-    },
-    isLoading: isLoadingDomains
-  } = useQuery({
+  const { data: domains = getDefaultPaginationResponse<Domain>(), isLoading: isLoadingDomains } = useQuery({
     queryKey: queryKeys.domains.list(searchTerm, pageIndex, pageSize),
     queryFn: () => domainService.getDomains({ searchTerm, pageIndex, pageSize }),
     enabled

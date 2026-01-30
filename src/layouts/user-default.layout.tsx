@@ -1,3 +1,4 @@
+import NavUser from '@/components/sidebar/users/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -6,7 +7,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
-import NavUser from '@/features/projects/components/sidebar/nav-user'
 import { useGetOrg } from '@/hooks/use-get-org'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
@@ -58,7 +58,7 @@ const navigations = [
   }
 ]
 
-export default function DefaultLayout() {
+export default function UserDefaultLayout() {
   const { t } = useTranslation()
   const location = useLocation()
   const [open, setOpen] = useState(false)

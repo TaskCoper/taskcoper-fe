@@ -9,12 +9,7 @@ interface UseGetAttachmentsProps {
 }
 
 export const useGetAttachments = ({ taskId }: UseGetAttachmentsProps) => {
-  const {
-    data: attachments = {
-      ...getDefaultPaginationResponse<Attachment>()
-    },
-    isLoading: isLoadingAttachments
-  } = useQuery({
+  const { data: attachments = getDefaultPaginationResponse<Attachment>(), isLoading: isLoadingAttachments } = useQuery({
     queryKey: queryKeys.attachments.byTask(taskId),
     queryFn: () => taskService.getAttachments({ taskId }),
     enabled: !!taskId

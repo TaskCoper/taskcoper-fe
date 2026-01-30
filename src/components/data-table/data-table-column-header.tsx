@@ -24,7 +24,7 @@ export function DataTableColumnHeader<TData, TValue>({
   const { t } = useTranslation()
 
   if (!column.getCanSort() && !column.getCanHide()) {
-    return <div className={cn(className)}>{label}</div>
+    return <div className={cn(className)}>{t(label)}</div>
   }
 
   return (
@@ -36,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
         )}
         {...props}
       >
-        {label}
+        {t(label)}
         {column.getCanSort() &&
           (column.getIsSorted() === 'desc' ? (
             <ChevronDown />
@@ -46,7 +46,7 @@ export function DataTableColumnHeader<TData, TValue>({
             <ChevronsUpDown />
           ))}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='start' className='w-28'>
+      <DropdownMenuContent align='start' className='min-w-28'>
         {column.getCanSort() && (
           <>
             <DropdownMenuCheckboxItem

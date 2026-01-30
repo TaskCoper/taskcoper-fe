@@ -12,9 +12,7 @@ export interface UseGetProjectMembersParams {
 // TODO: add pagination
 export const useGetProjectMembers = ({ projectId, searchTerm }: UseGetProjectMembersParams) => {
   const {
-    data: members = {
-      ...getDefaultPaginationResponse<ProjectMember>()
-    },
+    data: members = getDefaultPaginationResponse<ProjectMember>(),
     isLoading: isLoadingMembers,
     error
   } = useQuery({

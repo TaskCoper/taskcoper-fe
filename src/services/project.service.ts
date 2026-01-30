@@ -2,15 +2,42 @@ import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/
 import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
+import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Label } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
-import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview } from '@/types/project.type'
+import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview, SystemProject } from '@/types/project.type'
 import type { TaskPreview } from '@/types/task.type'
 
 class ProjectService {
   private readonly baseUrl = 'projects'
+
+  getProjects = async ({
+    searchTerm,
+    pageIndex,
+    pageSize,
+    startDate,
+    endDate,
+    organizationId,
+    domainId,
+    sortBy
+  }: GetProjectsParams) => {
+    const { data } = await api.get<BasePaginationResponse<SystemProject>>(`/v1/${this.baseUrl}`, {
+      params: {
+        searchTerm,
+        pageIndex,
+        pageSize,
+        startDate,
+        endDate,
+        organizationId,
+        domainId,
+        sortBy
+      }
+    })
+
+    return data
+  }
 
   getMyProjects = async ({ userId, status, searchTerm, pageIndex, pageSize }: GetMyProjectsParams) => {
     const { data } = await api.get<BasePaginationResponse<ProjectPreview>>(`/v1/${this.baseUrl}/user`, {
