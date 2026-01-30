@@ -1,4 +1,5 @@
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
+import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 
 export const queryKeys = {
   // Auth
@@ -9,8 +10,8 @@ export const queryKeys = {
   // Users
   users: {
     all: ['users'] as const,
-    list: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
-      [...queryKeys.users.all, searchTerm, pageIndex, pageSize] as const
+    list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId }: GetUsersParams) =>
+      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId] as const
   },
   // Projects
   projects: {

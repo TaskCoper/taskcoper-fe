@@ -54,7 +54,8 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
   const hasExpiration = watch('hasExpiration')
 
   const { users, isLoadingUsers } = useGetUsers({
-    searchTerm: debouncedSearchQuery
+    searchTerm: debouncedSearchQuery,
+    enabled: !!debouncedSearchQuery
   })
 
   const userItems: ComboboxUserItem[] = users.value.items.map((u) => ({

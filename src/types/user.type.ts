@@ -1,3 +1,5 @@
+import type { Domain } from './domain.type'
+
 export interface User {
   id: string
   email: string
@@ -8,7 +10,14 @@ export interface User {
   role: string
   address: string | null
   city: string | null
+  originalCity: string | null
   state: string | null
+  originalState: string | null
   projectCreatedCount: number
+  projectJoinCount: number
+  organizationId: string | null
+  organizationName: string | null
+  organizationAvatar: string | null
+  domains: Domain[]
   createdOnUtc: string
 }

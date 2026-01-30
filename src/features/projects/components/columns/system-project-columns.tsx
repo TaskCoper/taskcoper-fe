@@ -99,14 +99,18 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
         label: 'systemProjects.column.organization',
         variant: 'multiSelect'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='systemProjects.column.organization' />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='systemProjects.column.organization' className='mx-auto' />
+      ),
       cell: ({ row }) => {
         const { organizationName, organizationAvatar } = row.original
         if (!organizationName)
-          return <p className='text-muted-foreground'>{i18next.t('systemProjects.column.noOrganization')}</p>
+          return (
+            <p className='text-center text-muted-foreground'>{i18next.t('systemProjects.column.noOrganization')}</p>
+          )
 
         return (
-          <div className='flex items-center gap-3'>
+          <div className='flex justify-center items-center gap-3'>
             <Avatar className='size-6 ring-2 ring-orange-400 ring-offset-2'>
               <AvatarImage src={organizationAvatar || ''} alt={organizationName} />
               <AvatarFallback className='text-xs'>{getAvatarFallback(organizationName)}</AvatarFallback>
@@ -120,20 +124,6 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
       enableHiding: true,
       enableColumnFilter: true,
       size: 80
-    },
-    {
-      id: 'domainId',
-      accessorFn: (row) => row.domains.map((d) => d.domainId),
-      meta: {
-        label: 'systemProjects.column.domain',
-        variant: 'multiSelect'
-      },
-      header: () => null,
-      cell: () => null,
-      enableSorting: false,
-      enableHiding: false,
-      enableColumnFilter: true,
-      size: 0
     },
     {
       id: 'projectTeamSize',
@@ -300,6 +290,20 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
         )
       },
       size: 30
+    },
+    {
+      id: 'domainId',
+      accessorFn: (row) => row.domains.map((d) => d.domainId),
+      meta: {
+        label: 'systemProjects.column.domain',
+        variant: 'multiSelect'
+      },
+      header: () => null,
+      cell: () => null,
+      enableSorting: false,
+      enableHiding: false,
+      enableColumnFilter: true,
+      size: 0
     }
   ]
 }

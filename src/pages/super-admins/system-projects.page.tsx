@@ -23,7 +23,7 @@ export default function SystemProjectsPage() {
     prefix: 'projects'
   })
 
-  const [nameFilter] = useQueryState('projects_projectName', parseAsString)
+  const [nameFilter] = useQueryState('projects_name', parseAsString)
   const [startDateFilter] = useQueryState('projects_startDate', parseAsString)
   const [endDateFilter] = useQueryState('projects_endDate', parseAsString)
   const [orgIdsFilter] = useQueryState('projects_organizationId', parseAsArrayOf(parseAsString))
@@ -89,7 +89,7 @@ export default function SystemProjectsPage() {
   const isLoading = isLoadingProjects || isLoadingOrgStats || isLoadingDomainStats
 
   return (
-    <div className='px-4'>
+    <div className='px-4 pt-2'>
       <DataTable table={table} isLoading={isLoading}>
         <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
           <Button size='sm'>

@@ -10,7 +10,7 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar'
 import { ChevronRight, type LucideIcon } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 
 export function NavSecondary({
   items
@@ -26,6 +26,8 @@ export function NavSecondary({
     }[]
   }[]
 }) {
+  const { pathname } = useLocation()
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -44,7 +46,10 @@ export function NavSecondary({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubButton
+                        asChild
+                        className={pathname === subItem.url ? 'bg-primary/10 text-primary font-medium' : ''}
+                      >
                         <Link to={subItem.url}>
                           <span>{subItem.title}</span>
                         </Link>
