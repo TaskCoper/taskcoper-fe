@@ -24,8 +24,8 @@ export default function SystemProjectsPage() {
   })
 
   const [nameFilter] = useQueryState('projects_projectName', parseAsString)
-  const [startDateFilter] = useQueryState('projects_projectStartDate', parseAsString)
-  const [endDateFilter] = useQueryState('projects_projectEndDate', parseAsString)
+  const [startDateFilter] = useQueryState('projects_startDate', parseAsString)
+  const [endDateFilter] = useQueryState('projects_endDate', parseAsString)
   const [orgIdsFilter] = useQueryState('projects_organizationId', parseAsArrayOf(parseAsString))
   const [domainIdsFilter] = useQueryState('projects_domainId', parseAsArrayOf(parseAsString))
 
