@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { AudioWaveform, CircleUserRound, Command, FoldersIcon, GalleryVerticalEnd, GaugeIcon } from 'lucide-react'
 import * as React from 'react'
+import { useLocation } from 'react-router'
 import { NavMain } from './nav-main'
 import { NavSecondary } from './nav-secondary'
 
@@ -14,6 +15,7 @@ interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
   const { me, isGettingMe } = useGetMe()
+  const { pathname } = useLocation()
 
   const navItems = React.useMemo(() => {
     return {
@@ -38,7 +40,8 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
         {
           name: 'Dashboard',
           url: basePath,
-          icon: GaugeIcon
+          icon: GaugeIcon,
+          isActive: pathname === basePath
         }
       ],
       navSecondary: [
@@ -46,7 +49,7 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
           title: 'Dự án',
           url: `${basePath}/projects`,
           icon: FoldersIcon,
-          isActive: true,
+          isActive: pathname.startsWith(`${basePath}/projects`),
           items: [
             {
               title: 'Danh sách dự án',
@@ -62,6 +65,7 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
           title: 'Người dùng',
           url: `${basePath}/users`,
           icon: CircleUserRound,
+          isActive: pathname.startsWith(`${basePath}/users`),
           items: [
             {
               title: 'Danh sách người dùng',
@@ -79,7 +83,7 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
         }
       ]
     }
-  }, [basePath])
+  }, [basePath, pathname])
 
   return (
     <Sidebar collapsible='icon' {...props}>

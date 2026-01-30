@@ -1026,5 +1026,34 @@
       "viewProject": "View project",
       "viewProjectDetails": "View project details"
     }
+  },
+  "systemUsers": {
+    "createUser": "Create user",
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "name": "Name",
+      "namePlaceholder": "Search by name or email...",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "role": "Role",
+      "domains": "Domains",
+      "noDomains": "No domains",
+      "location": "Location",
+      "noLocation": "No location",
+      "projects": "Projects",
+      "created": "Created",
+      "joined": "Joined",
+      "createdAt": "Created"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "copyUserId": "Copy user ID",
+      "copyEmail": "Copy email",
+      "viewProfile": "View profile",
+      "editUser": "Edit user",
+      "deleteUser": "Delete user"
+    }
   }
 }

@@ -89,12 +89,15 @@ class UserService {
     return data.value
   }
 
-  getUsers = async ({ searchTerm, pageIndex, pageSize }: GetUsersParams) => {
+  getUsers = async ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId }: GetUsersParams) => {
     const { data } = await api.get<BasePaginationResponse<User>>(`/v1/${this.baseUrl}`, {
       params: {
         searchTerm,
         pageIndex,
-        pageSize
+        pageSize,
+        sortBy,
+        organizationId,
+        domainId
       }
     })
 

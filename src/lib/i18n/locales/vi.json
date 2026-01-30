@@ -1026,5 +1026,34 @@
       "viewProject": "Xem dự án",
       "viewProjectDetails": "Xem chi tiết dự án"
     }
+  },
+  "systemUsers": {
+    "createUser": "Tạo người dùng",
+    "column": {
+      "selectAll": "Chọn tất cả",
+      "selectRow": "Chọn hàng",
+      "name": "Họ tên",
+      "namePlaceholder": "Tìm theo tên hoặc email...",
+      "organization": "Tổ chức",
+      "noOrganization": "Không có tổ chức",
+      "role": "Vai trò",
+      "domains": "Lĩnh vực",
+      "noDomains": "Không có lĩnh vực",
+      "location": "Địa điểm",
+      "noLocation": "Không có địa điểm",
+      "projects": "Dự án",
+      "created": "Đã tạo",
+      "joined": "Đã tham gia",
+      "createdAt": "Ngày tạo"
+    },
+    "actions": {
+      "openMenu": "Mở menu",
+      "actions": "Thao tác",
+      "copyUserId": "Sao chép ID người dùng",
+      "copyEmail": "Sao chép email",
+      "viewProfile": "Xem hồ sơ",
+      "editUser": "Chỉnh sửa",
+      "deleteUser": "Xóa người dùng"
+    }
   }
 }

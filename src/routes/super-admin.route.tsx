@@ -6,6 +6,7 @@ import { lazy } from 'react'
 import type { RouteObject } from 'react-router'
 
 const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projects.page'))
+const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.page'))
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -36,6 +37,15 @@ export const adminRoutes: RouteObject[] = [
                   {
                     path: 'settings',
                     element: <div>Projects Settings</div>
+                  }
+                ]
+              },
+              {
+                path: 'users',
+                children: [
+                  {
+                    index: true,
+                    element: <SystemUsersPage />
                   }
                 ]
               }
