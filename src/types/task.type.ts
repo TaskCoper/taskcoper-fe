@@ -15,6 +15,8 @@ export interface TaskPreview {
   progressPercentage: number
   taskLabels: TaskLabel[]
   isCompleted: boolean
+  estimatedPoints: number | null
+  backgroundImage: string | null
 }
 
 export type TaskCardType = 'TaskCard'

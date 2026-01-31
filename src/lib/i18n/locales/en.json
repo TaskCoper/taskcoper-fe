@@ -558,6 +558,11 @@
       "title": "Task Detail",
       "description": "Task Description",
       "labels": "Labels",
+      "storyPoints": "Task Points",
+      "enterStoryPoints": "Enter task points",
+      "backgroundImage": "Background Image",
+      "chooseImage": "Upload image",
+      "none": "None",
       "dateFormat": "HH:mm MMM d, y"
     }
   },

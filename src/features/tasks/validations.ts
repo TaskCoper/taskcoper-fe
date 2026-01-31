@@ -36,6 +36,8 @@ export const updateTaskSchema = (t: TFunction) => {
         .max(10_000, { message: t('common.validation.maxLength.10000') })
         .nullable(),
       isCompleted: z.boolean(),
+      estimatedPoints: z.number().positive('common.validation.number.positive').nullable(),
+      backgroundImage: z.url().nullable(),
       position: z.number({ message: t('task.validation.position.invalid') }),
       startDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       endDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
