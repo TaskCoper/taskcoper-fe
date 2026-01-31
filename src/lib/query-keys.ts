@@ -10,8 +10,8 @@ export const queryKeys = {
   // Users
   users: {
     all: ['users'] as const,
-    list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId }: GetUsersParams) =>
-      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId] as const
+    list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) =>
+      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const
   },
   // Projects
   projects: {
@@ -101,5 +101,9 @@ export const queryKeys = {
   organizations: {
     detail: (organizationId?: string) => ['organization', organizationId] as const,
     stats: () => ['organization-stats'] as const
+  },
+  // Roles
+  roles: {
+    stats: () => ['role-stats'] as const
   }
 } as const
