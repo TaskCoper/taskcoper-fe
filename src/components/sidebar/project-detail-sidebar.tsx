@@ -16,6 +16,7 @@ import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import {
   CalendarClockIcon,
+  DatabaseIcon,
   GaugeIcon,
   InfoIcon,
   ListTodoIcon,
@@ -74,6 +75,12 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
         title: t('project.sidebar.note'),
         url: 'note',
         icon: NotebookPenIcon,
+        hasSecondSidebar: false
+      },
+      {
+        title: t('project.sidebar.storage'),
+        url: 'storage',
+        icon: DatabaseIcon,
         hasSecondSidebar: false
       },
       {

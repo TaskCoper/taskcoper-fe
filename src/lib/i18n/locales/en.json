@@ -290,6 +290,16 @@
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
+      "storage": "Storage",
+      "storagePage": {
+        "title": "Project Storage",
+        "description": "All files uploaded to tasks in this project.",
+        "noFiles": "No files uploaded yet.",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "download": "Download",
+        "task": "Task"
+      },
       "settings": "Settings",
       "myProjects": "My Projects",
       "myCalendar": "My Calendar",

@@ -105,5 +105,9 @@ export const queryKeys = {
   // Roles
   roles: {
     stats: () => ['role-stats'] as const
+  },
+  // Project Resources
+  projectResources: {
+    all: (projectId?: string) => ['project-resources', projectId] as const
   }
 } as const
