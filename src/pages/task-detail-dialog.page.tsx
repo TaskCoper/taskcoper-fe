@@ -27,9 +27,11 @@ import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask
 import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
 import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
 import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
+import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
 import DatePopover from '@/features/tasks/components/date-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
+import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
@@ -75,6 +77,7 @@ export default function TaskDetailDialogPage() {
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
   const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
+  const [openBackgroundImagePopover, setOpenBackgroundImagePopover] = useState(false)
 
   const sensors = useDndSensors()
 
@@ -130,7 +133,9 @@ export default function TaskDetailDialogPage() {
         startDate: task.taskStartDate,
         endDate: task.taskEndDate,
         targetMilestoneId: task.milestoneId,
-        announceBeforeMinutes: task.announceBeforeMinutes
+        announceBeforeMinutes: task.announceBeforeMinutes,
+        estimatedPoints: task.estimatedPoints,
+        backgroundImage: task.backgroundImage
       }
 
       const validated = updateTaskSchema(t).safeParse(values)
@@ -163,7 +168,9 @@ export default function TaskDetailDialogPage() {
         endDate: task.taskEndDate,
         isCompleted: task.isCompleted,
         targetMilestoneId: task.milestoneId,
-        announceBeforeMinutes: task.announceBeforeMinutes
+        announceBeforeMinutes: task.announceBeforeMinutes,
+        estimatedPoints: task.estimatedPoints,
+        backgroundImage: task.backgroundImage
       })
     }
   }, [open, task, resetTask])
@@ -241,62 +248,87 @@ export default function TaskDetailDialogPage() {
       <DialogContent
         showCloseButton={false}
         position='top-center'
-        className='min-w-6xl p-0 gap-0 flex flex-col'
+        className='min-w-6xl p-0 gap-0 flex flex-col border-none'
         onInteractOutside={handleClose}
       >
-        <VisuallyHidden>
-          <DialogHeader>
-            <DialogTitle>{t('task.detail.title')}</DialogTitle>
-            <DialogDescription>{t('task.detail.description')}</DialogDescription>
-          </DialogHeader>
-        </VisuallyHidden>
-        <div className='px-6 py-4 flex items-center justify-between gap-2'>
-          <Button size='sm' variant='secondary'>
-            {task?.milestoneName}
-            <ChevronDownIcon />
-          </Button>
+        <FormProvider {...updateTaskMethods}>
+          <VisuallyHidden>
+            <DialogHeader>
+              <DialogTitle>{t('task.detail.title')}</DialogTitle>
+              <DialogDescription>{t('task.detail.description')}</DialogDescription>
+            </DialogHeader>
+          </VisuallyHidden>
 
-          <div className='flex items-center gap-1'>
-            <Button className='rounded-full' variant='ghost' size='icon-sm'>
-              <EyeIcon />
+          {task?.backgroundImage ? (
+            <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
+              <img src={task.backgroundImage} alt='Cover' className='w-full h-full object-contain' />
+            </div>
+          ) : null}
+
+          <div
+            className={cn(
+              'px-6 py-4 flex items-center justify-between gap-2 z-10',
+              task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
+            )}
+          >
+            <Button size='sm' variant='secondary'>
+              {task?.milestoneName}
+              <ChevronDownIcon />
             </Button>
 
-            <Separator orientation='vertical' />
+            <div className='flex items-center gap-1'>
+              <Button className='rounded-full' variant={task?.backgroundImage ? 'outline' : 'ghost'} size='icon-sm'>
+                <EyeIcon />
+              </Button>
 
-            <Button className='rounded-full' variant='ghost' size='icon-sm'>
-              <ImageIcon />
-            </Button>
-
-            {taskId && task?.taskName && projectId && milestoneId ? (
-              <TaskDetailMenu
-                projectId={projectId}
-                parentMilestoneId={milestoneId}
-                taskId={taskId}
-                taskName={task.taskName}
-                onDeleteSuccess={goBack}
-                open={openTaskDetailMenu}
-                setOpen={setOpenTaskDetailMenu}
+              <BackgroundImagePopover
+                onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                open={openBackgroundImagePopover}
+                setOpen={setOpenBackgroundImagePopover}
               >
                 <Button
-                  className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}
-                  variant='ghost'
+                  className={cn('rounded-full', openBackgroundImagePopover ? 'bg-primary/10 text-primary' : '')}
+                  variant={task?.backgroundImage ? 'outline' : 'ghost'}
                   size='icon-sm'
                 >
-                  <MoreHorizontalIcon />
+                  <ImageIcon />
                 </Button>
-              </TaskDetailMenu>
-            ) : null}
+              </BackgroundImagePopover>
 
-            <Button className='rounded-full' variant='ghost' size='icon-sm' onClick={handleClose}>
-              <XIcon />
-            </Button>
+              {taskId && task?.taskName && projectId && milestoneId ? (
+                <TaskDetailMenu
+                  projectId={projectId}
+                  parentMilestoneId={milestoneId}
+                  taskId={taskId}
+                  taskName={task.taskName}
+                  onDeleteSuccess={goBack}
+                  open={openTaskDetailMenu}
+                  setOpen={setOpenTaskDetailMenu}
+                >
+                  <Button
+                    className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}
+                    variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                    size='icon-sm'
+                  >
+                    <MoreHorizontalIcon />
+                  </Button>
+                </TaskDetailMenu>
+              ) : null}
+
+              <Button
+                className='rounded-full'
+                variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                size='icon-sm'
+                onClick={handleClose}
+              >
+                <XIcon />
+              </Button>
+            </div>
           </div>
-        </div>
 
-        <Separator />
+          <Separator />
 
-        <div className='grid grid-cols-12 flex-1 overflow-hidden'>
-          <FormProvider {...updateTaskMethods}>
+          <div className='grid grid-cols-12 flex-1 overflow-hidden'>
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
               {/* Task name + popovers */}
               <div className='flex gap-3'>
@@ -375,7 +407,7 @@ export default function TaskDetailDialogPage() {
                 </div>
               </div>
 
-              <div className='flex items-center flex-wrap gap-10 pl-6'>
+              <div className='flex items-center flex-wrap gap-x-6 gap-y-4 pl-6'>
                 {/* Labels section */}
                 {(task?.taskLabels.length ?? 0) > 0 ? (
                   <div className='space-y-1 max-w-full'>
@@ -421,7 +453,7 @@ export default function TaskDetailDialogPage() {
 
                     <div className='flex items-center gap-1'>
                       {taskMembers?.value.items.map((member) => (
-                        <Avatar key={member.userId} className='size-9'>
+                        <Avatar key={member.userId} className='size-8'>
                           <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
                           <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
                         </Avatar>
@@ -429,7 +461,7 @@ export default function TaskDetailDialogPage() {
 
                       {projectId && taskId && milestoneId ? (
                         <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
-                          <Button className='rounded-full size-9' size='icon' variant='secondary'>
+                          <Button className='rounded-full size-8' size='icon' variant='secondary'>
                             <PlusIcon />
                           </Button>
                         </AssigneePopover>
@@ -461,6 +493,21 @@ export default function TaskDetailDialogPage() {
                     </DatePopover>
                   </div>
                 ) : null}
+
+                {/* Story points section */}
+                <div className='space-y-1'>
+                  <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.storyPoints')}</p>
+
+                  <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)}>
+                    <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
+                      {task?.estimatedPoints ? (
+                        <p className='font-semibold min-w-10'>{task.estimatedPoints}</p>
+                      ) : (
+                        <p className='font-semibold text-muted-foreground min-w-10'>{t('task.detail.none')}</p>
+                      )}
+                    </Button>
+                  </TaskPointsPopover>
+                </div>
               </div>
 
               <div className='flex gap-3'>
@@ -503,7 +550,7 @@ export default function TaskDetailDialogPage() {
                           {t('common.button.save')}
                         </Button>
                         <Button
-                          variant='outline'
+                          variant='ghost'
                           onClick={() => {
                             setIsEditDescription(false)
                             resetTask()
@@ -622,77 +669,77 @@ export default function TaskDetailDialogPage() {
                 </DragOverlay>
               </DndContext>
             </div>
-          </FormProvider>
 
-          <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
-            <div className='flex items-center gap-2'>
-              <MessageSquareText className='size-4' />
-              <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
-            </div>
-
-            {isEditComment ? (
-              <div className='space-y-2'>
-                <Controller
-                  name='content'
-                  control={addCommentControl}
-                  render={({ field }) => (
-                    <div className='[&_.prose]:min-h-32 [&_.prose]:max-h-56'>
-                      <RichTextEditor
-                        isInitialFocus={true}
-                        compact={true}
-                        content={field.value ?? ''}
-                        onChange={field.onChange}
-                      />
-                    </div>
-                  )}
-                />
-                <div className='flex items-center gap-2'>
-                  <Button
-                    onClick={() => {
-                      handleSubmitComment(onSubmitAddComment)()
-                      setIsEditComment(false)
-                    }}
-                    disabled={isAddingComment}
-                  >
-                    {isAddingComment ? <Spinner /> : null}
-                    {t('common.button.save')}
-                  </Button>
-                  <Button
-                    variant='outline'
-                    onClick={() => {
-                      setIsEditComment(false)
-                      resetComment()
-                    }}
-                    disabled={isAddingComment}
-                  >
-                    {t('common.button.cancel')}
-                  </Button>
-                </div>
+            <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
+              <div className='flex items-center gap-2'>
+                <MessageSquareText className='size-4' />
+                <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
               </div>
-            ) : (
-              <Input
-                placeholder={t('task.comment.addComment')}
-                className='font-semibold bg-background'
-                readOnly
-                onClick={() => setIsEditComment(true)}
-              />
-            )}
 
-            {taskId && projectId && milestoneId ? (
-              <div className='space-y-6 pb-6'>
-                {comments?.value.items.map((comment) => (
-                  <CommentCard
-                    key={comment.commentId}
-                    comment={comment}
-                    taskId={taskId}
-                    projectId={projectId}
-                    parentMilestoneId={milestoneId}
+              {isEditComment ? (
+                <div className='space-y-2'>
+                  <Controller
+                    name='content'
+                    control={addCommentControl}
+                    render={({ field }) => (
+                      <div className='[&_.prose]:min-h-32 [&_.prose]:max-h-56'>
+                        <RichTextEditor
+                          isInitialFocus={true}
+                          compact={true}
+                          content={field.value ?? ''}
+                          onChange={field.onChange}
+                        />
+                      </div>
+                    )}
                   />
-                ))}
-              </div>
-            ) : null}
+                  <div className='flex items-center gap-2'>
+                    <Button
+                      onClick={() => {
+                        handleSubmitComment(onSubmitAddComment)()
+                        setIsEditComment(false)
+                      }}
+                      disabled={isAddingComment}
+                    >
+                      {isAddingComment ? <Spinner /> : null}
+                      {t('common.button.save')}
+                    </Button>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setIsEditComment(false)
+                        resetComment()
+                      }}
+                      disabled={isAddingComment}
+                    >
+                      {t('common.button.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Input
+                  placeholder={t('task.comment.addComment')}
+                  className='font-semibold bg-background'
+                  readOnly
+                  onClick={() => setIsEditComment(true)}
+                />
+              )}
+
+              {taskId && projectId && milestoneId ? (
+                <div className='space-y-6 pb-6'>
+                  {comments?.value.items.map((comment) => (
+                    <CommentCard
+                      key={comment.commentId}
+                      comment={comment}
+                      taskId={taskId}
+                      projectId={projectId}
+                      parentMilestoneId={milestoneId}
+                    />
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
-        </div>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   )
