@@ -8,15 +8,11 @@ export interface GetMilestonesParams {
 }
 
 export const useGetMilestones = ({ projectId, parentMilestoneId }: GetMilestonesParams) => {
-  const {
-    data: milestones,
-    isLoading: isLoadingMilestones,
-    error
-  } = useQuery({
+  const { data: milestones, isLoading: isLoadingMilestones } = useQuery({
     queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId),
     queryFn: () => projectService.getMilestones({ projectId, parentMilestoneId }),
     enabled: !!projectId && !!parentMilestoneId
   })
 
-  return { milestones, isLoadingMilestones, error }
+  return { milestones, isLoadingMilestones }
 }

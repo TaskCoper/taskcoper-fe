@@ -1,4 +1,4 @@
-import { useGetMilestones } from '@/features/projects/hooks/use-get-milestones'
+import { useGetMilestones } from '@/features/milestones/hooks/use-get-milestones'
 import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { calculateNewItemPosition } from '@/shared/utils'
@@ -65,6 +65,8 @@ export const useAddTask = ({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(milestoneId) })
     }
   })
 

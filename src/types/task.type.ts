@@ -49,3 +49,9 @@ export interface TaskMember {
   email: string
   avatar: string | null
 }
+
+export interface MilestoneTask {
+  id: string
+  name: string
+  position: number
+}

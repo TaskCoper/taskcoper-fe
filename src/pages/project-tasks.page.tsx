@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMilestones } from '@/features/milestones/hooks/use-get-milestones'
 import ProjectBoard from '@/features/projects/components/project-board'
-import { useGetMilestones } from '@/features/projects/hooks/use-get-milestones'
 import { Outlet, useParams } from 'react-router'
 
 export default function ProjectTasksPage() {

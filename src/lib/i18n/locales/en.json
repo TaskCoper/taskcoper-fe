@@ -360,6 +360,12 @@
         }
       }
     },
+    "moveTask": {
+      "title": "Move task",
+      "selectMilestone": "Select milestone",
+      "selectPosition": "Select position",
+      "move": "Move"
+    },
     "deleteTask": {
       "title": "Delete task",
       "description": "Are you sure you want to delete {{taskName}}?",
