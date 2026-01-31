@@ -6,6 +6,7 @@ import { useGetUsers } from '@/features/users/hooks/use-get-users'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useGetDomainStats } from '@/hooks/use-get-domain-stats'
 import { useGetOrgStats } from '@/hooks/use-get-org-stats'
+import { useGetRoleStats } from '@/hooks/use-get-role-stats'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import type { User } from '@/types/user.type'
@@ -24,10 +25,12 @@ export default function SystemUsersPage() {
   const [nameFilter] = useQueryState('users_name', parseAsString)
   const [orgIdsFilter] = useQueryState('users_organizationId', parseAsArrayOf(parseAsString))
   const [domainIdsFilter] = useQueryState('users_domainId', parseAsArrayOf(parseAsString))
+  const [rolesFilter] = useQueryState('users_role', parseAsArrayOf(parseAsString))
 
   const name = nameFilter ?? undefined
   const orgIds = orgIdsFilter && orgIdsFilter.length > 0 ? orgIdsFilter : undefined
   const domainIds = domainIdsFilter && domainIdsFilter.length > 0 ? domainIdsFilter : undefined
+  const roles = rolesFilter && rolesFilter.length > 0 ? rolesFilter : undefined
 
   const { users, isLoadingUsers } = useGetUsers({
     pageIndex: page,
@@ -35,10 +38,12 @@ export default function SystemUsersPage() {
     sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
     searchTerm: name,
     organizationId: orgIds,
-    domainId: domainIds
+    domainId: domainIds,
+    roles
   })
   const { orgStats, isLoadingOrgStats } = useGetOrgStats()
   const { domainStats, isLoadingDomainStats } = useGetDomainStats()
+  const { roleStats, isLoadingRoleStats } = useGetRoleStats()
 
   const filterOptionOverrides = useMemo(() => {
     return {
@@ -51,9 +56,14 @@ export default function SystemUsersPage() {
         value: domain.domainId,
         label: domain.domainName,
         count: domain.totalUsers
+      })),
+      role: roleStats.map((role) => ({
+        value: role.roleName,
+        label: role.roleName,
+        count: role.totalUsers
       }))
     }
-  }, [orgStats, domainStats])
+  }, [orgStats, domainStats, roleStats])
 
   const { table } = useDataTable({
     data: users.value.items,
@@ -77,7 +87,7 @@ export default function SystemUsersPage() {
     filterPrefix: 'users'
   })
 
-  const isLoading = isLoadingUsers || isLoadingOrgStats || isLoadingDomainStats
+  const isLoading = isLoadingUsers || isLoadingOrgStats || isLoadingDomainStats || isLoadingRoleStats
 
   return (
     <div className='px-4 pt-2'>

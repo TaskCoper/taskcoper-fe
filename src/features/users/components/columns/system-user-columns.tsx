@@ -116,7 +116,7 @@ export const getColumns = (): ColumnDef<User>[] => {
       accessorKey: 'role',
       meta: {
         label: 'systemUsers.column.role',
-        variant: 'select'
+        variant: 'multiSelect'
       },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label='systemUsers.column.role' className='mx-auto' />

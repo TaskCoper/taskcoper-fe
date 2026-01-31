@@ -13,6 +13,7 @@ export interface GetUsersParams {
   sortBy?: string
   organizationId?: string[]
   domainId?: string[]
+  roles?: string[]
 }
 
 export const useGetUsers = ({
@@ -22,15 +23,16 @@ export const useGetUsers = ({
   enabled = true,
   sortBy,
   organizationId,
-  domainId
+  domainId,
+  roles
 }: GetUsersParams = {}) => {
   const {
     data: users = getDefaultPaginationResponse<User>(),
     isLoading: isLoadingUsers,
     isError: isErrorUsers
   } = useQuery({
-    queryKey: queryKeys.users.list({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId }),
-    queryFn: () => userService.getUsers({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId }),
+    queryKey: queryKeys.users.list({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }),
+    queryFn: () => userService.getUsers({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }),
     enabled
   })
 
