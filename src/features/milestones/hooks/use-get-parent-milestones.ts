@@ -7,13 +7,12 @@ import { useQuery } from '@tanstack/react-query'
 export const useGetParentMilestones = ({ projectId, enabled = true }: { projectId?: string; enabled?: boolean }) => {
   const {
     data: parentMilestones = getDefaultPaginationResponse<ParentMilestone>(),
-    isLoading: isLoadingParentMilestones,
-    error
+    isLoading: isLoadingParentMilestones
   } = useQuery({
     queryKey: queryKeys.projects.parentMilestones(projectId),
     queryFn: () => projectService.getParentMilestones({ projectId }),
     enabled: !!projectId && enabled
   })
 
-  return { parentMilestones, isLoadingParentMilestones, error }
+  return { parentMilestones, isLoadingParentMilestones }
 }

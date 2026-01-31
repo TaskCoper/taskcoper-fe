@@ -1,5 +1,5 @@
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
-import type { GetMilestonesParams } from '@/features/projects/hooks/use-get-milestones'
+import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'

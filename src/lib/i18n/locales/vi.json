@@ -360,6 +360,12 @@
         }
       }
     },
+    "moveTask": {
+      "title": "Di chuyển thẻ",
+      "selectMilestone": "Chọn danh sách",
+      "selectPosition": "Chọn vị trí",
+      "move": "Di chuyển"
+    },
     "deleteTask": {
       "title": "Xóa thẻ",
       "description": "Bạn có chắc chắn muốn xóa {{taskName}} không?",

@@ -43,7 +43,11 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const [activeTask, setActiveTask] = useState<TaskPreview | null>(null)
 
   const { updateMilestone } = useUpdateMilestone()
-  const { moveTask } = useMoveTask()
+  const { moveTask } = useMoveTask({
+    projectId,
+    parentMilestoneId: milestoneId,
+    milestoneId: activeTask?.milestoneId
+  })
 
   const sensors = useDndSensors()
 
@@ -141,9 +145,6 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
     const originalColumn = activeColumn
     const originalTask = activeTask
 
-    setActiveColumn(null)
-    setActiveTask(null)
-
     if (!over) return
 
     const activeId = active.id
@@ -208,7 +209,15 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
       })
 
       if (validated.success) {
-        moveTask({ body: validated.data })
+        moveTask(
+          { body: validated.data },
+          {
+            onSettled: () => {
+              setActiveColumn(null)
+              setActiveTask(null)
+            }
+          }
+        )
       }
     }
 

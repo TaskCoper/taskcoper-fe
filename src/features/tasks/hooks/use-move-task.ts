@@ -4,7 +4,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useMoveTask = () => {
+interface MoveTaskParams {
+  isDragging?: boolean
+  projectId?: string
+  milestoneId?: string
+  targetMilestoneId?: string
+  parentMilestoneId?: string
+}
+
+export const useMoveTask = ({
+  isDragging = true,
+  projectId,
+  parentMilestoneId,
+  milestoneId,
+  targetMilestoneId
+}: MoveTaskParams = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -17,6 +31,25 @@ export const useMoveTask = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.id) })
+
+      if (!isDragging) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(variables.body.id) })
+      }
+
+      if (parentMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneId) })
+        if (projectId) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+        }
+      }
+
+      if (milestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(milestoneId) })
+      }
+
+      if (targetMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(targetMilestoneId) })
+      }
     }
   })
 

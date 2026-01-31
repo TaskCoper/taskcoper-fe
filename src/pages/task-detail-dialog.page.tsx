@@ -29,6 +29,7 @@ import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
 import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
 import DatePopover from '@/features/tasks/components/date-popover'
+import MoveTaskPopover from '@/features/tasks/components/move-task-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
@@ -271,10 +272,19 @@ export default function TaskDetailDialogPage() {
               task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
             )}
           >
-            <Button size='sm' variant='secondary'>
-              {task?.milestoneName}
-              <ChevronDownIcon />
-            </Button>
+            {projectId && milestoneId && task?.taskId && task?.milestoneId ? (
+              <MoveTaskPopover
+                projectId={projectId}
+                parentMilestoneId={milestoneId}
+                milestoneId={task.milestoneId}
+                taskId={task.taskId}
+              >
+                <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                  {task?.milestoneName}
+                  <ChevronDownIcon />
+                </Button>
+              </MoveTaskPopover>
+            ) : null}
 
             <div className='flex items-center gap-1'>
               <Button className='rounded-full' variant={task?.backgroundImage ? 'outline' : 'ghost'} size='icon-sm'>

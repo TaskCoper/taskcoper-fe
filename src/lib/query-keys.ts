@@ -51,7 +51,9 @@ export const queryKeys = {
   // Milestones
   milestones: {
     all: ['milestones'] as const,
-    byParent: (projectId?: string, parentMilestoneId?: string) => ['milestones', projectId, parentMilestoneId] as const
+    byParent: (projectId?: string, parentMilestoneId?: string) => ['milestones', projectId, parentMilestoneId] as const,
+    tasks: (milestoneId?: string) => ['milestones-tasks', milestoneId] as const,
+    childMilestones: (parentMilestoneId?: string) => ['child-milestones', parentMilestoneId] as const
   },
   // Tasks
   tasks: {

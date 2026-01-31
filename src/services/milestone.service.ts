@@ -3,7 +3,9 @@ import type {
   AddParentMilestoneFormValues,
   UpdateMilestoneFormValues
 } from '@/features/milestones/validations'
-import api, { type BaseResponse } from '@/lib/axios'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { ChildMilestone } from '@/types/milestone.type'
+import type { MilestoneTask } from '@/types/task.type'
 
 class MilestoneService {
   private readonly baseUrl = 'milestones'
@@ -34,6 +36,22 @@ class MilestoneService {
     })
 
     return data.value
+  }
+
+  getChildMilestones = async ({ parentMilestoneId }: { parentMilestoneId?: string }) => {
+    if (!parentMilestoneId) return null
+    const { data } = await api.get<BasePaginationResponse<ChildMilestone>>(
+      `/v1/${this.baseUrl}/${parentMilestoneId}/childrens`
+    )
+
+    return data
+  }
+
+  getMilestoneTasks = async ({ milestoneId }: { milestoneId?: string }) => {
+    if (!milestoneId) return null
+    const { data } = await api.get<BasePaginationResponse<MilestoneTask>>(`/v1/${this.baseUrl}/${milestoneId}/tasks`)
+
+    return data
   }
 }
 

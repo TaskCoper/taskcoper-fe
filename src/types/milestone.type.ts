@@ -12,6 +12,12 @@ export interface ParentMilestone {
   position: number
 }
 
+export interface ChildMilestone {
+  id: string
+  name: string
+  position: number
+}
+
 export type MilestoneColumnType = 'MilestoneColumn'
 
 export interface MilestoneColumnDragData {
