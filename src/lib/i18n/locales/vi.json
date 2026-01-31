@@ -290,6 +290,16 @@
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
+      "storage": "Lưu trữ",
+      "storagePage": {
+        "title": "Kho lưu trữ",
+        "description": "Tất cả tệp được tải lên trong công việc của dự án này.",
+        "noFiles": "Chưa có tệp nào được tải lên.",
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua",
+        "download": "Tải xuống",
+        "task": "Công việc"
+      },
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
       "myCalendar": "Lịch của tôi",

@@ -32,7 +32,7 @@ export default function AttachmentMenu({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment()
+  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment({ projectId })
   const { deleteAttachment, isDeletingAttachment } = useDeleteAttachment({
     parentMilestoneId,
     projectId

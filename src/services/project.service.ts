@@ -7,7 +7,14 @@ import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/feature
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Label } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
-import type { InviteMembersPayload, Project, ProjectMember, ProjectPreview, SystemProject } from '@/types/project.type'
+import type {
+  InviteMembersPayload,
+  Project,
+  ProjectMember,
+  ProjectPreview,
+  ProjectResource,
+  SystemProject
+} from '@/types/project.type'
 import type { TaskPreview } from '@/types/task.type'
 
 class ProjectService {
@@ -179,6 +186,15 @@ class ProjectService {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${labelId}`)
 
     return data.value
+  }
+
+  getProjectResources = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
+      `/v1/${this.baseUrl}/${projectId}/resources`
+    )
+
+    return data
   }
 }
 

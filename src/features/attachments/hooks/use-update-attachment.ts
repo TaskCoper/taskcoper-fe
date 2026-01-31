@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { updateAttachmentSchema, type UpdateAttachmentFormValues } from '../validations'
 
-export const useUpdateAttachment = () => {
+export const useUpdateAttachment = ({ projectId }: { projectId: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -76,6 +76,7 @@ export const useUpdateAttachment = () => {
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(variables.body.taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.taskId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
     }
   })
 
