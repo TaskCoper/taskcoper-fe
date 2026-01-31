@@ -9,6 +9,7 @@ import { useDeleteTask } from '../hooks/use-delete-task'
 interface TaskDetailMenuProps {
   taskId: string
   projectId: string
+  milestoneId: string
   parentMilestoneId: string
   taskName: string
   children: React.ReactNode
@@ -21,6 +22,7 @@ export default function TaskDetailMenu({
   taskId,
   projectId,
   parentMilestoneId,
+  milestoneId,
   taskName,
   children,
   open,
@@ -30,7 +32,7 @@ export default function TaskDetailMenu({
   const { t } = useTranslation()
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, onDeleteSuccess })
+  const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess })
 
   const onClose = () => {
     setOpen(false)
