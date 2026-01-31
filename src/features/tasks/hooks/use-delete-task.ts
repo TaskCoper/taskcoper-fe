@@ -8,10 +8,11 @@ import { toast } from 'sonner'
 interface UseDeleteTaskProps {
   projectId?: string
   parentMilestoneId?: string
+  milestoneId?: string
   onDeleteSuccess?: () => void
 }
 
-export const useDeleteTask = ({ projectId, parentMilestoneId, onDeleteSuccess }: UseDeleteTaskProps) => {
+export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess }: UseDeleteTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -34,6 +35,10 @@ export const useDeleteTask = ({ projectId, parentMilestoneId, onDeleteSuccess }:
 
       if (projectId && user?.UserId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      }
+
+      if (milestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(milestoneId) })
       }
     }
   })

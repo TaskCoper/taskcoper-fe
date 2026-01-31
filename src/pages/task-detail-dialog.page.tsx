@@ -305,10 +305,11 @@ export default function TaskDetailDialogPage() {
                 </Button>
               </BackgroundImagePopover>
 
-              {taskId && task?.taskName && projectId && milestoneId ? (
+              {taskId && task?.taskName && projectId && milestoneId && task.milestoneId ? (
                 <TaskDetailMenu
                   projectId={projectId}
                   parentMilestoneId={milestoneId}
+                  milestoneId={task.milestoneId}
                   taskId={taskId}
                   taskName={task.taskName}
                   onDeleteSuccess={goBack}
