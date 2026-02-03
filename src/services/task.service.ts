@@ -1,6 +1,7 @@
 import type { UpdateAttachmentFormValues, UploadAttachmentFormValues } from '@/features/attachments/validations'
 import type { AddTaskCommentFormValues, UpdateTaskCommentFormValues } from '@/features/comments/validations'
 import type { AddSubtaskFormValues } from '@/features/subtasks/validations'
+import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type {
   AddTaskFormValues,
   AddTaskLabelFormValues,
@@ -11,10 +12,24 @@ import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios
 import type { Attachment } from '@/types/attachment.type'
 import type { Comment } from '@/types/comment.type'
 import type { Subtask } from '@/types/subtask.type'
-import type { TaskDetail, TaskMember } from '@/types/task.type'
+import type { TaskDetail, TaskMember, TaskRow } from '@/types/task.type'
 
 class TaskService {
   private readonly baseUrl = 'tasks'
+
+  // for table view
+  getTasks = async ({ parentMilestoneId, pageIndex, pageSize, sortBy }: UseGetTasksParams) => {
+    const { data } = await api.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
+      params: {
+        parentMilestoneId,
+        pageIndex,
+        pageSize,
+        sortBy
+      }
+    })
+
+    return data
+  }
 
   addTask = async ({ body }: { body: AddTaskFormValues }) => {
     const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)

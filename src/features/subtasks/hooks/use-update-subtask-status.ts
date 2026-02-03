@@ -110,8 +110,11 @@ export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }:
         queryClient.invalidateQueries({ queryKey })
       }
 
-      if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneId) {
+        if (projectId) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {

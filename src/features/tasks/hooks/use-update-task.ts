@@ -71,8 +71,11 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
         queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
-      if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneId) {
+        if (projectId) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {

@@ -56,6 +56,7 @@ export const useDeleteAttachment = ({ parentMilestoneId, projectId }: UseDeleteA
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(variables.taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })

@@ -357,6 +357,10 @@
           "minLength": "Vui lòng chọn ít nhất một lĩnh vực"
         }
       }
+    },
+    "views": {
+      "board": "Bảng Kanban",
+      "table": "Bảng dữ liệu"
     }
   },
   "task": {
@@ -381,6 +385,13 @@
       "description": "Bạn có chắc chắn muốn xóa {{taskName}} không?",
       "confirmText": "Xóa",
       "cancelText": "Hủy"
+    },
+    "copyLink": {
+      "title": "Sao chép liên kết",
+      "success": "Đã sao chép!",
+      "successDescription": "Đã sao chép liên kết thẻ vào clipboard",
+      "error": "Sao chép thất bại",
+      "errorDescription": "Không thể sao chép liên kết vào clipboard"
     },
     "validation": {
       "name": {
@@ -569,6 +580,11 @@
           }
         }
       }
+    },
+    "stats": {
+      "comments": "Bình luận",
+      "subtasks": "Công việc con",
+      "attachments": "Tệp đính kèm"
     },
     "detail": {
       "title": "Chi tiết công việc",

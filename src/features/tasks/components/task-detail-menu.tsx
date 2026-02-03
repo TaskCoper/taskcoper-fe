@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/shared/utils'
-import { ChevronLeftIcon, Trash2Icon, XIcon } from 'lucide-react'
+import { ChevronLeftIcon, CopyIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { useDeleteTask } from '../hooks/use-delete-task'
 
 interface TaskDetailMenuProps {
@@ -33,6 +34,23 @@ export default function TaskDetailMenu({
   const [isDeleting, setIsDeleting] = useState(false)
 
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess })
+
+  const handleCopyLink = async () => {
+    const baseUrl = window.location.origin
+    const taskUrl = `${baseUrl}/projects/${projectId}/milestones/${parentMilestoneId}/tasks/${taskId}`
+
+    try {
+      await navigator.clipboard.writeText(taskUrl)
+      toast.success(t('task.copyLink.success'), {
+        description: t('task.copyLink.successDescription')
+      })
+      onClose()
+    } catch {
+      toast.error(t('task.copyLink.error'), {
+        description: t('task.copyLink.errorDescription')
+      })
+    }
+  }
 
   const onClose = () => {
     setOpen(false)
@@ -78,6 +96,15 @@ export default function TaskDetailMenu({
           </div>
         ) : (
           <div className='py-2'>
+            <Button
+              size='sm'
+              className='w-full justify-start gap-2 rounded-none'
+              variant='ghost'
+              onClick={handleCopyLink}
+            >
+              <CopyIcon />
+              <p>{t('task.copyLink.title')}</p>
+            </Button>
             <Button
               size='sm'
               className='w-full justify-start gap-2 rounded-none'

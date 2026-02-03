@@ -86,7 +86,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
       {...(isEditing ? {} : { ...attributes, ...listeners })}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
-        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-9rem)] overflow-hidden bg-muted cursor-pointer'
+        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-12.5rem)] overflow-hidden bg-muted cursor-pointer'
       })}
     >
       <div className='flex items-center justify-between gap-2 shrink-0 pl-3 pr-2 pt-2'>
