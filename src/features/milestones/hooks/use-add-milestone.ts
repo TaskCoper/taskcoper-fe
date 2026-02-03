@@ -67,6 +67,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentId) })
     }
   })
 

@@ -29,8 +29,11 @@ export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDel
       onDeleteSuccess?.()
     },
     onSettled: () => {
-      if (projectId && parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneId) {
+        if (projectId) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       }
 
       if (projectId && user?.UserId) {

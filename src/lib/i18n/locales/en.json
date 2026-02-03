@@ -357,6 +357,10 @@
           "minLength": "At least one domain is required"
         }
       }
+    },
+    "views": {
+      "board": "Kanban View",
+      "table": "Table View"
     }
   },
   "task": {
@@ -381,6 +385,13 @@
       "description": "Are you sure you want to delete {{taskName}}?",
       "confirmText": "Delete",
       "cancelText": "Cancel"
+    },
+    "copyLink": {
+      "title": "Copy link",
+      "success": "Link copied!",
+      "successDescription": "Card link has been copied to clipboard",
+      "error": "Failed to copy",
+      "errorDescription": "Could not copy link to clipboard"
     },
     "validation": {
       "name": {
@@ -569,6 +580,11 @@
           }
         }
       }
+    },
+    "stats": {
+      "comments": "Comments",
+      "subtasks": "Subtasks",
+      "attachments": "Attachments"
     },
     "detail": {
       "title": "Task Detail",

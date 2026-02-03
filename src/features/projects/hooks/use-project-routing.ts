@@ -30,13 +30,13 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
 
   const shouldDisplayTabs = activeSegment === 'milestones'
   const currentMilestoneId = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
-  const activeTabValue = currentMilestoneId || (items[0] as any)?.id || ''
+  const activeTabValue = currentMilestoneId || items[0]?.id || ''
 
   const handleTabChange = (milestoneId: string) => {
     if (projectId) {
       setLastActiveMilestone(projectId, milestoneId)
     }
-    navigate(`milestones/${milestoneId}`)
+    navigate({ pathname: `milestones/${milestoneId}`, search: window.location.search }, { replace: true })
   }
 
   // Auto-navigate to saved milestone or first milestone when landing on project or milestones root
@@ -48,7 +48,7 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
       // Use saved milestone if it exists, otherwise fall back to first milestone
       const targetMilestoneId = milestoneExists ? savedMilestoneId : items[0].id
 
-      navigate(`milestones/${targetMilestoneId}`, { replace: true })
+      navigate({ pathname: `milestones/${targetMilestoneId}`, search: window.location.search }, { replace: true })
     }
   }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, projectId, getLastActiveMilestone])
 

@@ -72,9 +72,8 @@ export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled 
         queryKey: queryKeys.tasks.detail(taskId)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
     }
   })

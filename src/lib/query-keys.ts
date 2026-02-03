@@ -1,4 +1,5 @@
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
+import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 
 export const queryKeys = {
@@ -58,6 +59,9 @@ export const queryKeys = {
   // Tasks
   tasks: {
     all: ['tasks'] as const,
+    list: ({ parentMilestoneId, pageIndex, pageSize, sortBy }: UseGetTasksParams) =>
+      [...queryKeys.tasks.all, parentMilestoneId, pageIndex, pageSize, sortBy] as const,
+    listParent: (parentMilestoneId?: string) => [...queryKeys.tasks.all, parentMilestoneId] as const,
     detail: (taskId?: string) => ['task', taskId] as const,
     members: (taskId?: string) => ['taskMembers', taskId] as const,
     myAssigned: (projectId?: string, userId?: string) => ['my-assigned-tasks', projectId, userId] as const
