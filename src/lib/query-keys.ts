@@ -47,20 +47,61 @@ export const queryKeys = {
       list: (projectId?: string, searchTerm?: string) => ['members', projectId, searchTerm] as const
     },
     parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const,
-    labels: (projectId?: string) => ['project-labels', projectId]
+    labels: (projectId?: string) => ['project-labels', projectId],
+    labelStats: (projectId: string, parentMilestoneId?: string) => [
+      'project-label-stats',
+      projectId,
+      parentMilestoneId
+    ],
+    taskStatusStats: (projectId: string, parentMilestoneId?: string) => [
+      'project-task-status-stats',
+      projectId,
+      parentMilestoneId
+    ],
+    memberStats: (projectId: string, parentMilestoneId?: string) => [
+      'project-member-stats',
+      projectId,
+      parentMilestoneId
+    ]
   },
   // Milestones
   milestones: {
     all: ['milestones'] as const,
     byParent: (projectId?: string, parentMilestoneId?: string) => ['milestones', projectId, parentMilestoneId] as const,
     tasks: (milestoneId?: string) => ['milestones-tasks', milestoneId] as const,
-    childMilestones: (parentMilestoneId?: string) => ['child-milestones', parentMilestoneId] as const
+    childMilestones: (parentMilestoneId?: string) => ['child-milestones', parentMilestoneId] as const,
+    stats: (parentMilestoneId?: string) => ['milestone-stats', parentMilestoneId] as const
   },
   // Tasks
   tasks: {
     all: ['tasks'] as const,
-    list: ({ parentMilestoneId, pageIndex, pageSize, sortBy }: UseGetTasksParams) =>
-      [...queryKeys.tasks.all, parentMilestoneId, pageIndex, pageSize, sortBy] as const,
+    list: ({
+      parentMilestoneId,
+      pageIndex,
+      pageSize,
+      sortBy,
+      labelIds,
+      milestoneIds,
+      endDate,
+      startDate,
+      isCompleted,
+      name,
+      memberIds
+    }: UseGetTasksParams) =>
+      [
+        ...queryKeys.tasks.all,
+        parentMilestoneId,
+        pageIndex,
+        pageSize,
+        sortBy,
+        labelIds,
+        milestoneIds,
+        endDate,
+        startDate,
+        isCompleted,
+        name,
+        memberIds
+      ] as const,
     listParent: (parentMilestoneId?: string) => [...queryKeys.tasks.all, parentMilestoneId] as const,
     detail: (taskId?: string) => ['task', taskId] as const,
     members: (taskId?: string) => ['taskMembers', taskId] as const,

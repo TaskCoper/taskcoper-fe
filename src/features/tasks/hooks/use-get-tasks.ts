@@ -11,6 +11,13 @@ export interface UseGetTasksParams {
   pageIndex?: number
   pageSize?: number
   sortBy?: string
+  labelIds?: string[]
+  milestoneIds?: string[]
+  endDate?: string[]
+  startDate?: string[]
+  isCompleted?: boolean
+  name?: string
+  memberIds?: string[]
 }
 
 export const useGetTasks = ({
@@ -18,11 +25,43 @@ export const useGetTasks = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   sortBy,
+  labelIds,
+  milestoneIds,
+  endDate,
+  startDate,
+  isCompleted,
+  name,
+  memberIds,
   enabled = true
 }: UseGetTasksParams) => {
   const { data: tasks = getDefaultPaginationResponse<TaskRow>(), isLoading: isLoadingTasks } = useQuery({
-    queryKey: queryKeys.tasks.list({ parentMilestoneId, pageIndex, pageSize, sortBy }),
-    queryFn: () => taskService.getTasks({ parentMilestoneId, pageIndex, pageSize, sortBy }),
+    queryKey: queryKeys.tasks.list({
+      parentMilestoneId,
+      pageIndex,
+      pageSize,
+      sortBy,
+      labelIds,
+      milestoneIds,
+      endDate,
+      startDate,
+      isCompleted,
+      name,
+      memberIds
+    }),
+    queryFn: () =>
+      taskService.getTasks({
+        parentMilestoneId,
+        pageIndex,
+        pageSize,
+        sortBy,
+        labelIds,
+        milestoneIds,
+        endDate,
+        startDate,
+        isCompleted,
+        name,
+        memberIds
+      }),
     enabled: enabled && !!parentMilestoneId
   })
 

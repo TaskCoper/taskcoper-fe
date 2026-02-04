@@ -8,14 +8,7 @@ import type { TaskMember, TaskPreview } from '@/types/task.type'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import {
-  CircleCheckBigIcon,
-  ClockIcon,
-  LayersIcon,
-  MessageSquareIcon,
-  PaperclipIcon,
-  SquarePenIcon
-} from 'lucide-react'
+import { CircleCheckBigIcon, ClockIcon, MessageSquareIcon, PaperclipIcon, SquarePenIcon, StarIcon } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useUpdateTaskStatus } from '../hooks/use-update-task-status'
@@ -176,9 +169,9 @@ export default TaskCard
 
 const TaskStoryPointsChip = ({ storyPoints }: { storyPoints: number }) => {
   return (
-    <div className='flex items-center gap-1.5 rounded-sm bg-primary px-2 py-0.5'>
-      <LayersIcon className='size-3 text-white' />
-      <p className='text-xs font-semibold text-white'>{storyPoints}</p>
+    <div className='flex items-center gap-1 rounded-sm'>
+      <StarIcon className='size-3 text-primary' />
+      <p className='text-xs font-semibold text-primary'>{storyPoints}</p>
     </div>
   )
 }

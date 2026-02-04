@@ -1,15 +1,19 @@
 import { DataTable } from '@/components/data-table/data-table'
-import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { useGetProjectLabelStats } from '@/features/labels/hooks/use-get-project-label-stats'
+import { useGetMilestoneStats } from '@/features/milestones/hooks/use-get-milestone-stats'
 import { getColumns } from '@/features/tasks/components/columns/task-columns'
+import { useGetTaskStatusStats } from '@/features/tasks/hooks/use-get-task-status-stats'
 import { useGetTasks } from '@/features/tasks/hooks/use-get-tasks'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import type { TaskRow } from '@/types/task.type'
 import { PlusCircleIcon } from 'lucide-react'
+import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
+import { useGetProjectMemberStats } from '../hooks/use-get-project-member-stats'
 
 interface ProjectTableProps {
   projectId: string
@@ -23,12 +27,69 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     prefix: 'tasks'
   })
 
+  const { labelStats, isLoadingLabelStats } = useGetProjectLabelStats({ projectId, parentMilestoneId })
+  const { milestoneStats, isLoadingMilestoneStats } = useGetMilestoneStats({ parentMilestoneId })
+  const { taskStatusStats, isLoadingTaskStatusStats } = useGetTaskStatusStats({ projectId, parentMilestoneId })
+  const { projectMemberStats, isLoadingProjectMemberStats } = useGetProjectMemberStats({ projectId, parentMilestoneId })
+
+  const [startDateFilter] = useQueryState('tasks_startDate', parseAsArrayOf(parseAsString))
+  const [endDateFilter] = useQueryState('tasks_endDate', parseAsArrayOf(parseAsString))
+  const [labelsFilter] = useQueryState('tasks_labels', parseAsArrayOf(parseAsString))
+  const [milestonesFilter] = useQueryState('tasks_milestone', parseAsArrayOf(parseAsString))
+  const [isCompletedFilter] = useQueryState('tasks_isCompleted', parseAsBoolean)
+  const [nameFilter] = useQueryState('tasks_name', parseAsString)
+  const [membersFilter] = useQueryState('tasks_memberId', parseAsArrayOf(parseAsString))
+
+  const labels = labelsFilter && labelsFilter.length > 0 ? labelsFilter : undefined
+  const milestones = milestonesFilter && milestonesFilter.length > 0 ? milestonesFilter : undefined
+  const endDate = endDateFilter && endDateFilter.length > 1 ? endDateFilter : undefined
+  const startDate = startDateFilter && startDateFilter.length > 1 ? startDateFilter : undefined
+  const isCompleted = isCompletedFilter ?? undefined
+  const name = nameFilter ?? undefined
+  const memberIds = membersFilter && membersFilter.length > 0 ? membersFilter : undefined
+
   const { tasks, isLoadingTasks } = useGetTasks({
     parentMilestoneId,
     pageIndex: page,
     pageSize: limit,
-    sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined
+    sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
+    labelIds: labels,
+    milestoneIds: milestones,
+    endDate,
+    startDate,
+    isCompleted,
+    name,
+    memberIds
   })
+
+  const filterOptionOverrides = useMemo(() => {
+    return {
+      milestone:
+        milestoneStats?.value?.items.map((milestone) => ({
+          value: milestone.id,
+          label: milestone.name,
+          count: `${milestone.completedTaskCount}/${milestone.taskCount}`
+        })) ?? [],
+      labels:
+        labelStats?.value?.items.map((label) => ({
+          value: label.id,
+          label: label.name,
+          count: label.taskCount
+        })) ?? [],
+      isCompleted:
+        taskStatusStats?.value?.items.map((status) => ({
+          value: String(status.isCompleted),
+          label: status.isCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành',
+          count: status.totalTasks
+        })) ?? [],
+      memberId:
+        projectMemberStats?.value?.items.map((member) => ({
+          value: member.userId,
+          label: `${member.firstName} ${member.lastName}`,
+          count: member.totalTasks
+        })) ?? []
+    }
+  }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats])
 
   const { table } = useDataTable({
     data: tasks.value.items,
@@ -52,14 +113,17 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     filterPrefix: 'tasks'
   })
 
-  if (isLoadingTasks) {
-    return <DataTableSkeleton columnCount={6} rowCount={8} filterCount={3} />
-  }
+  const isLoading =
+    isLoadingTasks ||
+    isLoadingLabelStats ||
+    isLoadingMilestoneStats ||
+    isLoadingTaskStatusStats ||
+    isLoadingProjectMemberStats
 
   return (
     <div className='pb-24'>
-      <DataTable table={table} isLoading={isLoadingTasks}>
-        <DataTableToolbar table={table}>
+      <DataTable table={table} isLoading={isLoading}>
+        <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
           <Button size='sm'>
             <PlusCircleIcon />
             Thêm thẻ

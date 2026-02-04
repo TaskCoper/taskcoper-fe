@@ -32,7 +32,7 @@ export interface QueryKeys {
 export interface Option {
   label: string
   value: string
-  count?: number
+  count?: number | string
   icon?: React.FC<React.SVGProps<SVGSVGElement>>
 }
 

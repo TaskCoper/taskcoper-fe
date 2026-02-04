@@ -1,3 +1,4 @@
+import type { UseGetProjectLabelStatsParams } from '@/features/labels/hooks/use-get-project-label-stats'
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
 import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
@@ -5,17 +6,18 @@ import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-g
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Label } from '@/types/label.type'
+import type { Label, ProjectLabelStats } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type {
   InviteMembersPayload,
   Project,
   ProjectMember,
+  ProjectMemberStats,
   ProjectPreview,
   ProjectResource,
   SystemProject
 } from '@/types/project.type'
-import type { TaskPreview } from '@/types/task.type'
+import type { TaskPreview, TaskStatusStats } from '@/types/task.type'
 
 class ProjectService {
   private readonly baseUrl = 'projects'
@@ -192,6 +194,48 @@ class ProjectService {
     if (!projectId) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
       `/v1/${this.baseUrl}/${projectId}/resources`
+    )
+
+    return data
+  }
+
+  getProjectLabelStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectLabelStats>>(
+      `/v1/${this.baseUrl}/${projectId}/task-labels/statistic`,
+      {
+        params: {
+          parentMilestoneId
+        }
+      }
+    )
+
+    return data
+  }
+
+  getTaskStatusStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<TaskStatusStats>>(
+      `/v1/${this.baseUrl}/${projectId}/tasks-status/statistic`,
+      {
+        params: {
+          parentMilestoneId
+        }
+      }
+    )
+
+    return data
+  }
+
+  getProjectMemberStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberStats>>(
+      `/v1/${this.baseUrl}/${projectId}/members-tasks/statistic`,
+      {
+        params: {
+          parentMilestoneId
+        }
+      }
     )
 
     return data

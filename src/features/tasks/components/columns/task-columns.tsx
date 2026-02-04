@@ -70,7 +70,13 @@ export const getColumns = ({
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='Thẻ' />,
       cell: ({ row }) => (
-        <Link to={`tasks/${row.original.id}`} className='hover:underline'>
+        <Link
+          to={`tasks/${row.original.id}?view=table`}
+          className={cn(
+            'hover:underline',
+            row.original.isCompleted ? 'line-through decoration-foreground/40 text-muted-foreground' : ''
+          )}
+        >
           {row.original.name}
         </Link>
       ),
@@ -98,13 +104,13 @@ export const getColumns = ({
       accessorKey: 'isCompleted',
       meta: {
         label: 'Trạng thái',
-        variant: 'multiSelect'
+        variant: 'radio'
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='Trạng thái' className='mx-auto' />,
       cell: ({ row }) => (
         <div className='flex justify-center items-center'>
           <Checkbox
-            className='rounded-full'
+            className='rounded-full border-foreground/40'
             checked={row.original.isCompleted}
             onCheckedChange={(value) => console.log(value)}
           />
@@ -125,22 +131,17 @@ export const getColumns = ({
       header: ({ column }) => <DataTableColumnHeader column={column} label='Nhãn' />,
       cell: ({ row }) => (
         <div className='flex items-center gap-1'>
-          {row.original.taskLabels.slice(0, 3).map((label) => (
+          {row.original.taskLabels.map((label) => (
             <div key={label.id} className={cn('rounded-sm px-2 py-0.5', label.color)}>
               <p className={cn('text-xs font-medium', getColorTextClass(label.color))}>{label.name}</p>
             </div>
           ))}
-          {row.original.taskLabels.length > 3 && (
-            <div className='rounded-sm px-1 py-0.5 bg-muted-foreground/15'>
-              <MoreHorizontalIcon className='size-4 text-muted-foreground' />
-            </div>
-          )}
         </div>
       ),
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
-      size: 100
+      size: 220
     },
     {
       id: 'estimatedPoints',
@@ -251,7 +252,28 @@ export const getColumns = ({
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 100
+      size: 80
+    },
+    {
+      id: 'startDate',
+      accessorKey: 'startDate',
+      meta: { label: 'Ngày bắt đầu', variant: 'dateRange' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='Ngày bắt đầu' className='mx-auto' />,
+      cell: ({ row }) => {
+        if (row.original.startDate) {
+          return (
+            <p className='text-center'>
+              {format(new Date(row.original.startDate), i18next.t('task.detail.dateFormat'), { locale: vi })}
+            </p>
+          )
+        }
+
+        return <p className='text-center text-muted-foreground'>Chưa bắt đầu</p>
+      },
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 80
     },
     {
       id: 'endDate',
@@ -272,7 +294,7 @@ export const getColumns = ({
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: true,
-      size: 100
+      size: 80
     },
     {
       id: 'actions',

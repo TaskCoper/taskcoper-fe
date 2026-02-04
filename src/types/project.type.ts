@@ -117,6 +117,15 @@ export interface ProjectResource {
   modifiedOnUtc: string | null
 }
 
+export interface ProjectMemberStats {
+  userId: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar: string | null
+  totalTasks: number
+}
+
 // APIs
 export interface InviteMembersPayload {
   projectId: string

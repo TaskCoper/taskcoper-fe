@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { formatDate } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
+import { endOfDay, startOfDay } from 'date-fns'
 import { CalendarIcon, XCircle } from 'lucide-react'
 import * as React from 'react'
 import type { DateRange } from 'react-day-picker'
@@ -79,8 +80,8 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
       }
 
       if (multiple && !('getTime' in date)) {
-        const from = date.from?.toISOString()
-        const to = date.to?.toISOString()
+        const from = date.from ? startOfDay(date.from).toISOString() : undefined
+        const to = date.to ? endOfDay(date.to).toISOString() : undefined
         column.setFilterValue(from || to ? [from, to] : undefined)
       } else if (!multiple && 'getTime' in date) {
         column.setFilterValue(date.toISOString())
@@ -127,7 +128,7 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
           {hasSelectedDates && (
             <>
               <Separator orientation='vertical' className='mx-0.5 data-[orientation=vertical]:h-4' />
-              <span>{dateText}</span>
+              <p className='text-xs text-white font-medium bg-primary px-2 py-0.5 rounded-sm'>{dateText}</p>
             </>
           )}
         </span>

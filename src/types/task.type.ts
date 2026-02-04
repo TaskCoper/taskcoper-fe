@@ -75,3 +75,8 @@ export interface MilestoneTask {
   name: string
   position: number
 }
+
+export interface TaskStatusStats {
+  isCompleted: boolean
+  totalTasks: number
+}

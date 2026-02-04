@@ -13,3 +13,13 @@ export interface TaskLabel {
   name: string
   color: string
 }
+
+export interface ProjectLabelStats {
+  id: string
+  projectId: string
+  name: string
+  color: string
+  taskCount: number
+  createdOnUtc: string
+  modifiedOnUtc: string | null
+}
