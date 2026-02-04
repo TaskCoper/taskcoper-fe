@@ -27,10 +27,10 @@ interface SortableMilestoneColumnProps {
 
 export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {
   const { t } = useTranslation()
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { projectId, milestoneId: parentMilestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const [openDropdown, setOpenDropdown] = useState(false)
 
-  const { updateMilestone } = useUpdateMilestone({ queryKey })
+  const { updateMilestone } = useUpdateMilestone({ queryKey, parentMilestoneId })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
     initialValue: column.name,
@@ -38,7 +38,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     onSave: (newName) => {
       const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: column.id,
-        parentId: milestoneId,
+        parentId: parentMilestoneId,
         milestoneName: newName,
         position: column.position
       })
@@ -120,9 +120,13 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
         </div>
       </div>
 
-      {column.id && projectId && milestoneId ? (
+      {column.id && projectId && parentMilestoneId ? (
         <div className='px-2 pb-2'>
-          <AddTaskButton milestoneId={column.id as string} projectId={projectId} parentMilestoneId={milestoneId} />
+          <AddTaskButton
+            milestoneId={column.id as string}
+            projectId={projectId}
+            parentMilestoneId={parentMilestoneId}
+          />
         </div>
       ) : null}
     </Card>

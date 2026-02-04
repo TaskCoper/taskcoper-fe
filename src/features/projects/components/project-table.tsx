@@ -13,6 +13,7 @@ import type { TaskRow } from '@/types/task.type'
 import { PlusCircleIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useGetProjectMemberStats } from '../hooks/use-get-project-member-stats'
 
 interface ProjectTableProps {
@@ -21,6 +22,7 @@ interface ProjectTableProps {
 }
 
 export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTableProps) {
+  const { t } = useTranslation()
   const columns = useMemo(() => getColumns({ projectId, parentMilestoneId }), [projectId, parentMilestoneId])
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -52,7 +54,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     parentMilestoneId,
     pageIndex: page,
     pageSize: limit,
-    sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
+    sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy.toLowerCase()}` : sortBy.toLowerCase()) : undefined,
     labelIds: labels,
     milestoneIds: milestones,
     endDate,
@@ -79,7 +81,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
       isCompleted:
         taskStatusStats?.value?.items.map((status) => ({
           value: String(status.isCompleted),
-          label: status.isCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành',
+          label: status.isCompleted ? t('task.status.completed') : t('task.status.notCompleted'),
           count: status.totalTasks
         })) ?? [],
       memberId:
@@ -89,7 +91,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
           count: member.totalTasks
         })) ?? []
     }
-  }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats])
+  }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats, t])
 
   const { table } = useDataTable({
     data: tasks.value.items,
@@ -126,11 +128,11 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
         <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
           <Button size='sm'>
             <PlusCircleIcon />
-            Thêm thẻ
+            {t('task.table.addCard')}
           </Button>
           <Button size='sm'>
             <PlusCircleIcon />
-            Thêm danh sách
+            {t('task.table.addList')}
           </Button>
         </DataTableToolbar>
       </DataTable>

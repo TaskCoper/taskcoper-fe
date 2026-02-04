@@ -596,6 +596,32 @@
       "chooseImage": "Upload image",
       "none": "None",
       "dateFormat": "HH:mm MMM d, y"
+    },
+    "column": {
+      "card": "Task",
+      "enterCardName": "Enter task name...",
+      "list": "Milestone",
+      "status": "Status",
+      "labels": "Labels",
+      "noLabels": "No labels",
+      "taskPoints": "Estimated points",
+      "none": "None",
+      "stats": "Stats",
+      "startDate": "Start date",
+      "notStarted": "Not started",
+      "dueDate": "Due date",
+      "noDueDate": "No due date",
+      "members": "Members",
+      "viewDetails": "View details",
+      "delete": "Delete"
+    },
+    "status": {
+      "completed": "Completed",
+      "notCompleted": "Not completed"
+    },
+    "table": {
+      "addCard": "Add card",
+      "addList": "Add list"
     }
   },
   "richTextEditor": {

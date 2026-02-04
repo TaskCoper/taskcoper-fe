@@ -74,6 +74,7 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
       if (parentMilestoneId) {
         if (projectId) {
           queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
         }
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       }

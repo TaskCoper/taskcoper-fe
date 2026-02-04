@@ -596,6 +596,32 @@
       "chooseImage": "Tải lên ảnh bìa",
       "none": "Không có",
       "dateFormat": "HH:mm d 'thg' M, y"
+    },
+    "column": {
+      "card": "Thẻ",
+      "enterCardName": "Nhập tên thẻ...",
+      "list": "Danh sách",
+      "status": "Trạng thái",
+      "labels": "Nhãn",
+      "noLabels": "Không có nhãn",
+      "taskPoints": "Điểm công việc",
+      "none": "Không có",
+      "stats": "Thông số",
+      "startDate": "Ngày bắt đầu",
+      "notStarted": "Chưa bắt đầu",
+      "dueDate": "Hạn hoàn thành",
+      "noDueDate": "Chưa có hạn",
+      "members": "Thành viên",
+      "viewDetails": "Xem thông tin",
+      "delete": "Xóa"
+    },
+    "status": {
+      "completed": "Đã hoàn thành",
+      "notCompleted": "Chưa hoàn thành"
+    },
+    "table": {
+      "addCard": "Thêm thẻ",
+      "addList": "Thêm danh sách"
     }
   },
   "richTextEditor": {

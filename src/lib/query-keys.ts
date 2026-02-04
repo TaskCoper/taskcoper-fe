@@ -89,8 +89,7 @@ export const queryKeys = {
       memberIds
     }: UseGetTasksParams) =>
       [
-        ...queryKeys.tasks.all,
-        parentMilestoneId,
+        ...queryKeys.tasks.listParent(parentMilestoneId),
         pageIndex,
         pageSize,
         sortBy,

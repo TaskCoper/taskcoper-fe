@@ -20,14 +20,15 @@ import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import {
   CircleCheckBigIcon,
-  LayersIcon,
   MessageSquareIcon,
   MoreHorizontalIcon,
   PaperclipIcon,
-  SearchIcon
+  SearchIcon,
+  StarIcon
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import StatusCell from './status-cell'
 
 export const getColumns = ({
   projectId,
@@ -63,12 +64,12 @@ export const getColumns = ({
       id: 'name',
       accessorKey: 'projectName',
       meta: {
-        label: 'Thẻ',
-        placeholder: 'Nhập tên thẻ...',
+        label: 'task.column.card',
+        placeholder: 'task.column.enterCardName',
         variant: 'text',
         icon: SearchIcon
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Thẻ' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.card' />,
       cell: ({ row }) => (
         <Link
           to={`tasks/${row.original.id}?view=table`}
@@ -89,10 +90,10 @@ export const getColumns = ({
       id: 'milestone',
       accessorKey: 'milestone.id',
       meta: {
-        label: 'Danh sách',
+        label: 'task.column.list',
         variant: 'multiSelect'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Danh sách' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.list' />,
       cell: ({ row }) => <p>{row.original.milestone.name}</p>,
       enableSorting: false,
       enableHiding: true,
@@ -103,19 +104,11 @@ export const getColumns = ({
       id: 'isCompleted',
       accessorKey: 'isCompleted',
       meta: {
-        label: 'Trạng thái',
+        label: 'task.column.status',
         variant: 'radio'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Trạng thái' className='mx-auto' />,
-      cell: ({ row }) => (
-        <div className='flex justify-center items-center'>
-          <Checkbox
-            className='rounded-full border-foreground/40'
-            checked={row.original.isCompleted}
-            onCheckedChange={(value) => console.log(value)}
-          />
-        </div>
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.status' className='mx-auto' />,
+      cell: ({ row }) => <StatusCell row={row.original} projectId={projectId} parentMilestoneId={parentMilestoneId} />,
       enableColumnFilter: true,
       enableSorting: false,
       enableHiding: true,
@@ -125,19 +118,24 @@ export const getColumns = ({
       id: 'labels',
       accessorKey: 'taskLabels',
       meta: {
-        label: 'Nhãn',
+        label: 'task.column.labels',
         variant: 'multiSelect'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Nhãn' />,
-      cell: ({ row }) => (
-        <div className='flex items-center gap-1'>
-          {row.original.taskLabels.map((label) => (
-            <div key={label.id} className={cn('rounded-sm px-2 py-0.5', label.color)}>
-              <p className={cn('text-xs font-medium', getColorTextClass(label.color))}>{label.name}</p>
-            </div>
-          ))}
-        </div>
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.labels' />,
+      cell: ({ row }) => {
+        if (row.original.taskLabels.length === 0)
+          return <p className='text-muted-foreground'>{i18next.t('task.column.noLabels')}</p>
+
+        return (
+          <div className='flex items-center gap-1'>
+            {row.original.taskLabels.map((label) => (
+              <div key={label.id} className={cn('rounded-sm px-2 py-0.5', label.color)}>
+                <p className={cn('text-xs font-medium', getColorTextClass(label.color))}>{label.name}</p>
+              </div>
+            ))}
+          </div>
+        )
+      },
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
@@ -147,22 +145,24 @@ export const getColumns = ({
       id: 'estimatedPoints',
       accessorKey: 'estimatedPoints',
       meta: {
-        label: 'Điểm công việc'
+        label: 'task.column.taskPoints'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Điểm công việc' className='mx-auto' />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='task.column.taskPoints' className='mx-auto' />
+      ),
       cell: ({ row }) => {
         if (row.original.estimatedPoints) {
           return (
             <div className='flex justify-center'>
               <div className='flex justify-center items-center gap-1.5 rounded-md bg-primary/15 px-2 py-0.5'>
-                <LayersIcon className='size-3 text-primary' />
+                <StarIcon className='size-3 text-primary' />
                 <p className='font-semibold text-primary'>{row.original.estimatedPoints}</p>
               </div>
             </div>
           )
         }
 
-        return <p className='text-muted-foreground text-center'>Không có</p>
+        return <p className='text-muted-foreground text-center'>{i18next.t('task.column.none')}</p>
       },
       enableSorting: true,
       enableHiding: true,
@@ -208,13 +208,13 @@ export const getColumns = ({
       id: 'stats',
       accessorFn: (row) =>
         `${row.totalComments} - ${row.completedSubtasks}/${row.totalSubtasks} - ${row.totalComments} - ${row.totalResources}`,
-      meta: { label: 'Thông số' },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Thông số' className='mx-auto' />,
+      meta: { label: 'task.column.stats' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.stats' className='mx-auto' />,
       cell: ({ row }) => (
-        <div className='flex justify-center items-center gap-4'>
+        <div className='flex justify-center items-center gap-2'>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className='flex items-center gap-1 cursor-help'>
+              <div className='flex justify-center items-center gap-1 cursor-help w-10'>
                 <MessageSquareIcon className='size-3' />
                 <p className='text-xs font-semibold text-muted-foreground'>{row.original.totalComments}</p>
               </div>
@@ -225,7 +225,7 @@ export const getColumns = ({
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className='flex items-center gap-1 cursor-help'>
+              <div className='flex justify-center items-center gap-1 cursor-help w-10'>
                 <CircleCheckBigIcon className='size-3' />
                 <p className='text-xs font-semibold text-muted-foreground'>
                   {row.original.completedSubtasks}/{row.original.totalSubtasks}
@@ -238,7 +238,7 @@ export const getColumns = ({
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className='flex items-center gap-1 cursor-help'>
+              <div className='flex justify-center items-center gap-1 cursor-help w-10'>
                 <PaperclipIcon className='size-3' />
                 <p className='text-xs font-semibold text-muted-foreground'>{row.original.totalResources}</p>
               </div>
@@ -257,8 +257,10 @@ export const getColumns = ({
     {
       id: 'startDate',
       accessorKey: 'startDate',
-      meta: { label: 'Ngày bắt đầu', variant: 'dateRange' },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Ngày bắt đầu' className='mx-auto' />,
+      meta: { label: 'task.column.startDate', variant: 'dateRange' },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='task.column.startDate' className='mx-auto' />
+      ),
       cell: ({ row }) => {
         if (row.original.startDate) {
           return (
@@ -268,7 +270,7 @@ export const getColumns = ({
           )
         }
 
-        return <p className='text-center text-muted-foreground'>Chưa bắt đầu</p>
+        return <p className='text-center text-muted-foreground'>{i18next.t('task.column.notStarted')}</p>
       },
       enableSorting: true,
       enableHiding: true,
@@ -278,8 +280,8 @@ export const getColumns = ({
     {
       id: 'endDate',
       accessorKey: 'endDate',
-      meta: { label: 'Hạn hoàn thành', variant: 'dateRange' },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='Hạn hoàn thành' className='mx-auto' />,
+      meta: { label: 'task.column.dueDate', variant: 'dateRange' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.dueDate' className='mx-auto' />,
       cell: ({ row }) => {
         if (row.original.endDate) {
           return (
@@ -289,7 +291,7 @@ export const getColumns = ({
           )
         }
 
-        return <p className='text-center text-muted-foreground'>Chưa có hạn</p>
+        return <p className='text-center text-muted-foreground'>{i18next.t('task.column.noDueDate')}</p>
       },
       enableSorting: true,
       enableHiding: true,
@@ -332,9 +334,9 @@ export const getColumns = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to={`tasks/${id}`}>Xem thông tin</Link>
+                <Link to={`tasks/${id}`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className='focus:text-destructive'>Xóa</DropdownMenuItem>
+              <DropdownMenuItem className='focus:text-destructive'>{i18next.t('task.column.delete')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -345,7 +347,7 @@ export const getColumns = ({
       id: 'memberId',
       accessorFn: (row) => row.members.map((d) => d.userId),
       meta: {
-        label: 'Thành viên',
+        label: 'task.column.members',
         variant: 'multiSelect'
       },
       header: () => null,

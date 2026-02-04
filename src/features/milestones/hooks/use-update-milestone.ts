@@ -1,4 +1,5 @@
 import type { BasePaginationResponse } from '@/lib/axios'
+import { queryKeys } from '@/lib/query-keys'
 import milestoneService from '@/services/milestone.service'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -9,10 +10,12 @@ type CacheData = BasePaginationResponse<ParentMilestone> | MilestoneWithTasks
 
 export const useUpdateMilestone = ({
   shouldInvalidate,
-  queryKey
+  queryKey,
+  parentMilestoneId
 }: {
   shouldInvalidate?: boolean
   queryKey?: readonly unknown[]
+  parentMilestoneId?: string
 } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
@@ -70,6 +73,10 @@ export const useUpdateMilestone = ({
     onSettled: () => {
       if (shouldInvalidate && queryKey) {
         queryClient.invalidateQueries({ queryKey })
+      }
+
+      if (parentMilestoneId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
       }
     }
   })

@@ -27,11 +27,12 @@ export default function MilestoneColumnMenu({
   open,
   setOpen
 }: MilestoneColumnMenuProps) {
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { projectId, milestoneId: parentMilestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
-    queryKey: ['milestones', projectId, milestoneId]
+    queryKey: ['milestones', projectId, parentMilestoneId],
+    parentMilestoneId
   })
 
   const handleDeleteMilestone = async () => {
