@@ -112,9 +112,7 @@ export const SortableMilestoneTab = ({
       >
         <Tooltip>
           <TooltipTrigger asChild {...triggerProps}>
-            <p className={cn('truncate font-medium w-full', isActive ? 'text-left' : 'text-center')}>
-              {milestone.name}
-            </p>
+            <p className='truncate font-medium w-full text-left'>{milestone.name}</p>
           </TooltipTrigger>
           <TooltipContent side='bottom'>
             <p>{milestone.name}</p>

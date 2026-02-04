@@ -37,3 +37,11 @@ export interface MilestoneWithTasks {
   milestones: Milestone[]
   tasks: TaskPreview[]
 }
+
+export interface MilestoneStats {
+  id: string
+  name: string
+  position: number
+  taskCount: number
+  completedTaskCount: number
+}

@@ -38,7 +38,7 @@ export function DataTable<TData>({
                     style={{
                       ...getColumnPinningStyle({ column: header.column })
                     }}
-                    className='bg-muted/50!'
+                    className='bg-muted!'
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
@@ -54,7 +54,7 @@ export function DataTable<TData>({
                     <TableCell
                       key={column.id}
                       style={getColumnPinningStyle({ column })}
-                      className={rowIndex % 2 !== 0 ? 'bg-muted/50!' : ''}
+                      className={rowIndex % 2 !== 0 ? 'bg-muted' : ''}
                     >
                       <Skeleton className='h-5 w-full' />
                     </TableCell>
@@ -70,7 +70,7 @@ export function DataTable<TData>({
                       style={{
                         ...getColumnPinningStyle({ column: cell.column })
                       }}
-                      className={index % 2 !== 0 ? 'bg-muted/50!' : ''}
+                      className={index % 2 !== 0 ? 'bg-muted!' : ''}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

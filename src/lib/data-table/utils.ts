@@ -41,7 +41,8 @@ export function getFilterOperators(filterVariant: FilterVariant) {
     dateRange: dataTableConfig.dateOperators,
     boolean: dataTableConfig.booleanOperators,
     select: dataTableConfig.selectOperators,
-    multiSelect: dataTableConfig.multiSelectOperators
+    multiSelect: dataTableConfig.multiSelectOperators,
+    radio: dataTableConfig.selectOperators
   }
 
   return operatorMap[filterVariant] ?? dataTableConfig.textOperators
