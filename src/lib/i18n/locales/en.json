@@ -841,6 +841,7 @@
   },
   "error": {
     "home": "Go to homepage",
+    "somethingWentWrong": "Something went wrong",
     "pageNotFound": "Something went wrong",
     "pageNotFoundDescription": "Sorry we were unable to find that page",
     "unauthorized": "Unauthorized",
@@ -1117,6 +1118,75 @@
       "viewProfile": "View profile",
       "editUser": "Edit user",
       "deleteUser": "Delete user"
+    }
+  },
+  "projectStorage": {
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "fileName": "File name",
+      "fileNamePlaceholder": "Search files...",
+      "fileSize": "Size",
+      "noBytes": "No size",
+      "fileType": "Type",
+      "task": "Task",
+      "noTask": "No task",
+      "milestone": "List",
+      "noMilestone": "No list",
+      "uploadedBy": "Uploaded by",
+      "uploadedAt": "Uploaded"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "download": "Download"
+    },
+    "stats": {
+      "totalFiles": "Uploaded",
+      "totalSize": "Used storage"
+    },
+    "uploadFile": "Upload file"
+  },
+  "mimeTypes": {
+    "unknownFile": "Unknown File",
+    "image": {
+      "jpeg": "JPEG Image",
+      "png": "PNG Image",
+      "gif": "GIF Animation",
+      "svg": "SVG Vector",
+      "webp": "WebP Image",
+      "generic": "Image"
+    },
+    "document": {
+      "pdf": "PDF Document",
+      "word": "Word Doc",
+      "wordDocx": "Word Doc (DOCX)",
+      "excel": "Excel Sheet",
+      "excelXlsx": "Excel Sheet (XLSX)",
+      "powerpoint": "PowerPoint",
+      "powerpointPptx": "PowerPoint (PPTX)",
+      "text": "Text File",
+      "csv": "CSV Spreadsheet"
+    },
+    "archive": {
+      "zip": "ZIP Archive",
+      "sevenZip": "7-Zip Archive",
+      "rar": "RAR Archive"
+    },
+    "media": {
+      "video": {
+        "mp4": "MP4 Video",
+        "generic": "Video"
+      },
+      "audio": {
+        "mp3": "MP3 Audio",
+        "wav": "WAV Audio",
+        "generic": "Audio"
+      }
+    },
+    "generic": {
+      "text": "Text File",
+      "file": "File"
     }
   }
 }

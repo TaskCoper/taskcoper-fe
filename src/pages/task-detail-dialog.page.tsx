@@ -62,10 +62,11 @@ import {
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 
 export default function TaskDetailDialogPage() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const { t, i18n } = useTranslation()
   const { projectId, milestoneId, taskId } = useParams<{ projectId: string; milestoneId: string; taskId: string }>()
@@ -148,7 +149,14 @@ export default function TaskDetailDialogPage() {
   })
 
   const goBack = () => {
-    navigate(`/projects/${projectId}/milestones/${milestoneId}`)
+    // Check if we're in the storage route
+    if (location.pathname.includes('/storage/')) {
+      // Navigate back to storage page
+      navigate(`/projects/${projectId}/storage`)
+    } else {
+      // Navigate back to milestones page
+      navigate(`/projects/${projectId}/milestones/${milestoneId}`)
+    }
   }
 
   const handleClose = () => {

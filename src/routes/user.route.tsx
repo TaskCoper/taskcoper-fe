@@ -99,7 +99,16 @@ export const userRoutes: RouteObject[] = [
                       </div>
                     )
                   },
-                  { path: 'storage', element: <ProjectStoragePage /> },
+                  {
+                    path: 'storage',
+                    element: <ProjectStoragePage />,
+                    children: [
+                      {
+                        path: ':milestoneId/tasks/:taskId',
+                        element: <TaskDetailDialogPage />
+                      }
+                    ]
+                  },
                   {
                     path: 'settings',
                     element: (

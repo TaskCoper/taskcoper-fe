@@ -1,38 +1,58 @@
-import { Spinner } from '@/components/ui/spinner'
-import StorageTimeline from '@/features/projects/components/storage-timeline'
-import { useGetProjectResources } from '@/features/projects/hooks/use-get-project-resources'
+import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import ProjectStorageTable from '@/features/projects/components/project-storage-table'
+import { useGetProjectResourceStats } from '@/features/projects/hooks/use-get-project-resource-stats'
+import { formatBytes } from '@/features/projects/utils'
+import { DatabaseIcon, FilesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
+import { Outlet, useParams } from 'react-router'
 
 export default function ProjectStoragePage() {
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
-  const { projectResources, isLoadingProjectResources } = useGetProjectResources({ projectId })
 
-  if (isLoadingProjectResources) {
-    return (
-      <div className='flex h-full items-center justify-center p-8'>
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (!projectResources?.value.items.length) {
-    return (
-      <div className='flex h-full flex-col items-center justify-center p-8 text-muted-foreground'>
-        <p>{t('project.sidebar.storagePage.noFiles')}</p>
-      </div>
-    )
-  }
+  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({ projectId })
 
   return (
-    <div className='mx-auto max-w-4xl py-6'>
-      <div className='mb-6 px-6'>
-        <p className='text-2xl font-bold tracking-tight'>{t('project.sidebar.storagePage.title')}</p>
-        <p className='text-sm text-muted-foreground'>{t('project.sidebar.storagePage.description')}</p>
+    <>
+      <div className='mx-auto p-4 space-y-6'>
+        <div className='flex justify-between items-start gap-4'>
+          <div>
+            <p className='text-2xl font-bold tracking-tight'>{t('project.sidebar.storagePage.title')}</p>
+            <p className='text-sm text-muted-foreground'>{t('project.sidebar.storagePage.description')}</p>
+          </div>
+
+          <div className='flex items-center gap-2'>
+            <Card className='px-2 py-1 gap-0 min-w-32 rounded-lg'>
+              <p className='text-xs text-muted-foreground font-medium'>{t('projectStorage.stats.totalFiles')}</p>
+              {isLoadingProjectResourceStats ? (
+                <Skeleton className='h-7 w-16 mt-1' />
+              ) : (
+                <div className='flex items-center gap-1'>
+                  <FilesIcon className='size-4 text-primary' />
+                  <p className='font-bold tracking-tight'>{projectResourceStats?.totalResources ?? 0}</p>
+                </div>
+              )}
+            </Card>
+
+            <Card className='px-2 py-1 gap-0 min-w-32 rounded-lg'>
+              <p className='text-xs text-muted-foreground font-medium'>{t('projectStorage.stats.totalSize')}</p>
+              {isLoadingProjectResourceStats ? (
+                <Skeleton className='h-7 w-16 mt-1' />
+              ) : (
+                <div className='flex items-center gap-1'>
+                  <DatabaseIcon className='size-4 text-primary' />
+                  <p className='font-bold tracking-tight'>{formatBytes(projectResourceStats?.totalBytes ?? 0)}</p>
+                </div>
+              )}
+            </Card>
+          </div>
+        </div>
+
+        {projectId ? <ProjectStorageTable projectId={projectId} /> : null}
       </div>
 
-      <StorageTimeline resources={projectResources.value.items} />
-    </div>
+      <Outlet />
+    </>
   )
 }
