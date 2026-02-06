@@ -94,7 +94,7 @@ export const getColumns = (): ColumnDef<ProjectResource>[] => {
 
         return <p className='text-center'>{formatBytes(bytes)}</p>
       },
-      enableSorting: false,
+      enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
       maxSize: 150
@@ -206,7 +206,7 @@ export const getColumns = (): ColumnDef<ProjectResource>[] => {
               <DropdownMenuLabel>{i18next.t('projectStorage.actions.actions')}</DropdownMenuLabel>
               <DropdownMenuItem asChild>
                 <a href={url} download={name} target='_blank' rel='noreferrer'>
-                  <DownloadIcon className='size-4 mr-2' />
+                  <DownloadIcon />
                   {i18next.t('projectStorage.actions.download')}
                 </a>
               </DropdownMenuItem>
