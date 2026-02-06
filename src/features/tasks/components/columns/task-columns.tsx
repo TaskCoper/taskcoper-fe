@@ -334,7 +334,7 @@ export const getColumns = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to={`tasks/${id}`}>{i18next.t('task.column.viewDetails')}</Link>
+                <Link to={`tasks/${id}?view=table`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className='focus:text-destructive'>{i18next.t('task.column.delete')}</DropdownMenuItem>
             </DropdownMenuContent>

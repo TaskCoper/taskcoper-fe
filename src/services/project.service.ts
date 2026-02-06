@@ -3,6 +3,7 @@ import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/
 import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
+import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
@@ -13,8 +14,11 @@ import type {
   Project,
   ProjectMember,
   ProjectMemberStats,
+  ProjectMimeTypeStats,
   ProjectPreview,
   ProjectResource,
+  ProjectResourceMemberStats,
+  ProjectResourceStats,
   SystemProject
 } from '@/types/project.type'
 import type { TaskPreview, TaskStatusStats } from '@/types/task.type'
@@ -190,10 +194,32 @@ class ProjectService {
     return data.value
   }
 
-  getProjectResources = async ({ projectId }: { projectId?: string }) => {
+  getProjectResources = async ({
+    projectId,
+    pageIndex,
+    pageSize,
+    sortBy,
+    name,
+    from,
+    to,
+    mimeTypes,
+    memberIds
+  }: UseGetProjectResourcesParams) => {
     if (!projectId) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
-      `/v1/${this.baseUrl}/${projectId}/resources`
+      `/v1/${this.baseUrl}/${projectId}/resources`,
+      {
+        params: {
+          pageIndex,
+          pageSize,
+          sortBy,
+          searchTerm: name,
+          from,
+          to,
+          mimeTypes,
+          memberIds
+        }
+      }
     )
 
     return data
@@ -236,6 +262,33 @@ class ProjectService {
           parentMilestoneId
         }
       }
+    )
+
+    return data
+  }
+
+  getProjectResourceStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BaseResponse<ProjectResourceStats>>(
+      `/v1/${this.baseUrl}/${projectId}/resources/statistic`
+    )
+
+    return data.value
+  }
+
+  getProjectMimeTypeStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectMimeTypeStats>>(
+      `/v1/${this.baseUrl}/${projectId}/resources/mime-types/statistic`
+    )
+
+    return data
+  }
+
+  getProjectResourceMemberStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectResourceMemberStats>>(
+      `/v1/${this.baseUrl}/${projectId}/resources/members/statistic`
     )
 
     return data

@@ -1,3 +1,4 @@
+import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
@@ -62,7 +63,10 @@ export const queryKeys = {
       'project-member-stats',
       projectId,
       parentMilestoneId
-    ]
+    ],
+    resourceStats: (projectId?: string) => ['project-resource-stats', projectId] as const,
+    mimeTypeStats: (projectId?: string) => ['project-mime-type-stats', projectId] as const,
+    resourceMemberStats: (projectId?: string) => ['project-resource-member-stats', projectId] as const
   },
   // Milestones
   milestones: {
@@ -152,6 +156,18 @@ export const queryKeys = {
   },
   // Project Resources
   projectResources: {
-    all: (projectId?: string) => ['project-resources', projectId] as const
+    all: (projectId?: string) => ['project-resources', projectId] as const,
+    list: ({
+      projectId,
+      pageIndex,
+      pageSize,
+      sortBy,
+      name,
+      from,
+      to,
+      mimeTypes,
+      memberIds
+    }: UseGetProjectResourcesParams) =>
+      ['project-resources', projectId, pageIndex, pageSize, sortBy, name, from, to, mimeTypes, memberIds] as const
   }
 } as const

@@ -105,6 +105,7 @@ export interface ProjectResource {
     milestoneName: string
     parentMilestoneId: string
     parentMilestoneName: string
+    projectId: string
   }
   uploadBy: {
     id: string
@@ -124,6 +125,25 @@ export interface ProjectMemberStats {
   email: string
   avatar: string | null
   totalTasks: number
+}
+
+export interface ProjectResourceStats {
+  totalResources: number
+  totalBytes: number
+}
+
+export interface ProjectMimeTypeStats {
+  mimeType: string
+  totalResources: number
+}
+
+export interface ProjectResourceMemberStats {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar: string | null
+  totalResources: number
 }
 
 // APIs

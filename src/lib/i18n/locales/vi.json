@@ -841,6 +841,7 @@
   },
   "error": {
     "home": "Về trang chủ",
+    "somethingWentWrong": "Đã có lỗi xảy ra",
     "pageNotFound": "Đã có lỗi xảy ra",
     "pageNotFoundDescription": "Xin lỗi, chúng tôi không thể tìm thấy trang đó",
     "unauthorized": "Không được phép",
@@ -1117,6 +1118,75 @@
       "viewProfile": "Xem hồ sơ",
       "editUser": "Chỉnh sửa",
       "deleteUser": "Xóa người dùng"
+    }
+  },
+  "projectStorage": {
+    "column": {
+      "selectAll": "Chọn tất cả",
+      "selectRow": "Chọn hàng",
+      "fileName": "Tên tệp",
+      "fileNamePlaceholder": "Tìm kiếm tệp...",
+      "fileSize": "Kích cỡ",
+      "noBytes": "Chưa xác định",
+      "fileType": "Loại",
+      "task": "Công việc",
+      "noTask": "Không có công việc",
+      "milestone": "Danh sách",
+      "noMilestone": "Không có danh sách",
+      "uploadedBy": "Người tải lên",
+      "uploadedAt": "Ngày tải lên"
+    },
+    "actions": {
+      "openMenu": "Mở menu",
+      "actions": "Thao tác",
+      "download": "Tải xuống"
+    },
+    "stats": {
+      "totalFiles": "Đã tải lên",
+      "totalSize": "Dung lượng"
+    },
+    "uploadFile": "Tải lên tệp"
+  },
+  "mimeTypes": {
+    "unknownFile": "Tệp không xác định",
+    "image": {
+      "jpeg": "Hình JPEG",
+      "png": "Hình PNG",
+      "gif": "Hoạt hình GIF",
+      "svg": "Vector SVG",
+      "webp": "Hình WebP",
+      "generic": "Hình ảnh"
+    },
+    "document": {
+      "pdf": "Tài liệu PDF",
+      "word": "Tài liệu Word",
+      "wordDocx": "Tài liệu Word (DOCX)",
+      "excel": "Bảng tính Excel",
+      "excelXlsx": "Bảng tính Excel (XLSX)",
+      "powerpoint": "PowerPoint",
+      "powerpointPptx": "PowerPoint (PPTX)",
+      "text": "Tệp văn bản",
+      "csv": "Bảng tính CSV"
+    },
+    "archive": {
+      "zip": "Tệp nén ZIP",
+      "sevenZip": "Tệp nén 7-Zip",
+      "rar": "Tệp nén RAR"
+    },
+    "media": {
+      "video": {
+        "mp4": "Video MP4",
+        "generic": "Video"
+      },
+      "audio": {
+        "mp3": "Âm thanh MP3",
+        "wav": "Âm thanh WAV",
+        "generic": "Âm thanh"
+      }
+    },
+    "generic": {
+      "text": "Tệp văn bản",
+      "file": "Tệp"
     }
   }
 }
