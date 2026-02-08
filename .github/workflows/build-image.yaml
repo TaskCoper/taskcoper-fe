@@ -8,10 +8,15 @@ on:
       repository:
         required: true
         type: string
+      environment:
+        required: false
+        default: dev
+        type: string
 jobs:
   build-service-image:
     name: Build Service Image
     runs-on: [ubuntu-latest]
+    environment: ${{ inputs.environment }}
     env:
       REGISTRY: ghcr.io/${{ inputs.repository }}
     steps:
@@ -33,16 +38,14 @@ jobs:
         run: |
           if [ "${GITHUB_REF_NAME}" = "dev" ]; then
             echo "TAG=dev-latest" >> $GITHUB_ENV
-            echo "PROFILE=dev" >> $GITHUB_ENV
           else
             echo "TAG=prod-latest" >> $GITHUB_ENV
-            echo "PROFILE=prod" >> $GITHUB_ENV
           fi
       - name: Build and Push Image
         env:
-          PROFILE: ${{ env.PROFILE }}
+          PROFILE: ${{ inputs.environment }}
           TAG: ${{ env.TAG }}
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
           docker compose -f .docker/compose.yaml --profile "$PROFILE" push

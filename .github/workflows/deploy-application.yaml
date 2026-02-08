@@ -19,18 +19,12 @@ on:
         required: false
         default: develop-latest
         type: string
-      environment:
-        required: false
-        default: dev
-        type: string
 jobs:
   deploy-application:
     runs-on: ${{ inputs.run-on }}
-    environment: ${{ inputs.environment }}
     env:
       REGISTRY: ghcr.io/${{ inputs.repository }}
       TAG: ${{ inputs.tag }}
-      VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
