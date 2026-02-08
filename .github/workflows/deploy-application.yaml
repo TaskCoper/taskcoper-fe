@@ -47,7 +47,7 @@ jobs:
         run: docker compose -f .docker/compose.yaml -p taskcoper-client-${{ inputs.profile }} --profile client-${{ inputs.profile }} pull
 
       - name: Deploy New Image
-        run: docker compose -f .docker/compose.yaml -p taskcoper-client-${{ inputs.profile }} --profile ${{ inputs.environment }} up -d
+        run: docker compose -f .docker/compose.yaml -p taskcoper-client-${{ inputs.profile }} --profile ${{ inputs.profile }} up -d
 
       - name: Prune Old Image
         run: docker image prune -af
