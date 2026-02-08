@@ -6,8 +6,9 @@ on:
       - dev
   workflow_dispatch:
 jobs:
-  build-application:
-    name: Build / Client
+  build-client-dev:
+    name: Build / Client / Dev
+    if: ${{ github.ref == 'refs/heads/dev' }}
     uses: ./.github/workflows/build-image.yaml
     permissions:
       contents: read
@@ -16,10 +17,24 @@ jobs:
     with:
       actor: ${{ github.actor }}
       repository: ${{ github.repository }}
+      environment: dev
+
+  build-client-prod:
+    name: Build / Client / Prod
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      environment: prod
 
   deploy-client-dev:
     name: Deploy / Dev / Client
-    needs: build-application
+    needs: build-client-dev
     permissions:
       contents: read
       packages: write
@@ -29,13 +44,12 @@ jobs:
       actor: ${{ github.actor }}
       repository: ${{ github.repository }}
       profile: dev
-      environment: dev
       tag: dev-latest
     secrets: inherit
 
   deploy-client-prod:
     name: Deploy / Prod / Client
-    needs: build-application
+    needs: build-client-prod
     permissions:
       contents: read
       packages: write
@@ -45,6 +59,5 @@ jobs:
       actor: ${{ github.actor }}
       repository: ${{ github.repository }}
       profile: prod
-      environment: prod
       tag: prod-latest
     secrets: inherit
