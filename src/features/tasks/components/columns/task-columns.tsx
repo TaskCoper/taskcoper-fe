@@ -37,7 +37,7 @@ export const getColumns = ({
 }: {
   projectId: string
   parentMilestoneId: string
-  onDeleteTask: (taskId: string) => void
+  onDeleteTask: (taskId: string, taskName: string) => void
 }): ColumnDef<TaskRow>[] => {
   return [
     {
@@ -303,7 +303,7 @@ export const getColumns = ({
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id } = row.original
+        const { id, name } = row.original
 
         return (
           <DropdownMenu>
@@ -338,7 +338,7 @@ export const getColumns = ({
               <DropdownMenuItem asChild>
                 <Link to={`tasks/${id}?view=table`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id)}>
+              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
                 {i18next.t('task.column.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>

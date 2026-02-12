@@ -31,10 +31,10 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId })
 
   const onDeleteTask = useCallback(
-    async (taskId: string) => {
+    async (taskId: string, taskName: string) => {
       const confirmed = await confirm({
         title: t('task.deleteTask.title'),
-        description: t('task.deleteTask.description'),
+        description: t('task.deleteTask.description', { taskName }),
         confirmText: t('task.deleteTask.confirmText'),
         cancelText: t('common.button.cancel'),
         variant: 'destructive'
