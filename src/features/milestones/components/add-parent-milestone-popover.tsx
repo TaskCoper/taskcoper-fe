@@ -31,7 +31,7 @@ export default function AddParentMilestonePopover({ children, projectId }: AddPa
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         sideOffset={8}
-        className='w-72 p-4 mt-1 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+        className='w-72 p-4 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
         align='start'
       >
         <FormProvider {...methods}>

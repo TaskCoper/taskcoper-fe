@@ -92,6 +92,7 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
     }
   })
 

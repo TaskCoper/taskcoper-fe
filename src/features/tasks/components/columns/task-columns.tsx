@@ -32,10 +32,12 @@ import StatusCell from './status-cell'
 
 export const getColumns = ({
   projectId,
-  parentMilestoneId
+  parentMilestoneId,
+  onDeleteTask
 }: {
   projectId: string
   parentMilestoneId: string
+  onDeleteTask: (taskId: string) => void
 }): ColumnDef<TaskRow>[] => {
   return [
     {
@@ -336,7 +338,9 @@ export const getColumns = ({
               <DropdownMenuItem asChild>
                 <Link to={`tasks/${id}?view=table`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className='focus:text-destructive'>{i18next.t('task.column.delete')}</DropdownMenuItem>
+              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id)}>
+                {i18next.t('task.column.delete')}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )

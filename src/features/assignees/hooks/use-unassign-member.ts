@@ -37,6 +37,7 @@ export const useUnassignMember = ({ taskId, projectId, parentMilestoneId }: UseU
       if (parentMilestoneId) {
         if (projectId) {
           queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+          queryClient.invalidateQueries({ queryKey: queryKeys.projects.memberStats(projectId, parentMilestoneId) })
         }
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       }

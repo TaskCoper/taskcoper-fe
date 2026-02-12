@@ -67,6 +67,7 @@ export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
     }
   })
 

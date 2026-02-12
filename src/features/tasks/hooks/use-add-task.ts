@@ -5,17 +5,17 @@ import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { addTaskSchema, type AddTaskFormValues } from '../validations'
 
 export const useAddTask = ({
-  milestoneId,
+  milestoneId: initialMilestoneId,
   projectId,
   parentMilestoneId
 }: {
-  milestoneId: string
+  milestoneId?: string
   projectId: string
   parentMilestoneId: string
 }) => {
@@ -24,27 +24,29 @@ export const useAddTask = ({
   const [isTriggered, setIsTriggered] = useState(false)
   const { milestones } = useGetMilestones({ projectId, parentMilestoneId })
 
-  const existingTasks = useMemo(
-    () => milestones?.tasks.filter((task) => task.milestoneId === milestoneId) ?? [],
-    [milestones, milestoneId]
-  )
-  const calculatedPosition = useMemo(() => calculateNewItemPosition(existingTasks), [existingTasks])
-
   const methods = useForm<AddTaskFormValues>({
     defaultValues: {
-      milestoneId,
+      milestoneId: initialMilestoneId ?? '',
       name: '',
-      position: calculatedPosition
+      position: 0
     },
     resolver: zodResolver(addTaskSchema(t))
   })
 
+  const watchedMilestoneId = useWatch({ control: methods.control, name: 'milestoneId' })
+  const milestoneId = watchedMilestoneId || initialMilestoneId || ''
+
+  const existingTasks = useMemo(
+    () => milestones?.tasks.filter((task) => task.milestoneId === milestoneId) ?? [],
+    [milestones, milestoneId]
+  )
+
   useEffect(() => {
-    if (isTriggered) {
+    if (isTriggered && milestoneId) {
       const newPosition = calculateNewItemPosition(existingTasks)
       methods.setValue('position', newPosition)
     }
-  }, [isTriggered, existingTasks, methods])
+  }, [isTriggered, existingTasks, methods, milestoneId])
 
   const { mutate: addTask, isPending: isAddingTask } = useMutation({
     mutationFn: taskService.addTask,
@@ -52,7 +54,7 @@ export const useAddTask = ({
       toast.success(message)
       const newPosition = calculateNewItemPosition(existingTasks)
       methods.reset({
-        milestoneId,
+        milestoneId: initialMilestoneId ?? '',
         name: '',
         position: newPosition
       })

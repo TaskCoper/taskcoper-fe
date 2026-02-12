@@ -51,6 +51,7 @@ export const useDeleteTaskLabel = ({ taskId, projectId, parentMilestoneId }: Use
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStats(projectId, parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
     }
