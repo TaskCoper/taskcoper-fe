@@ -1139,13 +1139,19 @@
     "actions": {
       "openMenu": "Mở menu",
       "actions": "Thao tác",
-      "download": "Tải xuống"
+      "download": "Tải xuống",
+      "delete": "Xóa"
     },
     "stats": {
       "totalFiles": "Đã tải lên",
       "totalSize": "Dung lượng"
     },
-    "uploadFile": "Tải lên tệp"
+    "uploadFile": "Tải lên tệp",
+    "deleteResource": {
+      "title": "Xóa tệp",
+      "description": "Bạn có chắc chắn muốn xóa tệp này không? Thao tác này không thể hoàn tác.",
+      "confirmText": "Xóa"
+    }
   },
   "mimeTypes": {
     "unknownFile": "Tệp không xác định",

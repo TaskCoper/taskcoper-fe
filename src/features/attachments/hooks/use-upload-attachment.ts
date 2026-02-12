@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { uploadAttachmentSchema, type UploadAttachmentFormValues } from '../validations'
 import { useGetAttachments } from './use-get-attachments'
 
@@ -61,8 +62,9 @@ export const useUploadAttachment = ({ taskId, parentMilestoneId, projectId }: Us
     isPending: isUploadingAttachment
   } = useMutation({
     mutationFn: taskService.uploadAttachment,
-    onSuccess: () => {
+    onSuccess: (message) => {
       methods.reset()
+      toast.success(message)
       setOpen(false)
     },
     onSettled: () => {
@@ -72,6 +74,9 @@ export const useUploadAttachment = ({ taskId, parentMilestoneId, projectId }: Us
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectId) })
     }
   })
 

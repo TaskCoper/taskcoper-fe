@@ -19,6 +19,9 @@ export const useDeleteAttachment = ({ parentMilestoneId, projectId }: UseDeleteA
 
   const { mutate: deleteAttachment, isPending: isDeletingAttachment } = useMutation({
     mutationFn: taskService.deleteAttachment,
+    onSuccess: (message) => {
+      toast.success(message)
+    },
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.attachments.byTask(variables.taskId) })
       const previousData = queryClient.getQueryData<BasePaginationResponse<Attachment>>(
@@ -60,6 +63,9 @@ export const useDeleteAttachment = ({ parentMilestoneId, projectId }: UseDeleteA
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectId) })
     }
   })
 
