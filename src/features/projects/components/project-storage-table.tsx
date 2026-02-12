@@ -1,14 +1,17 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { useDeleteAttachment } from '@/features/attachments/hooks/use-delete-attachment'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import type { ProjectResource } from '@/types/project.type'
 import i18next from 'i18next'
 import { UploadIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useGetProjectMimeTypeStats } from '../hooks/use-get-project-mime-type-stats'
 import { useGetProjectResourceMemberStats } from '../hooks/use-get-project-resource-member-stats'
 import { useGetProjectResources } from '../hooks/use-get-project-resources'
@@ -20,7 +23,27 @@ interface ProjectStorageTableProps {
 }
 
 export default function ProjectStorageTable({ projectId }: ProjectStorageTableProps) {
-  const columns = useMemo(() => getColumns(), [])
+  const { t } = useTranslation()
+  const confirm = useConfirmStore((s) => s.confirm)
+  const { deleteAttachment } = useDeleteAttachment({ projectId, parentMilestoneId: '' })
+
+  const onDeleteResource = useCallback(
+    async (resourceId: string, taskId: string) => {
+      const confirmed = await confirm({
+        title: t('projectStorage.deleteResource.title'),
+        description: t('projectStorage.deleteResource.description'),
+        confirmText: t('projectStorage.deleteResource.confirmText'),
+        cancelText: t('common.button.cancel'),
+        variant: 'destructive'
+      })
+      if (confirmed) {
+        deleteAttachment({ id: resourceId, taskId })
+      }
+    },
+    [confirm, deleteAttachment, t]
+  )
+
+  const columns = useMemo(() => getColumns({ onDeleteResource }), [onDeleteResource])
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
     prefix: 'storage'

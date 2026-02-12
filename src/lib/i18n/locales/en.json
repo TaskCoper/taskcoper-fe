@@ -1139,13 +1139,19 @@
     "actions": {
       "openMenu": "Open menu",
       "actions": "Actions",
-      "download": "Download"
+      "download": "Download",
+      "delete": "Delete"
     },
     "stats": {
       "totalFiles": "Uploaded",
       "totalSize": "Used storage"
     },
-    "uploadFile": "Upload file"
+    "uploadFile": "Upload file",
+    "deleteResource": {
+      "title": "Delete file",
+      "description": "Are you sure you want to delete this file? This action cannot be undone.",
+      "confirmText": "Delete"
+    }
   },
   "mimeTypes": {
     "unknownFile": "Unknown File",

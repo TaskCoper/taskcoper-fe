@@ -49,9 +49,9 @@ export const queryKeys = {
     },
     parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const,
     labels: (projectId?: string) => ['project-labels', projectId],
+    labelStatsAll: (projectId: string) => ['project-label-stats', projectId],
     labelStats: (projectId: string, parentMilestoneId?: string) => [
-      'project-label-stats',
-      projectId,
+      ...queryKeys.projects.labelStatsAll(projectId),
       parentMilestoneId
     ],
     taskStatusStats: (projectId: string, parentMilestoneId?: string) => [

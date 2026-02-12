@@ -7,6 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import FileIcon from '@/features/projects/components/file-icon'
@@ -14,11 +15,15 @@ import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ProjectResource } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
-import { DownloadIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
+import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { formatBytes, formatMimeType } from '../../utils'
 
-export const getColumns = (): ColumnDef<ProjectResource>[] => {
+export const getColumns = ({
+  onDeleteResource
+}: {
+  onDeleteResource: (resourceId: string, taskId: string) => void
+}): ColumnDef<ProjectResource>[] => {
   return [
     {
       id: 'select',
@@ -192,7 +197,7 @@ export const getColumns = (): ColumnDef<ProjectResource>[] => {
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { url, name } = row.original
+        const { id, url, name, task } = row.original
 
         return (
           <DropdownMenu>
@@ -206,9 +211,12 @@ export const getColumns = (): ColumnDef<ProjectResource>[] => {
               <DropdownMenuLabel>{i18next.t('projectStorage.actions.actions')}</DropdownMenuLabel>
               <DropdownMenuItem asChild>
                 <a href={url} download={name} target='_blank' rel='noreferrer'>
-                  <DownloadIcon />
                   {i18next.t('projectStorage.actions.download')}
                 </a>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteResource(id, task.id)}>
+                {i18next.t('projectStorage.actions.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
