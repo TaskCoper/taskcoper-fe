@@ -15,13 +15,13 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
-import ProfileDetailDialog from '@/features/users/components/profile-detail-dialog'
 import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 interface NavUserProps {
   user?: User
@@ -29,9 +29,10 @@ interface NavUserProps {
 
 export default function NavUser({ user }: NavUserProps) {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const [language, setLanguage] = useState(i18n.language)
-  const [open, setOpen] = useState(false)
+  // const [open, setOpen] = useState(false)
 
   const { signOut, isSigningOut } = useSignOut()
 
@@ -82,14 +83,8 @@ export default function NavUser({ user }: NavUserProps) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault()
-                setOpen(true)
-              }}
-              className={open ? 'text-primary bg-primary/10' : ''}
-            >
-              <UserRoundIcon className={open ? 'text-primary' : ''} />
+            <DropdownMenuItem onSelect={() => navigate('/me')}>
+              <UserRoundIcon />
               {t('account.account')}
             </DropdownMenuItem>
             <DropdownMenuSub>
@@ -115,7 +110,7 @@ export default function NavUser({ user }: NavUserProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <ProfileDetailDialog open={open} onOpenChange={setOpen} />
+      {/* <ProfileDetailDialog open={open} onOpenChange={setOpen} /> */}
     </>
   )
 }

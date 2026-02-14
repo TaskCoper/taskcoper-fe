@@ -12,6 +12,7 @@ const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
+const MePage = lazy(() => import('@/pages/users/me.page'))
 
 export const userRoutes: RouteObject[] = [
   {
@@ -27,6 +28,10 @@ export const userRoutes: RouteObject[] = [
           {
             element: <UserDefaultLayout />,
             children: [
+              {
+                path: 'me',
+                element: <MePage />
+              },
               {
                 element: <ProjectsLayout />,
                 children: [
