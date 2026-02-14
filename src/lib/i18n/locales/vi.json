@@ -102,8 +102,11 @@
     "memberProjectsDescription": "Các dự án bạn tham gia với vai trò thành viên",
     "addCoverImage": "Thêm ảnh bìa",
     "addLogoImage": "Thêm logo",
+    "coverImageAlt": "{{name}} Ảnh bìa",
+    "logoImageAlt": "{{name}} Logo",
     "info": {
       "general": "Tổng quan",
+      "readme": "README",
       "generalDescription": "Thông tin cơ bản về dự án",
       "domains": "Lĩnh vực",
       "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",
@@ -733,7 +736,14 @@
     "profileDialog": {
       "profileAndDisplay": "Hồ sơ và hiển thị",
       "password": "Mật khẩu"
-    }
+    },
+    "tabs": {
+      "all": "Tất cả",
+      "info": "Giới thiệu",
+      "projects": "Dự án",
+      "files": "Ảnh & Video"
+    },
+    "logoImageAlt": "{{name}} Logo"
   },
   "auth": {
     "signIn": {

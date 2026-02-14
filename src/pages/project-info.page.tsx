@@ -151,11 +151,11 @@ export default function ProjectInfoPage() {
                 {project?.coverImage ? (
                   <img
                     src={project.coverImage}
-                    alt={project.name + ' Cover'}
-                    className='size-full object-cover rounded-xl'
+                    alt={t('project.coverImageAlt', { name: project.name })}
+                    className='size-full object-cover rounded-2xl'
                   />
                 ) : (
-                  <div className='size-full rounded-xl bg-muted flex items-center justify-center'>
+                  <div className='size-full rounded-2xl bg-muted flex items-center justify-center'>
                     <ImageOffIcon className='size-10 text-muted-foreground' />
                   </div>
                 )}
@@ -189,7 +189,7 @@ export default function ProjectInfoPage() {
                 {project?.logoImage ? (
                   <img
                     src={project.logoImage}
-                    alt={project.name + ' Logo'}
+                    alt={t('project.logoImageAlt', { name: project.name })}
                     className='size-full object-cover rounded-xl'
                   />
                 ) : (
@@ -233,7 +233,7 @@ export default function ProjectInfoPage() {
                 <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0'>
                   <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-xl'>
                     <BookOpenIcon className='size-4 text-muted-foreground' />
-                    <p className='text-sm font-semibold text-muted-foreground'>README</p>
+                    <p className='text-sm font-semibold text-muted-foreground'>{t('project.info.readme')}</p>
                   </div>
                   <Separator />
                   <div className='p-4'>

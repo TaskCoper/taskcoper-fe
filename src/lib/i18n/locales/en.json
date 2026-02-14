@@ -102,8 +102,11 @@
     "memberProjectsDescription": "Projects assigned to you as a team member",
     "addCoverImage": "Add cover image",
     "addLogoImage": "Add logo image",
+    "coverImageAlt": "{{name}} Cover",
+    "logoImageAlt": "{{name}} Logo",
     "info": {
       "general": "General",
+      "readme": "README",
       "generalDescription": "Basic information about the project",
       "domains": "Domains",
       "domainDescription": "Help classify your project better",
@@ -733,7 +736,14 @@
     "profileDialog": {
       "profileAndDisplay": "Profile and display",
       "password": "Password"
-    }
+    },
+    "tabs": {
+      "all": "All",
+      "info": "Info",
+      "projects": "Projects",
+      "files": "Photos & Videos"
+    },
+    "logoImageAlt": "{{name}} Logo"
   },
   "auth": {
     "signIn": {
