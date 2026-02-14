@@ -80,3 +80,23 @@ export interface TaskStatusStats {
   isCompleted: boolean
   totalTasks: number
 }
+
+export const TaskPriority = {
+  HIGHEST: 'HIGHEST',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW',
+  LOWEST: 'LOWEST'
+} as const
+
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority]
+
+export const TaskPriorityLabel = {
+  [TaskPriority.LOWEST]: 'task.priority.lowest',
+  [TaskPriority.LOW]: 'task.priority.low',
+  [TaskPriority.MEDIUM]: 'task.priority.medium',
+  [TaskPriority.HIGH]: 'task.priority.high',
+  [TaskPriority.HIGHEST]: 'task.priority.highest'
+} as const
+
+export type TaskPriorityLabel = (typeof TaskPriorityLabel)[keyof typeof TaskPriorityLabel]

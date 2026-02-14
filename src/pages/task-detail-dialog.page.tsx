@@ -30,6 +30,7 @@ import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
 import DatePopover from '@/features/tasks/components/date-popover'
 import MoveTaskPopover from '@/features/tasks/components/move-task-popover'
+import PriorityPopover from '@/features/tasks/components/priority-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
@@ -45,6 +46,7 @@ import { format } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import {
   ChevronDownIcon,
+  ChevronsUpIcon,
   ChevronUpIcon,
   ClockIcon,
   EyeIcon,
@@ -379,6 +381,13 @@ export default function TaskDetailDialogPage() {
 
                   {/* Action Buttons */}
                   <div className='flex items-center gap-2 flex-wrap'>
+                    <PriorityPopover>
+                      <Button variant='outline' size='sm'>
+                        <ChevronsUpIcon />
+                        {t('task.priority.title')}
+                      </Button>
+                    </PriorityPopover>
+
                     {projectId && taskId && milestoneId ? (
                       <LabelPopover
                         projectId={projectId}

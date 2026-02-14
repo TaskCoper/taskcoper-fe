@@ -625,6 +625,15 @@
     "table": {
       "addCard": "Thêm thẻ",
       "addList": "Thêm danh sách"
+    },
+    "priority": {
+      "title": "Độ ưu tiên",
+      "placeholder": "Độ ưu tiên",
+      "lowest": "Thấp nhất",
+      "low": "Thấp",
+      "medium": "Trung bình",
+      "high": "Cao",
+      "highest": "Cao nhất"
     }
   },
   "richTextEditor": {
