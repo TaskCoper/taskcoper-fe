@@ -625,6 +625,15 @@
     "table": {
       "addCard": "Add card",
       "addList": "Add list"
+    },
+    "priority": {
+      "title": "Priority",
+      "placeholder": "Priority",
+      "lowest": "Lowest",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "highest": "Highest"
     }
   },
   "richTextEditor": {

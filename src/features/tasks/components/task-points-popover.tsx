@@ -25,7 +25,7 @@ export default function TaskPointsPopover({ children, onSubmit }: TaskPointsPopo
         onInteractOutside={onClose}
         sideOffset={8}
         align='start'
-        className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto w-60'
+        className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto w-72'
       >
         <StoryPointsPopoverContent onSubmit={onSubmit} onClose={onClose} />
       </PopoverContent>

@@ -144,7 +144,8 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
             {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
             {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
             {task.members.length > 0 ? (
-              <div className='ml-auto'>
+              <div className='ml-auto flex items-center gap-2'>
+                {/* TODO: add task priority icon */}
                 <TaskMembersChip members={task.members} />
               </div>
             ) : null}
