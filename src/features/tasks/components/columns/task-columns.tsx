@@ -20,6 +20,7 @@ import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import {
   CircleCheckBigIcon,
+  EyeIcon,
   MessageSquareIcon,
   MoreHorizontalIcon,
   PaperclipIcon,
@@ -34,11 +35,15 @@ import StatusCell from './status-cell'
 export const getColumns = ({
   projectId,
   parentMilestoneId,
-  onDeleteTask
+  onDeleteTask,
+  userId,
+  searchParams
 }: {
   projectId: string
   parentMilestoneId: string
   onDeleteTask: (taskId: string, taskName: string) => void
+  userId?: string
+  searchParams?: string
 }): ColumnDef<TaskRow>[] => {
   return [
     {
@@ -75,7 +80,7 @@ export const getColumns = ({
       header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.card' />,
       cell: ({ row }) => (
         <Link
-          to={`tasks/${row.original.id}?view=table`}
+          to={`tasks/${row.original.id}${searchParams ?? '?mode=table'}`}
           className={cn(
             'hover:underline',
             row.original.isCompleted ? 'line-through decoration-foreground/40 text-muted-foreground' : ''
@@ -90,6 +95,20 @@ export const getColumns = ({
       size: 150
     },
     {
+      id: 'isCompleted',
+      accessorKey: 'isCompleted',
+      meta: {
+        label: 'task.column.status',
+        variant: 'radio'
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.status' className='mx-auto' />,
+      cell: ({ row }) => <StatusCell row={row.original} projectId={projectId} parentMilestoneId={parentMilestoneId} />,
+      enableColumnFilter: true,
+      enableSorting: false,
+      enableHiding: true,
+      size: 30
+    },
+    {
       id: 'priority',
       accessorKey: 'priority',
       meta: {
@@ -101,13 +120,39 @@ export const getColumns = ({
       ),
       cell: ({ row }) => (
         <div className='flex justify-center'>
-          {row.original.priority ? getTaskPriorityIcon('size-5')[row.original.priority] : null}
+          {row.original.priority ? (
+            getTaskPriorityIcon('size-5')[row.original.priority]
+          ) : (
+            <p className='text-muted-foreground'>{i18next.t('task.column.none')}</p>
+          )}
         </div>
       ),
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
       size: 40
+    },
+    {
+      id: 'isWatchingTask',
+      accessorFn: (row) => row.members.some((m) => !m.isMemberInTask && m.userId === userId),
+      meta: { label: 'task.column.watching', variant: 'radio' },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='task.column.watching' className='mx-auto' />
+      ),
+      cell: ({ row }) => {
+        const isWatching = row.original.members.some((m) => !m.isMemberInTask && m.userId === userId)
+        if (!isWatching) return null
+
+        return (
+          <div className='flex justify-center'>
+            <EyeIcon className='size-4' />
+          </div>
+        )
+      },
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 30
     },
     {
       id: 'milestone',
@@ -122,20 +167,6 @@ export const getColumns = ({
       enableHiding: true,
       enableColumnFilter: true,
       size: 80
-    },
-    {
-      id: 'isCompleted',
-      accessorKey: 'isCompleted',
-      meta: {
-        label: 'task.column.status',
-        variant: 'radio'
-      },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.status' className='mx-auto' />,
-      cell: ({ row }) => <StatusCell row={row.original} projectId={projectId} parentMilestoneId={parentMilestoneId} />,
-      enableColumnFilter: true,
-      enableSorting: false,
-      enableHiding: true,
-      size: 30
     },
     {
       id: 'labels',
@@ -198,7 +229,7 @@ export const getColumns = ({
       meta: { label: 'systemProjects.column.members' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='systemProjects.column.members' />,
       cell: ({ row }) => {
-        const members = row.getValue('members') as TaskMember[]
+        const members = (row.getValue('members') as TaskMember[]).filter((m) => m.isMemberInTask)
         if (members.length === 0)
           return <p className='text-muted-foreground'>{i18next.t('systemProjects.column.noMembers')}</p>
 
@@ -339,7 +370,7 @@ export const getColumns = ({
               <DropdownMenuItem
                 onClick={async () => {
                   const baseUrl = window.location.origin
-                  const taskUrl = `${baseUrl}/projects/${projectId}/milestones/${parentMilestoneId}/tasks/${id}?view=table`
+                  const taskUrl = `${baseUrl}/projects/${projectId}/milestones/${parentMilestoneId}/tasks/${id}?mode=table`
 
                   try {
                     await navigator.clipboard.writeText(taskUrl)
@@ -357,7 +388,7 @@ export const getColumns = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to={`tasks/${id}?view=table`}>{i18next.t('task.column.viewDetails')}</Link>
+                <Link to={`tasks/${id}${searchParams ?? '?mode=table'}`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
                 {i18next.t('task.column.delete')}

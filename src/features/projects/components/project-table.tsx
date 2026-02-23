@@ -13,6 +13,7 @@ import { useGetTaskStatusStats } from '@/features/tasks/hooks/use-get-task-statu
 import { useGetTasks } from '@/features/tasks/hooks/use-get-tasks'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { TaskPriorityLabel, type TaskRow } from '@/types/task.type'
@@ -20,6 +21,7 @@ import { PlusCircleIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
 import { useGetProjectMemberStats } from '../hooks/use-get-project-member-stats'
 
 interface ProjectTableProps {
@@ -29,7 +31,9 @@ interface ProjectTableProps {
 
 export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTableProps) {
   const { t } = useTranslation()
+  const location = useLocation()
   const confirm = useConfirmStore((s) => s.confirm)
+  const { user } = useAuthStore()
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId })
 
   const onDeleteTask = useCallback(
@@ -49,8 +53,9 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   )
 
   const columns = useMemo(
-    () => getColumns({ projectId, parentMilestoneId, onDeleteTask }),
-    [projectId, parentMilestoneId, onDeleteTask]
+    () =>
+      getColumns({ projectId, parentMilestoneId, onDeleteTask, userId: user?.UserId, searchParams: location.search }),
+    [projectId, parentMilestoneId, onDeleteTask, user?.UserId, location.search]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -71,6 +76,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const [nameFilter] = useQueryState('tasks_name', parseAsString)
   const [membersFilter] = useQueryState('tasks_memberId', parseAsArrayOf(parseAsString))
   const [prioritiesFilter] = useQueryState('tasks_priority', parseAsArrayOf(parseAsString))
+  const [isWatchingTaskFilter] = useQueryState('tasks_isWatchingTask', parseAsBoolean)
 
   const labels = labelsFilter && labelsFilter.length > 0 ? labelsFilter : undefined
   const milestones = milestonesFilter && milestonesFilter.length > 0 ? milestonesFilter : undefined
@@ -81,6 +87,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const memberIds = membersFilter && membersFilter.length > 0 ? membersFilter : undefined
   const priorities =
     prioritiesFilter && prioritiesFilter.length > 0 ? prioritiesFilter.map((p) => (p === 'null' ? null : p)) : undefined
+  const isWatchingTask = isWatchingTaskFilter ?? undefined
 
   const { tasks, isLoadingTasks } = useGetTasks({
     parentMilestoneId,
@@ -94,7 +101,8 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     isCompleted,
     name,
     memberIds,
-    priorities
+    priorities,
+    isWatchingTask
   })
 
   const filterOptionOverrides = useMemo(() => {
@@ -135,7 +143,11 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
             t('task.column.none')
           ),
           count: priority.totalTasks
-        })) ?? []
+        })) ?? [],
+      isWatchingTask: [
+        { value: 'true', label: t('task.column.watching') },
+        { value: 'false', label: t('task.column.notWatching') }
+      ]
     }
   }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats, priorityStats, t])
 

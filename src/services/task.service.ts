@@ -30,7 +30,8 @@ class TaskService {
     isCompleted,
     name,
     memberIds,
-    priorities
+    priorities,
+    isWatchingTask
   }: UseGetTasksParams) => {
     const { data } = await api.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
       params: {
@@ -47,7 +48,8 @@ class TaskService {
         isCompleted,
         searchTerm: name,
         memberIds,
-        priorities
+        priorities,
+        isWatching: isWatchingTask
       }
     })
 
@@ -193,6 +195,15 @@ class TaskService {
 
   deleteAttachment = async ({ id, taskId }: { id: string; taskId: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/attachments/${id}`)
+
+    return data.value
+  }
+
+  toggleWatchTask = async ({ taskId, isWatching }: { taskId: string; isWatching: boolean }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/watch`, {
+      id: taskId,
+      isWatching
+    })
 
     return data.value
   }

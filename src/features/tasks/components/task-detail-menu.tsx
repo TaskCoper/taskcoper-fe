@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/shared/utils'
-import { ChevronLeftIcon, CopyIcon, Trash2Icon, XIcon } from 'lucide-react'
+import { CheckIcon, ChevronLeftIcon, CopyIcon, EyeIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useDeleteTask } from '../hooks/use-delete-task'
+import { useToggleWatchTask } from '../hooks/use-toggle-watch-task'
 
 interface TaskDetailMenuProps {
   taskId: string
@@ -17,6 +18,7 @@ interface TaskDetailMenuProps {
   open: boolean
   setOpen: (open: boolean) => void
   onDeleteSuccess: () => void
+  isWatchingTask: boolean
 }
 
 export default function TaskDetailMenu({
@@ -28,12 +30,18 @@ export default function TaskDetailMenu({
   children,
   open,
   setOpen,
-  onDeleteSuccess
+  onDeleteSuccess,
+  isWatchingTask
 }: TaskDetailMenuProps) {
   const { t } = useTranslation()
   const [isDeleting, setIsDeleting] = useState(false)
 
+  const { toggleWatchTask } = useToggleWatchTask({ projectId, parentMilestoneId })
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess })
+
+  const handleToggleWatchTask = () => {
+    toggleWatchTask({ taskId, isWatching: !isWatchingTask })
+  }
 
   const handleCopyLink = async () => {
     const baseUrl = window.location.origin
@@ -100,11 +108,31 @@ export default function TaskDetailMenu({
               size='sm'
               className='w-full justify-start gap-2 rounded-none'
               variant='ghost'
+              onClick={handleToggleWatchTask}
+            >
+              <EyeIcon />
+              <p>{t('task.column.watching')}</p>
+
+              {isWatchingTask ? (
+                <>
+                  <div className='flex-1' />
+                  <div className='size-4 bg-lime-600 rounded-sm flex items-center justify-center'>
+                    <CheckIcon className='size-3 text-white' />
+                  </div>
+                </>
+              ) : null}
+            </Button>
+
+            <Button
+              size='sm'
+              className='w-full justify-start gap-2 rounded-none'
+              variant='ghost'
               onClick={handleCopyLink}
             >
               <CopyIcon />
               <p>{t('task.copyLink.title')}</p>
             </Button>
+
             <Button
               size='sm'
               className='w-full justify-start gap-2 rounded-none'
