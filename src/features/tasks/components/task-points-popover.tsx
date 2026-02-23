@@ -44,18 +44,28 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
   const estimatedPoints = watch('estimatedPoints')
 
   const [localPoints, setLocalPoints] = useState<string>(estimatedPoints?.toString() || '')
+  const currentAsString = estimatedPoints?.toString() ?? ''
+  const hasChanged = localPoints !== currentAsString
 
   const handleSave = () => {
     const points = localPoints === '' ? null : Number(localPoints)
     if (points !== null && isNaN(points)) return
 
-    setValue('estimatedPoints', points)
+    setValue('estimatedPoints', points, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
     onSubmit()
     onClose()
   }
 
   const handleRemove = () => {
-    setValue('estimatedPoints', null)
+    setValue('estimatedPoints', null, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
     onSubmit()
     onClose()
   }
@@ -84,7 +94,9 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
         <Button variant='ghost' onClick={handleRemove}>
           {t('common.button.remove')}
         </Button>
-        <Button onClick={handleSave}>{t('common.button.save')}</Button>
+        <Button onClick={handleSave} disabled={!hasChanged}>
+          {t('common.button.save')}
+        </Button>
       </div>
     </div>
   )

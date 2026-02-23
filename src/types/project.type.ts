@@ -1,3 +1,5 @@
+import type { TaskPriority } from './task.type'
+
 export interface ProjectPreview {
   id: string
   name: string
@@ -144,6 +146,11 @@ export interface ProjectResourceMemberStats {
   email: string
   avatar: string | null
   totalResources: number
+}
+
+export interface ProjectPriorityStats {
+  priority: TaskPriority | null
+  totalTasks: number
 }
 
 // APIs

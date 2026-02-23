@@ -2,10 +2,12 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
 import { useGetProjectLabelStats } from '@/features/labels/hooks/use-get-project-label-stats'
+import { useGetProjectPriorityStats } from '@/features/labels/hooks/use-get-project-priority-stats'
 import AddMilestonePopover from '@/features/milestones/components/add-milestone-popover'
 import { useGetMilestoneStats } from '@/features/milestones/hooks/use-get-milestone-stats'
 import AddTaskPopover from '@/features/tasks/components/add-task-popover'
 import { getColumns } from '@/features/tasks/components/columns/task-columns'
+import { getTaskPriorityIcon } from '@/features/tasks/constants'
 import { useDeleteTask } from '@/features/tasks/hooks/use-delete-task'
 import { useGetTaskStatusStats } from '@/features/tasks/hooks/use-get-task-status-stats'
 import { useGetTasks } from '@/features/tasks/hooks/use-get-tasks'
@@ -13,7 +15,7 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
-import type { TaskRow } from '@/types/task.type'
+import { TaskPriorityLabel, type TaskRow } from '@/types/task.type'
 import { PlusCircleIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
@@ -59,6 +61,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const { milestoneStats, isLoadingMilestoneStats } = useGetMilestoneStats({ parentMilestoneId })
   const { taskStatusStats, isLoadingTaskStatusStats } = useGetTaskStatusStats({ projectId, parentMilestoneId })
   const { projectMemberStats, isLoadingProjectMemberStats } = useGetProjectMemberStats({ projectId, parentMilestoneId })
+  const { priorityStats, isLoadingPriorityStats } = useGetProjectPriorityStats({ projectId, parentMilestoneId })
 
   const [startDateFilter] = useQueryState('tasks_startDate', parseAsArrayOf(parseAsString))
   const [endDateFilter] = useQueryState('tasks_endDate', parseAsArrayOf(parseAsString))
@@ -67,6 +70,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const [isCompletedFilter] = useQueryState('tasks_isCompleted', parseAsBoolean)
   const [nameFilter] = useQueryState('tasks_name', parseAsString)
   const [membersFilter] = useQueryState('tasks_memberId', parseAsArrayOf(parseAsString))
+  const [prioritiesFilter] = useQueryState('tasks_priority', parseAsArrayOf(parseAsString))
 
   const labels = labelsFilter && labelsFilter.length > 0 ? labelsFilter : undefined
   const milestones = milestonesFilter && milestonesFilter.length > 0 ? milestonesFilter : undefined
@@ -75,6 +79,8 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const isCompleted = isCompletedFilter ?? undefined
   const name = nameFilter ?? undefined
   const memberIds = membersFilter && membersFilter.length > 0 ? membersFilter : undefined
+  const priorities =
+    prioritiesFilter && prioritiesFilter.length > 0 ? prioritiesFilter.map((p) => (p === 'null' ? null : p)) : undefined
 
   const { tasks, isLoadingTasks } = useGetTasks({
     parentMilestoneId,
@@ -87,7 +93,8 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     startDate,
     isCompleted,
     name,
-    memberIds
+    memberIds,
+    priorities
   })
 
   const filterOptionOverrides = useMemo(() => {
@@ -115,9 +122,22 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
           value: member.userId,
           label: `${member.firstName} ${member.lastName}`,
           count: member.totalTasks
+        })) ?? [],
+      priority:
+        priorityStats?.value?.items.map((priority) => ({
+          value: priority.priority ?? 'null',
+          label: priority.priority ? (
+            <div className='flex items-center gap-1'>
+              {getTaskPriorityIcon()[priority.priority]}
+              <p>{t(TaskPriorityLabel[priority.priority])}</p>
+            </div>
+          ) : (
+            t('task.column.none')
+          ),
+          count: priority.totalTasks
         })) ?? []
     }
-  }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats, t])
+  }, [labelStats, milestoneStats, taskStatusStats, projectMemberStats, priorityStats, t])
 
   const { table } = useDataTable({
     data: tasks.value.items,
@@ -146,7 +166,8 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     isLoadingLabelStats ||
     isLoadingMilestoneStats ||
     isLoadingTaskStatusStats ||
-    isLoadingProjectMemberStats
+    isLoadingProjectMemberStats ||
+    isLoadingPriorityStats
 
   return (
     <div className='pb-24'>

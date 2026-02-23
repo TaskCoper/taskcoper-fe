@@ -34,11 +34,13 @@ import PriorityPopover from '@/features/tasks/components/priority-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
+import { getTaskPriorityIcon } from '@/features/tasks/constants'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
+import { TaskPriorityLabel } from '@/types/task.type'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -99,7 +101,12 @@ export default function TaskDetailDialogPage() {
     updateTask,
     isUpdatingTask
   } = useUpdateTask({ taskId, projectId, parentMilestoneId: milestoneId })
-  const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
+  const {
+    reset: resetTask,
+    control: updateTaskControl,
+    handleSubmit: handleSubmitTask,
+    formState: { isDirty }
+  } = updateTaskMethods
 
   const {
     methods: addCommentMethods,
@@ -131,6 +138,7 @@ export default function TaskDetailDialogPage() {
       const values: UpdateTaskFormValues = {
         id: task.taskId,
         name: newName,
+        priority: task.priority,
         isCompleted: task.isCompleted,
         description: task.taskDescription,
         position: task.taskPosition,
@@ -181,7 +189,8 @@ export default function TaskDetailDialogPage() {
         targetMilestoneId: task.milestoneId,
         announceBeforeMinutes: task.announceBeforeMinutes,
         estimatedPoints: task.estimatedPoints,
-        backgroundImage: task.backgroundImage
+        backgroundImage: task.backgroundImage,
+        priority: task.priority
       })
     }
   }, [open, task, resetTask])
@@ -196,12 +205,19 @@ export default function TaskDetailDialogPage() {
   }, [open, task, resetComment])
 
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
+    if (!isDirty) return
     updateTask({ body })
   }
 
   const handleRemoveDate = () => {
     updateTask({
       body: { ...updateTaskMethods.getValues(), startDate: null, endDate: null, announceBeforeMinutes: null }
+    })
+  }
+
+  const handleRemovePriority = () => {
+    updateTask({
+      body: { ...updateTaskMethods.getValues(), priority: null }
     })
   }
 
@@ -272,7 +288,11 @@ export default function TaskDetailDialogPage() {
 
           {task?.backgroundImage ? (
             <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
-              <img src={task.backgroundImage} alt='Cover' className='w-full h-full object-contain' />
+              <img
+                src={task.backgroundImage}
+                alt={t('task.detail.backgroundImage')}
+                className='w-full h-full object-contain'
+              />
             </div>
           ) : null}
 
@@ -352,7 +372,7 @@ export default function TaskDetailDialogPage() {
           <div className='grid grid-cols-12 flex-1 overflow-hidden'>
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
               {/* Task name + popovers */}
-              <div className='flex gap-3'>
+              <div className='flex gap-2'>
                 <Checkbox
                   checked={task?.isCompleted}
                   onCheckedChange={(checked) => {
@@ -381,14 +401,16 @@ export default function TaskDetailDialogPage() {
 
                   {/* Action Buttons */}
                   <div className='flex items-center gap-2 flex-wrap'>
-                    <PriorityPopover>
-                      <Button variant='outline' size='sm'>
-                        <ChevronsUpIcon />
-                        {t('task.priority.title')}
-                      </Button>
-                    </PriorityPopover>
+                    {!task?.priority ? (
+                      <PriorityPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemovePriority}>
+                        <Button variant='outline' size='sm'>
+                          <ChevronsUpIcon />
+                          {t('task.priority.title')}
+                        </Button>
+                      </PriorityPopover>
+                    ) : null}
 
-                    {projectId && taskId && milestoneId ? (
+                    {(task?.taskLabels.length ?? 0) === 0 && projectId && taskId && milestoneId ? (
                       <LabelPopover
                         projectId={projectId}
                         taskId={taskId}
@@ -401,12 +423,16 @@ export default function TaskDetailDialogPage() {
                         </Button>
                       </LabelPopover>
                     ) : null}
-                    <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
-                      <Button variant='outline' size='sm'>
-                        <ClockIcon />
-                        {t('common.field.date')}
-                      </Button>
-                    </DatePopover>
+
+                    {!task?.taskStartDate && !task?.taskEndDate ? (
+                      <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
+                        <Button variant='outline' size='sm'>
+                          <ClockIcon />
+                          {t('common.field.date')}
+                        </Button>
+                      </DatePopover>
+                    ) : null}
+
                     {projectId && taskId && milestoneId ? (
                       <SubtaskPopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
                         <Button variant='outline' size='sm'>
@@ -415,7 +441,8 @@ export default function TaskDetailDialogPage() {
                         </Button>
                       </SubtaskPopover>
                     ) : null}
-                    {projectId && taskId && milestoneId ? (
+
+                    {(taskMembers?.value.totalCount ?? 0) === 0 && projectId && taskId && milestoneId ? (
                       <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
                         <Button variant='outline' size='sm'>
                           <UserRoundPlusIcon />
@@ -423,6 +450,7 @@ export default function TaskDetailDialogPage() {
                         </Button>
                       </AssigneePopover>
                     ) : null}
+
                     {taskId && projectId && milestoneId ? (
                       <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={milestoneId}>
                         <Button variant='outline' size='sm'>
@@ -435,7 +463,38 @@ export default function TaskDetailDialogPage() {
                 </div>
               </div>
 
-              <div className='flex items-center flex-wrap gap-x-6 gap-y-4 pl-6'>
+              <div className='flex items-center flex-wrap gap-6 pl-6'>
+                {/* Priority section */}
+                {task?.priority ? (
+                  <div className='space-y-1'>
+                    <p className='text-sm font-semibold text-muted-foreground'>{t('task.priority.title')}</p>
+
+                    <PriorityPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemovePriority}>
+                      <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
+                        <div className='flex items-center gap-2 min-w-10'>
+                          {getTaskPriorityIcon()[task.priority]}
+                          <p className='font-semibold'>{t(TaskPriorityLabel[task.priority])}</p>
+                        </div>
+                      </Button>
+                    </PriorityPopover>
+                  </div>
+                ) : null}
+
+                {/* Story points section */}
+                <div className='space-y-1'>
+                  <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.storyPoints')}</p>
+
+                  <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)}>
+                    <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
+                      {task?.estimatedPoints ? (
+                        <p className='font-semibold min-w-10'>{task.estimatedPoints}</p>
+                      ) : (
+                        <p className='font-semibold text-muted-foreground min-w-10'>{t('task.detail.none')}</p>
+                      )}
+                    </Button>
+                  </TaskPointsPopover>
+                </div>
+
                 {/* Labels section */}
                 {(task?.taskLabels.length ?? 0) > 0 ? (
                   <div className='space-y-1 max-w-full'>
@@ -501,7 +560,13 @@ export default function TaskDetailDialogPage() {
                 {/* Date section */}
                 {task?.taskStartDate || task?.taskEndDate ? (
                   <div className='space-y-1'>
-                    <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.date')}</p>
+                    <p className='text-sm font-semibold text-muted-foreground'>
+                      {task.taskStartDate && task.taskEndDate
+                        ? t('common.ui.date')
+                        : task.taskStartDate
+                          ? t('task.detail.startDate')
+                          : t('task.detail.dueDate')}
+                    </p>
 
                     <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
                       <Button variant='secondary' size='sm'>
@@ -510,7 +575,7 @@ export default function TaskDetailDialogPage() {
                             {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
                         ) : null}
-                        {task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
+                        {task?.taskStartDate && task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
                         {task?.taskEndDate ? (
                           <p className='font-semibold'>
                             {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
@@ -521,21 +586,6 @@ export default function TaskDetailDialogPage() {
                     </DatePopover>
                   </div>
                 ) : null}
-
-                {/* Story points section */}
-                <div className='space-y-1'>
-                  <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.storyPoints')}</p>
-
-                  <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)}>
-                    <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
-                      {task?.estimatedPoints ? (
-                        <p className='font-semibold min-w-10'>{task.estimatedPoints}</p>
-                      ) : (
-                        <p className='font-semibold text-muted-foreground min-w-10'>{t('task.detail.none')}</p>
-                      )}
-                    </Button>
-                  </TaskPointsPopover>
-                </div>
               </div>
 
               <div className='flex gap-3'>

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn, getColorTextClass } from '@/shared/utils'
-import type { TaskMember, TaskRow } from '@/types/task.type'
+import { type TaskMember, type TaskRow } from '@/types/task.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import { getTaskPriorityIcon } from '../../constants'
 import StatusCell from './status-cell'
 
 export const getColumns = ({
@@ -87,6 +88,26 @@ export const getColumns = ({
       enableHiding: false,
       enableColumnFilter: true,
       size: 150
+    },
+    {
+      id: 'priority',
+      accessorKey: 'priority',
+      meta: {
+        label: 'task.column.priority',
+        variant: 'multiSelect'
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='task.column.priority' className='mx-auto' />
+      ),
+      cell: ({ row }) => (
+        <div className='flex justify-center'>
+          {row.original.priority ? getTaskPriorityIcon('size-5')[row.original.priority] : null}
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 40
     },
     {
       id: 'milestone',

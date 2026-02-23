@@ -18,6 +18,7 @@ export interface UseGetTasksParams {
   isCompleted?: boolean
   name?: string
   memberIds?: string[]
+  priorities?: (string | null)[]
 }
 
 export const useGetTasks = ({
@@ -32,6 +33,7 @@ export const useGetTasks = ({
   isCompleted,
   name,
   memberIds,
+  priorities,
   enabled = true
 }: UseGetTasksParams) => {
   const { data: tasks = getDefaultPaginationResponse<TaskRow>(), isLoading: isLoadingTasks } = useQuery({
@@ -46,7 +48,8 @@ export const useGetTasks = ({
       startDate,
       isCompleted,
       name,
-      memberIds
+      memberIds,
+      priorities
     }),
     queryFn: () =>
       taskService.getTasks({
@@ -60,7 +63,8 @@ export const useGetTasks = ({
         startDate,
         isCompleted,
         name,
-        memberIds
+        memberIds,
+        priorities
       }),
     enabled: enabled && !!parentMilestoneId
   })

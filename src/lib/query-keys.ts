@@ -66,7 +66,12 @@ export const queryKeys = {
     ],
     resourceStats: (projectId?: string) => ['project-resource-stats', projectId] as const,
     mimeTypeStats: (projectId?: string) => ['project-mime-type-stats', projectId] as const,
-    resourceMemberStats: (projectId?: string) => ['project-resource-member-stats', projectId] as const
+    resourceMemberStats: (projectId?: string) => ['project-resource-member-stats', projectId] as const,
+    priorityStats: (projectId?: string, parentMilestoneId?: string) => [
+      'project-priority-stats',
+      projectId,
+      parentMilestoneId
+    ]
   },
   // Milestones
   milestones: {
@@ -90,7 +95,8 @@ export const queryKeys = {
       startDate,
       isCompleted,
       name,
-      memberIds
+      memberIds,
+      priorities
     }: UseGetTasksParams) =>
       [
         ...queryKeys.tasks.listParent(parentMilestoneId),
@@ -103,7 +109,8 @@ export const queryKeys = {
         startDate,
         isCompleted,
         name,
-        memberIds
+        memberIds,
+        priorities
       ] as const,
     listParent: (parentMilestoneId?: string) => [...queryKeys.tasks.all, parentMilestoneId] as const,
     detail: (taskId?: string) => ['task', taskId] as const,

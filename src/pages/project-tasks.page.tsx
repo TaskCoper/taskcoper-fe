@@ -22,7 +22,7 @@ export default function ProjectTasksPage() {
   return (
     <>
       <div className='w-full h-full relative'>
-        {view === 'board' ? (
+        {view === 'board' && milestoneId && projectId ? (
           <div className='w-full h-full bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
             {isLoadingMilestones ? (
               <div className='flex items-start gap-3 p-4'>

@@ -11,6 +11,7 @@ import { vi } from 'date-fns/locale'
 import { CircleCheckBigIcon, ClockIcon, MessageSquareIcon, PaperclipIcon, SquarePenIcon, StarIcon } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { getTaskPriorityIcon } from '../constants'
 import { useUpdateTaskStatus } from '../hooks/use-update-task-status'
 
 const taskCardVariants = cva(
@@ -51,6 +52,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
     task.progressPercentage > 0 ||
     task.totalResources > 0 ||
     task.totalSubtasks > 0 ||
+    task.priority ||
     (task?.estimatedPoints && task.estimatedPoints > 0)
 
   const handleLabelClick = (e: React.MouseEvent) => {
@@ -143,10 +145,10 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
             ) : null}
             {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
             {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
-            {task.members.length > 0 ? (
+            {task.priority || task.members.length > 0 ? (
               <div className='ml-auto flex items-center gap-2'>
-                {/* TODO: add task priority icon */}
-                <TaskMembersChip members={task.members} />
+                {task.priority ? getTaskPriorityIcon()[task.priority] : null}
+                {task.members.length > 0 ? <TaskMembersChip members={task.members} /> : null}
               </div>
             ) : null}
           </div>

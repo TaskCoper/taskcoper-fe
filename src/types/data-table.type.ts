@@ -30,7 +30,7 @@ export interface QueryKeys {
 }
 
 export interface Option {
-  label: string
+  label: string | React.ReactNode
   value: string
   count?: number | string
   icon?: React.FC<React.SVGProps<SVGSVGElement>>

@@ -1,3 +1,4 @@
+import { TaskPriority } from '@/types/task.type'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -42,6 +43,7 @@ export const updateTaskSchema = (t: TFunction) => {
       startDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       endDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       targetMilestoneId: z.uuid({ message: t('task.validation.targetMilestoneId.invalid') }),
+      priority: z.enum(TaskPriority).nullable(),
       announceBeforeMinutes: z
         .number()
         .positive({ message: t('common.validation.number.positive') })
