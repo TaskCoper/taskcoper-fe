@@ -10,8 +10,8 @@ const baseSchema = (t: TFunction) =>
     position: z.number({ message: t('task.attachment.validation.position.invalid') })
   })
 
-const fileAttachmentSchema = (t: TFunction) =>
-  baseSchema(t).extend({
+const fileFieldsSchema = (t: TFunction) =>
+  z.object({
     isUpload: z.literal(true),
     storageKey: z.string().min(1, { message: t('task.attachment.validation.storageKey.minLength') }),
     mimeType: z.string().min(1, { message: t('task.attachment.validation.mimeType.minLength') }),
@@ -21,13 +21,16 @@ const fileAttachmentSchema = (t: TFunction) =>
       .positive({ message: t('task.attachment.validation.bytes.positive') })
   })
 
-const linkAttachmentSchema = (t: TFunction) =>
-  baseSchema(t).extend({
-    isUpload: z.literal(false),
-    storageKey: z.string().nullable(),
-    mimeType: z.string().nullable(),
-    bytes: z.number().nullable()
-  })
+const linkFieldsSchema = z.object({
+  isUpload: z.literal(false),
+  storageKey: z.string().nullable(),
+  mimeType: z.string().nullable(),
+  bytes: z.number().nullable()
+})
+
+const fileAttachmentSchema = (t: TFunction) => baseSchema(t).extend(fileFieldsSchema(t).shape)
+
+const linkAttachmentSchema = (t: TFunction) => baseSchema(t).extend(linkFieldsSchema.shape)
 
 const updateBaseSchema = (t: TFunction) =>
   z.object({
@@ -37,27 +40,20 @@ const updateBaseSchema = (t: TFunction) =>
   })
 
 const updateFileAttachmentSchema = (t: TFunction) =>
-  updateBaseSchema(t).extend({
-    isUpload: z.literal(true),
-    name: z.string().min(1, { message: t('task.attachment.validation.name.minLength') }),
-    url: z.url({ message: t('task.attachment.validation.url.invalid') }),
-    storageKey: z.string(),
-    mimeType: z.string(),
-    bytes: z
-      .number()
-      .int()
-      .positive({ message: t('task.attachment.validation.bytes.positive') })
-  })
+  updateBaseSchema(t)
+    .extend({
+      name: z.string().min(1, { message: t('task.attachment.validation.name.minLength') }),
+      url: z.url({ message: t('task.attachment.validation.url.invalid') })
+    })
+    .extend(fileFieldsSchema(t).shape)
 
 const updateLinkAttachmentSchema = (t: TFunction) =>
-  updateBaseSchema(t).extend({
-    isUpload: z.literal(false),
-    name: z.string(),
-    url: z.url({ message: t('task.attachment.validation.url.invalid') }),
-    storageKey: z.string().nullable(),
-    mimeType: z.string().nullable(),
-    bytes: z.number().nullable()
-  })
+  updateBaseSchema(t)
+    .extend({
+      name: z.string(),
+      url: z.url({ message: t('task.attachment.validation.url.invalid') })
+    })
+    .extend(linkFieldsSchema.shape)
 
 export const updateAttachmentSchema = (t: TFunction) =>
   z.discriminatedUnion('isUpload', [updateFileAttachmentSchema(t), updateLinkAttachmentSchema(t)])
@@ -65,5 +61,15 @@ export const updateAttachmentSchema = (t: TFunction) =>
 export const uploadAttachmentSchema = (t: TFunction) =>
   z.discriminatedUnion('isUpload', [fileAttachmentSchema(t), linkAttachmentSchema(t)])
 
+export const uploadProjectAttachmentSchema = (t: TFunction) =>
+  z
+    .object({
+      projectId: z.uuid(),
+      name: z.string(),
+      url: z.string()
+    })
+    .extend(fileFieldsSchema(t).shape)
+
 export type UploadAttachmentFormValues = z.infer<ReturnType<typeof uploadAttachmentSchema>>
 export type UpdateAttachmentFormValues = z.infer<ReturnType<typeof updateAttachmentSchema>>
+export type UploadProjectAttachmentFormValues = z.infer<ReturnType<typeof uploadProjectAttachmentSchema>>

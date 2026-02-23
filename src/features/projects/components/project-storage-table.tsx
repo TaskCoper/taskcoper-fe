@@ -1,17 +1,23 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useDeleteAttachment } from '@/features/attachments/hooks/use-delete-attachment'
+import { useDeleteProjectAttachment } from '@/features/attachments/hooks/use-delete-project-attachment'
+import { useUploadProjectAttachment } from '@/features/attachments/hooks/use-upload-project-attachment'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
+import { useUploadFile } from '@/hooks/use-upload-file'
+import type { ErrorResponse } from '@/lib/axios'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import type { ProjectResource } from '@/types/project.type'
-import i18next from 'i18next'
+import type { AxiosError } from 'axios'
 import { UploadIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { useGetProjectMimeTypeStats } from '../hooks/use-get-project-mime-type-stats'
 import { useGetProjectResourceMemberStats } from '../hooks/use-get-project-resource-member-stats'
 import { useGetProjectResources } from '../hooks/use-get-project-resources'
@@ -25,7 +31,13 @@ interface ProjectStorageTableProps {
 export default function ProjectStorageTable({ projectId }: ProjectStorageTableProps) {
   const { t } = useTranslation()
   const confirm = useConfirmStore((s) => s.confirm)
-  const { deleteAttachment } = useDeleteAttachment({ projectId, parentMilestoneId: '' })
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const { uploadFileAsync } = useUploadFile()
+  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectId })
+
+  const { deleteAttachment } = useDeleteAttachment({ projectId })
+  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectId })
 
   const onDeleteResource = useCallback(
     async (resourceId: string, taskId: string) => {
@@ -43,7 +55,85 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
     [confirm, deleteAttachment, t]
   )
 
-  const columns = useMemo(() => getColumns({ onDeleteResource }), [onDeleteResource])
+  const onDeleteProjectResource = useCallback(
+    async (resourceId: string) => {
+      const confirmed = await confirm({
+        title: t('projectStorage.deleteResource.title'),
+        description: t('projectStorage.deleteResource.description'),
+        confirmText: t('projectStorage.deleteResource.confirmText'),
+        cancelText: t('common.button.cancel'),
+        variant: 'destructive'
+      })
+      if (confirmed) {
+        deleteProjectAttachment({ projectId, resourceId })
+      }
+    },
+    [confirm, deleteProjectAttachment, projectId, t]
+  )
+
+  const handleUploadFiles = useCallback(
+    async (files: FileList) => {
+      for (const file of Array.from(files)) {
+        const toastId = toast.loading(t('common.ui.uploading'), {
+          description: (
+            <div className='w-full min-w-72 space-y-1'>
+              <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
+              <Progress value={0} className='w-full' />
+              <p className='text-xs text-muted-foreground'>0%</p>
+            </div>
+          )
+        })
+
+        try {
+          const url = await uploadFileAsync({
+            file,
+            onProgress: (progress) => {
+              toast.loading(t('common.ui.uploading'), {
+                id: toastId,
+                description: (
+                  <div className='w-full min-w-72 space-y-1'>
+                    <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
+                    <Progress value={progress} className='w-full' />
+                    <p className='text-xs text-muted-foreground'>{progress}%</p>
+                  </div>
+                )
+              })
+            }
+          })
+
+          if (url) {
+            await uploadProjectAttachmentAsync({
+              body: {
+                projectId,
+                name: file.name,
+                url,
+                isUpload: true,
+                storageKey: url,
+                mimeType: file.type || 'application/octet-stream',
+                bytes: file.size
+              }
+            })
+
+            toast.success(t('common.ui.uploadSuccess'), {
+              id: toastId,
+              description: file.name
+            })
+          }
+        } catch (error) {
+          toast(t('error.somethingWentWrong'), {
+            id: toastId,
+            description: (error as AxiosError<ErrorResponse>).response?.data?.detail
+          })
+        }
+      }
+    },
+    [projectId, t, uploadFileAsync, uploadProjectAttachmentAsync]
+  )
+
+  const columns = useMemo(
+    () => getColumns({ onDeleteResource, onDeleteProjectResource }),
+    [onDeleteResource, onDeleteProjectResource]
+  )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
     prefix: 'storage'
@@ -116,9 +206,22 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
   return (
     <DataTable table={table} isLoading={isLoading}>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-        <Button size='sm'>
+        <input
+          ref={fileInputRef}
+          type='file'
+          multiple
+          className='hidden'
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              handleUploadFiles(e.target.files)
+              e.target.value = ''
+            }
+          }}
+        />
+
+        <Button size='sm' onClick={() => fileInputRef.current?.click()}>
           <UploadIcon />
-          {i18next.t('projectStorage.uploadFile')}
+          {t('projectStorage.uploadFile')}
         </Button>
       </DataTableToolbar>
     </DataTable>

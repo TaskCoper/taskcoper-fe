@@ -1,3 +1,4 @@
+import type { UploadProjectAttachmentFormValues } from '@/features/attachments/validations'
 import type { UseGetProjectLabelStatsParams } from '@/features/labels/hooks/use-get-project-label-stats'
 import type { UseGetProjectPriorityStatsParams } from '@/features/labels/hooks/use-get-project-priority-stats'
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
@@ -308,6 +309,18 @@ class ProjectService {
     )
 
     return data
+  }
+
+  uploadAttachment = async ({ body }: { body: UploadProjectAttachmentFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/resources`, body)
+
+    return data.value
+  }
+
+  deleteAttachment = async ({ projectId, resourceId }: { projectId: string; resourceId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
+
+    return data.value
   }
 }
 
