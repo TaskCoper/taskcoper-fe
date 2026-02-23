@@ -2,13 +2,22 @@ import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { CircleCheckBigIcon, ClockIcon, MessageSquareIcon, PaperclipIcon, SquarePenIcon, StarIcon } from 'lucide-react'
+import {
+  CircleCheckBigIcon,
+  ClockIcon,
+  EyeIcon,
+  MessageSquareIcon,
+  PaperclipIcon,
+  SquarePenIcon,
+  StarIcon
+} from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { getTaskPriorityIcon } from '../constants'
@@ -35,6 +44,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
   const location = useLocation()
   const navigate = useNavigate()
 
+  const { user } = useAuthStore()
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const { areLabelsExpanded, toggleLabelsExpanded } = useTaskUIStore()
   const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
@@ -43,12 +53,15 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
     parentMilestoneId: milestoneId
   })
 
+  const isWatchingTask = task.members.find((x) => !x.isMemberInTask && x.userId === user?.UserId) !== undefined
+
   const isDisplayIcons =
+    isWatchingTask ||
     task.startDate ||
     task.endDate ||
     task.totalComments > 0 ||
     task.completedSubtasks > 0 ||
-    task.members.length > 0 ||
+    task.members.filter((x) => x.isMemberInTask).length > 0 ||
     task.progressPercentage > 0 ||
     task.totalResources > 0 ||
     task.totalSubtasks > 0 ||
@@ -136,6 +149,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
               task.progressPercentage > 0 ? 'mb-1' : ''
             )}
           >
+            {isWatchingTask ? <EyeIcon className='size-3.5' /> : null}
             {task.startDate || task.endDate ? <TaskDateChip startDate={task.startDate} endDate={task.endDate} /> : null}
             {task.estimatedPoints && task.estimatedPoints > 0 ? (
               <TaskStoryPointsChip storyPoints={task.estimatedPoints} />
@@ -145,10 +159,12 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
             ) : null}
             {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
             {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
-            {task.priority || task.members.length > 0 ? (
+            {task.priority || task.members.filter((x) => x.isMemberInTask).length > 0 ? (
               <div className='ml-auto flex items-center gap-2'>
                 {task.priority ? getTaskPriorityIcon()[task.priority] : null}
-                {task.members.length > 0 ? <TaskMembersChip members={task.members} /> : null}
+                {task.members.filter((x) => x.isMemberInTask).length > 0 ? (
+                  <TaskMembersChip members={task.members.filter((x) => x.isMemberInTask)} />
+                ) : null}
               </div>
             ) : null}
           </div>

@@ -618,6 +618,8 @@
       "dueDate": "Due date",
       "noDueDate": "No due date",
       "members": "Members",
+      "watching": "Watching",
+      "notWatching": "Not watching",
       "viewDetails": "View details",
       "delete": "Delete"
     },

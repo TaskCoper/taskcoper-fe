@@ -618,6 +618,8 @@
       "dueDate": "Hạn hoàn thành",
       "noDueDate": "Chưa có hạn",
       "members": "Thành viên",
+      "watching": "Theo dõi",
+      "notWatching": "Không theo dõi",
       "viewDetails": "Xem thông tin",
       "delete": "Xóa"
     },

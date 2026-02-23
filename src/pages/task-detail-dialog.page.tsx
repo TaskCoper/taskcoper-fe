@@ -36,9 +36,11 @@ import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
 import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
 import { getTaskPriorityIcon } from '@/features/tasks/constants'
 import { useGetTask } from '@/features/tasks/hooks/use-get-task'
+import { useToggleWatchTask } from '@/features/tasks/hooks/use-toggle-watch-task'
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { TaskPriorityLabel } from '@/types/task.type'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
@@ -72,6 +74,7 @@ export default function TaskDetailDialogPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const { user } = useAuthStore()
   const { t, i18n } = useTranslation()
   const { projectId, milestoneId, taskId } = useParams<{ projectId: string; milestoneId: string; taskId: string }>()
 
@@ -95,6 +98,9 @@ export default function TaskDetailDialogPage() {
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
+
+  const isWatchingTask =
+    taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.UserId) !== undefined
 
   const {
     methods: updateTaskMethods,
@@ -158,14 +164,16 @@ export default function TaskDetailDialogPage() {
     }
   })
 
+  const { toggleWatchTask } = useToggleWatchTask({ projectId, parentMilestoneId: milestoneId })
+
   const goBack = () => {
     // Check if we're in the storage route
     if (location.pathname.includes('/storage/')) {
       // Navigate back to storage page
-      navigate(`/projects/${projectId}/storage`)
+      navigate(`/projects/${projectId}/storage${location.search}`)
     } else {
       // Navigate back to milestones page
-      navigate(`/projects/${projectId}/milestones/${milestoneId}`)
+      navigate(`/projects/${projectId}/milestones/${milestoneId}${location.search}`)
     }
   }
 
@@ -317,9 +325,19 @@ export default function TaskDetailDialogPage() {
             ) : null}
 
             <div className='flex items-center gap-1'>
-              <Button className='rounded-full' variant={task?.backgroundImage ? 'outline' : 'ghost'} size='icon-sm'>
-                <EyeIcon />
-              </Button>
+              {isWatchingTask ? (
+                <Button
+                  className='rounded-full'
+                  variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                  size='icon-sm'
+                  onClick={() => {
+                    if (!taskId) return
+                    toggleWatchTask({ taskId, isWatching: false })
+                  }}
+                >
+                  <EyeIcon />
+                </Button>
+              ) : null}
 
               <BackgroundImagePopover
                 onSubmit={handleSubmitTask(onSubmitUpdateTask)}
@@ -345,6 +363,7 @@ export default function TaskDetailDialogPage() {
                   onDeleteSuccess={goBack}
                   open={openTaskDetailMenu}
                   setOpen={setOpenTaskDetailMenu}
+                  isWatchingTask={isWatchingTask}
                 >
                   <Button
                     className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}
@@ -442,7 +461,10 @@ export default function TaskDetailDialogPage() {
                       </SubtaskPopover>
                     ) : null}
 
-                    {(taskMembers?.value.totalCount ?? 0) === 0 && projectId && taskId && milestoneId ? (
+                    {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
+                    projectId &&
+                    taskId &&
+                    milestoneId ? (
                       <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
                         <Button variant='outline' size='sm'>
                           <UserRoundPlusIcon />
@@ -534,17 +556,21 @@ export default function TaskDetailDialogPage() {
                 ) : null}
 
                 {/* Assigned members section */}
-                {(taskMembers?.value.totalCount ?? 0) > 0 ? (
+                {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length > 0 ? (
                   <div className='space-y-1'>
                     <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.members')}</p>
 
                     <div className='flex items-center gap-1'>
-                      {taskMembers?.value.items.map((member) => (
-                        <Avatar key={member.userId} className='size-8'>
-                          <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
-                          <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
-                        </Avatar>
-                      ))}
+                      {taskMembers?.value.items
+                        .filter((x) => x.isMemberInTask)
+                        .map((member) => (
+                          <Avatar key={member.userId} className='size-8'>
+                            <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
+                            <AvatarFallback>
+                              {getAvatarFallback(`${member.firstName} ${member.lastName}`)}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
 
                       {projectId && taskId && milestoneId ? (
                         <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>

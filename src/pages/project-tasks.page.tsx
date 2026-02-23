@@ -11,18 +11,18 @@ import { Outlet, useParams } from 'react-router'
 
 export default function ProjectTasksPage() {
   const { t } = useTranslation()
-  const [view, setView] = useQueryState('view', parseAsStringEnum(['board', 'table']).withDefault('board'))
+  const [mode, setMode] = useQueryState('mode', parseAsStringEnum(['board', 'table']).withDefault('board'))
   const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
   const { milestones, isLoadingMilestones } = useGetMilestones({
     projectId,
     parentMilestoneId: milestoneId,
-    enabled: view === 'board'
+    enabled: mode === 'board'
   })
 
   return (
     <>
       <div className='w-full h-full relative'>
-        {view === 'board' && milestoneId && projectId ? (
+        {mode === 'board' && milestoneId && projectId ? (
           <div className='w-full h-full bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
             {isLoadingMilestones ? (
               <div className='flex items-start gap-3 p-4'>
@@ -36,7 +36,7 @@ export default function ProjectTasksPage() {
           </div>
         ) : null}
 
-        {view === 'table' && milestoneId && projectId ? (
+        {mode === 'table' && milestoneId && projectId ? (
           <div className='w-full h-full p-4'>
             <ProjectTable projectId={projectId} parentMilestoneId={milestoneId} />
           </div>
@@ -45,9 +45,9 @@ export default function ProjectTasksPage() {
         <Card className='fixed bottom-4 left-1/2 z-10 -translate-x-1/2 p-1 flex-row items-center gap-2 rounded-lg'>
           <Button
             variant='ghost'
-            onClick={() => setView('board')}
+            onClick={() => setMode('board')}
             size='sm'
-            className={view === 'board' ? 'bg-primary/15 text-primary' : ''}
+            className={mode === 'board' ? 'bg-primary/15 text-primary' : ''}
           >
             <SquareKanbanIcon />
             {t('project.views.board')}
@@ -55,9 +55,9 @@ export default function ProjectTasksPage() {
 
           <Button
             variant='ghost'
-            onClick={() => setView('table')}
+            onClick={() => setMode('table')}
             size='sm'
-            className={view === 'table' ? 'bg-primary/15 text-primary' : ''}
+            className={mode === 'table' ? 'bg-primary/15 text-primary' : ''}
           >
             <TablePropertiesIcon />
             {t('project.views.table')}

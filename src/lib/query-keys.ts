@@ -96,7 +96,8 @@ export const queryKeys = {
       isCompleted,
       name,
       memberIds,
-      priorities
+      priorities,
+      isWatchingTask
     }: UseGetTasksParams) =>
       [
         ...queryKeys.tasks.listParent(parentMilestoneId),
@@ -110,7 +111,8 @@ export const queryKeys = {
         isCompleted,
         name,
         memberIds,
-        priorities
+        priorities,
+        isWatchingTask
       ] as const,
     listParent: (parentMilestoneId?: string) => [...queryKeys.tasks.all, parentMilestoneId] as const,
     detail: (taskId?: string) => ['task', taskId] as const,
