@@ -20,9 +20,11 @@ import { Link } from 'react-router'
 import { formatBytes, formatMimeType } from '../../utils'
 
 export const getColumns = ({
-  onDeleteResource
+  onDeleteResource,
+  onDeleteProjectResource
 }: {
   onDeleteResource: (resourceId: string, taskId: string) => void
+  onDeleteProjectResource: (resourceId: string) => void
 }): ColumnDef<ProjectResource>[] => {
   return [
     {
@@ -127,17 +129,17 @@ export const getColumns = ({
     },
     {
       id: 'milestone',
-      accessorFn: (row) => row.task.milestoneName,
+      accessorFn: (row) => row.task?.milestoneName,
       meta: {
         label: 'projectStorage.column.milestone'
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='projectStorage.column.milestone' />,
       cell: ({ row }) => {
-        const { milestoneName } = row.original.task
-        if (!milestoneName)
+        const task = row.original.task
+        if (!task || !task.milestoneName)
           return <p className='text-muted-foreground'>{i18next.t('projectStorage.column.noMilestone')}</p>
 
-        return <p className='text-sm truncate'>{milestoneName}</p>
+        return <p className='text-sm truncate'>{task.milestoneName}</p>
       },
       enableSorting: false,
       enableHiding: true,
@@ -215,7 +217,10 @@ export const getColumns = ({
                 </a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteResource(id, task.id)}>
+              <DropdownMenuItem
+                className='focus:text-destructive'
+                onClick={() => (task ? onDeleteResource(id, task.id) : onDeleteProjectResource(id))}
+              >
                 {i18next.t('projectStorage.actions.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>

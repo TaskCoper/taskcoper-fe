@@ -108,7 +108,7 @@ export interface ProjectResource {
     parentMilestoneId: string
     parentMilestoneName: string
     projectId: string
-  }
+  } | null
   uploadBy: {
     id: string
     firstName: string
