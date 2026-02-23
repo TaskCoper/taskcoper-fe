@@ -14,7 +14,7 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const [isTriggered, setIsTriggered] = useState(false)
-  const { milestones } = useGetMilestones({ projectId, parentMilestoneId: parentId })
+  const { milestones } = useGetMilestones({ projectId, parentMilestoneId: parentId, enabled: isTriggered })
 
   const existingMilestones = useMemo(() => milestones?.milestones ?? [], [milestones])
   const calculatedPosition = useMemo(() => calculateNewItemPosition(existingMilestones), [existingMilestones])

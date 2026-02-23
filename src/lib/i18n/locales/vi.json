@@ -598,11 +598,14 @@
       "backgroundImage": "Ảnh bìa",
       "chooseImage": "Tải lên ảnh bìa",
       "none": "Không có",
-      "dateFormat": "HH:mm d 'thg' M, y"
+      "dateFormat": "HH:mm d 'thg' M, y",
+      "startDate": "Ngày bắt đầu",
+      "dueDate": "Ngày hết hạn"
     },
     "column": {
       "card": "Thẻ",
       "enterCardName": "Nhập tên thẻ...",
+      "priority": "Độ ưu tiên",
       "list": "Danh sách",
       "status": "Trạng thái",
       "labels": "Nhãn",

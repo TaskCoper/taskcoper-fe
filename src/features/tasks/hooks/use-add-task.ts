@@ -22,7 +22,7 @@ export const useAddTask = ({
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const [isTriggered, setIsTriggered] = useState(false)
-  const { milestones } = useGetMilestones({ projectId, parentMilestoneId })
+  const { milestones } = useGetMilestones({ projectId, parentMilestoneId, enabled: isTriggered })
 
   const methods = useForm<AddTaskFormValues>({
     defaultValues: {

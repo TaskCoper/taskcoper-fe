@@ -8,6 +8,7 @@ export interface TaskPreview {
   position: number
   startDate: string | null
   endDate: string | null
+  priority: TaskPriority | null
   members: TaskMember[]
   totalSubtasks: number
   completedSubtasks: number
@@ -34,6 +35,7 @@ export interface TaskDetail {
   milestoneName: string
   taskDescription: string | null
   taskPosition: number
+  priority: TaskPriority | null
   taskStartDate: string | null
   taskEndDate: string | null
   announceBeforeMinutes: number | null
@@ -50,6 +52,7 @@ export interface TaskRow {
   estimatedPoints: number | null
   backgroundImage: string | null
   isCompleted: boolean
+  priority: TaskPriority | null
   startDate: string | null
   endDate: string | null
   members: TaskMember[]

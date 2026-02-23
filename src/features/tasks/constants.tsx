@@ -1,3 +1,7 @@
+import { cn } from '@/shared/utils'
+import { TaskPriority } from '@/types/task.type'
+import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, EqualIcon } from 'lucide-react'
+
 export const TaskReminder = {
   NONE: 'common.ui.none',
   EXPIRED_DATE: 'task.date.expiredDate',
@@ -41,4 +45,14 @@ export const minutesToReminder = (minutes: number): keyof typeof TaskReminder =>
   }
 
   return mapping[minutes] || 'NONE'
+}
+
+export const getTaskPriorityIcon = (className?: string): Record<TaskPriority, React.ReactNode> => {
+  return {
+    [TaskPriority.LOWEST]: <ChevronsDownIcon className={cn('size-4 text-blue-500', className)} />,
+    [TaskPriority.LOW]: <ChevronDownIcon className={cn('size-4 text-blue-500', className)} />,
+    [TaskPriority.MEDIUM]: <EqualIcon className={cn('size-4 text-orange-500', className)} />,
+    [TaskPriority.HIGH]: <ChevronUpIcon className={cn('size-4 text-rose-500', className)} />,
+    [TaskPriority.HIGHEST]: <ChevronsUpIcon className={cn('size-4 text-rose-500', className)} />
+  }
 }

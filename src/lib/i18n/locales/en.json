@@ -598,11 +598,14 @@
       "backgroundImage": "Background Image",
       "chooseImage": "Upload image",
       "none": "None",
-      "dateFormat": "HH:mm MMM d, y"
+      "dateFormat": "HH:mm MMM d, y",
+      "startDate": "Start date",
+      "dueDate": "Due date"
     },
     "column": {
       "card": "Task",
       "enterCardName": "Enter task name...",
+      "priority": "Priority",
       "list": "Milestone",
       "status": "Status",
       "labels": "Labels",

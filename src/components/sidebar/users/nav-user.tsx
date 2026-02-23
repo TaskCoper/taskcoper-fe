@@ -18,7 +18,7 @@ import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
-import { GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
+import { GlobeIcon, LogOut, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -84,7 +84,7 @@ export default function NavUser({ user }: NavUserProps) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem onSelect={() => navigate('/me')}>
-              <UserRoundIcon />
+              <UserCircle2Icon />
               {t('account.account')}
             </DropdownMenuItem>
             <DropdownMenuSub>

@@ -1,4 +1,5 @@
 import type { UseGetProjectLabelStatsParams } from '@/features/labels/hooks/use-get-project-label-stats'
+import type { UseGetProjectPriorityStatsParams } from '@/features/labels/hooks/use-get-project-priority-stats'
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
 import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
@@ -16,6 +17,7 @@ import type {
   ProjectMemberStats,
   ProjectMimeTypeStats,
   ProjectPreview,
+  ProjectPriorityStats,
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
@@ -289,6 +291,20 @@ class ProjectService {
     if (!projectId) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResourceMemberStats>>(
       `/v1/${this.baseUrl}/${projectId}/resources/members/statistic`
+    )
+
+    return data
+  }
+
+  getProjectPriorityStats = async ({ projectId, parentMilestoneId }: UseGetProjectPriorityStatsParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<ProjectPriorityStats>>(
+      `/v1/${this.baseUrl}/${projectId}/tasks-priority/statistic`,
+      {
+        params: {
+          parentMilestoneId
+        }
+      }
     )
 
     return data

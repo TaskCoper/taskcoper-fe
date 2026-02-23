@@ -38,7 +38,12 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
   const [startTimeInvalid, setStartTimeInvalid] = useState(false)
   const [endTimeInvalid, setEndTimeInvalid] = useState(false)
 
-  const { watch, setValue, reset } = useFormContext()
+  const {
+    watch,
+    setValue,
+    reset,
+    formState: { isDirty }
+  } = useFormContext()
   const startDateValue = watch('startDate')
   const endDateValue = watch('endDate')
   const announceBeforeMinutes = watch('announceBeforeMinutes')
@@ -77,13 +82,25 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
 
   const handleUpdateDates = (updates: DateUpdates) => {
     if ('startDate' in updates) {
-      setValue('startDate', updates.startDate)
+      setValue('startDate', updates.startDate, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
+      })
     }
     if ('endDate' in updates) {
-      setValue('endDate', updates.endDate)
+      setValue('endDate', updates.endDate, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
+      })
     }
     if ('announceBeforeMinutes' in updates) {
-      setValue('announceBeforeMinutes', updates.announceBeforeMinutes)
+      setValue('announceBeforeMinutes', updates.announceBeforeMinutes, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
+      })
     }
   }
 
@@ -166,9 +183,21 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
   }
 
   const handleRemove = () => {
-    setValue('startDate', null)
-    setValue('endDate', null)
-    setValue('announceBeforeMinutes', null)
+    setValue('startDate', null, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
+    setValue('endDate', null, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
+    setValue('announceBeforeMinutes', null, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
 
     onRemove()
     setOpen(false)
@@ -324,7 +353,7 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
               <p className='text-xs text-muted-foreground my-2'>{t('task.date.reminderDescription')}</p>
             </div>
 
-            <Button className='w-full' onClick={handleSave}>
+            <Button className='w-full' onClick={handleSave} disabled={!isDirty}>
               {t('common.button.save')}
             </Button>
             <Button className='w-full' variant='secondary' onClick={handleRemove}>
