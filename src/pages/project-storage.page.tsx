@@ -15,7 +15,7 @@ export default function ProjectStoragePage() {
 
   return (
     <>
-      <div className='mx-auto p-4 space-y-6'>
+      <div className='mx-auto p-6 space-y-6'>
         <div className='flex justify-between items-start gap-4'>
           <div>
             <p className='text-2xl font-bold tracking-tight'>{t('project.sidebar.storagePage.title')}</p>

@@ -38,7 +38,7 @@ export function BlockquoteShortcutBadge({ shortcutKeys = BLOCKQUOTE_SHORTCUT_KEY
  *
  * For custom button implementations, use the `useBlockquote` hook instead.
  */
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const BlockquoteButton = React.forwardRef<HTMLButtonElement, BlockquoteButtonProps>(
   (
     {

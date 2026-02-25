@@ -41,10 +41,12 @@ export default function AssigneePopover({ children, projectId, taskId, parentMil
   const { assignMember, isAssigningMember } = useAssignMember({ taskId, projectId, parentMilestoneId })
   const { unassignMember, isUnassigningMember } = useUnassignMember({ taskId, projectId, parentMilestoneId })
 
-  const taskMemberIds = useMemo(
-    () => new Set(taskMembers?.value.items.map((m) => m.userId) ?? []),
+  const actualTaskMembers = useMemo(
+    () => taskMembers?.value.items.filter((m) => m.isMemberInTask) ?? [],
     [taskMembers?.value.items]
   )
+
+  const taskMemberIds = useMemo(() => new Set(actualTaskMembers.map((m) => m.userId)), [actualTaskMembers])
 
   const isSearching = debouncedSearchTerm.length > 0
 
@@ -53,7 +55,7 @@ export default function AssigneePopover({ children, projectId, taskId, parentMil
     [members?.value.items, isSearching, taskMemberIds]
   )
 
-  const hasTaskMembers = (taskMembers?.value.totalCount ?? 0) > 0
+  const hasTaskMembers = actualTaskMembers.length > 0
   const showProjectMembersSection = isLoadingMembers || filteredMembers.length > 0
   const showTaskMembersSection = hasTaskMembers && !isSearching
 
@@ -166,7 +168,7 @@ export default function AssigneePopover({ children, projectId, taskId, parentMil
                       <Spinner />
                     </div>
                   ) : (
-                    taskMembers?.value.items.map((taskMember) => (
+                    actualTaskMembers.map((taskMember) => (
                       <div
                         role='button'
                         key={taskMember.userId}

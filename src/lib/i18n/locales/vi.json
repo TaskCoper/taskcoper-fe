@@ -306,7 +306,8 @@
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
       "myCalendar": "Lịch của tôi",
-      "performance": "Hiệu suất"
+      "performance": "Hiệu suất",
+      "noPendingTasks": "Tuyệt vời! Bạn không có công việc nào đang chờ"
     },
     "tasks": {
       "addTask": "Thêm thẻ",
@@ -817,7 +818,7 @@
         },
         "password": {
           "minLength": "Mật khẩu phải có ít nhất 8 ký tự",
-          "strong": "Mật khẩu cần ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và một số"
+          "strong": "Mật khẩu cần ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, một ký tự đặc biệt và một số"
         },
         "firstName": {
           "minLength": "Vui lòng nhập họ",
@@ -1175,6 +1176,35 @@
       "title": "Xóa tệp",
       "description": "Bạn có chắc chắn muốn xóa tệp này không? Thao tác này không thể hoàn tác.",
       "confirmText": "Xóa"
+    }
+  },
+  "projectPerformance": {
+    "title": "Hiệu suất dự án",
+    "description": "Tổng quan hoạt động và hiệu quả của dự án này.",
+    "statCompleted": "Công việc đã hoàn thành",
+    "statComments": "Bình luận",
+    "statFiles": "Tệp đã tải lên",
+    "statSubtasks": "Công việc con đã tạo",
+    "statTasks": "Công việc đã tạo",
+    "trendLabel": "so với tháng trước",
+    "contributions": "{{count}} đóng góp trong {{year}}",
+    "tooltipNoActivitiesOn": "Không có hoạt động vào {{date}}",
+    "tooltipTasksCreated": "Task đã tạo",
+    "tooltipTasksCompleted": "Task đã hoàn thành",
+    "tooltipSubtasksCreated": "Subtask đã tạo",
+    "tooltipComments": "Bình luận",
+    "tooltipFilesUploaded": "Tệp đã tải lên",
+    "tooltipTotalActivities": "{{count}} hoạt động tổng",
+    "heatmap": {
+      "tooltipDefault": "{{count}} hoạt động vào {{date}}",
+      "tooltipNoCount": "Không",
+      "legendZero": "0 hoạt động",
+      "legendOneToNine": "1-9 hoạt động",
+      "legendTenToNineteen": "10-19 hoạt động",
+      "legendTwentyToTwentyNine": "20-29 hoạt động",
+      "legendThirtyPlus": "30+ hoạt động",
+      "less": "Ít",
+      "more": "Nhiều"
     }
   },
   "mimeTypes": {

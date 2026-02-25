@@ -191,7 +191,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
                   ) : assignedTasks?.value.totalCount === 0 ? (
                     <div className='flex flex-col justify-center items-center gap-3 mt-10'>
                       <SmileIcon className='size-14 text-muted-foreground' />
-                      <p className='text-muted-foreground text-sm'>Yay! You have no pending tasks</p>
+                      <p className='text-muted-foreground text-sm'>{t('project.sidebar.noPendingTasks')}</p>
                     </div>
                   ) : (
                     assignedTasks?.value.items.map((task) => <TaskCard key={task.id} task={task} />)

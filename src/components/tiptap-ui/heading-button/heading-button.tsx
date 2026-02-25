@@ -42,7 +42,7 @@ export function HeadingShortcutBadge({
  *
  * For custom button implementations, use the `useHeading` hook instead.
  */
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const HeadingButton = React.forwardRef<HTMLButtonElement, HeadingButtonProps>(
   (
     {

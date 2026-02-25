@@ -38,7 +38,7 @@ export function ImageShortcutBadge({ shortcutKeys = IMAGE_UPLOAD_SHORTCUT_KEY }:
  *
  * For custom button implementations, use the `useImage` hook instead.
  */
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const ImageUploadButton = React.forwardRef<HTMLButtonElement, ImageUploadButtonProps>(
   (
     {

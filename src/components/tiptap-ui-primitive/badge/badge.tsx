@@ -1,9 +1,9 @@
 'use client'
 
-import * as React from 'react'
 import '@/components/tiptap-ui-primitive/badge/badge-colors.scss'
 import '@/components/tiptap-ui-primitive/badge/badge-group.scss'
 import '@/components/tiptap-ui-primitive/badge/badge.scss'
+import * as React from 'react'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'ghost' | 'white' | 'gray' | 'green' | 'default'
@@ -12,7 +12,6 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   trimText?: boolean
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ variant, size = 'default', appearance = 'default', trimText = false, className, children, ...props }, ref) => {
     return (
