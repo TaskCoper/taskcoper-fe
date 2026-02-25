@@ -1,3 +1,4 @@
+import type { GetProjectHeatmapParams } from '@/features/projects/hooks/use-get-project-heatmap'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
@@ -178,5 +179,9 @@ export const queryKeys = {
       memberIds
     }: UseGetProjectResourcesParams) =>
       ['project-resources', projectId, pageIndex, pageSize, sortBy, name, from, to, mimeTypes, memberIds] as const
+  },
+  // Efficiency
+  efficiency: {
+    heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) => ['heatmap', projectId, from, to] as const
   }
 } as const

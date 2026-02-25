@@ -107,12 +107,7 @@ export default function TaskDetailDialogPage() {
     updateTask,
     isUpdatingTask
   } = useUpdateTask({ taskId, projectId, parentMilestoneId: milestoneId })
-  const {
-    reset: resetTask,
-    control: updateTaskControl,
-    handleSubmit: handleSubmitTask,
-    formState: { isDirty }
-  } = updateTaskMethods
+  const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
     methods: addCommentMethods,
@@ -213,7 +208,7 @@ export default function TaskDetailDialogPage() {
   }, [open, task, resetComment])
 
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
-    if (!isDirty) return
+    if (!updateTaskMethods.formState.isDirty) return
     updateTask({ body })
   }
 

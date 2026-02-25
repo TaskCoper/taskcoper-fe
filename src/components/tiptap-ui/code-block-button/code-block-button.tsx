@@ -38,7 +38,7 @@ export function CodeBlockShortcutBadge({ shortcutKeys = CODE_BLOCK_SHORTCUT_KEY 
  *
  * For custom button implementations, use the `useCodeBlock` hook instead.
  */
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const CodeBlockButton = React.forwardRef<HTMLButtonElement, CodeBlockButtonProps>(
   (
     {

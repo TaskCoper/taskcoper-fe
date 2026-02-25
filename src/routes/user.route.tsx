@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
@@ -12,6 +13,7 @@ const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
+const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const MePage = lazy(() => import('@/pages/users/me.page'))
 
 export const userRoutes: RouteObject[] = [
@@ -82,11 +84,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'performance',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Performance Comming Soon</p>
-                      </div>
-                    )
+                    element: <ProjectPerformancePage />
                   },
                   {
                     path: 'chat',

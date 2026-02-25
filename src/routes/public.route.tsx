@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import HomePage from '@/pages/home.page'

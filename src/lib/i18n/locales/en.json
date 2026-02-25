@@ -306,7 +306,8 @@
       "settings": "Settings",
       "myProjects": "My Projects",
       "myCalendar": "My Calendar",
-      "performance": "Performance"
+      "performance": "Performance",
+      "noPendingTasks": "Yay! You have no pending tasks"
     },
     "tasks": {
       "addTask": "Add new task",
@@ -817,7 +818,7 @@
         },
         "password": {
           "minLength": "Password must be at least 8 characters long",
-          "strong": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
+          "strong": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one special character and one number"
         },
         "firstName": {
           "minLength": "First name is required",
@@ -1175,6 +1176,35 @@
       "title": "Delete file",
       "description": "Are you sure you want to delete this file? This action cannot be undone.",
       "confirmText": "Delete"
+    }
+  },
+  "projectPerformance": {
+    "title": "Project Performance",
+    "description": "Activity and efficiency overview for this project.",
+    "statCompleted": "Completed tasks",
+    "statComments": "Comments",
+    "statFiles": "Uploaded files",
+    "statSubtasks": "Created subtasks",
+    "statTasks": "Created tasks",
+    "trendLabel": "compared to last month",
+    "contributions": "{{count}} contributions in {{year}}",
+    "tooltipNoActivitiesOn": "No activities on {{date}}",
+    "tooltipTasksCreated": "Tasks created",
+    "tooltipTasksCompleted": "Tasks completed",
+    "tooltipSubtasksCreated": "Subtasks created",
+    "tooltipComments": "Comments",
+    "tooltipFilesUploaded": "Files uploaded",
+    "tooltipTotalActivities": "{{count}} total activities",
+    "heatmap": {
+      "tooltipDefault": "{{count}} activities on {{date}}",
+      "tooltipNoCount": "No",
+      "legendZero": "0 activities",
+      "legendOneToNine": "1-9 activities",
+      "legendTenToNineteen": "10-19 activities",
+      "legendTwentyToTwentyNine": "20-29 activities",
+      "legendThirtyPlus": "30+ activities",
+      "less": "Less",
+      "more": "More"
     }
   },
   "mimeTypes": {
