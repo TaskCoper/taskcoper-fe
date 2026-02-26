@@ -1,3 +1,4 @@
+import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectHeatmapParams } from '@/features/projects/hooks/use-get-project-heatmap'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
@@ -182,6 +183,8 @@ export const queryKeys = {
   },
   // Efficiency
   efficiency: {
-    heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) => ['heatmap', projectId, from, to] as const
+    heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) => ['heatmap', projectId, from, to] as const,
+    taskStats: ({ projectId, from, to, parentMilestoneId, isViewInMonth }: GetProjectTaskStatsParams) =>
+      ['task-stats', projectId, from, to, parentMilestoneId, isViewInMonth] as const
   }
 } as const

@@ -1205,7 +1205,21 @@
       "legendThirtyPlus": "30+ hoạt động",
       "less": "Ít",
       "more": "Nhiều"
-    }
+    },
+    "popover": {
+      "actionDescription": "Chọn ngày và chế độ xem.",
+      "weeks": "Tuần",
+      "months": "Tháng",
+      "tab": "Tab",
+      "year": "Năm",
+      "selectYear": "Chọn năm"
+    },
+    "taskStatistics": "Thống kê công việc",
+    "noTaskStatistics": "Không có thống kê công việc cho khoảng thời gian này.",
+    "trendingUp": "Tăng lên {{value}}% tháng này",
+    "showingVisitors": "Hiển thị tổng số người truy cập trong {{months}} tháng qua",
+    "chartCreated": "Đã tạo",
+    "chartCompleted": "Đã hoàn thành"
   },
   "mimeTypes": {
     "unknownFile": "Tệp không xác định",
