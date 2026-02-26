@@ -6,3 +6,10 @@ export interface ProjectHeatmap {
   totalTasksCompleted: number
   statisticDate: string
 }
+
+export interface ProjectTaskStats {
+  totalTasksCreated: number
+  totalTaskCompleted: number
+  startDate: string
+  endDate: string
+}

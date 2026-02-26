@@ -1205,7 +1205,21 @@
       "legendThirtyPlus": "30+ activities",
       "less": "Less",
       "more": "More"
-    }
+    },
+    "popover": {
+      "actionDescription": "Choose date and view mode.",
+      "weeks": "Weeks",
+      "months": "Months",
+      "tab": "Tab",
+      "year": "Year",
+      "selectYear": "Select year"
+    },
+    "taskStatistics": "Task statistics",
+    "noTaskStatistics": "No task statistics for this range.",
+    "trendingUp": "Trending up by {{value}}% this month",
+    "showingVisitors": "Showing total visitors for the last {{months}} months",
+    "chartCreated": "Created",
+    "chartCompleted": "Completed"
   },
   "mimeTypes": {
     "unknownFile": "Unknown File",

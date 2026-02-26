@@ -2,7 +2,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/shared/utils'
 import { subMonths } from 'date-fns'
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useMemo } from 'react'
 import type { Day } from 'react-day-picker'
 import { useTranslation } from 'react-i18next'
 import { Card } from './ui/card'
@@ -26,13 +26,13 @@ interface CalendarHeatmapProps<T = unknown> {
 }
 
 interface HeatmapContextValue<T = unknown> {
-  data: CalendarHeatmapData<T>[]
+  dataMap: Map<string, CalendarHeatmapData<T>>
   renderTooltip?: RenderTooltipFn<T>
   onDayClick?: (data: CalendarHeatmapData<T>, date: Date) => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const HeatmapDataContext = createContext<HeatmapContextValue<any>>({ data: [] })
+const HeatmapDataContext = createContext<HeatmapContextValue<any>>({ dataMap: new Map() })
 
 const heatmapClassNames = {
   zero: 'bg-muted',
@@ -45,8 +45,8 @@ const heatmapClassNames = {
 function HeatmapDayButton({ day, modifiers, className, ...props }: React.ComponentProps<typeof Day>) {
   void modifiers
   const { t } = useTranslation()
-  const { data, renderTooltip, onDayClick } = useContext(HeatmapDataContext)
-  const matchingData = data.find((item) => item.date.toDateString() === day.date.toDateString())
+  const { dataMap, renderTooltip, onDayClick } = useContext(HeatmapDataContext)
+  const matchingData = dataMap.get(day.date.toDateString())
 
   const handleClick = () => {
     if (matchingData && onDayClick) {
@@ -108,7 +108,16 @@ function HeatmapLegend() {
 
 function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth }: CalendarHeatmapProps<T>) {
   const defaultStartMonth = startMonth ?? subMonths(new Date(), 11)
-  const heatmapModifiers = () => {
+
+  const dataMap = useMemo(() => {
+    const map = new Map<string, CalendarHeatmapData<T>>()
+    for (const item of data) {
+      map.set(item.date.toDateString(), item)
+    }
+    return map
+  }, [data])
+
+  const heatmapModifiers = useMemo(() => {
     const one: Date[] = []
     const two: Date[] = []
     const three: Date[] = []
@@ -139,14 +148,14 @@ function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth
     }
 
     return { zero, one, two, three, four }
-  }
+  }, [data])
 
   const formatCaption = (date: Date) => {
     return date.toLocaleString('default', { month: 'short' })
   }
 
   return (
-    <HeatmapDataContext.Provider value={{ data, renderTooltip, onDayClick } as HeatmapContextValue}>
+    <HeatmapDataContext.Provider value={{ dataMap, renderTooltip, onDayClick } as HeatmapContextValue}>
       <Card
         className='overflow-x-auto shadow-none pt-6 pb-4'
         style={{ '--box-size': DAY_SIZE, '--box-margin': DAY_MARGIN } as React.CSSProperties}
@@ -170,9 +179,7 @@ function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth
               day: 'w-(--box-size) h-(--box-size) m-(--box-margin) rounded-xs text-xs text-transparent p-0 cursor-pointer',
               day_button: 'w-full h-full cursor-default bg-transparent p-0 border-none outline-none text-transparent'
             }}
-            modifiers={{
-              ...heatmapModifiers()
-            }}
+            modifiers={heatmapModifiers}
             modifiersClassNames={{
               ...heatmapClassNames
             }}
