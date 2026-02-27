@@ -2,6 +2,7 @@ import Heatmap, { type CalendarHeatmapData } from '@/components/heatmap'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
+import { Skeleton } from '@/components/ui/skeleton'
 import ProjectTaskStatsPopover from '@/features/charts/components/project-task-stats-popover'
 import { useGetProjectTaskStats } from '@/features/charts/hooks/use-get-project-task-stats'
 import { projectTaskStatisticsSchema, type ProjectTaskStatisticsParams } from '@/features/charts/validations'
@@ -24,6 +25,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import BarChartHorizontal from '../components/bar-chart-horizontal'
 
 function mapToHeatmapData(stats: ProjectHeatmap[]): CalendarHeatmapData<Omit<ProjectHeatmap, 'statisticDate'>>[] {
   const aggregated = new Map<string, Omit<ProjectHeatmap, 'statisticDate'>>()
@@ -79,17 +81,20 @@ export default function ProjectPerformancePage() {
     return { from, to }
   }, [selectedYear])
 
-  const { projectActivityStats } = useGetProjectHeatmap({
+  const { projectActivityStats, isLoadingProjectActivityStats } = useGetProjectHeatmap({
     projectId,
     ...dateRange
   })
 
-  const { projectActivityStats: currentProjectActivityStats } = useGetProjectHeatmap({
+  const {
+    projectActivityStats: currentProjectActivityStats,
+    isLoadingProjectActivityStats: isLoadingCurrentProjectActivityStats
+  } = useGetProjectHeatmap({
     projectId,
     ...currentDateRange
   })
 
-  const { parentMilestones } = useGetParentMilestones({ projectId })
+  const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({ projectId })
   const methods = useForm<ProjectTaskStatisticsParams>({
     resolver: zodResolver(projectTaskStatisticsSchema),
     defaultValues: {
@@ -107,7 +112,7 @@ export default function ProjectPerformancePage() {
   const formIsViewInMonth = appliedFilters.isViewInMonth
   const formParentMilestoneId = appliedFilters.parentMilestoneId
 
-  const { projectTaskStats } = useGetProjectTaskStats({
+  const { projectTaskStats, isLoadingProjectTaskStats } = useGetProjectTaskStats({
     projectId,
     from: formFrom,
     to: formTo,
@@ -150,11 +155,11 @@ export default function ProjectPerformancePage() {
       ({
         created: {
           label: t('projectPerformance.chartCreated'),
-          color: 'var(--chart-1)'
+          color: '#00bcff'
         },
         completed: {
           label: t('projectPerformance.chartCompleted'),
-          color: 'var(--chart-2)'
+          color: '#00d492'
         }
       }) satisfies ChartConfig,
     [t]
@@ -204,103 +209,124 @@ export default function ProjectPerformancePage() {
     [t]
   )
 
-  return (
-    <div className='max-w-7xl h-full mx-auto p-6 space-y-6 overflow-auto pb-20'>
-      <div>
-        <p className='text-2xl font-bold tracking-tight'>{t('projectPerformance.title')}</p>
-        <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
+  const isLoading =
+    isLoadingProjectTaskStats ||
+    isLoadingProjectActivityStats ||
+    isLoadingCurrentProjectActivityStats ||
+    isLoadingParentMilestones
+
+  if (isLoading) {
+    return (
+      <div className='overflow-auto'>
+        <div className='max-w-7xl h-full mx-auto pt-6 space-y-6 pb-20'>
+          <div>
+            <Skeleton className='h-8 w-[250px] mb-2' />
+            <Skeleton className='h-4 w-[400px]' />
+          </div>
+
+          <div className='space-y-4'>
+            <div className='flex flex-wrap gap-4'>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className='h-[116px] flex-1 min-w-[200px] rounded-xl' />
+              ))}
+            </div>
+
+            <div className='w-full'>
+              <Skeleton className='h-[300px] w-full rounded-xl' />
+            </div>
+
+            <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
+              <Skeleton className='h-[200px] flex-1 rounded-xl' />
+              <Skeleton className='h-[200px] flex-1 rounded-xl' />
+            </div>
+
+            <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
+              <div className='flex-4 space-y-2'>
+                <Skeleton className='h-4 w-[200px] mb-2' />
+                <Skeleton className='h-[150px] w-full rounded-xl' />
+              </div>
+              <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className='h-8 w-full rounded-md' />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    )
+  }
 
-      {/* Statistics cards */}
-      <div className='space-y-4'>
-        <div className='grid grid-cols-10 gap-4'>
-          <div className='col-span-2'>
-            <StatCard
-              title={t('projectPerformance.statTasks')}
-              value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
-              icon={<LayersPlus className='size-5 text-white' />}
-              color='slate'
-              trendValue={3}
-              trendDirection='down'
-            />
-          </div>
-
-          <div className='col-span-2'>
-            <StatCard
-              title={t('projectPerformance.statSubtasks')}
-              value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
-              icon={<ListTreeIcon className='size-5 text-white' />}
-              color='orange'
-              trendValue={2}
-              trendDirection='up'
-            />
-          </div>
-
-          <div className='col-span-2'>
-            <StatCard
-              title={t('projectPerformance.statCompleted')}
-              value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
-              icon={<CircleCheckBigIcon className='size-5 text-white' />}
-              color='green'
-              trendValue={4}
-              trendDirection='up'
-            />
-          </div>
-
-          <div className='col-span-2'>
-            <StatCard
-              title={t('projectPerformance.statComments')}
-              value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
-              icon={<MessageCircleIcon className='size-5 text-white' />}
-              color='blue'
-              trendValue={12}
-              trendDirection='up'
-            />
-          </div>
-
-          <div className='col-span-2'>
-            <StatCard
-              title={t('projectPerformance.statFiles')}
-              value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
-              icon={<PaperclipIcon className='size-5 text-white' />}
-              color='purple'
-              trendValue={0}
-              trendDirection='neutral'
-            />
-          </div>
+  return (
+    <div className='overflow-auto'>
+      <div className='max-w-7xl h-full mx-auto pt-6 space-y-6 pb-20'>
+        <div>
+          <p className='text-2xl font-bold tracking-tight'>{t('projectPerformance.title')}</p>
+          <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
         </div>
 
-        {/* Contributions heatmap */}
-        <div className='grid grid-cols-10 gap-4 w-full h-full mt-6'>
-          <div className='col-span-8 space-y-2'>
-            <p className='text-sm text-muted-foreground'>
-              {(t as (key: string, options?: Record<string, string | number>) => string)(
-                'projectPerformance.contributions',
-                { count: totalContributions, year: selectedYear }
-              )}
-            </p>
-            <Heatmap data={heatmapData} renderTooltip={renderTooltip} startMonth={heatmapStartMonth} />
+        {/* Statistics cards */}
+        <div className='space-y-4'>
+          <div className='flex flex-wrap gap-4'>
+            <div className='flex-1 min-w-[200px]'>
+              <StatCard
+                title={t('projectPerformance.statTasks')}
+                value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
+                icon={<LayersPlus className='size-4.5 text-white' />}
+                color='slate'
+                trendValue={3}
+                trendDirection='down'
+              />
+            </div>
+
+            <div className='flex-1 min-w-[200px]'>
+              <StatCard
+                title={t('projectPerformance.statSubtasks')}
+                value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
+                icon={<ListTreeIcon className='size-4.5 text-white' />}
+                color='orange'
+                trendValue={2}
+                trendDirection='up'
+              />
+            </div>
+
+            <div className='flex-1 min-w-[200px]'>
+              <StatCard
+                title={t('projectPerformance.statCompleted')}
+                value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
+                icon={<CircleCheckBigIcon className='size-4.5 text-white' />}
+                color='green'
+                trendValue={4}
+                trendDirection='up'
+              />
+            </div>
+
+            <div className='flex-1 min-w-[200px]'>
+              <StatCard
+                title={t('projectPerformance.statComments')}
+                value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
+                icon={<MessageCircleIcon className='size-4.5 text-white' />}
+                color='blue'
+                trendValue={12}
+                trendDirection='up'
+              />
+            </div>
+
+            <div className='flex-1 min-w-[200px]'>
+              <StatCard
+                title={t('projectPerformance.statFiles')}
+                value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
+                icon={<PaperclipIcon className='size-4.5 text-white' />}
+                color='purple'
+                trendValue={0}
+                trendDirection='neutral'
+              />
+            </div>
           </div>
 
-          <div className='col-span-2 flex flex-col gap-2'>
-            {YEAR_OPTIONS.map((year) => (
-              <Button
-                key={year}
-                className='justify-start'
-                variant={year === selectedYear ? 'default' : 'ghost'}
-                size='sm'
-                onClick={() => setSelectedYear(year)}
-              >
-                <span className='text-xs font-normal'>{year}</span>
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Bar chart */}
-        <div className='grid grid-cols-10 gap-4 w-full h-full'>
-          <div className='col-span-10'>
-            <Card className='p-4 shadow-none'>
+          {/* Bar chart */}
+          <div className='w-full'>
+            <Card className='p-4 shadow-none gap-4'>
               <div className='flex justify-between items-start gap-2'>
                 <div>
                   <p className='font-semibold'>{t('projectPerformance.taskStatistics')}</p>
@@ -315,11 +341,9 @@ export default function ProjectPerformancePage() {
                 </FormProvider>
               </div>
 
+              {isLoading}
               {taskStatsChartData.length > 0 ? (
-                <ChartContainer
-                  config={projectTaskStatsChartConfig}
-                  className='h-[180px] max-h-[180px] w-full aspect-auto'
-                >
+                <ChartContainer config={projectTaskStatsChartConfig} className='max-h-32 w-full'>
                   <BarChart accessibilityLayer data={taskStatsChartData} barCategoryGap={18} barGap={6}>
                     <CartesianGrid vertical={false} />
                     <XAxis
@@ -330,8 +354,8 @@ export default function ProjectPerformancePage() {
                       tickFormatter={(value) => `${value}`}
                     />
                     <ChartTooltip cursor={false} content={<ChartTooltipContent indicator='line' />} />
-                    <Bar dataKey='created' fill='#00bcff' radius={4} barSize={14} />
-                    <Bar dataKey='completed' fill='#00d492' radius={4} barSize={14} />
+                    <Bar dataKey='created' fill='var(--color-created)' radius={4} barSize={14} />
+                    <Bar dataKey='completed' fill='var(--color-completed)' radius={4} barSize={14} />
                   </BarChart>
                 </ChartContainer>
               ) : (
@@ -354,6 +378,42 @@ export default function ProjectPerformancePage() {
                 </div>
               </div>
             </Card>
+          </div>
+
+          <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
+            <div className='flex-1'>
+              <BarChartHorizontal />
+            </div>
+            <div className='flex-1'>
+              <BarChartHorizontal />
+            </div>
+          </div>
+
+          {/* Contributions heatmap */}
+          <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
+            <div className='flex-4 space-y-2'>
+              <p className='text-sm text-muted-foreground'>
+                {(t as (key: string, options?: Record<string, string | number>) => string)(
+                  'projectPerformance.contributions',
+                  { count: totalContributions, year: selectedYear }
+                )}
+              </p>
+              <Heatmap data={heatmapData} renderTooltip={renderTooltip} startMonth={heatmapStartMonth} />
+            </div>
+
+            <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
+              {YEAR_OPTIONS.map((year) => (
+                <Button
+                  key={year}
+                  className='justify-start'
+                  variant={year === selectedYear ? 'default' : 'ghost'}
+                  size='sm'
+                  onClick={() => setSelectedYear(year)}
+                >
+                  <span className='text-xs font-normal'>{year}</span>
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

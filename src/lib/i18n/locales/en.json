@@ -92,7 +92,8 @@
       "action": "Action",
       "members": "Members",
       "date": "Date",
-      "optional": "optional"
+      "optional": "optional",
+      "apply": "Apply"
     }
   },
   "project": {

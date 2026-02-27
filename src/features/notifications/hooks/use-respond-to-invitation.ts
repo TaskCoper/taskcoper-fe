@@ -21,8 +21,12 @@ export const useRespondToInvitation = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: () => {
+    onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
+
+      if (variables.isAccepted) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
+      }
     }
   })
 
