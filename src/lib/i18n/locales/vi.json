@@ -92,7 +92,8 @@
       "action": "Thao tác",
       "members": "Thành viên",
       "date": "Ngày",
-      "optional": "tùy chọn"
+      "optional": "tùy chọn",
+      "apply": "Áp dụng"
     }
   },
   "project": {
