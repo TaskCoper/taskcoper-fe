@@ -18,6 +18,7 @@ const router = createBrowserRouter([
     children: [...publicRoutes, ...userRoutes, ...orgAdminRoutes, ...adminRoutes]
   }
 ])
+console.log('ahihi')
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
