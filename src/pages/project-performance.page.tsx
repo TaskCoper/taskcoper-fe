@@ -2,16 +2,22 @@ import Heatmap, { type CalendarHeatmapData } from '@/components/heatmap'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
-import { Skeleton } from '@/components/ui/skeleton'
+import ChartDateFilterPopover from '@/features/charts/components/chart-date-filter-popover'
 import ProjectTaskStatsPopover from '@/features/charts/components/project-task-stats-popover'
+import { useGetProjectHeatmap } from '@/features/charts/hooks/use-get-project-heatmap'
+import { useGetProjectOnTimeCompleters } from '@/features/charts/hooks/use-get-project-on-time-completers'
 import { useGetProjectTaskStats } from '@/features/charts/hooks/use-get-project-task-stats'
-import { projectTaskStatisticsSchema, type ProjectTaskStatisticsParams } from '@/features/charts/validations'
+import { useGetProjectTopContributors } from '@/features/charts/hooks/use-get-project-top-contributors'
+import {
+  projectTaskStatisticsSchema,
+  type ChartDateFilterParams,
+  type ProjectTaskStatisticsParams
+} from '@/features/charts/validations'
 import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
 import StatCard from '@/features/projects/components/stat-card'
-import { useGetProjectHeatmap } from '@/features/projects/hooks/use-get-project-heatmap'
 import type { ProjectHeatmap } from '@/types/efficiency.type'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { endOfMonth, format, getYear, parseISO, startOfMonth } from 'date-fns'
+import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
 import {
   CircleCheckBigIcon,
   LayersPlus,
@@ -25,7 +31,10 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import BarChartHorizontal from '../components/bar-chart-horizontal'
+import BarChartHorizontal from '../features/charts/components/bar-chart-horizontal'
+import PieChartLabel from '../features/charts/components/pie-chart'
+
+const pieChartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 
 function mapToHeatmapData(stats: ProjectHeatmap[]): CalendarHeatmapData<Omit<ProjectHeatmap, 'statisticDate'>>[] {
   const aggregated = new Map<string, Omit<ProjectHeatmap, 'statisticDate'>>()
@@ -81,26 +90,45 @@ export default function ProjectPerformancePage() {
     return { from, to }
   }, [selectedYear])
 
-  const { projectActivityStats, isLoadingProjectActivityStats } = useGetProjectHeatmap({
+  const { projectActivityStats } = useGetProjectHeatmap({
     projectId,
     ...dateRange
   })
 
-  const {
-    projectActivityStats: currentProjectActivityStats,
-    isLoadingProjectActivityStats: isLoadingCurrentProjectActivityStats
-  } = useGetProjectHeatmap({
+  const [topContributorsFilters, setTopContributorsFilters] = useState<ChartDateFilterParams>({
+    from: startOfDay(startOfMonth(new Date())).toISOString(),
+    to: endOfDay(endOfMonth(new Date())).toISOString()
+  })
+
+  const [onTimeCompletersFilters, setOnTimeCompletersFilters] = useState<ChartDateFilterParams>({
+    from: startOfDay(startOfMonth(new Date())).toISOString(),
+    to: endOfDay(endOfMonth(new Date())).toISOString()
+  })
+
+  const { projectTopContributors } = useGetProjectTopContributors({
+    projectId,
+    from: topContributorsFilters.from,
+    to: topContributorsFilters.to
+  })
+
+  const { projectOnTimeCompleters } = useGetProjectOnTimeCompleters({
+    projectId,
+    from: onTimeCompletersFilters.from,
+    to: onTimeCompletersFilters.to
+  })
+
+  const { projectActivityStats: currentProjectActivityStats } = useGetProjectHeatmap({
     projectId,
     ...currentDateRange
   })
 
-  const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({ projectId })
+  const { parentMilestones } = useGetParentMilestones({ projectId })
   const methods = useForm<ProjectTaskStatisticsParams>({
     resolver: zodResolver(projectTaskStatisticsSchema),
     defaultValues: {
       from: startOfMonth(new Date()).toISOString(),
       to: endOfMonth(new Date()).toISOString(),
-      isViewInMonth: true,
+      isViewInMonth: false,
       parentMilestoneId: null
     }
   })
@@ -112,7 +140,7 @@ export default function ProjectPerformancePage() {
   const formIsViewInMonth = appliedFilters.isViewInMonth
   const formParentMilestoneId = appliedFilters.parentMilestoneId
 
-  const { projectTaskStats, isLoadingProjectTaskStats } = useGetProjectTaskStats({
+  const { projectTaskStats } = useGetProjectTaskStats({
     projectId,
     from: formFrom,
     to: formTo,
@@ -145,6 +173,18 @@ export default function ProjectPerformancePage() {
 
     return `${fromLabel} - ${toLabel} (${isViewInMonth})${milestoneLabel}`
   }, [formFrom, formTo, formIsViewInMonth, formParentMilestoneId, parentMilestones])
+
+  const topOnTimeCompletersRangeLabel = useMemo(() => {
+    const fromLabel = onTimeCompletersFilters.from ? format(parseISO(onTimeCompletersFilters.from), 'MMM d, yyyy') : ''
+    const toLabel = onTimeCompletersFilters.to ? format(parseISO(onTimeCompletersFilters.to), 'MMM d, yyyy') : ''
+    return `${fromLabel} - ${toLabel}`
+  }, [onTimeCompletersFilters.from, onTimeCompletersFilters.to])
+
+  const topContributorsRangeLabel = useMemo(() => {
+    const fromLabel = topContributorsFilters.from ? format(parseISO(topContributorsFilters.from), 'MMM d, yyyy') : ''
+    const toLabel = topContributorsFilters.to ? format(parseISO(topContributorsFilters.to), 'MMM d, yyyy') : ''
+    return `${fromLabel} - ${toLabel}`
+  }, [topContributorsFilters.from, topContributorsFilters.to])
 
   const heatmapData = useMemo(() => mapToHeatmapData(projectActivityStats ?? []), [projectActivityStats])
   const totalContributions = useMemo(() => heatmapData.reduce((sum, d) => sum + d.count, 0), [heatmapData])
@@ -209,57 +249,114 @@ export default function ProjectPerformancePage() {
     [t]
   )
 
-  const isLoading =
-    isLoadingProjectTaskStats ||
-    isLoadingProjectActivityStats ||
-    isLoadingCurrentProjectActivityStats ||
-    isLoadingParentMilestones
+  const topOnTimeCompletersData = useMemo(() => {
+    if (!projectOnTimeCompleters) return []
+    return projectOnTimeCompleters
+      .map((c) => ({
+        id: c.userId,
+        name: `${c.firstName} ${c.lastName}`.trim() || c.email,
+        email: c.email,
+        avatar: c.avatar,
+        completed: c.totalTaskCompleted
+      }))
+      .sort((a, b) => b.completed - a.completed)
+      .slice(0, 5)
+  }, [projectOnTimeCompleters])
 
-  if (isLoading) {
-    return (
-      <div className='overflow-auto'>
-        <div className='max-w-7xl h-full mx-auto pt-6 space-y-6 pb-20'>
-          <div>
-            <Skeleton className='h-8 w-[250px] mb-2' />
-            <Skeleton className='h-4 w-[400px]' />
-          </div>
+  const topOnTimeCompletersPercentageConfig = useMemo(
+    () =>
+      ({
+        completed: {
+          label: t('projectPerformance.topOnTimeCompletersTooltip'),
+          color: '#8B5CF6'
+        }
+      }) satisfies ChartConfig,
+    [t]
+  )
 
-          <div className='space-y-4'>
-            <div className='flex flex-wrap gap-4'>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className='h-[116px] flex-1 min-w-[200px] rounded-xl' />
-              ))}
-            </div>
+  const topContributorsPieData = useMemo(() => {
+    if (!projectTopContributors) return []
+    return projectTopContributors
+      .sort((a, b) => b.contributionPercentage - a.contributionPercentage)
+      .slice(0, 5)
+      .map((c, index) => ({
+        id: c.userId || `user-${index}`,
+        name: `${c.firstName} ${c.lastName}`.trim() || c.email,
+        completed: c.contributionPercentage,
+        fill: pieChartColors[index]
+      }))
+  }, [projectTopContributors])
 
-            <div className='w-full'>
-              <Skeleton className='h-[300px] w-full rounded-xl' />
-            </div>
+  const topContributorsPieConfig = useMemo(() => {
+    const config: ChartConfig = {
+      completed: {
+        label: t('projectPerformance.topContributorsPercentageTooltip')
+      }
+    }
 
-            <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
-              <Skeleton className='h-[200px] flex-1 rounded-xl' />
-              <Skeleton className='h-[200px] flex-1 rounded-xl' />
-            </div>
+    topContributorsPieData.forEach((item, index) => {
+      config[item.id] = {
+        label: item.name,
+        color: pieChartColors[index]
+      }
+    })
 
-            <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
-              <div className='flex-4 space-y-2'>
-                <Skeleton className='h-4 w-[200px] mb-2' />
-                <Skeleton className='h-[150px] w-full rounded-xl' />
-              </div>
-              <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className='h-8 w-full rounded-md' />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+    return config
+  }, [t, topContributorsPieData])
+
+  // const isLoading =
+  //   isLoadingProjectTaskStats ||
+  //   isLoadingProjectActivityStats ||
+  //   isLoadingCurrentProjectActivityStats ||
+  //   isLoadingParentMilestones ||
+  //   isLoadingProjectTopContributors ||
+  //   isLoadingProjectOnTimeCompleters
+
+  // if (isLoading) {
+  //   return (
+  //     <div className='overflow-auto'>
+  //       <div className='max-w-7xl h-full mx-auto pt-6 space-y-6 pb-20'>
+  //         <div>
+  //           <Skeleton className='h-8 w-[250px] mb-2' />
+  //           <Skeleton className='h-4 w-[400px]' />
+  //         </div>
+
+  //         <div className='space-y-4'>
+  //           <div className='flex flex-wrap gap-4'>
+  //             {Array.from({ length: 5 }).map((_, i) => (
+  //               <Skeleton key={i} className='h-[116px] flex-1 min-w-[200px] rounded-xl' />
+  //             ))}
+  //           </div>
+
+  //           <div className='w-full'>
+  //             <Skeleton className='h-[300px] w-full rounded-xl' />
+  //           </div>
+
+  //           <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
+  //             <Skeleton className='h-[200px] flex-1 rounded-xl' />
+  //             <Skeleton className='h-[200px] flex-1 rounded-xl' />
+  //           </div>
+
+  //           <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
+  //             <div className='flex-4 space-y-2'>
+  //               <Skeleton className='h-4 w-[200px] mb-2' />
+  //               <Skeleton className='h-[150px] w-full rounded-xl' />
+  //             </div>
+  //             <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
+  //               {Array.from({ length: 5 }).map((_, i) => (
+  //                 <Skeleton key={i} className='h-8 w-full rounded-md' />
+  //               ))}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className='overflow-auto'>
-      <div className='max-w-7xl h-full mx-auto pt-6 space-y-6 pb-20'>
+      <div className='max-w-7xl h-full mx-auto p-6 space-y-6 pb-20'>
         <div>
           <p className='text-2xl font-bold tracking-tight'>{t('projectPerformance.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
@@ -341,7 +438,6 @@ export default function ProjectPerformancePage() {
                 </FormProvider>
               </div>
 
-              {isLoading}
               {taskStatsChartData.length > 0 ? (
                 <ChartContainer config={projectTaskStatsChartConfig} className='max-h-32 w-full'>
                   <BarChart accessibilityLayer data={taskStatsChartData} barCategoryGap={18} barGap={6}>
@@ -359,7 +455,9 @@ export default function ProjectPerformancePage() {
                   </BarChart>
                 </ChartContainer>
               ) : (
-                <p className='text-sm text-muted-foreground'>{t('projectPerformance.noTaskStatistics')}</p>
+                <p className='text-sm text-muted-foreground text-center py-10'>
+                  {t('projectPerformance.noTaskStatistics')}
+                </p>
               )}
 
               <div className='flex flex-col items-start gap-1'>
@@ -381,11 +479,41 @@ export default function ProjectPerformancePage() {
           </div>
 
           <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
-            <div className='flex-1'>
-              <BarChartHorizontal />
+            <div className='flex-2'>
+              <BarChartHorizontal
+                data={topOnTimeCompletersData}
+                config={topOnTimeCompletersPercentageConfig}
+                description={topOnTimeCompletersRangeLabel}
+                dataKey='completed'
+                xAxisKey='name'
+                title={t('projectPerformance.topOnTimeCompleters')}
+                color='var(--color-completed)'
+                menu={
+                  <ChartDateFilterPopover
+                    from={onTimeCompletersFilters.from}
+                    to={onTimeCompletersFilters.to}
+                    onApplyFilters={setOnTimeCompletersFilters}
+                  />
+                }
+              />
             </div>
+
             <div className='flex-1'>
-              <BarChartHorizontal />
+              <PieChartLabel
+                data={topContributorsPieData}
+                config={topContributorsPieConfig}
+                description={topContributorsRangeLabel}
+                dataKey='completed'
+                nameKey='name'
+                title={t('projectPerformance.topContributorsPercentage')}
+                menu={
+                  <ChartDateFilterPopover
+                    from={topContributorsFilters.from}
+                    to={topContributorsFilters.to}
+                    onApplyFilters={setTopContributorsFilters}
+                  />
+                }
+              />
             </div>
           </div>
 

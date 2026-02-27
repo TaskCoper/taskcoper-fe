@@ -13,3 +13,14 @@ export interface ProjectTaskStats {
   startDate: string
   endDate: string
 }
+
+export interface ProjectTopContributor {
+  userId: string
+  email: string
+  firstName: string
+  lastName: string
+  avatar: string | null
+  contributionPercentage: number
+  totalWeightedScore: number
+  totalTaskCompleted: number
+}

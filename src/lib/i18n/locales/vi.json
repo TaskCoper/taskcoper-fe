@@ -93,7 +93,9 @@
       "members": "Thành viên",
       "date": "Ngày",
       "optional": "tùy chọn",
-      "apply": "Áp dụng"
+      "apply": "Áp dụng",
+      "noDataAvailable": "Không có dữ liệu",
+      "filter": "Lọc"
     }
   },
   "project": {
@@ -1213,14 +1215,21 @@
       "months": "Tháng",
       "tab": "Tab",
       "year": "Năm",
-      "selectYear": "Chọn năm"
+      "selectYear": "Chọn năm",
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "selectDate": "Chọn ngày"
     },
     "taskStatistics": "Thống kê công việc",
     "noTaskStatistics": "Không có thống kê công việc cho khoảng thời gian này.",
     "trendingUp": "Tăng lên {{value}}% tháng này",
     "showingVisitors": "Hiển thị tổng số người truy cập trong {{months}} tháng qua",
     "chartCreated": "Đã tạo",
-    "chartCompleted": "Đã hoàn thành"
+    "chartCompleted": "Đã hoàn thành",
+    "topContributorsPercentage": "Top đóng góp (%)",
+    "topContributorsPercentageTooltip": "Phần trăm",
+    "topOnTimeCompleters": "Top hoàn thành đúng hạn",
+    "topOnTimeCompletersTooltip": "Số lượng"
   },
   "mimeTypes": {
     "unknownFile": "Tệp không xác định",
