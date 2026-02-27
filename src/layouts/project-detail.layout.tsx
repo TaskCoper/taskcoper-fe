@@ -61,7 +61,7 @@ export default function ProjectDetailLayout() {
   })
 
   // show member avatars next to the parent milestones tab
-  const { members, isLoadingMembers } = useGetProjectMembers({ projectId })
+  const { members, isLoadingMembers } = useGetProjectMembers({ projectId, enabled: shouldFetchMilestones })
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -269,7 +269,7 @@ export default function ProjectDetailLayout() {
                     {(members?.value.totalCount ?? 0) > 4 && (
                       <Avatar className='z-10 text-sm font-medium text-muted-foreground size-6'>
                         <AvatarFallback>
-                          <p className='text-xs font-medium'>+{(members?.value.totalCount ?? 0) - 1}</p>
+                          <p className='text-xs font-medium'>+{(members?.value.totalCount ?? 0) - 4}</p>
                         </AvatarFallback>
                       </Avatar>
                     )}

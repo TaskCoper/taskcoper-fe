@@ -1,7 +1,9 @@
+import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
+import type { GetProjectOnTimeCompletersParams } from '@/features/charts/hooks/use-get-project-on-time-completers'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
-import type { GetProjectHeatmapParams } from '@/features/projects/hooks/use-get-project-heatmap'
+import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
 import api, { type BaseResponse } from '@/lib/axios'
-import type { ProjectHeatmap, ProjectTaskStats } from '@/types/efficiency.type'
+import type { ProjectHeatmap, ProjectTaskStats, ProjectTopContributor } from '@/types/efficiency.type'
 
 class EfficiencyService {
   private readonly baseUrl = 'efficiency'
@@ -33,6 +35,36 @@ class EfficiencyService {
           to,
           parentMilestoneId,
           isViewInMonth
+        }
+      }
+    )
+
+    return data.value
+  }
+
+  getTopContributors = async ({ projectId, from, to }: GetProjectTopContributorsParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BaseResponse<ProjectTopContributor[]>>(
+      `/v1/${this.baseUrl}/${projectId}/top-contributors`,
+      {
+        params: {
+          from,
+          to
+        }
+      }
+    )
+
+    return data.value
+  }
+
+  getOnTimeCompleters = async ({ projectId, from, to }: GetProjectOnTimeCompletersParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BaseResponse<ProjectTopContributor[]>>(
+      `/v1/${this.baseUrl}/${projectId}/top-contributors/on-deadline`,
+      {
+        params: {
+          from,
+          to
         }
       }
     )

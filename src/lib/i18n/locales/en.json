@@ -93,7 +93,9 @@
       "members": "Members",
       "date": "Date",
       "optional": "optional",
-      "apply": "Apply"
+      "apply": "Apply",
+      "noDataAvailable": "No data available",
+      "filter": "Filter"
     }
   },
   "project": {
@@ -1213,14 +1215,21 @@
       "months": "Months",
       "tab": "Tab",
       "year": "Year",
-      "selectYear": "Select year"
+      "selectYear": "Select year",
+      "from": "From",
+      "to": "To",
+      "selectDate": "Select date"
     },
     "taskStatistics": "Task statistics",
     "noTaskStatistics": "No task statistics for this range.",
     "trendingUp": "Trending up by {{value}}% this month",
     "showingVisitors": "Showing total visitors for the last {{months}} months",
     "chartCreated": "Created",
-    "chartCompleted": "Completed"
+    "chartCompleted": "Completed",
+    "topContributorsPercentage": "Top Contributors by %",
+    "topContributorsPercentageTooltip": "Percentage",
+    "topOnTimeCompletersPercentage": "Top On-Time Completers by %",
+    "topOnTimeCompletersPercentageDescription": "Tasks"
   },
   "mimeTypes": {
     "unknownFile": "Unknown File",

@@ -205,7 +205,7 @@ const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDat
             {format(new Date(startDate), "d 'thg' M y", { locale: vi })}
           </p>
         )}
-        {endDate && <p className='text-xs font-semibold text-muted-foreground'>–</p>}
+        {startDate && endDate && <p className='text-xs font-semibold text-muted-foreground'>–</p>}
         {endDate && (
           <p className='text-xs font-semibold text-muted-foreground'>
             {format(new Date(endDate), "d 'thg' M y", { locale: vi })}

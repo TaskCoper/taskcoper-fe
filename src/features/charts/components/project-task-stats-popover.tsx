@@ -1,4 +1,3 @@
-import { DatePickerField } from '@/components/date-picker-field'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import {
@@ -12,7 +11,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { ParentMilestone } from '@/types/milestone.type'
-import { endOfMonth, endOfYear, getYear, startOfMonth, startOfYear } from 'date-fns'
+import { endOfMonth, endOfYear, format, getYear, startOfMonth, startOfYear } from 'date-fns'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -45,22 +44,43 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
     return currentYear
   })
 
+  const [selectedMonth, setSelectedMonth] = useState<number>(() => {
+    const fromVal = getValues('from')
+    if (fromVal && !getValues('isViewInMonth')) {
+      return new Date(fromVal).getMonth()
+    }
+    return new Date().getMonth()
+  })
+
   const handleTabChange = (value: 'weeks' | 'months') => {
     setValue('isViewInMonth', value === 'months')
     if (value === 'months') {
       setValue('from', startOfYear(new Date(selectedYear, 0, 1)).toISOString())
       setValue('to', endOfYear(new Date(selectedYear, 0, 1)).toISOString())
     } else {
-      setValue('from', startOfMonth(new Date()).toISOString())
-      setValue('to', endOfMonth(new Date()).toISOString())
+      setValue('from', startOfMonth(new Date(selectedYear, selectedMonth, 1)).toISOString())
+      setValue('to', endOfMonth(new Date(selectedYear, selectedMonth, 1)).toISOString())
     }
   }
 
   const handleYearChange = (yearStr: string) => {
     const year = parseInt(yearStr, 10)
     setSelectedYear(year)
-    setValue('from', startOfYear(new Date(year, 0, 1)).toISOString())
-    setValue('to', endOfYear(new Date(year, 0, 1)).toISOString())
+    const isMonthsTab = getValues('isViewInMonth')
+    if (isMonthsTab) {
+      setValue('from', startOfYear(new Date(year, 0, 1)).toISOString())
+      setValue('to', endOfYear(new Date(year, 0, 1)).toISOString())
+    } else {
+      setValue('from', startOfMonth(new Date(year, selectedMonth, 1)).toISOString())
+      setValue('to', endOfMonth(new Date(year, selectedMonth, 1)).toISOString())
+    }
+  }
+
+  const handleMonthChange = (monthStr: string) => {
+    const month = parseInt(monthStr, 10)
+    setSelectedMonth(month)
+    setValue('from', startOfMonth(new Date(selectedYear, month, 1)).toISOString())
+    setValue('to', endOfMonth(new Date(selectedYear, month, 1)).toISOString())
   }
 
   return (
@@ -90,23 +110,37 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
 
             <TabsContent value='weeks'>
               <div className='space-y-4 pt-4'>
-                <DatePickerField
-                  control={control}
-                  name='from'
-                  label='common.field.startDate'
-                  placeholder='project.inviteMembers.field.expirationDate.placeholder'
-                  displayError={false}
-                  isRequired
-                />
+                <Field orientation='responsive' className='gap-1 w-full'>
+                  <FieldLabel className='gap-1 items-baseline'>{t('projectPerformance.popover.months')}</FieldLabel>
+                  <Select value={selectedMonth.toString()} onValueChange={handleMonthChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('projectPerformance.popover.months')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 12 }, (_, i) => i).map((month) => (
+                        <SelectItem key={month} value={month.toString()}>
+                          {format(new Date(currentYear, month, 1), 'MMMM')}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
 
-                <DatePickerField
-                  control={control}
-                  name='to'
-                  label='common.field.endDate'
-                  placeholder='project.inviteMembers.field.expirationDate.placeholder'
-                  displayError={false}
-                  isRequired
-                />
+                <Field orientation='responsive' className='gap-1 w-full'>
+                  <FieldLabel className='gap-1 items-baseline'>{t('projectPerformance.popover.year')}</FieldLabel>
+                  <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('projectPerformance.popover.selectYear')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {YEAR_OPTIONS.map((year) => (
+                        <SelectItem key={year} value={year.toString()}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
 
                 <Controller
                   name='parentMilestoneId'
