@@ -13,7 +13,6 @@ import {
   type ChartDateFilterParams,
   type ProjectTaskStatisticsParams
 } from '@/features/charts/validations'
-import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
 import StatCard from '@/features/projects/components/stat-card'
 import type { ProjectHeatmap } from '@/types/efficiency.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -122,7 +121,7 @@ export default function ProjectPerformancePage() {
     ...currentDateRange
   })
 
-  const { parentMilestones } = useGetParentMilestones({ projectId })
+  // const { parentMilestones } = useGetParentMilestones({ projectId })
   const methods = useForm<ProjectTaskStatisticsParams>({
     resolver: zodResolver(projectTaskStatisticsSchema),
     defaultValues: {
@@ -138,14 +137,12 @@ export default function ProjectPerformancePage() {
   const formFrom = appliedFilters.from ?? dateRange.from
   const formTo = appliedFilters.to ?? dateRange.to
   const formIsViewInMonth = appliedFilters.isViewInMonth
-  const formParentMilestoneId = appliedFilters.parentMilestoneId
 
   const { projectTaskStats } = useGetProjectTaskStats({
     projectId,
     from: formFrom,
     to: formTo,
-    isViewInMonth: formIsViewInMonth,
-    parentMilestoneId: formParentMilestoneId ?? undefined
+    isViewInMonth: formIsViewInMonth
   })
 
   const taskStatsChartData = useMemo(() => {
@@ -166,13 +163,13 @@ export default function ProjectPerformancePage() {
   const taskStatsRangeLabel = useMemo(() => {
     const fromLabel = formFrom ? format(parseISO(formFrom), 'MMM d, yyyy') : ''
     const toLabel = formTo ? format(parseISO(formTo), 'MMM d, yyyy') : ''
-    const isViewInMonth = formIsViewInMonth ? 'Month' : 'Week'
+    const isViewInMonth = formIsViewInMonth ? t('common.ui.month') : t('common.ui.week')
 
-    const milestone = parentMilestones?.value.items?.find((m) => m.id === formParentMilestoneId)
-    const milestoneLabel = milestone ? ` • ${milestone.name}` : ''
+    // const milestone = parentMilestones?.value.items?.find((m) => m.id === formParentMilestoneId)
+    // const milestoneLabel = milestone ? ` • ${milestone.name}` : ''
 
-    return `${fromLabel} - ${toLabel} (${isViewInMonth})${milestoneLabel}`
-  }, [formFrom, formTo, formIsViewInMonth, formParentMilestoneId, parentMilestones])
+    return `${fromLabel} - ${toLabel} (${isViewInMonth})`
+  }, [formFrom, formTo, formIsViewInMonth, t])
 
   const topOnTimeCompletersRangeLabel = useMemo(() => {
     const fromLabel = onTimeCompletersFilters.from ? format(parseISO(onTimeCompletersFilters.from), 'MMM d, yyyy') : ''
@@ -268,7 +265,7 @@ export default function ProjectPerformancePage() {
       ({
         completed: {
           label: t('projectPerformance.topOnTimeCompletersTooltip'),
-          color: '#8B5CF6'
+          color: '#06B6D4'
         }
       }) satisfies ChartConfig,
     [t]
@@ -432,7 +429,7 @@ export default function ProjectPerformancePage() {
 
                 <FormProvider {...methods}>
                   <ProjectTaskStatsPopover
-                    parentMilestones={parentMilestones?.value.items ?? []}
+                    // parentMilestones={parentMilestones?.value.items ?? []}
                     onApplyFilters={setAppliedFilters}
                   />
                 </FormProvider>

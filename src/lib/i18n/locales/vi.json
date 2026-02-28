@@ -95,7 +95,9 @@
       "optional": "tùy chọn",
       "apply": "Áp dụng",
       "noDataAvailable": "Không có dữ liệu",
-      "filter": "Lọc"
+      "filter": "Lọc",
+      "month": "Tháng",
+      "week": "Tuần"
     }
   },
   "project": {
