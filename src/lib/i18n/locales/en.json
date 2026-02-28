@@ -95,7 +95,9 @@
       "optional": "optional",
       "apply": "Apply",
       "noDataAvailable": "No data available",
-      "filter": "Filter"
+      "filter": "Filter",
+      "month": "Month",
+      "week": "Week"
     }
   },
   "project": {

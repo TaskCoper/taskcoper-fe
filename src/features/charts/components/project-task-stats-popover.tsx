@@ -10,11 +10,10 @@ import {
 } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { ParentMilestone } from '@/types/milestone.type'
 import { endOfMonth, endOfYear, format, getYear, startOfMonth, startOfYear } from 'date-fns'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { ProjectTaskStatisticsParams } from '../validations'
 
@@ -22,13 +21,13 @@ const currentYear = getYear(new Date())
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 interface ProjectTaskStatsPopoverProps {
-  parentMilestones: ParentMilestone[]
+  // parentMilestones: ParentMilestone[]
   onApplyFilters: (data: ProjectTaskStatisticsParams) => void
 }
 
-export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilters }: ProjectTaskStatsPopoverProps) {
+export default function ProjectTaskStatsPopover({ onApplyFilters }: ProjectTaskStatsPopoverProps) {
   const { t } = useTranslation()
-  const { control, setValue, getValues, handleSubmit } = useFormContext<ProjectTaskStatisticsParams>()
+  const { setValue, getValues, handleSubmit } = useFormContext<ProjectTaskStatisticsParams>()
 
   const handleApply = handleSubmit((data) => {
     onApplyFilters(data)
@@ -142,7 +141,7 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
                   </Select>
                 </Field>
 
-                <Controller
+                {/* <Controller
                   name='parentMilestoneId'
                   control={control}
                   render={({ field, fieldState }) => (
@@ -166,7 +165,7 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
                       </Select>
                     </Field>
                   )}
-                />
+                /> */}
               </div>
             </TabsContent>
 
@@ -188,7 +187,7 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
                   </Select>
                 </Field>
 
-                <Controller
+                {/* <Controller
                   name='parentMilestoneId'
                   control={control}
                   render={({ field, fieldState }) => (
@@ -212,7 +211,7 @@ export default function ProjectTaskStatsPopover({ parentMilestones, onApplyFilte
                       </Select>
                     </Field>
                   )}
-                />
+                /> */}
               </div>
             </TabsContent>
           </Tabs>

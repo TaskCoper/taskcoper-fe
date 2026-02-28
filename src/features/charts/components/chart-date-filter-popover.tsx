@@ -64,7 +64,7 @@ export default function ChartDateFilterPopover({ from, to, onApplyFilters }: Cha
               </PopoverDescription>
             </PopoverHeader>
 
-            <div className='space-y-2'>
+            <div className='space-y-4'>
               <DatePickerField
                 name='from'
                 label='projectPerformance.popover.from'
