@@ -14,6 +14,7 @@ const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
+const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
 const MePage = lazy(() => import('@/pages/users/me.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
@@ -87,11 +88,7 @@ export const userRoutes: RouteObject[] = [
                   { path: 'info', element: <ProjectInfoPage /> },
                   {
                     path: 'calendar',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Calendar Comming Soon</p>
-                      </div>
-                    )
+                    element: <ProjectCalendarPage />
                   },
                   {
                     path: 'performance',
