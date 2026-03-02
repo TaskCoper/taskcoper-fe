@@ -1228,10 +1228,10 @@
     "showingVisitors": "Showing total visitors for the last {{months}} months",
     "chartCreated": "Created",
     "chartCompleted": "Completed",
-    "topContributorsPercentage": "Top Contributors by %",
+    "topContributorsPercentage": "Top Contributors (%)",
     "topContributorsPercentageTooltip": "Percentage",
-    "topOnTimeCompletersPercentage": "Top On-Time Completers by %",
-    "topOnTimeCompletersPercentageDescription": "Tasks"
+    "topOnTimeCompleters": "Top On-Time Completers",
+    "topOnTimeCompletersTooltip": "Tasks"
   },
   "mimeTypes": {
     "unknownFile": "Unknown File",

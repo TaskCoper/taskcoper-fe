@@ -1,5 +1,7 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useSyncTimezone } from '@/features/auth/hooks/use-sync-timezone'
 import { useAuthStore } from '@/lib/zustand/auth.store'
+import { getUserType } from '@/shared/utils'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
@@ -8,9 +10,10 @@ interface AuthGuardLayoutProps {
 }
 
 export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) {
-  const { isAuthenticated, isVerificationRequired } = useAuthStore()
-
+  const { isAuthenticated, isVerificationRequired, user } = useAuthStore()
   const { me, isGettingMe } = useGetMe()
+
+  useSyncTimezone(me)
 
   const location = useLocation()
 
@@ -41,6 +44,10 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   }
 
   if (isAuthenticated && me && !isVerificationRequired && !isOnVerifyPage) {
+    const userType = getUserType(user)
+
+    if (userType === 'superAdmin') return <Navigate to='/dashboard' replace />
+    if (userType === 'orgAdmin') return <Navigate to='/manage' replace />
     return <Navigate to='/projects' replace />
   }
 
