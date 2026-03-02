@@ -18,6 +18,7 @@ import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { formatBytes, formatMimeType } from '../../utils'
+import { PdfPreview } from '@/features/projects/components/project-storage-preview-doc'
 
 export const getColumns = ({
   onDeleteResource,
@@ -74,9 +75,7 @@ export const getColumns = ({
           </div>
 
           <div>
-            <a href={row.original.url} target='_blank' rel='noreferrer' className='font-medium text-sm hover:underline'>
-              {row.original.name}
-            </a>
+            <PdfPreview url={row.original.url} name={row.original.name} mimeType={row.original.mimeType} />
             <p className='text-xs text-muted-foreground'>{formatMimeType(row.original.mimeType)}</p>
           </div>
         </div>
