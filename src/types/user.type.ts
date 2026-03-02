@@ -11,6 +11,7 @@ export interface User {
   address: string | null
   city: string | null
   originalCity: string | null
+  timeZone: string | null
   state: string | null
   originalState: string | null
   projectCreatedCount: number

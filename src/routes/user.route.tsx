@@ -20,13 +20,14 @@ export const userRoutes: RouteObject[] = [
   {
     element: <AuthGuardLayout requiresAuth={true} />,
     children: [
+      // NOTE: Allow admins to access verify email page (RARE)
+      {
+        path: '/verify-email',
+        element: <VerifyEmailPage />
+      },
       {
         element: <RoleGuardLayout allowedRoles={['user']} />,
         children: [
-          {
-            path: '/verify-email',
-            element: <VerifyEmailPage />
-          },
           {
             element: <UserDefaultLayout />,
             children: [

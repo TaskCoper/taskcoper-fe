@@ -62,6 +62,23 @@ class UserService {
     return data.value
   }
 
+  updateMyTimezone = async (me: User, timeZone: string) => {
+    const body = {
+      firstName: me.firstName,
+      lastName: me.lastName,
+      email: me.email,
+      avatar: me.avatar,
+      phoneNumber: me.phoneNumber,
+      address: me.address,
+      city: me.city,
+      state: me.state,
+      timeZone
+    }
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
+
+    return data.value
+  }
+
   changePassword = async ({ body }: { body: ChangePasswordFormValues }) => {
     const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
 
