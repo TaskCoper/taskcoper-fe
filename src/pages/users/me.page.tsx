@@ -3,12 +3,12 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import ProfileDetailDialog from '@/features/users/components/profile-detail-dialog'
 import { UNDERLINE_TAB_CLASSNAME } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { ImageOffIcon, SettingsIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 type TabValue = 'all' | 'info' | 'projects' | 'files'
 
@@ -22,7 +22,6 @@ interface TabItem {
 export default function MePage() {
   const { t } = useTranslation()
   const { me, isGettingMe } = useGetMe()
-  const [openProfileDetailDialog, setOpenProfileDetailDialog] = useState(false)
 
   const tabs: TabItem[] = [
     {
@@ -52,6 +51,8 @@ export default function MePage() {
   ]
 
   const [activeTab, setActiveTab] = useState<TabItem>(tabs[0])
+
+  const navigate = useNavigate()
 
   if (isGettingMe) {
     return (
@@ -152,15 +153,9 @@ export default function MePage() {
                 ))}
               </TabsList>
 
-              <ProfileDetailDialog open={openProfileDetailDialog} onOpenChange={setOpenProfileDetailDialog}>
-                <Button
-                  variant='secondary'
-                  size='icon-sm'
-                  className={cn(openProfileDetailDialog ? 'bg-primary/10 text-primary' : '')}
-                >
-                  <SettingsIcon />
-                </Button>
-              </ProfileDetailDialog>
+              <Button variant='secondary' size='icon-sm' onClick={() => navigate('/me/settings')}>
+                <SettingsIcon />
+              </Button>
             </div>
           </div>
         </div>
