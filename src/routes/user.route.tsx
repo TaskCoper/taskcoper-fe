@@ -15,8 +15,8 @@ const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const MePage = lazy(() => import('@/pages/users/me.page'))
-const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 
 export const userRoutes: RouteObject[] = [
   {
@@ -70,10 +70,10 @@ export const userRoutes: RouteObject[] = [
                     path: 'milestones',
                     element: null
                   },
-                  {
-                    path: 'revenue',
-                    element: <ProjectRevenuePage />
-                  },
+                  // {
+                  //   path: 'revenue',
+                  //   element: <ProjectRevenuePage />
+                  // },
                   {
                     path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,
@@ -143,11 +143,7 @@ export const userRoutes: RouteObject[] = [
               },
               {
                 path: 'network',
-                element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Network Comming Soon</p>
-                  </div>
-                )
+                element: <NetworkPage />
               },
               {
                 path: 'community',

@@ -100,6 +100,19 @@
       "week": "Week"
     }
   },
+  "network": {
+    "filter": {
+      "domainPlaceholder": "Search domains…"
+    },
+    "domainSelect": {
+      "domainsSelected": "{{count}} domains selected",
+      "loading": "Loading…",
+      "loadingMore": "Loading more…",
+      "noDomainsFound": "No domains found.",
+      "removeAriaLabel": "Remove {{name}}",
+      "overflowMore": "+{{count}} more"
+    }
+  },
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
@@ -375,8 +388,28 @@
       "preview": "Preview",
       "click_to_open": "Click to open",
       "file_type_pdf": "PDF",
-      "file_type_image": "IMG"
+      "file_type_image": "IMG",
+      "unsupported": "Preview not supported"
     }
+  },
+  "expertNetwork": {
+    "titlePrefix": "Our ",
+    "titleHighlight": "Experts",
+    "titleSuffix": " Team from TaskCoper",
+    "subtitle": "Still not sure which expert to choose?",
+    "searchByAi": "Search with AI",
+    "domainFilter": "Domain",
+    "ratingFilter": "Rating",
+    "sortByRating": "Sort by rating",
+    "sortPlaceholder": "Sort by",
+    "sortHighest": "Highest",
+    "sortLowest": "Lowest",
+    "searchPlaceholder": "Search for mentors...",
+    "resultsCount": "{{count}} results",
+    "reset": "Reset",
+    "viewProfile": "View profile",
+    "noBio": "No introduction yet",
+    "noMentorsFound": "No mentors found"
   },
   "task": {
     "addTask": {

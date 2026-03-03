@@ -1,6 +1,7 @@
 import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
+import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
@@ -191,5 +192,12 @@ export const queryKeys = {
       ['top-contributors', projectId, from, to] as const,
     onTimeCompleters: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
       ['on-time-completers', projectId, from, to] as const
+  },
+  // Mentors
+  mentors: {
+    list: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
+      ['mentors', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
+    listInfinite: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
+      ['mentors-infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
   }
 } as const
