@@ -113,7 +113,7 @@ export default function ProfileSection() {
 
   useEffect(() => {
     if (me && provinces.length > 0) {
-      const matchedProvince = provinces.find((p) => p.name === me.city)
+      const matchedProvince = provinces.find((p) => p.name === me.originalCity)
       const cityCode = matchedProvince?.code ?? -1
 
       reset({
@@ -137,7 +137,7 @@ export default function ProfileSection() {
 
   useEffect(() => {
     if (me && wards.length > 0 && cityCodeForm !== -1) {
-      const matchedWard = wards.find((w) => w.name === me.state)
+      const matchedWard = wards.find((w) => w.name === me.originalState)
       if (matchedWard) {
         setValue('wardCode', matchedWard.code)
       }
