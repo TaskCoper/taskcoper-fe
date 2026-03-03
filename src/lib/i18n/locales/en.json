@@ -370,6 +370,12 @@
     "views": {
       "board": "Kanban View",
       "table": "Table View"
+    },
+    "priviewDocument": {
+      "preview": "Preview",
+      "click_to_open": "Click to open",
+      "file_type_pdf": "PDF",
+      "file_type_image": "IMG"
     }
   },
   "task": {
