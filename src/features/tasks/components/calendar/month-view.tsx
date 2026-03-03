@@ -45,7 +45,7 @@ export default function MonthView({ date, tasks, onTaskClick }: MonthViewProps) 
   }
 
   return (
-    <div className='flex-1 flex flex-col overflow-y-auto'>
+    <div className='flex-1 flex flex-col max-h-[calc(100vh-6.75rem)]'>
       <div className='grid grid-cols-7 border-b sticky top-0 bg-background z-10'>
         {WEEKDAY_NAMES.map((name) => (
           <div
@@ -66,10 +66,7 @@ export default function MonthView({ date, tasks, onTaskClick }: MonthViewProps) 
           const overflow = dayTasks.length - MAX_VISIBLE_TASKS
 
           return (
-            <div
-              key={day.toISOString()}
-              className={cn('border-l border-b first:border-l-0 p-1', !inMonth && 'bg-muted/30')}
-            >
+            <div key={day.toISOString()} className={cn('border-l border-b p-1', !inMonth && 'bg-muted/30')}>
               <div className='flex items-start justify-center'>
                 <span
                   className={cn(

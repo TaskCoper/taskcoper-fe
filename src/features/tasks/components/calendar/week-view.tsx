@@ -60,7 +60,7 @@ export default function WeekView({ date, tasks, onTaskClick }: WeekViewProps) {
         })}
       </div>
 
-      <div className='flex relative' style={{ height: 24 * HOUR_HEIGHT + 40 }}>
+      <div className='flex relative' style={{ height: 24 * HOUR_HEIGHT }}>
         <div className='shrink-0 relative' style={{ width: TIME_GUTTER_WIDTH }}>
           {HOURS.map((hour) => (
             <div

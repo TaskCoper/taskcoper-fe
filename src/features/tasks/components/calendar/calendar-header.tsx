@@ -22,7 +22,7 @@ export default function CalendarHeader({
   onToday
 }: CalendarHeaderProps) {
   return (
-    <div className='flex items-center justify-between px-4 py-2 border-b shrink-0'>
+    <div className='flex items-center border-b shrink-0 gap-2 h-13 px-2.5'>
       <div className='flex items-center gap-3'>
         <Button variant='outline' size='sm' onClick={onToday}>
           Today
@@ -39,6 +39,8 @@ export default function CalendarHeader({
 
         <p className='text-lg font-semibold'>{title}</p>
       </div>
+
+      <div className='flex-1' />
 
       <ButtonGroup>
         {(['day', 'week', 'month'] as const).map((mode) => (

@@ -52,7 +52,7 @@ export default function DayView({ date, tasks, onTaskClick }: DayViewProps) {
         </div>
       </div>
 
-      <div className='relative' style={{ height: 24 * HOUR_HEIGHT + 40 }}>
+      <div className='relative' style={{ height: 24 * HOUR_HEIGHT }}>
         {HOURS.map((hour) => (
           <div key={hour} className='absolute w-full flex' style={{ top: hour * HOUR_HEIGHT, height: HOUR_HEIGHT }}>
             <div

@@ -15,6 +15,7 @@
   "common": {
     "button": {
       "add": "Add",
+      "create": "Create",
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
@@ -64,6 +65,11 @@
         "invalid": "Invalid date format",
         "required": "Date is required",
         "mustBeGreater": "End date must be greater than start date"
+      },
+      "schedule": {
+        "dayRequired": "At least one day must be selected",
+        "startTimeRequired": "Start time is required",
+        "endTimeRequired": "End time is required"
       }
     },
     "ui": {
@@ -98,6 +104,30 @@
       "filter": "Filter",
       "month": "Month",
       "week": "Week"
+    }
+  },
+  "dayOfWeek": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun",
+    "placeholder": "Select a day"
+  },
+  "schedule": {
+    "createAvailability": {
+      "title": "Create Your Availability",
+      "description": "Add the time slots when you're available to meet with students. Once saved, students can start booking sessions."
+    },
+    "field": {
+      "availableDays": "Available Days",
+      "startTime": "Start time",
+      "endTime": "End time"
+    },
+    "button": {
+      "create": "Create Schedule"
     }
   },
   "project": {

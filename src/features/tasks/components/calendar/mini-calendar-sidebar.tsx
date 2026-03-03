@@ -14,7 +14,7 @@ export default function MiniCalendarSidebar({ selectedDate, onDateSelect }: Mini
   }, [selectedDate])
 
   return (
-    <div className='border-r p-4 hidden lg:block overflow-y-auto'>
+    <div className='hidden lg:block'>
       <Calendar
         mode='single'
         selected={selectedDate}

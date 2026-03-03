@@ -15,6 +15,7 @@
   "common": {
     "button": {
       "add": "Thêm",
+      "create": "Tạo",
       "edit": "Chỉnh sửa",
       "save": "Lưu",
       "cancel": "Hủy",
@@ -64,6 +65,11 @@
         "invalid": "Định dạng ngày không hợp lệ",
         "required": "Ngày là bắt buộc",
         "mustBeGreater": "Ngày kết thúc phải lớn hơn ngày bắt đầu"
+      },
+      "schedule": {
+        "dayRequired": "Ít nhất một ngày phải được chọn",
+        "startTimeRequired": "Thời gian bắt đầu là bắt buộc",
+        "endTimeRequired": "Thời gian kết thúc là bắt buộc"
       }
     },
     "ui": {
@@ -98,6 +104,30 @@
       "filter": "Lọc",
       "month": "Tháng",
       "week": "Tuần"
+    }
+  },
+  "dayOfWeek": {
+    "monday": "T2",
+    "tuesday": "T3",
+    "wednesday": "T4",
+    "thursday": "T5",
+    "friday": "T6",
+    "saturday": "T7",
+    "sunday": "CN",
+    "placeholder": "Chọn ngày"
+  },
+  "schedule": {
+    "createAvailability": {
+      "title": "Tạo lịch rảnh của bạn",
+      "description": "Thêm các khoảng thời gian bạn rảnh để gặp sinh viên. Sau khi lưu, sinh viên có thể bắt đầu đặt lịch hẹn."
+    },
+    "field": {
+      "availableDays": "Các ngày rảnh",
+      "startTime": "Thời gian bắt đầu",
+      "endTime": "Thời gian kết thúc"
+    },
+    "button": {
+      "create": "Tạo lịch"
     }
   },
   "project": {

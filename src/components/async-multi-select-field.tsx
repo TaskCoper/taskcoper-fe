@@ -126,7 +126,11 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
             {label && (
               <FieldLabel htmlFor={name} className='gap-0.5'>
                 {t(label)}
-                {isRequired && <span className='text-destructive font-semibold'>*</span>}
+                {isRequired ? (
+                  <span className='text-destructive font-semibold'>*</span>
+                ) : (
+                  <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+                )}
               </FieldLabel>
             )}
 

@@ -8,6 +8,7 @@ import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
+const CalendarPage = lazy(() => import('@/pages/users/calendar.page'))
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
@@ -51,11 +52,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'calendar',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Calendar Comming Soon</p>
-                      </div>
-                    )
+                    element: <CalendarPage />
                   }
                 ]
               },
