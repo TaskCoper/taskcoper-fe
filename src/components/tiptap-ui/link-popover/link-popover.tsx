@@ -70,7 +70,6 @@ export interface LinkPopoverProps extends Omit<ButtonProps, 'type'>, UseLinkPopo
  */
 export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, children, ...props }, ref) => {
   const { t } = useTranslation()
-
   return (
     <Button
       type='button'
@@ -261,7 +260,10 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
           </LinkButton>
         </PopoverTrigger>
 
-        <PopoverContent>
+        <PopoverContent
+          className='max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+          sideOffset={8}
+        >
           <LinkMain
             url={url}
             setUrl={setUrl}

@@ -2,6 +2,7 @@
 
 import type { Editor } from '@tiptap/react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -43,23 +44,7 @@ export interface ListOption {
   icon: React.ElementType
 }
 
-export const listOptions: ListOption[] = [
-  {
-    label: 'Danh sách dấu đầu dòng',
-    type: 'bulletList',
-    icon: ListIcon
-  },
-  {
-    label: 'Danh sách được đánh số',
-    type: 'orderedList',
-    icon: ListOrderedIcon
-  },
-  {
-    label: 'Danh sách công việc',
-    type: 'taskList',
-    icon: ListTodoIcon
-  }
-]
+// listOptions are now generated dynamically with i18n in useListDropdownMenu hook
 
 export function canToggleAnyList(editor: Editor | null, listTypes: ListType[]): boolean {
   if (!editor || !editor.isEditable) return false
@@ -71,9 +56,7 @@ export function isAnyListActive(editor: Editor | null, listTypes: ListType[]): b
   return listTypes.some((type) => isListActive(editor, type))
 }
 
-export function getFilteredListOptions(availableTypes: ListType[]): typeof listOptions {
-  return listOptions.filter((option) => !option.type || availableTypes.includes(option.type))
-}
+// getFilteredListOptions is no longer needed - filtering is done directly in useListDropdownMenu
 
 export function shouldShowListDropdown(params: {
   editor: Editor | null
@@ -143,6 +126,7 @@ export function getActiveListType(editor: Editor | null, availableTypes: ListTyp
  * ```
  */
 export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
+  const { t } = useTranslation()
   const {
     editor: providedEditor,
     types = ['bulletList', 'orderedList', 'taskList'],
@@ -154,7 +138,31 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
 
   const listInSchema = types.some((type) => isNodeInSchema(type, editor))
 
-  const filteredLists = React.useMemo(() => getFilteredListOptions(types), [types])
+  const listOptions: ListOption[] = React.useMemo(
+    () => [
+      {
+        label: t('richTextEditor.list.bulletList'),
+        type: 'bulletList',
+        icon: ListIcon
+      },
+      {
+        label: t('richTextEditor.list.orderedList'),
+        type: 'orderedList',
+        icon: ListOrderedIcon
+      },
+      {
+        label: t('richTextEditor.list.taskList'),
+        type: 'taskList',
+        icon: ListTodoIcon
+      }
+    ],
+    [t]
+  )
+
+  const filteredLists = React.useMemo(
+    () => listOptions.filter((option) => types.includes(option.type)),
+    [types, listOptions]
+  )
 
   const canToggleAny = canToggleAnyList(editor, types)
   const isAnyActive = isAnyListActive(editor, types)
@@ -192,7 +200,7 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
     canToggle: canToggleAny,
     types,
     filteredLists,
-    label: 'List',
+    label: t('richTextEditor.list.label'),
     Icon: activeList ? listIcons[activeList.type] : ListIcon
   }
 }

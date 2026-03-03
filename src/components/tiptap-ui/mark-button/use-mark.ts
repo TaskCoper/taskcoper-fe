@@ -153,9 +153,9 @@ export function getFormattedMarkName(type: Mark): string {
  * ```
  */
 export function useMark(config: UseMarkConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, type, hideWhenUnavailable = false, onToggled } = config
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canToggle = canToggleMark(editor, type)
@@ -187,19 +187,14 @@ export function useMark(config: UseMarkConfig) {
     return success
   }, [editor, type, onToggled])
 
-  const getLabel = () => {
-    switch (type) {
-      case 'bold':
-        return t('richTextEditor.mark.bold')
-      case 'italic':
-        return t('richTextEditor.mark.italic')
-      case 'strike':
-        return t('richTextEditor.mark.strike')
-      case 'code':
-        return t('richTextEditor.mark.code')
-      default:
-        return getFormattedMarkName(type)
-    }
+  const labelMap: Record<Mark, string> = {
+    bold: t('richTextEditor.mark.bold'),
+    italic: t('richTextEditor.mark.italic'),
+    strike: t('richTextEditor.mark.strike'),
+    code: t('richTextEditor.mark.code'),
+    underline: getFormattedMarkName(type), // Not in i18n file, fallback to formatted name
+    superscript: getFormattedMarkName(type), // Not in i18n file, fallback to formatted name
+    subscript: getFormattedMarkName(type) // Not in i18n file, fallback to formatted name
   }
 
   return {
@@ -207,7 +202,7 @@ export function useMark(config: UseMarkConfig) {
     isActive,
     handleMark,
     canToggle,
-    label: getLabel(),
+    label: labelMap[type] || getFormattedMarkName(type),
     shortcutKeys: MARK_SHORTCUT_KEYS[type],
     Icon: markIcons[type]
   }

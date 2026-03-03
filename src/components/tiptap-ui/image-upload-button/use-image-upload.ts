@@ -127,9 +127,9 @@ export function shouldShowButton(props: { editor: Editor | null; hideWhenUnavail
  * ```
  */
 export function useImageUpload(config?: UseImageUploadConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onInserted } = config || {}
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const isMobile = useIsMobile()
   const [isVisible, setIsVisible] = React.useState<boolean>(true)

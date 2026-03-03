@@ -1,0 +1,81 @@
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { useInlineEdit } from '@/hooks/use-inline-edit'
+import type { Subtask } from '@/types/subtask.type'
+import { XIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useDeleteSubtask } from '../hooks/use-delete-subtask'
+import { useUpdateSubtask } from '../hooks/use-update-subtask'
+import { useUpdateSubtaskStatus } from '../hooks/use-update-subtask-status'
+import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
+
+interface SubtaskCardProps {
+  subtask: Subtask
+  taskId: string
+  projectId: string
+  parentMilestoneId: string
+}
+
+export default function SubtaskCard({ subtask, taskId, projectId, parentMilestoneId }: SubtaskCardProps) {
+  const { t } = useTranslation()
+  const { updateSubtask } = useUpdateSubtask({ taskId })
+  const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectId, parentMilestoneId })
+  const { deleteSubtask } = useDeleteSubtask({ taskId, projectId, parentMilestoneId })
+
+  const { isEditing, inputProps, triggerProps } = useInlineEdit({
+    initialValue: subtask.name,
+    clickType: 'single',
+    onSave: (newName) => {
+      const validated = updateSubtaskSchema(t).safeParse({
+        id: subtask.id,
+        name: newName,
+        index: subtask.index,
+        parentId: subtask.parentId
+      })
+
+      if (validated.success) {
+        updateSubtask({ body: validated.data })
+      }
+    }
+  })
+
+  const handleCheckboxChange = (checked: boolean) => {
+    const validated = updateSubtaskStatusSchema(t).safeParse({
+      id: subtask.id,
+      isCompleted: checked
+    })
+
+    if (validated.success) {
+      updateSubtaskStatus({ body: validated.data })
+    }
+  }
+
+  const handleDelete = () => {
+    deleteSubtask({ id: subtask.id })
+  }
+
+  if (isEditing) {
+    return (
+      <div className='flex items-center gap-2'>
+        <Checkbox checked={subtask.isCompleted} disabled />
+        <Input type='text' className='h-7 text-sm px-2' {...inputProps} />
+      </div>
+    )
+  }
+
+  return (
+    <div className='flex items-center gap-2'>
+      <Checkbox checked={subtask.isCompleted} onCheckedChange={handleCheckboxChange} />
+      <div className='flex items-center gap-2 w-full hover:bg-muted rounded-sm px-2 py-1 group/subtask-item'>
+        <p className='text-sm cursor-pointer w-full' {...triggerProps}>
+          {subtask.name}
+        </p>
+
+        <XIcon
+          className='size-4 cursor-pointer hidden group-hover/subtask-item:block hover:text-destructive'
+          onClick={handleDelete}
+        />
+      </div>
+    </div>
+  )
+}

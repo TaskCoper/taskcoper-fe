@@ -1,12 +1,22 @@
 FROM node:22-alpine AS build
 
+# Enable Corepack for Yarn 4.12.0
+RUN corepack enable
+
 WORKDIR /usr/src/app
 
-COPY package*.json yarn.lock ./
+# Copy package files and Yarn configuration
+COPY package.json yarn.lock .yarnrc.yml ./
 
+# Install dependencies
 RUN yarn install --frozen-lockfile
 
 COPY ./ ./
+
+ARG API_BASE_URL
+
+ENV VITE_API_BASE_URL=${API_BASE_URL}
+
 RUN yarn build
 
 FROM nginx:alpine AS runner

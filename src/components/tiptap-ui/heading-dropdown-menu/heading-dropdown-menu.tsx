@@ -42,6 +42,7 @@ export interface HeadingDropdownMenuProps extends Omit<ButtonProps, 'type'>, Use
  *
  * For custom dropdown implementations, use the `useHeadingDropdownMenu` hook instead.
  */
+
 export const HeadingDropdownMenu = React.forwardRef<HTMLButtonElement, HeadingDropdownMenuProps>(
   (
     {
@@ -98,7 +99,7 @@ export const HeadingDropdownMenu = React.forwardRef<HTMLButtonElement, HeadingDr
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='start' portal={portal}>
+        <DropdownMenuContent align='start' portal={portal} sideOffset={8}>
           <Card>
             <CardBody>
               <ButtonGroup>

@@ -46,7 +46,7 @@
 }
 
 :root {
-  --radius: 0.65rem;
+  --radius: 0.55rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -135,7 +135,7 @@
 /* Width */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
+  height: 6px;
 }
 
 /* Track */
@@ -151,5 +151,19 @@
 
 /* Hover state */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  @apply text-muted-foreground;
+  content: attr(data-placeholder);
+  float: left;
+  font-size: 0.875rem;
+  font-weight: 400;
+  height: 0;
+  pointer-events: none;
+}
+
+.bg-dot {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 10 10'%3E%3Ccircle cx='2.5' cy='2.5' r='0.6' fill='%23d1d5db'/%3E%3C/svg%3E");
 }

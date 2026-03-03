@@ -4,6 +4,8 @@ x-client-base: &client-base
   build:
     context: ..
     dockerfile: Dockerfile
+    args:
+      API_BASE_URL: ${API_BASE_URL}
   environment:
     TZ: UTC
 

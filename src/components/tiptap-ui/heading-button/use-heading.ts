@@ -233,9 +233,9 @@ export function shouldShowButton(props: {
  * ```
  */
 export function useHeading(config: UseHeadingConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, level, hideWhenUnavailable = false, onToggled } = config
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canToggleState = canToggle(editor, level)

@@ -238,9 +238,9 @@ export function useLinkState(props: { editor: Editor | null; hideWhenUnavailable
  * ```
  */
 export function useLinkPopover(config?: UseLinkPopoverConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onSetLink } = config || {}
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
 
   const { isVisible, canSet, isActive } = useLinkState({

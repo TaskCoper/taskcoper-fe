@@ -1,0 +1,79 @@
+import { Button } from '@/components/ui/button'
+import AttachmentPopover from '@/features/attachments/components/attachment-popover'
+import FileAttachment from '@/features/attachments/components/file-attachment'
+import LinkAttachment from '@/features/attachments/components/link-attachment'
+import type { Attachment } from '@/types/attachment.type'
+import { PaperclipIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+interface AttachmentsSectionProps {
+  taskId: string
+  projectId: string
+  parentMilestoneId: string
+  attachments: Attachment[]
+}
+
+export default function AttachmentsSection({
+  taskId,
+  projectId,
+  parentMilestoneId,
+  attachments
+}: AttachmentsSectionProps) {
+  const { t } = useTranslation()
+
+  const fileAttachments = attachments.filter((attachment) => attachment.isUpload)
+  const linkAttachments = attachments.filter((attachment) => !attachment.isUpload)
+
+  return (
+    <div className='mt-10'>
+      <div className='flex gap-3'>
+        <PaperclipIcon className='mt-1.5 size-4' />
+        <div className='flex items-center justify-between w-full'>
+          <p className='font-semibold'>{t('task.attachment.attachmentsSection')}</p>
+
+          <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId}>
+            <Button variant='secondary' size='sm'>
+              {t('common.button.add')}
+            </Button>
+          </AttachmentPopover>
+        </div>
+      </div>
+
+      <div className='pl-7 mt-2 space-y-6'>
+        {linkAttachments.length > 0 ? (
+          <div className='space-y-2'>
+            <p className='font-semibold text-sm'>{t('task.attachment.links')}</p>
+
+            <div className='space-y-1'>
+              {linkAttachments.map((attachment) => (
+                <LinkAttachment
+                  key={attachment.projectResourceId}
+                  attachment={attachment}
+                  taskId={taskId}
+                  parentMilestoneId={parentMilestoneId}
+                  projectId={projectId}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {fileAttachments.length > 0 ? (
+          <div className='space-y-2'>
+            <p className='font-semibold text-sm'>{t('task.attachment.files')}</p>
+
+            {fileAttachments.map((attachment) => (
+              <FileAttachment
+                key={attachment.projectResourceId}
+                attachment={attachment}
+                taskId={taskId}
+                parentMilestoneId={parentMilestoneId}
+                projectId={projectId}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}

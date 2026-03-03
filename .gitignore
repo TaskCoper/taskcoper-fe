@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Lock files (using Yarn)
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -25,3 +28,6 @@ dist-ssr
 
 # Env
 .env*
+
+# Yarn
+.yarn/install-state.gz

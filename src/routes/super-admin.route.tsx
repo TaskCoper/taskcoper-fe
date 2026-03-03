@@ -1,0 +1,59 @@
+/* eslint-disable react-refresh/only-export-components */
+import AdminDefaultLayout from '@/layouts/admin-default.layout'
+import AuthGuardLayout from '@/layouts/auth-guard.layout'
+import RoleGuardLayout from '@/layouts/role-guard.layout'
+import DashboardPage from '@/pages/super-admins/dashboard.page'
+import { lazy } from 'react'
+import type { RouteObject } from 'react-router'
+
+const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projects.page'))
+const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.page'))
+
+export const adminRoutes: RouteObject[] = [
+  {
+    element: <AuthGuardLayout requiresAuth={true} />,
+    children: [
+      {
+        element: <RoleGuardLayout allowedRoles={['superAdmin']} />,
+        children: [
+          {
+            path: 'dashboard',
+            element: <AdminDefaultLayout basePath='/dashboard' />,
+            children: [
+              {
+                index: true,
+                element: <DashboardPage />
+              },
+              {
+                path: 'projects',
+                children: [
+                  {
+                    index: true,
+                    element: <SystemProjectsPage />
+                  },
+                  {
+                    path: ':projectId',
+                    element: <div>Project Detail</div>
+                  },
+                  {
+                    path: 'settings',
+                    element: <div>Projects Settings</div>
+                  }
+                ]
+              },
+              {
+                path: 'users',
+                children: [
+                  {
+                    index: true,
+                    element: <SystemUsersPage />
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

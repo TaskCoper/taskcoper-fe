@@ -1,31 +1,473 @@
 {
+  "header": {
+    "home": "Home",
+    "featuredProjects": "Featured Projects",
+    "expertNetwork": "Expert Network",
+    "startupCommunity": "Startup Community",
+    "news": "News",
+    "manageProjects": "Manage"
+  },
+  "role": {
+    "owner": "Owner",
+    "editor": "Editor",
+    "viewer": "Viewer"
+  },
+  "common": {
+    "button": {
+      "add": "Add",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "invite": "Invite",
+      "accept": "Accept",
+      "decline": "Decline",
+      "remove": "Remove",
+      "delete": "Delete",
+      "insert": "Insert",
+      "download": "Download"
+    },
+    "field": {
+      "label": "Label",
+      "description": "Description",
+      "title": "Title",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "date": "Date"
+    },
+    "validation": {
+      "email": {
+        "invalid": "Invalid email address"
+      },
+      "required": "This field is required",
+      "maxLength": {
+        "255": "Max 255 characters",
+        "10000": "Max 10000 characters",
+        "20": "Max 20 characters"
+      },
+      "minLength": {
+        "1": "This field is required",
+        "8": "Must be at least 8 characters long",
+        "6": "Must be 6 characters"
+      },
+      "url": {
+        "invalid": "Invalid URL"
+      },
+      "number": {
+        "positive": "Must be a positive number",
+        "invalid": "Must be a valid number"
+      },
+      "date": {
+        "invalid": "Invalid date format",
+        "required": "Date is required",
+        "mustBeGreater": "End date must be greater than start date"
+      }
+    },
+    "ui": {
+      "selected": "selected",
+      "characters": "characters",
+      "search": "Search...",
+      "selectPlaceholder": "Select option",
+      "noResults": "No results found.",
+      "viewOnly": "View only",
+      "canEdit": "Can edit",
+      "none": "None",
+      "uploading": "Uploading...",
+      "pleaseWait": "Please wait...",
+      "uploadSuccess": "Upload successful",
+      "invalidFileType": "Invalid file type",
+      "pleaseUploadValidFileFormat": "Please upload a valid file format.",
+      "fileTooLarge": "File too large",
+      "pleaseUploadSmallerFile": "Please upload a smaller file.",
+      "loading": "Loading...",
+      "viewMore": "View more",
+      "viewLess": "View less",
+      "noDescription": "No description provided",
+      "me": "me",
+      "yes": "Yes",
+      "no": "No",
+      "action": "Action",
+      "members": "Members",
+      "date": "Date",
+      "optional": "optional",
+      "apply": "Apply",
+      "noDataAvailable": "No data available",
+      "filter": "Filter",
+      "month": "Month",
+      "week": "Week"
+    }
+  },
+  "network": {
+    "filter": {
+      "domainPlaceholder": "Search domains…"
+    },
+    "domainSelect": {
+      "domainsSelected": "{{count}} domains selected",
+      "loading": "Loading…",
+      "loadingMore": "Loading more…",
+      "noDomainsFound": "No domains found.",
+      "removeAriaLabel": "Remove {{name}}",
+      "overflowMore": "+{{count}} more"
+    }
+  },
   "project": {
+    "title": "My Projects",
+    "description": "Manage your projects and tasks",
+    "memberProjects": "Other projects",
+    "memberProjectsDescription": "Projects assigned to you as a team member",
+    "addCoverImage": "Add cover image",
+    "addLogoImage": "Add logo image",
+    "coverImageAlt": "{{name}} Cover",
+    "logoImageAlt": "{{name}} Logo",
+    "info": {
+      "general": "General",
+      "readme": "README",
+      "generalDescription": "Basic information about the project",
+      "domains": "Domains",
+      "domainDescription": "Help classify your project better",
+      "teamSize": "Team size",
+      "teamSizeDescription": "Number of team members in the project currently",
+      "teamContact": "Team contact",
+      "teamContactDescription": "Contact information for the team",
+      "teamEmail": "Team email",
+      "teamEmailDescription": "Email address for the team",
+      "schoolSubject": "School subject",
+      "schoolSubjectDescription": "Subject of the school the project is related to",
+      "members": "Members",
+      "memberDescription": "Number of members in the project currently",
+      "inviteMembers": "Invite members",
+      "timeline": "Timeline",
+      "timelineDescription": "The planned start and end time",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "progress": "Progress",
+      "progressDescription": "Overall project progress"
+    },
+    "updateProjectInfo": {
+      "title": "Project overview",
+      "description": "Edit the project name and summary",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter project description"
+        }
+      }
+    },
+    "updateProjectGeneral": {
+      "title": "Project general",
+      "description": "Edit the project general information",
+      "field": {
+        "teamSize": {
+          "label": "Team size",
+          "placeholder": "Enter team size"
+        },
+        "teamContact": {
+          "label": "Team contact",
+          "placeholder": "Enter team contact"
+        },
+        "teamEmail": {
+          "label": "Team email",
+          "placeholder": "Enter team email"
+        },
+        "schoolSubject": {
+          "label": "School subject",
+          "placeholder": "Enter school subject"
+        }
+      }
+    },
+    "updateProject": {
+      "validation": {
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "name": {
+          "minLength": "Project name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 10000 characters"
+        },
+        "startDate": {
+          "invalid": "Invalid start date format"
+        },
+        "endDate": {
+          "invalid": "Invalid end date format"
+        },
+        "coverImage": {
+          "invalid": "Invalid cover image URL"
+        },
+        "logoImage": {
+          "invalid": "Invalid logo image URL"
+        },
+        "teamSize": {
+          "maxLength": "Max 255 characters"
+        },
+        "teamContact": {
+          "maxLength": "Max 255 characters"
+        },
+        "teamEmail": {
+          "invalid": "Invalid email address"
+        },
+        "schoolSubject": {
+          "maxLength": "Max 255 characters"
+        },
+        "domainIds": {
+          "minLength": "At least one domain is required",
+          "invalid": "Invalid domain"
+        }
+      }
+    },
+    "updateProjectTimeline": {
+      "title": "Project timeline",
+      "description": "Edit the project timeline"
+    },
+    "updateProjectDomains": {
+      "title": "Project domains",
+      "description": "Edit the project domains",
+      "searchLabel": "Domains",
+      "selectedDomains": "Selected domains",
+      "validation": {
+        "domainIds": {
+          "invalid": "Invalid domain",
+          "minLength": "At least one domain is required"
+        }
+      }
+    },
+    "updateProjectMembers": {
+      "title": "Project members",
+      "description": "Edit the project members",
+      "confirm": {
+        "title": "Remove member",
+        "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "confirmText": "Remove",
+        "cancelText": "Cancel"
+      },
+      "column": {
+        "member": "Member",
+        "role": "Role",
+        "permission": "Permission",
+        "canEdit": "Editor"
+      },
+      "role": {
+        "mentor": "Mentor",
+        "student": "Student"
+      }
+    },
+    "inviteMembers": {
+      "title": "New members",
+      "description": "Add new members to your project to collaborate and share tasks.",
+      "invitedUsers": "Invited users",
+      "comboboxPlaceholder": "Click to invite",
+      "search": "Type email to search...",
+      "searchLabel": "Member",
+      "validation": {
+        "inviteMembers": {
+          "minLength": "At least one member is required"
+        },
+        "users": {
+          "userId": {
+            "invalid": "Invalid user ID"
+          },
+          "email": {
+            "invalid": "Invalid email address"
+          },
+          "fullName": {
+            "required": "Full name is required"
+          },
+          "avatar": {
+            "invalid": "Invalid avatar URL"
+          },
+          "inviteExpireDate": {
+            "invalid": "Invalid expiration date format"
+          }
+        },
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "dateRequired": "Expiration date is required when expiration is enabled",
+        "dateInvalid": "Expiration date must be greater than today"
+      },
+      "field": {
+        "hasExpiration": {
+          "label": "Expiration",
+          "description": "Enable expiration to set a date for the invite to expire"
+        },
+        "expirationDate": {
+          "label": "Expiration date",
+          "placeholder": "Select expiration date"
+        }
+      }
+    },
     "sidebar": {
       "aboutProject": "About Project",
-      "tasks": "Tasks",
+      "tasks": "My Tasks",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
-      "settings": "Settings"
+      "storage": "Storage",
+      "storagePage": {
+        "title": "Project Storage",
+        "description": "All files uploaded to tasks in this project.",
+        "noFiles": "No files uploaded yet.",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "download": "Download",
+        "task": "Task"
+      },
+      "settings": "Settings",
+      "myProjects": "My Projects",
+      "myCalendar": "My Calendar",
+      "performance": "Performance",
+      "noPendingTasks": "Yay! You have no pending tasks"
     },
     "tasks": {
       "addTask": "Add new task",
       "addMilestone": "Add another milestone"
+    },
+    "createProject": {
+      "button": "Create project",
+      "title": "New project",
+      "description": "Create a new project to get started",
+      "field": {
+        "name": {
+          "label": "Project name",
+          "placeholder": "Enter project name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter project description",
+          "description": "This will be displayed on the project page."
+        },
+        "startDate": {
+          "label": "Start date",
+          "placeholder": "Pick a start date"
+        },
+        "endDate": {
+          "label": "End date",
+          "placeholder": "Pick a end date"
+        },
+        "domain": {
+          "label": "Domain",
+          "placeholder": "Select a domain",
+          "searchPlaceholder": "Search domain..."
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Project name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "startDate": {
+          "invalid": "Start date is required"
+        },
+        "endDate": {
+          "invalid": "End date is required",
+          "mustBeGreater": "End date must be greater than start date"
+        },
+        "domainIds": {
+          "invalid": "Domain is required",
+          "minLength": "At least one domain is required"
+        }
+      }
+    },
+    "views": {
+      "board": "Kanban View",
+      "table": "Table View"
+    },
+    "priviewDocument": {
+      "preview": "Preview",
+      "click_to_open": "Click to open",
+      "file_type_pdf": "PDF",
+      "file_type_image": "IMG",
+      "unsupported": "Preview not supported"
     }
   },
+  "expertNetwork": {
+    "titlePrefix": "Our ",
+    "titleHighlight": "Experts",
+    "titleSuffix": " Team from TaskCoper",
+    "subtitle": "Still not sure which expert to choose?",
+    "searchByAi": "Search with AI",
+    "domainFilter": "Domain",
+    "ratingFilter": "Rating",
+    "sortByRating": "Sort by rating",
+    "sortPlaceholder": "Sort by",
+    "sortHighest": "Highest",
+    "sortLowest": "Lowest",
+    "searchPlaceholder": "Search for mentors...",
+    "resultsCount": "{{count}} results",
+    "reset": "Reset",
+    "viewProfile": "View profile",
+    "noBio": "No introduction yet",
+    "noMentorsFound": "No mentors found"
+  },
   "task": {
+    "addTask": {
+      "title": "Task",
+      "description": "Add a task to your milestone",
+      "field": {
+        "name": {
+          "label": "Task name",
+          "placeholder": "Enter task name..."
+        }
+      }
+    },
+    "moveTask": {
+      "title": "Move task",
+      "selectMilestone": "Select milestone",
+      "selectPosition": "Select position",
+      "move": "Move"
+    },
+    "deleteTask": {
+      "title": "Delete task",
+      "description": "Are you sure you want to delete {{taskName}}?",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    },
+    "copyLink": {
+      "title": "Copy link",
+      "success": "Link copied!",
+      "successDescription": "Card link has been copied to clipboard",
+      "error": "Failed to copy",
+      "errorDescription": "Could not copy link to clipboard"
+    },
+    "validation": {
+      "name": {
+        "minLength": "Task name is required",
+        "maxLength": "Max 255 characters"
+      },
+      "milestoneId": {
+        "invalid": "Invalid milestone"
+      },
+      "id": {
+        "invalid": "Invalid task ID"
+      },
+      "targetMilestoneId": {
+        "invalid": "Invalid target milestone"
+      },
+      "position": {
+        "invalid": "Invalid position"
+      },
+      "targetPosition": {
+        "invalid": "Invalid target position"
+      }
+    },
     "date": {
       "notSetDate": "DD/MM/YYYY",
       "notSetTime": "H:mm",
-      "date": "Date",
-      "startDate": "Start date",
-      "endDate": "End date",
       "reminderSetting": "Reminder Setting",
       "selectReminderTime": "Select reminder time",
       "reminderDescription": "Reminder will be sent to all members and followers of this card.",
-      "save": "Save",
-      "remove": "Remove",
-      "none": "None",
       "expiredDate": "At expiration date",
       "fiveMinutesBefore": "5 minutes before",
       "tenMinutesBefore": "10 minutes before",
@@ -36,47 +478,219 @@
       "twoDaysBefore": "2 days before"
     },
     "label": {
-      "label": "Label",
       "createLabel": "Create new label",
-      "findLabel": "Find label..."
+      "findLabel": "Find label...",
+      "editLabel": "Edit label",
+      "updateLabel": "Update label",
+      "deleteLabel": "Delete label",
+      "deleteLabelConfirmation": "This will remove this label from all cards. There is no undo.",
+      "chooseColor": "Choose a color",
+      "removeColor": "Remove color",
+      "create": "Create",
+      "validation": {
+        "projectId": {
+          "invalid": "Invalid project ID"
+        },
+        "id": {
+          "invalid": "Invalid label ID"
+        },
+        "name": {
+          "minLength": "Label name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "color": {
+          "maxLength": "Max 255 characters"
+        },
+        "nameOrColorRequired": "Label must have at least a name or a color"
+      }
     },
     "subtask": {
+      "title": "Title",
       "subtask": "Subtask",
       "subtaskTitle": "Add a list of tasks",
-      "title": "Title",
-      "addSubtask": "Add"
+      "addItem": "Add an item",
+      "addItemPlaceholder": "Add an item",
+      "showCompletedItems": "Show completed items",
+      "hideCompletedItems": "Hide completed items",
+      "allCompletedItems": "Everything on this subtask has been completed!",
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "name": {
+          "minLength": "Subtask name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "index": {
+          "invalid": "Invalid index"
+        },
+        "parentId": {
+          "invalid": "Invalid parent ID"
+        }
+      }
     },
     "assignee": {
       "assignee": "Assignee",
       "findAssignee": "Find assignee...",
-      "boardAssignee": "Board assignee"
+      "taskAssignee": "Task assignee",
+      "boardAssignee": "Project assignee"
     },
     "attachment": {
       "attachment": "Attachment",
-      "cancel": "Cancel",
-      "insert": "Insert",
       "attachmentTitle": "Attach files from your computer",
       "attachmentDescription": "You can also drag and drop files to upload them.",
       "chooseAttachment": "Choose file",
       "attachmentValue": "Search or paste link",
       "attachmentValuePlaceholder": "Search recent links or paste a new link",
-      "attachmentDisplay": "Display text (optional)",
+      "attachmentDisplay": "Display text",
       "attachmentDisplayPlaceholder": "Text to display",
-      "attachmentDisplayDescription": "Provide a title or description for this link"
+      "attachmentDisplayDescription": "Provide a title or description for this link",
+      "deleteAttachment": {
+        "title": "Delete attachment",
+        "description": "Are you sure you want to delete {{attachmentName}}?",
+        "confirmText": "Delete"
+      },
+      "editAttachment": {
+        "title": "Edit attachment"
+      },
+      "attachmentsSection": "Attachments",
+      "links": "Links",
+      "files": "Files",
+      "fileName": "File name",
+      "addedAt": "Added {{date}}",
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "commentId": {
+          "invalid": "Invalid comment ID"
+        },
+        "url": {
+          "invalid": "Invalid URL"
+        },
+        "position": {
+          "invalid": "Invalid position"
+        },
+        "storageKey": {
+          "minLength": "Storage key is required"
+        },
+        "mimeType": {
+          "minLength": "MIME type is required"
+        },
+        "bytes": {
+          "positive": "File size must be positive"
+        },
+        "projectResourceId": {
+          "invalid": "Invalid attachment ID"
+        },
+        "name": {
+          "minLength": "File name is required"
+        }
+      }
     },
     "description": {
-      "description": "Description",
       "addDescription": "Add more detailed description..."
     },
     "comment": {
       "comment": "Comments and Activity",
-      "addComment": "Add comment..."
+      "addComment": "Add comment...",
+      "deleteComment": {
+        "title": "Delete comment?",
+        "description": "The comment will be permanently deleted and you cannot undo.",
+        "confirmText": "Delete comment"
+      },
+      "validation": {
+        "taskId": {
+          "invalid": "Invalid task ID"
+        },
+        "content": {
+          "minLength": "Comment content is required",
+          "maxLength": "Max 10000 characters"
+        },
+        "commentResources": {
+          "fileUrl": {
+            "invalid": "Invalid file URL"
+          },
+          "storageKey": {
+            "minLength": "Storage key is required"
+          },
+          "fileName": {
+            "minLength": "File name is required"
+          },
+          "fileType": {
+            "minLength": "File type is required"
+          },
+          "fileSize": {
+            "positive": "File size must be positive"
+          },
+          "fileExtension": {
+            "minLength": "File extension is required"
+          }
+        }
+      }
+    },
+    "stats": {
+      "comments": "Comments",
+      "subtasks": "Subtasks",
+      "attachments": "Attachments"
+    },
+    "detail": {
+      "title": "Task Detail",
+      "description": "Task Description",
+      "labels": "Labels",
+      "storyPoints": "Task Points",
+      "enterStoryPoints": "Enter task points",
+      "backgroundImage": "Background Image",
+      "chooseImage": "Upload image",
+      "none": "None",
+      "dateFormat": "HH:mm MMM d, y",
+      "startDate": "Start date",
+      "dueDate": "Due date"
+    },
+    "column": {
+      "card": "Task",
+      "enterCardName": "Enter task name...",
+      "priority": "Priority",
+      "list": "Milestone",
+      "status": "Status",
+      "labels": "Labels",
+      "noLabels": "No labels",
+      "taskPoints": "Estimated points",
+      "none": "None",
+      "stats": "Stats",
+      "startDate": "Start date",
+      "notStarted": "Not started",
+      "dueDate": "Due date",
+      "noDueDate": "No due date",
+      "members": "Members",
+      "watching": "Watching",
+      "notWatching": "Not watching",
+      "viewDetails": "View details",
+      "delete": "Delete"
+    },
+    "status": {
+      "completed": "Completed",
+      "notCompleted": "Not completed"
+    },
+    "table": {
+      "addCard": "Add card",
+      "addList": "Add list"
+    },
+    "priority": {
+      "title": "Priority",
+      "placeholder": "Priority",
+      "lowest": "Lowest",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "highest": "Highest"
     }
   },
   "richTextEditor": {
     "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
-    "save": "Save",
-    "cancel": "Cancel",
+    "strikethrough": "Strikethrough",
+    "inlineCode": "Inline Code",
+    "attachFile": "Attach file",
     "heading": {
       "label": "Heading",
       "ariaLabel": "Format text as heading",
@@ -126,5 +740,585 @@
     "account": "Account",
     "language": "Language",
     "logout": "Logout"
+  },
+  "user": {
+    "updateProfile": {
+      "section": {
+        "contact": "Contact Information",
+        "other": "Other Information"
+      },
+      "field": {
+        "firstName": {
+          "label": "First Name"
+        },
+        "lastName": {
+          "label": "Last Name"
+        },
+        "phoneNumber": {
+          "label": "Phone Number"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "province": {
+          "label": "Province",
+          "placeholder": "Select province",
+          "searchPlaceholder": "Search province..."
+        },
+        "ward": {
+          "label": "Ward",
+          "placeholder": "Select ward",
+          "searchPlaceholder": "Search ward..."
+        }
+      },
+      "validation": {
+        "phoneNumber": {
+          "invalid": "Invalid phone number format"
+        }
+      }
+    },
+    "password": {
+      "title": "Password",
+      "description": "Change your password",
+      "saveChanges": "Save changes"
+    },
+    "changePassword": {
+      "currentPassword": {
+        "label": "Current Password",
+        "placeholder": "Enter current password"
+      },
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter new password"
+      }
+    },
+    "profileDialog": {
+      "profileAndDisplay": "Profile and display",
+      "password": "Password"
+    },
+    "tabs": {
+      "all": "All",
+      "info": "Info",
+      "projects": "Projects",
+      "files": "Photos & Videos"
+    },
+    "logoImageAlt": "{{name}} Logo"
+  },
+  "auth": {
+    "signIn": {
+      "label": "Sign in",
+      "button": "Let's go!",
+      "title": "Welcome back!",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "description": "Sign in to your account to continue",
+      "field": {
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Invalid email address"
+        },
+        "password": {
+          "minLength": "Password must be at least 8 characters long"
+        }
+      }
+    },
+    "signUp": {
+      "label": "Sign up",
+      "title": "Welcome to TaskCoper",
+      "description": "Sign up today and unlock a world of possibilities. Your journey begins here.",
+      "button": "Create your account",
+      "haveAccount": "Already have an account?",
+      "verifyEmail": {
+        "title": "Verify your email",
+        "description": "Enter the code sent to your email",
+        "button": "Verify code",
+        "resendCode": "Resend",
+        "useDifferentAccount": "Use a different account"
+      },
+      "field": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": {
+          "label": "Email",
+          "placeholder": "example@gmail.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "validation": {
+        "email": {
+          "invalid": "Invalid email address"
+        },
+        "password": {
+          "minLength": "Password must be at least 8 characters long",
+          "strong": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one special character and one number"
+        },
+        "firstName": {
+          "minLength": "First name is required",
+          "maxLength": "Max 20 characters"
+        },
+        "lastName": {
+          "minLength": "Last name is required",
+          "maxLength": "Max 20 characters"
+        },
+        "role": {
+          "invalid": "Invalid role"
+        },
+        "code": {
+          "minLength": "Code must be 6 characters",
+          "maxLength": "Code must be 6 characters"
+        },
+        "phoneNumber": {
+          "invalid": "Invalid phone number format"
+        }
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter the email address you used to create the account, and we will email you instructions to reset your password",
+      "sendEmail": "Send Email",
+      "rememberPassword": "Remember Password?"
+    },
+    "verifyOtp": {
+      "title": "Verify OTP",
+      "emailSent": "We have sent you an email at",
+      "checkInbox": "Check your inbox and enter the code here.",
+      "continue": "Continue",
+      "wrongEmail": "Wrong email?",
+      "goBack": "Go back"
+    },
+    "resetPassword": {
+      "title": "Create New Password",
+      "description": "Your new password must be different from any of your previous passwords.",
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter your new password"
+      },
+      "reset": "Reset"
+    }
+  },
+  "error": {
+    "home": "Go to homepage",
+    "somethingWentWrong": "Something went wrong",
+    "pageNotFound": "Something went wrong",
+    "pageNotFoundDescription": "Sorry we were unable to find that page",
+    "unauthorized": "Unauthorized",
+    "unauthorizedDescription": "Something has gone wrong on the web site's server",
+    "forbidden": "Forbidden",
+    "forbiddenDescription": "Accessing the page or resource you were trying to reach is forbidden",
+    "serverError": "This page isn't working",
+    "serverErrorDescription": "We apologise and are fixing the problem. Please try again later.",
+    "maintenance": "System is down for Maintenance",
+    "maintenanceDescription": "We promise, we'll be right back!"
+  },
+  "comboboxField": {
+    "placeholder": "Select option",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No option found."
+  },
+  "datePickerField": {
+    "placeholder": "Select date"
+  },
+  "comboboxMultiField": {
+    "placeholder": "Select options",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No options found."
+  },
+  "milestone": {
+    "addParentMilestone": {
+      "title": "Parent milestone",
+      "description": "Add a parent milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name"
+        }
+      }
+    },
+    "deleteMilestone": {
+      "title": "Delete Tab",
+      "milestoneTitle": "Delete Milestone",
+      "description": "Are you sure you want to delete {{milestoneName}}?",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    },
+    "addMilestone": {
+      "title": "Milestone",
+      "description": "Add a milestone to your project",
+      "field": {
+        "milestoneName": {
+          "label": "Milestone name",
+          "placeholder": "Enter milestone name..."
+        }
+      }
+    },
+    "validation": {
+      "milestoneName": {
+        "minLength": "Milestone name is required",
+        "maxLength": "Max 255 characters"
+      },
+      "projectId": {
+        "invalid": "Invalid project ID"
+      },
+      "parentId": {
+        "invalid": "Invalid parent milestone"
+      },
+      "milestoneId": {
+        "invalid": "Invalid milestone ID"
+      },
+      "position": {
+        "invalid": "Invalid position"
+      }
+    }
+  },
+  "notification": {
+    "popover": {
+      "title": "Notifications",
+      "description": "You have no notifications",
+      "markAllAsRead": "Mark all as read"
+    },
+    "type": {
+      "task": "Tasks",
+      "chat": "Chat",
+      "project": "Project",
+      "system": "System"
+    }
+  },
+  "home": {
+    "header": {
+      "signIn": "Sign In",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "Top Trusted Choice",
+      "title": "Project Management Platform",
+      "titleHighlight": "No. 1 in Vietnam",
+      "description": "TaskCoper helps teams organize work, track progress, and collaborate seamlessly. All in one powerful platform.",
+      "cta": "Start Your Journey",
+      "trustBadge": "Trusted by 500+ teams worldwide"
+    },
+    "stats": {
+      "projects": "Projects",
+      "tasksDone": "Tasks Done",
+      "uptime": "Uptime",
+      "support": "Support"
+    },
+    "cards": {
+      "taskCard": {
+        "title": "Design Review",
+        "subtitle": "UI/UX Sprint",
+        "status": "Completed",
+        "description": "Finalize dashboard components and design system tokens for v2.0 release.",
+        "priority": "High Priority",
+        "comments": "{{count}} comments",
+        "members": "{{count}} members"
+      },
+      "teamChat": {
+        "title": "Team Chat",
+        "message": "The new API is ready for testing...",
+        "timeAgo": "2 min ago",
+        "message2": "Great! I'll run the unit tests now",
+        "timeAgo2": "Just now",
+        "typing": "Sarah is typing...",
+        "viewAll": "View all"
+      },
+      "productivity": {
+        "title": "Productivity",
+        "change": "↑ 23% this week",
+        "tasksCompleted": "{{count}} tasks completed",
+        "streak": "🔥 {{days}} day streak",
+        "days": {
+          "mon": "Mon",
+          "wed": "Wed",
+          "fri": "Fri",
+          "sun": "Sun"
+        }
+      },
+      "teamActivity": {
+        "title": "Team Activity",
+        "live": "Live",
+        "alexCompleted": "Alex completed",
+        "apiIntegration": "API Integration",
+        "bethStarted": "Beth started",
+        "codeReview": "Code Review",
+        "online": "{{count}} online"
+      },
+      "timeline": {
+        "title": "Today's Timeline",
+        "events": "{{count}} events",
+        "sprintReview": "Sprint Review",
+        "sprintReviewTime": "9:00 AM - Done",
+        "teamStandup": "Team Standup",
+        "now": "Now",
+        "designSync": "Design Sync"
+      },
+      "sprint": {
+        "title": "Sprint 12",
+        "remaining": "{{count}} days remaining",
+        "toDo": "To Do",
+        "inProgress": "In Progress",
+        "done": "Done"
+      }
+    }
+  },
+  "activities": {
+    "FileAddedToTaskActivity": "added a file to the task",
+    "FileAddedToTaskCommentActivity": "added a file to a task comment",
+    "FileUpdatedInTaskActivity": "updated a file in the task",
+    "FileRemovedInTaskActivity": "removed a file from the task",
+    "TaskUpdatedActivity": "updated the task",
+    "TaskCreatedActivity": "created the task",
+    "TaskMovedInTaskActivity": "moved the task",
+    "TaskMarkedInTaskActivity": "marked the task as completed",
+    "TaskUnMarkedInTaskActivity": "unmarked the task as completed",
+    "UserAddedToTaskActivity": "added a user to the task",
+    "UserRemovedInTaskActivity": "removed a user from the task",
+    "SubTaskAddedToTaskActivity": "added a subtask to the task",
+    "SubtaskUpdatedInTaskActivity": "updated the subtask",
+    "SubtaskDeletedInTaskActivity": "deleted the subtask",
+    "LabelAddedToTaskActivity": "added a label to the task",
+    "LabelDeletedToTaskActivity": "removed a label from the task"
+  },
+  "dataTable": {
+    "table": {
+      "noResults": "No results."
+    },
+    "pagination": {
+      "rowsSelected": "{{selected}} of {{total}} row(s) selected.",
+      "rowsPerPage": "Rows per page",
+      "pageXofY": "Page {{current}} of {{total}}",
+      "goToFirstPage": "Go to first page",
+      "goToPreviousPage": "Go to previous page",
+      "goToNextPage": "Go to next page",
+      "goToLastPage": "Go to last page"
+    },
+    "column": {
+      "asc": "Asc",
+      "desc": "Desc",
+      "hide": "Hide",
+      "reset": "Reset"
+    },
+    "toolbar": {
+      "reset": "Reset"
+    },
+    "filter": {
+      "noResultsFound": "No results found.",
+      "selected": "selected",
+      "clearFilters": "Clear filters",
+      "clearFilter": "Clear filter",
+      "clear": "Clear",
+      "selectDate": "Select date",
+      "selectDateRange": "Select date range",
+      "from": "From",
+      "to": "to"
+    },
+    "viewOptions": {
+      "view": "View",
+      "toggleColumns": "Toggle columns",
+      "searchColumns": "Search columns...",
+      "noColumnsFound": "No columns found."
+    }
+  },
+  "systemProjects": {
+    "createProject": "Create project",
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "projectName": "Project name",
+      "projectNamePlaceholder": "Enter project name or code...",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "domain": "Domain",
+      "teamSize": "Team size",
+      "notProvided": "Not provided",
+      "schoolSubject": "Subject",
+      "createdBy": "Created by",
+      "noCreator": "No creator",
+      "members": "Members",
+      "noMembers": "No members",
+      "startDate": "Start date",
+      "startDatePlaceholder": "Select start date...",
+      "endDate": "End date",
+      "endDatePlaceholder": "Select end date..."
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "copyProjectId": "Copy project ID",
+      "viewProject": "View project",
+      "viewProjectDetails": "View project details"
+    }
+  },
+  "systemUsers": {
+    "createUser": "Create user",
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "name": "Name",
+      "namePlaceholder": "Search by name or email...",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "role": "Role",
+      "domains": "Domains",
+      "noDomains": "No domains",
+      "location": "Location",
+      "noLocation": "No location",
+      "projects": "Projects",
+      "created": "Created",
+      "joined": "Joined",
+      "createdAt": "Created"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "copyUserId": "Copy user ID",
+      "copyEmail": "Copy email",
+      "viewProfile": "View profile",
+      "editUser": "Edit user",
+      "deleteUser": "Delete user"
+    }
+  },
+  "projectStorage": {
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "fileName": "File name",
+      "fileNamePlaceholder": "Search files...",
+      "fileSize": "Size",
+      "noBytes": "No size",
+      "fileType": "Type",
+      "task": "Task",
+      "noTask": "No task",
+      "milestone": "List",
+      "noMilestone": "No list",
+      "uploadedBy": "Uploaded by",
+      "uploadedAt": "Uploaded"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "stats": {
+      "totalFiles": "Uploaded",
+      "totalSize": "Used storage"
+    },
+    "uploadFile": "Upload file",
+    "deleteResource": {
+      "title": "Delete file",
+      "description": "Are you sure you want to delete this file? This action cannot be undone.",
+      "confirmText": "Delete"
+    }
+  },
+  "projectPerformance": {
+    "title": "Project Performance",
+    "description": "Activity and efficiency overview for this project.",
+    "statCompleted": "Completed tasks",
+    "statComments": "Comments",
+    "statFiles": "Uploaded files",
+    "statSubtasks": "Created subtasks",
+    "statTasks": "Created tasks",
+    "trendLabel": "compared to last month",
+    "contributions": "{{count}} contributions in {{year}}",
+    "tooltipNoActivitiesOn": "No activities on {{date}}",
+    "tooltipTasksCreated": "Tasks created",
+    "tooltipTasksCompleted": "Tasks completed",
+    "tooltipSubtasksCreated": "Subtasks created",
+    "tooltipComments": "Comments",
+    "tooltipFilesUploaded": "Files uploaded",
+    "tooltipTotalActivities": "{{count}} total activities",
+    "heatmap": {
+      "tooltipDefault": "{{count}} activities on {{date}}",
+      "tooltipNoCount": "No",
+      "legendZero": "0 activities",
+      "legendOneToNine": "1-9 activities",
+      "legendTenToNineteen": "10-19 activities",
+      "legendTwentyToTwentyNine": "20-29 activities",
+      "legendThirtyPlus": "30+ activities",
+      "less": "Less",
+      "more": "More"
+    },
+    "popover": {
+      "actionDescription": "Choose date and view mode.",
+      "weeks": "Weeks",
+      "months": "Months",
+      "tab": "Tab",
+      "year": "Year",
+      "selectYear": "Select year",
+      "from": "From",
+      "to": "To",
+      "selectDate": "Select date"
+    },
+    "taskStatistics": "Task statistics",
+    "noTaskStatistics": "No task statistics for this range.",
+    "trendingUp": "Trending up by {{value}}% this month",
+    "showingVisitors": "Showing total visitors for the last {{months}} months",
+    "chartCreated": "Created",
+    "chartCompleted": "Completed",
+    "topContributorsPercentage": "Top Contributors (%)",
+    "topContributorsPercentageTooltip": "Percentage",
+    "topOnTimeCompleters": "Top On-Time Completers",
+    "topOnTimeCompletersTooltip": "Tasks"
+  },
+  "mimeTypes": {
+    "unknownFile": "Unknown File",
+    "image": {
+      "jpeg": "JPEG Image",
+      "png": "PNG Image",
+      "gif": "GIF Animation",
+      "svg": "SVG Vector",
+      "webp": "WebP Image",
+      "generic": "Image"
+    },
+    "document": {
+      "pdf": "PDF Document",
+      "word": "Word Doc",
+      "wordDocx": "Word Doc (DOCX)",
+      "excel": "Excel Sheet",
+      "excelXlsx": "Excel Sheet (XLSX)",
+      "powerpoint": "PowerPoint",
+      "powerpointPptx": "PowerPoint (PPTX)",
+      "text": "Text File",
+      "csv": "CSV Spreadsheet"
+    },
+    "archive": {
+      "zip": "ZIP Archive",
+      "sevenZip": "7-Zip Archive",
+      "rar": "RAR Archive"
+    },
+    "media": {
+      "video": {
+        "mp4": "MP4 Video",
+        "generic": "Video"
+      },
+      "audio": {
+        "mp3": "MP3 Audio",
+        "wav": "WAV Audio",
+        "generic": "Audio"
+      }
+    },
+    "generic": {
+      "text": "Text File",
+      "file": "File"
+    }
+  },
+  "pageTitle": {
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "featuredProjects": "Featured Projects",
+    "community": "Community",
+    "news": "News"
   }
 }

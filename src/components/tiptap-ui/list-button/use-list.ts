@@ -3,7 +3,6 @@
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { type Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -15,6 +14,7 @@ import { ListTodoIcon } from '@/components/tiptap-icons/list-todo-icon'
 
 // --- Lib ---
 import { findNodePosition, isNodeInSchema, isNodeTypeSelected, isValidPosition } from '@/shared/tiptap-utils'
+import { useTranslation } from 'react-i18next'
 
 export type ListType = 'bulletList' | 'orderedList' | 'taskList'
 
@@ -46,6 +46,8 @@ export const listIcons = {
   orderedList: ListOrderedIcon,
   taskList: ListTodoIcon
 }
+
+// Labels are now handled via i18n in useList hook
 
 export const LIST_SHORTCUT_KEYS: Record<ListType, string> = {
   bulletList: 'mod+shift+8',
@@ -234,9 +236,9 @@ export function shouldShowButton(props: {
  * ```
  */
 export function useList(config: UseListConfig) {
+  const { t } = useTranslation()
   const { editor: providedEditor, type, hideWhenUnavailable = false, onToggled } = config
 
-  const { t } = useTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canToggle = canToggleList(editor, type)
@@ -268,17 +270,10 @@ export function useList(config: UseListConfig) {
     return success
   }, [editor, type, onToggled])
 
-  const getLabel = () => {
-    switch (type) {
-      case 'bulletList':
-        return t('richTextEditor.list.bulletList')
-      case 'orderedList':
-        return t('richTextEditor.list.orderedList')
-      case 'taskList':
-        return t('richTextEditor.list.taskList')
-      default:
-        return ''
-    }
+  const labelMap: Record<ListType, string> = {
+    bulletList: t('richTextEditor.list.bulletList'),
+    orderedList: t('richTextEditor.list.orderedList'),
+    taskList: t('richTextEditor.list.taskList')
   }
 
   return {
@@ -286,7 +281,7 @@ export function useList(config: UseListConfig) {
     isActive,
     handleToggle,
     canToggle,
-    label: getLabel(),
+    label: labelMap[type],
     shortcutKeys: LIST_SHORTCUT_KEYS[type],
     Icon: listIcons[type]
   }

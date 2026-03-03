@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -39,6 +38,7 @@ export function CodeBlockShortcutBadge({ shortcutKeys = CODE_BLOCK_SHORTCUT_KEY 
  *
  * For custom button implementations, use the `useCodeBlock` hook instead.
  */
+
 export const CodeBlockButton = React.forwardRef<HTMLButtonElement, CodeBlockButtonProps>(
   (
     {
@@ -53,7 +53,6 @@ export const CodeBlockButton = React.forwardRef<HTMLButtonElement, CodeBlockButt
     },
     ref
   ) => {
-    const { t } = useTranslation()
     const { editor } = useTiptapEditor(providedEditor)
     const { isVisible, canToggle, isActive, handleToggle, label, shortcutKeys, Icon } = useCodeBlock({
       editor,
@@ -85,7 +84,7 @@ export const CodeBlockButton = React.forwardRef<HTMLButtonElement, CodeBlockButt
         tabIndex={-1}
         aria-label={label}
         aria-pressed={isActive}
-        tooltip={t('richTextEditor.codeBlock.label')}
+        tooltip={label}
         onClick={handleClick}
         {...buttonProps}
         ref={ref}

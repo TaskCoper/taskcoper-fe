@@ -38,6 +38,7 @@ export function ImageShortcutBadge({ shortcutKeys = IMAGE_UPLOAD_SHORTCUT_KEY }:
  *
  * For custom button implementations, use the `useImage` hook instead.
  */
+
 export const ImageUploadButton = React.forwardRef<HTMLButtonElement, ImageUploadButtonProps>(
   (
     {

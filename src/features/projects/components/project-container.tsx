@@ -21,8 +21,7 @@ export default function ProjectContainer({ children }: ProjectContainerProps) {
     <div
       className={variations({
         dragging: dndContext.active ? 'active' : 'default',
-        className:
-          'overflow-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent scrollbar-corner-slate-50 p-4 flex items-start gap-3 bg-linear-to-br from-sky-400 via-teal-500 to-blue-600'
+        className: 'overflow-auto flex items-start gap-3 p-4'
       })}
     >
       {children}

@@ -1,19 +1,47 @@
-import type { UniqueIdentifier } from '@dnd-kit/core'
+import type { TaskPreview } from './task.type'
 
-export interface MilestoneEntity {
-  // TODO: Add actual DB fields when backend is ready
+export interface Milestone {
   id: string
-  title: string
+  name: string
+  position: number
 }
 
-export interface MilestoneColumnVM {
-  id: UniqueIdentifier
-  title: string
+export interface ParentMilestone {
+  id: string
+  name: string
+  position: number
+}
+
+export interface ChildMilestone {
+  id: string
+  name: string
+  position: number
 }
 
 export type MilestoneColumnType = 'MilestoneColumn'
 
 export interface MilestoneColumnDragData {
   type: MilestoneColumnType
-  column: MilestoneColumnVM
+  column: Milestone
+}
+
+export type MilestoneTabType = 'MilestoneTab'
+
+export interface MilestoneTabDragData {
+  type: MilestoneTabType
+  milestone: Milestone
+}
+
+export interface MilestoneWithTasks {
+  parentId: string
+  milestones: Milestone[]
+  tasks: TaskPreview[]
+}
+
+export interface MilestoneStats {
+  id: string
+  name: string
+  position: number
+  taskCount: number
+  completedTaskCount: number
 }
