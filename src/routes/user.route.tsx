@@ -4,6 +4,7 @@ import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
+import ProfilePage from '@/pages/users/setting.page'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
@@ -34,6 +35,10 @@ export const userRoutes: RouteObject[] = [
               {
                 path: 'me',
                 element: <MePage />
+              },
+              {
+                path: 'me/settings',
+                element: <ProfilePage />
               },
               {
                 element: <ProjectsLayout />,
