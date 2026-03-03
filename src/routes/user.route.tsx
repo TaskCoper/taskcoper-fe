@@ -4,7 +4,6 @@ import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
-import ProfilePage from '@/pages/users/setting.page'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
 
@@ -16,6 +15,8 @@ const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const MePage = lazy(() => import('@/pages/users/me.page'))
+const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
+const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 
 export const userRoutes: RouteObject[] = [
   {
@@ -38,7 +39,7 @@ export const userRoutes: RouteObject[] = [
               },
               {
                 path: 'me/settings',
-                element: <ProfilePage />
+                element: <SettingsPage />
               },
               {
                 element: <ProjectsLayout />,
@@ -68,6 +69,10 @@ export const userRoutes: RouteObject[] = [
                   {
                     path: 'milestones',
                     element: null
+                  },
+                  {
+                    path: 'revenue',
+                    element: <ProjectRevenuePage />
                   },
                   {
                     path: 'milestones/:milestoneId',

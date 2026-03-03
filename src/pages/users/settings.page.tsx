@@ -8,13 +8,10 @@ import {
   SidebarMenuItem,
   SidebarProvider
 } from '@/components/ui/sidebar'
-
 import PasswordSection from '@/features/users/components/password-section'
 import ProfileSection from '@/features/users/components/profile-section'
 import { cn } from '@/shared/utils'
-
 import { CircleUserRoundIcon, LockKeyholeIcon, type LucideIcon } from 'lucide-react'
-
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -40,7 +37,7 @@ const navItems: NavItem[] = [
   }
 ]
 
-export default function SettingPage() {
+export default function SettingsPage() {
   const { t } = useTranslation()
   const [selected, setSelected] = useState<NavItem>(navItems[0])
 

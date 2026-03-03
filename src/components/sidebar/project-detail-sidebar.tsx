@@ -15,6 +15,7 @@ import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigne
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import {
+  BanknoteIcon,
   CalendarClockIcon,
   DatabaseIcon,
   GaugeIcon,
@@ -81,6 +82,12 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
         title: t('project.sidebar.storage'),
         url: 'storage',
         icon: DatabaseIcon,
+        hasSecondSidebar: false
+      },
+      {
+        title: 'Revenue',
+        url: 'revenue',
+        icon: BanknoteIcon,
         hasSecondSidebar: false
       },
       {
