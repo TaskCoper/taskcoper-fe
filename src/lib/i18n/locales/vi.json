@@ -370,6 +370,12 @@
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
+    },
+    "priviewDocument": {
+      "preview": "Xem trước",
+      "click_to_open": "Nhấn để mở",
+      "file_type_pdf": "PDF",
+      "file_type_image": "Ảnh"
     }
   },
   "task": {
