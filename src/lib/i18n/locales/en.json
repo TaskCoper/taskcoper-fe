@@ -1315,6 +1315,7 @@
     }
   },
   "pageTitle": {
+    "network": "Network",
     "projects": "Projects",
     "calendar": "Calendar",
     "featuredProjects": "Featured Projects",

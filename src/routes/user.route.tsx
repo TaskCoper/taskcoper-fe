@@ -164,14 +164,19 @@ export const userRoutes: RouteObject[] = [
                   </PageWrapper>
                 )
               },
-              // {
-              //   path: 'network',
-              //   element: (
-              //     <PageWrapper title='Network'>
-              //       <NetworkPage />
-              //     </PageWrapper>
-              //   )
-              // },
+              {
+                path: 'network',
+                element: (
+                  // <PageWrapper title='Network'>
+                  //   <NetworkPage />
+                  // </PageWrapper>
+                  <PageWrapper titleKey='pageTitle.network'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>Network Comming Soon</p>
+                    </div>
+                  </PageWrapper>
+                )
+              },
               {
                 path: 'community',
                 element: (
