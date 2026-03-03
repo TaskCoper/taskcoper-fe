@@ -1313,5 +1313,12 @@
       "text": "Text File",
       "file": "File"
     }
+  },
+  "pageTitle": {
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "featuredProjects": "Featured Projects",
+    "community": "Community",
+    "news": "News"
   }
 }

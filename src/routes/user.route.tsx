@@ -4,7 +4,8 @@ import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
-import { lazy } from 'react'
+import { lazy, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
@@ -16,7 +17,18 @@ const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const MePage = lazy(() => import('@/pages/users/me.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
-const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+// const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+
+const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
+  const { t } = useTranslation()
+  const title = t(titleKey)
+
+  useEffect(() => {
+    document.title = `${title} | TaskCoper`
+  }, [title])
+
+  return <>{children}</>
+}
 
 export const userRoutes: RouteObject[] = [
   {
@@ -46,14 +58,20 @@ export const userRoutes: RouteObject[] = [
                 children: [
                   {
                     path: 'projects',
-                    element: <ProjectsPage />
+                    element: (
+                      <PageWrapper titleKey='pageTitle.projects'>
+                        <ProjectsPage />
+                      </PageWrapper>
+                    )
                   },
                   {
                     path: 'calendar',
                     element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Calendar Comming Soon</p>
-                      </div>
+                      <PageWrapper titleKey='pageTitle.calendar'>
+                        <div className='w-full h-full flex justify-center items-center'>
+                          <p className='text-2xl font-bold'>Calendar Comming Soon</p>
+                        </div>
+                      </PageWrapper>
                     )
                   }
                 ]
@@ -84,7 +102,10 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
-                  { path: 'info', element: <ProjectInfoPage /> },
+                  {
+                    path: 'info',
+                    element: <ProjectInfoPage />
+                  },
                   {
                     path: 'calendar',
                     element: (
@@ -136,29 +157,39 @@ export const userRoutes: RouteObject[] = [
               {
                 path: 'featured-projects',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.featuredProjects'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               },
-              {
-                path: 'network',
-                element: <NetworkPage />
-              },
+              // {
+              //   path: 'network',
+              //   element: (
+              //     <PageWrapper title='Network'>
+              //       <NetworkPage />
+              //     </PageWrapper>
+              //   )
+              // },
               {
                 path: 'community',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Community Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.community'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>Community Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               },
               {
                 path: 'news',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>News Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.news'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>News Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               }
             ]

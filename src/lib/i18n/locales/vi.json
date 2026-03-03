@@ -1313,5 +1313,12 @@
       "text": "Tệp văn bản",
       "file": "Tệp"
     }
+  },
+  "pageTitle": {
+    "projects": "Dự án",
+    "calendar": "Lịch",
+    "featuredProjects": "Dự án nổi bật",
+    "community": "Cộng đồng",
+    "news": "Tin tức"
   }
 }

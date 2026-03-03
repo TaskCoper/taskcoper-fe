@@ -17,8 +17,7 @@ import {
   HomeIcon,
   MenuIcon,
   MessageCircleIcon,
-  NewspaperIcon,
-  UsersRoundIcon
+  NewspaperIcon
 } from 'lucide-react'
 import { createElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -38,12 +37,12 @@ const navigations = [
     icon: FolderClosedIcon,
     url: '/featured-projects'
   },
-  {
-    id: 300,
-    label: 'header.expertNetwork',
-    icon: UsersRoundIcon,
-    url: '/network'
-  },
+  // {
+  //   id: 300,
+  //   label: 'header.expertNetwork',
+  //   icon: UsersRoundIcon,
+  //   url: '/network'
+  // },
   {
     id: 400,
     label: 'header.startupCommunity',
