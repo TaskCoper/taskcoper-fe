@@ -24,8 +24,6 @@ export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
     mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
     mimeType === 'application/vnd.ms-excel'
 
-  const canPreview = isPdf || isImage || isText || isWord || isExcel
-
   const handleMove = (e: React.MouseEvent<HTMLSpanElement>) => {
     const previewWidth = 340
     const previewHeight = 280
@@ -73,14 +71,18 @@ export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
       )
     }
 
-    return null
+    return (
+      <div className='flex flex-col items-center justify-center w-full h-full text-muted-foreground gap-3 bg-muted/10 p-4 text-center'>
+        <FileIcon className='size-10 opacity-30 stroke-1' />
+        <p className='text-[11px]'>{t('project.priviewDocument.unsupported', 'Preview not supported')}</p>
+      </div>
+    )
   }
 
   return (
     <>
       <span
         onMouseEnter={(e) => {
-          if (!canPreview) return
           handleMove(e)
           setShow(true)
         }}
@@ -91,10 +93,10 @@ export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
       >
         <span className='truncate max-w-[160px] group-hover:underline underline-offset-2'>{name}</span>
 
-        {canPreview && <ExternalLinkIcon className='size-3 opacity-0 group-hover:opacity-60 transition shrink-0' />}
+        <ExternalLinkIcon className='size-3 opacity-0 group-hover:opacity-60 transition shrink-0' />
       </span>
 
-      {show && canPreview && (
+      {show && (
         <div
           className='fixed z-9999 w-[340px] rounded-xl border border-border/40 bg-white shadow-2xl overflow-hidden'
           style={{

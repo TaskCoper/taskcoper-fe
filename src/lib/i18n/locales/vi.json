@@ -100,6 +100,19 @@
       "week": "Tuần"
     }
   },
+  "network": {
+    "filter": {
+      "domainPlaceholder": "Tìm kiếm lĩnh vực…"
+    },
+    "domainSelect": {
+      "domainsSelected": "{{count}} lĩnh vực đã chọn",
+      "loading": "Đang tải…",
+      "loadingMore": "Đang tải thêm…",
+      "noDomainsFound": "Không tìm thấy lĩnh vực.",
+      "removeAriaLabel": "Xóa {{name}}",
+      "overflowMore": "+{{count}} khác"
+    }
+  },
   "project": {
     "title": "Dự án của tôi",
     "description": "Quản lý dự án và công việc của bạn",
@@ -375,8 +388,28 @@
       "preview": "Xem trước",
       "click_to_open": "Nhấn để mở",
       "file_type_pdf": "PDF",
-      "file_type_image": "Ảnh"
+      "file_type_image": "Ảnh",
+      "unsupported": "Không hỗ trợ xem trước"
     }
+  },
+  "expertNetwork": {
+    "titlePrefix": "Đội ngũ ",
+    "titleHighlight": "Chuyên gia",
+    "titleSuffix": " của TaskCoper",
+    "subtitle": "Bạn vẫn chưa biết chọn chuyên gia nào?",
+    "searchByAi": "Tìm kiếm bằng AI",
+    "domainFilter": "Lĩnh vực",
+    "ratingFilter": "Đánh giá",
+    "sortByRating": "Sắp xếp theo đánh giá",
+    "sortPlaceholder": "Sắp xếp",
+    "sortHighest": "Cao nhất",
+    "sortLowest": "Thấp nhất",
+    "searchPlaceholder": "Tìm kiếm cố vấn...",
+    "resultsCount": "{{count}} kết quả",
+    "reset": "Đặt lại",
+    "viewProfile": "Xem hồ sơ",
+    "noBio": "Chưa có giới thiệu",
+    "noMentorsFound": "Không tìm thấy cố vấn"
   },
   "task": {
     "addTask": {
