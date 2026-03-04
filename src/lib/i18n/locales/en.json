@@ -394,6 +394,7 @@
     },
     "projectRevenue": {
       "addRevenue": "Add Revenue",
+      "addRevenueDescription": "Track your project income and expenses.",
       "form": {
         "name": "Transaction Name",
         "namePlaceholder": "Enter transaction name...",
@@ -401,6 +402,10 @@
         "amount": "Amount",
         "note": "Note",
         "notePlaceholder": "Enter note..."
+      },
+      "validation": {
+        "nameRequired": "Transaction name is required",
+        "amountMin": "Amount must be a positive number"
       },
       "type": {
         "income": "Income",

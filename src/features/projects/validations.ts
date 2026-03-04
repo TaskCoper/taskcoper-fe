@@ -3,6 +3,14 @@ import z from 'zod'
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 
+export const createRevenueSchema = (t: TFunction) =>
+  z.object({
+    name: z.string().min(1, t('project.projectRevenue.validation.nameRequired')),
+    type: z.enum(['income', 'expense']),
+    amount: z.coerce.number().min(0, t('project.projectRevenue.validation.amountMin')),
+    note: z.string().optional()
+  })
+
 export const createProjectSchema = (t: TFunction) => {
   return z
     .object({
@@ -153,3 +161,4 @@ export type InviteMembersFormValues = z.infer<ReturnType<typeof inviteMembersSch
 export type InviteMemberItem = z.infer<ReturnType<typeof memberSchema>>
 export type DomainItem = z.infer<ReturnType<typeof domainSchema>>
 export type UpdateProjectFormValues = z.infer<ReturnType<typeof updateProjectSchema>>
+export type CreateRevenueFormValues = z.infer<ReturnType<typeof createRevenueSchema>>

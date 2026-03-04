@@ -394,6 +394,7 @@
     },
     "projectRevenue": {
       "addRevenue": "Thêm doanh thu",
+      "addRevenueDescription": "Ghi lại thu chi của dự án.",
       "form": {
         "name": "Tên giao dịch",
         "namePlaceholder": "Nhập tên giao dịch...",
@@ -402,7 +403,10 @@
         "note": "Ghi chú",
         "notePlaceholder": "Nhập ghi chú..."
       },
-
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên giao dịch",
+        "amountMin": "Số tiền phải là số dương"
+      },
       "type": {
         "income": "Thu",
         "expense": "Chi"
