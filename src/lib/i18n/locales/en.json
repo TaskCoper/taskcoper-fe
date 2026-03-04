@@ -100,6 +100,19 @@
       "week": "Week"
     }
   },
+  "network": {
+    "filter": {
+      "domainPlaceholder": "Search domains…"
+    },
+    "domainSelect": {
+      "domainsSelected": "{{count}} domains selected",
+      "loading": "Loading…",
+      "loadingMore": "Loading more…",
+      "noDomainsFound": "No domains found.",
+      "removeAriaLabel": "Remove {{name}}",
+      "overflowMore": "+{{count}} more"
+    }
+  },
   "project": {
     "title": "My Projects",
     "description": "Manage your projects and tasks",
@@ -420,6 +433,25 @@
         "confirmText": "Delete"
       }
     }
+  },
+  "expertNetwork": {
+    "titlePrefix": "Our ",
+    "titleHighlight": "Experts",
+    "titleSuffix": " Team from TaskCoper",
+    "subtitle": "Still not sure which expert to choose?",
+    "searchByAi": "Search with AI",
+    "domainFilter": "Domain",
+    "ratingFilter": "Rating",
+    "sortByRating": "Sort by rating",
+    "sortPlaceholder": "Sort by",
+    "sortHighest": "Highest",
+    "sortLowest": "Lowest",
+    "searchPlaceholder": "Search for mentors...",
+    "resultsCount": "{{count}} results",
+    "reset": "Reset",
+    "viewProfile": "View profile",
+    "noBio": "No introduction yet",
+    "noMentorsFound": "No mentors found"
   },
   "task": {
     "addTask": {
@@ -1323,5 +1355,13 @@
       "text": "Text File",
       "file": "File"
     }
+  },
+  "pageTitle": {
+    "network": "Network",
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "featuredProjects": "Featured Projects",
+    "community": "Community",
+    "news": "News"
   }
 }

@@ -10,7 +10,7 @@ export default function RoleGuardLayout({ allowedRoles }: RoleGuardLayoutProps) 
   const { user } = useAuthStore()
   const userType = getUserType(user)
 
-  if (!userType || !allowedRoles.includes(userType)) {
+  if (userType && !allowedRoles.includes(userType)) {
     if (userType === 'superAdmin') {
       return <Navigate to='/dashboard' replace />
     }

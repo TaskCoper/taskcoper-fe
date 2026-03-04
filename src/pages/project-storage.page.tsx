@@ -1,9 +1,11 @@
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProjectStorageTable from '@/features/projects/components/project-storage-table'
+import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import { useGetProjectResourceStats } from '@/features/projects/hooks/use-get-project-resource-stats'
 import { formatBytes } from '@/features/projects/utils'
 import { DatabaseIcon, FilesIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useParams } from 'react-router'
 
@@ -12,6 +14,16 @@ export default function ProjectStoragePage() {
   const { projectId } = useParams<{ projectId: string }>()
 
   const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({ projectId })
+
+  const { project } = useGetProject({
+    projectId
+  })
+
+  useEffect(() => {
+    if (project) {
+      document.title = `${project?.name} | TaskCoper`
+    }
+  }, [project])
 
   return (
     <>

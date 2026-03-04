@@ -9,7 +9,7 @@ import { PlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getRevenueColumns } from './columns/project-resource-columns'
+import { getColumns } from './columns/project-revenue-columns'
 
 export type RevenueItem = {
   id: string
@@ -70,7 +70,7 @@ export default function ProjectRevenueTable({ projectId: _projectId, onAddRevenu
     [confirm, t]
   )
 
-  const columns = useMemo(() => getRevenueColumns({ onDeleteRevenue }), [onDeleteRevenue])
+  const columns = useMemo(() => getColumns({ onDeleteRevenue }), [onDeleteRevenue])
 
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,

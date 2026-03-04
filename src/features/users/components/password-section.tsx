@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -9,6 +11,7 @@ import ChangePasswordForm from './change-password-form'
 
 export default function PasswordSection() {
   const { t } = useTranslation()
+  const { me } = useGetMe()
   const { methods, changePassword, isChangingPassword } = useChangePassword()
 
   const {
@@ -19,6 +22,12 @@ export default function PasswordSection() {
   const onSubmit: SubmitHandler<ChangePasswordFormValues> = (body) => {
     changePassword({ body })
   }
+
+  useEffect(() => {
+    if (me) {
+      document.title = `${me?.firstName} ${me?.lastName} | TaskCoper`
+    }
+  }, [me])
 
   return (
     <div className='px-24 pb-6'>
