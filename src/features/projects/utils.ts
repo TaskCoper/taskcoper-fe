@@ -8,6 +8,13 @@ export const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 
+export const formatCurrency = (amount: number, currency = 'VND', locale = 'vi-VN'): string => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+  }).format(amount)
+}
+
 /**
  * Formats a MIME type string into a human-readable label for UI display
  */

@@ -308,6 +308,10 @@
         "download": "Download",
         "task": "Task"
       },
+      "revenuePage": {
+        "title": "Revenue",
+        "description": "Track income, expenses, and the current balance of this project."
+      },
       "settings": "Settings",
       "myProjects": "My Projects",
       "myCalendar": "My Calendar",
@@ -371,11 +375,50 @@
       "board": "Kanban View",
       "table": "Table View"
     },
-    "priviewDocument": {
+    "previewDocument": {
       "preview": "Preview",
-      "click_to_open": "Click to open",
-      "file_type_pdf": "PDF",
-      "file_type_image": "IMG"
+      "clickToOpen": "Click to open"
+    },
+    "projectRevenue": {
+      "addRevenue": "Add Revenue",
+      "form": {
+        "name": "Transaction Name",
+        "namePlaceholder": "Enter transaction name...",
+        "type": "Type",
+        "amount": "Amount",
+        "note": "Note",
+        "notePlaceholder": "Enter note..."
+      },
+      "type": {
+        "income": "Income",
+        "expense": "Expense"
+      },
+      "stats": {
+        "totalIncome": "Total Income",
+        "totalExpense": "Total Expense",
+        "currentBalance": "Current Balance",
+        "totalTransactions": "Transactions"
+      },
+      "table": {
+        "name": "Transaction Name",
+        "namePlaceholder": "Search by transaction name...",
+        "type": "Type",
+        "amount": "Amount",
+        "balanceAfter": "Balance After",
+        "note": "Note",
+        "createdAt": "Created At"
+      },
+      "actions": {
+        "add": "Add Transaction",
+        "delete": "Delete",
+        "actions": "Actions",
+        "openMenu": "Open menu"
+      },
+      "deleteRevenue": {
+        "title": "Delete Transaction",
+        "description": "Are you sure you want to delete this transaction? This action cannot be undone.",
+        "confirmText": "Delete"
+      }
     }
   },
   "task": {

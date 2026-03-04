@@ -308,6 +308,10 @@
         "download": "Tải xuống",
         "task": "Công việc"
       },
+      "revenuePage": {
+        "title": "Doanh thu",
+        "description": "Theo dõi thu chi và số dư của dự án này."
+      },
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
       "myCalendar": "Lịch của tôi",
@@ -371,11 +375,51 @@
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
     },
-    "priviewDocument": {
+    "previewDocument": {
       "preview": "Xem trước",
-      "click_to_open": "Nhấn để mở",
-      "file_type_pdf": "PDF",
-      "file_type_image": "Ảnh"
+      "clickToOpen": "Nhấn để mở"
+    },
+    "projectRevenue": {
+      "addRevenue": "Thêm doanh thu",
+      "form": {
+        "name": "Tên giao dịch",
+        "namePlaceholder": "Nhập tên giao dịch...",
+        "type": "Loại",
+        "amount": "Số tiền",
+        "note": "Ghi chú",
+        "notePlaceholder": "Nhập ghi chú..."
+      },
+
+      "type": {
+        "income": "Thu",
+        "expense": "Chi"
+      },
+      "stats": {
+        "totalIncome": "Tổng thu",
+        "totalExpense": "Tổng chi",
+        "currentBalance": "Số dư",
+        "totalTransactions": "Giao dịch"
+      },
+      "table": {
+        "name": "Tên giao dịch",
+        "namePlaceholder": "Tìm theo tên giao dịch...",
+        "type": "Loại",
+        "amount": "Số tiền",
+        "balanceAfter": "Số dư sau",
+        "note": "Ghi chú",
+        "createdAt": "Ngày tạo"
+      },
+      "actions": {
+        "add": "Thêm giao dịch",
+        "delete": "Xóa",
+        "actions": "Hành động",
+        "openMenu": "Mở menu"
+      },
+      "deleteRevenue": {
+        "title": "Xóa giao dịch",
+        "description": "Bạn có chắc chắn muốn xóa giao dịch này không? Thao tác này không thể hoàn tác.",
+        "confirmText": "Xóa"
+      }
     }
   },
   "task": {

@@ -117,8 +117,8 @@ export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
           <div className='relative h-[210px] bg-white overflow-hidden'>{renderPreview()}</div>
 
           <div className='px-3 py-1 border-t bg-muted/20 text-[9px] text-muted-foreground flex justify-between'>
-            <span>{t('project.priviewDocument.preview')}</span>
-            <span>{t('project.priviewDocument.click_to_open')}</span>
+            <span>{t('project.previewDocument.preview')}</span>
+            <span>{t('project.previewDocument.clickToOpen')}</span>
           </div>
         </div>
       )}
