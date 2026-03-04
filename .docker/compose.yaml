@@ -6,6 +6,8 @@ x-client-base: &client-base
     dockerfile: Dockerfile
     args:
       API_BASE_URL: ${API_BASE_URL}
+      VITE_API_BASE_URL: ${API_BASE_URL}
+      VITE_FILE_BASE_URL: ${API_BASE_URL}
   environment:
     TZ: UTC
 
