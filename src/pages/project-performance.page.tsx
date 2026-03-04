@@ -14,6 +14,7 @@ import {
   type ProjectTaskStatisticsParams
 } from '@/features/charts/validations'
 import StatCard from '@/features/projects/components/stat-card'
+import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import type { ProjectHeatmap } from '@/types/efficiency.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
@@ -25,7 +26,7 @@ import {
   PaperclipIcon,
   TrendingUp
 } from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -350,6 +351,16 @@ export default function ProjectPerformancePage() {
   //     </div>
   //   )
   // }
+
+  const { project } = useGetProject({
+    projectId
+  })
+
+  useEffect(() => {
+    if (project) {
+      document.title = `${project?.name} | TaskCoper`
+    }
+  }, [project])
 
   return (
     <div className='overflow-auto'>

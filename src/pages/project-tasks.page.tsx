@@ -4,8 +4,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMilestones } from '@/features/milestones/hooks/use-get-milestones'
 import ProjectBoard from '@/features/projects/components/project-board'
 import ProjectTable from '@/features/projects/components/project-table'
+import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import { SquareKanbanIcon, TablePropertiesIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useParams } from 'react-router'
 
@@ -18,6 +20,15 @@ export default function ProjectTasksPage() {
     parentMilestoneId: milestoneId,
     enabled: mode === 'board'
   })
+  const { project } = useGetProject({
+    projectId
+  })
+
+  useEffect(() => {
+    if (project) {
+      document.title = `${project?.name} | TaskCoper`
+    }
+  }, [project])
 
   return (
     <>

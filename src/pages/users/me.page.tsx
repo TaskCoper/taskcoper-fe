@@ -6,7 +6,7 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { UNDERLINE_TAB_CLASSNAME } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { ImageOffIcon, SettingsIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
@@ -22,6 +22,12 @@ interface TabItem {
 export default function MePage() {
   const { t } = useTranslation()
   const { me, isGettingMe } = useGetMe()
+
+  useEffect(() => {
+    if (me) {
+      document.title = `${me?.firstName} ${me?.lastName} | TaskCoper`
+    }
+  }, [me])
 
   const tabs: TabItem[] = [
     {

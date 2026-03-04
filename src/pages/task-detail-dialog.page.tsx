@@ -228,6 +228,12 @@ export default function TaskDetailDialogPage() {
     addComment({ body })
   }
 
+  // useEffect(() => {
+  //   if (task) {
+  //     document.title = `${task?.taskName} | TaskCoper`
+  //   }
+  // }, [task])
+
   if (isLoading) {
     return (
       <Dialog open={true}>
