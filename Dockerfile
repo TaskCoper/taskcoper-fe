@@ -14,8 +14,10 @@ RUN yarn install --frozen-lockfile
 COPY ./ ./
 
 ARG API_BASE_URL
+ARG FILE_BASE_URL
 
 ENV VITE_API_BASE_URL=${API_BASE_URL}
+ENV VITE_FILE_BASE_URL=${FILE_BASE_URL}
 
 RUN yarn build
 
