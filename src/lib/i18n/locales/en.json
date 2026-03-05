@@ -401,7 +401,9 @@
         "type": "Type",
         "amount": "Amount",
         "note": "Note",
-        "notePlaceholder": "Enter note..."
+        "notePlaceholder": "Enter note...",
+        "label": "Label",
+        "chooseLabel": "Choose label"
       },
       "validation": {
         "nameRequired": "Transaction name is required",
@@ -415,7 +417,14 @@
         "totalIncome": "Total Income",
         "totalExpense": "Total Expense",
         "currentBalance": "Current Balance",
-        "totalTransactions": "Transactions"
+        "totalTransactions": "Transactions",
+        "labels": "Labels",
+        "findLabel": "Find label...",
+        "createLabel": "Create label",
+        "editLabel": "Edit label",
+        "deleteLabel": "Delete label",
+        "deleteLabelConfirmation": "This will remove this label from all revenue entries. There is no undo.",
+        "create": "Create"
       },
       "table": {
         "name": "Transaction Name",
@@ -525,14 +534,16 @@
       "twoDaysBefore": "2 days before"
     },
     "label": {
+      "label": "Label",
       "createLabel": "Create new label",
       "findLabel": "Find label...",
       "editLabel": "Edit label",
       "updateLabel": "Update label",
       "deleteLabel": "Delete label",
       "deleteLabelConfirmation": "This will remove this label from all cards. There is no undo.",
-      "chooseColor": "Choose a color",
       "removeColor": "Remove color",
+      "chooseLabel": "Choose label",
+      "chooseColor": "Choose a color",
       "create": "Create",
       "validation": {
         "projectId": {

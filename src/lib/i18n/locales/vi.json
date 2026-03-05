@@ -401,7 +401,9 @@
         "type": "Loại",
         "amount": "Số tiền",
         "note": "Ghi chú",
-        "notePlaceholder": "Nhập ghi chú..."
+        "notePlaceholder": "Nhập ghi chú...",
+        "label": "Nhãn",
+        "chooseLabel": "Chọn nhãn"
       },
       "validation": {
         "nameRequired": "Vui lòng nhập tên giao dịch",
@@ -415,7 +417,14 @@
         "totalIncome": "Tổng thu",
         "totalExpense": "Tổng chi",
         "currentBalance": "Số dư",
-        "totalTransactions": "Giao dịch"
+        "totalTransactions": "Giao dịch",
+        "labels": "Nhãn",
+        "findLabel": "Tìm nhãn...",
+        "createLabel": "Tạo nhãn",
+        "editLabel": "Chỉnh sửa nhãn",
+        "deleteLabel": "Xóa nhãn",
+        "deleteLabelConfirmation": "Thao tác này sẽ xóa nhãn khỏi tất cả giao dịch. Không thể hoàn tác.",
+        "create": "Tạo mới"
       },
       "table": {
         "name": "Tên giao dịch",
@@ -426,6 +435,7 @@
         "note": "Ghi chú",
         "createdAt": "Ngày tạo"
       },
+
       "actions": {
         "add": "Thêm giao dịch",
         "delete": "Xóa",
@@ -525,13 +535,15 @@
       "twoDaysBefore": "2 ngày trước"
     },
     "label": {
+      "label": "Nhãn",
       "createLabel": "Tạo nhãn mới",
       "findLabel": "Tìm nhãn...",
       "editLabel": "Chỉnh sửa nhãn",
       "updateLabel": "Cập nhật nhãn",
       "deleteLabel": "Xóa nhãn",
       "deleteLabelConfirmation": "Việc này sẽ xóa nhãn này khỏi tất cả các thẻ. Không có hoàn tác.",
-      "chooseColor": "Chọn một màu",
+      "chooseLabel": "Chọn nhãn",
+      "chooseColor": "Chọn màu",
       "removeColor": "Gỡ bỏ màu",
       "create": "Tạo mới",
       "validation": {

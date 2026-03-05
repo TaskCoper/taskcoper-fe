@@ -8,7 +8,8 @@ export const createRevenueSchema = (t: TFunction) =>
     name: z.string().min(1, t('project.projectRevenue.validation.nameRequired')),
     type: z.enum(['income', 'expense']),
     amount: z.coerce.number().min(0, t('project.projectRevenue.validation.amountMin')),
-    note: z.string().optional()
+    note: z.string().optional(),
+    labelIds: z.array(z.string()).optional()
   })
 
 export const createProjectSchema = (t: TFunction) => {

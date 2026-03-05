@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -17,14 +18,15 @@ import CreateRevenueForm from '../forms/create-revenue-form'
 interface CreateRevenueDialogProps {
   open: boolean
   onClose: () => void
+  projectId: string
 }
 
-export default function CreateRevenueDialog({ open, onClose }: CreateRevenueDialogProps) {
+export default function CreateRevenueDialog({ open, onClose, projectId }: CreateRevenueDialogProps) {
   const { t } = useTranslation()
   const { methods, createRevenue, isCreatingRevenue } = useCreateRevenue()
 
-  const onSubmit: SubmitHandler<CreateRevenueFormValues> = (data) => {
-    createRevenue(data)
+  const onSubmit: SubmitHandler<CreateRevenueFormValues> = async (data) => {
+    await createRevenue(data)
     handleClose()
   }
 
@@ -47,8 +49,8 @@ export default function CreateRevenueDialog({ open, onClose }: CreateRevenueDial
         </DialogHeader>
 
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4 py-2'>
-            <CreateRevenueForm />
+          <form onSubmit={methods.handleSubmit(onSubmit as SubmitHandler<any>)} className='space-y-4 py-2'>
+            <CreateRevenueForm projectId={projectId} />
 
             <DialogFooter className='gap-2'>
               <Button type='button' variant='outline' onClick={handleClose} disabled={isCreatingRevenue}>

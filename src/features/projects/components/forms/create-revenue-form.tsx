@@ -1,18 +1,24 @@
+import { Badge } from '@/components/ui/badge'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowDownCircleIcon, ArrowUpCircleIcon } from 'lucide-react'
+import RevenueLabelPopover from '@/features/labels/components/label-revenue'
+import { useGetRevenueLabels } from '@/features/projects/hooks/use-get-revenue-labels'
+import { cn, getColorTextClass } from '@/shared/utils'
+import { ArrowDownCircleIcon, ArrowUpCircleIcon, TagIcon } from 'lucide-react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { CreateRevenueFormValues } from '../../validations'
 
-export default function CreateRevenueForm() {
+export default function CreateRevenueForm({ projectId }: { projectId: string }) {
   const { t } = useTranslation()
   const { control } = useFormContext<CreateRevenueFormValues>()
+  const { revenueLabels } = useGetRevenueLabels({ projectId })
 
   return (
     <div className='flex flex-col gap-4 w-full'>
+      {/* Name */}
       <Controller
         name='name'
         control={control}
@@ -38,6 +44,7 @@ export default function CreateRevenueForm() {
         )}
       />
 
+      {/* Type + Amount */}
       <div className='grid grid-cols-2 gap-3'>
         <Controller
           name='type'
@@ -99,6 +106,7 @@ export default function CreateRevenueForm() {
         />
       </div>
 
+      {/* Note */}
       <Controller
         name='note'
         control={control}
@@ -115,6 +123,67 @@ export default function CreateRevenueForm() {
             />
           </Field>
         )}
+      />
+
+      {/* Labels */}
+      <Controller
+        name='labelIds'
+        control={control}
+        render={({ field }) => {
+          const selectedIds: string[] = field.value ?? []
+          const selectedLabels = selectedIds
+            .map((id) => revenueLabels?.value?.items?.find((l) => l.id === id))
+            .filter(Boolean)
+
+          return (
+            <Field className='gap-1.5'>
+              <FieldLabel>{t('task.label.label')}</FieldLabel>
+              <div className='flex items-center gap-2'>
+                {/* Trigger button nhỏ gọn */}
+                <RevenueLabelPopover
+                  projectId={projectId}
+                  selectedIds={selectedIds}
+                  onSelect={(id) => {
+                    if (selectedIds.includes(id)) {
+                      field.onChange(selectedIds.filter((sid) => sid !== id))
+                    } else {
+                      field.onChange([...selectedIds, id])
+                    }
+                  }}
+                  onSelectAll={(ids) => field.onChange(ids)}
+                >
+                  <button
+                    type='button'
+                    className={cn(
+                      'h-8 w-8 rounded-md border border-input bg-background flex items-center justify-center',
+                      'hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+                    )}
+                  >
+                    <TagIcon className='size-4' />
+                  </button>
+                </RevenueLabelPopover>
+                {/* Các label đã chọn nằm kế bên */}
+                <div className='flex flex-wrap gap-1'>
+                  {selectedLabels.map((label) =>
+                    label ? (
+                      <Badge
+                        key={label.id}
+                        variant='secondary'
+                        className={cn(
+                          label.color || 'bg-gray-200',
+                          'flex items-center gap-1 px-1.5 h-5 text-xs font-semibold rounded-sm border-0',
+                          getColorTextClass(label.color ?? '')
+                        )}
+                      >
+                        {label.name}
+                      </Badge>
+                    ) : null
+                  )}
+                </div>
+              </div>
+            </Field>
+          )
+        }}
       />
     </div>
   )

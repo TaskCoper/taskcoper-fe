@@ -98,7 +98,7 @@ export default function ProjectRevenuePage() {
         {projectId ? <ProjectRevenueTable projectId={projectId} onAddRevenue={() => setOpenDialog(true)} /> : null}
       </div>
 
-      <CreateRevenueDialog open={openDialog} onClose={() => setOpenDialog(false)} />
+      <CreateRevenueDialog projectId={projectId as string} open={openDialog} onClose={() => setOpenDialog(false)} />
       <Outlet />
     </>
   )

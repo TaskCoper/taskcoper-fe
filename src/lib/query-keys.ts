@@ -199,5 +199,9 @@ export const queryKeys = {
       ['mentors', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
     listInfinite: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
       ['mentors-infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
+  },
+  // Project Revenue
+  projectRevenue: {
+    labels: (projectId?: string) => ['revenue-labels', projectId] as const
   }
 } as const

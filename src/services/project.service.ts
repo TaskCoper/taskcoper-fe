@@ -9,7 +9,7 @@ import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Label, ProjectLabelStats } from '@/types/label.type'
+import type { Label, ProjectLabelStats, RevenueLabel } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type {
   InviteMembersPayload,
@@ -321,6 +321,57 @@ class ProjectService {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
 
     return data.value
+  }
+
+  getRevenueLabels = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/labels`
+    )
+
+    return data
+  }
+
+  createRevenueLabel = async ({ projectId, name, color }: { projectId: string; name: string; color: string }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/revenues/labels`, {
+      projectId,
+      name,
+      color
+    })
+
+    return data
+  }
+
+  updateRevenueLabel = async ({
+    projectId,
+    labelId,
+    name,
+    color
+  }: {
+    projectId: string
+    labelId: string
+    name: string
+    color: string
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/labels/${labelId}`,
+      {
+        id: labelId,
+        projectId,
+        name,
+        color
+      }
+    )
+
+    return data
+  }
+
+  deleteRevenueLabel = async ({ projectId, labelId }: { projectId: string; labelId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/labels/${labelId}`
+    )
+
+    return data
   }
 }
 
