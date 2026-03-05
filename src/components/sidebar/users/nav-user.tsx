@@ -83,7 +83,7 @@ export default function NavUser({ user }: NavUserProps) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={() => navigate('/me')}>
+            <DropdownMenuItem onSelect={() => navigate(`/users/${user?.id}`)}>
               <UserCircle2Icon />
               {t('account.account')}
             </DropdownMenuItem>

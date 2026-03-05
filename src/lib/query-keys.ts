@@ -17,7 +17,8 @@ export const queryKeys = {
   users: {
     all: ['users'] as const,
     list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) =>
-      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const
+      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const,
+    detail: (userId?: string) => ['user', userId] as const
   },
   // Projects
   projects: {

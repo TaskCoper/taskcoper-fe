@@ -8,7 +8,7 @@ import type {
   VerifyCodeFormValues
 } from '@/features/users/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { User } from '@/types/user.type'
+import type { User, UserDetail } from '@/types/user.type'
 
 class UserService {
   private readonly baseUrl = 'users'
@@ -52,6 +52,12 @@ class UserService {
 
   getMe = async () => {
     const { data } = await api.get<BaseResponse<User>>(`/v1/${this.baseUrl}/me`)
+
+    return data.value
+  }
+
+  getUser = async ({ userId }: { userId: string }) => {
+    const { data } = await api.get<BaseResponse<UserDetail>>(`/v1/${this.baseUrl}/${userId}`)
 
     return data.value
   }
