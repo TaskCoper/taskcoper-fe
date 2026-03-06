@@ -1,6 +1,7 @@
 import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
+import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
@@ -200,5 +201,10 @@ export const queryKeys = {
       ['mentors', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
     listInfinite: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
       ['mentors-infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
+  },
+  // Mentor Applications
+  mentorApplications: {
+    my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
+      ['mentor-applications', 'my', status, sortBy] as const
   }
 } as const

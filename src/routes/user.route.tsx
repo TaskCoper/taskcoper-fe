@@ -19,6 +19,7 @@ const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
+const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -55,10 +56,6 @@ export const userRoutes: RouteObject[] = [
                 element: <SettingsPage />
               },
               {
-                path: 'applications/submit',
-                element: <MentorApplicationPage />
-              },
-              {
                 element: <ProjectsLayout />,
                 children: [
                   {
@@ -78,7 +75,12 @@ export const userRoutes: RouteObject[] = [
                         </div>
                       </PageWrapper>
                     )
-                  }
+                  },
+                  {
+                    path: 'applications/submit',
+                    element: <MentorApplicationPage />
+                  },
+                  { path: 'applications', element: <MentorApplicationsPage /> }
                 ]
               },
               {

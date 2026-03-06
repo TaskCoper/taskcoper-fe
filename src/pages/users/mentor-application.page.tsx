@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next'
 
 export default function MentorApplicationPage() {
   const { t } = useTranslation()
-  const { methods, onSubmit, uploadStatuses, clearUploadStatuses } = useSubmitMentorApplication()
+  const { methods, onSubmit, uploadStatuses, clearUploadStatuses, isSubmittingMentorApplication } =
+    useSubmitMentorApplication()
 
   return (
     <div className='absolute inset-0 overflow-auto'>
-      <div className='mx-auto max-w-4xl space-y-10 p-4 pb-10'>
+      <div className='mx-auto max-w-4xl space-y-10 p-4 pb-24'>
         <div>
           <p className='text-2xl font-bold'>{t('mentorApplication.page.title')}</p>
           <p className='text-muted-foreground text-sm'>{t('mentorApplication.page.description')}</p>
@@ -21,8 +22,8 @@ export default function MentorApplicationPage() {
             <SubmitMentorApplicationForm uploadStatuses={uploadStatuses} onClearStatuses={clearUploadStatuses} />
 
             <div className='flex justify-end'>
-              <Button type='submit' disabled={methods.formState.isSubmitting}>
-                {methods.formState.isSubmitting
+              <Button type='submit' disabled={methods.formState.isSubmitting || isSubmittingMentorApplication}>
+                {methods.formState.isSubmitting || isSubmittingMentorApplication
                   ? t('mentorApplication.submit.buttonUploading')
                   : t('mentorApplication.submit.button')}
               </Button>

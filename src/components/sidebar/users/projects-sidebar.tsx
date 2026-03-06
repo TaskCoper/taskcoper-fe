@@ -8,7 +8,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { cn } from '@/shared/utils'
-import { CalendarClockIcon, FolderOpenIcon } from 'lucide-react'
+import { CalendarDaysIcon, FileClockIcon, FolderOpenIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router'
@@ -27,7 +27,12 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
       {
         title: t('project.sidebar.myCalendar'),
         url: '/calendar',
-        icon: CalendarClockIcon
+        icon: CalendarDaysIcon
+      },
+      {
+        title: t('project.sidebar.applicationHistory'),
+        url: '/applications',
+        icon: FileClockIcon
       }
     ],
     [t]

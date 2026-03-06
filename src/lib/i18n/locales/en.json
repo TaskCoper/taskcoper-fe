@@ -325,6 +325,7 @@
       "settings": "Settings",
       "myProjects": "My Projects",
       "myCalendar": "My Calendar",
+      "applicationHistory": "Application History",
       "performance": "Performance",
       "noPendingTasks": "Yay! You have no pending tasks"
     },
@@ -1026,6 +1027,31 @@
       "descriptionMax": "Description must be at most 10,000 characters",
       "portfolioFilesMin": "At least one portfolio file is required",
       "portfolioFilesMax": "You can upload at most 10 files"
+    },
+    "status": {
+      "pendingReview": "Pending Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "pending": "Pending"
+    },
+    "list": {
+      "title": "Your Mentor Applications",
+      "description": "View your submitted mentor applications and monitor their review status.",
+      "allStatuses": "All Statuses",
+      "sortLatest": "Latest",
+      "sortOldest": "Oldest",
+      "newApplication": "New Application",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files"
+    },
+    "dialog": {
+      "title": "Application Details",
+      "submitted": "Submitted {{date}}",
+      "reviewed": "Reviewed {{date}}",
+      "shortBio": "Short Bio",
+      "portfolioFiles": "Portfolio Files ({{count}})",
+      "detailedIntroduction": "Detailed Introduction",
+      "reviewerNote": "Reviewer Note"
     }
   },
   "notification": {

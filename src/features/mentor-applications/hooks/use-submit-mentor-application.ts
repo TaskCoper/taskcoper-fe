@@ -1,6 +1,9 @@
 import { useUploadFile } from '@/hooks/use-upload-file'
 import type { ErrorResponse } from '@/lib/axios'
+import { queryKeys } from '@/lib/query-keys'
+import mentorApplicationService from '@/services/mentor-application.service'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,6 +21,7 @@ const defaultValues: SubmitMentorApplicationFormValues = {
 
 export const useSubmitMentorApplication = () => {
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   const methods = useForm<SubmitMentorApplicationFormValues>({
     defaultValues,
@@ -91,8 +95,31 @@ export const useSubmitMentorApplication = () => {
       portfolioUrls
     }
 
-    console.log('Final body:', finalBody)
+    submitMentorApplication({ body: finalBody })
   }
 
-  return { methods, onSubmit, uploadStatuses, clearUploadStatuses }
+  const { mutate: submitMentorApplication, isPending: isSubmittingMentorApplication } = useMutation({
+    mutationFn: mentorApplicationService.submitMentorApplication,
+    onSuccess: (message) => {
+      toast.success(message)
+      methods.reset()
+    },
+    onError: (error) => {
+      toast(t('error.somethingWentWrong'), {
+        description: error.response?.data?.detail
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorApplications.my() })
+    }
+  })
+
+  return {
+    methods,
+    onSubmit,
+    uploadStatuses,
+    clearUploadStatuses,
+    submitMentorApplication,
+    isSubmittingMentorApplication
+  }
 }

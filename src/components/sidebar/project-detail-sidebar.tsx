@@ -15,7 +15,7 @@ import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigne
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import {
-  CalendarClockIcon,
+  CalendarDaysIcon,
   DatabaseIcon,
   GaugeIcon,
   InfoIcon,
@@ -62,7 +62,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
       {
         title: t('project.sidebar.calendar'),
         url: 'calendar',
-        icon: CalendarClockIcon,
+        icon: CalendarDaysIcon,
         hasSecondSidebar: false
       },
       {
