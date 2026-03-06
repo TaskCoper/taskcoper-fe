@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
@@ -20,7 +21,7 @@ import {
   NewspaperIcon,
   UsersRoundIcon
 } from 'lucide-react'
-import { createElement, useState } from 'react'
+import { createElement, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
@@ -185,7 +186,15 @@ export default function UserDefaultLayout() {
       </header>
 
       <main className='flex-1 h-full w-full relative'>
-        <Outlet />
+        <Suspense
+          fallback={
+            <div className='flex h-full w-full items-center justify-center'>
+              <Spinner className='text-muted-foreground' />
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   )

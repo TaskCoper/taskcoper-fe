@@ -97,7 +97,8 @@
       "noDataAvailable": "No data available",
       "filter": "Filter",
       "month": "Month",
-      "week": "Week"
+      "week": "Week",
+      "files": "files"
     }
   },
   "network": {
@@ -980,6 +981,51 @@
       "position": {
         "invalid": "Invalid position"
       }
+    }
+  },
+  "mentorApplication": {
+    "widget": {
+      "title": "Become a Mentor",
+      "description": "Share your expertise and guide others on their journey to success.",
+      "applyNow": "Apply Now",
+      "dismiss": "Dismiss"
+    },
+    "page": {
+      "title": "Submit Mentor Application",
+      "description": "Empower the next generation of founders by sharing your strategic expertise. Help early-stage teams navigate the journey from product-market fit to scaling, while providing the critical insights that transform bold ideas into successful companies."
+    },
+    "form": {
+      "shortBio": "Short Bio",
+      "shortBioPlaceholder": "Briefly introduce yourself (1–2 sentences). Highlight your main expertise, years of experience, or what you can help mentees achieve.",
+      "detailedIntroduction": "Detailed Introduction",
+      "detailedIntroductionPlaceholder": "Tell mentees more about yourself. You can include:\n•   Your background and professional experience\n•   Areas of expertise you can mentor in\n•   Your mentoring style and what mentees can expect\n•   Notable projects, achievements, or companies you've worked with",
+      "portfolioFiles": "Portfolio Files",
+      "dropzoneEmpty": "Drag & drop files here, or click to browse",
+      "dropzoneActive": "Drop your files here",
+      "dropzoneHint": "Supports PDF and DOCX — up to 10 files",
+      "dropzoneAddMore": "Drop or click to add more files",
+      "dropzoneAddMoreActive": "Drop to add more files",
+      "statusUploading": "Uploading…",
+      "statusUploaded": "Uploaded",
+      "statusFailed": "Failed",
+      "removeFile": "Remove {{name}}"
+    },
+    "submit": {
+      "button": "Submit Application",
+      "buttonUploading": "Uploading…",
+      "uploadingParallel": "Uploading {{total}} file(s) in parallel…",
+      "allUploadsFailed": "All uploads failed",
+      "allUploadsFailedDescription": "Please remove the failed files and try again.",
+      "partialUpload": "{{count}} of {{total}} files uploaded",
+      "partialUploadFailed": "Failed: {{names}}"
+    },
+    "validation": {
+      "shortBioRequired": "Short bio is required",
+      "shortBioMax": "Short bio must be at most 255 characters",
+      "descriptionRequired": "Description is required",
+      "descriptionMax": "Description must be at most 10,000 characters",
+      "portfolioFilesMin": "At least one portfolio file is required",
+      "portfolioFilesMax": "You can upload at most 10 files"
     }
   },
   "notification": {

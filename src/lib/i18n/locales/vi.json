@@ -97,7 +97,8 @@
       "noDataAvailable": "Không có dữ liệu",
       "filter": "Lọc",
       "month": "Tháng",
-      "week": "Tuần"
+      "week": "Tuần",
+      "files": "tệp"
     }
   },
   "network": {
@@ -980,6 +981,51 @@
       "position": {
         "invalid": "Vị trí không hợp lệ"
       }
+    }
+  },
+  "mentorApplication": {
+    "widget": {
+      "title": "Trở thành Mentor",
+      "description": "Chia sẻ chuyên môn và dẫn dắt người khác đến thành công.",
+      "applyNow": "Ứng tuyển ngay",
+      "dismiss": "Đóng"
+    },
+    "page": {
+      "title": "Nộp đơn ứng tuyển Mentor",
+      "description": "Hỗ trợ thế hệ sáng lập tiếp theo bằng cách chia sẻ chuyên môn chiến lược của bạn. Giúp các đội ngũ giai đoạn đầu điều hướng hành trình từ product-market fit đến mở rộng quy mô, đồng thời cung cấp những góc nhìn quan trọng biến ý tưởng táo bạo thành công ty thành công."
+    },
+    "form": {
+      "shortBio": "Tiểu sử ngắn",
+      "shortBioPlaceholder": "Giới thiệu ngắn gọn về bản thân (1–2 câu). Nêu bật chuyên môn chính, kinh nghiệm hoặc những gì bạn có thể giúp mentee đạt được.",
+      "detailedIntroduction": "Giới thiệu chi tiết",
+      "detailedIntroductionPlaceholder": "Kể thêm về bản thân cho mentee. Bạn có thể bao gồm:\n•   Nền tảng và kinh nghiệm chuyên môn\n•   Lĩnh vực chuyên môn bạn có thể mentor\n•   Phong cách mentoring và điều mentee có thể mong đợi\n•   Dự án, thành tựu hoặc công ty đáng chú ý bạn đã làm việc",
+      "portfolioFiles": "Tệp Portfolio",
+      "dropzoneEmpty": "Kéo thả tệp vào đây hoặc nhấp để chọn",
+      "dropzoneActive": "Thả tệp của bạn vào đây",
+      "dropzoneHint": "Hỗ trợ PDF và DOCX — tối đa 10 tệp",
+      "dropzoneAddMore": "Thả hoặc nhấp để thêm tệp",
+      "dropzoneAddMoreActive": "Thả để thêm tệp",
+      "statusUploading": "Đang tải lên…",
+      "statusUploaded": "Đã tải lên",
+      "statusFailed": "Thất bại",
+      "removeFile": "Xóa {{name}}"
+    },
+    "submit": {
+      "button": "Nộp đơn",
+      "buttonUploading": "Đang tải lên…",
+      "uploadingParallel": "Đang tải lên {{total}} tệp song song…",
+      "allUploadsFailed": "Tất cả tải lên thất bại",
+      "allUploadsFailedDescription": "Vui lòng xóa các tệp thất bại và thử lại.",
+      "partialUpload": "{{count}} / {{total}} tệp đã tải lên",
+      "partialUploadFailed": "Thất bại: {{names}}"
+    },
+    "validation": {
+      "shortBioRequired": "Tiểu sử ngắn là bắt buộc",
+      "shortBioMax": "Tiểu sử ngắn tối đa 255 ký tự",
+      "descriptionRequired": "Mô tả là bắt buộc",
+      "descriptionMax": "Mô tả tối đa 10.000 ký tự",
+      "portfolioFilesMin": "Cần ít nhất một tệp portfolio",
+      "portfolioFilesMax": "Bạn chỉ có thể tải lên tối đa 10 tệp"
     }
   },
   "notification": {
