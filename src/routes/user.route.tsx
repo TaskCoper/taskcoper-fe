@@ -15,9 +15,11 @@ const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
-const MePage = lazy(() => import('@/pages/users/me.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
-// const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
+const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
+const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -46,11 +48,11 @@ export const userRoutes: RouteObject[] = [
             element: <UserDefaultLayout />,
             children: [
               {
-                path: 'me',
-                element: <MePage />
+                path: 'users/:userId',
+                element: <ProfilePage />
               },
               {
-                path: 'me/settings',
+                path: 'users/:userId/settings',
                 element: <SettingsPage />
               },
               {
@@ -73,7 +75,12 @@ export const userRoutes: RouteObject[] = [
                         </div>
                       </PageWrapper>
                     )
-                  }
+                  },
+                  {
+                    path: 'applications/submit',
+                    element: <MentorApplicationPage />
+                  },
+                  { path: 'applications', element: <MentorApplicationsPage /> }
                 ]
               },
               {
@@ -167,14 +174,14 @@ export const userRoutes: RouteObject[] = [
               {
                 path: 'network',
                 element: (
-                  // <PageWrapper title='Network'>
-                  //   <NetworkPage />
-                  // </PageWrapper>
                   <PageWrapper titleKey='pageTitle.network'>
-                    <div className='w-full h-full flex justify-center items-center'>
-                      <p className='text-2xl font-bold'>Network Comming Soon</p>
-                    </div>
+                    <NetworkPage />
                   </PageWrapper>
+                  // <PageWrapper titleKey='pageTitle.network'>
+                  //   <div className='w-full h-full flex justify-center items-center'>
+                  //     <p className='text-2xl font-bold'>Network Comming Soon</p>
+                  //   </div>
+                  // </PageWrapper>
                 )
               },
               {

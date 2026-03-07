@@ -14,6 +14,7 @@ import { ArrowRightIcon, SearchIcon, SparkleIcon, StarIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
+import { Link } from 'react-router'
 import { useDebounce } from 'use-debounce'
 
 function StarRow({ rating }: { rating: number }) {
@@ -85,10 +86,12 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
         </div>
       )}
 
-      <Button size='sm' className='ml-auto mt-auto'>
-        {t('expertNetwork.viewProfile')}
-        <ArrowRightIcon />
-      </Button>
+      <Link to={`/users/${mentor.id}`} className='ml-auto mt-auto'>
+        <Button size='sm'>
+          {t('expertNetwork.viewProfile')}
+          <ArrowRightIcon />
+        </Button>
+      </Link>
     </Card>
   )
 }

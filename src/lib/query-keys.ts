@@ -1,6 +1,8 @@
 import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
+import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
+import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
@@ -17,7 +19,8 @@ export const queryKeys = {
   users: {
     all: ['users'] as const,
     list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) =>
-      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const
+      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const,
+    detail: (userId?: string) => ['user', userId] as const
   },
   // Projects
   projects: {
@@ -199,5 +202,13 @@ export const queryKeys = {
       ['mentors', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
     listInfinite: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
       ['mentors-infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
+  },
+  // Mentor Applications
+  mentorApplications: {
+    all: ['mentor-applications'] as const,
+    list: ({ status, sortBy }: GetMentorApplicationsParams = {}) =>
+      [...queryKeys.mentorApplications.all, status, sortBy] as const,
+    my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
+      [...queryKeys.mentorApplications.all, 'my', status, sortBy] as const
   }
 } as const
