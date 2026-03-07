@@ -1026,7 +1026,8 @@
       "descriptionRequired": "Description is required",
       "descriptionMax": "Description must be at most 10,000 characters",
       "portfolioFilesMin": "At least one portfolio file is required",
-      "portfolioFilesMax": "You can upload at most 10 files"
+      "portfolioFilesMax": "You can upload at most 10 files",
+      "adminNoteRequiredForRejection": "Please enter a note when rejecting an application"
     },
     "status": {
       "pendingReview": "Pending Review",
@@ -1034,15 +1035,26 @@
       "rejected": "Rejected",
       "pending": "Pending"
     },
+    "button": {
+      "approve": "Approve",
+      "reject": "Reject"
+    },
     "list": {
       "title": "Your Mentor Applications",
+      "adminDescription": "Review submitted mentor applications of the system",
       "description": "View your submitted mentor applications and monitor their review status.",
       "allStatuses": "All Statuses",
       "sortLatest": "Latest",
       "sortOldest": "Oldest",
       "newApplication": "New Application",
       "fileCount_one": "{{count}} file",
-      "fileCount_other": "{{count}} files"
+      "fileCount_other": "{{count}} files",
+      "noApplications": "No applications found.",
+      "selectApplicationToView": "Select an application to view details"
+    },
+    "sidebar": {
+      "title": "Mentor Applications",
+      "list": "Application List"
     },
     "dialog": {
       "title": "Application Details",
@@ -1051,7 +1063,9 @@
       "shortBio": "Short Bio",
       "portfolioFiles": "Portfolio Files ({{count}})",
       "detailedIntroduction": "Detailed Introduction",
-      "reviewerNote": "Reviewer Note"
+      "reviewerNote": "Reviewer Note",
+      "reviewerNoteTitle": "Reviewer Note",
+      "reviewerNotePlaceholder": "Enter a reason if declining..."
     }
   },
   "notification": {

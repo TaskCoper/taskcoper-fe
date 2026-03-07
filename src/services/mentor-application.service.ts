@@ -1,4 +1,5 @@
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { ReviewMentorApplicationFormValues } from '@/features/mentor-applications/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Application, SubmitMentorApplicationBody } from '@/types/mentor-application.type'
 
@@ -20,6 +21,23 @@ class MentorApplication {
     })
 
     return data
+  }
+
+  getMentorApplications = async ({ status, sortBy }: GetMyMentorApplicationsParams) => {
+    const { data } = await api.get<BasePaginationResponse<Application>>(`/v1/${this.baseUrl}`, {
+      params: {
+        status,
+        sortBy
+      }
+    })
+
+    return data
+  }
+
+  reviewMentorApplication = async ({ body }: { body: ReviewMentorApplicationFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.applicationId}/review`, body)
+
+    return data.value
   }
 }
 

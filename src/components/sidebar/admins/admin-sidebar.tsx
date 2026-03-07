@@ -3,8 +3,17 @@ import { TeamSwitcher } from '@/components/sidebar/admins/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { AudioWaveform, CircleUserRound, Command, FoldersIcon, GalleryVerticalEnd, GaugeIcon } from 'lucide-react'
+import {
+  AudioWaveform,
+  CircleUserRound,
+  Command,
+  FileClockIcon,
+  FoldersIcon,
+  GalleryVerticalEnd,
+  GaugeIcon
+} from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { NavMain } from './nav-main'
 import { NavSecondary } from './nav-secondary'
@@ -16,6 +25,7 @@ interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
   const { me, isGettingMe } = useGetMe()
   const { pathname } = useLocation()
+  const { t } = useTranslation()
 
   const navItems = React.useMemo(() => {
     return {
@@ -80,10 +90,22 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
               url: `${basePath}/users/permissions`
             }
           ]
+        },
+        {
+          title: t('mentorApplication.sidebar.title'),
+          url: `${basePath}/applications`,
+          icon: FileClockIcon,
+          isActive: pathname.startsWith(`${basePath}/applications`),
+          items: [
+            {
+              title: t('mentorApplication.sidebar.list'),
+              url: `${basePath}/applications`
+            }
+          ]
         }
       ]
     }
-  }, [basePath, pathname])
+  }, [basePath, pathname, t])
 
   return (
     <Sidebar collapsible='icon' {...props}>

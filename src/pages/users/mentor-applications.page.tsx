@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import MentorApplicationDialog from '@/features/mentor-applications/components/mentor-application-dialog'
 import {
   useGetMyMentorApplications,
@@ -63,7 +64,7 @@ export default function MentorApplicationsPage() {
   const [status, setStatus] = useState<ApplicationStatus>()
   const [sortBy, setSortBy] = useState<GetMyMentorApplicationsParams['sortBy']>('-createdat')
 
-  const { applications } = useGetMyMentorApplications({ status, sortBy })
+  const { applications, isLoadingMyMentorApplications } = useGetMyMentorApplications({ status, sortBy })
 
   return (
     <div className='absolute inset-0 overflow-auto'>
@@ -133,29 +134,45 @@ export default function MentorApplicationsPage() {
           </div>
 
           <div className='space-y-3'>
-            {applications.value.items.map((application, index) => {
-              return (
-                <MentorApplicationDialog application={application}>
-                  <Card key={application.applicationId} className='overflow-hidden p-0 gap-0 rounded-lg cursor-pointer'>
+            {isLoadingMyMentorApplications
+              ? Array.from({ length: 3 }).map((_, index) => (
+                  <Card key={index} className='overflow-hidden p-0 gap-0 rounded-lg'>
                     <div className='flex items-center gap-3 p-3'>
-                      <div className='size-8 bg-primary/10 rounded-full flex justify-center items-center shrink-0'>
-                        <p className='text-primary font-bold font-mono'>{index + 1}</p>
+                      <Skeleton className='size-8 rounded-full shrink-0' />
+                      <div className='flex-1 min-w-0 space-y-2'>
+                        <Skeleton className='h-4 w-3/4' />
+                        <Skeleton className='h-3 w-1/4' />
                       </div>
-
-                      <div className='flex-1 min-w-0'>
-                        <p className='text-sm font-medium truncate'>{application.shortBio}</p>
-                        <p className='text-xs text-muted-foreground'>{formatDate(application.createdOnUtc)}</p>
-                      </div>
-
                       <div className='flex items-center gap-2 shrink-0'>
-                        <UrlCountFlag count={application.portfolioUrls?.length ?? 0} />
-                        <StatusFlag status={application.status} />
+                        <Skeleton className='h-6 w-20 rounded-full' />
+                        <Skeleton className='h-6 w-24 rounded-full' />
                       </div>
                     </div>
                   </Card>
-                </MentorApplicationDialog>
-              )
-            })}
+                ))
+              : applications.value.items.map((application, index) => {
+                  return (
+                    <MentorApplicationDialog application={application} key={application.applicationId}>
+                      <Card className='overflow-hidden p-0 gap-0 rounded-lg cursor-pointer'>
+                        <div className='flex items-center gap-3 p-3'>
+                          <div className='size-8 bg-primary/10 rounded-full flex justify-center items-center shrink-0'>
+                            <p className='text-primary font-bold font-mono'>{index + 1}</p>
+                          </div>
+
+                          <div className='flex-1 min-w-0'>
+                            <p className='text-sm font-medium truncate'>{application.shortBio}</p>
+                            <p className='text-xs text-muted-foreground'>{formatDate(application.createdOnUtc)}</p>
+                          </div>
+
+                          <div className='flex items-center gap-2 shrink-0'>
+                            <UrlCountFlag count={application.portfolioUrls?.length ?? 0} />
+                            <StatusFlag status={application.status} />
+                          </div>
+                        </div>
+                      </Card>
+                    </MentorApplicationDialog>
+                  )
+                })}
           </div>
         </div>
       </div>
