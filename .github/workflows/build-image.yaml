@@ -46,6 +46,7 @@ jobs:
           PROFILE: ${{ inputs.environment }}
           TAG: ${{ env.TAG }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          FILE_BASE_URL: ${{ secrets.FILE_BASE_URL }}
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
           docker compose -f .docker/compose.yaml --profile "$PROFILE" push

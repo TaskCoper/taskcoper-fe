@@ -8,6 +8,7 @@ import type { RouteObject } from 'react-router'
 
 const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projects.page'))
 const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.page'))
+const SystemMentorApplicationsPage = lazy(() => import('@/pages/super-admins/system-mentor-applications.page'))
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -47,6 +48,15 @@ export const adminRoutes: RouteObject[] = [
                   {
                     index: true,
                     element: <SystemUsersPage />
+                  }
+                ]
+              },
+              {
+                path: 'applications',
+                children: [
+                  {
+                    index: true,
+                    element: <SystemMentorApplicationsPage />
                   }
                 ]
               }

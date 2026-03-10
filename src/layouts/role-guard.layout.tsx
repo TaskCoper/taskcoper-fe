@@ -2,15 +2,17 @@ import { useAuthStore } from '@/lib/zustand/auth.store'
 import { getUserType } from '@/shared/utils'
 import { Navigate, Outlet } from 'react-router'
 
+export type RoleType = 'user' | 'orgAdmin' | 'superAdmin'
+
 interface RoleGuardLayoutProps {
-  allowedRoles: ('user' | 'orgAdmin' | 'superAdmin')[]
+  allowedRoles: RoleType[]
 }
 
 export default function RoleGuardLayout({ allowedRoles }: RoleGuardLayoutProps) {
   const { user } = useAuthStore()
   const userType = getUserType(user)
 
-  if (!userType || !allowedRoles.includes(userType)) {
+  if (userType && !allowedRoles.includes(userType)) {
     if (userType === 'superAdmin') {
       return <Navigate to='/dashboard' replace />
     }

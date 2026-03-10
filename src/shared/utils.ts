@@ -1,5 +1,6 @@
 import { sortedTaskLabelColors } from '@/features/labels/constants'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
+import type { RoleType } from '@/layouts/role-guard.layout'
 import type { BasePaginationResponse } from '@/lib/axios'
 import type { UserPayload } from '@/lib/zustand/auth.store'
 import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
@@ -163,7 +164,7 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   }
 }
 
-export const getUserType = (user: UserPayload | null) => {
+export const getUserType = (user: UserPayload | null): RoleType | null => {
   if (!user) return null
   if (user.Role === 'Admin' && !user.OrganizationId) return 'superAdmin'
   if (user.Role === 'Admin' && user.OrganizationId) return 'orgAdmin'

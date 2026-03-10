@@ -6203,12 +6203,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.69.0":
-  version: 7.69.0
-  resolution: "react-hook-form@npm:7.69.0"
+"react-hook-form@npm:^7.71.2":
+  version: 7.71.2
+  resolution: "react-hook-form@npm:7.71.2"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/99440aac1edbbda1f1704e31bea72dd75130d09593f5fce037596d381fb3dbf5a9864b28f49ecd52bd6dfabceb437905578fe2efc20c69411500fbdbc8647df6
+  checksum: 10c0/bff61c229f5f2516e650325e0c450146cb8a08dc323e5e9aa0753eb937be0b66fe17f40a7b4be9aabc2b5cb770d03de07db7f4912c6c9452a86924072cc1cb46
   languageName: node
   linkType: hard
 
@@ -6241,6 +6241,19 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/33ee736f5df01fbc3922f1c1b1e9f768c4930364a9f9695b5dcdf8ec997d8eee71c0fc7f2ccbd75f0d98aa2915890c4554fa4a6afe129582de50af84b1d959d8
+  languageName: node
+  linkType: hard
+
+"react-intersection-observer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "react-intersection-observer@npm:10.0.3"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10c0/64439d19793c49bf9d1701fc74cd854f4ddc646411500a4d1efa058ac0100efdde5d4dd24ce736a48eeba9de3585c164c916be2b91e9c9b2b5db7b756c8cec9d
   languageName: node
   linkType: hard
 
@@ -7016,9 +7029,10 @@ __metadata:
     react-day-picker: "npm:^9.14.0"
     react-dom: "npm:^19.2.0"
     react-dropzone: "npm:^14.3.8"
-    react-hook-form: "npm:^7.69.0"
+    react-hook-form: "npm:^7.71.2"
     react-hotkeys-hook: "npm:^5.2.1"
     react-i18next: "npm:^16.4.1"
+    react-intersection-observer: "npm:^10.0.3"
     react-pdf: "npm:^10.4.1"
     react-router: "npm:^7.13.1"
     recharts: "npm:2.15.4"
@@ -7032,7 +7046,7 @@ __metadata:
     use-debounce: "npm:^10.0.6"
     vaul: "npm:^1.1.2"
     vite: "npm:^7.2.4"
-    zod: "npm:^4.2.1"
+    zod: "npm:^4.3.6"
     zustand: "npm:^5.0.9"
   languageName: unknown
   linkType: soft
@@ -7426,10 +7440,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "zod@npm:4.2.1"
-  checksum: 10c0/ecb5219bddf76a42d092a843fb98ad4cb78f1e1077082772b03ef032ee5cbc80790a4051836b962d26fb4af854323bc784d628bd1b8d9898149eba7af21c5560
+"zod@npm:^4.3.6":
+  version: 4.3.6
+  resolution: "zod@npm:4.3.6"
+  checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
   languageName: node
   linkType: hard
 

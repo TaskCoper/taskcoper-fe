@@ -4,7 +4,8 @@ import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
-import { lazy } from 'react'
+import { lazy, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
@@ -16,9 +17,22 @@ const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
-const MePage = lazy(() => import('@/pages/users/me.page'))
-const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
+const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
+const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
+
+const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
+  const { t } = useTranslation()
+  const title = t(titleKey)
+
+  useEffect(() => {
+    document.title = `${title} | TaskCoper`
+  }, [title])
+
+  return <>{children}</>
+}
 
 export const userRoutes: RouteObject[] = [
   {
@@ -36,11 +50,11 @@ export const userRoutes: RouteObject[] = [
             element: <UserDefaultLayout />,
             children: [
               {
-                path: 'me',
-                element: <MePage />
+                path: 'users/:userId',
+                element: <ProfilePage />
               },
               {
-                path: 'me/settings',
+                path: 'users/:userId/settings',
                 element: <SettingsPage />
               },
               {
@@ -48,12 +62,30 @@ export const userRoutes: RouteObject[] = [
                 children: [
                   {
                     path: 'projects',
-                    element: <ProjectsPage />
+                    element: (
+                      <PageWrapper titleKey='pageTitle.projects'>
+                        <ProjectsPage />
+                      </PageWrapper>
+                    )
                   },
                   {
                     path: 'calendar',
                     element: <CalendarPage />
-                  }
+                  },
+                  {
+                    element: (
+                      <PageWrapper titleKey='pageTitle.calendar'>
+                        <div className='w-full h-full flex justify-center items-center'>
+                          <p className='text-2xl font-bold'>Calendar Comming Soon</p>
+                        </div>
+                      </PageWrapper>
+                    )
+                  },
+                  {
+                    path: 'applications/submit',
+                    element: <MentorApplicationPage />
+                  },
+                  { path: 'applications', element: <MentorApplicationsPage /> }
                 ]
               },
               {
@@ -68,10 +100,10 @@ export const userRoutes: RouteObject[] = [
                     path: 'milestones',
                     element: null
                   },
-                  {
-                    path: 'revenue',
-                    element: <ProjectRevenuePage />
-                  },
+                  // {
+                  //   path: 'revenue',
+                  //   element: <ProjectRevenuePage />
+                  // },
                   {
                     path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,
@@ -82,7 +114,10 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
-                  { path: 'info', element: <ProjectInfoPage /> },
+                  {
+                    path: 'info',
+                    element: <ProjectInfoPage />
+                  },
                   {
                     path: 'calendar',
                     element: <ProjectCalendarPage />
@@ -130,33 +165,44 @@ export const userRoutes: RouteObject[] = [
               {
                 path: 'featured-projects',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.featuredProjects'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               },
               {
                 path: 'network',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Network Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.network'>
+                    <NetworkPage />
+                  </PageWrapper>
+                  // <PageWrapper titleKey='pageTitle.network'>
+                  //   <div className='w-full h-full flex justify-center items-center'>
+                  //     <p className='text-2xl font-bold'>Network Comming Soon</p>
+                  //   </div>
+                  // </PageWrapper>
                 )
               },
               {
                 path: 'community',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>Community Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.community'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>Community Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               },
               {
                 path: 'news',
                 element: (
-                  <div className='w-full h-full flex justify-center items-center'>
-                    <p className='text-2xl font-bold'>News Comming Soon</p>
-                  </div>
+                  <PageWrapper titleKey='pageTitle.news'>
+                    <div className='w-full h-full flex justify-center items-center'>
+                      <p className='text-2xl font-bold'>News Comming Soon</p>
+                    </div>
+                  </PageWrapper>
                 )
               }
             ]

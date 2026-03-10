@@ -66,6 +66,12 @@ export default function ProjectInfoPage() {
     }
   }, [project, reset])
 
+  useEffect(() => {
+    if (project) {
+      document.title = `${project?.name} | TaskCoper`
+    }
+  }, [project])
+
   const onSubmit: SubmitHandler<UpdateProjectFormValues> = (body) => {
     updateProject({
       body: {

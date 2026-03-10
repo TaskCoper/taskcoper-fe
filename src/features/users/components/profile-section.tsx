@@ -60,6 +60,12 @@ export default function ProfileSection() {
     }
   }, [pendingAvatarPreview])
 
+  useEffect(() => {
+    if (me) {
+      document.title = `${me?.firstName} ${me?.lastName} | TaskCoper`
+    }
+  }, [me])
+
   const onSubmit: SubmitHandler<UpdateMeFormValues> = async (body) => {
     let avatarUrl = body.avatar
 

@@ -14,9 +14,11 @@ import { ImageUploadButton } from '@/components/tiptap-ui/image-upload-button'
 import { LinkPopover } from '@/components/tiptap-ui/link-popover'
 import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
 import { MarkButton } from '@/components/tiptap-ui/mark-button'
+import { FieldError } from '@/components/ui/field'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import type { ErrorResponse } from '@/lib/axios'
 import { MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
+import { cn } from '@/shared/utils'
 import FileHandler from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import { Placeholder } from '@tiptap/extensions'
@@ -39,7 +41,10 @@ interface RichTextEditorProps {
   isInitialFocus?: boolean
   compact?: boolean
   content: string
+  placeholder?: string
   onChange: (html: string) => void
+  invalid?: boolean
+  error?: { message?: string }
 }
 
 export default function RichTextEditor({
@@ -47,11 +52,15 @@ export default function RichTextEditor({
   isDisplay = true,
   isInitialFocus = false,
   compact = false,
-  onChange
+  onChange,
+  placeholder = 'richTextEditor.placeholder',
+  invalid = false,
+  error
 }: RichTextEditorProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { uploadFileAsync } = useUploadFile()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const placeholderText = t(placeholder)
 
   const handleUploadAndInsertFile = useCallback(
     async (editor: Editor, file: File, pos?: number) => {
@@ -124,102 +133,105 @@ export default function RichTextEditor({
     [t, uploadFileAsync]
   )
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Image,
-      FileHandler.configure({
-        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-        onDrop: (currentEditor, files, pos) => {
-          files.forEach((file) => {
-            handleUploadAndInsertFile(currentEditor, file, pos)
-          })
-        },
-        onPaste: (currentEditor, files, htmlContent) => {
-          if (htmlContent) {
-            // if there is htmlContent, let other extensions handle insertion via inputRule
-            return false
-          }
-          files.forEach((file) => {
-            handleUploadAndInsertFile(currentEditor, file)
-          })
-        }
-      }),
-      ImageUploadNode.configure({
-        accept: 'image/*',
-        maxSize: MAX_UPLOAD_IMAGE_SIZE,
-        limit: 1,
-        upload: async (file) => {
-          const toastId = toast.loading(t('common.ui.uploading'), {
-            description: t('common.ui.pleaseWait')
-          })
-
-          try {
-            const url = await uploadFileAsync({
-              file,
-              onProgress: (progress) => {
-                toast.loading(t('common.ui.uploading'), {
-                  id: toastId,
-                  description: (
-                    <div className='w-full min-w-72 space-y-1'>
-                      <Progress value={progress} className='w-full' />
-                      <p className='text-xs text-muted-foreground'>{progress}%</p>
-                    </div>
-                  )
-                })
-              }
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit,
+        Image,
+        FileHandler.configure({
+          allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+          onDrop: (currentEditor, files, pos) => {
+            files.forEach((file) => {
+              handleUploadAndInsertFile(currentEditor, file, pos)
             })
-
-            if (url) {
-              toast.success(t('common.ui.uploadSuccess'), {
-                id: toastId,
-                description: null
-              })
-              return url
+          },
+          onPaste: (currentEditor, files, htmlContent) => {
+            if (htmlContent) {
+              // if there is htmlContent, let other extensions handle insertion via inputRule
+              return false
             }
-
-            toast.dismiss(toastId)
-            return ''
-          } catch (error) {
-            toast.error(t('error.somethingWentWrong'), {
-              id: toastId,
-              description: (error as AxiosError<ErrorResponse>).response?.data?.detail
+            files.forEach((file) => {
+              handleUploadAndInsertFile(currentEditor, file)
             })
+          }
+        }),
+        ImageUploadNode.configure({
+          accept: 'image/*',
+          maxSize: MAX_UPLOAD_IMAGE_SIZE,
+          limit: 1,
+          upload: async (file) => {
+            const toastId = toast.loading(t('common.ui.uploading'), {
+              description: t('common.ui.pleaseWait')
+            })
+
+            try {
+              const url = await uploadFileAsync({
+                file,
+                onProgress: (progress) => {
+                  toast.loading(t('common.ui.uploading'), {
+                    id: toastId,
+                    description: (
+                      <div className='w-full min-w-72 space-y-1'>
+                        <Progress value={progress} className='w-full' />
+                        <p className='text-xs text-muted-foreground'>{progress}%</p>
+                      </div>
+                    )
+                  })
+                }
+              })
+
+              if (url) {
+                toast.success(t('common.ui.uploadSuccess'), {
+                  id: toastId,
+                  description: null
+                })
+                return url
+              }
+
+              toast.dismiss(toastId)
+              return ''
+            } catch (error) {
+              toast.error(t('error.somethingWentWrong'), {
+                id: toastId,
+                description: (error as AxiosError<ErrorResponse>).response?.data?.detail
+              })
+              return ''
+            }
+          },
+          onError: (error) => {
+            if (error instanceof Error) {
+              toast.error(error.message)
+            }
+          }
+        }),
+        Placeholder.configure({
+          placeholder: ({ editor }) => {
+            if (editor.isEmpty) {
+              return placeholderText
+            }
             return ''
-          }
-        },
-        onError: (error) => {
-          if (error instanceof Error) {
-            toast.error(error.message)
-          }
+          },
+          emptyEditorClass: 'is-editor-empty'
+        })
+      ],
+      editorProps: {
+        attributes: {
+          class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
         }
-      }),
-      Placeholder.configure({
-        placeholder: ({ editor }) => {
-          if (editor.isEmpty) {
-            return t('richTextEditor.placeholder')
-          }
-          return ''
-        },
-        emptyEditorClass: 'is-editor-empty'
-      })
-    ],
-    editorProps: {
-      attributes: {
-        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
-      }
+      },
+      content,
+      onUpdate: ({ editor }) => {
+        if (editor.isEmpty || editor.getHTML() === '<p></p>') {
+          onChange('')
+        } else {
+          onChange(editor.getHTML())
+        }
+      },
+      // Don't render immediately on the server to avoid SSR issues
+      immediatelyRender: false
     },
-    content,
-    onUpdate: ({ editor }) => {
-      if (editor.isEmpty || editor.getHTML() === '<p></p>') {
-        onChange('')
-      } else {
-        onChange(editor.getHTML())
-      }
-    },
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false
-  })
+    [i18n.language, placeholderText]
+  )
 
   useEffect(() => {
     if (isDisplay && isInitialFocus && editor) {
@@ -249,9 +261,14 @@ export default function RichTextEditor({
 
   if (isDisplay && editor) {
     return (
-      <div className='space-y-2'>
+      <div className='space-y-1'>
         <EditorContext.Provider value={{ editor }}>
-          <div className='rounded-md ring ring-foreground/60 focus-within:ring-2 focus-within:ring-primary bg-background'>
+          <div
+            className={cn(
+              'rounded-md border bg-background shadow-xs focus-within:ring-2',
+              invalid ? 'border-destructive focus-within:ring-destructive' : 'border-border focus-within:ring-primary'
+            )}
+          >
             <div className='p-2 flex gap-2 border-b items-center flex-wrap'>
               {compact ? (
                 // Compact toolbar for narrow spaces
@@ -418,6 +435,8 @@ export default function RichTextEditor({
             <EditorContent editor={editor} />
           </div>
         </EditorContext.Provider>
+
+        <div className='min-h-4'>{invalid && error && <FieldError className='text-xs' errors={[error]} />}</div>
       </div>
     )
   }
