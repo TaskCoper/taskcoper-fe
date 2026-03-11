@@ -7,24 +7,30 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useCreateSchedule } from '../hooks/use-create-schedule'
-import type { CreateScheduleFormValues } from '../validations'
-import CreateScheduleForm from './create-schedule-form'
+import { useCreateSchedules } from '../hooks/use-create-schedules'
+import type { CreateSchedulesFormValues } from '../validations'
+import CreateScheduleForm from './create-schedules-form'
 
-interface CreateScheduleDialog {
+interface CreateSchedulesDialog {
   children: React.ReactNode
 }
 
-export default function CreateScheduleDialog({ children }: CreateScheduleDialog) {
+export default function CreateSchedulesDialog({ children }: CreateSchedulesDialog) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const { methods } = useCreateSchedule()
+  const { methods, createSchedules, isCreatingSchedules } = useCreateSchedules()
 
-  const onSubmit: SubmitHandler<CreateScheduleFormValues> = (body) => {
-    console.log(body)
+  const onSubmit: SubmitHandler<CreateSchedulesFormValues> = (body) => {
+    const formattedBody = {
+      ...body,
+      startTime: body.startTime.split(':').length === 2 ? `${body.startTime}:00` : body.startTime,
+      endTime: body.endTime.split(':').length === 2 ? `${body.endTime}:00` : body.endTime
+    }
+    createSchedules({ body: formattedBody })
   }
 
   const onClose = () => {
@@ -43,7 +49,7 @@ export default function CreateScheduleDialog({ children }: CreateScheduleDialog)
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-xl'>
+      <DialogContent position='top-center' className='min-w-xl' onInteractOutside={onClose}>
         <DialogHeader>
           <DialogTitle>{t('schedule.createAvailability.title')}</DialogTitle>
           <DialogDescription>{t('schedule.createAvailability.description')}</DialogDescription>
@@ -57,7 +63,10 @@ export default function CreateScheduleDialog({ children }: CreateScheduleDialog)
               <Button variant='ghost' type='button' onClick={onClose}>
                 {t('common.button.cancel')}
               </Button>
-              <Button>{t('common.button.create')}</Button>
+              <Button disabled={isCreatingSchedules}>
+                {isCreatingSchedules ? <Spinner /> : null}
+                {t('common.button.create')}
+              </Button>
             </div>
           </form>
         </FormProvider>

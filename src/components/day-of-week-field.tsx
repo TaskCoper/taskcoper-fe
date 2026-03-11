@@ -10,6 +10,7 @@ interface DayOfWeekFieldProps<T extends FieldValues> {
   control?: Control<T>
   isRequired?: boolean
   isDisabled?: boolean
+  isMulti?: boolean
   className?: string
   displayError?: boolean
 }
@@ -20,6 +21,7 @@ export function DayOfWeekField<T extends FieldValues>({
   control: propsControl,
   isRequired = false,
   isDisabled = false,
+  isMulti = true,
   className,
   displayError = true
 }: DayOfWeekFieldProps<T>) {
@@ -49,7 +51,9 @@ export function DayOfWeekField<T extends FieldValues>({
 
           <div id={field.name} className='flex flex-wrap justify-center gap-3'>
             {DAY_OF_WEEKS.map((day) => {
-              const currentValues = (Array.isArray(field.value) ? field.value : []) as number[]
+              const currentValues = (
+                Array.isArray(field.value) ? field.value : [field.value].filter((v) => v !== undefined && v !== null)
+              ) as number[]
               const isSelected = currentValues.includes(day.value)
               const localizedLabel = t(`dayOfWeek.${day.label.toLowerCase()}`)
 
@@ -60,10 +64,14 @@ export function DayOfWeekField<T extends FieldValues>({
                   disabled={isDisabled}
                   title={localizedLabel}
                   onClick={() => {
-                    const newValue = isSelected
-                      ? currentValues.filter((v: number) => v !== day.value)
-                      : [...currentValues, day.value]
-                    field.onChange(newValue)
+                    if (isMulti) {
+                      const newValue = isSelected
+                        ? currentValues.filter((v: number) => v !== day.value)
+                        : [...currentValues, day.value]
+                      field.onChange(newValue)
+                    } else {
+                      field.onChange(isSelected ? null : day.value)
+                    }
                   }}
                   className={cn(
                     'flex size-12 shrink-0 items-center justify-center rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer',

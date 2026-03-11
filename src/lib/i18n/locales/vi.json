@@ -105,7 +105,14 @@
       "month": "Tháng",
       "week": "Tuần",
       "files": "tệp"
-    }
+    },
+    "status": {
+      "all": "Tất cả",
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động",
+      "disabled": "Đã vô hiệu hóa"
+    },
+    "off": "Tắt"
   },
   "network": {
     "filter": {
@@ -138,10 +145,48 @@
     "field": {
       "availableDays": "Các ngày rảnh",
       "startTime": "Thời gian bắt đầu",
-      "endTime": "Thời gian kết thúc"
+      "endTime": "Thời gian kết thúc",
+      "isActive": "Trạng thái hoạt động",
+      "isActiveDescription": "Nếu bạn không bật, lịch sẽ không được áp dụng"
     },
     "button": {
-      "create": "Tạo lịch"
+      "create": "Tạo lịch",
+      "viewSchedules": "Xem lịch",
+      "update": "Cập nhật lịch"
+    },
+    "update": {
+      "description": "Cập nhật thông tin lịch của bạn."
+    },
+    "delete": {
+      "title": "Xóa lịch?",
+      "description": "Lịch này sẽ bị xóa. Hành động này không thể hoàn tác."
+    },
+    "tab": {
+      "calendar": "Lịch",
+      "timeline": "Dòng thời gian"
+    },
+    "timeline": {
+      "empty": "Chưa có lịch nào",
+      "emptyDescription": "Tạo lịch rảnh của bạn để sinh viên có thể đặt lịch hẹn với bạn.",
+      "totalSlots": "khoảng thời gian",
+      "noSlots": "Không có lịch",
+      "monday": "Thứ Hai",
+      "tuesday": "Thứ Ba",
+      "wednesday": "Thứ Tư",
+      "thursday": "Thứ Năm",
+      "friday": "Thứ Sáu",
+      "saturday": "Thứ Bảy",
+      "sunday": "Chủ Nhật",
+      "recurring": "định kỳ",
+      "temporary": "tạm thời",
+      "onwards": "trở đi",
+      "today": "Hôm nay",
+      "legend": {
+        "permanent": "Không thời hạn",
+        "fromOnly": "Từ ngày",
+        "toOnly": "Đến ngày",
+        "range": "Hoạt động trong khoảng ngày"
+      }
     }
   },
   "project": {

@@ -69,7 +69,7 @@ export function TimeInputField<T extends FieldValues>({
           </div>
 
           {displayError && (
-            <div className='min-h-4 mt-0.5'>
+            <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
             </div>
           )}

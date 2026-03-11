@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import CreateScheduleDialog from '@/features/schedules/components/create-schedule-dialog'
 import CalendarHeader, { type CalendarViewMode } from '@/features/tasks/components/calendar/calendar-header'
 import DayView from '@/features/tasks/components/calendar/day-view'
 import MiniCalendarSidebar from '@/features/tasks/components/calendar/mini-calendar-sidebar'
@@ -19,11 +18,11 @@ import {
   subMonths,
   subWeeks
 } from 'date-fns'
-import { CalendarPlusIcon } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 
 function generateSampleTasks(): TaskPreview[] {
   const today = new Date()
@@ -188,9 +187,10 @@ function generateSampleTasks(): TaskPreview[] {
 
 export default function CalendarPage() {
   const { t } = useTranslation()
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const { user } = useAuthStore()
+
   const [currentDate, setCurrentDate] = useState(() => new Date())
   const [viewMode, setViewMode] = useQueryState(
     'view',
@@ -249,14 +249,14 @@ export default function CalendarPage() {
 
           <div className='flex-1' />
 
-          {user?.Role === 'Mentor' ? (
-            <CreateScheduleDialog>
-              <Button variant='outline' size='sm'>
-                <CalendarPlusIcon />
-                {t('schedule.button.create')}
+          {user?.Role === 'Mentor' && (
+            <Link to='schedules'>
+              <Button size='sm' className='w-full'>
+                <CalendarIcon />
+                {t('schedule.button.viewSchedules')}
               </Button>
-            </CreateScheduleDialog>
-          ) : null}
+            </Link>
+          )}
         </div>
 
         <div className='flex-1 flex flex-col min-h-0'>

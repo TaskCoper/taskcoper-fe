@@ -22,6 +22,7 @@ const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
+const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -71,6 +72,15 @@ export const userRoutes: RouteObject[] = [
                   {
                     path: 'calendar',
                     element: <CalendarPage />
+                  },
+                  {
+                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                    children: [
+                      {
+                        path: 'calendar/schedules',
+                        element: <SchedulesPage />
+                      }
+                    ]
                   },
                   {
                     element: (
