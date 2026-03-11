@@ -9,17 +9,20 @@ import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
+const CalendarPage = lazy(() => import('@/pages/users/calendar.page'))
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
+const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
+const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -68,6 +71,18 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'calendar',
+                    element: <CalendarPage />
+                  },
+                  {
+                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                    children: [
+                      {
+                        path: 'calendar/schedules',
+                        element: <SchedulesPage />
+                      }
+                    ]
+                  },
+                  {
                     element: (
                       <PageWrapper titleKey='pageTitle.calendar'>
                         <div className='w-full h-full flex justify-center items-center'>
@@ -115,11 +130,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'calendar',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Calendar Comming Soon</p>
-                      </div>
-                    )
+                    element: <ProjectCalendarPage />
                   },
                   {
                     path: 'performance',

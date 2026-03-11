@@ -6,6 +6,7 @@ import type { GetMyMentorApplicationsParams } from '@/features/mentor-applicatio
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
+import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 
@@ -210,5 +211,11 @@ export const queryKeys = {
       [...queryKeys.mentorApplications.all, status, sortBy] as const,
     my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
       [...queryKeys.mentorApplications.all, 'my', status, sortBy] as const
+  },
+  // Schedules
+  schedules: {
+    all: ['schedules'] as const,
+    allMy: ['schedules', 'my'] as const,
+    my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy, isActive] as const
   }
 } as const

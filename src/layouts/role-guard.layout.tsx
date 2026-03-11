@@ -6,9 +6,10 @@ export type RoleType = 'user' | 'orgAdmin' | 'superAdmin'
 
 interface RoleGuardLayoutProps {
   allowedRoles: RoleType[]
+  allowedUserRoles?: string[]
 }
 
-export default function RoleGuardLayout({ allowedRoles }: RoleGuardLayoutProps) {
+export default function RoleGuardLayout({ allowedRoles, allowedUserRoles }: RoleGuardLayoutProps) {
   const { user } = useAuthStore()
   const userType = getUserType(user)
 
@@ -21,6 +22,10 @@ export default function RoleGuardLayout({ allowedRoles }: RoleGuardLayoutProps) 
       return <Navigate to='/manage' replace />
     }
 
+    return <Navigate to='/projects' replace />
+  }
+
+  if (userType === 'user' && allowedUserRoles && user?.Role && !allowedUserRoles.includes(user.Role)) {
     return <Navigate to='/projects' replace />
   }
 

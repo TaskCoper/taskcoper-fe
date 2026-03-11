@@ -100,7 +100,11 @@ export function DateRangePickerField<T extends FieldValues>({
           <Field data-invalid={fieldState.invalid} className={cn('gap-1', className)}>
             <FieldLabel htmlFor={field.name} className='gap-0.5'>
               {t(label)}
-              {isRequired && <span className='text-destructive font-semibold'>*</span>}
+              {isRequired ? (
+                <span className='text-destructive font-semibold'>*</span>
+              ) : (
+                <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+              )}
             </FieldLabel>
 
             <Popover open={open} onOpenChange={setOpen}>

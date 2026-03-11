@@ -15,6 +15,7 @@
   "common": {
     "button": {
       "add": "Add",
+      "create": "Create",
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
@@ -64,6 +65,11 @@
         "invalid": "Invalid date format",
         "required": "Date is required",
         "mustBeGreater": "End date must be greater than start date"
+      },
+      "schedule": {
+        "dayRequired": "At least one day must be selected",
+        "startTimeRequired": "Start time is required",
+        "endTimeRequired": "End time is required"
       }
     },
     "ui": {
@@ -99,7 +105,14 @@
       "month": "Month",
       "week": "Week",
       "files": "files"
-    }
+    },
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive",
+      "disabled": "Disabled"
+    },
+    "off": "Off"
   },
   "network": {
     "filter": {
@@ -112,6 +125,68 @@
       "noDomainsFound": "No domains found.",
       "removeAriaLabel": "Remove {{name}}",
       "overflowMore": "+{{count}} more"
+    }
+  },
+  "dayOfWeek": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun",
+    "placeholder": "Select a day"
+  },
+  "schedule": {
+    "createAvailability": {
+      "title": "Create Your Availability",
+      "description": "Add the time slots when you're available to meet with students. Once saved, students can start booking sessions."
+    },
+    "field": {
+      "availableDays": "Available Days",
+      "startTime": "Start time",
+      "endTime": "End time",
+      "isActive": "Active status",
+      "isActiveDescription": "If disabled, the schedule will not be active"
+    },
+    "button": {
+      "create": "Create Schedule",
+      "viewSchedules": "View Schedules",
+      "update": "Update Schedule"
+    },
+    "update": {
+      "description": "Update your schedule information."
+    },
+    "delete": {
+      "title": "Delete schedule?",
+      "description": "This schedule will be removed. This action cannot be undone."
+    },
+    "tab": {
+      "calendar": "Calendar",
+      "timeline": "Timeline"
+    },
+    "timeline": {
+      "empty": "No schedule yet",
+      "emptyDescription": "Create your availability to let students book mentoring sessions with you.",
+      "totalSlots": "availability slots",
+      "noSlots": "No availability",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "recurring": "recurring",
+      "temporary": "temporary",
+      "onwards": "onwards",
+      "today": "Today",
+      "legend": {
+        "permanent": "Permanent",
+        "fromOnly": "From date",
+        "toOnly": "To date",
+        "range": "Active between dates"
+      }
     }
   },
   "project": {
