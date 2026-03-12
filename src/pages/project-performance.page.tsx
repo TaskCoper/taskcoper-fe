@@ -18,14 +18,7 @@ import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import type { ProjectHeatmap } from '@/types/efficiency.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
-import {
-  CircleCheckBigIcon,
-  LayersPlus,
-  ListTreeIcon,
-  MessageCircleIcon,
-  PaperclipIcon,
-  TrendingUp
-} from 'lucide-react'
+import { CircleCheckBigIcon, LayersPlus, ListTreeIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -97,12 +90,14 @@ export default function ProjectPerformancePage() {
 
   const [topContributorsFilters, setTopContributorsFilters] = useState<ChartDateFilterParams>({
     from: startOfDay(startOfMonth(new Date())).toISOString(),
-    to: endOfDay(endOfMonth(new Date())).toISOString()
+    to: endOfDay(endOfMonth(new Date())).toISOString(),
+    isViewInMonth: false
   })
 
   const [onTimeCompletersFilters, setOnTimeCompletersFilters] = useState<ChartDateFilterParams>({
     from: startOfDay(startOfMonth(new Date())).toISOString(),
-    to: endOfDay(endOfMonth(new Date())).toISOString()
+    to: endOfDay(endOfMonth(new Date())).toISOString(),
+    isViewInMonth: false
   })
 
   const { projectTopContributors } = useGetProjectTopContributors({
@@ -468,7 +463,7 @@ export default function ProjectPerformancePage() {
                 </p>
               )}
 
-              <div className='flex flex-col items-start gap-1'>
+              {/* <div className='flex flex-col items-start gap-1'>
                 <div className='flex gap-2 leading-none font-medium text-sm'>
                   {(t as (key: string, options?: Record<string, string | number>) => string)(
                     'projectPerformance.trendingUp',
@@ -482,7 +477,7 @@ export default function ProjectPerformancePage() {
                     { months: 6 }
                   )}
                 </div>
-              </div>
+              </div> */}
             </Card>
           </div>
 
@@ -500,6 +495,7 @@ export default function ProjectPerformancePage() {
                   <ChartDateFilterPopover
                     from={onTimeCompletersFilters.from}
                     to={onTimeCompletersFilters.to}
+                    isViewInMonth={onTimeCompletersFilters.isViewInMonth}
                     onApplyFilters={setOnTimeCompletersFilters}
                   />
                 }
@@ -518,6 +514,7 @@ export default function ProjectPerformancePage() {
                   <ChartDateFilterPopover
                     from={topContributorsFilters.from}
                     to={topContributorsFilters.to}
+                    isViewInMonth={topContributorsFilters.isViewInMonth}
                     onApplyFilters={setTopContributorsFilters}
                   />
                 }
