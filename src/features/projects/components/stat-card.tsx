@@ -1,6 +1,4 @@
 import { Card } from '@/components/ui/card'
-import { EqualIcon, TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export type StatColor = 'blue' | 'green' | 'emerald' | 'teal' | 'red' | 'orange' | 'purple' | 'slate'
 
@@ -29,31 +27,31 @@ export default function StatCard({
   title,
   value,
   icon,
-  color = 'blue',
-  trendValue,
-  trendLabel,
-  trendDirection = 'up'
+  color = 'blue'
+  // trendValue,
+  // trendLabel,
+  // trendDirection = 'up'
 }: StatCardProps) {
-  const { t } = useTranslation()
-  const resolvedTrendLabel = trendLabel ?? t('projectPerformance.trendLabel')
-  const getTrendDetails = () => {
-    switch (trendDirection) {
-      case 'up':
-        return {
-          bgClass: 'bg-green-100',
-          iconClass: 'text-green-600',
-          textClass: 'text-green-500',
-          Icon: TrendingUpIcon
-        }
-      case 'down':
-        return { bgClass: 'bg-red-100', iconClass: 'text-red-600', textClass: 'text-red-500', Icon: TrendingDownIcon }
-      case 'neutral':
-      default:
-        return { bgClass: 'bg-gray-100', iconClass: 'text-gray-600', textClass: 'text-gray-500', Icon: EqualIcon }
-    }
-  }
+  // const { t } = useTranslation()
+  // const resolvedTrendLabel = trendLabel ?? t('projectPerformance.trendLabel')
+  // const getTrendDetails = () => {
+  //   switch (trendDirection) {
+  //     case 'up':
+  //       return {
+  //         bgClass: 'bg-green-100',
+  //         iconClass: 'text-green-600',
+  //         textClass: 'text-green-500',
+  //         Icon: TrendingUpIcon
+  //       }
+  //     case 'down':
+  //       return { bgClass: 'bg-red-100', iconClass: 'text-red-600', textClass: 'text-red-500', Icon: TrendingDownIcon }
+  //     case 'neutral':
+  //     default:
+  //       return { bgClass: 'bg-gray-100', iconClass: 'text-gray-600', textClass: 'text-gray-500', Icon: EqualIcon }
+  //   }
+  // }
 
-  const { bgClass, textClass, iconClass, Icon: TrendIcon } = getTrendDetails()
+  // const { bgClass, textClass, iconClass, Icon: TrendIcon } = getTrendDetails()
   const iconGradient = gradientMap[color] || gradientMap.blue
 
   return (
@@ -67,7 +65,7 @@ export default function StatCard({
         </div>
       </Card>
 
-      {trendValue !== undefined && (
+      {/* {trendValue !== undefined && (
         <div className='px-1 pt-2 pb-1 flex items-center gap-1'>
           <div className={`size-5 rounded-full flex items-center justify-center ${bgClass}`}>
             <TrendIcon className={`size-3.5 ${iconClass}`} />
@@ -76,7 +74,7 @@ export default function StatCard({
           <p className={`text-sm font-semibold ${textClass}`}>{trendValue}</p>
           <p className='text-sm text-muted-foreground'>{resolvedTrendLabel}</p>
         </div>
-      )}
+      )} */}
     </Card>
   )
 }
