@@ -23,7 +23,8 @@ import {
   MessageCircleIcon,
   NotebookPenIcon,
   SettingsIcon,
-  SmileIcon
+  SmileIcon,
+  WalletIcon
 } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -83,12 +84,12 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
         icon: DatabaseIcon,
         hasSecondSidebar: false
       },
-      // {
-      //   title: 'Revenue',
-      //   url: 'revenue',
-      //   icon: BanknoteIcon,
-      //   hasSecondSidebar: false
-      // },
+      {
+        title: t('project.sidebar.revenue'),
+        url: 'revenue',
+        icon: WalletIcon,
+        hasSecondSidebar: false
+      },
       {
         title: t('project.sidebar.settings'),
         url: 'settings',

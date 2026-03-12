@@ -23,6 +23,7 @@ const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
+const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -110,10 +111,10 @@ export const userRoutes: RouteObject[] = [
                     path: 'milestones',
                     element: null
                   },
-                  // {
-                  //   path: 'revenue',
-                  //   element: <ProjectRevenuePage />
-                  // },
+                  {
+                    path: 'revenue',
+                    element: <ProjectRevenuePage />
+                  },
                   {
                     path: 'milestones/:milestoneId',
                     element: <ProjectTasksPage />,

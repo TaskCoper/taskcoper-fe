@@ -6,8 +6,13 @@ import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-mi
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
+import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
-import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
+import type {
+  AddProjectRevenueFormValues,
+  CreateProjectFormValues,
+  UpdateProjectFormValues
+} from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Label, ProjectLabelStats } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
@@ -22,6 +27,7 @@ import type {
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  Revenue,
   SystemProject
 } from '@/types/project.type'
 import type { TaskPreview, TaskStatusStats } from '@/types/task.type'
@@ -319,6 +325,36 @@ class ProjectService {
 
   deleteAttachment = async ({ projectId, resourceId }: { projectId: string; resourceId: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
+
+    return data.value
+  }
+
+  getProjectRevenues = async ({
+    projectId,
+    pageIndex,
+    pageSize,
+    labelIds,
+    searchTerm,
+    type,
+    sortBy
+  }: GetProjectRevenuesParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<Revenue>>(`/v1/${this.baseUrl}/${projectId}/revenues`, {
+      params: {
+        pageIndex,
+        pageSize,
+        labelIds,
+        searchTerm,
+        type,
+        sortBy
+      }
+    })
+
+    return data
+  }
+
+  addProjectRevenue = async ({ body }: { body: AddProjectRevenueFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues`, body)
 
     return data.value
   }

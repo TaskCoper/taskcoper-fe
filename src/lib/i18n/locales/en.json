@@ -388,6 +388,7 @@
       "chat": "Chat",
       "note": "Note",
       "storage": "Storage",
+      "revenue": "Revenue",
       "storagePage": {
         "title": "Project Storage",
         "description": "All files uploaded to tasks in this project.",
@@ -467,6 +468,58 @@
       "file_type_pdf": "PDF",
       "file_type_image": "IMG",
       "unsupported": "Preview not supported"
+    },
+    "addProjectRevenue": {
+      "title": {
+        "cashIn": "Add New <highlight>Income</highlight>",
+        "cashOut": "Add New <highlight>Expense</highlight>"
+      },
+      "description": {
+        "cashIn": "Add a new income to your project.",
+        "cashOut": "Add a new expense to your project."
+      },
+      "trigger": {
+        "cashIn": "Add Income",
+        "cashOut": "Add Expense"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter transaction name"
+      },
+      "amount": {
+        "label": "Amount",
+        "placeholder": "Enter amount"
+      },
+      "note": {
+        "label": "Note",
+        "placeholder": "Enter note for this transaction"
+      },
+      "type": {
+        "cashIn": "Cash In",
+        "cashOut": "Cash Out"
+      },
+      "validation": {
+        "name": {
+          "minLength": "Transaction name is required"
+        },
+        "amount": {
+          "min": "Amount must be greater than 0"
+        },
+        "note": {
+          "maxLength": "Max 255 characters"
+        }
+      }
+    }
+  },
+  "projectRevenue": {
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "delete": "Delete"
     }
   },
   "expertNetwork": {

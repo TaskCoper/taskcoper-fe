@@ -388,6 +388,7 @@
       "chat": "Tin nhắn",
       "note": "Ghi chú",
       "storage": "Lưu trữ",
+      "revenue": "Doanh thu",
       "storagePage": {
         "title": "Kho lưu trữ",
         "description": "Tất cả tệp được tải lên trong công việc của dự án này.",
@@ -467,6 +468,58 @@
       "file_type_pdf": "PDF",
       "file_type_image": "Ảnh",
       "unsupported": "Không hỗ trợ xem trước"
+    },
+    "addProjectRevenue": {
+      "title": {
+        "cashIn": "Thêm <highlight>khoản thu</highlight> mới",
+        "cashOut": "Thêm <highlight>khoản chi</highlight> mới"
+      },
+      "description": {
+        "cashIn": "Thêm một khoản thu mới cho dự án của bạn.",
+        "cashOut": "Thêm một khoản chi mới cho dự án của bạn."
+      },
+      "trigger": {
+        "cashIn": "Thêm khoản thu",
+        "cashOut": "Thêm khoản chi"
+      },
+      "name": {
+        "label": "Tên",
+        "placeholder": "Nhập tên giao dịch"
+      },
+      "amount": {
+        "label": "Số tiền",
+        "placeholder": "Nhập số tiền"
+      },
+      "note": {
+        "label": "Ghi chú",
+        "placeholder": "Nhập ghi chú cho giao dịch này"
+      },
+      "type": {
+        "cashIn": "Khoản thu",
+        "cashOut": "Khoản chi"
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên giao dịch là bắt buộc"
+        },
+        "amount": {
+          "min": "Số tiền phải lớn hơn 0"
+        },
+        "note": {
+          "maxLength": "Tối đa 255 ký tự"
+        }
+      }
+    }
+  },
+  "projectRevenue": {
+    "column": {
+      "selectAll": "Chọn tất cả",
+      "selectRow": "Chọn dòng"
+    },
+    "actions": {
+      "openMenu": "Mở menu",
+      "actions": "Thao tác",
+      "delete": "Xóa"
     }
   },
   "expertNetwork": {

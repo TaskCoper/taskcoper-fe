@@ -5,6 +5,7 @@ import type { GetMentorApplicationsParams } from '@/features/mentor-applications
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
+import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
@@ -217,5 +218,11 @@ export const queryKeys = {
     all: ['schedules'] as const,
     allMy: ['schedules', 'my'] as const,
     my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy, isActive] as const
+  },
+  // Project Revenues
+  projectRevenues: {
+    all: (projectId?: string) => ['project-revenues', projectId] as const,
+    list: ({ projectId, pageIndex, pageSize, labelIds, searchTerm, type, sortBy }: GetProjectRevenuesParams) =>
+      [...queryKeys.projectRevenues.all(projectId), pageIndex, pageSize, labelIds, searchTerm, type, sortBy] as const
   }
 } as const
