@@ -153,6 +153,60 @@ export interface ProjectPriorityStats {
   totalTasks: number
 }
 
+export const RevenueType = {
+  CashIn: 'CashIn',
+  CashOut: 'CashOut'
+} as const
+
+export type RevenueType = (typeof RevenueType)[keyof typeof RevenueType]
+
+export const RevenueTypeLabel = {
+  [RevenueType.CashIn]: 'project.addProjectRevenue.type.cashIn',
+  [RevenueType.CashOut]: 'project.addProjectRevenue.type.cashOut'
+}
+
+export type RevenueTypeLabel = (typeof RevenueTypeLabel)[keyof typeof RevenueTypeLabel]
+
+export interface Revenue {
+  id: string
+  name: string
+  amount: number
+  balanceAfter: number
+  type: RevenueType
+  note: string
+  createdOnUtc: string
+  createdBy: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+    avatar: string | null
+  }
+  labels: {
+    id: string
+    name: string
+    color: string
+  }[]
+}
+
+export interface RevenueLabelStats {
+  id: string
+  name: string
+  color: string
+  transactionCount: number
+}
+
+export interface RevenueTypeStats {
+  name: RevenueType
+  transactionCount: number
+}
+
+export interface RevenueStats {
+  totalRevenue: number
+  totalExpense: number
+  netRevenue: number
+}
+
 // APIs
 export interface InviteMembersPayload {
   projectId: string

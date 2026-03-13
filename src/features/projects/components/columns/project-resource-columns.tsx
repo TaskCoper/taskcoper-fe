@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import FileIcon from '@/features/projects/components/file-icon'
+import { PdfPreview } from '@/features/projects/components/project-storage-preview-doc'
 import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ProjectResource } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -18,7 +19,6 @@ import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { formatBytes, formatMimeType } from '../../utils'
-import { PdfPreview } from '@/features/projects/components/project-storage-preview-doc'
 
 export const getColumns = ({
   onDeleteResource,
@@ -32,7 +32,7 @@ export const getColumns = ({
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label='projectStorage.column.selectAll'
+          aria-label={i18next.t('projectStorage.column.selectAll')}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -40,7 +40,7 @@ export const getColumns = ({
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label='projectStorage.column.selectRow'
+          aria-label={i18next.t('projectStorage.column.selectRow')}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}

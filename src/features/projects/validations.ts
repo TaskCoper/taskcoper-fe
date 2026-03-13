@@ -1,3 +1,4 @@
+import { RevenueType } from '@/types/project.type'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -148,8 +149,33 @@ export const updateProjectSchema = (t: TFunction) => {
     .strict()
 }
 
+export const addProjectRevenueSchema = (t: TFunction) => {
+  return z.object({
+    name: z.string().trim().min(1, t('project.addProjectRevenue.validation.name.minLength')),
+    amount: z.number().min(1, t('project.addProjectRevenue.validation.amount.min')),
+    type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+    note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
+    labelIds: z.array(z.uuid()),
+    projectId: z.uuid()
+  })
+}
+
+export const updateProjectRevenueSchema = (t: TFunction) => {
+  return z.object({
+    projectTransactionId: z.uuid(),
+    projectId: z.uuid(),
+    name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
+    amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
+    type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+    note: z.string().trim().max(255, t('project.updateProjectRevenue.validation.note.maxLength')),
+    labelIds: z.array(z.uuid())
+  })
+}
+
 export type CreateProjectFormValues = z.infer<ReturnType<typeof createProjectSchema>>
 export type InviteMembersFormValues = z.infer<ReturnType<typeof inviteMembersSchema>>
 export type InviteMemberItem = z.infer<ReturnType<typeof memberSchema>>
 export type DomainItem = z.infer<ReturnType<typeof domainSchema>>
 export type UpdateProjectFormValues = z.infer<ReturnType<typeof updateProjectSchema>>
+export type AddProjectRevenueFormValues = z.infer<ReturnType<typeof addProjectRevenueSchema>>
+export type UpdateProjectRevenueFormValues = z.infer<ReturnType<typeof updateProjectRevenueSchema>>

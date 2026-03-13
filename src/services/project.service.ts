@@ -1,15 +1,26 @@
 import type { UploadProjectAttachmentFormValues } from '@/features/attachments/validations'
 import type { UseGetProjectLabelStatsParams } from '@/features/labels/hooks/use-get-project-label-stats'
 import type { UseGetProjectPriorityStatsParams } from '@/features/labels/hooks/use-get-project-priority-stats'
-import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from '@/features/labels/validations'
+import type {
+  AddProjectLabelFormValues,
+  AddProjectRevenueLabelFormValues,
+  UpdateProjectLabelFormValues,
+  UpdateProjectRevenueLabelFormValues
+} from '@/features/labels/validations'
 import type { GetMilestonesParams } from '@/features/milestones/hooks/use-get-milestones'
 import type { GetMyProjectsParams } from '@/features/projects/hooks/use-get-my-projects'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
+import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
-import type { CreateProjectFormValues, UpdateProjectFormValues } from '@/features/projects/validations'
+import type {
+  AddProjectRevenueFormValues,
+  CreateProjectFormValues,
+  UpdateProjectFormValues,
+  UpdateProjectRevenueFormValues
+} from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Label, ProjectLabelStats } from '@/types/label.type'
+import type { Label, ProjectLabelStats, RevenueLabel } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type {
   InviteMembersPayload,
@@ -22,6 +33,10 @@ import type {
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  Revenue,
+  RevenueLabelStats,
+  RevenueStats,
+  RevenueTypeStats,
   SystemProject
 } from '@/types/project.type'
 import type { TaskPreview, TaskStatusStats } from '@/types/task.type'
@@ -319,6 +334,112 @@ class ProjectService {
 
   deleteAttachment = async ({ projectId, resourceId }: { projectId: string; resourceId: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
+
+    return data.value
+  }
+
+  getProjectRevenues = async ({
+    projectId,
+    pageIndex,
+    pageSize,
+    labelIds,
+    searchTerm,
+    type,
+    sortBy,
+    startDate,
+    endDate
+  }: GetProjectRevenuesParams) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<Revenue>>(`/v1/${this.baseUrl}/${projectId}/revenues`, {
+      params: {
+        pageIndex,
+        pageSize,
+        labelIds,
+        searchTerm,
+        type,
+        sortBy,
+        startDate,
+        endDate
+      }
+    })
+
+    return data
+  }
+
+  getProjectRevenueStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BaseResponse<RevenueStats>>(`/v1/${this.baseUrl}/${projectId}/revenues/health-check`)
+
+    return data.value
+  }
+
+  addProjectRevenue = async ({ body }: { body: AddProjectRevenueFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues`, body)
+
+    return data.value
+  }
+
+  updateProjectRevenue = async ({ body }: { body: UpdateProjectRevenueFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectId}/revenues/${body.projectTransactionId}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteProjectRevenue = async ({ projectId, revenueId }: { projectId: string; revenueId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/revenues/${revenueId}`)
+
+    return data.value
+  }
+
+  getProjectRevenueLabelStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<RevenueLabelStats>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/labels`
+    )
+
+    return data.value.items
+  }
+
+  getProjectRevenueTypeStats = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<RevenueTypeStats>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/types`
+    )
+
+    return data.value.items
+  }
+
+  getProjectRevenueLabels = async ({ projectId }: { projectId?: string }) => {
+    if (!projectId) return null
+    const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/labels`
+    )
+
+    return data
+  }
+
+  addProjectRevenueLabel = async ({ body }: { body: AddProjectRevenueLabelFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues/labels`, body)
+
+    return data.value
+  }
+
+  updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectId}/revenues/labels/${body.id}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteProjectRevenueLabel = async ({ projectId, labelId }: { projectId: string; labelId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectId}/revenues/labels/${labelId}`
+    )
 
     return data.value
   }

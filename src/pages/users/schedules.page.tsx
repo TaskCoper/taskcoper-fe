@@ -72,7 +72,7 @@ const formatDuration = (startTime: string, endTime: string): string => {
 
 const ScheduleRow = ({ schedule }: { schedule: MeetingRule }) => {
   const { t } = useTranslation()
-  const confirm = useConfirmStore((s) => s.confirm)
+  const { confirm } = useConfirmStore()
   const { deleteSchedule, isDeletingSchedule } = useDeleteSchedule()
   const temporary = isTemporary(schedule)
 
@@ -186,15 +186,15 @@ const ScheduleRow = ({ schedule }: { schedule: MeetingRule }) => {
 
       <div className='flex items-center gap-1 shrink-0'>
         <UpdateScheduleDialog schedule={schedule}>
-          <button className='p-2 text-muted-foreground hover:text-primary transition-colors'>
+          <Button variant='ghost' size='icon-sm'>
             <PencilIcon className='size-4' />
-          </button>
+          </Button>
         </UpdateScheduleDialog>
 
         <Button
           variant='ghost'
           size='icon-sm'
-          className='text-muted-foreground hover:text-destructive'
+          className='hover:text-destructive'
           onClick={handleDelete}
           disabled={isDeletingSchedule}
         >
