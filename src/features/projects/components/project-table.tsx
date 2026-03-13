@@ -32,7 +32,7 @@ interface ProjectTableProps {
 export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTableProps) {
   const { t } = useTranslation()
   const location = useLocation()
-  const confirm = useConfirmStore((s) => s.confirm)
+  const { confirm } = useConfirmStore()
   const { user } = useAuthStore()
   const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId })
 

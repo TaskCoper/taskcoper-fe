@@ -30,7 +30,7 @@ interface ProjectStorageTableProps {
 
 export default function ProjectStorageTable({ projectId }: ProjectStorageTableProps) {
   const { t } = useTranslation()
-  const confirm = useConfirmStore((s) => s.confirm)
+  const { confirm } = useConfirmStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { uploadFileAsync } = useUploadFile()

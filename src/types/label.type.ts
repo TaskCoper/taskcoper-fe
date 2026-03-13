@@ -23,3 +23,9 @@ export interface ProjectLabelStats {
   createdOnUtc: string
   modifiedOnUtc: string | null
 }
+
+export interface RevenueLabel {
+  id: string
+  name: string
+  color: string
+}

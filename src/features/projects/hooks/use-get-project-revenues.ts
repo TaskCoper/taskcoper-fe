@@ -10,6 +10,8 @@ export interface GetProjectRevenuesParams {
   searchTerm?: string
   type?: string
   sortBy?: string
+  startDate?: string
+  endDate?: string
 }
 
 export const useGetProjectRevenues = ({
@@ -19,12 +21,34 @@ export const useGetProjectRevenues = ({
   labelIds,
   searchTerm,
   type,
-  sortBy
+  sortBy,
+  startDate,
+  endDate
 }: GetProjectRevenuesParams) => {
   const { data: projectRevenues, isLoading: isLoadingProjectRevenues } = useQuery({
-    queryKey: queryKeys.projectRevenues.list({ projectId, pageIndex, pageSize, labelIds, searchTerm, type, sortBy }),
+    queryKey: queryKeys.projectRevenues.list({
+      projectId,
+      pageIndex,
+      pageSize,
+      labelIds,
+      searchTerm,
+      type,
+      sortBy,
+      startDate,
+      endDate
+    }),
     queryFn: () =>
-      projectService.getProjectRevenues({ projectId, pageIndex, pageSize, labelIds, searchTerm, type, sortBy }),
+      projectService.getProjectRevenues({
+        projectId,
+        pageIndex,
+        pageSize,
+        labelIds,
+        searchTerm,
+        type,
+        sortBy,
+        startDate,
+        endDate
+      }),
     enabled: !!projectId
   })
 

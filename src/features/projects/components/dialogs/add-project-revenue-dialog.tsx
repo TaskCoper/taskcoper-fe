@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,8 +7,9 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { Spinner } from '@/components/ui/spinner'
 import type { RevenueType } from '@/types/project.type'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAddProjectRevenue } from '../../hooks/use-add-project-revenue'
@@ -22,27 +24,49 @@ interface AddProjectRevenueDialogProps {
 
 export default function AddProjectRevenueDialog({ projectId, type, children }: AddProjectRevenueDialogProps) {
   const { t } = useTranslation()
-  const { methods } = useAddProjectRevenue()
+  const { methods, addProjectRevenue, isAddingProjectRevenue } = useAddProjectRevenue()
+  const [open, setOpen] = useState(false)
 
   const onSubmit: SubmitHandler<AddProjectRevenueFormValues> = (body) => {
-    console.log(body)
+    addProjectRevenue(
+      { body },
+      {
+        onSuccess: () => {
+          setOpen(false)
+        }
+      }
+    )
+  }
+
+  const onClose = () => {
+    setOpen(false)
   }
 
   useEffect(() => {
-    methods.reset({
-      name: '',
-      amount: 0,
-      note: '',
-      type,
-      labelIds: [],
-      projectId
-    })
-  }, [projectId, methods, type])
+    if (open) {
+      methods.reset({
+        name: '',
+        amount: 0,
+        note: '',
+        type,
+        labelIds: [],
+        projectId
+      })
+    }
+  }, [open, projectId, methods, type])
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          methods.reset()
+        }
+        setOpen(isOpen)
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-xl'>
+      <DialogContent position='top-center' onInteractOutside={onClose}>
         <DialogHeader>
           <DialogTitle>
             <Trans
@@ -66,8 +90,18 @@ export default function AddProjectRevenueDialog({ projectId, type, children }: A
         </DialogHeader>
 
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
             <AddProjectRevenueForm />
+
+            <div className='flex items-center justify-end gap-2'>
+              <Button variant='ghost' onClick={onClose}>
+                {t('common.button.cancel')}
+              </Button>
+              <Button disabled={isAddingProjectRevenue}>
+                {isAddingProjectRevenue ? <Spinner /> : null}
+                {t('common.button.add')}
+              </Button>
+            </div>
           </form>
         </FormProvider>
       </DialogContent>

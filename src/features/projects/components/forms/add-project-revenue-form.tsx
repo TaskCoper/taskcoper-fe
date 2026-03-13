@@ -1,16 +1,19 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
+import RevenueLabelCombobox from '@/features/labels/components/revenue-label-combobox'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { AddProjectRevenueFormValues } from '../../validations'
 
 export default function AddProjectRevenueForm() {
   const { t } = useTranslation()
-  const { control } = useFormContext<AddProjectRevenueFormValues>()
+  const { control, watch } = useFormContext<AddProjectRevenueFormValues>()
+
+  const projectId = watch('projectId')
 
   return (
-    <div>
+    <div className='space-y-2'>
       <Controller
         name='name'
         control={control}
@@ -56,6 +59,21 @@ export default function AddProjectRevenueForm() {
             <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
             </div>
+          </Field>
+        )}
+      />
+
+      <Controller
+        name='labelIds'
+        control={control}
+        render={({ field }) => (
+          <Field className='gap-1 mb-6'>
+            <FieldLabel>{t('common.field.label')}</FieldLabel>
+            <RevenueLabelCombobox
+              projectId={projectId}
+              selectedLabelIds={field.value}
+              onSelectionChange={(labelIds) => field.onChange(labelIds)}
+            />
           </Field>
         )}
       />

@@ -398,6 +398,10 @@
         "download": "Tải xuống",
         "task": "Công việc"
       },
+      "revenuePage": {
+        "title": "Doanh thu dự án",
+        "description": "Quản lý các khoản thu và chi của dự án."
+      },
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
       "myCalendar": "Lịch của tôi",
@@ -509,16 +513,47 @@
           "maxLength": "Tối đa 255 ký tự"
         }
       }
+    },
+    "updateProjectRevenue": {
+      "title": "Chỉnh sửa giao dịch",
+      "description": "Cập nhật thông tin chi tiết của giao dịch này.",
+      "validation": {
+        "name": {
+          "minLength": "Tên giao dịch là bắt buộc"
+        },
+        "amount": {
+          "min": "Số tiền phải lớn hơn 0"
+        },
+        "note": {
+          "maxLength": "Tối đa 255 ký tự"
+        }
+      }
     }
   },
   "projectRevenue": {
+    "stats": {
+      "totalRevenue": "Tổng thu",
+      "totalExpense": "Tổng chi",
+      "netRevenue": "Chênh lệch"
+    },
     "column": {
       "selectAll": "Chọn tất cả",
-      "selectRow": "Chọn dòng"
+      "selectRow": "Chọn dòng",
+      "name": "Tên",
+      "namePlaceholder": "Nhập tên để tìm kiếm...",
+      "amount": "Số tiền",
+      "type": "Loại",
+      "labels": "Nhãn",
+      "balanceAfter": "Số dư",
+      "createdDate": "Ngày tạo",
+      "createdBy": "Người tạo",
+      "none": "Không có",
+      "noLabels": "Không có nhãn"
     },
     "actions": {
       "openMenu": "Mở menu",
       "actions": "Thao tác",
+      "edit": "Chỉnh sửa",
       "delete": "Xóa"
     }
   },

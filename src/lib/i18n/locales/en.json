@@ -398,6 +398,10 @@
         "download": "Download",
         "task": "Task"
       },
+      "revenuePage": {
+        "title": "Project Revenue",
+        "description": "Manage project income and expenses."
+      },
       "settings": "Settings",
       "myProjects": "My Projects",
       "myCalendar": "My Calendar",
@@ -495,9 +499,24 @@
         "placeholder": "Enter note for this transaction"
       },
       "type": {
-        "cashIn": "Cash In",
-        "cashOut": "Cash Out"
+        "cashIn": "Income",
+        "cashOut": "Expense"
       },
+      "validation": {
+        "name": {
+          "minLength": "Transaction name is required"
+        },
+        "amount": {
+          "min": "Amount must be greater than 0"
+        },
+        "note": {
+          "maxLength": "Max 255 characters"
+        }
+      }
+    },
+    "updateProjectRevenue": {
+      "title": "Edit Transaction",
+      "description": "Update the details of this transaction.",
       "validation": {
         "name": {
           "minLength": "Transaction name is required"
@@ -512,13 +531,29 @@
     }
   },
   "projectRevenue": {
+    "stats": {
+      "totalRevenue": "Total Income",
+      "totalExpense": "Total Expense",
+      "netRevenue": "Net Revenue"
+    },
     "column": {
       "selectAll": "Select all",
-      "selectRow": "Select row"
+      "selectRow": "Select row",
+      "name": "Name",
+      "namePlaceholder": "Search by name...",
+      "amount": "Amount",
+      "type": "Type",
+      "labels": "Labels",
+      "balanceAfter": "Balance",
+      "createdDate": "Date",
+      "createdBy": "Created by",
+      "none": "None",
+      "noLabels": "No labels"
     },
     "actions": {
       "openMenu": "Open menu",
       "actions": "Actions",
+      "edit": "Edit",
       "delete": "Delete"
     }
   },

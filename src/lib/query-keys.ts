@@ -222,7 +222,35 @@ export const queryKeys = {
   // Project Revenues
   projectRevenues: {
     all: (projectId?: string) => ['project-revenues', projectId] as const,
-    list: ({ projectId, pageIndex, pageSize, labelIds, searchTerm, type, sortBy }: GetProjectRevenuesParams) =>
-      [...queryKeys.projectRevenues.all(projectId), pageIndex, pageSize, labelIds, searchTerm, type, sortBy] as const
+    list: ({
+      projectId,
+      pageIndex,
+      pageSize,
+      labelIds,
+      searchTerm,
+      type,
+      sortBy,
+      startDate,
+      endDate
+    }: GetProjectRevenuesParams) =>
+      [
+        ...queryKeys.projectRevenues.all(projectId),
+        pageIndex,
+        pageSize,
+        labelIds,
+        searchTerm,
+        type,
+        sortBy,
+        startDate,
+        endDate
+      ] as const,
+    stats: (projectId?: string) => ['project-revenue-stats', projectId] as const,
+    typeStats: (projectId?: string) => ['project-revenue-type-stats', projectId] as const
+  },
+  // Project Revenue Labels
+  projectRevenueLabels: {
+    all: (projectId?: string) => ['project-revenue-labels', projectId] as const,
+    list: (projectId?: string) => [...queryKeys.projectRevenueLabels.all(projectId)] as const,
+    stats: (projectId?: string) => ['project-revenue-labels-stats', projectId] as const
   }
 } as const

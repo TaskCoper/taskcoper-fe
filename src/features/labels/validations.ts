@@ -41,5 +41,36 @@ export const updateProjectLabelSchema = (t: TFunction) => {
     .strict()
 }
 
+export const addProjectRevenueLabelSchema = (t: TFunction) => {
+  return z.object({
+    projectId: z.uuid({ message: t('task.label.validation.projectId.invalid') }),
+    name: z
+      .string()
+      .max(255, { message: t('task.label.validation.name.maxLength') })
+      .or(z.literal('')),
+    color: z
+      .string()
+      .max(255, { message: t('task.label.validation.color.maxLength') })
+      .or(z.literal(''))
+  })
+}
+
+export const updateProjectRevenueLabelSchema = (t: TFunction) => {
+  return z.object({
+    id: z.uuid({ message: t('task.label.validation.id.invalid') }),
+    name: z
+      .string()
+      .max(255, { message: t('task.label.validation.name.maxLength') })
+      .or(z.literal('')),
+    color: z
+      .string()
+      .max(255, { message: t('task.label.validation.color.maxLength') })
+      .or(z.literal('')),
+    projectId: z.uuid({ message: t('task.label.validation.projectId.invalid') })
+  })
+}
+
 export type AddProjectLabelFormValues = z.infer<ReturnType<typeof addProjectLabelSchema>>
 export type UpdateProjectLabelFormValues = z.infer<ReturnType<typeof updateProjectLabelSchema>>
+export type AddProjectRevenueLabelFormValues = z.infer<ReturnType<typeof addProjectRevenueLabelSchema>>
+export type UpdateProjectRevenueLabelFormValues = z.infer<ReturnType<typeof updateProjectRevenueLabelSchema>>

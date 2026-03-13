@@ -72,7 +72,7 @@ const formatDuration = (startTime: string, endTime: string): string => {
 
 const ScheduleRow = ({ schedule }: { schedule: MeetingRule }) => {
   const { t } = useTranslation()
-  const confirm = useConfirmStore((s) => s.confirm)
+  const { confirm } = useConfirmStore()
   const { deleteSchedule, isDeletingSchedule } = useDeleteSchedule()
   const temporary = isTemporary(schedule)
 
