@@ -55,7 +55,7 @@ export function DayOfWeekField<T extends FieldValues>({
                 Array.isArray(field.value) ? field.value : [field.value].filter((v) => v !== undefined && v !== null)
               ) as number[]
               const isSelected = currentValues.includes(day.value)
-              const localizedLabel = t(`dayOfWeek.${day.label.toLowerCase()}`)
+              const localizedLabel = t(`dayOfWeek.${day.key}`)
 
               return (
                 <button

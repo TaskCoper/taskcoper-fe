@@ -181,12 +181,37 @@
       "temporary": "temporary",
       "onwards": "onwards",
       "today": "Today",
+      "activeFrom": "from",
+      "activeTo": "to",
       "legend": {
         "permanent": "Permanent",
         "fromOnly": "From date",
         "toOnly": "To date",
         "range": "Active between dates"
       }
+    }
+  },
+  "meeting": {
+    "dialog": {
+      "title": "Book meeting",
+      "description": "Choose a date and time to book a meeting"
+    },
+    "button": {
+      "book": "Book meeting"
+    },
+    "form": {
+      "bookForProject": "Book for project",
+      "bookForProjectDescription": "You are booking on behalf of a project.",
+      "bookForSelfDescription": "You are booking for yourself.",
+      "projectLabel": "Project",
+      "projectPlaceholder": "Select project",
+      "projectSearchPlaceholder": "Search project"
+    },
+    "mentorSchedule": {
+      "title": "Meetings",
+      "weekLabel": "Week {{week}} - {{month}}",
+      "available": "Available",
+      "booked": "Booked"
     }
   },
   "project": {

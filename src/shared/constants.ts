@@ -37,39 +37,11 @@ export const UNDERLINE_TAB_CLASSNAME = {
 }
 
 export const DAY_OF_WEEKS = [
-  {
-    id: 1,
-    value: 1,
-    label: 'Monday'
-  },
-  {
-    id: 50,
-    value: 2,
-    label: 'Tuesday'
-  },
-  {
-    id: 100,
-    value: 3,
-    label: 'Wednesday'
-  },
-  {
-    id: 150,
-    value: 4,
-    label: 'Thursday'
-  },
-  {
-    id: 200,
-    value: 5,
-    label: 'Friday'
-  },
-  {
-    id: 250,
-    value: 6,
-    label: 'Saturday'
-  },
-  {
-    id: 300,
-    value: 0,
-    label: 'Sunday'
-  }
-]
+  { id: 1, value: 1, key: 'monday' },
+  { id: 50, value: 2, key: 'tuesday' },
+  { id: 100, value: 3, key: 'wednesday' },
+  { id: 150, value: 4, key: 'thursday' },
+  { id: 200, value: 5, key: 'friday' },
+  { id: 250, value: 6, key: 'saturday' },
+  { id: 300, value: 0, key: 'sunday' }
+] as const

@@ -1,6 +1,7 @@
 import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
+import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
@@ -8,6 +9,7 @@ import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
+import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 
@@ -51,6 +53,8 @@ export const queryKeys = {
       ] as const,
     listMy: (userId?: string, status?: string[], searchTerm?: string, pageIndex?: number, pageSize?: number) =>
       [...queryKeys.projects.allMy, userId, status, searchTerm, pageIndex, pageSize] as const,
+    listMyInfinite: (userId?: string, status?: string[], searchTerm?: string, pageSize?: number) =>
+      [...queryKeys.projects.allMy, 'infinite', userId, status, searchTerm, pageSize] as const,
     detail: (projectId?: string) => ['project', projectId] as const,
     members: {
       all: (projectId?: string) => ['members', projectId] as const,
@@ -217,7 +221,9 @@ export const queryKeys = {
   schedules: {
     all: ['schedules'] as const,
     allMy: ['schedules', 'my'] as const,
-    my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy, isActive] as const
+    my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy, isActive] as const,
+    list: ({ userId, activeFrom, activeTo }: GetScheduleParams) =>
+      [...queryKeys.schedules.all, userId, activeFrom, activeTo] as const
   },
   // Project Revenues
   projectRevenues: {
@@ -252,5 +258,12 @@ export const queryKeys = {
     all: (projectId?: string) => ['project-revenue-labels', projectId] as const,
     list: (projectId?: string) => [...queryKeys.projectRevenueLabels.all(projectId)] as const,
     stats: (projectId?: string) => ['project-revenue-labels-stats', projectId] as const
+  },
+  // Meetings
+  meetings: {
+    all: ['meetings'] as const,
+    allMentor: (mentorId?: string) => ['meetings', 'mentor', mentorId] as const,
+    mentor: ({ mentorId, activeFrom, activeTo }: GetMentorMeetingsParams) =>
+      [...queryKeys.meetings.allMentor(mentorId), activeFrom, activeTo] as const
   }
 } as const

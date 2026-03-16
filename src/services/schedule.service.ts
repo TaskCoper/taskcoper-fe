@@ -1,16 +1,11 @@
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
+import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
 import type { CreateSchedulesFormValues, UpdateScheduleFormValues } from '@/features/schedules/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { MeetingRule } from '@/types/schedule.type'
+import type { MeetingRule, ScheduleSlot } from '@/types/schedule.type'
 
 class ScheduleService {
   private readonly baseUrl = 'meeting-rules'
-
-  createSchedules = async ({ body }: { body: CreateSchedulesFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/batch`, body)
-
-    return data.value
-  }
 
   getMySchedules = async ({ isActive }: GetMySchedulesParams) => {
     const { data } = await api.get<BasePaginationResponse<MeetingRule>>(`/v1/${this.baseUrl}/me`, {
@@ -20,6 +15,23 @@ class ScheduleService {
     })
 
     return data
+  }
+
+  getSchedule = async ({ userId, activeFrom, activeTo }: GetScheduleParams) => {
+    const { data } = await api.get<BasePaginationResponse<ScheduleSlot>>(`/v1/${this.baseUrl}/users/${userId}`, {
+      params: {
+        activeFrom,
+        activeTo
+      }
+    })
+
+    return data
+  }
+
+  createSchedules = async ({ body }: { body: CreateSchedulesFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/batch`, body)
+
+    return data.value
   }
 
   deleteSchedule = async ({ id }: { id: string }) => {

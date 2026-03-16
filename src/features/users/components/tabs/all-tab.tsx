@@ -2,7 +2,7 @@ import SanitizedHtml from '@/components/sanitized-html'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import MentorSchedule from '@/features/users/components/mentor-schedule'
+import MentorSchedule from '@/features/schedules/components/mentor-schedule'
 import { cn } from '@/shared/utils'
 import { BookOpenIcon, ChevronDownIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
@@ -13,7 +13,11 @@ const html =
 
 const COLLAPSED_HEIGHT = 300
 
-export default function AllTab() {
+interface AllTabProps {
+  userId: string
+}
+
+export default function AllTab({ userId }: AllTabProps) {
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const [needsCollapse, setNeedsCollapse] = useState(false)
@@ -31,7 +35,7 @@ export default function AllTab() {
 
   return (
     <div className='space-y-4 pb-20'>
-      <MentorSchedule />
+      <MentorSchedule userId={userId} />
 
       <div className='grid grid-cols-12 gap-4'>
         <div className='col-span-12'>
