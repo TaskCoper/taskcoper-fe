@@ -1611,7 +1611,9 @@
       "price": "Price",
       "pricePlaceholder": "Enter price",
       "currency": "Currency",
-      "currencyPlaceholder": "Select currency"
+      "currencyPlaceholder": "Select currency",
+      "isActive": "Active",
+      "isActiveDescription": "If disabled, this package will not be visible/available."
     },
     "list": {
       "newPackage": "New package"
