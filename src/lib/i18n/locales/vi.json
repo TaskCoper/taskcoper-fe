@@ -181,12 +181,37 @@
       "temporary": "tạm thời",
       "onwards": "trở đi",
       "today": "Hôm nay",
+      "activeFrom": "từ",
+      "activeTo": "đến",
       "legend": {
         "permanent": "Không thời hạn",
         "fromOnly": "Từ ngày",
         "toOnly": "Đến ngày",
         "range": "Hoạt động trong khoảng ngày"
       }
+    }
+  },
+  "meeting": {
+    "dialog": {
+      "title": "Đặt lịch hẹn",
+      "description": "Chọn ngày và giờ để đặt lịch hẹn"
+    },
+    "button": {
+      "book": "Đặt lịch"
+    },
+    "form": {
+      "bookForProject": "Đặt lịch cho dự án",
+      "bookForProjectDescription": "Bạn đang đặt lịch thay mặt dự án.",
+      "bookForSelfDescription": "Bạn đang đặt lịch cho chính mình.",
+      "projectLabel": "Dự án",
+      "projectPlaceholder": "Chọn dự án",
+      "projectSearchPlaceholder": "Tìm dự án"
+    },
+    "mentorSchedule": {
+      "title": "Lịch hẹn",
+      "weekLabel": "Tuần {{week}} - {{month}}",
+      "available": "Trống",
+      "booked": "Đã đặt"
     }
   },
   "project": {
@@ -1594,6 +1619,9 @@
       "newPackage": "Gói mới"
     },
     "card": {
+      "sessionsCount_one": "{{count}} buổi",
+      "sessionsCount_other": "{{count}} buổi",
+      "bookFor": "Đặt lịch {{price}}",
       "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
       "sortOrder": "Thứ tự sắp xếp: {{value}}"
     },
@@ -1614,6 +1642,12 @@
     "dialog": {
       "title": "Thông tin gói",
       "description": "Cập nhật thông tin gói"
+    }
+  },
+  "packageBooking": {
+    "bookPackage": {
+      "title": "Đặt gói",
+      "description": "Xác nhận gói bạn chọn và chọn dự án để đặt lịch."
     }
   },
   "pageTitle": {

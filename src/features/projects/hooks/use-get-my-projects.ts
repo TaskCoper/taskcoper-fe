@@ -12,11 +12,13 @@ export interface GetMyProjectsParams {
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
+  enabled?: boolean
 }
 
 export const useGetMyProjects = ({
   status,
   searchTerm,
+  enabled = true,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE
 }: GetMyProjectsParams) => {
@@ -26,7 +28,7 @@ export const useGetMyProjects = ({
     useQuery({
       queryKey: queryKeys.projects.listMy(user?.UserId, status, searchTerm, pageIndex, pageSize),
       queryFn: () => projectService.getMyProjects({ userId: user?.UserId, status, searchTerm, pageIndex, pageSize }),
-      enabled: !!user?.UserId
+      enabled: !!user?.UserId && enabled
     })
 
   return { myProjects, isLoadingMyProjects }

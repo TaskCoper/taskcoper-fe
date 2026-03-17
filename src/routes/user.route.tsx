@@ -25,6 +25,7 @@ const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applicati
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const MeetingSessionPackagesPage = lazy(() => import('@/pages/users/meeting-session-packages.page'))
+const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -49,6 +50,10 @@ export const userRoutes: RouteObject[] = [
       {
         element: <RoleGuardLayout allowedRoles={['user']} />,
         children: [
+          {
+            path: 'payments/checkout',
+            element: <CheckoutPage />
+          },
           {
             element: <UserDefaultLayout />,
             children: [

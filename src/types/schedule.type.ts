@@ -12,3 +12,9 @@ export interface MeetingRule {
   createdOnUtc: string
   modifiedOnUtc: string | null
 }
+
+export interface ScheduleSlot {
+  dayOfWeek: number
+  startTimeUtc: string
+  endTimeUtc: string
+}

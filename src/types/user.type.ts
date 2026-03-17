@@ -7,6 +7,7 @@ export interface User {
   lastName: string
   phoneNumber: string | null
   avatar: string | null
+  coverImageUrl: string | null
   role: string
   address: string | null
   city: string | null
@@ -31,6 +32,7 @@ export interface UserDetail {
   phoneNumber: string | null
   timeZone: string | null
   avatar: string | null
+  coverImageUrl: string | null
   role: string
   address: string | null
   city: string | null

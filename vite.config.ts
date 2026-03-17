@@ -56,7 +56,25 @@ export default defineConfig({
           i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
 
           // Other utilities
-          utils: ['axios', 'date-fns', 'jwt-decode', 'lodash', 'zustand', 'next-themes', 'react-day-picker']
+          utils: [
+            'axios',
+            'date-fns',
+            'jwt-decode',
+            'lodash',
+            'zustand',
+            'next-themes',
+            'react-day-picker',
+            'dompurify'
+          ],
+
+          // PDF and File Handling
+          pdf: ['pdfjs-dist', 'react-pdf', 'react-dropzone'],
+
+          // Visualization and Charts
+          charts: ['recharts'],
+
+          // Animations and UI Extras
+          animations: ['framer-motion', 'vaul']
         }
       }
     },
