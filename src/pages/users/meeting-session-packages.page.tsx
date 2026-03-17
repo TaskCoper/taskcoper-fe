@@ -157,7 +157,7 @@ export default function MeetingSessionPackagesPage() {
                       type='button'
                       size='icon'
                       variant='ghost'
-                      disabled={isUpdatingMentorPackage || mentorPackage.sortOrder <= 0}
+                      disabled={isUpdatingMentorPackage || mentorPackage.sortOrder <= 0 || index === 0}
                       onClick={() => changeSortOrder(mentorPackage, 'up')}
                     >
                       <ArrowUpIcon />
