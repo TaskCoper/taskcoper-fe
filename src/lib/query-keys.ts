@@ -271,5 +271,9 @@ export const queryKeys = {
     allMentor: (mentorId?: string) => ['meetings', 'mentor', mentorId] as const,
     mentor: ({ mentorId, activeFrom, activeTo }: GetMentorMeetingsParams) =>
       [...queryKeys.meetings.allMentor(mentorId), activeFrom, activeTo] as const
+  },
+  // Transactions
+  transactions: {
+    detail: (transactionId?: string) => ['transaction', transactionId] as const
   }
 } as const

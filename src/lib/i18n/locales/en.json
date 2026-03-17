@@ -1644,6 +1644,12 @@
       "description": "Update package information"
     }
   },
+  "packageBooking": {
+    "bookPackage": {
+      "title": "Book package",
+      "description": "Confirm your package and select a project to book for."
+    }
+  },
   "pageTitle": {
     "network": "Network",
     "projects": "Projects",

@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
+import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
 import MentorSchedule from '@/features/schedules/components/mentor-schedule'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import { BookOpenIcon, ChevronDownIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
@@ -35,6 +37,8 @@ interface AllTabProps {
 
 export default function AllTab({ userId }: AllTabProps) {
   const { t } = useTranslation()
+  const { user } = useAuthStore()
+
   const [isExpanded, setIsExpanded] = useState(false)
   const [needsCollapse, setNeedsCollapse] = useState(false)
 
@@ -51,6 +55,8 @@ export default function AllTab({ userId }: AllTabProps) {
       return () => observer.disconnect()
     }
   }, [])
+
+  const isHidden = user?.UserId === userId
 
   return (
     <div className='space-y-4 pb-20'>
@@ -77,9 +83,17 @@ export default function AllTab({ userId }: AllTabProps) {
             </div>
 
             <div className='px-2 pb-2'>
-              <Button className='w-full'>
-                {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
-              </Button>
+              {isHidden ? (
+                <Button className='w-full'>
+                  {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
+                </Button>
+              ) : (
+                <BookPackageDialog mentorPackage={pkg}>
+                  <Button className='w-full'>
+                    {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
+                  </Button>
+                </BookPackageDialog>
+              )}
             </div>
           </Card>
         ))}

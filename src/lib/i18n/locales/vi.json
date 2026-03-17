@@ -1644,6 +1644,12 @@
       "description": "Cập nhật thông tin gói"
     }
   },
+  "packageBooking": {
+    "bookPackage": {
+      "title": "Đặt gói",
+      "description": "Xác nhận gói bạn chọn và chọn dự án để đặt lịch."
+    }
+  },
   "pageTitle": {
     "network": "Kết nối chuyên gia",
     "projects": "Dự án",
