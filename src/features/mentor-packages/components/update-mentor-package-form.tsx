@@ -1,6 +1,7 @@
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
+import { Switch } from '@/components/ui/switch'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateMentorPackageFormValues } from '../validations'
@@ -100,6 +101,32 @@ export default function UpdateMentorPackageForm() {
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
+          </Field>
+        )}
+      />
+
+      <Controller
+        name='isActive'
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field
+            orientation='horizontal'
+            data-invalid={fieldState.invalid}
+            className='p-4 bg-muted/80 rounded-md border border-dashed'
+          >
+            <FieldContent className='gap-0'>
+              <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.isActive')}</FieldLabel>
+              <FieldDescription className='text-xs'>{t('mentorPackage.form.isActiveDescription')}</FieldDescription>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </FieldContent>
+
+            <Switch
+              id={field.name}
+              name={field.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              aria-invalid={fieldState.invalid}
+            />
           </Field>
         )}
       />
