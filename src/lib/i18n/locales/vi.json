@@ -1619,6 +1619,9 @@
       "newPackage": "Gói mới"
     },
     "card": {
+      "sessionsCount_one": "{{count}} buổi",
+      "sessionsCount_other": "{{count}} buổi",
+      "bookFor": "Đặt lịch {{price}}",
       "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
       "sortOrder": "Thứ tự sắp xếp: {{value}}"
     },

@@ -3,6 +3,7 @@ import type {
   UpdateMentorPackageFormValues
 } from '@/features/mentor-packages/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 
 class MentorPackageService {
@@ -15,7 +16,14 @@ class MentorPackageService {
   }
 
   getMyMentorPackages = async () => {
-    const { data } = await api.get<BasePaginationResponse<MentorPackage[]>>(`/v1/${this.baseUrl}/me`)
+    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`)
+
+    return data
+  }
+
+  getMentorPackages = async ({ mentorId }: { mentorId?: string }) => {
+    if (!mentorId) return getDefaultPaginationResponse<MentorPackage>()
+    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/mentor/${mentorId}`)
 
     return data
   }

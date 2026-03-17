@@ -1,7 +1,9 @@
 import SanitizedHtml from '@/components/sanitized-html'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import MentorSchedule from '@/features/schedules/components/mentor-schedule'
 import { cn } from '@/shared/utils'
 import { BookOpenIcon, ChevronDownIcon } from 'lucide-react'
@@ -13,6 +15,20 @@ const html =
 
 const COLLAPSED_HEIGHT = 300
 
+const formatCurrency = (price: number, currency: 'Vnd' | 'Usd') => {
+  const currencyCode = currency === 'Usd' ? 'USD' : 'VND'
+
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currencyCode,
+      maximumFractionDigits: 0
+    }).format(price)
+  } catch {
+    return `${price.toLocaleString()} ${currency}`
+  }
+}
+
 interface AllTabProps {
   userId: string
 }
@@ -21,7 +37,10 @@ export default function AllTab({ userId }: AllTabProps) {
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const [needsCollapse, setNeedsCollapse] = useState(false)
+
   const contentRef = useRef<HTMLDivElement>(null)
+
+  const { mentorPackages } = useGetMentorPackages({ mentorId: userId })
 
   const measureRef = useCallback((node: HTMLDivElement | null) => {
     if (node) {
@@ -35,6 +54,37 @@ export default function AllTab({ userId }: AllTabProps) {
 
   return (
     <div className='space-y-4 pb-20'>
+      <div className='flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+        {mentorPackages.value.items.map((pkg) => (
+          <Card
+            key={pkg.id}
+            className='shrink-0 w-[calc((100%-8rem)/3)] min-w-[calc((100%-8rem)/3)] rounded-lg p-0 gap-0 shadow-none'
+          >
+            <div className='px-3 py-2 flex items-center gap-1'>
+              <p className='font-semibold text-primary truncate'>{pkg.name}</p>
+              <div className='flex-1' />
+              <Badge className='rounded-md' variant='secondary'>
+                <p className='font-semibold text-xs'>
+                  {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
+                </p>
+              </Badge>
+            </div>
+
+            <Separator />
+
+            <div className='p-4'>
+              <p className='text-xs text-muted-foreground italic'>{pkg.description}</p>
+            </div>
+
+            <div className='px-2 pb-2'>
+              <Button className='w-full'>
+                {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+
       <MentorSchedule userId={userId} />
 
       <div className='grid grid-cols-12 gap-4'>

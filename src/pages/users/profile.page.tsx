@@ -117,8 +117,15 @@ export default function ProfilePage() {
         <div className='max-w-7xl mx-auto px-4 pt-4'>
           <div className='relative h-48 sm:h-52'>
             <div className='size-full relative'>
-              {/* TODO: need cover image */}
-              <div className='size-full rounded-2xl bg-muted-foreground/15 flex items-center justify-center'></div>
+              {user?.coverImageUrl ? (
+                <img
+                  src={user.coverImageUrl}
+                  alt={t('user.coverImageAlt', { name: `${user.firstName} ${user.lastName}` })}
+                  className='size-full object-cover rounded-2xl'
+                />
+              ) : (
+                <div className='size-full rounded-2xl bg-muted-foreground/15 flex items-center justify-center'></div>
+              )}
             </div>
 
             <div className='absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 rounded-2xl border-4 border-background bg-muted shadow-sm'>

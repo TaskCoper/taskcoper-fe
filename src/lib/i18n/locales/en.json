@@ -1619,6 +1619,9 @@
       "newPackage": "New package"
     },
     "card": {
+      "sessionsCount_one": "{{count}} session",
+      "sessionsCount_other": "{{count}} sessions",
+      "bookFor": "Book for {{price}}",
       "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} min / session",
       "sortOrder": "Sort order: {{value}}"
     },
