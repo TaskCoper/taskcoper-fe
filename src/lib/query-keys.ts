@@ -217,6 +217,11 @@ export const queryKeys = {
     my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
       [...queryKeys.mentorApplications.all, 'my', status, sortBy] as const
   },
+  // Mentor Packages
+  mentorPackages: {
+    all: ['mentor-packages'] as const,
+    my: () => [...queryKeys.mentorPackages.all, 'my'] as const
+  },
   // Schedules
   schedules: {
     all: ['schedules'] as const,

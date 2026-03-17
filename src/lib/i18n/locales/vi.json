@@ -1588,6 +1588,57 @@
       "file": "Tệp"
     }
   },
+  "mentorPackage": {
+    "create": {
+      "title": "Gói hướng dẫn mới",
+      "description": "Tạo một gói hướng dẫn mới để cung cấp dịch vụ của bạn."
+    },
+    "page": {
+      "title": "Gói buổi gặp",
+      "description": "Tạo và quản lý các gói buổi gặp với mức giá linh hoạt cho mentee.",
+      "emptyTitle": "Chưa có gói nào",
+      "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee."
+    },
+    "form": {
+      "name": "Tên gói",
+      "namePlaceholder": "Nhập tên gói",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả gói hướng dẫn",
+      "durationInMinutes": "Thời lượng (phút)",
+      "durationPlaceholder": "VD: 60",
+      "totalSessions": "Tổng số buổi",
+      "totalSessionsPlaceholder": "VD: 10",
+      "price": "Giá",
+      "pricePlaceholder": "Nhập giá",
+      "currency": "Tiền tệ",
+      "currencyPlaceholder": "Chọn tiền tệ"
+    },
+    "list": {
+      "newPackage": "Gói mới"
+    },
+    "card": {
+      "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
+      "sortOrder": "Thứ tự sắp xếp: {{value}}"
+    },
+    "sidebar": {
+      "meetingSessionPackages": "Gói buổi gặp"
+    },
+    "delete": {
+      "title": "Xóa gói?",
+      "description": "Bạn có chắc chắn muốn xóa \"{{packageName}}\" không?"
+    },
+    "validation": {
+      "nameRequired": "Yêu cầu nhập tên",
+      "descriptionMax": "Tối đa 255 ký tự",
+      "durationPositive": "Phải > 0",
+      "sessionsPositive": "Phải > 0",
+      "pricePositive": "Phải > 0"
+    },
+    "dialog": {
+      "title": "Thông tin gói",
+      "description": "Cập nhật thông tin gói"
+    }
+  },
   "pageTitle": {
     "network": "Kết nối chuyên gia",
     "projects": "Dự án",

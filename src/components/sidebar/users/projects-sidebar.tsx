@@ -7,18 +7,26 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
-import { CalendarDaysIcon, FileClockIcon, FolderOpenIcon } from 'lucide-react'
+import { CalendarDaysIcon, FileClockIcon, FolderOpenIcon, PackageIcon, type LucideIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router'
 
+type NavItem = {
+  title: string
+  url: string
+  icon: LucideIcon
+}
+
 export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation()
   const location = useLocation()
+  const { user } = useAuthStore()
 
   const navMain = useMemo(
-    () => [
+    (): NavItem[] => [
       {
         title: t('project.sidebar.myProjects'),
         url: '/projects',
@@ -29,13 +37,26 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         url: '/calendar',
         icon: CalendarDaysIcon
       },
-      {
-        title: t('project.sidebar.applicationHistory'),
-        url: '/applications',
-        icon: FileClockIcon
-      }
+      ...(user?.Role !== 'Mentor'
+        ? [
+            {
+              title: t('project.sidebar.applicationHistory'),
+              url: '/applications',
+              icon: FileClockIcon
+            }
+          ]
+        : []),
+      ...(user?.Role === 'Mentor'
+        ? [
+            {
+              title: t('mentorPackage.sidebar.meetingSessionPackages'),
+              url: '/meeting-session-packages',
+              icon: PackageIcon
+            }
+          ]
+        : [])
     ],
-    [t]
+    [t, user?.Role]
   )
 
   const activeSegment = useMemo(() => {
