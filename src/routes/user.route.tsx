@@ -24,6 +24,7 @@ const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-applicatio
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
+const MeetingSessionPackagesPage = lazy(() => import('@/pages/users/meeting-session-packages.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -93,10 +94,19 @@ export const userRoutes: RouteObject[] = [
                     )
                   },
                   {
-                    path: 'applications/submit',
-                    element: <MentorApplicationPage />
+                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['User']} />,
+                    children: [
+                      {
+                        path: 'applications/submit',
+                        element: <MentorApplicationPage />
+                      },
+                      { path: 'applications', element: <MentorApplicationsPage /> }
+                    ]
                   },
-                  { path: 'applications', element: <MentorApplicationsPage /> }
+                  {
+                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                    children: [{ path: 'meeting-session-packages', element: <MeetingSessionPackagesPage /> }]
+                  }
                 ]
               },
               {
