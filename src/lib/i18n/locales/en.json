@@ -1563,6 +1563,57 @@
       "file": "File"
     }
   },
+  "mentorPackage": {
+    "create": {
+      "title": "New mentor package",
+      "description": "Create a new mentor package to offer your services."
+    },
+    "page": {
+      "title": "Meeting Session Packages",
+      "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
+      "emptyTitle": "No packages yet",
+      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees."
+    },
+    "form": {
+      "name": "Package name",
+      "namePlaceholder": "Enter package name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter package description",
+      "durationInMinutes": "Duration (minutes)",
+      "durationPlaceholder": "e.g. 60",
+      "totalSessions": "Total sessions",
+      "totalSessionsPlaceholder": "e.g. 10",
+      "price": "Price",
+      "pricePlaceholder": "Enter price",
+      "currency": "Currency",
+      "currencyPlaceholder": "Select currency"
+    },
+    "list": {
+      "newPackage": "New package"
+    },
+    "card": {
+      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} min / session",
+      "sortOrder": "Sort order: {{value}}"
+    },
+    "sidebar": {
+      "meetingSessionPackages": "Meeting Session Packages"
+    },
+    "delete": {
+      "title": "Delete package",
+      "description": "Are you sure you want to delete \"{{packageName}}\"?"
+    },
+    "validation": {
+      "nameRequired": "Name required",
+      "descriptionMax": "Max 255 chars",
+      "durationPositive": "Must be > 0",
+      "sessionsPositive": "Must be > 0",
+      "pricePositive": "Must be > 0"
+    },
+    "dialog": {
+      "title": "Package information",
+      "description": "Update package information"
+    }
+  },
   "pageTitle": {
     "network": "Network",
     "projects": "Projects",
