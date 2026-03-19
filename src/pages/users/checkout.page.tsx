@@ -1,5 +1,3 @@
-import logo from '/images/taskcoper.png'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,27 +5,15 @@ import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetTransaction } from '@/features/transactions/hooks/use-get-transaction'
-import { cn } from '@/shared/utils'
+import { cn, formatCurrency } from '@/shared/utils'
 import { CheckCircle2Icon, CopyIcon, ExternalLinkIcon, RefreshCcwIcon, ShieldAlertIcon, TimerIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
+import logo from '/images/taskcoper.png'
 
 const PAYMENT_WINDOW_MS = 2 * 60 * 1000
-
-const formatCurrency = (amount: number, currency: string) => {
-  const currencyCode = currency === 'Usd' ? 'USD' : currency === 'Vnd' ? 'VND' : currency
-
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currencyCode,
-      maximumFractionDigits: 0
-    }).format(amount)
-  } catch {
-    return `${amount.toLocaleString()} ${currency}`
-  }
-}
 
 const pad2 = (n: number) => String(Math.max(0, Math.floor(n))).padStart(2, '0')
 
@@ -74,6 +60,7 @@ function usePaymentCountdown(createdOnUtc?: string | null, isDisabled?: boolean)
 }
 
 export default function CheckoutPage() {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const transactionId = searchParams.get('transactionId') ?? undefined
 
@@ -93,17 +80,17 @@ export default function CheckoutPage() {
   const [qrBroken, setQrBroken] = useState(false)
 
   const status = useMemo(() => {
-    if (isPaid) return { label: 'Paid', tone: 'success' as const }
-    if (isExpired) return { label: 'Expired', tone: 'destructive' as const }
-    return { label: 'Pending', tone: 'secondary' as const }
-  }, [isExpired, isPaid])
+    if (isPaid) return { label: t('checkout.status.paid'), tone: 'success' as const }
+    if (isExpired) return { label: t('checkout.status.expired'), tone: 'destructive' as const }
+    return { label: t('checkout.status.pending'), tone: 'secondary' as const }
+  }, [isExpired, isPaid, t])
 
   const handleCopy = async (value: string, label: string) => {
     try {
       await navigator.clipboard.writeText(value)
-      toast.success('Copied', { description: label })
+      toast.success(t('transactions.column.copyId'), { description: label })
     } catch {
-      toast.error('Copy failed', { description: 'Please copy manually.' })
+      toast.error(t('checkout.error.copyFailed'), { description: t('checkout.error.copyFailedDesc') })
     }
   }
 
@@ -117,12 +104,10 @@ export default function CheckoutPage() {
                 <Link to='/' className='shrink-0'>
                   <img src={logo} alt='TaskCoper' className='h-7' />
                 </Link>
-                <p className='font-mono text-xs tracking-wide text-muted-foreground'>PAYMENTS • CHECKOUT</p>
+                <p className='font-mono text-xs tracking-wide text-muted-foreground'>{t('checkout.breadcrumb')}</p>
               </div>
-              <h1 className='mt-3 text-2xl font-extrabold tracking-tight md:text-3xl'>Complete your payment</h1>
-              <p className='mt-1 text-sm text-muted-foreground'>
-                Scan the QR or open the payment link. This checkout expires 2 minutes after creation.
-              </p>
+              <h1 className='mt-3 text-2xl font-extrabold tracking-tight md:text-3xl'>{t('checkout.title')}</h1>
+              <p className='mt-1 text-sm text-muted-foreground'>{t('checkout.description')}</p>
             </div>
 
             <Badge
@@ -141,14 +126,12 @@ export default function CheckoutPage() {
           {!transactionId ? (
             <Card>
               <CardHeader>
-                <CardTitle>Missing transaction</CardTitle>
-                <CardDescription>
-                  The URL must include <span className='font-mono'>transactionId</span> in the query string.
-                </CardDescription>
+                <CardTitle>{t('checkout.error.missingTransaction')}</CardTitle>
+                <CardDescription>{t('checkout.error.missingTransactionDesc')}</CardDescription>
               </CardHeader>
               <CardFooter className='justify-end'>
                 <Button asChild>
-                  <Link to='/'>Back to home</Link>
+                  <Link to='/'>{t('common.button.cancel')}</Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -156,18 +139,18 @@ export default function CheckoutPage() {
             <Card>
               <CardContent className='py-10 flex items-center justify-center gap-3'>
                 <Spinner />
-                <p className='text-sm text-muted-foreground'>Loading checkout…</p>
+                <p className='text-sm text-muted-foreground'>{t('checkout.loading')}</p>
               </CardContent>
             </Card>
           ) : !transaction ? (
             <Card>
               <CardHeader>
-                <CardTitle>Transaction not found</CardTitle>
-                <CardDescription>Please check the link or try again.</CardDescription>
+                <CardTitle>{t('checkout.error.notFound')}</CardTitle>
+                <CardDescription>{t('checkout.error.notFoundDesc')}</CardDescription>
               </CardHeader>
               <CardFooter className='justify-end'>
                 <Button asChild variant='secondary'>
-                  <Link to='/'>Back to home</Link>
+                  <Link to='/'>{t('common.button.cancel')}</Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -177,14 +160,16 @@ export default function CheckoutPage() {
                 <CardHeader className='border-b'>
                   <div className='flex items-start justify-between gap-4'>
                     <div className='min-w-0'>
-                      <CardTitle className='truncate'>{transaction.description || 'Payment'}</CardTitle>
+                      <CardTitle className='truncate'>
+                        {transaction.description || t('checkout.defaultDescription')}
+                      </CardTitle>
                       <CardDescription className='mt-1'>
-                        Transaction <span className='font-mono'>{transaction.transactionId}</span>
+                        {t('checkout.transactionLabel')} <span className='font-mono'>{transaction.transactionId}</span>
                       </CardDescription>
                     </div>
 
                     <div className='text-right'>
-                      <p className='font-mono text-xs text-muted-foreground'>AMOUNT</p>
+                      <p className='font-mono text-xs text-muted-foreground'>{t('checkout.amountLabel')}</p>
                       <p className='mt-1 text-xl font-extrabold text-primary'>
                         {formatCurrency(transaction.amount, transaction.currency)}
                       </p>
@@ -195,16 +180,14 @@ export default function CheckoutPage() {
                     {isPaid ? (
                       <div className='flex items-center gap-2 text-emerald-700'>
                         <CheckCircle2Icon className='size-4' />
-                        <p className='text-sm font-semibold'>Payment received</p>
+                        <p className='text-sm font-semibold'>{t('checkout.status.paidDesc')}</p>
                       </div>
                     ) : isExpired ? (
                       <div className='flex items-start gap-2 text-destructive'>
                         <ShieldAlertIcon className='mt-0.5 size-4' />
                         <div>
-                          <p className='text-sm font-semibold'>This checkout has expired</p>
-                          <p className='text-xs text-muted-foreground mt-0.5'>
-                            Please create a new transaction and open the new checkout link.
-                          </p>
+                          <p className='text-sm font-semibold'>{t('checkout.error.expired')}</p>
+                          <p className='text-xs text-muted-foreground mt-0.5'>{t('checkout.error.expiredDesc')}</p>
                         </div>
                       </div>
                     ) : (
@@ -212,7 +195,7 @@ export default function CheckoutPage() {
                         <div className='flex items-center justify-between gap-3'>
                           <div className='flex items-center gap-2 text-muted-foreground'>
                             <TimerIcon className='size-4' />
-                            <p className='text-sm'>Time left</p>
+                            <p className='text-sm'>{t('checkout.timeLeft')}</p>
                           </div>
                           <p className='font-mono text-sm font-semibold'>
                             {remainingMs == null ? '--:--' : formatMs(remainingMs)}
@@ -227,34 +210,32 @@ export default function CheckoutPage() {
                 <CardContent className='space-y-5'>
                   <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
                     <div className='rounded-lg border bg-muted/30 p-4'>
-                      <p className='text-xs font-mono text-muted-foreground'>GATEWAY</p>
+                      <p className='text-xs font-mono text-muted-foreground'>{t('checkout.gatewayLabel')}</p>
                       <p className='mt-1 text-sm font-semibold'>{transaction.gatewayName || '—'}</p>
                     </div>
                     <div className='rounded-lg border bg-muted/30 p-4'>
-                      <p className='text-xs font-mono text-muted-foreground'>STATUS</p>
+                      <p className='text-xs font-mono text-muted-foreground'>{t('checkout.statusLabel')}</p>
                       <p className='mt-1 text-sm font-semibold'>{transaction.status || '—'}</p>
                     </div>
                   </div>
 
                   <div className='space-y-2'>
                     <div className='flex items-center justify-between gap-3'>
-                      <p className='text-sm font-semibold'>Transfer content</p>
+                      <p className='text-sm font-semibold'>{t('checkout.transferContent')}</p>
                       <Button
                         size='sm'
                         variant='secondary'
-                        onClick={() => handleCopy(transaction.identifyDescription || '', 'Transfer content')}
+                        onClick={() => handleCopy(transaction.identifyDescription || '', t('checkout.transferContent'))}
                         disabled={!transaction.identifyDescription}
                         className='gap-2'
                       >
                         <CopyIcon className='size-4' />
-                        Copy
+                        {t('transactions.column.copyId')}
                       </Button>
                     </div>
                     <div className='rounded-lg border bg-background p-4'>
                       <p className='font-mono text-sm break-all'>{transaction.identifyDescription || '—'}</p>
-                      <p className='mt-2 text-xs text-muted-foreground'>
-                        Use this content when transferring so we can match your payment.
-                      </p>
+                      <p className='mt-2 text-xs text-muted-foreground'>{t('checkout.transferContentDesc')}</p>
                     </div>
                   </div>
 
@@ -262,15 +243,13 @@ export default function CheckoutPage() {
 
                   <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                     <div className='min-w-0'>
-                      <p className='text-sm font-semibold'>Having trouble?</p>
-                      <p className='text-xs text-muted-foreground'>
-                        If the QR doesn’t load, open the payment link in a new tab.
-                      </p>
+                      <p className='text-sm font-semibold'>{t('checkout.troubleTitle')}</p>
+                      <p className='text-xs text-muted-foreground'>{t('checkout.troubleDesc')}</p>
                     </div>
                     <Button asChild variant='outline' className='gap-2'>
                       <a href={transaction.qrCodePaymentUrl} target='_blank' rel='noreferrer'>
                         <ExternalLinkIcon className='size-4' />
-                        Open payment link
+                        {t('checkout.openPaymentLink')}
                       </a>
                     </Button>
                   </div>
@@ -279,8 +258,8 @@ export default function CheckoutPage() {
 
               <Card className='lg:col-span-2'>
                 <CardHeader className='border-b'>
-                  <CardTitle>Scan to pay</CardTitle>
-                  <CardDescription>Use your banking app to scan this QR.</CardDescription>
+                  <CardTitle>{t('checkout.scanToPay')}</CardTitle>
+                  <CardDescription>{t('checkout.scanToPayDesc')}</CardDescription>
                 </CardHeader>
 
                 <CardContent className='space-y-4'>
@@ -292,8 +271,8 @@ export default function CheckoutPage() {
                   >
                     {!transaction.qrCodePaymentUrl || qrBroken ? (
                       <div className='text-center space-y-2'>
-                        <p className='text-sm font-semibold'>QR unavailable</p>
-                        <p className='text-xs text-muted-foreground'>Please use the payment link.</p>
+                        <p className='text-sm font-semibold'>{t('checkout.qrUnavailable')}</p>
+                        <p className='text-xs text-muted-foreground'>{t('checkout.qrUnavailableDesc')}</p>
                       </div>
                     ) : (
                       <img
@@ -313,23 +292,18 @@ export default function CheckoutPage() {
                       disabled={isPaid}
                     >
                       <RefreshCcwIcon className='size-4' />
-                      Refresh
+                      {t('checkout.refresh')}
                     </Button>
                     <Button
                       className='flex-1 gap-2'
-                      onClick={() => handleCopy(transaction.transactionId, 'Transaction ID')}
+                      onClick={() => handleCopy(transaction.transactionId, t('checkout.transactionLabel'))}
                       variant='outline'
                     >
                       <CopyIcon className='size-4' />
-                      Copy ID
+                      {t('checkout.copyId')}
                     </Button>
                   </div>
                 </CardContent>
-
-                <CardFooter className='justify-between'>
-                  <p className='text-xs text-muted-foreground'>Secure checkout</p>
-                  <p className='text-xs font-mono text-muted-foreground'>UTC</p>
-                </CardFooter>
               </Card>
             </div>
           )}

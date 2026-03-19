@@ -6,6 +6,7 @@ import type { UserPayload } from '@/lib/zustand/auth.store'
 import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
 import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/types/subtask.type'
 import type { TaskCardDragData } from '@/types/task.type'
+import type { Currency } from '@/types/transaction.type'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -170,4 +171,18 @@ export const getUserType = (user: UserPayload | null): RoleType | null => {
   if (user.Role === 'Admin' && user.OrganizationId) return 'orgAdmin'
 
   return 'user'
+}
+
+export const formatCurrency = (price: number, currency?: Currency) => {
+  const currencyCode = currency === 'Usd' ? 'USD' : 'VND'
+
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currencyCode,
+      maximumFractionDigits: 0
+    }).format(price)
+  } catch {
+    return `${price.toLocaleString()} ${currency}`
+  }
 }

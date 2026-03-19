@@ -9,7 +9,14 @@ import {
 } from '@/components/ui/sidebar'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
-import { CalendarDaysIcon, FileClockIcon, FolderOpenIcon, PackageIcon, type LucideIcon } from 'lucide-react'
+import {
+  CalendarDaysIcon,
+  FileClockIcon,
+  FolderOpenIcon,
+  PackageIcon,
+  ScanBarcodeIcon,
+  type LucideIcon
+} from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router'
@@ -36,6 +43,11 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         title: t('project.sidebar.myCalendar'),
         url: '/calendar',
         icon: CalendarDaysIcon
+      },
+      {
+        title: t('pageTitle.transactions'),
+        url: '/transactions',
+        icon: ScanBarcodeIcon
       },
       ...(user?.Role !== 'Mentor'
         ? [

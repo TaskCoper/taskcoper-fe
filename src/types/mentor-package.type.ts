@@ -1,3 +1,5 @@
+import type { Currency } from './transaction.type'
+
 export interface MentorPackage {
   id: string
   mentorId: string
@@ -6,7 +8,7 @@ export interface MentorPackage {
   durationInMinutes: number
   totalSessions: number
   price: number
-  currency: 'Vnd' | 'Usd'
+  currency: Currency
   isActive: boolean
   sortOrder: number
   createdOnUtc: string
