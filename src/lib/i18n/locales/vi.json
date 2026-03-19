@@ -104,7 +104,9 @@
       "filter": "Lọc",
       "month": "Tháng",
       "week": "Tuần",
-      "files": "tệp"
+      "files": "tệp",
+      "openMenu": "Mở menu",
+      "comingSoon": "Sắp ra mắt"
     },
     "status": {
       "all": "Tất cả",
@@ -1646,8 +1648,14 @@
   },
   "packageBooking": {
     "bookPackage": {
-      "title": "Đặt gói",
-      "description": "Xác nhận gói bạn chọn và chọn dự án để đặt lịch."
+      "title": "Đặt lịch",
+      "description": "Xác nhận gói bạn chọn và chọn dự án để đặt lịch.",
+      "receipt": "TASKCOPER • BIÊN LAI",
+      "sessions": "Số buổi",
+      "durationPerSession": "Thời lượng / buổi",
+      "min": "phút",
+      "total": "TỔNG",
+      "proceed": "Quất liền!"
     }
   },
   "pageTitle": {
@@ -1656,6 +1664,80 @@
     "calendar": "Lịch",
     "featuredProjects": "Dự án nổi bật",
     "community": "Cộng đồng",
-    "news": "Tin tức"
+    "news": "Tin tức",
+    "transactions": "Giao dịch"
+  },
+  "transactions": {
+    "title": "Lịch sử giao dịch",
+    "description": "Xem và quản lý lịch sử giao dịch của bạn.",
+    "column": {
+      "reference": "Tham chiếu",
+      "targetModel": "Đối tượng",
+      "amount": "Số tiền",
+      "status": "Trạng thái",
+      "type": "Loại",
+      "method": "Cổng thanh toán",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Tìm kiếm theo mô tả...",
+      "createdDate": "Ngày tạo",
+      "paidDate": "Ngày thanh toán",
+      "actions": "Hành động",
+      "copyId": "Sao chép ID",
+      "viewDetails": "Xem chi tiết"
+    },
+    "status": {
+      "pending": "Đang chờ",
+      "completed": "Hoàn tất",
+      "failed": "Thất bại",
+      "canceled": "Đã hủy",
+      "refunded": "Đã hoàn tiền"
+    },
+    "type": {
+      "payment": "Thanh toán",
+      "refund": "Hoàn tiền"
+    },
+    "targetModel": {
+      "subscription": "Gói",
+      "packageBooking": "Gói buổi gặp"
+    }
+  },
+  "checkout": {
+    "breadcrumb": "THANH TOÁN • CHECKOUT",
+    "title": "Hoàn tất thanh toán",
+    "description": "Quét mã QR hoặc mở liên kết thanh toán. Phiên thanh toán này sẽ hết hạn sau 2 phút.",
+    "status": {
+      "paid": "Đã thanh toán",
+      "paidDesc": "Đã nhận được thanh toán",
+      "pending": "Đang chờ",
+      "expired": "Hết hạn"
+    },
+    "error": {
+      "missingTransaction": "Thiếu thông tin giao dịch",
+      "missingTransactionDesc": "URL phải bao gồm transactionId trong query string.",
+      "notFound": "Không tìm thấy giao dịch",
+      "notFoundDesc": "Vui lòng kiểm tra lại liên kết hoặc thử lại sau.",
+      "expired": "Phiên thanh toán đã hết hạn",
+      "expiredDesc": "Vui lòng tạo giao dịch mới và mở lại liên kết thanh toán mới.",
+      "copyFailed": "Sao chép thất bại",
+      "copyFailedDesc": "Vui lòng sao chép thủ công."
+    },
+    "loading": "Đang tải thanh toán…",
+    "defaultDescription": "Thanh toán",
+    "transactionLabel": "Giao dịch",
+    "amountLabel": "SỐ TIỀN",
+    "timeLeft": "Thời gian còn lại",
+    "gatewayLabel": "CỔNG THANH TOÁN",
+    "statusLabel": "TRẠNG THÁI",
+    "transferContent": "Nội dung chuyển khoản",
+    "transferContentDesc": "Sử dụng nội dung này khi chuyển khoản để chúng tôi có thể đối soát thanh toán của bạn.",
+    "troubleTitle": "Gặp vấn đề?",
+    "troubleDesc": "Nếu mã QR không tải được, hãy mở liên kết thanh toán trong tab mới.",
+    "openPaymentLink": "Mở liên kết thanh toán",
+    "scanToPay": "Quét để thanh toán",
+    "scanToPayDesc": "Sử dụng ứng dụng ngân hàng của bạn để quét mã QR này.",
+    "qrUnavailable": "Mã QR không khả dụng",
+    "qrUnavailableDesc": "Vui lòng sử dụng liên kết thanh toán.",
+    "copyId": "Sao chép ID",
+    "refresh": "Tải lại"
   }
 }

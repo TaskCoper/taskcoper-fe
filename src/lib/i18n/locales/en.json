@@ -104,7 +104,9 @@
       "filter": "Filter",
       "month": "Month",
       "week": "Week",
-      "files": "files"
+      "files": "files",
+      "openMenu": "Open menu",
+      "comingSoon": "Coming Soon"
     },
     "status": {
       "all": "All",
@@ -1647,7 +1649,13 @@
   "packageBooking": {
     "bookPackage": {
       "title": "Book package",
-      "description": "Confirm your package and select a project to book for."
+      "description": "Confirm your package and select a project to book for.",
+      "receipt": "TASKCOPER • RECEIPT",
+      "sessions": "Sessions",
+      "durationPerSession": "Duration / session",
+      "min": "min",
+      "total": "TOTAL",
+      "proceed": "Book now"
     }
   },
   "pageTitle": {
@@ -1656,6 +1664,80 @@
     "calendar": "Calendar",
     "featuredProjects": "Featured Projects",
     "community": "Community",
-    "news": "News"
+    "news": "News",
+    "transactions": "Transactions"
+  },
+  "transactions": {
+    "title": "Transactions History",
+    "description": "View and manage your transaction history.",
+    "column": {
+      "reference": "Reference",
+      "targetModel": "Target Model",
+      "amount": "Amount",
+      "status": "Status",
+      "type": "Type",
+      "method": "Gateway",
+      "description": "Description",
+      "descriptionPlaceholder": "Search by description...",
+      "createdDate": "Created Date",
+      "paidDate": "Paid Date",
+      "actions": "Actions",
+      "copyId": "Copy ID",
+      "viewDetails": "View Details"
+    },
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "failed": "Failed",
+      "canceled": "Canceled",
+      "refunded": "Refunded"
+    },
+    "type": {
+      "payment": "Payment",
+      "refund": "Refund"
+    },
+    "targetModel": {
+      "subscription": "Subscription",
+      "packageBooking": "Package Booking"
+    }
+  },
+  "checkout": {
+    "breadcrumb": "PAYMENTS • CHECKOUT",
+    "title": "Complete your payment",
+    "description": "Scan the QR or open the payment link. This checkout expires 2 minutes after creation.",
+    "status": {
+      "paid": "Paid",
+      "paidDesc": "Payment received",
+      "pending": "Pending",
+      "expired": "Expired"
+    },
+    "error": {
+      "missingTransaction": "Missing transaction",
+      "missingTransactionDesc": "The URL must include transactionId in the query string.",
+      "notFound": "Transaction not found",
+      "notFoundDesc": "Please check the link or try again.",
+      "expired": "This checkout has expired",
+      "expiredDesc": "Please create a new transaction and open the new checkout link.",
+      "copyFailed": "Copy failed",
+      "copyFailedDesc": "Please copy manually."
+    },
+    "loading": "Loading checkout…",
+    "defaultDescription": "Payment",
+    "transactionLabel": "Transaction",
+    "amountLabel": "AMOUNT",
+    "timeLeft": "Time left",
+    "gatewayLabel": "GATEWAY",
+    "statusLabel": "STATUS",
+    "transferContent": "Transfer content",
+    "transferContentDesc": "Use this content when transferring so we can match your payment.",
+    "troubleTitle": "Having trouble?",
+    "troubleDesc": "If the QR doesn’t load, open the payment link in a new tab.",
+    "openPaymentLink": "Open payment link",
+    "scanToPay": "Scan to pay",
+    "scanToPayDesc": "Use your banking app to scan this QR.",
+    "qrUnavailable": "QR unavailable",
+    "qrUnavailableDesc": "Please use the payment link.",
+    "copyId": "Copy ID",
+    "refresh": "Refresh"
   }
 }

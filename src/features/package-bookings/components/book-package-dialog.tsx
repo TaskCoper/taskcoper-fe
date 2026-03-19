@@ -12,27 +12,13 @@ import {
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMyProjectsInfinite } from '@/features/projects/hooks/use-get-my-projects-infinite'
-import { cn } from '@/shared/utils'
+import { cn, formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useBookPackage } from '../hooks/use-book-package'
 import type { BookPackageFormValues } from '../validations'
-
-const formatCurrency = (price: number, currency: MentorPackage['currency']) => {
-  const currencyCode = currency === 'Usd' ? 'USD' : 'VND'
-
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currencyCode,
-      maximumFractionDigits: 0
-    }).format(price)
-  } catch {
-    return `${price.toLocaleString()} ${currency}`
-  }
-}
 
 interface BookPackageDialogProps {
   children: React.ReactNode
@@ -101,7 +87,9 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
           <div>
             <div className='flex items-start justify-between gap-4'>
               <div className='min-w-0'>
-                <p className='font-mono text-xs text-muted-foreground tracking-wide'>TASKCOPER • RECEIPT</p>
+                <p className='font-mono text-xs text-muted-foreground tracking-wide'>
+                  {t('packageBooking.bookPackage.receipt')}
+                </p>
                 <p className='mt-2 font-semibold leading-snug truncate'>{mentorPackage.name}</p>
               </div>
 
@@ -120,19 +108,21 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
 
           <div className='space-y-2 font-mono text-xs'>
             <div className='flex items-center justify-between gap-3'>
-              <p className='text-muted-foreground'>Sessions</p>
+              <p className='text-muted-foreground'>{t('packageBooking.bookPackage.sessions')}</p>
               <p className='font-semibold'>{mentorPackage.totalSessions}</p>
             </div>
             <div className='flex items-center justify-between gap-3'>
-              <p className='text-muted-foreground'>Duration / session</p>
-              <p className='font-semibold'>{mentorPackage.durationInMinutes} min</p>
+              <p className='text-muted-foreground'>{t('packageBooking.bookPackage.durationPerSession')}</p>
+              <p className='font-semibold'>
+                {mentorPackage.durationInMinutes} {t('packageBooking.bookPackage.min')}
+              </p>
             </div>
           </div>
 
           <div className='my-3 border-t border-dashed border-border' />
 
           <div className='flex items-center justify-between gap-3 font-mono'>
-            <p className='text-xs text-muted-foreground'>TOTAL</p>
+            <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.total')}</p>
             <p className='text-sm font-extrabold'>{formatCurrency(mentorPackage.price, mentorPackage.currency)}</p>
           </div>
         </Card>
@@ -168,7 +158,7 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
 
             <Button className='w-full' disabled={isBookingPackage}>
               {isBookingPackage ? <Spinner /> : null}
-              Quất liền!
+              {t('packageBooking.bookPackage.proceed')}
             </Button>
           </form>
         </FormProvider>

@@ -11,6 +11,7 @@ import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projec
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
+import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 
 export const queryKeys = {
@@ -274,6 +275,22 @@ export const queryKeys = {
   },
   // Transactions
   transactions: {
-    detail: (transactionId?: string) => ['transaction', transactionId] as const
+    all: ['transactions'] as const,
+    my: ({ pageIndex, pageSize, status, type, sortBy, searchTerm, createdFrom, createdTo }: GetMyTransactionsParams) =>
+      [
+        ...queryKeys.transactions.all,
+        'my',
+        pageIndex,
+        pageSize,
+        status,
+        type,
+        sortBy,
+        searchTerm,
+        createdFrom,
+        createdTo
+      ] as const,
+    detail: (transactionId?: string) => ['transaction', transactionId] as const,
+    statusStats: () => ['transaction-status-stats'] as const,
+    typeStats: () => ['transaction-type-stats'] as const
   }
 } as const

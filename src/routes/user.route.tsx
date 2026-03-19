@@ -26,6 +26,7 @@ const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const MeetingSessionPackagesPage = lazy(() => import('@/pages/users/meeting-session-packages.page'))
 const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
+const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -73,6 +74,14 @@ export const userRoutes: RouteObject[] = [
                     element: (
                       <PageWrapper titleKey='pageTitle.projects'>
                         <ProjectsPage />
+                      </PageWrapper>
+                    )
+                  },
+                  {
+                    path: 'transactions',
+                    element: (
+                      <PageWrapper titleKey='pageTitle.transactions'>
+                        <TransactionsPage />
                       </PageWrapper>
                     )
                   },

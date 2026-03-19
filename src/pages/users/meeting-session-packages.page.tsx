@@ -5,6 +5,7 @@ import CreateMentorPackageDialog from '@/features/mentor-packages/components/cre
 import MentorPackageDialog from '@/features/mentor-packages/components/mentor-package-dialog'
 import { useGetMyMentorPackages } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
+import { formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { ArrowDownIcon, ArrowUpIcon, CheckCircle2Icon, CircleIcon, ClockIcon, PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -25,20 +26,6 @@ const ActiveFlag = ({ isActive }: { isActive: MentorPackage['isActive'] }) => {
       {isActive ? t('common.status.active') : t('common.status.inactive')}
     </span>
   )
-}
-
-const formatCurrency = (price: MentorPackage['price'], currency: MentorPackage['currency']) => {
-  const currencyCode = currency === 'Usd' ? 'USD' : 'VND'
-
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currencyCode,
-      maximumFractionDigits: 0
-    }).format(price)
-  } catch {
-    return `${price.toLocaleString()} ${currency}`
-  }
 }
 
 export default function MeetingSessionPackagesPage() {
