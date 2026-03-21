@@ -1710,43 +1710,32 @@
     }
   },
   "checkout": {
-    "breadcrumb": "PAYMENTS • CHECKOUT",
-    "title": "Complete your payment",
-    "description": "Scan the QR or open the payment link. This checkout expires 2 minutes after creation.",
-    "status": {
-      "paid": "Paid",
-      "paidDesc": "Payment received",
-      "pending": "Pending",
-      "expired": "Expired"
-    },
     "error": {
+      "copyFailed": "Copy failed",
+      "copyFailedDesc": "Please copy manually.",
       "missingTransaction": "Missing transaction",
       "missingTransactionDesc": "The URL must include transactionId in the query string.",
       "notFound": "Transaction not found",
       "notFoundDesc": "Please check the link or try again.",
       "expired": "This checkout has expired",
-      "expiredDesc": "Please create a new transaction and open the new checkout link.",
-      "copyFailed": "Copy failed",
-      "copyFailedDesc": "Please copy manually."
+      "expiredDesc": "Please create a new transaction and open the new checkout link."
     },
     "loading": "Loading checkout…",
-    "defaultDescription": "Payment",
-    "transactionLabel": "Transaction",
-    "amountLabel": "AMOUNT",
-    "timeLeft": "Time left",
-    "gatewayLabel": "GATEWAY",
-    "statusLabel": "STATUS",
-    "transferContent": "Transfer content",
-    "transferContentDesc": "Use this content when transferring so we can match your payment.",
-    "troubleTitle": "Having trouble?",
-    "troubleDesc": "If the QR doesn’t load, open the payment link in a new tab.",
-    "openPaymentLink": "Open payment link",
-    "scanToPay": "Scan to pay",
     "scanToPayDesc": "Use your banking app to scan this QR.",
     "qrUnavailable": "QR unavailable",
     "qrUnavailableDesc": "Please use the payment link.",
-    "copyId": "Copy ID",
-    "refresh": "Refresh"
+    "timeLeft": "Time left",
+    "status": {
+      "paidDesc": "Payment received",
+      "redirecting": "Please wait 2 seconds for redirection"
+    },
+    "qrBank": "Bank",
+    "qrAccount": "Account",
+    "transferContent": "Transfer content",
+    "refresh": "Refresh",
+    "openPaymentLink": "Open payment link",
+    "amountLabel": "Total amount",
+    "securePayment": "Secure Payment"
   },
 
   "mentorTitle": {
