@@ -62,7 +62,7 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         ? [
             {
               title: t('mentorPackage.sidebar.meetingSessionPackages'),
-              url: '/meeting-session-packages',
+              url: '/mentor-packages',
               icon: PackageIcon
             }
           ]

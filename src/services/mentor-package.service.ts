@@ -4,7 +4,7 @@ import type {
 } from '@/features/mentor-packages/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { MentorPackage } from '@/types/mentor-package.type'
+import type { MentorPackage, MentorPackageDetail } from '@/types/mentor-package.type'
 
 class MentorPackageService {
   private readonly baseUrl = 'mentor-packages'
@@ -26,6 +26,13 @@ class MentorPackageService {
     const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/mentor/${mentorId}`)
 
     return data
+  }
+
+  getMentorPackage = async ({ packageId }: { packageId?: string }) => {
+    if (!packageId) return null
+    const { data } = await api.get<BaseResponse<MentorPackageDetail>>(`/v1/${this.baseUrl}/${packageId}`)
+
+    return data.value
   }
 
   updateMentorPackage = async ({ body }: { body: UpdateMentorPackageFormValues }) => {

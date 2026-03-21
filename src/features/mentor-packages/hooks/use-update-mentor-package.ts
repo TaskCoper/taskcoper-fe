@@ -12,6 +12,16 @@ export const useUpdateMentorPackage = () => {
   const { t } = useTranslation()
 
   const methods = useForm<UpdateMentorPackageFormValues>({
+    defaultValues: {
+      name: '',
+      description: '',
+      durationInMinutes: 0,
+      totalSessions: '0',
+      price: '0',
+      currency: 'Vnd',
+      isActive: true,
+      sortOrder: 0
+    },
     resolver: zodResolver(updateMentorPackageSchema(t))
   })
 
@@ -25,8 +35,9 @@ export const useUpdateMentorPackage = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: () => {
+    onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.my() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId) })
     }
   })
 

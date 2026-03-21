@@ -1598,6 +1598,34 @@
       "file": "File"
     }
   },
+  "mentorPackageRule": {
+    "add": {
+      "title": "Add package rule",
+      "description": "Add a new rule to this mentor package."
+    },
+    "form": {
+      "no": "Rule Number",
+      "noPlaceholder": "Enter rule number",
+      "totalTimeSlots": "Total Time Slots",
+      "totalTimeSlotsPlaceholder": "Enter total time slots"
+    },
+    "item": {
+      "session": "Session",
+      "hours": "hours",
+      "edit": "Edit",
+      "create": "Create new rule"
+    },
+    "delete": {
+      "title": "Delete rule?",
+      "description": "Are you sure you want to delete session {{no}}?"
+    },
+    "validation": {
+      "noRequired": "Number required",
+      "noPositive": "Must be > 0",
+      "totalTimeSlotsRequired": "Total slots required",
+      "totalTimeSlotsPositive": "Must be > 0"
+    }
+  },
   "mentorPackage": {
     "create": {
       "title": "New mentor package",
@@ -1607,7 +1635,11 @@
       "title": "Meeting Session Packages",
       "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
       "emptyTitle": "No packages yet",
-      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees."
+      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
+      "infoTitle": "Information",
+      "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
+      "durationTitle": "Session Duration",
+      "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session."
     },
     "form": {
       "name": "Package name",
@@ -1633,7 +1665,7 @@
       "sessionsCount_other": "{{count}} sessions",
       "bookFor": "Book for {{price}}",
       "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} min / session",
-      "sortOrder": "Sort order: {{value}}"
+      "sortOrder": "Sort order"
     },
     "sidebar": {
       "meetingSessionPackages": "Meeting Session Packages"

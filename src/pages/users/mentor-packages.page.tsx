@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import CreateMentorPackageDialog from '@/features/mentor-packages/components/create-mentor-package-dialog'
-import MentorPackageDialog from '@/features/mentor-packages/components/mentor-package-dialog'
 import { useGetMyMentorPackages } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
 import { formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { ArrowDownIcon, ArrowUpIcon, CheckCircle2Icon, CircleIcon, ClockIcon, PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 const ActiveFlag = ({ isActive }: { isActive: MentorPackage['isActive'] }) => {
   const { t } = useTranslation()
@@ -28,7 +28,7 @@ const ActiveFlag = ({ isActive }: { isActive: MentorPackage['isActive'] }) => {
   )
 }
 
-export default function MeetingSessionPackagesPage() {
+export default function MentorPackagesPage() {
   const { t } = useTranslation()
   const { mentorPackages, isLoadingMyMentorPackages } = useGetMyMentorPackages()
   const items = mentorPackages.value.items as MentorPackage[]
@@ -107,7 +107,7 @@ export default function MeetingSessionPackagesPage() {
               items.map((mentorPackage, index) => (
                 <div key={mentorPackage.id} className='flex items-stretch gap-3'>
                   <div className='flex-1 min-w-0'>
-                    <MentorPackageDialog mentorPackage={mentorPackage}>
+                    <Link to={`${mentorPackage.id}`}>
                       <Card className='overflow-hidden p-0 gap-0 rounded-lg cursor-pointer'>
                         <div className='flex items-start gap-3 p-3'>
                           <div className='size-8 bg-primary/10 rounded-full flex justify-center items-center shrink-0'>
@@ -136,7 +136,7 @@ export default function MeetingSessionPackagesPage() {
                           </div>
                         </div>
                       </Card>
-                    </MentorPackageDialog>
+                    </Link>
                   </div>
 
                   <div className='flex flex-col items-center justify-center gap-1 shrink-0'>

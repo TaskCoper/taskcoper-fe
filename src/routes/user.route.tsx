@@ -10,23 +10,28 @@ import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
 const CalendarPage = lazy(() => import('@/pages/users/calendar.page'))
-const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
-const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
+
+const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
+const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
+
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
+
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
-const MeetingSessionPackagesPage = lazy(() => import('@/pages/users/meeting-session-packages.page'))
 const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
 const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
+
+const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
+const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -119,7 +124,10 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
-                    children: [{ path: 'meeting-session-packages', element: <MeetingSessionPackagesPage /> }]
+                    children: [
+                      { path: 'mentor-packages', element: <MentorPackagesPage /> },
+                      { path: 'mentor-packages/:packageId', element: <MentorPackagePage /> }
+                    ]
                   }
                 ]
               },
