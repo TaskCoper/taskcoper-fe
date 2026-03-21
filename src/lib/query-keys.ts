@@ -292,6 +292,7 @@ export const queryKeys = {
       ] as const,
     detail: (transactionId?: string) => ['transaction', transactionId] as const,
     statusStats: () => ['transaction-status-stats'] as const,
-    typeStats: () => ['transaction-type-stats'] as const
+    typeStats: () => ['transaction-type-stats'] as const,
+    status: (transactionId?: string) => ['transaction-status', transactionId] as const
   }
 } as const

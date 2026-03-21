@@ -1710,43 +1710,32 @@
     }
   },
   "checkout": {
-    "breadcrumb": "THANH TOÁN • CHECKOUT",
-    "title": "Hoàn tất thanh toán",
-    "description": "Quét mã QR hoặc mở liên kết thanh toán. Phiên thanh toán này sẽ hết hạn sau 2 phút.",
-    "status": {
-      "paid": "Đã thanh toán",
-      "paidDesc": "Đã nhận được thanh toán",
-      "pending": "Đang chờ",
-      "expired": "Hết hạn"
-    },
     "error": {
+      "copyFailed": "Sao chép thất bại",
+      "copyFailedDesc": "Vui lòng sao chép thủ công.",
       "missingTransaction": "Thiếu thông tin giao dịch",
       "missingTransactionDesc": "URL phải bao gồm transactionId trong query string.",
       "notFound": "Không tìm thấy giao dịch",
       "notFoundDesc": "Vui lòng kiểm tra lại liên kết hoặc thử lại sau.",
       "expired": "Phiên thanh toán đã hết hạn",
-      "expiredDesc": "Vui lòng tạo giao dịch mới và mở lại liên kết thanh toán mới.",
-      "copyFailed": "Sao chép thất bại",
-      "copyFailedDesc": "Vui lòng sao chép thủ công."
+      "expiredDesc": "Vui lòng tạo giao dịch mới và mở lại liên kết thanh toán mới."
     },
     "loading": "Đang tải thanh toán…",
-    "defaultDescription": "Thanh toán",
-    "transactionLabel": "Giao dịch",
-    "amountLabel": "SỐ TIỀN",
-    "timeLeft": "Thời gian còn lại",
-    "gatewayLabel": "CỔNG THANH TOÁN",
-    "statusLabel": "TRẠNG THÁI",
-    "transferContent": "Nội dung chuyển khoản",
-    "transferContentDesc": "Sử dụng nội dung này khi chuyển khoản để chúng tôi có thể đối soát thanh toán của bạn.",
-    "troubleTitle": "Gặp vấn đề?",
-    "troubleDesc": "Nếu mã QR không tải được, hãy mở liên kết thanh toán trong tab mới.",
-    "openPaymentLink": "Mở liên kết thanh toán",
-    "scanToPay": "Quét để thanh toán",
     "scanToPayDesc": "Sử dụng ứng dụng ngân hàng của bạn để quét mã QR này.",
     "qrUnavailable": "Mã QR không khả dụng",
     "qrUnavailableDesc": "Vui lòng sử dụng liên kết thanh toán.",
-    "copyId": "Sao chép ID",
-    "refresh": "Tải lại"
+    "timeLeft": "Thời gian còn lại",
+    "status": {
+      "paidDesc": "Đã nhận được thanh toán",
+      "redirecting": "Vui lòng chờ 2 giây để được chuyển hướng"
+    },
+    "qrBank": "Ngân hàng",
+    "qrAccount": "Số tài khoản",
+    "transferContent": "Nội dung chuyển khoản",
+    "refresh": "Tải lại",
+    "openPaymentLink": "Mở liên kết thanh toán",
+    "amountLabel": "Tổng số tiền",
+    "securePayment": "Thanh toán an toàn"
   },
 
   "mentorTitle": {

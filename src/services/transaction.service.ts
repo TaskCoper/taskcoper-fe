@@ -49,6 +49,15 @@ class TransactionService {
 
     return data
   }
+
+  getTransactionStatus = async ({ transactionId }: { transactionId?: string }) => {
+    if (!transactionId) return null
+    const { data } = await api.get<BaseResponse<Pick<Transaction, 'transactionId' | 'status' | 'paidAt'>>>(
+      `/v1/${this.baseUrl}/${transactionId}/status`
+    )
+
+    return data.value
+  }
 }
 
 const transactionService = new TransactionService()
