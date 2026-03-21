@@ -5,43 +5,29 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
+import { ApplicationStatusFilter } from '@/features/mentor-applications/components/application-status-filter'
 import { useGetMentorApplications } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import { useReviewMentorApplication } from '@/features/mentor-applications/hooks/use-review-mentor-application'
+import type { ReviewMentorApplicationFormValues } from '@/features/mentor-applications/validations'
+import { STATUS_CONFIG } from '@/shared/constants'
 import { formatDate } from '@/shared/utils'
 import type { Application } from '@/types/mentor-application.type'
-import { ApplicationStatus } from '@/types/mentor-application.type'
+import { ApplicationStatus, MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
 import { type i18n as Ii18n, type TFunction } from 'i18next'
 import {
   AlertCircleIcon,
   CalendarIcon,
   CheckCircle2Icon,
-  ClockIcon,
   ExternalLinkIcon,
   FileTextIcon,
-  LinkIcon
+  LinkIcon,
+  LockKeyholeIcon
 } from 'lucide-react'
 import { useState } from 'react'
-import { Controller } from 'react-hook-form'
+import { Controller, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-
-const STATUS_CONFIG: Record<ApplicationStatus, { labelKey: string; icon: React.ElementType; className: string }> = {
-  [ApplicationStatus.PENDING]: {
-    labelKey: 'mentorApplication.status.pendingReview',
-    icon: ClockIcon,
-    className: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-  },
-  [ApplicationStatus.APPROVED]: {
-    labelKey: 'mentorApplication.status.approved',
-    icon: CheckCircle2Icon,
-    className: 'bg-green-500/10 text-green-600 border-green-500/20'
-  },
-  [ApplicationStatus.REJECTED]: {
-    labelKey: 'mentorApplication.status.rejected',
-    icon: AlertCircleIcon,
-    className: 'bg-destructive/10 text-destructive border-destructive/20'
-  }
-}
 
 const StatusFlag = ({ status }: { status: Application['status'] }) => {
   const { t } = useTranslation()
@@ -96,37 +82,7 @@ export default function SystemMentorApplicationsPage() {
           <p className='text-sm text-muted-foreground'>{t('mentorApplication.list.adminDescription')}</p>
         </div>
 
-        <Select
-          value={status ?? 'all'}
-          onValueChange={(value) => setStatus(value === 'all' ? undefined : (value as ApplicationStatus))}
-        >
-          <SelectTrigger size='sm' className='w-36'>
-            <SelectValue placeholder={t('mentorApplication.list.allStatuses')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value='all'>{t('mentorApplication.list.allStatuses')}</SelectItem>
-              <SelectItem value={ApplicationStatus.PENDING}>
-                <span className='flex items-center gap-1.5'>
-                  <ClockIcon className='size-3 text-amber-500' />
-                  {t('mentorApplication.status.pending')}
-                </span>
-              </SelectItem>
-              <SelectItem value={ApplicationStatus.APPROVED}>
-                <span className='flex items-center gap-1.5'>
-                  <CheckCircle2Icon className='size-3 text-green-500' />
-                  {t('mentorApplication.status.approved')}
-                </span>
-              </SelectItem>
-              <SelectItem value={ApplicationStatus.REJECTED}>
-                <span className='flex items-center gap-1.5'>
-                  <AlertCircleIcon className='size-3 text-destructive' />
-                  {t('mentorApplication.status.rejected')}
-                </span>
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <ApplicationStatusFilter value={status} onValueChange={setStatus} />
 
         <Select value={sortBy} onValueChange={(value) => setSortBy(value as GetMyMentorApplicationsParams['sortBy'])}>
           <SelectTrigger size='sm' className='w-32'>
@@ -217,12 +173,30 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
   const config = STATUS_CONFIG[application.status]
   const StatusIcon = config.icon
 
-  const { methods, onSubmit, isReviewingMentorApplication } = useReviewMentorApplication()
+  const { methods, reviewMentorApplication, isReviewingMentorApplication } = useReviewMentorApplication()
 
-  const handleReview = (isApproved: boolean) => {
+  const onSubmit: SubmitHandler<ReviewMentorApplicationFormValues> = (body) => {
+    reviewMentorApplication({ body })
+  }
+
+  const handleReview = (status: ApplicationStatus) => {
     methods.setValue('applicationId', application.applicationId)
-    methods.setValue('isApproved', isApproved)
+    methods.setValue('status', status)
     methods.handleSubmit(onSubmit)()
+  }
+
+  const getNextStatusLabel = () => {
+    if (application.status === ApplicationStatus.PENDING) return t('mentorApplication.button.markInReview')
+    if (application.status === ApplicationStatus.IN_REVIEW) return t('mentorApplication.button.moveToOffers')
+    if (application.status === ApplicationStatus.IN_OFFERS) return t('mentorApplication.button.approve')
+    return ''
+  }
+
+  const getNextStatusValue = () => {
+    if (application.status === ApplicationStatus.PENDING) return ApplicationStatus.IN_REVIEW
+    if (application.status === ApplicationStatus.IN_REVIEW) return ApplicationStatus.IN_OFFERS
+    if (application.status === ApplicationStatus.IN_OFFERS) return ApplicationStatus.APPROVED
+    return ApplicationStatus.APPROVED
   }
 
   const dateFormatOptions: Intl.DateTimeFormatOptions = {
@@ -245,7 +219,7 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
 
   return (
     <div className='flex flex-col h-full min-h-0'>
-      <div className='p-5 gap-0 bg-muted/20 border-b shrink-0'>
+      <div className='p-4 gap-0 bg-muted/20 border-b shrink-0'>
         <div className='flex items-start justify-between gap-3'>
           <h2 className='text-lg font-semibold'>{t('mentorApplication.dialog.title')}</h2>
 
@@ -258,8 +232,8 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
         </div>
 
         <div className='flex flex-col gap-1.5'>
-          <p className='flex items-center gap-2 text-sm text-foreground/80'>
-            <CalendarIcon className='size-4 text-muted-foreground' />
+          <p className='flex items-center gap-2 text-sm text-muted-foreground'>
+            <CalendarIcon className='size-3 text-muted-foreground' />
             {t('mentorApplication.dialog.submitted', { date: submittedDate })}
           </p>
 
@@ -272,74 +246,115 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
         </div>
       </div>
 
-      <div className='flex-1 overflow-y-auto p-6 space-y-8'>
-        <div>
-          <SectionLabel label={t('mentorApplication.dialog.shortBio')} />
-          <Card className='p-3 shadow-none rounded-lg'>
-            <p className='text-sm leading-relaxed'>{application.shortBio}</p>
-          </Card>
-        </div>
-
-        {fileNames.length > 0 && (
-          <div>
-            <SectionLabel label={t('mentorApplication.dialog.portfolioFiles', { count: fileNames.length })} />
-            <div className='flex flex-wrap gap-2 mt-2'>
-              {application.portfolioUrls.map((url, i) => (
-                <a
-                  key={url}
-                  href={url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='group flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:border-muted-foreground/30 shadow-sm'
-                >
-                  <FileTextIcon className='size-4 text-blue-500 shrink-0' />
-                  <span className='max-w-[200px] truncate'>{fileNames[i]}</span>
-                  <ExternalLinkIcon className='size-3.5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity shrink-0' />
-                </a>
-              ))}
-            </div>
+      <div
+        className={`flex-1 relative ${application.status === ApplicationStatus.PENDING ? 'overflow-hidden' : 'overflow-y-auto'}`}
+      >
+        {application.status === ApplicationStatus.PENDING && (
+          <div className='absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/40 backdrop-blur-[2px]'>
+            <LockKeyholeIcon className='size-12 mb-3' />
+            <p className='text-muted-foreground text-sm'>{t('mentorApplication.status.pendingLock')}</p>
           </div>
         )}
 
-        <div>
-          <SectionLabel label={t('mentorApplication.dialog.detailedIntroduction')} />
-          <Card className='p-3 shadow-none rounded-lg'>
-            <SanitizedHtml html={application.description} />
-          </Card>
+        <div
+          className={`p-4 space-y-8 ${application.status === ApplicationStatus.PENDING ? 'blur-sm pointer-events-none opacity-50 select-none' : ''}`}
+        >
+          <div>
+            <SectionLabel label={t('mentorApplication.dialog.shortBio')} />
+            <Card className='p-3 shadow-none rounded-lg'>
+              <p className='text-sm leading-relaxed'>{application.shortBio}</p>
+            </Card>
+          </div>
+
+          {fileNames.length > 0 && (
+            <div>
+              <SectionLabel label={t('mentorApplication.dialog.portfolioFiles', { count: fileNames.length })} />
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {application.portfolioUrls.map((url, i) => (
+                  <a
+                    key={url}
+                    href={url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='group flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:border-muted-foreground/30 shadow-sm'
+                  >
+                    <FileTextIcon className='size-4 text-blue-500 shrink-0' />
+                    <span className='max-w-[200px] truncate'>{fileNames[i]}</span>
+                    <ExternalLinkIcon className='size-3.5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity shrink-0' />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <SectionLabel label={t('mentorApplication.dialog.detailedIntroduction')} />
+            <Card className='p-3 shadow-none rounded-lg'>
+              <SanitizedHtml html={application.description} />
+            </Card>
+          </div>
         </div>
       </div>
 
       {application.adminNote && (
-        <div className='flex items-start gap-3 bg-blue-50/50 dark:bg-blue-950/20 p-5 shrink-0 border-t'>
-          <AlertCircleIcon className='size-5 shrink-0 text-blue-500 mt-0.5' />
+        <div className='flex items-start gap-2 bg-blue-50/50 p-4 shrink-0 border-t'>
+          <AlertCircleIcon className='size-4 shrink-0 text-blue-500 mt-0.5' />
           <div>
-            <p className='text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1'>
-              {t('mentorApplication.dialog.reviewerNote')}
-            </p>
-            <p className='text-sm text-blue-900/80 dark:text-blue-200/80'>{application.adminNote}</p>
+            <p className='text-sm font-semibold text-blue-700'>{t('mentorApplication.dialog.reviewerNote')}</p>
+            <p className='text-sm text-blue-900/80'>{application.adminNote}</p>
           </div>
         </div>
       )}
 
-      {application.status === ApplicationStatus.PENDING && (
-        <div className='p-6 border-t shrink-0 bg-muted/10'>
-          <form className='space-y-4'>
+      {(
+        [ApplicationStatus.PENDING, ApplicationStatus.IN_REVIEW, ApplicationStatus.IN_OFFERS] as ApplicationStatus[]
+      ).includes(application.status) && (
+        <div className='p-4 border-t shrink-0 bg-muted/10'>
+          {application.status === ApplicationStatus.IN_OFFERS && (
+            <Controller
+              control={methods.control}
+              name='titleLevel'
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
+                  <FieldLabel htmlFor={field.name}>{t('mentorApplication.dialog.titleLevel')}</FieldLabel>
+                  <Select
+                    value={field.value ?? ''}
+                    onValueChange={field.onChange}
+                    disabled={isReviewingMentorApplication}
+                  >
+                    <SelectTrigger id={field.name}>
+                      <SelectValue placeholder={t('mentorApplication.dialog.titleLevelPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {Object.values(MentorTitle).map((title) => (
+                          <SelectItem key={title} value={title}>
+                            {t(MentorTitleLabel[title])}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <div className='min-h-4 mt-1'>
+                    {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                  </div>
+                </Field>
+              )}
+            />
+          )}
+
+          {application.status !== ApplicationStatus.PENDING && (
             <Controller
               control={methods.control}
               name='adminNote'
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
-                  <FieldLabel htmlFor={field.name}>
-                    {t('mentorApplication.dialog.reviewerNoteTitle', 'Reviewer Note')}
-                  </FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t('mentorApplication.dialog.reviewerNoteTitle')}</FieldLabel>
                   <InputGroup>
                     <InputGroupTextarea
                       {...field}
                       id={field.name}
-                      placeholder={t(
-                        'mentorApplication.dialog.reviewerNotePlaceholder',
-                        'Enter a reason if declining...'
-                      )}
+                      placeholder={t('mentorApplication.dialog.reviewerNotePlaceholder')}
                       rows={3}
                       className='min-h-20 resize-none wrap-break-word'
                       disabled={isReviewingMentorApplication}
@@ -358,27 +373,33 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
                 </Field>
               )}
             />
+          )}
 
-            <div className='flex gap-3 justify-end'>
+          <div className='flex gap-2 justify-end'>
+            {application.status !== ApplicationStatus.PENDING && (
               <Button
                 type='button'
+                size='sm'
                 variant='destructive'
                 disabled={isReviewingMentorApplication}
-                onClick={() => handleReview(false)}
+                onClick={() => handleReview(ApplicationStatus.REJECTED)}
               >
+                {isReviewingMentorApplication ? <Spinner /> : null}
                 {t('mentorApplication.button.reject')}
               </Button>
+            )}
 
-              <Button
-                type='button'
-                disabled={isReviewingMentorApplication}
-                onClick={() => handleReview(true)}
-                className='bg-emerald-600 hover:bg-emerald-700 text-white'
-              >
-                {t('mentorApplication.button.approve')}
-              </Button>
-            </div>
-          </form>
+            <Button
+              type='button'
+              size='sm'
+              disabled={isReviewingMentorApplication}
+              onClick={() => handleReview(getNextStatusValue())}
+              className='bg-emerald-600 hover:bg-emerald-700 text-white'
+            >
+              {isReviewingMentorApplication ? <Spinner /> : null}
+              {getNextStatusLabel()}
+            </Button>
+          </div>
         </div>
       )}
     </div>

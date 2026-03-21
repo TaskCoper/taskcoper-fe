@@ -1,3 +1,4 @@
+import { ApplicationStatus, MentorTitle } from '@/types/mentor-application.type'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -21,13 +22,24 @@ export const reviewMentorApplicationSchema = (t: TFunction) =>
   z
     .object({
       applicationId: z.string(),
-      isApproved: z.boolean(),
-      adminNote: z.string().nullable()
+      status: z.enum(ApplicationStatus),
+      adminNote: z.string().nullable(),
+      titleLevel: z.enum(MentorTitle).nullable()
     })
-    .refine((data) => data.isApproved || (data.adminNote && data.adminNote.trim().length > 0), {
-      message: t('mentorApplication.validation.adminNoteRequiredForRejection'),
-      path: ['adminNote']
-    })
+    .refine(
+      (data) => data.status !== ApplicationStatus.REJECTED || (data.adminNote && data.adminNote.trim().length > 0),
+      {
+        message: t('mentorApplication.validation.adminNoteRequiredForRejection'),
+        path: ['adminNote']
+      }
+    )
+    .refine(
+      (data) => data.status !== ApplicationStatus.APPROVED || (data.titleLevel && data.titleLevel.trim().length > 0),
+      {
+        message: t('mentorApplication.validation.titleLevelRequiredForApproval'),
+        path: ['titleLevel']
+      }
+    )
 
 export type SubmitMentorApplicationFormValues = z.infer<ReturnType<typeof submitMentorApplicationSchema>>
 export type ReviewMentorApplicationFormValues = z.infer<ReturnType<typeof reviewMentorApplicationSchema>>

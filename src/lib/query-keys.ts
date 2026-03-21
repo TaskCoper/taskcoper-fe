@@ -215,8 +215,9 @@ export const queryKeys = {
     all: ['mentor-applications'] as const,
     list: ({ status, sortBy }: GetMentorApplicationsParams = {}) =>
       [...queryKeys.mentorApplications.all, status, sortBy] as const,
+    allMy: ['mentor-applications', 'my'] as const,
     my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
-      [...queryKeys.mentorApplications.all, 'my', status, sortBy] as const
+      [...queryKeys.mentorApplications.allMy, status, sortBy] as const
   },
   // Mentor Packages
   mentorPackages: {

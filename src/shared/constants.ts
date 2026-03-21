@@ -1,5 +1,7 @@
+import { ApplicationStatus } from '@/types/mentor-application.type'
 import type { Locale } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
+import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'
 
 export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 10
@@ -45,3 +47,34 @@ export const DAY_OF_WEEKS = [
   { id: 250, value: 6, key: 'saturday' },
   { id: 300, value: 0, key: 'sunday' }
 ] as const
+
+export const STATUS_CONFIG: Record<
+  ApplicationStatus,
+  { labelKey: string; icon: React.ElementType; className: string }
+> = {
+  [ApplicationStatus.PENDING]: {
+    labelKey: 'mentorApplication.status.pending',
+    icon: ClockIcon,
+    className: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+  },
+  [ApplicationStatus.IN_REVIEW]: {
+    labelKey: 'mentorApplication.status.inReview',
+    icon: EyeIcon,
+    className: 'bg-blue-500/10 text-blue-600 border-blue-500/20'
+  },
+  [ApplicationStatus.IN_OFFERS]: {
+    labelKey: 'mentorApplication.status.inOffers',
+    icon: BriefcaseIcon,
+    className: 'bg-purple-500/10 text-purple-600 border-purple-500/20'
+  },
+  [ApplicationStatus.APPROVED]: {
+    labelKey: 'mentorApplication.status.approved',
+    icon: CheckCircle2Icon,
+    className: 'bg-green-500/10 text-green-600 border-green-500/20'
+  },
+  [ApplicationStatus.REJECTED]: {
+    labelKey: 'mentorApplication.status.rejected',
+    icon: AlertCircleIcon,
+    className: 'bg-destructive/10 text-destructive border-destructive/20'
+  }
+}

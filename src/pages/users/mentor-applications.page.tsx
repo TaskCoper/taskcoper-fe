@@ -2,38 +2,22 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { ApplicationStatusFilter } from '@/features/mentor-applications/components/application-status-filter'
 import MentorApplicationDialog from '@/features/mentor-applications/components/mentor-application-dialog'
 import {
   useGetMyMentorApplications,
   type GetMyMentorApplicationsParams
 } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import { STATUS_CONFIG } from '@/shared/constants'
 import { formatDate } from '@/shared/utils'
 import type { Application } from '@/types/mentor-application.type'
 import { ApplicationStatus } from '@/types/mentor-application.type'
-import { AlertCircleIcon, CheckCircle2Icon, ClockIcon, LinkIcon, PlusIcon } from 'lucide-react'
+import { LinkIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-const STATUS_CONFIG: Record<ApplicationStatus, { labelKey: string; icon: React.ElementType; className: string }> = {
-  [ApplicationStatus.PENDING]: {
-    labelKey: 'mentorApplication.status.pendingReview',
-    icon: ClockIcon,
-    className: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-  },
-  [ApplicationStatus.APPROVED]: {
-    labelKey: 'mentorApplication.status.approved',
-    icon: CheckCircle2Icon,
-    className: 'bg-green-500/10 text-green-600 border-green-500/20'
-  },
-  [ApplicationStatus.REJECTED]: {
-    labelKey: 'mentorApplication.status.rejected',
-    icon: AlertCircleIcon,
-    className: 'bg-destructive/10 text-destructive border-destructive/20'
-  }
-}
-
-function StatusFlag({ status }: { status: Application['status'] }) {
+const StatusFlag = ({ status }: { status: Application['status'] }) => {
   const { t } = useTranslation()
   const config = STATUS_CONFIG[status]
   const Icon = config.icon
@@ -48,7 +32,7 @@ function StatusFlag({ status }: { status: Application['status'] }) {
   )
 }
 
-function UrlCountFlag({ count }: { count: number }) {
+const UrlCountFlag = ({ count }: { count: number }) => {
   const { t } = useTranslation()
 
   return (
@@ -76,37 +60,7 @@ export default function MentorApplicationsPage() {
 
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-2'>
-            <Select
-              value={status ?? 'all'}
-              onValueChange={(value) => setStatus(value === 'all' ? undefined : (value as ApplicationStatus))}
-            >
-              <SelectTrigger size='sm' className='w-36'>
-                <SelectValue placeholder={t('mentorApplication.list.allStatuses')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value='all'>{t('mentorApplication.list.allStatuses')}</SelectItem>
-                  <SelectItem value={ApplicationStatus.PENDING}>
-                    <span className='flex items-center gap-1.5'>
-                      <ClockIcon className='size-3 text-amber-500' />
-                      {t('mentorApplication.status.pending')}
-                    </span>
-                  </SelectItem>
-                  <SelectItem value={ApplicationStatus.APPROVED}>
-                    <span className='flex items-center gap-1.5'>
-                      <CheckCircle2Icon className='size-3 text-green-500' />
-                      {t('mentorApplication.status.approved')}
-                    </span>
-                  </SelectItem>
-                  <SelectItem value={ApplicationStatus.REJECTED}>
-                    <span className='flex items-center gap-1.5'>
-                      <AlertCircleIcon className='size-3 text-destructive' />
-                      {t('mentorApplication.status.rejected')}
-                    </span>
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <ApplicationStatusFilter value={status} onValueChange={setStatus} />
 
             <Select
               value={sortBy}

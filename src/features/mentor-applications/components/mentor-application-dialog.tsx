@@ -8,40 +8,15 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { STATUS_CONFIG } from '@/shared/constants'
 import type { Application } from '@/types/mentor-application.type'
-import { ApplicationStatus } from '@/types/mentor-application.type'
-import {
-  AlertCircleIcon,
-  CalendarIcon,
-  CheckCircle2Icon,
-  ClockIcon,
-  ExternalLinkIcon,
-  FileTextIcon
-} from 'lucide-react'
+import { AlertCircleIcon, CalendarIcon, CheckCircle2Icon, ExternalLinkIcon, FileTextIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface MentorApplicationDialogProps {
   children: React.ReactNode
   application: Application
-}
-
-const STATUS_CONFIG = {
-  [ApplicationStatus.PENDING]: {
-    labelKey: 'mentorApplication.status.pendingReview',
-    icon: ClockIcon,
-    className: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-  },
-  [ApplicationStatus.APPROVED]: {
-    labelKey: 'mentorApplication.status.approved',
-    icon: CheckCircle2Icon,
-    className: 'bg-green-500/10 text-green-600 border-green-500/20'
-  },
-  [ApplicationStatus.REJECTED]: {
-    labelKey: 'mentorApplication.status.rejected',
-    icon: AlertCircleIcon,
-    className: 'bg-destructive/10 text-destructive border-destructive/20'
-  }
 }
 
 function SectionLabel({ label }: { label: string }) {
@@ -76,7 +51,7 @@ export default function MentorApplicationDialog({ application, children }: Mento
         onInteractOutside={() => setOpen(false)}
         showCloseButton={false}
       >
-        <DialogHeader className='p-4 gap-0'>
+        <DialogHeader className='p-4 gap-0  '>
           <div className='flex items-start justify-between gap-3'>
             <DialogTitle>{t('mentorApplication.dialog.title')}</DialogTitle>
 
@@ -88,17 +63,19 @@ export default function MentorApplicationDialog({ application, children }: Mento
             </p>
           </div>
 
-          <DialogDescription className='flex items-center gap-2'>
-            <CalendarIcon className='size-4' />
-            {t('mentorApplication.dialog.submitted', { date: submittedDate })}
-          </DialogDescription>
+          <div className='space-y-1'>
+            <DialogDescription className='flex items-center gap-2'>
+              <CalendarIcon className='size-4' />
+              {t('mentorApplication.dialog.submitted', { date: submittedDate })}
+            </DialogDescription>
 
-          {reviewedDate && (
-            <span className='flex items-center gap-1 text-xs text-muted-foreground'>
-              <CheckCircle2Icon className='size-4' />
-              {t('mentorApplication.dialog.reviewed', { date: reviewedDate })}
-            </span>
-          )}
+            {reviewedDate && (
+              <div className='flex items-center gap-2 text-muted-foreground'>
+                <CheckCircle2Icon className='size-4' />
+                <p className='text-sm'>{t('mentorApplication.dialog.reviewed', { date: reviewedDate })}</p>
+              </div>
+            )}
+          </div>
         </DialogHeader>
 
         <Separator />
@@ -141,16 +118,13 @@ export default function MentorApplicationDialog({ application, children }: Mento
         </div>
 
         {application.adminNote && (
-          <>
-            <Separator />
-            <div className='flex items-start gap-2.5 bg-primary/10 p-4 shrink-0'>
-              <AlertCircleIcon className='size-4 shrink-0 text-primary mt-0.5' />
-              <div>
-                <p className='text-sm font-semibold text-primary'>{t('mentorApplication.dialog.reviewerNote')}</p>
-                <p className='text-xs text-primary/80'>{application.adminNote}</p>
-              </div>
+          <div className='flex items-start gap-2 bg-blue-50/50 p-4 shrink-0 border-t'>
+            <AlertCircleIcon className='size-4 shrink-0 text-blue-500 mt-0.5' />
+            <div>
+              <p className='text-sm font-semibold text-blue-700'>{t('mentorApplication.dialog.reviewerNote')}</p>
+              <p className='text-sm text-blue-900/80'>{application.adminNote}</p>
             </div>
-          </>
+          </div>
         )}
       </DialogContent>
     </Dialog>

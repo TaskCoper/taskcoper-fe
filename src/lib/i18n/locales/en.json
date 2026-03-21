@@ -1217,16 +1217,22 @@
       "descriptionMax": "Description must be at most 10,000 characters",
       "portfolioFilesMin": "At least one portfolio file is required",
       "portfolioFilesMax": "You can upload at most 10 files",
-      "adminNoteRequiredForRejection": "Please enter a note when rejecting an application"
+      "adminNoteRequiredForRejection": "Please enter a note when rejecting an application",
+      "titleLevelRequiredForApproval": "Title level is required when approving"
     },
     "status": {
-      "pendingReview": "Pending Review",
       "approved": "Approved",
       "rejected": "Rejected",
-      "pending": "Pending"
+      "pending": "New",
+      "pendingReview": "Pending Review",
+      "pendingLock": "Accept to view details",
+      "inReview": "In Review",
+      "inOffers": "Interview"
     },
     "button": {
       "approve": "Approve",
+      "markInReview": "Review",
+      "moveToOffers": "Interview",
       "reject": "Reject"
     },
     "list": {
@@ -1255,7 +1261,9 @@
       "detailedIntroduction": "Detailed Introduction",
       "reviewerNote": "Reviewer Note",
       "reviewerNoteTitle": "Reviewer Note",
-      "reviewerNotePlaceholder": "Enter a reason if declining..."
+      "reviewerNotePlaceholder": "Enter a reason if declining...",
+      "titleLevel": "Mentor Title Level",
+      "titleLevelPlaceholder": "Select title level..."
     }
   },
   "notification": {
@@ -1739,5 +1747,17 @@
     "qrUnavailableDesc": "Please use the payment link.",
     "copyId": "Copy ID",
     "refresh": "Refresh"
+  },
+
+  "mentorTitle": {
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "platinum": "Platinum",
+    "diamond": "Diamond",
+    "master": "Master",
+    "grandMaster": "Grand Master",
+    "legendary": "Legendary",
+    "mythic": "Mythic"
   }
 }
