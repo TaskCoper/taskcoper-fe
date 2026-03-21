@@ -1217,16 +1217,22 @@
       "descriptionMax": "Mô tả tối đa 10.000 ký tự",
       "portfolioFilesMin": "Cần ít nhất một tệp portfolio",
       "portfolioFilesMax": "Bạn chỉ có thể tải lên tối đa 10 tệp",
-      "adminNoteRequiredForRejection": "Vui lòng nhập ghi chú khi từ chối đơn ứng tuyển"
+      "adminNoteRequiredForRejection": "Vui lòng nhập ghi chú khi từ chối đơn ứng tuyển",
+      "titleLevelRequiredForApproval": "Vui lòng chọn cấp bậc khi duyêt đơn ứng tuyển"
     },
     "status": {
-      "pendingReview": "Đang chờ duyệt",
       "approved": "Đã duyệt",
       "rejected": "Đã từ chối",
-      "pending": "Chờ duyệt"
+      "pending": "Mới",
+      "pendingReview": "Chờ duyệt",
+      "pendingLock": "Chấp nhận để xem chi tiết",
+      "inReview": "Đang xem xét",
+      "inOffers": "Đang phỏng vấn"
     },
     "button": {
       "approve": "Duyệt",
+      "markInReview": "Xem",
+      "moveToOffers": "Phỏng vấn",
       "reject": "Từ chối"
     },
     "list": {
@@ -1255,7 +1261,9 @@
       "detailedIntroduction": "Giới thiệu chi tiết",
       "reviewerNote": "Ghi chú của người xét duyệt",
       "reviewerNoteTitle": "Ghi chú của người xét duyệt",
-      "reviewerNotePlaceholder": "Nhập lý do nếu từ chối..."
+      "reviewerNotePlaceholder": "Nhập lý do nếu từ chối...",
+      "titleLevel": "Cấp Bậc Cố Vấn",
+      "titleLevelPlaceholder": "Chọn cấp bậc..."
     }
   },
   "notification": {
@@ -1739,5 +1747,17 @@
     "qrUnavailableDesc": "Vui lòng sử dụng liên kết thanh toán.",
     "copyId": "Sao chép ID",
     "refresh": "Tải lại"
+  },
+
+  "mentorTitle": {
+    "bronze": "Đồng",
+    "silver": "Bạc",
+    "gold": "Vàng",
+    "platinum": "Bạch kim",
+    "diamond": "Kim cương",
+    "master": "Cao thủ",
+    "grandMaster": "Đại cao thủ",
+    "legendary": "Huyền thoại",
+    "mythic": "Thần thoại"
   }
 }

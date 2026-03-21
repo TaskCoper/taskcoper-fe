@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { reviewMentorApplicationSchema, type ReviewMentorApplicationFormValues } from '../validations'
 
+import { ApplicationStatus } from '@/types/mentor-application.type'
+
 export const useReviewMentorApplication = () => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -15,8 +17,9 @@ export const useReviewMentorApplication = () => {
     resolver: zodResolver(reviewMentorApplicationSchema(t)),
     defaultValues: {
       applicationId: '',
-      isApproved: false,
-      adminNote: ''
+      status: ApplicationStatus.IN_REVIEW,
+      adminNote: '',
+      titleLevel: null
     }
   })
 
@@ -36,13 +39,8 @@ export const useReviewMentorApplication = () => {
     }
   })
 
-  const onSubmit = (values: ReviewMentorApplicationFormValues) => {
-    reviewMentorApplication({ body: values })
-  }
-
   return {
     methods,
-    onSubmit,
     reviewMentorApplication,
     isReviewingMentorApplication
   }

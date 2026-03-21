@@ -8,6 +8,7 @@ import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { submitMentorApplicationSchema, type SubmitMentorApplicationFormValues } from '../validations'
 
@@ -21,6 +22,7 @@ const defaultValues: SubmitMentorApplicationFormValues = {
 
 export const useSubmitMentorApplication = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const methods = useForm<SubmitMentorApplicationFormValues>({
@@ -103,6 +105,7 @@ export const useSubmitMentorApplication = () => {
     onSuccess: (message) => {
       toast.success(message)
       methods.reset()
+      navigate('/applications')
     },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
@@ -110,7 +113,7 @@ export const useSubmitMentorApplication = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorApplications.my() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorApplications.allMy })
     }
   })
 
