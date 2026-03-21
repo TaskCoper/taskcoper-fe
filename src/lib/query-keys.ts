@@ -223,7 +223,8 @@ export const queryKeys = {
   mentorPackages: {
     all: ['mentor-packages'] as const,
     my: () => [...queryKeys.mentorPackages.all, 'my'] as const,
-    list: ({ mentorId }: { mentorId?: string }) => [...queryKeys.mentorPackages.all, mentorId] as const
+    list: ({ mentorId }: { mentorId?: string }) => [...queryKeys.mentorPackages.all, mentorId] as const,
+    detail: (packageId?: string) => ['mentor-package', packageId] as const
   },
   // Schedules
   schedules: {

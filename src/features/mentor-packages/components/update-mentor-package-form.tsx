@@ -23,7 +23,6 @@ export default function UpdateMentorPackageForm() {
               id={field.name}
               placeholder={t('mentorPackage.form.namePlaceholder')}
               aria-invalid={fieldState.invalid}
-              autoFocus
               spellCheck={false}
             />
 
@@ -112,7 +111,7 @@ export default function UpdateMentorPackageForm() {
           <Field
             orientation='horizontal'
             data-invalid={fieldState.invalid}
-            className='p-4 bg-muted/80 rounded-md border border-dashed'
+            className='p-4 bg-muted/60 rounded-md border border-dashed'
           >
             <FieldContent className='gap-0'>
               <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.isActive')}</FieldLabel>

@@ -14,3 +14,13 @@ export interface MentorPackage {
   createdOnUtc: string
   modifiedOnUtc: string | null
 }
+
+export interface MentorPackageRule {
+  id: string
+  no: number
+  totalTimeSlots: number
+}
+
+export interface MentorPackageDetail extends MentorPackage {
+  rules: MentorPackageRule[]
+}

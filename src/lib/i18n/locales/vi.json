@@ -1598,6 +1598,34 @@
       "file": "Tệp"
     }
   },
+  "mentorPackageRule": {
+    "add": {
+      "title": "Thêm quy tắc gói",
+      "description": "Thêm một quy tắc mới cho gói hướng dẫn này."
+    },
+    "form": {
+      "no": "Số thứ tự",
+      "noPlaceholder": "Nhập số thứ tự",
+      "totalTimeSlots": "Tổng số slot thời gian",
+      "totalTimeSlotsPlaceholder": "Nhập tổng số slot thời gian"
+    },
+    "item": {
+      "session": "Buổi",
+      "hours": "giờ",
+      "edit": "Chỉnh sửa",
+      "create": "Tạo quy tắc mới"
+    },
+    "delete": {
+      "title": "Xóa quy tắc?",
+      "description": "Bạn có chắc chắn muốn xóa buổi thứ {{no}} không?"
+    },
+    "validation": {
+      "noRequired": "Yêu cầu nhập số thứ tự",
+      "noPositive": "Số thứ tự phải > 0",
+      "totalTimeSlotsRequired": "Yêu cầu nhập tổng số slot",
+      "totalTimeSlotsPositive": "Tổng số slot phải > 0"
+    }
+  },
   "mentorPackage": {
     "create": {
       "title": "Gói hướng dẫn mới",
@@ -1607,7 +1635,11 @@
       "title": "Gói buổi gặp",
       "description": "Tạo và quản lý các gói buổi gặp với mức giá linh hoạt cho mentee.",
       "emptyTitle": "Chưa có gói nào",
-      "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee."
+      "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee.",
+      "infoTitle": "Thông tin",
+      "infoDescription": "Nhập thông tin cơ bản của gói, bao gồm tên, mô tả, số buổi và giá để người dùng dễ hiểu và lựa chọn.",
+      "durationTitle": "Thời lượng mỗi buổi",
+      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi."
     },
     "form": {
       "name": "Tên gói",
@@ -1633,7 +1665,7 @@
       "sessionsCount_other": "{{count}} buổi",
       "bookFor": "Đặt lịch {{price}}",
       "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
-      "sortOrder": "Thứ tự sắp xếp: {{value}}"
+      "sortOrder": "Thứ tự sắp xếp"
     },
     "sidebar": {
       "meetingSessionPackages": "Gói buổi gặp"
