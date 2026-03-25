@@ -32,6 +32,8 @@ const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
 const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
+const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
+const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -89,6 +91,14 @@ export const userRoutes: RouteObject[] = [
                         <TransactionsPage />
                       </PageWrapper>
                     )
+                  },
+                  {
+                    path: 'purchases',
+                    element: <PurchaseHistoryPage />
+                  },
+                  {
+                    path: 'purchases/packages/:packageId',
+                    element: <PurchasedPackagePage />
                   },
                   {
                     path: 'calendar',

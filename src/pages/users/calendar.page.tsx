@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button'
+import { useGetMyMeetings } from '@/features/meetings/hooks/use-get-my-meetings'
 import CalendarHeader, { type CalendarViewMode } from '@/features/tasks/components/calendar/calendar-header'
 import DayView from '@/features/tasks/components/calendar/day-view'
 import MiniCalendarSidebar from '@/features/tasks/components/calendar/mini-calendar-sidebar'
 import MonthView from '@/features/tasks/components/calendar/month-view'
 import WeekView from '@/features/tasks/components/calendar/week-view'
 import { useAuthStore } from '@/lib/zustand/auth.store'
-import type { TaskPreview } from '@/types/task.type'
+import type { MeetingBooking } from '@/types/meeting.type'
 import {
   addDays,
   addMonths,
   addWeeks,
+  endOfMonth,
+  endOfWeek,
   format,
-  setHours,
-  setMinutes,
+  startOfMonth,
   startOfWeek,
   subDays,
   subMonths,
@@ -22,174 +24,12 @@ import { CalendarIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useLocation, useNavigate } from 'react-router'
-
-function generateSampleTasks(): TaskPreview[] {
-  const today = new Date()
-  const makeDate = (dayOffset: number, hour: number, minute = 0) =>
-    setMinutes(setHours(addDays(today, dayOffset), hour), minute).toISOString()
-
-  return [
-    {
-      id: 'sample-1',
-      name: 'Team standup meeting',
-      milestoneId: 'ms-1',
-      position: 1,
-      startDate: makeDate(-2, 4, 0),
-      endDate: makeDate(0, 9, 30),
-      priority: 'MEDIUM',
-      members: [],
-      totalSubtasks: 0,
-      completedSubtasks: 0,
-      totalComments: 0,
-      totalResources: 0,
-      progressPercentage: 0,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: 1,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-2',
-      name: 'Design review — landing page',
-      milestoneId: 'ms-1',
-      position: 2,
-      startDate: makeDate(1, 9, 0),
-      endDate: makeDate(1, 10, 30),
-      priority: 'HIGH',
-      members: [],
-      totalSubtasks: 3,
-      completedSubtasks: 1,
-      totalComments: 2,
-      totalResources: 0,
-      progressPercentage: 33,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: 3,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-3',
-      name: 'Write API documentation',
-      milestoneId: 'ms-2',
-      position: 3,
-      startDate: makeDate(-1, 13, 30),
-      endDate: makeDate(-1, 15, 30),
-      priority: 'LOW',
-      members: [],
-      totalSubtasks: 5,
-      completedSubtasks: 2,
-      totalComments: 0,
-      totalResources: 1,
-      progressPercentage: 40,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: 5,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-4',
-      name: 'Sprint planning',
-      milestoneId: 'ms-1',
-      position: 4,
-      startDate: makeDate(0, 10, 45),
-      endDate: makeDate(0, 12, 55),
-      priority: 'HIGHEST',
-      members: [],
-      totalSubtasks: 0,
-      completedSubtasks: 0,
-      totalComments: 5,
-      totalResources: 0,
-      progressPercentage: 0,
-      taskLabels: [],
-      isCompleted: true,
-      estimatedPoints: 2,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-5',
-      name: 'Fix login bug #342',
-      milestoneId: 'ms-2',
-      position: 5,
-      startDate: makeDate(2, 8, 0),
-      endDate: makeDate(2, 10, 0),
-      priority: 'HIGHEST',
-      members: [],
-      totalSubtasks: 2,
-      completedSubtasks: 0,
-      totalComments: 3,
-      totalResources: 0,
-      progressPercentage: 0,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: 3,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-6',
-      name: 'Deploy staging build',
-      milestoneId: 'ms-1',
-      position: 6,
-      startDate: makeDate(3, 16, 0),
-      endDate: makeDate(3, 17, 0),
-      priority: 'MEDIUM',
-      members: [],
-      totalSubtasks: 0,
-      completedSubtasks: 0,
-      totalComments: 0,
-      totalResources: 0,
-      progressPercentage: 0,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: 1,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-7',
-      name: 'Weekly retrospective',
-      milestoneId: 'ms-1',
-      position: 7,
-      startDate: makeDate(4, 15, 0),
-      endDate: makeDate(4, 16, 0),
-      priority: null,
-      members: [],
-      totalSubtasks: 0,
-      completedSubtasks: 0,
-      totalComments: 1,
-      totalResources: 0,
-      progressPercentage: 0,
-      taskLabels: [],
-      isCompleted: false,
-      estimatedPoints: null,
-      backgroundImage: null
-    },
-    {
-      id: 'sample-8',
-      name: 'Database migration prep',
-      milestoneId: 'ms-2',
-      position: 8,
-      startDate: makeDate(1, 11, 0),
-      endDate: makeDate(1, 12, 30),
-      priority: 'HIGH',
-      members: [],
-      totalSubtasks: 4,
-      completedSubtasks: 4,
-      totalComments: 0,
-      totalResources: 2,
-      progressPercentage: 100,
-      taskLabels: [],
-      isCompleted: true,
-      estimatedPoints: 5,
-      backgroundImage: null
-    }
-  ]
-}
+import { Link, Outlet, useNavigate } from 'react-router'
 
 export default function CalendarPage() {
   const { t } = useTranslation()
   const { user } = useAuthStore()
   const navigate = useNavigate()
-  const location = useLocation()
 
   const [currentDate, setCurrentDate] = useState(() => new Date())
   const [viewMode, setViewMode] = useQueryState(
@@ -197,7 +37,27 @@ export default function CalendarPage() {
     parseAsStringEnum<CalendarViewMode>(['day', 'week', 'month']).withDefault('week')
   )
 
-  const sampleTasks = useMemo(() => generateSampleTasks(), [])
+  // Compute dynamic date range based on view mode
+  const { activeFrom, activeTo } = useMemo(() => {
+    if (viewMode === 'day') {
+      const dayStart = new Date(currentDate)
+      dayStart.setHours(0, 0, 0, 0)
+      const dayEnd = new Date(currentDate)
+      dayEnd.setHours(23, 59, 59, 999)
+      return { activeFrom: dayStart.toISOString(), activeTo: dayEnd.toISOString() }
+    }
+    if (viewMode === 'week') {
+      const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
+      const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 })
+      return { activeFrom: weekStart.toISOString(), activeTo: weekEnd.toISOString() }
+    }
+    // month — extend to cover full calendar grid (prev/next month days)
+    const monthStart = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 })
+    const monthEnd = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 0 })
+    return { activeFrom: monthStart.toISOString(), activeTo: monthEnd.toISOString() }
+  }, [currentDate, viewMode])
+
+  const { myMeetings } = useGetMyMeetings({ activeFrom, activeTo })
 
   const handlePrev = useCallback(() => {
     setCurrentDate((d) => {
@@ -223,11 +83,11 @@ export default function CalendarPage() {
     setCurrentDate(date)
   }, [])
 
-  const handleTaskClick = useCallback(
-    (task: TaskPreview) => {
-      navigate(`${location.pathname}/${task.milestoneId}/tasks/${task.id}${location.search}`)
+  const handleMeetingClick = useCallback(
+    (meeting: MeetingBooking) => {
+      navigate(`/users/purchased-packages/${meeting.id}`)
     },
-    [navigate, location.pathname, location.search]
+    [navigate]
   )
 
   const headerTitle = (() => {
@@ -269,9 +129,15 @@ export default function CalendarPage() {
             onToday={handleToday}
           />
 
-          {viewMode === 'day' && <DayView date={currentDate} tasks={sampleTasks} onTaskClick={handleTaskClick} />}
-          {viewMode === 'week' && <WeekView date={currentDate} tasks={sampleTasks} onTaskClick={handleTaskClick} />}
-          {viewMode === 'month' && <MonthView date={currentDate} tasks={sampleTasks} onTaskClick={handleTaskClick} />}
+          {viewMode === 'day' && (
+            <DayView date={currentDate} meetings={myMeetings} onMeetingClick={handleMeetingClick} />
+          )}
+          {viewMode === 'week' && (
+            <WeekView date={currentDate} meetings={myMeetings} onMeetingClick={handleMeetingClick} />
+          )}
+          {viewMode === 'month' && (
+            <MonthView date={currentDate} meetings={myMeetings} onMeetingClick={handleMeetingClick} />
+          )}
         </div>
       </div>
 

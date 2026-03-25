@@ -16,7 +16,8 @@ import {
   MessageSquareIcon,
   PaperclipIcon,
   SquarePenIcon,
-  StarIcon
+  StarIcon,
+  TypeIcon
 } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
@@ -66,7 +67,8 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
     task.totalResources > 0 ||
     task.totalSubtasks > 0 ||
     task.priority ||
-    (task?.estimatedPoints && task.estimatedPoints > 0)
+    (task?.estimatedPoints && task.estimatedPoints > 0) ||
+    task.hasDescription
 
   const handleLabelClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -150,6 +152,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
             )}
           >
             {isWatchingTask ? <EyeIcon className='size-3.5' /> : null}
+            {task.hasDescription ? <TypeIcon className='size-3' /> : null}
             {task.startDate || task.endDate ? <TaskDateChip startDate={task.startDate} endDate={task.endDate} /> : null}
             {task.estimatedPoints && task.estimatedPoints > 0 ? (
               <TaskStoryPointsChip storyPoints={task.estimatedPoints} />

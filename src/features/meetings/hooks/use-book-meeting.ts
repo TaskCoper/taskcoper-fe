@@ -8,7 +8,11 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { bookMeetingSchema, type BookMeetingFormValues } from '../validations'
 
-export const useBookMeeting = () => {
+interface UseBookMeetingOptions {
+  packageId?: string
+}
+
+export const useBookMeeting = ({ packageId }: UseBookMeetingOptions = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -35,6 +39,11 @@ export const useBookMeeting = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(variables.body.mentorId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+
+      if (packageId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
     }
   })
 

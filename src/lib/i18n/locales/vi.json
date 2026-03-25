@@ -213,7 +213,8 @@
       "title": "Lịch hẹn",
       "weekLabel": "Tuần {{week}} - {{month}}",
       "available": "Trống",
-      "booked": "Đã đặt"
+      "booked": "Đã đặt",
+      "selected": "Đã chọn"
     }
   },
   "project": {
@@ -1780,5 +1781,22 @@
     "grandMaster": "Đại cao thủ",
     "legendary": "Huyền thoại",
     "mythic": "Thần thoại"
+  },
+  "purchaseHistory": {
+    "title": "Gói đang sử dụng",
+    "description": "Quản lý các gói bạn đã mua và sử dụng",
+    "meetingsCount": "{{booked}}/{{total}} buổi hẹn",
+    "price": "Giá",
+    "duration": "Thời lượng",
+    "viewDetails": "Xem chi tiết",
+    "bookSession": "Đặt lịch",
+    "detail": {
+      "about": "Giới thiệu",
+      "progress": "Tiến độ",
+      "mentor": "Cố vấn",
+      "details": "Chi tiết gói",
+      "meetings": "Các buổi hẹn",
+      "noMeetings": "Chưa có buổi hẹn nào được đặt"
+    }
   }
 }

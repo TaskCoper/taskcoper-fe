@@ -61,6 +61,8 @@ export default function BookMeetingForm({
             {
               startTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.startTimeUtc}Z`,
               endTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.endTimeUtc}Z`
+              // startTimeUtc: combineDateTimeToUtc(activeDay.date, activeSlot.startTimeUtc),
+              // endTimeUtc: combineDateTimeToUtc(activeDay.date, activeSlot.endTimeUtc)
             }
           ]
         : []

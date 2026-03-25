@@ -1,12 +1,12 @@
 import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
 import { cn } from '@/shared/utils'
-import type { TaskPreview } from '@/types/task.type'
+import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, endOfMonth, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
 
 interface MonthViewProps {
   date: Date
-  tasks: TaskPreview[]
-  onTaskClick?: (task: TaskPreview) => void
+  meetings: MeetingBooking[]
+  onMeetingClick?: (meeting: MeetingBooking) => void
 }
 
 const WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -33,14 +33,14 @@ function getMonthGrid(date: Date) {
   return days
 }
 
-export default function MonthView({ date, tasks, onTaskClick }: MonthViewProps) {
+export default function MonthView({ date, meetings, onMeetingClick }: MonthViewProps) {
   const days = getMonthGrid(date)
   const weeks = Math.ceil(days.length / 7)
 
-  function getTasksForDay(day: Date) {
-    return tasks.filter((task) => {
-      if (!task.startDate) return false
-      return isSameDay(new Date(task.startDate), day)
+  function getMeetingsForDay(day: Date) {
+    return meetings.filter((meeting) => {
+      if (!meeting.startTimeUtc) return false
+      return isSameDay(new Date(meeting.startTimeUtc), day)
     })
   }
 
@@ -61,9 +61,9 @@ export default function MonthView({ date, tasks, onTaskClick }: MonthViewProps) 
         {days.map((day) => {
           const today = isToday(day)
           const inMonth = isSameMonth(day, date)
-          const dayTasks = getTasksForDay(day)
-          const visibleTasks = dayTasks.slice(0, MAX_VISIBLE_TASKS)
-          const overflow = dayTasks.length - MAX_VISIBLE_TASKS
+          const dayMeetings = getMeetingsForDay(day)
+          const visibleMeetings = dayMeetings.slice(0, MAX_VISIBLE_TASKS)
+          const overflow = dayMeetings.length - MAX_VISIBLE_TASKS
 
           return (
             <div key={day.toISOString()} className={cn('border-l border-b p-1', !inMonth && 'bg-muted/30')}>
@@ -81,8 +81,8 @@ export default function MonthView({ date, tasks, onTaskClick }: MonthViewProps) 
               </div>
 
               <div className='mt-0.5 space-y-0.5'>
-                {visibleTasks.map((task) => (
-                  <CalendarEvent key={task.id} task={task} variant='chip' onClick={onTaskClick} />
+                {visibleMeetings.map((meeting) => (
+                  <CalendarEvent key={meeting.id} meeting={meeting} variant='chip' onClick={onMeetingClick} />
                 ))}
                 {overflow > 0 && (
                   <p className='text-[10px] text-muted-foreground pl-1.5 cursor-pointer hover:text-foreground'>

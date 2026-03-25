@@ -10,7 +10,9 @@ export const bookMeetingSchema = () => {
     mentorId: z.uuid(),
     bookingTimeSlots: z.array(bookingTimeSlotSchema).min(1),
     bookByUserId: z.uuid(),
-    bookByProjectId: z.uuid().nullable()
+    bookByProjectId: z.uuid().nullable(),
+    packageBookingId: z.uuid().nullable(),
+    packageSessionNumber: z.number().positive().nullable()
   })
 }
 

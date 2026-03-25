@@ -213,7 +213,8 @@
       "title": "Meetings",
       "weekLabel": "Week {{week}} - {{month}}",
       "available": "Available",
-      "booked": "Booked"
+      "booked": "Booked",
+      "selected": "Selected"
     }
   },
   "project": {
@@ -1780,5 +1781,22 @@
     "grandMaster": "Grand Master",
     "legendary": "Legendary",
     "mythic": "Mythic"
+  },
+  "purchaseHistory": {
+    "title": "Purchased Packages",
+    "description": "Manage your purchased packages and sessions",
+    "meetingsCount": "{{booked}}/{{total}} sessions",
+    "price": "Price",
+    "duration": "Duration",
+    "viewDetails": "View Details",
+    "bookSession": "Book Session",
+    "detail": {
+      "about": "About",
+      "progress": "Progress",
+      "mentor": "Mentor",
+      "details": "Package Details",
+      "meetings": "Meetings",
+      "noMeetings": "No meetings scheduled yet"
+    }
   }
 }

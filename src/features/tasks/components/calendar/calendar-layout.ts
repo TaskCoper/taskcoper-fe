@@ -1,9 +1,8 @@
-import type { TaskPreview } from '@/types/task.type'
-
-const HOUR_HEIGHT = 60
+import type { MeetingBooking } from '@/types/meeting.type'
+import { CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT } from '@/features/tasks/constants'
 
 export interface LayoutedEvent {
-  task: TaskPreview
+  meeting: MeetingBooking
   top: number
   height: number
   /** 0-based column index within the overlap group */
@@ -13,37 +12,44 @@ export interface LayoutedEvent {
 }
 
 /**
- * Calculate the vertical position of a task within a day.
+ * Calculate the vertical position of a meeting within a day.
  */
-function getMinuteRange(task: TaskPreview, dayStart: Date, dayEnd: Date) {
-  const start = new Date(task.startDate!)
-  const end = new Date(task.endDate!)
+function getMinuteRange(meeting: MeetingBooking, dayStart: Date, dayEnd: Date) {
+  const start = new Date(meeting.startTimeUtc)
+  const end = new Date(meeting.endTimeUtc)
 
   const effectiveStart = start < dayStart ? dayStart : start
-  const effectiveEnd = end > dayEnd ? dayEnd : end
-
   const startMin = effectiveStart.getHours() * 60 + effectiveStart.getMinutes()
-  const endMin = effectiveEnd.getHours() * 60 + effectiveEnd.getMinutes()
+
+  let endMin: number
+  if (end > dayEnd) {
+    // If it crosses past this day, cap its visual render at the very bottom (minute 1440)
+    endMin = 24 * 60
+  } else {
+    // Note: if end is exactly 00:00 of the *same* day, getHours() is 0.
+    // It shouldn't happen for end times normally.
+    endMin = end.getHours() * 60 + end.getMinutes()
+  }
 
   return { startMin, endMin: Math.max(endMin, startMin + 15) }
 }
 
 /**
- * Takes an array of tasks for a single day and returns layout info
+ * Takes an array of meetings for a single day and returns layout info
  * with overlap columns computed (Google Calendar-style side-by-side).
  */
-export function layoutDayEvents(tasks: TaskPreview[], day: Date): LayoutedEvent[] {
+export function layoutDayEvents(meetings: MeetingBooking[], day: Date): LayoutedEvent[] {
   const dayStart = new Date(day)
   dayStart.setHours(0, 0, 0, 0)
   const dayEnd = new Date(day)
   dayEnd.setHours(23, 59, 59, 999)
 
   // Build positioned items
-  const items = tasks
-    .filter((t) => t.startDate && t.endDate)
-    .map((task) => {
-      const { startMin, endMin } = getMinuteRange(task, dayStart, dayEnd)
-      return { task, startMin, endMin }
+  const items = meetings
+    .filter((m) => m.startTimeUtc && m.endTimeUtc)
+    .map((meeting) => {
+      const { startMin, endMin } = getMinuteRange(meeting, dayStart, dayEnd)
+      return { meeting, startMin, endMin }
     })
     .sort((a, b) => a.startMin - b.startMin || a.endMin - b.endMin)
 
@@ -78,7 +84,7 @@ export function layoutDayEvents(tasks: TaskPreview[], day: Date): LayoutedEvent[
         if (item.startMin >= columns[col].endMin) {
           columns[col].endMin = item.endMin
           result.push({
-            task: item.task,
+            meeting: item.meeting,
             top: (item.startMin / 60) * HOUR_HEIGHT,
             height: ((item.endMin - item.startMin) / 60) * HOUR_HEIGHT,
             column: col,
@@ -91,7 +97,7 @@ export function layoutDayEvents(tasks: TaskPreview[], day: Date): LayoutedEvent[
       if (!placed) {
         columns.push({ endMin: item.endMin })
         result.push({
-          task: item.task,
+          meeting: item.meeting,
           top: (item.startMin / 60) * HOUR_HEIGHT,
           height: ((item.endMin - item.startMin) / 60) * HOUR_HEIGHT,
           column: columns.length - 1,
@@ -103,7 +109,7 @@ export function layoutDayEvents(tasks: TaskPreview[], day: Date): LayoutedEvent[
     // Set totalColumns for all items in this cluster
     const total = columns.length
     for (const r of result) {
-      if (cluster.some((c) => c.task.id === r.task.id) && r.totalColumns === 0) {
+      if (cluster.some((c) => c.meeting.id === r.meeting.id) && r.totalColumns === 0) {
         r.totalColumns = total
       }
     }

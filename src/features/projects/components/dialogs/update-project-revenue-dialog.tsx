@@ -25,8 +25,6 @@ export default function UpdateProjectRevenueDialog({
   const { t } = useTranslation()
   const { methods, updateProjectRevenue, isUpdatingProjectRevenue } = useUpdateProjectRevenue()
 
-  console.log(methods.formState.errors)
-
   const onSubmit: SubmitHandler<UpdateProjectRevenueFormValues> = (body) => {
     updateProjectRevenue(
       { body },

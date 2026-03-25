@@ -1,26 +1,28 @@
 import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
 import { layoutDayEvents } from '@/features/tasks/components/calendar/calendar-layout'
+import {
+  CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
+  CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
+} from '@/features/tasks/constants'
 import { cn } from '@/shared/utils'
-import type { TaskPreview } from '@/types/task.type'
+import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, format, isSameDay, isToday, setHours, startOfWeek } from 'date-fns'
 import { useEffect, useRef } from 'react'
 
 interface WeekViewProps {
   date: Date
-  tasks: TaskPreview[]
-  onTaskClick?: (task: TaskPreview) => void
+  meetings: MeetingBooking[]
+  onMeetingClick?: (meeting: MeetingBooking) => void
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
-const HOUR_HEIGHT = 60
-const TIME_GUTTER_WIDTH = 64
 
 function getWeekDays(date: Date) {
   const start = startOfWeek(date, { weekStartsOn: 0 })
   return Array.from({ length: 7 }, (_, i) => addDays(start, i))
 }
 
-export default function WeekView({ date, tasks, onTaskClick }: WeekViewProps) {
+export default function WeekView({ date, meetings, onMeetingClick }: WeekViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const days = getWeekDays(date)
   const now = new Date()
@@ -60,7 +62,7 @@ export default function WeekView({ date, tasks, onTaskClick }: WeekViewProps) {
         })}
       </div>
 
-      <div className='flex relative' style={{ height: 24 * HOUR_HEIGHT }}>
+      <div className='flex relative' style={{ height: 24 * HOUR_HEIGHT + 16 }}>
         <div className='shrink-0 relative' style={{ width: TIME_GUTTER_WIDTH }}>
           {HOURS.map((hour) => (
             <div
@@ -75,12 +77,12 @@ export default function WeekView({ date, tasks, onTaskClick }: WeekViewProps) {
 
         {days.map((day) => {
           const today = isToday(day)
-          const dayTasks = tasks.filter((task) => {
-            if (!task.startDate) return false
-            return isSameDay(new Date(task.startDate), day)
+          const dayMeetings = meetings.filter((meeting) => {
+            if (!meeting.startTimeUtc) return false
+            return isSameDay(new Date(meeting.startTimeUtc), day)
           })
 
-          const layouted = layoutDayEvents(dayTasks, day)
+          const layouted = layoutDayEvents(dayMeetings, day)
           const currentTimeTop = today ? ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT : null
 
           return (
@@ -98,14 +100,14 @@ export default function WeekView({ date, tasks, onTaskClick }: WeekViewProps) {
                 const leftPercent = ev.column * widthPercent
                 return (
                   <CalendarEvent
-                    key={ev.task.id}
-                    task={ev.task}
-                    onClick={onTaskClick}
+                    key={ev.meeting.id}
+                    meeting={ev.meeting}
+                    onClick={onMeetingClick}
                     style={{
-                      top: ev.top,
-                      height: ev.height,
+                      top: ev.top + 1,
+                      height: ev.height - 2,
                       left: `calc(${leftPercent}% + 2px)`,
-                      width: `calc(${widthPercent}% - 4px)`
+                      width: `calc(${widthPercent}% - 14px)`
                     }}
                   />
                 )

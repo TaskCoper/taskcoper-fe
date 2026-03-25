@@ -58,3 +58,10 @@ export const groupSlotsByDay = (slots: ScheduleSlot[], weekStart: Date): DaySche
 
   return days
 }
+
+export const combineDateTimeToUtc = (date: Date, time: string) => {
+  const [hours, minutes, seconds] = time.split(':').map(Number)
+  const combinedDate = new Date(date)
+  combinedDate.setHours(hours, minutes, seconds || 0, 0)
+  return combinedDate.toISOString()
+}
