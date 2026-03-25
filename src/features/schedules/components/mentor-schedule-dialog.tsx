@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useBookMeeting } from '@/features/meetings/hooks/use-book-meeting'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
-import { formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
+import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
@@ -351,10 +351,10 @@ export default function MentorScheduleDialog({
                                   dayOfWeek: slot.dayOfWeek,
                                   startTime: slot.startTimeUtc,
                                   endTime: slot.endTimeUtc,
-                                  startTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.startTimeUtc}Z`,
-                                  endTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.endTimeUtc}Z`
-                                  // startTimeUtc: combineDateTimeToUtc(day.date, slot.startTimeUtc),
-                                  // endTimeUtc: combineDateTimeToUtc(day.date, slot.endTimeUtc)
+                                  // startTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.startTimeUtc}Z`,
+                                  // endTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.endTimeUtc}Z`
+                                  startTimeUtc: combineDateTimeToUtc(day.date, slot.startTimeUtc),
+                                  endTimeUtc: combineDateTimeToUtc(day.date, slot.endTimeUtc)
                                 }
                               ])
                             }}
