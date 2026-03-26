@@ -2,7 +2,7 @@ import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
 import type { BookMeetingFormValues } from '@/features/meetings/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { MeetingBooking } from '@/types/meeting.type'
+import type { MeetingBooking, MeetingDetail } from '@/types/meeting.type'
 import type { ScheduleSlot } from '@/types/schedule.type'
 
 class MeetingService {
@@ -37,6 +37,13 @@ class MeetingService {
     })
 
     return data.value.items
+  }
+
+  getMeeting = async ({ meetingId }: { meetingId?: string }) => {
+    if (!meetingId) return null
+    const { data } = await api.get<BaseResponse<MeetingDetail>>(`/v1/${this.baseUrl}/bookings/${meetingId}`)
+
+    return data.value
   }
 }
 

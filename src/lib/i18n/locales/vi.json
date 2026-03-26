@@ -215,7 +215,51 @@
       "available": "Trống",
       "booked": "Đã đặt",
       "selected": "Đã chọn"
+    },
+    "detail": {
+      "session": "Buổi {{sequence}}",
+      "meetingWith": "Gặp gỡ",
+      "to": "đến",
+      "joinViaGoogleMeet": "Tham gia bằng Google Meet",
+      "maxGuests": "Tối đa 100 kết nối khách",
+      "noLinkYet": "Chưa có link",
+      "noteWillBeHere": "Ghi chú của {{firstName}} {{lastName}} sẽ ở đây.",
+      "information": "Thông tin",
+      "status": "Trạng thái",
+      "belongsToProject": "Thuộc về dự án",
+      "belongsToPackage": "Thuộc gói",
+      "sessionSequence": "Thứ tự buổi",
+      "mentor": "Người hướng dẫn",
+      "participants": "Người tham gia",
+      "dateFormat": "dd 'thg' MM, yyyy",
+      "meetingDateTimeAt": "vào"
+    },
+    "status": {
+      "free": "Trống",
+      "booked": "Đã đặt",
+      "completed": "Hoàn thành",
+      "reschedule": "Chờ xếp lại",
+      "cancelled": "Đã hủy",
+      "suspended": "Tạm ngưng"
     }
+  },
+  "purchasedPackage": {
+    "progress": "Tiến độ",
+    "overallProgress": "Tiến độ tổng thể của gói mentor",
+    "information": "Thông tin",
+    "packageInformation": "Thông tin gói mentor",
+    "belongsToProject": "Thuộc về dự án",
+    "createdBy": "Được tạo bởi",
+    "purchasedOn": "Đã mua vào",
+    "bookSchedule": "Đặt lịch",
+    "meetingSession": "Meeting buổi {{sequence}}",
+    "bookMeetingSession": "Đặt lịch hẹn cho buổi {{sequence}} ({{slots}} slot)",
+    "confirmBooking": "Xác nhận đặt",
+    "note": "Lưu ý:",
+    "bookingNote": "Bạn chỉ có thể chọn các khoảng thời gian liên tiếp nhau. Vui lòng chọn {{slots}} khoảng thời gian liên tiếp để đặt lịch.",
+    "completedProgress": "Hoàn thành {{progress}}%",
+    "meetButton": "Meet",
+    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm"
   },
   "project": {
     "title": "Dự án của tôi",

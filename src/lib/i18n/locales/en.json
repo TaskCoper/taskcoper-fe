@@ -215,7 +215,51 @@
       "available": "Available",
       "booked": "Booked",
       "selected": "Selected"
+    },
+    "detail": {
+      "session": "Session {{sequence}}",
+      "meetingWith": "Meeting with",
+      "to": "to",
+      "joinViaGoogleMeet": "Join via Google Meet",
+      "maxGuests": "Max 100 guests",
+      "noLinkYet": "No link yet",
+      "noteWillBeHere": "{{firstName}} {{lastName}}'s note will be here.",
+      "information": "Information",
+      "status": "Status",
+      "belongsToProject": "Belongs to project",
+      "belongsToPackage": "Belongs to package",
+      "sessionSequence": "Session sequence",
+      "mentor": "Mentor",
+      "participants": "Participants",
+      "dateFormat": "dd MMM, yyyy",
+      "meetingDateTimeAt": "at"
+    },
+    "status": {
+      "free": "Free",
+      "booked": "Booked",
+      "completed": "Completed",
+      "reschedule": "Rescheduled",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended"
     }
+  },
+  "purchasedPackage": {
+    "progress": "Progress",
+    "overallProgress": "Overall progress of the mentor package",
+    "information": "Information",
+    "packageInformation": "Mentor package information",
+    "belongsToProject": "Belongs to project",
+    "createdBy": "Created by",
+    "purchasedOn": "Purchased on",
+    "bookSchedule": "Book schedule",
+    "meetingSession": "Meeting session {{sequence}}",
+    "bookMeetingSession": "Book schedule for session {{sequence}} ({{slots}} slots)",
+    "confirmBooking": "Confirm Booking",
+    "note": "Note:",
+    "bookingNote": "You can only select consecutive time slots. Please select {{slots}} consecutive time slots to book a meeting.",
+    "completedProgress": "Completed {{progress}}%",
+    "meetButton": "Meet",
+    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm"
   },
   "project": {
     "title": "My Projects",

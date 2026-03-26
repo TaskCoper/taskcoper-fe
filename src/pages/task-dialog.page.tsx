@@ -70,7 +70,7 @@ import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
 
-export default function TaskDetailDialogPage() {
+export default function TaskDialogPage() {
   const navigate = useNavigate()
   const location = useLocation()
 

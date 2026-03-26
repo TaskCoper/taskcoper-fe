@@ -22,7 +22,9 @@ export const useBookMeeting = ({ packageId }: UseBookMeetingOptions = {}) => {
       mentorId: '',
       bookingTimeSlots: [],
       bookByUserId: user?.UserId ?? '',
-      bookByProjectId: null
+      bookByProjectId: null,
+      packageBookingId: null,
+      packageSessionNumber: null
     },
     resolver: zodResolver(bookMeetingSchema())
   })

@@ -2,10 +2,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { cn } from '@/shared/utils'
-import { MeetingStatus } from '@/types/meeting.type'
+import { MeetingStatus, MeetingStatusLabel } from '@/types/meeting.type'
 import { format } from 'date-fns'
 import {
   CalendarDaysIcon,
@@ -21,6 +22,7 @@ import {
   XCircleIcon
 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 
 export interface SelectedTimeSlot {
@@ -29,22 +31,6 @@ export interface SelectedTimeSlot {
   endTime: string
   startTimeUtc: string
   endTimeUtc: string
-}
-
-const getStatusStyles = (status: MeetingStatus) => {
-  switch (status) {
-    case MeetingStatus.COMPLETED:
-      return 'bg-emerald-500/10 text-emerald-600 border-emerald-200 dark:border-emerald-500/20'
-    case MeetingStatus.BOOKED:
-      return 'bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-500/20'
-    case MeetingStatus.RESCHEDULE:
-      return 'bg-amber-500/10 text-amber-600 border-amber-200 dark:border-amber-500/20'
-    case MeetingStatus.CANCELLED:
-    case MeetingStatus.SUSPENDED:
-      return 'bg-red-500/10 text-red-600 border-red-200 dark:border-red-500/20'
-    default:
-      return 'bg-slate-500/10 text-slate-600 border-slate-200 dark:border-slate-500/20'
-  }
 }
 
 const getStatusIcon = (status: MeetingStatus) => {
@@ -67,6 +53,7 @@ export default function PurchasedPackagePage() {
   const { packageId } = useParams<{ packageId: string }>()
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { purchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
 
@@ -116,25 +103,30 @@ export default function PurchasedPackagePage() {
               .map((meeting) => (
                 <Card key={meeting.meetingId} className='p-3 flex-row items-center justify-between rounded-lg'>
                   <div>
-                    <p className='text-sm font-semibold'>Meeting buổi {meeting.packageBookingSequence}</p>
+                    <p className='text-sm font-semibold'>
+                      {t('purchasedPackage.meetingSession', { sequence: meeting.packageBookingSequence })}
+                    </p>
                     <div className='flex items-center gap-1'>
                       <ClockIcon className='size-3 text-muted-foreground' />
                       <p className='text-muted-foreground text-xs'>
-                        {format(meeting.startTimeUtc, `dd/MM/yyyy 'vào' HH:mm`)}
+                        {format(meeting.startTimeUtc, t('purchasedPackage.meetingDateFormat'))}
                       </p>
                     </div>
                   </div>
 
-                  <Badge className={cn('rounded-sm', getStatusStyles(meeting.status))}>
+                  <Badge
+                    variant='outline'
+                    className={cn('rounded-sm px-2 py-0.5 border', getMeetingStatusTheme(meeting.status).badge)}
+                  >
                     {getStatusIcon(meeting.status)}
-                    {meeting.status}
+                    {t(MeetingStatusLabel[meeting.status])}
                   </Badge>
 
                   {meeting.status === MeetingStatus.BOOKED && meeting.meetingLink ? (
                     <Link to={meeting.meetingLink} target='_blank'>
                       <Button size='sm'>
                         <VideoIcon />
-                        Meet
+                        {t('purchasedPackage.meetButton')}
                       </Button>
                     </Link>
                   ) : null}
@@ -146,23 +138,25 @@ export default function PurchasedPackagePage() {
         <div className='col-span-4 space-y-8'>
           <div className='space-y-4'>
             <div>
-              <p className='font-semibold'>Tiến độ ({progress.toFixed(0)}%)</p>
-              <p className='text-xs text-muted-foreground'>Tiến độ tổng thể của gói mentor</p>
+              <p className='font-semibold'>
+                {t('purchasedPackage.progress')} ({progress.toFixed(0)}%)
+              </p>
+              <p className='text-xs text-muted-foreground'>{t('purchasedPackage.overallProgress')}</p>
             </div>
             <Progress value={progress} className='h-2' />
           </div>
 
           <div className='space-y-4'>
             <div>
-              <p className='font-semibold'>Thông tin</p>
-              <p className='text-xs text-muted-foreground'>Thông tin gói mentor</p>
+              <p className='font-semibold'>{t('purchasedPackage.information')}</p>
+              <p className='text-xs text-muted-foreground'>{t('purchasedPackage.packageInformation')}</p>
             </div>
 
             <div className='space-y-2'>
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex items-center gap-2 text-muted-foreground'>
                   <FolderOpenIcon className='size-4' />
-                  <p className='text-xs font-medium'>Thuộc về dự án</p>
+                  <p className='text-xs font-medium'>{t('purchasedPackage.belongsToProject')}</p>
                 </div>
 
                 <Link
@@ -176,7 +170,7 @@ export default function PurchasedPackagePage() {
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex items-center gap-2 text-muted-foreground'>
                   <GraduationCapIcon className='size-4' />
-                  <p className='text-xs font-medium'>Được tạo bởi</p>
+                  <p className='text-xs font-medium'>{t('purchasedPackage.createdBy')}</p>
                 </div>
 
                 <Link
@@ -192,7 +186,7 @@ export default function PurchasedPackagePage() {
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex items-center gap-2 text-muted-foreground'>
                   <CalendarDaysIcon className='size-4' />
-                  <p className='text-xs font-medium'>Đã mua vào</p>
+                  <p className='text-xs font-medium'>{t('purchasedPackage.purchasedOn')}</p>
                 </div>
 
                 <p className='text-xs font-semibold'>
@@ -205,7 +199,7 @@ export default function PurchasedPackagePage() {
 
             <Button onClick={() => setOpen(true)} className='w-full'>
               <CalendarPlusIcon />
-              Đặt lịch
+              {t('purchasedPackage.bookSchedule')}
             </Button>
           </div>
         </div>

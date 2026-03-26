@@ -85,7 +85,7 @@ export default function CalendarPage() {
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
-      navigate(`/users/purchased-packages/${meeting.id}`)
+      navigate(`meetings/${meeting.id}`)
     },
     [navigate]
   )

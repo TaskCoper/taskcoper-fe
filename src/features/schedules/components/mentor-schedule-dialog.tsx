@@ -197,7 +197,10 @@ export default function MentorScheduleDialog({
       <DialogContent position='top-center' className='min-w-4xl gap-4'>
         <DialogHeader>
           <DialogTitle>
-            Đặt lịch hẹn cho buổi {nextRule.packageSequence} ({nextRule.totalTimeSlots} slot)
+            {t('purchasedPackage.bookMeetingSession', {
+              sequence: nextRule.packageSequence,
+              slots: nextRule.totalTimeSlots
+            })}
           </DialogTitle>
           <DialogDescription>
             {t('meeting.mentorSchedule.weekLabel', {
@@ -396,8 +399,8 @@ export default function MentorScheduleDialog({
         <div className='bg-primary/5 p-4 border border-primary border-dashed rounded-md flex items-center gap-2'>
           <AlertCircleIcon className='size-5 text-primary' />
           <p className='text-sm text-primary'>
-            <span className='font-bold'>Note:</span> You can only select consecutive time slots. Please select{' '}
-            {limitSlots} consecutive time slots to book a meeting.
+            <span className='font-bold'>{t('purchasedPackage.note')}</span>{' '}
+            {t('purchasedPackage.bookingNote', { slots: limitSlots })}
           </p>
         </div>
 
@@ -412,7 +415,7 @@ export default function MentorScheduleDialog({
 
           <Button disabled={!isSelectionFull || isBookingMeeting} onClick={onSubmit}>
             {isBookingMeeting ? <Spinner /> : null}
-            Confirm Booking
+            {t('purchasedPackage.confirmBooking')}
           </Button>
         </div>
       </DialogContent>

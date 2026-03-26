@@ -1,45 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME } from '@/features/tasks/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
+import { type MeetingBooking } from '@/types/meeting.type'
 import { format } from 'date-fns'
-
-const getStatusTheme = (status?: string) => {
-  switch (status) {
-    case MeetingStatus.COMPLETED:
-      return {
-        dot: 'bg-green-400',
-        block: 'border-green-400 bg-green-700 hover:bg-green-700 text-white',
-        avatar: 'bg-green-600 text-white'
-      }
-    case MeetingStatus.RESCHEDULE:
-      return {
-        dot: 'bg-orange-400',
-        block: 'border-orange-400 bg-orange-700 hover:bg-orange-700 text-white',
-        avatar: 'bg-orange-600 text-white'
-      }
-    case MeetingStatus.CANCELLED:
-      return {
-        dot: 'bg-rose-400',
-        block: 'border-rose-400 bg-rose-700 hover:bg-rose-700 text-white',
-        avatar: 'bg-rose-600 text-white'
-      }
-    case MeetingStatus.SUSPENDED:
-    case MeetingStatus.FREE:
-      return {
-        dot: 'bg-slate-400',
-        block: 'border-slate-400 bg-slate-700 hover:bg-slate-700 text-white',
-        avatar: 'bg-slate-600 text-white'
-      }
-    case MeetingStatus.BOOKED:
-    default:
-      return {
-        dot: 'bg-primary',
-        block: 'border-white/60 bg-primary/90 hover:bg-primary text-white',
-        avatar: 'bg-primary/30 text-white'
-      }
-  }
-}
 
 interface CalendarEventProps {
   meeting: MeetingBooking & { status?: string }
@@ -50,7 +14,7 @@ interface CalendarEventProps {
 }
 
 export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
-  const theme = getStatusTheme(meeting.status)
+  const theme = getMeetingStatusTheme(meeting.status)
 
   const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`
   const projectText = meeting.project?.name ? `[${meeting.project.name}] ` : ''

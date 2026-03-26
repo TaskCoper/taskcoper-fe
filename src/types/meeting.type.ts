@@ -10,12 +10,12 @@ export const MeetingStatus = {
 export type MeetingStatus = (typeof MeetingStatus)[keyof typeof MeetingStatus]
 
 export const MeetingStatusLabel = {
-  [MeetingStatus.FREE]: 'Free',
-  [MeetingStatus.BOOKED]: 'Booked',
-  [MeetingStatus.COMPLETED]: 'Completed',
-  [MeetingStatus.RESCHEDULE]: 'Reschedule',
-  [MeetingStatus.CANCELLED]: 'Cancelled',
-  [MeetingStatus.SUSPENDED]: 'Suspended'
+  [MeetingStatus.FREE]: 'meeting.status.free',
+  [MeetingStatus.BOOKED]: 'meeting.status.booked',
+  [MeetingStatus.COMPLETED]: 'meeting.status.completed',
+  [MeetingStatus.RESCHEDULE]: 'meeting.status.reschedule',
+  [MeetingStatus.CANCELLED]: 'meeting.status.cancelled',
+  [MeetingStatus.SUSPENDED]: 'meeting.status.suspended'
 }
 
 export type MeetingStatusLabel = (typeof MeetingStatusLabel)[keyof typeof MeetingStatusLabel]
@@ -59,4 +59,31 @@ export interface MeetingBooking {
   projectId: string | null
   project: MeetingBookingProject | null
   mentor: MeetingBookingMentor
+}
+
+export interface MeetingDetail extends MeetingBooking {
+  note: string
+  parentId: string | null
+  projectId: string
+  meetingLink: string | null
+  project: {
+    id: string
+    name: string
+    logoImage: string
+    coverImage: string
+    members: Array<{
+      userId: string
+      email: string
+      firstName: string
+      lastName: string
+      avatarUrl: string | null
+      role: string
+    }>
+  }
+  subMeetings: Array<{
+    id: string
+    startTimeUtc: string
+    endTimeUtc: string
+    status: MeetingStatus
+  }>
 }
