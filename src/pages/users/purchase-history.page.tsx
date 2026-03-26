@@ -35,7 +35,7 @@ export default function PurchaseHistoryPage() {
           <p className='text-sm text-muted-foreground'>{t('purchaseHistory.description')}</p>
         </div>
 
-        {purchasedMentorPackages?.value.items.length ? (
+        {purchasedMentorPackages.value.totalCount ? (
           <div className='grid grid-cols-12 gap-6'>
             {purchasedMentorPackages.value.items.map((pkg) => (
               <div key={pkg.id} className={responsiveColSpan}>

@@ -4,10 +4,10 @@ import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
 } from '@/features/tasks/constants'
-import { cn } from '@/shared/utils'
+import { cn, getTimezoneOffsetString } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, format, isSameDay, isToday, setHours, startOfWeek } from 'date-fns'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface WeekViewProps {
   date: Date
@@ -24,6 +24,7 @@ function getWeekDays(date: Date) {
 
 export default function WeekView({ date, meetings, onMeetingClick }: WeekViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [timezone] = useState(getTimezoneOffsetString())
   const days = getWeekDays(date)
   const now = new Date()
 
@@ -38,7 +39,7 @@ export default function WeekView({ date, meetings, onMeetingClick }: WeekViewPro
       <div className='flex border-b sticky top-0 bg-background z-10'>
         <div className='shrink-0' style={{ width: TIME_GUTTER_WIDTH }}>
           <div className='h-full flex items-end justify-end pr-2 pb-1'>
-            <span className='text-[10px] text-muted-foreground'>GMT+07</span>
+            <span className='text-[10px] text-muted-foreground'>{timezone}</span>
           </div>
         </div>
 

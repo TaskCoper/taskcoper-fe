@@ -106,7 +106,8 @@
       "week": "Tuần",
       "files": "tệp",
       "openMenu": "Mở menu",
-      "comingSoon": "Sắp ra mắt"
+      "comingSoon": "Sắp ra mắt",
+      "more": "+{{count}} nữa"
     },
     "status": {
       "all": "Tất cả",
@@ -242,7 +243,8 @@
       "rescheduleReasonPlaceholder": "Nhập lý do dời lịch...",
       "confirmCancel": "Xác nhận hủy",
       "history": "Lịch sử",
-      "cancelledBy": "Người hủy"
+      "cancelledBy": "Người hủy",
+      "disabledActionTooltip": "Bạn chỉ có thể dời lịch hoặc hủy lịch hẹn trước thời gian bắt đầu ít nhất 32 giờ."
     },
     "status": {
       "free": "Trống",
@@ -1827,7 +1829,6 @@
     "amountLabel": "Tổng số tiền",
     "securePayment": "Thanh toán an toàn"
   },
-
   "mentorTitle": {
     "bronze": "Đồng",
     "silver": "Bạc",
@@ -1840,8 +1841,8 @@
     "mythic": "Thần thoại"
   },
   "purchaseHistory": {
-    "title": "Gói đang sử dụng",
-    "description": "Quản lý các gói bạn đã mua và sử dụng",
+    "title": "Gói Mentor Đã Mua",
+    "description": "Quản lý các gói mentor và buổi hẹn của bạn",
     "meetingsCount": "{{booked}}/{{total}} buổi hẹn",
     "price": "Giá",
     "duration": "Thời lượng",

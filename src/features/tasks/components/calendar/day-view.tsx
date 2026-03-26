@@ -4,10 +4,10 @@ import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
 } from '@/features/tasks/constants'
-import { cn } from '@/shared/utils'
+import { cn, getTimezoneOffsetString } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { format, isSameDay, isToday, setHours } from 'date-fns'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface DayViewProps {
   date: Date
@@ -19,6 +19,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
 export default function DayView({ date, meetings, onMeetingClick }: DayViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [timezone] = useState(getTimezoneOffsetString())
   const now = new Date()
   const isCurrentDay = isToday(date)
 
@@ -40,7 +41,11 @@ export default function DayView({ date, meetings, onMeetingClick }: DayViewProps
   return (
     <div ref={scrollRef} className='flex-1 overflow-y-auto'>
       <div className='flex border-b sticky top-0 bg-background z-10'>
-        <div className='shrink-0' style={{ width: TIME_GUTTER_WIDTH }} />
+        <div className='shrink-0 relative' style={{ width: TIME_GUTTER_WIDTH }}>
+          <div className='absolute bottom-1 right-2'>
+            <span className='text-[10px] text-muted-foreground'>{timezone}</span>
+          </div>
+        </div>
         <div className='flex-1 text-center py-2'>
           <p className='text-xs text-muted-foreground uppercase'>{format(date, 'EEE')}</p>
           <div

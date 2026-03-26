@@ -186,3 +186,14 @@ export const formatCurrency = (price: number, currency?: Currency) => {
     return `${price.toLocaleString()} ${currency}`
   }
 }
+
+export const getTimezoneOffsetString = () => {
+  const date = new Date()
+  const offset = -date.getTimezoneOffset()
+  const sign = offset >= 0 ? '+' : '-'
+  const hours = Math.floor(Math.abs(offset) / 60)
+  const minutes = Math.abs(offset) % 60
+  const gmt = `GMT${sign}${String(hours).padStart(2, '0')}`
+
+  return minutes > 0 ? `${gmt}:${String(minutes).padStart(2, '0')}` : gmt
+}

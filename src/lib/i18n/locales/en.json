@@ -106,7 +106,8 @@
       "week": "Week",
       "files": "files",
       "openMenu": "Open menu",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "more": "+{{count}} more"
     },
     "status": {
       "all": "All",
@@ -242,7 +243,8 @@
       "rescheduleReasonPlaceholder": "Enter reason for rescheduling...",
       "confirmCancel": "Confirm Cancel",
       "history": "History",
-      "cancelledBy": "Cancelled by"
+      "cancelledBy": "Cancelled by",
+      "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time."
     },
     "status": {
       "free": "Free",
@@ -1827,7 +1829,6 @@
     "amountLabel": "Total amount",
     "securePayment": "Secure Payment"
   },
-
   "mentorTitle": {
     "bronze": "Bronze",
     "silver": "Silver",

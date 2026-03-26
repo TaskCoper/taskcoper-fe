@@ -50,7 +50,10 @@ export default function MentorScheduleDialog({
 }: MentorScheduleDialogProps) {
   const { user } = useAuthStore()
   const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({ packageId: packageBookingId ?? undefined })
-  const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting()
+  const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting({
+    packageId: packageBookingId ?? undefined,
+    mentorId: mentorUserId
+  })
 
   const { t, i18n } = useTranslation()
   const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
@@ -102,12 +105,12 @@ export default function MentorScheduleDialog({
   })
 
   const schedule = useMemo(
-    () => groupSlotsByDay(scheduleData?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(scheduleData.value.items, currentWeekStart),
     [scheduleData, currentWeekStart]
   )
 
   const bookedSchedule = useMemo(
-    () => groupSlotsByDay(mentorMeetings?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(mentorMeetings.value.items, currentWeekStart),
     [mentorMeetings, currentWeekStart]
   )
 
@@ -247,7 +250,7 @@ export default function MentorScheduleDialog({
 
             <div className='flex items-center gap-1'>
               <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
-                <ChevronLeftIcon className='size-4' />
+                <ChevronLeftIcon />
               </Button>
 
               <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
@@ -268,7 +271,7 @@ export default function MentorScheduleDialog({
               </Select>
 
               <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
-                <ChevronRightIcon className='size-4' />
+                <ChevronRightIcon />
               </Button>
             </div>
 

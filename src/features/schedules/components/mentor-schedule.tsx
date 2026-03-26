@@ -64,12 +64,12 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
   })
 
   const schedule = useMemo(
-    () => groupSlotsByDay(scheduleData?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(scheduleData.value.items, currentWeekStart),
     [scheduleData, currentWeekStart]
   )
 
   const bookedSchedule = useMemo(
-    () => groupSlotsByDay(mentorMeetings?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(mentorMeetings.value.items, currentWeekStart),
     [mentorMeetings, currentWeekStart]
   )
 
@@ -149,7 +149,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
 
           <div className='flex items-center gap-1'>
             <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
-              <ChevronLeftIcon className='size-4' />
+              <ChevronLeftIcon />
             </Button>
 
             <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
@@ -170,7 +170,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
             </Select>
 
             <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
-              <ChevronRightIcon className='size-4' />
+              <ChevronRightIcon />
             </Button>
           </div>
 

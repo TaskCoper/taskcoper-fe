@@ -224,8 +224,11 @@ export default function MeetingDialogPage() {
           <div className='absolute top-4 right-4 flex items-center gap-1'>
             {meeting && (
               <MeetingDetailMenu
-                meetingId={meeting?.id}
-                status={meeting?.status}
+                meetingId={meeting.id}
+                status={meeting.status}
+                startTimeUtc={meeting.startTimeUtc}
+                mentorId={meeting.mentorUserId}
+                packageId={meeting.packageBookingId}
                 onReschedule={() => setIsRescheduling(true)}
               >
                 <Button variant='secondary' size='icon-sm' className='size-7'>

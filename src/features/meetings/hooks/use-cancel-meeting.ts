@@ -5,7 +5,12 @@ import type { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useCancelMeeting = () => {
+interface UseCancelMeetingOptions {
+  mentorId: string
+  packageId?: string
+}
+
+export const useCancelMeeting = ({ mentorId, packageId }: UseCancelMeetingOptions) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -22,6 +27,11 @@ export const useCancelMeeting = () => {
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.meetingId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(mentorId) })
+
+      if (packageId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
     }
   })
 

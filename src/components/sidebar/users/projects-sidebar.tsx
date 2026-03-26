@@ -47,7 +47,7 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
       },
 
       {
-        title: 'Gói đang sử dụng',
+        title: t('purchaseHistory.title'),
         url: '/purchases',
         icon: ShoppingBagIcon
       },

@@ -2,6 +2,7 @@ import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
 import { cn } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, endOfMonth, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 interface MonthViewProps {
   date: Date
@@ -34,6 +35,7 @@ function getMonthGrid(date: Date) {
 }
 
 export default function MonthView({ date, meetings, onMeetingClick }: MonthViewProps) {
+  const { t } = useTranslation()
   const days = getMonthGrid(date)
   const weeks = Math.ceil(days.length / 7)
 
@@ -86,7 +88,7 @@ export default function MonthView({ date, meetings, onMeetingClick }: MonthViewP
                 ))}
                 {overflow > 0 && (
                   <p className='text-[10px] text-muted-foreground pl-1.5 cursor-pointer hover:text-foreground'>
-                    +{overflow} more
+                    {t('common.ui.more', { count: overflow })}
                   </p>
                 )}
               </div>
