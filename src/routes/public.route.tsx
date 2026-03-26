@@ -9,6 +9,9 @@ const SignUpPage = lazy(() => import('@/pages/sign-up.page'))
 const SignInPage = lazy(() => import('@/pages/sign-in.page'))
 const ForgotPasswordPage = lazy(() => import('@/pages/users/forgot-password.page'))
 
+const TermsOfServicePage = lazy(() => import('@/pages/terms-of-service.page'))
+const PrivacyPolicyPage = lazy(() => import('@/pages/privacy-policy.page'))
+
 export const publicRoutes: RouteObject[] = [
   {
     element: <RoleGuardLayout allowedRoles={['user']} />,
@@ -35,5 +38,13 @@ export const publicRoutes: RouteObject[] = [
         element: <SignUpPage />
       }
     ]
+  },
+  {
+    path: 'terms-of-service',
+    element: <TermsOfServicePage />
+  },
+  {
+    path: 'privacy-policy',
+    element: <PrivacyPolicyPage />
   }
 ]

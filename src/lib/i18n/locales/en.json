@@ -1761,7 +1761,9 @@
     "featuredProjects": "Featured Projects",
     "community": "Community",
     "news": "News",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
   },
   "transactions": {
     "title": "Transactions History",
@@ -1852,6 +1854,58 @@
       "details": "Package Details",
       "meetings": "Meetings",
       "noMeetings": "No meetings scheduled yet"
+    },
+    "legal": {
+      "terms": {
+        "title": "Terms of Service",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "Welcome to TaskCoper. By using our platform, you agree to comply with the following terms.",
+        "sections": {
+          "accounts": {
+            "title": "1. User Accounts",
+            "content": "You are responsible for maintaining the security of your account and all activities that occur under it. Providing accurate information is mandatory."
+          },
+          "management": {
+            "title": "2. Project & Task Management",
+            "content": "TaskCoper provides tools for managing projects, task cards, and team collaboration. Users are responsible for the content and data they upload."
+          },
+          "mentoring": {
+            "title": "3. Mentoring Services",
+            "content": "The platform connects Experts (Mentors) and Users (Mentees). All agreements regarding meetings and mentoring roadmaps must comply with our professional conduct rules."
+          },
+          "payments": {
+            "title": "4. Payments & Refunds",
+            "content": "Mentor Packages and transactions on the platform are processed securely. Refunds will be considered based on the specific policy of each package."
+          },
+          "ip": {
+            "title": "5. Intellectual Property",
+            "content": "All features and designs of TaskCoper are owned by us. Your project content remains yours."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "We respect your privacy and are committed to protecting your personal data.",
+        "sections": {
+          "collection": {
+            "title": "1. Data Collection",
+            "content": "We collect profile information (name, email, avatar) and activity data (projects, tasks, meeting history) to improve our services."
+          },
+          "usage": {
+            "title": "2. Data Usage",
+            "content": "Your information is used to operate the platform, support AI advisors, and facilitate connections between Mentors and Mentees."
+          },
+          "security": {
+            "title": "3. Data Security",
+            "content": "We apply standard security measures to prevent unauthorized access or leakage of user data."
+          },
+          "rights": {
+            "title": "4. User Rights",
+            "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
+          }
+        }
+      }
     }
   }
 }

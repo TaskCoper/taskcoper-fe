@@ -1761,7 +1761,9 @@
     "featuredProjects": "Dự án nổi bật",
     "community": "Cộng đồng",
     "news": "Tin tức",
-    "transactions": "Giao dịch"
+    "transactions": "Giao dịch",
+    "termsOfService": "Điều khoản Dịch vụ",
+    "privacyPolicy": "Chính sách Bảo mật"
   },
   "transactions": {
     "title": "Lịch sử giao dịch",
@@ -1852,6 +1854,58 @@
       "details": "Chi tiết gói",
       "meetings": "Các buổi hẹn",
       "noMeetings": "Chưa có buổi hẹn nào được đặt"
+    },
+    "legal": {
+      "terms": {
+        "title": "Điều khoản Dịch vụ",
+        "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
+        "intro": "Chào mừng bạn đến với TaskCoper. Bằng việc sử dụng nền tảng của chúng tôi, bạn đồng ý tuân thủ các điều khoản sau.",
+        "sections": {
+          "accounts": {
+            "title": "1. Tài khoản Người dùng",
+            "content": "Bạn có trách nhiệm bảo mật tài khoản và mọi hoạt động diễn ra dưới tài khoản của mình. Việc cung cấp thông tin chính xác là bắt buộc."
+          },
+          "management": {
+            "title": "2. Quản lý Dự án & Công việc",
+            "content": "TaskCoper cung cấp công cụ để quản lý dự án, thẻ công việc (task), và cộng tác nhóm. Người dùng chịu trách nhiệm về nội dung và dữ liệu họ tải lên."
+          },
+          "mentoring": {
+            "title": "3. Dịch vụ Hướng dẫn (Mentoring)",
+            "content": "Nền tảng kết nối Chuyên gia (Mentor) và Người dùng (Mentee). Mọi thỏa thuận về buổi gặp và lộ trình hướng dẫn phải tuân thủ quy tắc ứng xử chuyên nghiệp của chúng tôi."
+          },
+          "payments": {
+            "title": "4. Thanh toán & Hoàn tiền",
+            "content": "Các gói dịch vụ (Mentor Packages) và giao dịch trên nền tảng được xử lý bảo mật. Việc hoàn tiền sẽ được xem xét dựa trên chính sách cụ thể của từng gói."
+          },
+          "ip": {
+            "title": "5. Sở hữu Trí tuệ",
+            "content": "Tất cả các tính năng và thiết kế của TaskCoper đều thuộc sở hữu của chúng tôi. Nội dung dự án của bạn vẫn thuộc về bạn."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Chính sách Bảo mật",
+        "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
+        "intro": "Chúng tôi tôn trọng quyền riêng tư của bạn và cam kết bảo vệ dữ liệu cá nhân của bạn.",
+        "sections": {
+          "collection": {
+            "title": "1. Thu thập Thông tin",
+            "content": "Chúng tôi thu thập thông tin hồ sơ (tên, email, ảnh đại diện) và dữ liệu hoạt động (dự án, nhiệm vụ, lịch sử buổi gặp) để cải thiện dịch vụ."
+          },
+          "usage": {
+            "title": "2. Sử dụng Thông tin",
+            "content": "Thông tin của bạn được sử dụng để vận hành nền tảng, hỗ trợ AI cố vấn, và tạo điều kiện kết nối giữa Mentor và Mentee."
+          },
+          "security": {
+            "title": "3. Bảo mật Dữ liệu",
+            "content": "Chúng tôi áp dụng các biện pháp bảo mật tiêu chuẩn để ngăn chặn việc truy cập trái phép hoặc rò rỉ dữ liệu của người dùng."
+          },
+          "rights": {
+            "title": "4. Quyền của Người dùng",
+            "content": "Bạn có quyền truy cập, chỉnh sửa hoặc yêu cầu xóa dữ liệu cá nhân của mình bất kỳ lúc nào thông qua cài đặt tài khoản."
+          }
+        }
+      }
     }
   }
 }
