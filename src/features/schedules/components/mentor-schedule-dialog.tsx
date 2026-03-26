@@ -1,10 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { Textarea } from '@/components/ui/textarea'
 import { useBookMeeting } from '@/features/meetings/hooks/use-book-meeting'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
+import { useRescheduleMeeting } from '@/features/meetings/hooks/use-reschedule-meeting'
 import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import { useAuthStore } from '@/lib/zustand/auth.store'
@@ -29,6 +32,7 @@ interface MentorScheduleDialogProps {
   packageBookingId: string | null
   packageSessionNumber: number | null
   nextRule: PurchasedMentorPackageRule
+  meetingId?: string
 }
 
 export default function MentorScheduleDialog({
@@ -41,10 +45,12 @@ export default function MentorScheduleDialog({
   bookByProjectId,
   packageBookingId,
   packageSessionNumber,
-  nextRule
+  nextRule,
+  meetingId
 }: MentorScheduleDialogProps) {
   const { user } = useAuthStore()
   const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({ packageId: packageBookingId ?? undefined })
+  const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting()
 
   const { t, i18n } = useTranslation()
   const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
@@ -52,6 +58,7 @@ export default function MentorScheduleDialog({
   const today = new Date()
   const [selectedYear, setSelectedYear] = useState<number>(getYear(today))
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(startOfWeek(today, { weekStartsOn: 1 }))
+  const [reason, setReason] = useState('')
 
   const currentYear = getYear(today)
 
@@ -161,6 +168,26 @@ export default function MentorScheduleDialog({
   }, [methods, mentorUserId, bookByProjectId, packageBookingId, packageSessionNumber, user?.UserId, selectedTimeSlots])
 
   const onSubmit = () => {
+    if (meetingId) {
+      rescheduleMeeting(
+        {
+          body: {
+            meetingId,
+            startTimeUtc: selectedTimeSlots[0].startTimeUtc,
+            endTimeUtc: selectedTimeSlots[selectedTimeSlots.length - 1].endTimeUtc,
+            reason
+          }
+        },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+            onSelectedTimeSlotsChange([])
+          }
+        }
+      )
+      return
+    }
+
     bookMeeting(
       {
         body: methods.getValues()
@@ -173,6 +200,8 @@ export default function MentorScheduleDialog({
       }
     )
   }
+
+  const isPending = isBookingMeeting || isReschedulingMeeting
 
   const isSelectionFull = selectedTimeSlots.length === limitSlots
   const isSelectionStarted = selectedTimeSlots.length > 0
@@ -404,6 +433,18 @@ export default function MentorScheduleDialog({
           </p>
         </div>
 
+        {meetingId && (
+          <div className='space-y-2'>
+            <Label className='text-sm font-medium'>{t('meeting.detail.cancelReasonLabel')}</Label>
+            <Textarea
+              placeholder={t('meeting.detail.rescheduleReasonPlaceholder')}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className='min-h-[100px]'
+            />
+          </div>
+        )}
+
         <div className='flex items-center gap-2 justify-end'>
           <Button
             variant='outline'
@@ -413,8 +454,8 @@ export default function MentorScheduleDialog({
             {t('dataTable.toolbar.reset')}
           </Button>
 
-          <Button disabled={!isSelectionFull || isBookingMeeting} onClick={onSubmit}>
-            {isBookingMeeting ? <Spinner /> : null}
+          <Button disabled={!isSelectionFull || isPending} onClick={onSubmit}>
+            {isPending ? <Spinner /> : null}
             {t('purchasedPackage.confirmBooking')}
           </Button>
         </div>

@@ -232,7 +232,17 @@
       "mentor": "Người hướng dẫn",
       "participants": "Người tham gia",
       "dateFormat": "dd 'thg' MM, yyyy",
-      "meetingDateTimeAt": "vào"
+      "meetingDateTimeAt": "vào",
+      "cancel": "Hủy lịch",
+      "reschedule": "Dời lịch",
+      "cancelTitle": "Hủy lịch hẹn",
+      "cancelDescription": "Bạn có chắc chắn muốn hủy lịch hẹn này? Thao tác này không thể hoàn tác.",
+      "cancelReasonLabel": "Lý do",
+      "cancelReasonPlaceholder": "Nhập lý do hủy lịch...",
+      "rescheduleReasonPlaceholder": "Nhập lý do dời lịch...",
+      "confirmCancel": "Xác nhận hủy",
+      "history": "Lịch sử",
+      "cancelledBy": "Người hủy"
     },
     "status": {
       "free": "Trống",

@@ -1,10 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import MeetingDetailMenu from '@/features/meetings/components/meeting-detail-menu'
 import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
+import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { MeetingStatus, MeetingStatusLabel } from '@/types/meeting.type'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -13,9 +16,11 @@ import {
   ArrowDown01Icon,
   CalendarIcon,
   CheckCircle2Icon,
+  CircleXIcon,
   FolderOpenIcon,
   HistoryIcon,
   InfoIcon,
+  MoreHorizontalIcon,
   PackageIcon,
   TextAlignStartIcon,
   VideoIcon,
@@ -24,6 +29,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
+import type { SelectedTimeSlot } from './purchased-package.page'
 
 const getTimezoneString = () => {
   const date = new Date()
@@ -68,19 +74,59 @@ export default function MeetingDialogPage() {
   const { meetingId } = useParams()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
   const { t } = useTranslation()
+  const [isRescheduling, setIsRescheduling] = useState(false)
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
   if (isLoadingMeeting) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className='min-w-6xl p-0 border-none overflow-hidden' position='top-center'>
-          <DialogHeader className='space-y-1 p-6 bg-muted'>
-            <Skeleton className='h-8 w-1/3' />
-            <div className='flex items-center gap-2 mt-2'>
-              <Skeleton className='h-9 w-32' />
-              <Skeleton className='h-9 w-24' />
-              <Skeleton className='h-9 w-24' />
+        <DialogContent
+          className='min-w-6xl p-0 border-none overflow-hidden gap-0'
+          position='top-center'
+          showCloseButton={false}
+        >
+          <DialogHeader className='px-6 py-4 space-y-3 bg-muted'>
+            <Skeleton className='h-7 w-1/2 bg-foreground/10' />
+            <div className='flex items-center gap-2'>
+              <Skeleton className='h-9 w-32 bg-foreground/10' />
+              <Skeleton className='h-9 w-24 bg-foreground/10' />
+              <Skeleton className='h-9 w-24 bg-foreground/10' />
             </div>
           </DialogHeader>
+
+          <div className='p-6 grid grid-cols-12 gap-8'>
+            <div className='col-span-8 space-y-6'>
+              <div className='flex items-start gap-4'>
+                <Skeleton className='size-5 rounded-md mt-0.5' />
+                <div className='space-y-2 flex-1'>
+                  <Skeleton className='h-5 w-48' />
+                  <Skeleton className='h-4 w-64' />
+                </div>
+              </div>
+              <div className='flex items-start gap-4'>
+                <Skeleton className='size-5 rounded-md mt-1.5' />
+                <Skeleton className='w-full h-32 rounded-md' />
+              </div>
+            </div>
+
+            <div className='col-span-4 space-y-6'>
+              <div className='flex items-center justify-between gap-2'>
+                <Skeleton className='h-5 w-16' />
+                <Skeleton className='h-6 w-24 rounded-md' />
+              </div>
+              <div className='space-y-4 pt-2'>
+                <Skeleton className='h-5 w-24' />
+                <div className='space-y-3'>
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className='flex items-center justify-between gap-4'>
+                      <Skeleton className='h-4 w-28' />
+                      <Skeleton className='h-4 w-32' />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     )
@@ -123,7 +169,7 @@ export default function MeetingDialogPage() {
             </DialogDescription>
           </VisuallyHidden>
 
-          <DialogTitle className='text-xl'>
+          <DialogTitle className='text-xl w-[95%]'>
             {meeting?.projectId && meeting?.project ? (
               <>
                 <Link to={`/projects/${meeting.projectId}`} className='hover:text-white/80 transition-colors'>
@@ -169,6 +215,20 @@ export default function MeetingDialogPage() {
             </p>
             <p className='text-sm text-white/80 ml-2'>{getTimezoneString()}</p>
           </div>
+
+          <div className='absolute top-4 right-4 flex items-center gap-1'>
+            {meeting && (
+              <MeetingDetailMenu
+                meetingId={meeting?.id}
+                status={meeting?.status}
+                onReschedule={() => setIsRescheduling(true)}
+              >
+                <Button variant='secondary' size='icon-sm' className='size-7'>
+                  <MoreHorizontalIcon />
+                </Button>
+              </MeetingDetailMenu>
+            )}
+          </div>
         </DialogHeader>
 
         <div className='p-6 grid grid-cols-12 gap-8'>
@@ -208,6 +268,34 @@ export default function MeetingDialogPage() {
                 )}
               </div>
             </div>
+
+            {meeting?.status === MeetingStatus.CANCELLED && meeting.reason && (
+              <div className='flex items-start gap-4'>
+                <CircleXIcon className='size-4 mt-1.5 text-destructive' />
+                <div className='space-y-1.5 flex-1 p-3 bg-destructive/5 border border-destructive/20 rounded-md'>
+                  <p className='text-sm font-bold text-destructive leading-none'>
+                    {t('meeting.detail.cancelReasonLabel')}
+                  </p>
+                  <p className='text-sm text-foreground/90'>{meeting.reason}</p>
+                  {meeting.cancelledBy && (
+                    <div className='flex items-center gap-2 mt-2 pt-2 border-t border-destructive/10'>
+                      <p className='text-xs text-muted-foreground'>{t('meeting.detail.cancelledBy')}:</p>
+                      <div className='flex items-center gap-1.5'>
+                        <Avatar className='size-5'>
+                          <AvatarImage src={meeting.cancelledBy.avatarUrl ?? undefined} />
+                          <AvatarFallback className='text-[8px]'>
+                            {getAvatarFallback(`${meeting.cancelledBy.firstName} ${meeting.cancelledBy.lastName}`)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className='text-xs font-medium'>
+                          {meeting.cancelledBy.firstName} {meeting.cancelledBy.lastName}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className='col-span-4 space-y-6'>
@@ -274,14 +362,9 @@ export default function MeetingDialogPage() {
                       <p className='text-xs font-medium'>{t('meeting.detail.sessionSequence')}</p>
                     </div>
 
-                    <Link
-                      to={`/purchases/packages/${meeting?.packageBookingId}`}
-                      className='hover:text-primary hover:underline w-[60%] text-right'
-                    >
-                      <p className='text-xs font-semibold truncate'>
-                        {t('meeting.detail.session', { sequence: meeting?.packageSequence })}
-                      </p>
-                    </Link>
+                    <p className='text-xs font-semibold truncate w-[60%] text-right'>
+                      {t('meeting.detail.session', { sequence: meeting?.packageSequence })}
+                    </p>
                   </div>
                 ) : null}
               </div>
@@ -345,6 +428,29 @@ export default function MeetingDialogPage() {
           </div>
         </div>
       </DialogContent>
+
+      {meeting && isRescheduling ? (
+        <MentorScheduleDialog
+          open={isRescheduling}
+          onOpenChange={setIsRescheduling}
+          mentorUserId={meeting.mentorUserId}
+          selectedTimeSlots={selectedTimeSlots}
+          onSelectedTimeSlotsChange={setSelectedTimeSlots}
+          limitSlots={
+            meeting.packageRules?.find((rule) => rule.packageSequence === meeting.packageSequence)?.totalTimeSlots || 1
+          }
+          bookByProjectId={meeting.projectId}
+          packageBookingId={meeting.packageBookingId}
+          packageSessionNumber={meeting.packageSequence}
+          meetingId={meeting.id}
+          nextRule={{
+            packageSequence: meeting.packageSequence,
+            totalTimeSlots:
+              meeting.packageRules?.find((rule) => rule.packageSequence === meeting.packageSequence)?.totalTimeSlots ||
+              1
+          }}
+        />
+      ) : null}
     </Dialog>
   )
 }

@@ -232,7 +232,17 @@
       "mentor": "Mentor",
       "participants": "Participants",
       "dateFormat": "dd MMM, yyyy",
-      "meetingDateTimeAt": "at"
+      "meetingDateTimeAt": "at",
+      "cancel": "Cancel",
+      "reschedule": "Reschedule",
+      "cancelTitle": "Cancel meeting",
+      "cancelDescription": "Are you sure you want to cancel this meeting? This action cannot be undone.",
+      "cancelReasonLabel": "Reason",
+      "cancelReasonPlaceholder": "Enter reason for cancellation...",
+      "rescheduleReasonPlaceholder": "Enter reason for rescheduling...",
+      "confirmCancel": "Confirm Cancel",
+      "history": "History",
+      "cancelledBy": "Cancelled by"
     },
     "status": {
       "free": "Free",

@@ -31,13 +31,6 @@ export interface Meeting {
   endTimeUtc: string
 }
 
-export interface MeetingBookingProject {
-  id: string
-  name: string
-  logoImage: string | null
-  coverImage: string | null
-}
-
 export interface MeetingBookingMentor {
   id: string
   email: string
@@ -57,15 +50,14 @@ export interface MeetingBooking {
   packageName: string
   packageSequence: number
   projectId: string | null
-  project: MeetingBookingProject | null
   mentor: MeetingBookingMentor
-}
-
-export interface MeetingDetail extends MeetingBooking {
-  note: string
-  parentId: string | null
-  projectId: string
-  meetingLink: string | null
+  cancelledBy: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    avatarUrl: string | null
+  } | null
   project: {
     id: string
     name: string
@@ -79,7 +71,19 @@ export interface MeetingDetail extends MeetingBooking {
       avatarUrl: string | null
       role: string
     }>
-  }
+  } | null
+  reason: string | null
+  packageRules: Array<{
+    packageSequence: number
+    totalTimeSlots: number
+  }>
+  note: string
+  meetingLink: string | null
+  isCancelledByMentor: boolean
+}
+
+export interface MeetingDetail extends MeetingBooking {
+  parentId: string | null
   subMeetings: Array<{
     id: string
     startTimeUtc: string

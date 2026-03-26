@@ -4,6 +4,7 @@ import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME 
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { type MeetingBooking } from '@/types/meeting.type'
 import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 interface CalendarEventProps {
   meeting: MeetingBooking & { status?: string }
@@ -14,11 +15,16 @@ interface CalendarEventProps {
 }
 
 export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
+  const { t } = useTranslation()
   const theme = getMeetingStatusTheme(meeting.status)
 
   const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`
-  const projectText = meeting.project?.name ? `[${meeting.project.name}] ` : ''
-  const title = `${projectText}${meeting.packageName}`
+
+  const projectText = meeting.projectId && meeting.project ? `[${meeting.project.name}] - ` : ''
+  const titleText = meeting.packageBookingId
+    ? `${t('meeting.detail.session', { sequence: meeting.packageSequence })} - ${meeting.packageName}`
+    : `${t('meeting.detail.meetingWith')} ${mentorFullName}`
+  const title = `${projectText}${titleText}`
 
   const startTime = meeting.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : ''
   const endTime = meeting.endTimeUtc ? format(new Date(meeting.endTimeUtc), 'h:mm a') : ''
