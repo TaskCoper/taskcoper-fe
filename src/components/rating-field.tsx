@@ -7,9 +7,10 @@ interface RatingFieldProps {
   value: RatingValue | undefined
   setValue: (value: RatingValue | undefined) => void
   className?: string
+  size?: number
 }
 
-export default function RatingField({ value, setValue, className }: RatingFieldProps) {
+export default function RatingField({ value, setValue, className, size = 24 }: RatingFieldProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       {[1, 2, 3, 4, 5].map((star) => {
@@ -17,7 +18,7 @@ export default function RatingField({ value, setValue, className }: RatingFieldP
         const halfSelected = value !== undefined && value === star - 0.5
 
         return (
-          <div key={star} className='relative size-5 cursor-pointer'>
+          <div key={star} className='relative cursor-pointer' style={{ width: size, height: size }}>
             {/* Left half – clicks set half star */}
             <button
               type='button'
@@ -40,13 +41,14 @@ export default function RatingField({ value, setValue, className }: RatingFieldP
             />
 
             {/* Background (empty) star */}
-            <StarIcon className='absolute inset-0 size-6 fill-muted text-muted-foreground/15 stroke-[1.5]' />
+            <StarIcon size={size} className='absolute inset-0 fill-muted text-muted-foreground/15 stroke-[1.5]' />
 
             {/* Filled star – full or half via clip-path */}
             {(fullSelected || halfSelected) && (
               <StarIcon
+                size={size}
                 className={cn(
-                  'absolute inset-0 size-6 fill-amber-400 text-amber-400 stroke-[1.5] transition-colors',
+                  'absolute inset-0 fill-amber-400 text-amber-400 stroke-[1.5] transition-colors',
                   halfSelected && '[clip-path:inset(0_50%_0_0)]'
                 )}
               />

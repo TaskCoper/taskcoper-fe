@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { DaySchedule } from '../utils'
-import { formatTimeRange } from '../utils'
+import { combineDateTimeToUtc, formatTimeRange } from '../utils'
 import type { BookMeetingFormValues } from '../validations'
 
 interface BookMeetingFormProps {
@@ -59,8 +59,10 @@ export default function BookMeetingForm({
       activeDay && activeSlot
         ? [
             {
-              startTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.startTimeUtc}Z`,
-              endTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.endTimeUtc}Z`
+              // startTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.startTimeUtc}Z`,
+              // endTimeUtc: `${format(activeDay.date, 'yyyy-MM-dd')}T${activeSlot.endTimeUtc}Z`
+              startTimeUtc: combineDateTimeToUtc(activeDay.date, activeSlot.startTimeUtc),
+              endTimeUtc: combineDateTimeToUtc(activeDay.date, activeSlot.endTimeUtc)
             }
           ]
         : []

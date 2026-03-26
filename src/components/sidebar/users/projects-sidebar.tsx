@@ -13,8 +13,9 @@ import {
   CalendarDaysIcon,
   FileClockIcon,
   FolderOpenIcon,
-  PackageIcon,
-  ScanBarcodeIcon,
+  HistoryIcon,
+  ShoppingBagIcon,
+  VideoIcon,
   type LucideIcon
 } from 'lucide-react'
 import { useMemo } from 'react'
@@ -44,10 +45,11 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         url: '/calendar',
         icon: CalendarDaysIcon
       },
+
       {
-        title: t('pageTitle.transactions'),
-        url: '/transactions',
-        icon: ScanBarcodeIcon
+        title: t('purchaseHistory.title'),
+        url: '/purchases',
+        icon: ShoppingBagIcon
       },
       ...(user?.Role !== 'Mentor'
         ? [
@@ -63,10 +65,15 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
             {
               title: t('mentorPackage.sidebar.meetingSessionPackages'),
               url: '/mentor-packages',
-              icon: PackageIcon
+              icon: VideoIcon
             }
           ]
-        : [])
+        : []),
+      {
+        title: t('pageTitle.transactions'),
+        url: '/transactions',
+        icon: HistoryIcon
+      }
     ],
     [t, user?.Role]
   )

@@ -4,12 +4,17 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetMentorPackages = ({ mentorId }: { mentorId?: string }) => {
+interface UseGetMentorPackagesProps {
+  mentorId?: string
+  enabled?: boolean
+}
+
+export const useGetMentorPackages = ({ mentorId, enabled = true }: UseGetMentorPackagesProps) => {
   const { data: mentorPackages = getDefaultPaginationResponse<MentorPackage>(), isLoading: isLoadingMentorPackages } =
     useQuery({
       queryKey: queryKeys.mentorPackages.list({ mentorId }),
       queryFn: () => mentorPackageService.getMentorPackages({ mentorId }),
-      enabled: !!mentorId
+      enabled: !!mentorId && enabled
     })
 
   return { mentorPackages, isLoadingMentorPackages }

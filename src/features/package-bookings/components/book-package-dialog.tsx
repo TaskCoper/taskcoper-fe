@@ -90,7 +90,7 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
                 <p className='font-mono text-xs text-muted-foreground tracking-wide'>
                   {t('packageBooking.bookPackage.receipt')}
                 </p>
-                <p className='mt-2 font-semibold leading-snug truncate'>{mentorPackage.name}</p>
+                <p className='mt-2 font-semibold leading-snug line-clamp-1'>{mentorPackage.name}</p>
               </div>
 
               <div className='shrink-0 text-right'>
@@ -131,7 +131,7 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
           <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
             <Controller
               control={methods.control}
-              name='mentorPackageId'
+              name='bookedByProjectId'
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className='gap-1'>
                   <FieldLabel htmlFor={field.name}>{t('meeting.form.projectLabel')}</FieldLabel>

@@ -1,3 +1,4 @@
+import { MeetingStatus } from '@/types/meeting.type'
 import type { ScheduleSlot } from '@/types/schedule.type'
 import { addDays } from 'date-fns'
 
@@ -57,4 +58,53 @@ export const groupSlotsByDay = (slots: ScheduleSlot[], weekStart: Date): DaySche
   }
 
   return days
+}
+
+export const combineDateTimeToUtc = (date: Date, time: string) => {
+  const [hours, minutes, seconds] = time.split(':').map(Number)
+  const combinedDate = new Date(date)
+  combinedDate.setHours(hours, minutes, seconds || 0, 0)
+  return combinedDate.toISOString()
+}
+
+export const getMeetingStatusTheme = (status?: string) => {
+  switch (status) {
+    case MeetingStatus.COMPLETED:
+      return {
+        dot: 'bg-emerald-500',
+        block: 'border-emerald-500 bg-emerald-600 hover:bg-emerald-700 text-white',
+        avatar: 'bg-emerald-600 text-white',
+        badge: 'bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:border-emerald-500/20 dark:text-emerald-400'
+      }
+    case MeetingStatus.RESCHEDULE:
+      return {
+        dot: 'bg-amber-500',
+        block: 'border-amber-500 bg-amber-600 hover:bg-amber-700 text-white',
+        avatar: 'bg-amber-600 text-white',
+        badge: 'bg-amber-500/10 text-amber-700 border-amber-200 dark:border-amber-500/20 dark:text-amber-400'
+      }
+    case MeetingStatus.CANCELLED:
+    case MeetingStatus.SUSPENDED:
+      return {
+        dot: 'bg-rose-500',
+        block: 'border-rose-500 bg-rose-600 hover:bg-rose-700 text-white',
+        avatar: 'bg-rose-600 text-white',
+        badge: 'bg-rose-500/10 text-rose-700 border-rose-200 dark:border-rose-500/20 dark:text-rose-400'
+      }
+    case MeetingStatus.FREE:
+      return {
+        dot: 'bg-slate-400',
+        block: 'border-slate-400 bg-slate-600 hover:bg-slate-700 text-white',
+        avatar: 'bg-slate-600 text-white',
+        badge: 'bg-slate-500/10 text-slate-700 border-slate-200 dark:border-slate-500/20 dark:text-slate-400'
+      }
+    case MeetingStatus.BOOKED:
+    default:
+      return {
+        dot: 'bg-blue-500',
+        block: 'border-blue-500 bg-blue-600 hover:bg-blue-700 text-white',
+        avatar: 'bg-blue-600 text-white',
+        badge: 'bg-blue-500/10 text-blue-700 border-blue-200 dark:border-blue-500/20 dark:text-blue-400'
+      }
+  }
 }

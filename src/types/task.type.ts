@@ -11,6 +11,7 @@ export interface TaskPreview {
   priority: TaskPriority | null
   members: TaskMember[]
   totalSubtasks: number
+  hasDescription: boolean
   completedSubtasks: number
   totalComments: number
   totalResources: number

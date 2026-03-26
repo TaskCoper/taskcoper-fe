@@ -106,7 +106,8 @@
       "week": "Week",
       "files": "files",
       "openMenu": "Open menu",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "more": "+{{count}} more"
     },
     "status": {
       "all": "All",
@@ -213,8 +214,64 @@
       "title": "Meetings",
       "weekLabel": "Week {{week}} - {{month}}",
       "available": "Available",
-      "booked": "Booked"
+      "booked": "Booked",
+      "selected": "Selected"
+    },
+    "detail": {
+      "session": "Session {{sequence}}",
+      "meetingWith": "Meeting with",
+      "to": "to",
+      "joinViaGoogleMeet": "Join via Google Meet",
+      "maxGuests": "Max 100 guests",
+      "noLinkYet": "No link yet",
+      "noteWillBeHere": "{{firstName}} {{lastName}}'s note will be here.",
+      "information": "Information",
+      "status": "Status",
+      "belongsToProject": "Belongs to project",
+      "belongsToPackage": "Belongs to package",
+      "sessionSequence": "Session sequence",
+      "mentor": "Mentor",
+      "participants": "Participants",
+      "dateFormat": "dd MMM, yyyy",
+      "meetingDateTimeAt": "at",
+      "cancel": "Cancel",
+      "reschedule": "Reschedule",
+      "cancelTitle": "Cancel meeting",
+      "cancelDescription": "Are you sure you want to cancel this meeting? This action cannot be undone.",
+      "cancelReasonLabel": "Reason",
+      "cancelReasonPlaceholder": "Enter reason for cancellation...",
+      "rescheduleReasonPlaceholder": "Enter reason for rescheduling...",
+      "confirmCancel": "Confirm Cancel",
+      "history": "History",
+      "cancelledBy": "Cancelled by",
+      "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time."
+    },
+    "status": {
+      "free": "Free",
+      "booked": "Booked",
+      "completed": "Completed",
+      "reschedule": "Rescheduled",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended"
     }
+  },
+  "purchasedPackage": {
+    "progress": "Progress",
+    "overallProgress": "Overall progress of the mentor package",
+    "information": "Information",
+    "packageInformation": "Mentor package information",
+    "belongsToProject": "Belongs to project",
+    "createdBy": "Created by",
+    "purchasedOn": "Purchased on",
+    "bookSchedule": "Book schedule",
+    "meetingSession": "Meeting session {{sequence}}",
+    "bookMeetingSession": "Book schedule for session {{sequence}} ({{slots}} slots)",
+    "confirmBooking": "Confirm Booking",
+    "note": "Note:",
+    "bookingNote": "You can only select consecutive time slots. Please select {{slots}} consecutive time slots to book a meeting.",
+    "completedProgress": "Completed {{progress}}%",
+    "meetButton": "Meet",
+    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm"
   },
   "project": {
     "title": "My Projects",
@@ -1663,8 +1720,9 @@
     "card": {
       "sessionsCount_one": "{{count}} session",
       "sessionsCount_other": "{{count}} sessions",
+      "viewPackage": "View package",
       "bookFor": "Book for {{price}}",
-      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} min / session",
+      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} mins/session",
       "sortOrder": "Sort order"
     },
     "sidebar": {
@@ -1771,7 +1829,6 @@
     "amountLabel": "Total amount",
     "securePayment": "Secure Payment"
   },
-
   "mentorTitle": {
     "bronze": "Bronze",
     "silver": "Silver",
@@ -1783,54 +1840,71 @@
     "legendary": "Legendary",
     "mythic": "Mythic"
   },
-  "legal": {
-    "terms": {
-      "title": "Terms of Service",
-      "lastUpdated": "Last Updated: March 26, 2026",
-      "intro": "Welcome to TaskCoper. By using our platform, you agree to comply with the following terms.",
-      "sections": {
-        "accounts": {
-          "title": "1. User Accounts",
-          "content": "You are responsible for maintaining the security of your account and all activities that occur under it. Providing accurate information is mandatory."
-        },
-        "management": {
-          "title": "2. Project & Task Management",
-          "content": "TaskCoper provides tools for managing projects, task cards, and team collaboration. Users are responsible for the content and data they upload."
-        },
-        "mentoring": {
-          "title": "3. Mentoring Services",
-          "content": "The platform connects Experts (Mentors) and Users (Mentees). All agreements regarding meetings and mentoring roadmaps must comply with our professional conduct rules."
-        },
-        "payments": {
-          "title": "4. Payments & Refunds",
-          "content": "Mentor Packages and transactions on the platform are processed securely. Refunds will be considered based on the specific policy of each package."
-        },
-        "ip": {
-          "title": "5. Intellectual Property",
-          "content": "All features and designs of TaskCoper are owned by us. Your project content remains yours."
-        }
-      }
+  "purchaseHistory": {
+    "title": "Purchased Packages",
+    "description": "Manage your purchased packages and sessions",
+    "meetingsCount": "{{booked}}/{{total}} sessions",
+    "price": "Price",
+    "duration": "Duration",
+    "viewDetails": "View Details",
+    "bookSession": "Book Session",
+    "detail": {
+      "about": "About",
+      "progress": "Progress",
+      "mentor": "Mentor",
+      "details": "Package Details",
+      "meetings": "Meetings",
+      "noMeetings": "No meetings scheduled yet"
     },
-    "privacy": {
-      "title": "Privacy Policy",
-      "lastUpdated": "Last Updated: March 26, 2026",
-      "intro": "We respect your privacy and are committed to protecting your personal data.",
-      "sections": {
-        "collection": {
-          "title": "1. Data Collection",
-          "content": "We collect profile information (name, email, avatar) and activity data (projects, tasks, meeting history) to improve our services."
-        },
-        "usage": {
-          "title": "2. Data Usage",
-          "content": "Your information is used to operate the platform, support AI advisors, and facilitate connections between Mentors and Mentees."
-        },
-        "security": {
-          "title": "3. Data Security",
-          "content": "We apply standard security measures to prevent unauthorized access or leakage of user data."
-        },
-        "rights": {
-          "title": "4. User Rights",
-          "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
+    "legal": {
+      "terms": {
+        "title": "Terms of Service",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "Welcome to TaskCoper. By using our platform, you agree to comply with the following terms.",
+        "sections": {
+          "accounts": {
+            "title": "1. User Accounts",
+            "content": "You are responsible for maintaining the security of your account and all activities that occur under it. Providing accurate information is mandatory."
+          },
+          "management": {
+            "title": "2. Project & Task Management",
+            "content": "TaskCoper provides tools for managing projects, task cards, and team collaboration. Users are responsible for the content and data they upload."
+          },
+          "mentoring": {
+            "title": "3. Mentoring Services",
+            "content": "The platform connects Experts (Mentors) and Users (Mentees). All agreements regarding meetings and mentoring roadmaps must comply with our professional conduct rules."
+          },
+          "payments": {
+            "title": "4. Payments & Refunds",
+            "content": "Mentor Packages and transactions on the platform are processed securely. Refunds will be considered based on the specific policy of each package."
+          },
+          "ip": {
+            "title": "5. Intellectual Property",
+            "content": "All features and designs of TaskCoper are owned by us. Your project content remains yours."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "We respect your privacy and are committed to protecting your personal data.",
+        "sections": {
+          "collection": {
+            "title": "1. Data Collection",
+            "content": "We collect profile information (name, email, avatar) and activity data (projects, tasks, meeting history) to improve our services."
+          },
+          "usage": {
+            "title": "2. Data Usage",
+            "content": "Your information is used to operate the platform, support AI advisors, and facilitate connections between Mentors and Mentees."
+          },
+          "security": {
+            "title": "3. Data Security",
+            "content": "We apply standard security measures to prevent unauthorized access or leakage of user data."
+          },
+          "rights": {
+            "title": "4. User Rights",
+            "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
+          }
         }
       }
     }

@@ -43,7 +43,7 @@ export default function ProfilePage() {
         id: 1,
         label: t('user.tabs.all'),
         value: 'all',
-        content: <AllTab userId={userId!} />
+        content: <AllTab userDetail={user} />
       },
       {
         id: 50,
@@ -64,7 +64,7 @@ export default function ProfilePage() {
         content: <div>Comming Soon</div>
       }
     ]
-  }, [t, userId])
+  }, [t, user])
 
   const [activeTab, setActiveTab] = useState<TabItem>(tabs[0])
 

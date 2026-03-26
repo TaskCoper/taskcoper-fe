@@ -56,3 +56,8 @@ export const getTaskPriorityIcon = (className?: string): Record<TaskPriority, Re
     [TaskPriority.HIGHEST]: <ChevronsUpIcon className={cn('size-4 text-rose-500', className)} />
   }
 }
+
+// Calendar Layout Constants
+export const CALENDAR_HOUR_HEIGHT = 70
+export const CALENDAR_TIME_GUTTER_WIDTH = 64
+export const CALENDAR_EVENT_MIN_HEIGHT = 50

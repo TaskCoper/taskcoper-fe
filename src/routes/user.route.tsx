@@ -17,7 +17,7 @@ const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
-const TaskDetailDialogPage = lazy(() => import('@/pages/task-detail-dialog.page'))
+const TaskDialogPage = lazy(() => import('@/pages/task-dialog.page'))
 
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
@@ -32,6 +32,10 @@ const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
 const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
+const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
+const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
+
+const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -91,8 +95,22 @@ export const userRoutes: RouteObject[] = [
                     )
                   },
                   {
+                    path: 'purchases',
+                    element: <PurchaseHistoryPage />
+                  },
+                  {
+                    path: 'purchases/packages/:packageId',
+                    element: <PurchasedPackagePage />
+                  },
+                  {
                     path: 'calendar',
-                    element: <CalendarPage />
+                    element: <CalendarPage />,
+                    children: [
+                      {
+                        path: 'meetings/:meetingId',
+                        element: <MeetingDialogPage />
+                      }
+                    ]
                   },
                   {
                     element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
@@ -153,7 +171,7 @@ export const userRoutes: RouteObject[] = [
                     children: [
                       {
                         path: 'tasks/:taskId',
-                        element: <TaskDetailDialogPage />
+                        element: <TaskDialogPage />
                       }
                     ]
                   },
@@ -163,7 +181,13 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'calendar',
-                    element: <ProjectCalendarPage />
+                    element: <ProjectCalendarPage />,
+                    children: [
+                      {
+                        path: 'meetings/:meetingId',
+                        element: <MeetingDialogPage />
+                      }
+                    ]
                   },
                   {
                     path: 'performance',
@@ -191,7 +215,7 @@ export const userRoutes: RouteObject[] = [
                     children: [
                       {
                         path: ':milestoneId/tasks/:taskId',
-                        element: <TaskDetailDialogPage />
+                        element: <TaskDialogPage />
                       }
                     ]
                   },

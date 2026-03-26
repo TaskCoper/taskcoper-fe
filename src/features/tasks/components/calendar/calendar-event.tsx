@@ -1,84 +1,99 @@
-import { cn } from '@/shared/utils'
-import type { TaskPreview } from '@/types/task.type'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getMeetingStatusTheme } from '@/features/meetings/utils'
+import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME } from '@/features/tasks/constants'
+import { cn, getAvatarFallback } from '@/shared/utils'
+import { type MeetingBooking } from '@/types/meeting.type'
+import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 interface CalendarEventProps {
-  task: TaskPreview
+  meeting: MeetingBooking & { status?: string }
   variant?: 'block' | 'chip'
   style?: React.CSSProperties
   className?: string
-  onClick?: (task: TaskPreview) => void
+  onClick?: (meeting: MeetingBooking) => void
 }
 
-const priorityColors: Record<string, string> = {
-  HIGHEST: 'bg-rose-500',
-  HIGH: 'bg-rose-400',
-  MEDIUM: 'bg-orange-400',
-  LOW: 'bg-blue-400',
-  LOWEST: 'bg-blue-300'
-}
+export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
+  const { t } = useTranslation()
+  const theme = getMeetingStatusTheme(meeting.status)
 
-const priorityBorderColors: Record<string, string> = {
-  HIGHEST: '#f43f5e',
-  HIGH: '#fb7185',
-  MEDIUM: '#fb923c',
-  LOW: '#60a5fa',
-  LOWEST: '#93c5fd'
-}
+  const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`
 
-const MIN_HEIGHT_FOR_TIME = 32
+  const projectText = meeting.projectId && meeting.project ? `[${meeting.project.name}] - ` : ''
+  const titleText = meeting.packageBookingId
+    ? `${t('meeting.detail.session', { sequence: meeting.packageSequence })} - ${meeting.packageName}`
+    : `${t('meeting.detail.meetingWith')} ${mentorFullName}`
+  const title = `${projectText}${titleText}`
 
-export default function CalendarEvent({ task, variant = 'block', style, className, onClick }: CalendarEventProps) {
-  const accentColor = task.priority ? priorityColors[task.priority] : 'bg-primary'
+  const startTime = meeting.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : ''
+  const endTime = meeting.endTimeUtc ? format(new Date(meeting.endTimeUtc), 'h:mm a') : ''
+  const timeString = startTime && endTime ? `${startTime} - ${endTime}` : ''
 
+  // month view
   if (variant === 'chip') {
     return (
       <div
         className={cn(
-          'flex items-center gap-1.5 rounded px-1.5 py-0.5 text-xs truncate cursor-pointer',
-          'bg-primary/10 text-primary hover:bg-primary/20 transition-colors',
+          'flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-xs truncate cursor-pointer',
+          'hover:bg-accent/80 hover:scale-101 transition-colors',
           className
         )}
-        title={task.name}
-        onClick={() => onClick?.(task)}
+        title={`${title}\n${timeString}\nw/ ${mentorFullName}`}
+        onClick={(e) => {
+          e.stopPropagation()
+          onClick?.(meeting)
+        }}
       >
-        <span className={cn('size-2 rounded-full shrink-0', accentColor)} />
-        <span className='truncate'>{task.name}</span>
+        <div className={cn('size-2.5 rounded-full shrink-0', theme.dot)} />
+        {startTime && <p className='font-medium shrink-0'>{startTime}</p>}
+        <p className='truncate font-medium text-foreground'>{title}</p>
       </div>
     )
   }
 
-  const height = typeof style?.height === 'number' ? style.height : 60
+  const height = typeof style?.height === 'number' ? style.height : CALENDAR_HOUR_HEIGHT
   const isCompact = height < MIN_HEIGHT_FOR_TIME
 
   return (
     <div
       className={cn(
-        'absolute rounded-md overflow-hidden cursor-pointer group',
-        'bg-primary/10 border-l-[3px] hover:bg-primary/20 transition-colors',
-        isCompact ? 'flex items-center px-1.5 gap-1' : 'px-2 py-1',
+        'absolute rounded-md overflow-hidden cursor-pointer group transition-all',
+        'border-l-4 hover:scale-101',
+        theme.block,
+        isCompact ? 'flex items-center px-1.5 gap-1.5' : 'flex flex-col px-2 py-1.5',
         className
       )}
       style={{
-        borderLeftColor: task.priority ? priorityBorderColors[task.priority] || 'var(--primary)' : 'var(--primary)',
-        minHeight: 18,
+        minHeight: 22,
         ...style
       }}
-      title={task.name}
-      onClick={() => onClick?.(task)}
+      title={`${title}\n${timeString}\nw/ ${mentorFullName}`}
+      onClick={(e) => {
+        e.stopPropagation()
+        onClick?.(meeting)
+      }}
     >
       {isCompact ? (
         <>
-          <p className='text-[11px] font-medium truncate text-primary leading-none'>{task.name}</p>
+          <p className='text-[11px] font-medium opacity-75 shrink-0'>{timeString}</p>
+          <p className='text-xs font-semibold truncate leading-none'>{title}</p>
         </>
       ) : (
         <>
-          <p className='text-xs font-medium truncate text-primary'>{task.name}</p>
-          {task.startDate && task.endDate && (
-            <p className='text-[10px] text-muted-foreground truncate mt-0.5'>
-              {new Date(task.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              {' – '}
-              {new Date(task.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </p>
+          <p className='text-xs font-semibold truncate leading-tight'>{title}</p>
+          {timeString && <p className='text-[11px] font-medium truncate mt-0.5 leading-tight'>{timeString}</p>}
+
+          {height >= CALENDAR_HOUR_HEIGHT - 2 && (
+            <div className='flex items-center gap-1.5 mt-auto pt-1'>
+              <Avatar className='size-4'>
+                <AvatarImage src={meeting.mentor.avatarUrl ?? ''} />
+                <AvatarFallback className={cn('text-[8px]', theme.avatar)}>
+                  {getAvatarFallback(mentorFullName)}
+                </AvatarFallback>
+              </Avatar>
+              <p className='text-[11px] font-medium truncate opacity-90'>{mentorFullName}</p>
+            </div>
           )}
         </>
       )}

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import CreateMeetingDialog from '@/features/meetings/components/book-meeting-dialog'
+import BookMeetingDialog from '@/features/meetings/components/book-meeting-dialog'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import { formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
@@ -64,12 +64,12 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
   })
 
   const schedule = useMemo(
-    () => groupSlotsByDay(scheduleData?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(scheduleData.value.items, currentWeekStart),
     [scheduleData, currentWeekStart]
   )
 
   const bookedSchedule = useMemo(
-    () => groupSlotsByDay(mentorMeetings?.value?.items ?? [], currentWeekStart),
+    () => groupSlotsByDay(mentorMeetings.value.items, currentWeekStart),
     [mentorMeetings, currentWeekStart]
   )
 
@@ -149,7 +149,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
 
           <div className='flex items-center gap-1'>
             <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
-              <ChevronLeftIcon className='size-4' />
+              <ChevronLeftIcon />
             </Button>
 
             <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
@@ -170,7 +170,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
             </Select>
 
             <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
-              <ChevronRightIcon className='size-4' />
+              <ChevronRightIcon />
             </Button>
           </div>
 
@@ -202,6 +202,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
         <div className='grid grid-cols-7 gap-2'>
           {schedule.map((day, index) => {
             const dayIsToday = isToday(day.date)
+            const isPastDay = day.date.getTime() < new Date().setHours(0, 0, 0, 0)
 
             return (
               <div key={index} className='flex flex-col gap-2'>
@@ -223,15 +224,21 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
                       (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc
                     )
 
+                    const now = new Date()
+                    const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`
+                    const isPassedTime = dayIsToday && slot.startTimeUtc < currentTimeStr
+
+                    const isDisabled = isBooked || isPastDay || isPassedTime
+
                     return (
                       <button
                         key={`${slot.dayOfWeek}-${slot.startTimeUtc}`}
                         type='button'
-                        disabled={isBooked}
-                        onClick={() => !isBooked && handleOpenDialog(slot, day.date)}
+                        disabled={isDisabled}
+                        onClick={() => !isDisabled && handleOpenDialog(slot, day.date)}
                         className={cn(
                           'w-full p-2 rounded-md text-center transition-all duration-200 border',
-                          isBooked
+                          isDisabled
                             ? 'bg-muted/50 border-muted text-muted-foreground cursor-not-allowed shadow-none'
                             : 'border-dashed cursor-pointer hover:scale-[1.02] hover:shadow-sm bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
                         )}
@@ -258,7 +265,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
         </div>
       </div>
 
-      <CreateMeetingDialog
+      <BookMeetingDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         mentorId={userId}

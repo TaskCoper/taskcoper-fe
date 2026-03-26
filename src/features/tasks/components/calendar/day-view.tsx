@@ -1,31 +1,34 @@
 import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
 import { layoutDayEvents } from '@/features/tasks/components/calendar/calendar-layout'
-import { cn } from '@/shared/utils'
-import type { TaskPreview } from '@/types/task.type'
+import {
+  CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
+  CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
+} from '@/features/tasks/constants'
+import { cn, getTimezoneOffsetString } from '@/shared/utils'
+import type { MeetingBooking } from '@/types/meeting.type'
 import { format, isSameDay, isToday, setHours } from 'date-fns'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface DayViewProps {
   date: Date
-  tasks: TaskPreview[]
-  onTaskClick?: (task: TaskPreview) => void
+  meetings: MeetingBooking[]
+  onMeetingClick?: (meeting: MeetingBooking) => void
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
-const HOUR_HEIGHT = 60
-const TIME_GUTTER_WIDTH = 64
 
-export default function DayView({ date, tasks, onTaskClick }: DayViewProps) {
+export default function DayView({ date, meetings, onMeetingClick }: DayViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [timezone] = useState(getTimezoneOffsetString())
   const now = new Date()
   const isCurrentDay = isToday(date)
 
-  const dayTasks = tasks.filter((task) => {
-    if (!task.startDate) return false
-    return isSameDay(new Date(task.startDate), date)
+  const dayMeetings = meetings.filter((meeting) => {
+    if (!meeting.startTimeUtc) return false
+    return isSameDay(new Date(meeting.startTimeUtc), date)
   })
 
-  const layouted = layoutDayEvents(dayTasks, date)
+  const layouted = layoutDayEvents(dayMeetings, date)
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -38,7 +41,11 @@ export default function DayView({ date, tasks, onTaskClick }: DayViewProps) {
   return (
     <div ref={scrollRef} className='flex-1 overflow-y-auto'>
       <div className='flex border-b sticky top-0 bg-background z-10'>
-        <div className='shrink-0' style={{ width: TIME_GUTTER_WIDTH }} />
+        <div className='shrink-0 relative' style={{ width: TIME_GUTTER_WIDTH }}>
+          <div className='absolute bottom-1 right-2'>
+            <span className='text-[10px] text-muted-foreground'>{timezone}</span>
+          </div>
+        </div>
         <div className='flex-1 text-center py-2'>
           <p className='text-xs text-muted-foreground uppercase'>{format(date, 'EEE')}</p>
           <div
@@ -52,7 +59,7 @@ export default function DayView({ date, tasks, onTaskClick }: DayViewProps) {
         </div>
       </div>
 
-      <div className='relative' style={{ height: 24 * HOUR_HEIGHT }}>
+      <div className='relative' style={{ height: 24 * HOUR_HEIGHT + 16 }}>
         {HOURS.map((hour) => (
           <div key={hour} className='absolute w-full flex' style={{ top: hour * HOUR_HEIGHT, height: HOUR_HEIGHT }}>
             <div
@@ -69,16 +76,17 @@ export default function DayView({ date, tasks, onTaskClick }: DayViewProps) {
           {layouted.map((ev) => {
             const widthPercent = 100 / ev.totalColumns
             const leftPercent = ev.column * widthPercent
+
             return (
               <CalendarEvent
-                key={ev.task.id}
-                task={ev.task}
-                onClick={onTaskClick}
+                key={ev.meeting.id}
+                meeting={ev.meeting}
+                onClick={onMeetingClick}
                 style={{
-                  top: ev.top,
-                  height: ev.height,
+                  top: ev.top + 1,
+                  height: ev.height - 2,
                   left: `calc(${leftPercent}% + 2px)`,
-                  width: `calc(${widthPercent}% - 6px)`
+                  width: `calc(${widthPercent}% - 14px)`
                 }}
               />
             )
