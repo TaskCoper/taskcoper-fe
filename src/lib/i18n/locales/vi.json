@@ -1718,6 +1718,7 @@
     "card": {
       "sessionsCount_one": "{{count}} buổi",
       "sessionsCount_other": "{{count}} buổi",
+      "viewPackage": "Xem gói",
       "bookFor": "Đặt lịch {{price}}",
       "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
       "sortOrder": "Thứ tự sắp xếp"

@@ -1718,8 +1718,9 @@
     "card": {
       "sessionsCount_one": "{{count}} session",
       "sessionsCount_other": "{{count}} sessions",
+      "viewPackage": "View package",
       "bookFor": "Book for {{price}}",
-      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} min / session",
+      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} mins/session",
       "sortOrder": "Sort order"
     },
     "sidebar": {

@@ -74,6 +74,11 @@ export default function PurchasedPackagePage() {
       Math.max(1, purchasedMentorPackage?.totalSessions ?? 1)) *
     100
 
+  const completedSessions =
+    purchasedMentorPackage?.meetings?.filter(
+      (meeting) => meeting.status === MeetingStatus.COMPLETED && !meeting.parentId
+    ).length || 0
+
   const limitSlots =
     purchasedMentorPackage?.rules.find((rule) => rule.packageSequence === currentSequence + 1)?.totalTimeSlots ?? 1
 
@@ -139,7 +144,7 @@ export default function PurchasedPackagePage() {
           <div className='space-y-4'>
             <div>
               <p className='font-semibold'>
-                {t('purchasedPackage.progress')} ({progress.toFixed(0)}%)
+                {t('purchasedPackage.progress')} ({completedSessions}/{purchasedMentorPackage?.totalSessions})
               </p>
               <p className='text-xs text-muted-foreground'>{t('purchasedPackage.overallProgress')}</p>
             </div>

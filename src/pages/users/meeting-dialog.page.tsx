@@ -85,6 +85,11 @@ export default function MeetingDialogPage() {
           position='top-center'
           showCloseButton={false}
         >
+          <VisuallyHidden>
+            <DialogTitle>{t('meeting.detail.loadingTitle')}</DialogTitle>
+            <DialogDescription>{t('meeting.detail.loadingDescription')}</DialogDescription>
+          </VisuallyHidden>
+
           <DialogHeader className='px-6 py-4 space-y-3 bg-muted'>
             <Skeleton className='h-7 w-1/2 bg-foreground/10' />
             <div className='flex items-center gap-2'>
@@ -156,7 +161,7 @@ export default function MeetingDialogPage() {
       >
         <DialogHeader
           className={cn(
-            'px-6 py-4 transition-colors space-y-1',
+            'px-6 py-4 space-y-1',
             getMeetingStatusTheme(meeting?.status).block.includes('bg-')
               ? getMeetingStatusTheme(meeting?.status).block
               : 'bg-primary text-white'
@@ -317,58 +322,58 @@ export default function MeetingDialogPage() {
               )}
             </div>
 
-            <div className='space-y-2.5'>
-              <div>
+            {((meeting?.projectId && meeting.project) || meeting?.packageBookingId) && (
+              <div className='space-y-2.5'>
                 <p className='text-sm font-medium'>{t('meeting.detail.information')}</p>
+
+                <div className='space-y-2'>
+                  {meeting?.projectId && meeting.project ? (
+                    <div className='flex items-center justify-between gap-2'>
+                      <div className='flex items-center gap-2 text-muted-foreground'>
+                        <FolderOpenIcon className='size-4' />
+                        <p className='text-xs font-medium'>{t('meeting.detail.belongsToProject')}</p>
+                      </div>
+
+                      <Link
+                        to={`/projects/${meeting?.projectId}/info`}
+                        className='hover:text-primary hover:underline w-[60%] text-right'
+                      >
+                        <p className='text-xs font-semibold truncate'>{meeting?.project?.name}</p>
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {meeting?.packageBookingId ? (
+                    <div className='flex items-center justify-between gap-2'>
+                      <div className='flex items-center gap-2 text-muted-foreground'>
+                        <PackageIcon className='size-4' />
+                        <p className='text-xs font-medium'>{t('meeting.detail.belongsToPackage')}</p>
+                      </div>
+
+                      <Link
+                        to={`/purchases/packages/${meeting?.packageBookingId}`}
+                        className='hover:text-primary hover:underline w-[60%] text-right'
+                      >
+                        <p className='text-xs font-semibold truncate'>{meeting?.packageName}</p>
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {meeting?.packageBookingId ? (
+                    <div className='flex items-center justify-between gap-2'>
+                      <div className='flex items-center gap-2 text-muted-foreground'>
+                        <ArrowDown01Icon className='size-4' />
+                        <p className='text-xs font-medium'>{t('meeting.detail.sessionSequence')}</p>
+                      </div>
+
+                      <p className='text-xs font-semibold truncate w-[60%] text-right'>
+                        {t('meeting.detail.session', { sequence: meeting?.packageSequence })}
+                      </p>
+                    </div>
+                  ) : null}
+                </div>
               </div>
-
-              <div className='space-y-2'>
-                {meeting?.projectId && meeting.project ? (
-                  <div className='flex items-center justify-between gap-2'>
-                    <div className='flex items-center gap-2 text-muted-foreground'>
-                      <FolderOpenIcon className='size-4' />
-                      <p className='text-xs font-medium'>{t('meeting.detail.belongsToProject')}</p>
-                    </div>
-
-                    <Link
-                      to={`/projects/${meeting?.projectId}/info`}
-                      className='hover:text-primary hover:underline w-[60%] text-right'
-                    >
-                      <p className='text-xs font-semibold truncate'>{meeting?.project?.name}</p>
-                    </Link>
-                  </div>
-                ) : null}
-
-                {meeting?.packageBookingId ? (
-                  <div className='flex items-center justify-between gap-2'>
-                    <div className='flex items-center gap-2 text-muted-foreground'>
-                      <PackageIcon className='size-4' />
-                      <p className='text-xs font-medium'>{t('meeting.detail.belongsToPackage')}</p>
-                    </div>
-
-                    <Link
-                      to={`/purchases/packages/${meeting?.packageBookingId}`}
-                      className='hover:text-primary hover:underline w-[60%] text-right'
-                    >
-                      <p className='text-xs font-semibold truncate'>{meeting?.packageName}</p>
-                    </Link>
-                  </div>
-                ) : null}
-
-                {meeting?.packageBookingId ? (
-                  <div className='flex items-center justify-between gap-2'>
-                    <div className='flex items-center gap-2 text-muted-foreground'>
-                      <ArrowDown01Icon className='size-4' />
-                      <p className='text-xs font-medium'>{t('meeting.detail.sessionSequence')}</p>
-                    </div>
-
-                    <p className='text-xs font-semibold truncate w-[60%] text-right'>
-                      {t('meeting.detail.session', { sequence: meeting?.packageSequence })}
-                    </p>
-                  </div>
-                ) : null}
-              </div>
-            </div>
+            )}
 
             <div className='space-y-2.5'>
               <p className='text-sm font-medium'>{t('meeting.detail.mentor')}</p>
