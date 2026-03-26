@@ -4,7 +4,6 @@ import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
-import MeetingDialogPage from '@/pages/users/meeting-dialog.page'
 import { lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
@@ -35,6 +34,8 @@ const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
 const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
 const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
+
+const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
 
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
@@ -180,7 +181,13 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     path: 'calendar',
-                    element: <ProjectCalendarPage />
+                    element: <ProjectCalendarPage />,
+                    children: [
+                      {
+                        path: 'meetings/:meetingId',
+                        element: <MeetingDialogPage />
+                      }
+                    ]
                   },
                   {
                     path: 'performance',

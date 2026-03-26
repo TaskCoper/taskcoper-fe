@@ -3,6 +3,7 @@ import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
+import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
@@ -279,7 +280,10 @@ export const queryKeys = {
       [...queryKeys.meetings.allMentor(mentorId), activeFrom, activeTo] as const,
     allMy: ['meetings', 'my'] as const,
     my: ({ activeFrom, activeTo }: GetMyMeetingsParams) => [...queryKeys.meetings.allMy, activeFrom, activeTo] as const,
-    detail: (meetingId?: string) => ['meeting', meetingId] as const
+    detail: (meetingId?: string) => ['meeting', meetingId] as const,
+    allProject: ['meetings', 'project'] as const,
+    project: ({ projectId, activeFrom, activeTo }: GetProjectMeetingsParams) =>
+      [...queryKeys.meetings.allProject, projectId, activeFrom, activeTo] as const
   },
   // Transactions
   transactions: {

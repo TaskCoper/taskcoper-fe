@@ -1,5 +1,6 @@
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
+import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type {
   BookMeetingFormValues,
   CancelMeetingFormValues,
@@ -39,6 +40,20 @@ class MeetingService {
         activeTo
       }
     })
+
+    return data.value.items
+  }
+
+  getProjectMeetings = async ({ projectId, activeFrom, activeTo }: GetProjectMeetingsParams) => {
+    const { data } = await api.get<BasePaginationResponse<MeetingBooking>>(
+      `/v1/${this.baseUrl}/bookings/projects/${projectId}`,
+      {
+        params: {
+          activeFrom,
+          activeTo
+        }
+      }
+    )
 
     return data.value.items
   }

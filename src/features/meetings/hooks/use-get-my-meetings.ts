@@ -10,7 +10,8 @@ export interface GetMyMeetingsParams {
 export const useGetMyMeetings = ({ activeFrom, activeTo }: GetMyMeetingsParams) => {
   const { data: myMeetings = [], isLoading: isLoadingMyMeetings } = useQuery({
     queryKey: queryKeys.meetings.my({ activeFrom, activeTo }),
-    queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo })
+    queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo }),
+    enabled: !!activeFrom && !!activeTo
   })
 
   return { myMeetings, isLoadingMyMeetings }
