@@ -668,6 +668,19 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Footer Links */}
+        <footer className='py-4 px-6 flex justify-center items-center gap-4 sm:gap-6 text-[10px] sm:text-xs z-50'>
+          <Link to='/terms-of-service' className='hover:text-primary transition-colors'>
+            {t('pageTitle.termsOfService')}
+          </Link>
+          <Separator orientation='vertical' className='h-3 bg-slate-200' />
+          <Link to='/privacy-policy' className='hover:text-primary transition-colors'>
+            {t('pageTitle.privacyPolicy')}
+          </Link>
+          <Separator orientation='vertical' className='h-3 bg-slate-200' />
+          <p>© {new Date().getFullYear()} TaskCoper</p>
+        </footer>
       </div>
     </>
   )
