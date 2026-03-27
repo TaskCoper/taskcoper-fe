@@ -44,14 +44,14 @@
       },
       "required": "This field is required",
       "maxLength": {
+        "20": "Max 20 characters",
         "255": "Max 255 characters",
-        "10000": "Max 10000 characters",
-        "20": "Max 20 characters"
+        "10000": "Max 10000 characters"
       },
       "minLength": {
         "1": "This field is required",
-        "8": "Must be at least 8 characters long",
-        "6": "Must be 6 characters"
+        "6": "Must be 6 characters",
+        "8": "Must be at least 8 characters long"
       },
       "url": {
         "invalid": "Invalid URL"
@@ -1006,7 +1006,8 @@
       "titleHighlight": "No. 1 in Vietnam",
       "description": "TaskCoper helps teams organize work, track progress, and collaborate seamlessly. All in one powerful platform.",
       "cta": "Start Your Journey",
-      "trustBadge": "Trusted by 500+ teams worldwide"
+      "trustBadge": "Trusted by 500+ teams worldwide",
+      "brandName": "TaskCoper"
     },
     "stats": {
       "projects": "Projects",
@@ -1070,7 +1071,8 @@
         "inProgress": "In Progress",
         "done": "Done"
       }
-    }
+    },
+    "title": "TaskCoper - Project Management Platform"
   },
   "activities": {
     "FileAddedToTaskActivity": "added a file to the task",
@@ -1387,7 +1389,6 @@
     "amountLabel": "Total amount",
     "securePayment": "Secure Payment"
   },
-
   "mentorTitle": {
     "bronze": "Bronze",
     "silver": "Silver",

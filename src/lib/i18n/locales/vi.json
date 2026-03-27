@@ -44,14 +44,14 @@
       },
       "required": "Trường này là bắt buộc",
       "maxLength": {
+        "20": "Tối đa 20 ký tự",
         "255": "Tối đa 255 ký tự",
-        "10000": "Tối đa 10000 ký tự",
-        "20": "Tối đa 20 ký tự"
+        "10000": "Tối đa 10000 ký tự"
       },
       "minLength": {
         "1": "Trường này là bắt buộc",
-        "8": "Phải có ít nhất 8 ký tự",
-        "6": "Phải có 6 ký tự"
+        "6": "Phải có 6 ký tự",
+        "8": "Phải có ít nhất 8 ký tự"
       },
       "url": {
         "invalid": "URL không hợp lệ"
@@ -1006,7 +1006,8 @@
       "titleHighlight": "Số 1 Việt Nam",
       "description": "TaskCoper giúp các nhóm tổ chức công việc, theo dõi tiến độ và cộng tác liền mạch. Tất cả trong một nền tảng mạnh mẽ.",
       "cta": "Bắt đầu hành trình",
-      "trustBadge": "Được tin dùng bởi hơn 500 nhóm trên toàn thế giới"
+      "trustBadge": "Được tin dùng bởi hơn 500 nhóm trên toàn thế giới",
+      "brandName": "TaskCoper"
     },
     "stats": {
       "projects": "Dự án",
@@ -1070,7 +1071,8 @@
         "inProgress": "Đang làm",
         "done": "Xong"
       }
-    }
+    },
+    "title": "TaskCoper - Nền tảng Quản lý dự án"
   },
   "activities": {
     "FileAddedToTaskActivity": "đã thêm tệp vào công việc",
@@ -1387,7 +1389,6 @@
     "amountLabel": "Tổng số tiền",
     "securePayment": "Thanh toán an toàn"
   },
-
   "mentorTitle": {
     "bronze": "Đồng",
     "silver": "Bạc",
