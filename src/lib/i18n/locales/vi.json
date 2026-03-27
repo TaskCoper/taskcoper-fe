@@ -1042,8 +1042,29 @@
       }
     },
     "profileDialog": {
+      "settings": "Cài đặt",
       "profileAndDisplay": "Hồ sơ và hiển thị",
-      "password": "Mật khẩu"
+      "password": "Mật khẩu",
+      "connectedApps": "Ứng dụng liên kết",
+      "googleCalendar": "Google Calendar",
+      "connectWithCalendar": "Kết nối với Lịch",
+      "googleCallback": {
+        "loading": {
+          "title": "Đang kết nối Google Calendar",
+          "description": "Vui lòng đợi trong khi chúng tôi xác minh tài khoản của bạn..."
+        },
+        "success": {
+          "title": "Kết nối thành công!",
+          "description": "Google Calendar của bạn đã được liên kết. Đang chuyển hướng quay lại..."
+        },
+        "error": {
+          "title": "Kết nối thất bại",
+          "description": "Có lỗi xảy ra trong quá trình kết nối Google Calendar. Vui lòng thử lại."
+        },
+        "verifyingOauthToken": "Đang xác minh token OAuth của Google",
+        "connectedBadge": "Đã kết nối",
+        "goBack": "Quay lại"
+      }
     },
     "tabs": {
       "all": "Tất cả",

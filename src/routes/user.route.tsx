@@ -37,6 +37,8 @@ const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.
 
 const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
 
+const GoogleCallbackPage = lazy(() => import('@/pages/google-callback.page'))
+
 const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
   const { t } = useTranslation()
   const title = t(titleKey)
@@ -60,6 +62,10 @@ export const userRoutes: RouteObject[] = [
       {
         element: <RoleGuardLayout allowedRoles={['user']} />,
         children: [
+          {
+            path: 'integrations/google/callback',
+            element: <GoogleCallbackPage />
+          },
           {
             path: 'payments/checkout',
             element: <CheckoutPage />
