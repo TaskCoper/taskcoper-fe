@@ -14,12 +14,12 @@ const PrivacyPolicyPage = lazy(() => import('@/pages/privacy-policy.page'))
 
 export const publicRoutes: RouteObject[] = [
   {
+    path: '/',
+    element: <HomePage />
+  },
+  {
     element: <RoleGuardLayout allowedRoles={['user']} />,
     children: [
-      {
-        path: '/',
-        element: <HomePage />
-      },
       {
         path: '/forgot-password',
         element: <ForgotPasswordPage />
