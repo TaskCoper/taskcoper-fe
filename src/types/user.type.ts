@@ -22,6 +22,7 @@ export interface User {
   organizationAvatar: string | null
   domains: Domain[]
   createdOnUtc: string
+  isGrantGoogleCalendarAccess: boolean
 }
 
 export interface UserDetail {

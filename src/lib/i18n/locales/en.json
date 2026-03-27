@@ -1042,8 +1042,29 @@
       }
     },
     "profileDialog": {
+      "settings": "Settings",
       "profileAndDisplay": "Profile and display",
-      "password": "Password"
+      "password": "Password",
+      "connectedApps": "Connected Apps",
+      "googleCalendar": "Google Calendar",
+      "connectWithCalendar": "Connect with Calendar",
+      "googleCallback": {
+        "loading": {
+          "title": "Connecting Google Calendar",
+          "description": "Please wait while we verify your account..."
+        },
+        "success": {
+          "title": "Successfully Connected!",
+          "description": "Your Google Calendar is now linked. Redirecting you back..."
+        },
+        "error": {
+          "title": "Connection Failed",
+          "description": "Something went wrong while connecting your Google Calendar. Please try again."
+        },
+        "verifyingOauthToken": "Verifying Google OAuth token",
+        "connectedBadge": "Connected",
+        "goBack": "Go Back"
+      }
     },
     "tabs": {
       "all": "All",

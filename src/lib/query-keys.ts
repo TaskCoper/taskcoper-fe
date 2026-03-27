@@ -25,6 +25,7 @@ export const queryKeys = {
   // Users
   users: {
     all: ['users'] as const,
+    googleAuthUrl: (userId?: string) => [...queryKeys.users.all, 'google-auth-url', userId] as const,
     list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) =>
       [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const,
     detail: (userId?: string) => ['user', userId] as const
