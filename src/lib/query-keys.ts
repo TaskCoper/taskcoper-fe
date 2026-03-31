@@ -1,6 +1,7 @@
 import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
+import type { GetCommissionsParams } from '@/features/commissions/hooks/use-get-commissions'
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
 import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
@@ -308,5 +309,11 @@ export const queryKeys = {
     statusStats: () => ['transaction-status-stats'] as const,
     typeStats: () => ['transaction-type-stats'] as const,
     status: (transactionId?: string) => ['transaction-status', transactionId] as const
+  },
+  // Commissions
+  commissions: {
+    all: ['commissions'] as const,
+    list: ({ page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy }: GetCommissionsParams) =>
+      [...queryKeys.commissions.all, page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const
   }
 } as const

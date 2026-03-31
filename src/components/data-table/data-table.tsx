@@ -2,8 +2,8 @@ import { DataTablePagination } from '@/components/data-table/data-table-paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getColumnPinningStyle } from '@/lib/data-table/utils'
 import { cn } from '@/shared/utils'
-import { flexRender, type Table as TanstackTable } from '@tanstack/react-table'
-import type * as React from 'react'
+import { flexRender, type Row, type Table as TanstackTable } from '@tanstack/react-table'
+import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Skeleton } from '../ui/skeleton'
 
@@ -11,11 +11,13 @@ interface DataTableProps<TData> extends React.ComponentProps<'div'> {
   table: TanstackTable<TData>
   actionBar?: React.ReactNode
   isLoading?: boolean
+  renderSubComponent?: (props: { row: Row<TData> }) => React.ReactNode
 }
 
 export function DataTable<TData>({
   table,
   actionBar,
+  renderSubComponent,
   children,
   className,
   isLoading = false,
@@ -63,19 +65,28 @@ export function DataTable<TData>({
               ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, index) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      style={{
-                        ...getColumnPinningStyle({ column: cell.column })
-                      }}
-                      className={index % 2 !== 0 ? 'bg-muted!' : ''}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <React.Fragment key={row.id}>
+                  <TableRow data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          ...getColumnPinningStyle({ column: cell.column })
+                        }}
+                        className={index % 2 !== 0 ? 'bg-muted!' : ''}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {row.getIsExpanded() && renderSubComponent && (
+                    <TableRow>
+                      <TableCell colSpan={row.getVisibleCells().length} className='bg-muted/50 p-0'>
+                        {renderSubComponent({ row })}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               ))
             ) : (
               <TableRow>

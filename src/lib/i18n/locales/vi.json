@@ -35,6 +35,7 @@
       "name": "Tên",
       "email": "Email",
       "password": "Mật khẩu",
+      "isActive": "Kích hoạt",
       "startDate": "Ngày bắt đầu",
       "endDate": "Ngày kết thúc",
       "date": "Ngày"
@@ -73,6 +74,7 @@
       }
     },
     "ui": {
+      "count": "Số lượng",
       "selected": "đã chọn",
       "characters": "ký tự",
       "search": "Tìm kiếm...",
@@ -253,6 +255,48 @@
       "reschedule": "Chờ xếp lại",
       "cancelled": "Đã hủy",
       "suspended": "Tạm ngưng"
+    }
+  },
+  "commission": {
+    "button": {
+      "addConfig": "Thêm cấu hình"
+    },
+    "dialog": {
+      "title": "Cấu hình hoa hồng",
+      "description": "Thêm cấu hình hoa hồng mới"
+    },
+    "field": {
+      "targetModel": "Đối tượng áp dụng",
+      "titleLevel": "Cấp bậc",
+      "rate": "Tỉ lệ (%)",
+      "minAmount": "Số tiền tối thiểu",
+      "maxAmount": "Số tiền tối đa",
+      "isActiveDescription": "Bật để áp dụng cấu hình hoa hồng này."
+    }
+  },
+  "adminSidebar": {
+    "main": {
+      "groupLabel": "Tổng quan",
+      "dashboard": "Dashboard"
+    },
+    "system": {
+      "groupLabel": "Quản trị hệ thống",
+      "toggle": "Bật/tắt",
+      "projects": {
+        "title": "Dự án",
+        "list": "Danh sách dự án",
+        "settings": "Cài đặt"
+      },
+      "users": {
+        "title": "Người dùng",
+        "list": "Danh sách người dùng",
+        "roles": "Vai trò",
+        "permissions": "Quyền hạn"
+      },
+      "commissions": {
+        "title": "Hoa hồng",
+        "config": "Cấu hình"
+      }
     }
   },
   "purchasedPackage": {

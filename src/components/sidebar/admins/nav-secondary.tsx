@@ -3,6 +3,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -10,57 +11,92 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar'
 import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router'
 
-export function NavSecondary({
+export default function NavSecondary({
   items
 }: {
   items: {
     title: string
     url: string
-    icon?: LucideIcon
+    icon: LucideIcon
     isActive?: boolean
     items?: {
       title: string
       url: string
+      activeUrls?: string[]
     }[]
   }[]
 }) {
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const { t } = useTranslation()
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('adminSidebar.system.groupLabel')}</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive} className='group/collapsible'>
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton
-                        asChild
-                        className={pathname === subItem.url ? 'bg-primary/10 text-primary font-medium' : ''}
-                      >
-                        <Link to={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+        {items.map((item) => {
+          const isParentActive =
+            item.url !== '#' ? location.pathname === item.url || location.pathname.startsWith(item.url + '/') : false
+
+          const hasActiveSubItem = item.items?.some(
+            (subItem) =>
+              location.pathname === subItem.url ||
+              location.pathname.startsWith(subItem.url + '/') ||
+              subItem.activeUrls?.includes(location.pathname)
+          )
+
+          const isActive = isParentActive || hasActiveSubItem
+
+          return (
+            <Collapsible key={item.title} asChild defaultOpen={isActive}>
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <Link to={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                {item.items?.length ? (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className='data-[state=open]:rotate-90'>
+                        <ChevronRight />
+                        <span className='sr-only'>{t('adminSidebar.system.toggle')}</span>
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items.map((subItem) => {
+                          const isSubItemActive =
+                            location.pathname === subItem.url ||
+                            location.pathname.startsWith(subItem.url + '/') ||
+                            subItem.activeUrls?.includes(location.pathname)
+
+                          return (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                className={isSubItemActive ? 'bg-primary/10 text-primary font-medium' : ''}
+                              >
+                                <Link to={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          )
+                        })}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                ) : null}
+              </SidebarMenuItem>
+            </Collapsible>
+          )
+        })}
       </SidebarMenu>
     </SidebarGroup>
   )

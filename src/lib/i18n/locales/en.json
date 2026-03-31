@@ -35,6 +35,7 @@
       "name": "Name",
       "email": "Email",
       "password": "Password",
+      "isActive": "Active",
       "startDate": "Start date",
       "endDate": "End date",
       "date": "Date"
@@ -73,6 +74,7 @@
       }
     },
     "ui": {
+      "count": "Count",
       "selected": "selected",
       "characters": "characters",
       "search": "Search...",
@@ -253,6 +255,48 @@
       "reschedule": "Rescheduled",
       "cancelled": "Cancelled",
       "suspended": "Suspended"
+    }
+  },
+  "commission": {
+    "button": {
+      "addConfig": "Add configuration"
+    },
+    "dialog": {
+      "title": "Commission configuration",
+      "description": "Add a new commission configuration"
+    },
+    "field": {
+      "targetModel": "Target Model",
+      "titleLevel": "Title Level",
+      "rate": "Rate (%)",
+      "minAmount": "Min Amount",
+      "maxAmount": "Max Amount",
+      "isActiveDescription": "Enable this to apply the commission configuration."
+    }
+  },
+  "adminSidebar": {
+    "main": {
+      "groupLabel": "Overview",
+      "dashboard": "Dashboard"
+    },
+    "system": {
+      "groupLabel": "System administration",
+      "toggle": "Toggle",
+      "projects": {
+        "title": "Projects",
+        "list": "Project list",
+        "settings": "Settings"
+      },
+      "users": {
+        "title": "Users",
+        "list": "User list",
+        "roles": "Roles",
+        "permissions": "Permissions"
+      },
+      "commissions": {
+        "title": "Commissions",
+        "config": "Configuration"
+      }
     }
   },
   "purchasedPackage": {
