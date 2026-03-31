@@ -1,5 +1,6 @@
 import type { TaskLabel } from './label.type'
 import type { Milestone } from './milestone.type'
+import type { MentionUser } from './user.type'
 
 export interface TaskPreview {
   id: string
@@ -44,6 +45,7 @@ export interface TaskDetail {
   estimatedPoints: number | null
   taskLabels: TaskLabel[]
   isCompleted: boolean
+  mentionedUsers: MentionUser[]
 }
 
 export interface TaskRow {

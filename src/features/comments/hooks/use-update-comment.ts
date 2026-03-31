@@ -37,7 +37,13 @@ export const useUpdateComment = () => {
                 ...old.value,
                 items: old.value.items.map((item) => {
                   if (item.commentId === variables.body.commentId) {
-                    return { ...item, content: variables.body.content }
+                    return {
+                      ...item,
+                      content: variables.body.content,
+                      mentionedUsers: item.mentionedUsers.filter((u) =>
+                        variables.body.mentionedUserIds.includes(u.userId)
+                      )
+                    }
                   }
 
                   return item

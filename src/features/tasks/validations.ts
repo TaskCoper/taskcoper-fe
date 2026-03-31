@@ -47,7 +47,8 @@ export const updateTaskSchema = (t: TFunction) => {
       announceBeforeMinutes: z
         .number()
         .positive({ message: t('common.validation.number.positive') })
-        .nullable()
+        .nullable(),
+      mentionedUserIds: z.array(z.uuid())
     })
     .strict()
 }

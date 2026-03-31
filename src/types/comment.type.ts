@@ -1,3 +1,5 @@
+import type { MentionUser } from './user.type'
+
 export interface Comment {
   commentId: string
   content: string
@@ -10,4 +12,5 @@ export interface Comment {
   createdAt: string
   updatedAt: string | null
   responses: []
+  mentionedUsers: MentionUser[]
 }

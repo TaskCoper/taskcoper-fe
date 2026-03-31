@@ -73,7 +73,12 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
 
   useEffect(() => {
     if (isEditComment) {
-      reset({ content: comment.content, commentId: comment.commentId, taskId })
+      reset({
+        content: comment.content,
+        commentId: comment.commentId,
+        taskId,
+        mentionedUserIds: comment.mentionedUsers.map((user) => user.userId)
+      })
     }
   }, [isEditComment, reset, comment, taskId])
 
@@ -124,7 +129,17 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
               control={control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className='gap-1'>
-                  <RichTextEditor isInitialFocus={true} content={field.value ?? ''} onChange={field.onChange} compact />
+                  <RichTextEditor
+                    isInitialFocus={true}
+                    content={field.value ?? ''}
+                    onChange={field.onChange}
+                    onMentionIdsChange={(ids) => {
+                      methods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                    }}
+                    compact
+                    projectId={projectId}
+                    mentionedUsers={comment.mentionedUsers}
+                  />
                 </Field>
               )}
             />
@@ -154,7 +169,7 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
           </div>
         ) : (
           <Card className='px-3 py-2 shadow-xs rounded-lg w-full'>
-            <SanitizedHtml html={comment.content} />
+            <SanitizedHtml html={comment.content} mentionedUsers={comment.mentionedUsers} />
           </Card>
         )}
 

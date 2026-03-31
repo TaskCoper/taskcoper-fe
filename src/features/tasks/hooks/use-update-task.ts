@@ -50,7 +50,8 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
             isCompleted: variables.body.isCompleted,
             estimatedPoints: variables.body.estimatedPoints,
             backgroundImage: variables.body.backgroundImage,
-            priority: variables.body.priority
+            priority: variables.body.priority,
+            mentionedUsers: old.mentionedUsers.filter((u) => variables.body.mentionedUserIds.includes(u.userId))
           }
         })
       }

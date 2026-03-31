@@ -29,7 +29,8 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
       const taskId = methods.getValues('taskId')
       methods.reset({
         taskId,
-        content: ''
+        content: '',
+        mentionedUserIds: []
       })
     },
     onError: (error) => {
