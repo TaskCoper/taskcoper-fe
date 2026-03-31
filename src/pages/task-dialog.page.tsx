@@ -658,11 +658,14 @@ export default function TaskDialogPage() {
                               onChange={field.onChange}
                               onMentionIdsChange={(ids) => {
                                 const currentMentionUsers = task?.mentionedUsers ?? []
-                                const mentionIdQueues = currentMentionUsers.reduce<Record<string, string[]>>((acc, user) => {
-                                  if (!acc[user.userId]) acc[user.userId] = []
-                                  acc[user.userId].push(user.id)
-                                  return acc
-                                }, {})
+                                const mentionIdQueues = currentMentionUsers.reduce<Record<string, string[]>>(
+                                  (acc, user) => {
+                                    if (!acc[user.userId]) acc[user.userId] = []
+                                    acc[user.userId].push(user.id)
+                                    return acc
+                                  },
+                                  {}
+                                )
 
                                 updateTaskMethods.setValue(
                                   'mentionUsers',

@@ -43,7 +43,7 @@ export const useCreateProject = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
     }
   })
 

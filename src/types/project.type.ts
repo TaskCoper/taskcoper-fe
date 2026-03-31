@@ -211,7 +211,7 @@ export interface RevenueStats {
 export interface InviteMembersPayload {
   projectId: string
   inviteMembers: {
-    userId: string
+    email: string
     isEditor: boolean
     inviteExpireDate: string | null
   }[]

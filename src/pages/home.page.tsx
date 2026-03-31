@@ -1,4 +1,3 @@
-import PageWrapper from '@/components/page-wrapper'
 import NavUser from '@/components/sidebar/users/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -107,7 +106,7 @@ export default function HomePage() {
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
   return (
-    <PageWrapper titleKey='home.title'>
+    <>
       <style>{customStyles}</style>
       <div className='bg-dot h-screen overflow-hidden flex flex-col'>
         {/* Header */}
@@ -132,29 +131,22 @@ export default function HomePage() {
                 </div>
               ) : null}
 
-              {isGettingMe ? (
-                <div className='hidden md:flex items-center gap-2'>
-                  <Skeleton className='w-20 h-8 rounded-md' />
-                  <Skeleton className='w-20 h-8 rounded-md' />
-                </div>
-              ) : me ? (
-                <div className='hidden lg:flex items-center gap-2'>
-                  {navigations.map((navigation) => {
-                    const isActive = location.pathname === navigation.url
-                    return (
-                      <Button
-                        key={navigation.id}
-                        asChild
-                        size='sm'
-                        variant='ghost'
-                        className={cn(isActive && 'bg-primary/10 text-primary')}
-                      >
-                        <Link to={navigation.url}>{t(navigation.label)}</Link>
-                      </Button>
-                    )
-                  })}
-                </div>
-              ) : null}
+              <div className='hidden lg:flex items-center gap-2'>
+                {navigations.map((navigation) => {
+                  const isActive = location.pathname === navigation.url
+                  return (
+                    <Button
+                      key={navigation.id}
+                      asChild
+                      size='sm'
+                      variant='ghost'
+                      className={cn(isActive && 'bg-primary/10 text-primary')}
+                    >
+                      <Link to={navigation.url}>{t(navigation.label)}</Link>
+                    </Button>
+                  )
+                })}
+              </div>
             </div>
 
             {isGettingMe ? (
@@ -617,16 +609,10 @@ export default function HomePage() {
                 <span className='text-primary text-xs font-semibold'>{t('home.hero.badge')}</span>
               </div>
 
-              <div className='mb-5 sm:mb-6 space-y-2 animate-[fadeIn_0.6s_ease-out] tracking-tight'>
-                <h1 className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900'>
-                  {t('home.hero.brandName')}
-                </h1>
+              <div className='mb-5 sm:mb-6 space-y-2 animate-[fadeIn_0.6s_ease-out] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight'>
+                <h1 className='text-slate-900'>{t('home.hero.title')}</h1>
 
-                <p className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900'>
-                  {t('home.hero.title')}
-                </p>
-
-                <p className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent'>
+                <p className='bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent'>
                   {t('home.hero.titleHighlight')}
                 </p>
               </div>
@@ -689,6 +675,6 @@ export default function HomePage() {
           <p>© {new Date().getFullYear()} TaskCoper</p>
         </footer>
       </div>
-    </PageWrapper>
+    </>
   )
 }

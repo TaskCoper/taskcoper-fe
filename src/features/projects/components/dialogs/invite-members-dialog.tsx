@@ -76,7 +76,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
     const body: InviteMembersPayload = {
       projectId: data.projectId,
       inviteMembers: data.inviteMembers.map((u) => ({
-        userId: u.userId,
+        email: u.email,
         isEditor: u.isEditor,
         inviteExpireDate: finalExpireDate
       }))
@@ -140,6 +140,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
                     <AvatarImage src={user.avatar ?? ''} />
                     <AvatarFallback>{getAvatarFallback(user.fullName)}</AvatarFallback>
                   </Avatar>
+
                   <div className='flex-1 overflow-hidden'>
                     <p className='text-sm font-medium truncate'>{user.fullName}</p>
                     <p className='text-xs text-muted-foreground truncate'>{user.email}</p>
