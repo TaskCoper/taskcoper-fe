@@ -7,6 +7,7 @@ import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
+import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
@@ -62,7 +63,8 @@ export const queryKeys = {
     detail: (projectId?: string) => ['project', projectId] as const,
     members: {
       all: (projectId?: string) => ['members', projectId] as const,
-      list: (projectId?: string, searchTerm?: string) => ['members', projectId, searchTerm] as const
+      list: ({ projectId, searchTerm, pageIndex, pageSize, excludeIds }: UseGetProjectMembersParams) =>
+        [...queryKeys.projects.members.all(projectId), searchTerm, pageIndex, pageSize, excludeIds] as const
     },
     parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const,
     labels: (projectId?: string) => ['project-labels', projectId],

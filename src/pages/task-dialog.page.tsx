@@ -65,7 +65,7 @@ import {
   UserRoundPlusIcon,
   XIcon
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
@@ -82,6 +82,8 @@ export default function TaskDialogPage() {
 
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
+  const descriptionRef = useRef<HTMLDivElement>(null)
   const [isEditComment, setIsEditComment] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
@@ -148,7 +150,9 @@ export default function TaskDialogPage() {
         targetMilestoneId: task.milestoneId,
         announceBeforeMinutes: task.announceBeforeMinutes,
         estimatedPoints: task.estimatedPoints,
-        backgroundImage: task.backgroundImage
+        backgroundImage: task.backgroundImage,
+        mentionedUserIds:
+          updateTaskMethods.getValues().mentionedUserIds || task.mentionedUsers.map((user) => user.userId)
       }
 
       const validated = updateTaskSchema(t).safeParse(values)
@@ -193,7 +197,8 @@ export default function TaskDialogPage() {
         announceBeforeMinutes: task.announceBeforeMinutes,
         estimatedPoints: task.estimatedPoints,
         backgroundImage: task.backgroundImage,
-        priority: task.priority
+        priority: task.priority,
+        mentionedUserIds: task.mentionedUsers.map((user) => user.userId)
       })
     }
   }, [open, task, resetTask])
@@ -202,10 +207,24 @@ export default function TaskDialogPage() {
     if (open && task) {
       resetComment({
         taskId: task.taskId,
-        content: ''
+        content: '',
+        mentionedUserIds: []
       })
     }
   }, [open, task, resetComment])
+
+  useEffect(() => {
+    if (!descriptionRef.current) return
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setShowDescriptionToggle(entry.target.scrollHeight > 384)
+      }
+    })
+
+    observer.observe(descriptionRef.current)
+    return () => observer.disconnect()
+  }, [task?.taskDescription, isEditDescription])
 
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
     if (!updateTaskMethods.formState.isDirty) return
@@ -638,6 +657,11 @@ export default function TaskDialogPage() {
                               isInitialFocus={true}
                               content={field.value ?? ''}
                               onChange={field.onChange}
+                              onMentionIdsChange={(ids) => {
+                                updateTaskMethods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                              }}
+                              projectId={projectId}
+                              mentionedUsers={task?.mentionedUsers}
                             />
                           </Field>
                         )}
@@ -670,34 +694,37 @@ export default function TaskDialogPage() {
                     <div>
                       <div className='relative'>
                         <div
+                          ref={descriptionRef}
                           role='button'
                           className={cn('overflow-hidden transition-all', !isDescriptionExpanded && 'max-h-96')}
                         >
-                          <SanitizedHtml html={task.taskDescription} />
+                          <SanitizedHtml html={task.taskDescription} mentionedUsers={task.mentionedUsers} />
                         </div>
                         {/* Gradient overlay when collapsed - only covers the HTML area */}
-                        {!isDescriptionExpanded && (
+                        {showDescriptionToggle && !isDescriptionExpanded && (
                           <div className='absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-background to-transparent pointer-events-none' />
                         )}
                       </div>
 
-                      <Button
-                        variant='secondary'
-                        className='w-full mt-1'
-                        onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                      >
-                        {isDescriptionExpanded ? (
-                          <>
-                            <ChevronUpIcon className='size-4' />
-                            {t('common.ui.viewLess')}
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDownIcon className='size-4' />
-                            {t('common.ui.viewMore')}
-                          </>
-                        )}
-                      </Button>
+                      {showDescriptionToggle && (
+                        <Button
+                          variant='secondary'
+                          className='w-full mt-1'
+                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                        >
+                          {isDescriptionExpanded ? (
+                            <>
+                              <ChevronUpIcon className='size-4' />
+                              {t('common.ui.viewLess')}
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDownIcon className='size-4' />
+                              {t('common.ui.viewMore')}
+                            </>
+                          )}
+                        </Button>
+                      )}
                     </div>
                   ) : (
                     <Textarea
@@ -793,6 +820,10 @@ export default function TaskDialogPage() {
                           compact={true}
                           content={field.value ?? ''}
                           onChange={field.onChange}
+                          onMentionIdsChange={(ids) => {
+                            addCommentMethods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                          }}
+                          projectId={projectId}
                         />
                       </div>
                     )}

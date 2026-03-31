@@ -20,6 +20,7 @@ import type {
   UpdateProjectRevenueFormValues
 } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { Label, ProjectLabelStats, RevenueLabel } from '@/types/label.type'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import type {
@@ -108,11 +109,20 @@ class ProjectService {
     return data.value
   }
 
-  getProjectMembers = async ({ projectId, searchTerm }: UseGetProjectMembersParams) => {
-    if (!projectId) return null
+  getProjectMembers = async ({
+    projectId,
+    searchTerm,
+    pageIndex,
+    pageSize,
+    excludeIds
+  }: UseGetProjectMembersParams) => {
+    if (!projectId) return getDefaultPaginationResponse<ProjectMember>()
     const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`, {
       params: {
-        searchTerm
+        searchTerm,
+        pageIndex,
+        pageSize,
+        excludeIds
       }
     })
 

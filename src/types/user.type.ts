@@ -25,6 +25,14 @@ export interface User {
   isGrantGoogleCalendarAccess: boolean
 }
 
+export interface MentionUser {
+  id: string
+  userId: string
+  firstName: string
+  lastName: string
+  avatar: string | null
+}
+
 export interface UserDetail {
   id: string
   email: string

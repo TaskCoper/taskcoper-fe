@@ -3195,6 +3195,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-link@npm:^3.21.0":
+  version: 3.21.0
+  resolution: "@tiptap/extension-link@npm:3.21.0"
+  dependencies:
+    linkifyjs: "npm:^4.3.2"
+  peerDependencies:
+    "@tiptap/core": ^3.21.0
+    "@tiptap/pm": ^3.21.0
+  checksum: 10c0/1133d67228900e063b3b61fe7d17e2a31c752285e2f0414dba4acdf75d7eb1fc73afd004c4809bba9058353362fc0c6ed776902def2f27194c20db730bf30586
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-list-item@npm:^3.13.0":
   version: 3.13.0
   resolution: "@tiptap/extension-list-item@npm:3.13.0"
@@ -3220,6 +3232,17 @@ __metadata:
     "@tiptap/core": ^3.13.0
     "@tiptap/pm": ^3.13.0
   checksum: 10c0/555247472de282c1fa2ef760007441f9f54e006eb82719627589c09ff7603d75093347c70e148d39f34ff2e5d9c1c5246cc1e79fc2330ca98c0db4058dc55796
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-mention@npm:^3.21.0":
+  version: 3.21.0
+  resolution: "@tiptap/extension-mention@npm:3.21.0"
+  peerDependencies:
+    "@tiptap/core": ^3.21.0
+    "@tiptap/pm": ^3.21.0
+    "@tiptap/suggestion": ^3.21.0
+  checksum: 10c0/7a5f6be8129cd26e18e591c53fc47ef972ab7943040443e7c582f7335661342560acfb07b4ef7d537aaeb83a1fa4ac96b25437d9d0a85fe72898611f045eb353
   languageName: node
   linkType: hard
 
@@ -3378,6 +3401,16 @@ __metadata:
     "@tiptap/extensions": "npm:^3.13.0"
     "@tiptap/pm": "npm:^3.13.0"
   checksum: 10c0/d4e59f04f5e33e52afe14c5df3f46a83149218b5f09e376d1b99ab1c1ca76e92577ff326e177b65230ee1f5debc2334a9523fd73cf6fa987b62a521a7587015a
+  languageName: node
+  linkType: hard
+
+"@tiptap/suggestion@npm:^3.21.0":
+  version: 3.21.0
+  resolution: "@tiptap/suggestion@npm:3.21.0"
+  peerDependencies:
+    "@tiptap/core": ^3.21.0
+    "@tiptap/pm": ^3.21.0
+  checksum: 10c0/30e6b2fd23ae347a40c9e040bbfeb7c3b0d3142e718a43266675ed3d67ef13d128afa5ef2a2952522deeb664b5c99b9538bcbabe4f95fa9a19ecfbfdc3538bd0
   languageName: node
   linkType: hard
 
@@ -5329,12 +5362,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.575.0":
-  version: 0.575.0
-  resolution: "lucide-react@npm:0.575.0"
+"lucide-react@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "lucide-react@npm:1.7.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/4f42e81c88f60c8f904b178c0b28e8ac9a99da8ef24eba5f26ed97b63124304a847baea2f71125629a272df58dbb61cd799ff6a7e4878e5a4c28d8a699b84730
+  checksum: 10c0/bf913e1c9b8438fd1e19dbee602b4c1a596109faadd361b452e210135e51ff1147cbce9c1aa686a9c419f01541540536507a03202bc2cebebc04eb9a3cf8be2e
   languageName: node
   linkType: hard
 
@@ -6992,12 +7025,15 @@ __metadata:
     "@tiptap/extension-file-handler": "npm:^3.16.0"
     "@tiptap/extension-horizontal-rule": "npm:^3.13.0"
     "@tiptap/extension-image": "npm:^3.13.0"
+    "@tiptap/extension-link": "npm:^3.21.0"
     "@tiptap/extension-list": "npm:^3.13.0"
+    "@tiptap/extension-mention": "npm:^3.21.0"
     "@tiptap/extension-subscript": "npm:^3.13.0"
     "@tiptap/extension-superscript": "npm:^3.13.0"
     "@tiptap/pm": "npm:^3.13.0"
     "@tiptap/react": "npm:^3.13.0"
     "@tiptap/starter-kit": "npm:^3.13.0"
+    "@tiptap/suggestion": "npm:^3.21.0"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^24.10.2"
     "@types/react": "npm:^19.2.5"
@@ -7019,7 +7055,7 @@ __metadata:
     input-otp: "npm:^1.4.2"
     jwt-decode: "npm:^4.0.0"
     lodash: "npm:^4.17.23"
-    lucide-react: "npm:^0.575.0"
+    lucide-react: "npm:^1.7.0"
     next-themes: "npm:^0.4.6"
     nuqs: "npm:^2.8.6"
     pdfjs-dist: "npm:^5.5.207"
