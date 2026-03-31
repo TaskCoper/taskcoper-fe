@@ -66,13 +66,14 @@ interface RichTextEditorProps {
   mentionedUsers?: MentionUser[]
 }
 
-// Helper function to extract unique user IDs from Tiptap's JSON structure
+// Helper function to extract user IDs from Tiptap's JSON structure.
+// Keep duplicates to preserve repeated mentions in the payload.
 const extractMentionIds = (jsonNode: JSONContent): string[] => {
-  const ids = new Set<string>()
+  const ids: string[] = []
 
   const traverse = (node: JSONContent) => {
     if (node.type === 'mention' && node.attrs?.id) {
-      ids.add(node.attrs.id)
+      ids.push(node.attrs.id)
     }
     if (node.content && Array.isArray(node.content)) {
       node.content.forEach(traverse)
@@ -80,7 +81,7 @@ const extractMentionIds = (jsonNode: JSONContent): string[] => {
   }
 
   traverse(jsonNode)
-  return Array.from(ids)
+  return ids
 }
 
 export default function RichTextEditor({

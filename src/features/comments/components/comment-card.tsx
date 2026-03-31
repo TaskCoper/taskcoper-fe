@@ -77,7 +77,7 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
         content: comment.content,
         commentId: comment.commentId,
         taskId,
-        mentionedUserIds: comment.mentionedUsers.map((user) => user.userId)
+        mentionUsers: comment.mentionedUsers.map((user) => ({ userId: user.userId, mentionId: user.id }))
       })
     }
   }, [isEditComment, reset, comment, taskId])
@@ -134,7 +134,20 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
                     content={field.value ?? ''}
                     onChange={field.onChange}
                     onMentionIdsChange={(ids) => {
-                      methods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                      const mentionIdQueues = comment.mentionedUsers.reduce<Record<string, string[]>>((acc, user) => {
+                        if (!acc[user.userId]) acc[user.userId] = []
+                        acc[user.userId].push(user.id)
+                        return acc
+                      }, {})
+
+                      methods.setValue(
+                        'mentionUsers',
+                        ids.map((userId) => ({
+                          userId,
+                          mentionId: mentionIdQueues[userId]?.shift() ?? null
+                        })),
+                        { shouldDirty: true }
+                      )
                     }}
                     compact
                     projectId={projectId}

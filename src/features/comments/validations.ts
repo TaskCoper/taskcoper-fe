@@ -10,7 +10,12 @@ export const addTaskCommentSchema = (t: TFunction) => {
         .trim()
         .min(1, { message: t('task.comment.validation.content.minLength') })
         .max(10_000, { message: t('task.comment.validation.content.maxLength') }),
-      mentionedUserIds: z.array(z.uuid())
+      mentionUsers: z.array(
+        z.object({
+          userId: z.uuid(),
+          mentionId: z.uuid().nullable()
+        })
+      )
     })
     .strict()
 }
@@ -25,7 +30,12 @@ export const updateTaskCommentSchema = (t: TFunction) => {
         .trim()
         .min(1, { message: t('task.comment.validation.content.minLength') })
         .max(10_000, { message: t('task.comment.validation.content.maxLength') }),
-      mentionedUserIds: z.array(z.uuid())
+      mentionUsers: z.array(
+        z.object({
+          userId: z.uuid(),
+          mentionId: z.uuid().nullable()
+        })
+      )
     })
     .strict()
 }

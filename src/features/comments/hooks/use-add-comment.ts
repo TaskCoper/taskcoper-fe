@@ -30,7 +30,7 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
       methods.reset({
         taskId,
         content: '',
-        mentionedUserIds: []
+        mentionUsers: []
       })
     },
     onError: (error) => {

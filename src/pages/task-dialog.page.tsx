@@ -151,8 +151,7 @@ export default function TaskDialogPage() {
         announceBeforeMinutes: task.announceBeforeMinutes,
         estimatedPoints: task.estimatedPoints,
         backgroundImage: task.backgroundImage,
-        mentionedUserIds:
-          updateTaskMethods.getValues().mentionedUserIds || task.mentionedUsers.map((user) => user.userId)
+        mentionUsers: task.mentionedUsers.map((user) => ({ userId: user.userId, mentionId: user.id }))
       }
 
       const validated = updateTaskSchema(t).safeParse(values)
@@ -198,7 +197,7 @@ export default function TaskDialogPage() {
         estimatedPoints: task.estimatedPoints,
         backgroundImage: task.backgroundImage,
         priority: task.priority,
-        mentionedUserIds: task.mentionedUsers.map((user) => user.userId)
+        mentionUsers: task.mentionedUsers.map((user) => ({ userId: user.userId, mentionId: user.id }))
       })
     }
   }, [open, task, resetTask])
@@ -208,7 +207,7 @@ export default function TaskDialogPage() {
       resetComment({
         taskId: task.taskId,
         content: '',
-        mentionedUserIds: []
+        mentionUsers: []
       })
     }
   }, [open, task, resetComment])
@@ -658,7 +657,21 @@ export default function TaskDialogPage() {
                               content={field.value ?? ''}
                               onChange={field.onChange}
                               onMentionIdsChange={(ids) => {
-                                updateTaskMethods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                                const currentMentionUsers = task?.mentionedUsers ?? []
+                                const mentionIdQueues = currentMentionUsers.reduce<Record<string, string[]>>((acc, user) => {
+                                  if (!acc[user.userId]) acc[user.userId] = []
+                                  acc[user.userId].push(user.id)
+                                  return acc
+                                }, {})
+
+                                updateTaskMethods.setValue(
+                                  'mentionUsers',
+                                  ids.map((userId) => ({
+                                    userId,
+                                    mentionId: mentionIdQueues[userId]?.shift() ?? null
+                                  })),
+                                  { shouldDirty: true }
+                                )
                               }}
                               projectId={projectId}
                               mentionedUsers={task?.mentionedUsers}
@@ -821,7 +834,11 @@ export default function TaskDialogPage() {
                           content={field.value ?? ''}
                           onChange={field.onChange}
                           onMentionIdsChange={(ids) => {
-                            addCommentMethods.setValue('mentionedUserIds', ids, { shouldDirty: true })
+                            addCommentMethods.setValue(
+                              'mentionUsers',
+                              ids.map((userId) => ({ userId, mentionId: null })),
+                              { shouldDirty: true }
+                            )
                           }}
                           projectId={projectId}
                         />
