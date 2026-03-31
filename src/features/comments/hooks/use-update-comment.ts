@@ -40,9 +40,7 @@ export const useUpdateComment = () => {
                     return {
                       ...item,
                       content: variables.body.content,
-                      mentionedUsers: item.mentionedUsers.filter((u) =>
-                        variables.body.mentionedUserIds.includes(u.userId)
-                      )
+                      mentionedUsers: item.mentionedUsers
                     }
                   }
 
