@@ -147,7 +147,7 @@ export default function MentorPackagePage() {
     deleteMentorPackage(
       { mentorPackageId: mentorPackage.id },
       {
-        onSuccess: () => navigate('/mentor-packages')
+        onSuccess: () => navigate('/packages')
       }
     )
   }

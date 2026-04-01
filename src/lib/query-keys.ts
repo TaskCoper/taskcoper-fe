@@ -17,6 +17,7 @@ import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-sched
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import type { GetVouchersParams } from '@/features/vouchers/hooks/use-get-vouchers'
 
 export const queryKeys = {
   // Auth
@@ -232,6 +233,8 @@ export const queryKeys = {
     purchased: () => [...queryKeys.mentorPackages.all, 'purchased'] as const,
     purchasedDetail: (packageId?: string) => [...queryKeys.mentorPackages.purchased(), packageId] as const,
     list: ({ mentorId }: { mentorId?: string }) => [...queryKeys.mentorPackages.all, mentorId] as const,
+    listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>
+      [...queryKeys.mentorPackages.all, 'infinite', params] as const,
     detail: (packageId?: string) => ['mentor-package', packageId] as const
   },
   // Schedules
@@ -315,5 +318,41 @@ export const queryKeys = {
     all: ['commissions'] as const,
     list: ({ page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy }: GetCommissionsParams) =>
       [...queryKeys.commissions.all, page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const
+  },
+  // Vouchers
+  vouchers: {
+    all: ['vouchers'] as const,
+    list: ({
+      pageIndex,
+      pageSize,
+      searchTerm,
+      isActive,
+      discountType,
+      scope,
+      targetType,
+      targetId,
+      sortBy,
+      startTime,
+      endTime
+    }: GetVouchersParams) =>
+      [
+        ...queryKeys.vouchers.all,
+        pageIndex,
+        pageSize,
+        searchTerm,
+        isActive,
+        discountType,
+        scope,
+        targetType,
+        targetId,
+        sortBy,
+        startTime,
+        endTime
+      ] as const,
+    detail: (voucherId?: string) => ['voucher', voucherId] as const,
+    scopeStats: () => ['voucher-scope-stats'] as const,
+    typeStats: () => ['voucher-type-stats'] as const,
+    targetStats: () => ['voucher-target-stats'] as const,
+    statusStats: () => ['voucher-status-stats'] as const
   }
 } as const

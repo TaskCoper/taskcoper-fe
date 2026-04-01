@@ -55,7 +55,7 @@ export default function MentorPackagesPage() {
   }
 
   return (
-    <div className='absolute inset-0 overflow-auto'>
+    <div className='absolute inset-0 overflow-y-auto'>
       <div className='mx-auto max-w-4xl space-y-10 p-4 pb-10'>
         <div>
           <p className='text-2xl font-bold'>{t('mentorPackage.page.title')}</p>
