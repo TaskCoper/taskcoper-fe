@@ -32,8 +32,12 @@ const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
 const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
+
 const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
 const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
+
+const MentorVouchersPage = lazy(() => import('@/pages/users/mentor-vouchers.page'))
+const MentorVoucherPage = lazy(() => import('@/pages/users/mentor-voucher.page'))
 
 const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
 
@@ -149,8 +153,10 @@ export const userRoutes: RouteObject[] = [
                   {
                     element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
                     children: [
-                      { path: 'mentor-packages', element: <MentorPackagesPage /> },
-                      { path: 'mentor-packages/:packageId', element: <MentorPackagePage /> }
+                      { path: 'packages', element: <MentorPackagesPage /> },
+                      { path: 'packages/:packageId', element: <MentorPackagePage /> },
+                      { path: 'vouchers', element: <MentorVouchersPage /> },
+                      { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> }
                     ]
                   }
                 ]

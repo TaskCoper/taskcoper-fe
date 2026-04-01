@@ -1,0 +1,35 @@
+import { queryKeys } from '@/lib/query-keys'
+import voucherService from '@/services/voucher.service'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import { updateVoucherSchema, type UpdateVoucherFormValues } from '../validations'
+
+export const useUpdateVoucher = () => {
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
+
+  const methods = useForm<UpdateVoucherFormValues>({
+    resolver: zodResolver(updateVoucherSchema(t))
+  })
+
+  const { mutate: updateVoucher, isPending: isUpdatingVoucher } = useMutation({
+    mutationFn: voucherService.updateVoucher,
+    onSuccess: (message) => {
+      toast.success(message)
+    },
+    onError: (error) => {
+      toast.error(t('error.somethingWentWrong'), {
+        description: error.response?.data?.detail
+      })
+    },
+    onSettled: (_, _error, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(variables.body.voucherId) })
+    }
+  })
+
+  return { methods, updateVoucher, isUpdatingVoucher }
+}

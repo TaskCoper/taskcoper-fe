@@ -51,7 +51,7 @@ export default function CreateCommissionDialog({ children }: CreateCommissionDia
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-xl'>
+      <DialogContent position='top-center' className='min-w-xl' onInteractOutside={onClose}>
         <DialogHeader>
           <DialogTitle>{t('commission.dialog.title')}</DialogTitle>
           <DialogDescription>{t('commission.dialog.description')}</DialogDescription>

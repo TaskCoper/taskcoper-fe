@@ -15,6 +15,7 @@ import {
   FolderOpenIcon,
   HistoryIcon,
   ShoppingBagIcon,
+  TicketPercentIcon,
   VideoIcon,
   type LucideIcon
 } from 'lucide-react'
@@ -64,8 +65,13 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         ? [
             {
               title: t('mentorPackage.sidebar.meetingSessionPackages'),
-              url: '/mentor-packages',
+              url: '/packages',
               icon: VideoIcon
+            },
+            {
+              title: t('voucher.sidebar.vouchers'),
+              url: '/vouchers',
+              icon: TicketPercentIcon
             }
           ]
         : []),

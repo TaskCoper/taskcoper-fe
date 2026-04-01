@@ -15,8 +15,16 @@ class MentorPackageService {
     return data.value
   }
 
-  getMyMentorPackages = async () => {
-    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`)
+  getMyMentorPackages = async ({
+    pageIndex,
+    pageSize
+  }: {
+    pageIndex?: number
+    pageSize?: number
+  } = {}) => {
+    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`, {
+      params: { pageIndex, pageSize }
+    })
 
     return data
   }

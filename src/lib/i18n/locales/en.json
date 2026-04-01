@@ -47,11 +47,13 @@
       "required": "This field is required",
       "maxLength": {
         "20": "Max 20 characters",
+        "25": "Max 25 characters",
         "255": "Max 255 characters",
         "10000": "Max 10000 characters"
       },
       "minLength": {
         "1": "This field is required",
+        "5": "Must be at least 5 characters",
         "6": "Must be 6 characters",
         "8": "Must be at least 8 characters long"
       },
@@ -109,7 +111,13 @@
       "files": "files",
       "openMenu": "Open menu",
       "comingSoon": "Coming Soon",
-      "more": "+{{count}} more"
+      "more": "+{{count}} more",
+      "infiniteSelect": {
+        "placeholder": "Search...",
+        "selectedCount": "{{count}} selected",
+        "loading": "Loading...",
+        "noResults": "No results found"
+      }
     },
     "status": {
       "all": "All",
@@ -255,6 +263,109 @@
       "reschedule": "Rescheduled",
       "cancelled": "Cancelled",
       "suspended": "Suspended"
+    }
+  },
+  "voucher": {
+    "button": {
+      "addVoucher": "Add Voucher"
+    },
+    "sidebar": {
+      "vouchers": "Vouchers"
+    },
+    "dialog": {
+      "title": "Add Voucher",
+      "description": "Add a new voucher"
+    },
+    "column": {
+      "code": "Code",
+      "codePlaceholder": "Enter code to search...",
+      "name": "Name",
+      "discount": "Discount",
+      "discountType": "Type",
+      "usage": "Usage",
+      "status": "Status",
+      "startsAt": "Starts At",
+      "endsAt": "Ends At",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "none": "None",
+      "targets": "Targets",
+      "scope": "Scope",
+      "usageLimitPerUser": "Limit per User",
+      "isStackable": "Stackable",
+      "createdOnUtc": "Created On"
+    },
+    "field": {
+      "name": "Voucher Name",
+      "namePlaceholder": "Enter voucher name",
+      "code": "Voucher Code",
+      "codePlaceholder": "EXAMPLE2026",
+      "startsAt": "Starts At",
+      "startsAtPlaceholder": "Select start date",
+      "endsAt": "Ends At",
+      "endsAtPlaceholder": "Select end date",
+      "discountType": "Discount Type",
+      "discountValue": "Discount Value",
+      "discountValuePlaceholder": "Enter discount value",
+      "totalUsageLimit": "Total Usage Limit",
+      "totalUsageLimitPlaceholder": "Enter total usage limit",
+      "usageLimitPerUser": "Usage Limit Per User",
+      "usageLimitPerUserPlaceholder": "Enter usage limit per user",
+      "isStackable": "Is Stackable",
+      "isStackableDescription": "Can be combined with other vouchers",
+      "scope": "Voucher Scope",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter voucher description",
+      "targets": "Specific Targets Selection",
+      "targetsPlaceholder": "Select target packages...",
+      "isActive": "Status",
+      "isActiveDescription": "Indicates if this voucher can be used."
+    },
+    "toast": {
+      "createSuccess": "Voucher created successfully"
+    },
+    "discountType": {
+      "percent": "Percent",
+      "fixedAmount": "Fixed Amount"
+    },
+    "scope": {
+      "allTargets": "All Targets",
+      "specificTargets": "Specific Targets"
+    },
+    "targetType": {
+      "allTargets": "All Targets",
+      "mentorPackage": "Mentor Package",
+      "subscriptionPlan": "Subscription Plan"
+    },
+    "validation": {
+      "discountPercentMax": "Discount percentage cannot exceed 100%",
+      "targetsRequired": "Please select at least one specific target package"
+    },
+    "page": {
+      "title": "Voucher List",
+      "description": "Manage vouchers you have created.",
+      "infoTitle": "Voucher Information",
+      "infoDescription": "Update general information and usage limits for this voucher.",
+      "targetsTitle": "Applicable Targets",
+      "targetsDescription": "Manage the mentor packages that this voucher can be applied to."
+    },
+    "target": {
+      "create": "Add Targets",
+      "createDescription": "Select mentor packages to add as targets for this voucher.",
+      "selectedTargets": "Selected Targets",
+      "item": {
+        "create": "Add Target"
+      },
+      "delete": {
+        "title": "Remove target",
+        "description": "Are you sure you want to remove \"{{targetName}}\" from this voucher?"
+      }
+    },
+    "delete": {
+      "title": "Delete voucher",
+      "description": "Are you sure you want to delete voucher \"{{voucherCode}}\"? This action cannot be undone."
     }
   },
   "commission": {

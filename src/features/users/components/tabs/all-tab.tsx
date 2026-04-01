@@ -74,7 +74,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
 
               <div className='px-2 pb-2'>
                 {isHidden ? (
-                  <Link to={`/mentor-packages/${pkg.id}`}>
+                  <Link to={`/packages/${pkg.id}`}>
                     <Button className='w-full'>{t('mentorPackage.card.viewPackage')}</Button>
                   </Link>
                 ) : (

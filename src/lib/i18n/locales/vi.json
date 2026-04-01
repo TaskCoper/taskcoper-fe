@@ -47,11 +47,13 @@
       "required": "Trường này là bắt buộc",
       "maxLength": {
         "20": "Tối đa 20 ký tự",
+        "25": "Tối đa 25 ký tự",
         "255": "Tối đa 255 ký tự",
         "10000": "Tối đa 10000 ký tự"
       },
       "minLength": {
         "1": "Trường này là bắt buộc",
+        "5": "Phải có ít nhất 5 ký tự",
         "6": "Phải có 6 ký tự",
         "8": "Phải có ít nhất 8 ký tự"
       },
@@ -109,7 +111,13 @@
       "files": "tệp",
       "openMenu": "Mở menu",
       "comingSoon": "Sắp ra mắt",
-      "more": "+{{count}} nữa"
+      "more": "+{{count}} nữa",
+      "infiniteSelect": {
+        "placeholder": "Tìm kiếm...",
+        "selectedCount": "Đã chọn {{count}}",
+        "loading": "Đang tải...",
+        "noResults": "Không tìm thấy kết quả"
+      }
     },
     "status": {
       "all": "Tất cả",
@@ -255,6 +263,109 @@
       "reschedule": "Chờ xếp lại",
       "cancelled": "Đã hủy",
       "suspended": "Tạm ngưng"
+    }
+  },
+  "voucher": {
+    "button": {
+      "addVoucher": "Thêm Voucher"
+    },
+    "sidebar": {
+      "vouchers": "Voucher"
+    },
+    "dialog": {
+      "title": "Thêm Voucher",
+      "description": "Thêm một voucher mới"
+    },
+    "column": {
+      "code": "Mã",
+      "codePlaceholder": "Nhập mã để tìm kiếm...",
+      "name": "Tên",
+      "discount": "Giảm giá",
+      "discountType": "Loại",
+      "usage": "Đã dùng / Tổng",
+      "status": "Trạng thái",
+      "startsAt": "Bắt đầu",
+      "endsAt": "Kết thúc",
+      "actions": "Hành động",
+      "active": "Đang hoạt động",
+      "inactive": "Chưa hoạt động",
+      "expired": "Đã hết hạn",
+      "none": "Không",
+      "targets": "Đối tượng",
+      "scope": "Phạm vi",
+      "usageLimitPerUser": "Lượt dùng/người",
+      "isStackable": "Cộng dồn",
+      "createdOnUtc": "Ngày tạo"
+    },
+    "field": {
+      "name": "Tên Voucher",
+      "namePlaceholder": "Nhập tên voucher",
+      "code": "Mã Voucher",
+      "codePlaceholder": "EXAMPLE2026",
+      "startsAt": "Bắt đầu lúc",
+      "startsAtPlaceholder": "Chọn ngày bắt đầu",
+      "endsAt": "Kết thúc lúc",
+      "endsAtPlaceholder": "Chọn ngày kết thúc",
+      "discountType": "Loại giảm giá",
+      "discountValue": "Giá trị giảm giá",
+      "discountValuePlaceholder": "Nhập giá trị...",
+      "totalUsageLimit": "Tổng lượt sử dụng",
+      "totalUsageLimitPlaceholder": "Nhập tổng số lượt...",
+      "usageLimitPerUser": "Lượt dùng mỗi người",
+      "usageLimitPerUserPlaceholder": "Nhập số lượt/người...",
+      "isStackable": "Có thể cộng dồn",
+      "isStackableDescription": "Có thể sử dụng cùng với các voucher khác",
+      "scope": "Phạm vi áp dụng",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả voucher",
+      "targets": "Chọn đối tượng áp dụng",
+      "targetsPlaceholder": "Chọn đối tượng áp dụng...",
+      "isActive": "Trạng thái",
+      "isActiveDescription": "Cho biết voucher này có thể được sử dụng hay không."
+    },
+    "toast": {
+      "createSuccess": "Tạo voucher thành công"
+    },
+    "discountType": {
+      "percent": "Phần trăm",
+      "fixedAmount": "Số tiền cố định"
+    },
+    "scope": {
+      "allTargets": "Tất cả đối tượng",
+      "specificTargets": "Đối tượng cụ thể"
+    },
+    "targetType": {
+      "allTargets": "Tất cả đối tượng",
+      "mentorPackage": "Gói Mentor",
+      "subscriptionPlan": "Gói Đăng ký"
+    },
+    "validation": {
+      "discountPercentMax": "Tỷ lệ giảm giá không được vượt quá 100%",
+      "targetsRequired": "Vui lòng chọn ít nhất một gói đối tượng cụ thể"
+    },
+    "page": {
+      "title": "Danh sách Voucher",
+      "description": "Quản lý các voucher bạn đã tạo.",
+      "infoTitle": "Thông tin Voucher",
+      "infoDescription": "Cập nhật thông tin chung và giới hạn sử dụng cho voucher này.",
+      "targetsTitle": "Đối tượng áp dụng",
+      "targetsDescription": "Quản lý các gói mentor mà voucher này có thể áp dụng."
+    },
+    "target": {
+      "create": "Thêm đối tượng",
+      "createDescription": "Chọn các gói mentor để thêm làm đối tượng cho voucher này.",
+      "selectedTargets": "Đối tượng đã chọn",
+      "item": {
+        "create": "Thêm đối tượng"
+      },
+      "delete": {
+        "title": "Gỡ bỏ đối tượng",
+        "description": "Bạn có chắc chắn muốn gỡ bỏ \"{{targetName}}\" khỏi voucher này?"
+      }
+    },
+    "delete": {
+      "title": "Xóa voucher",
+      "description": "Bạn có chắc chắn muốn xóa voucher \"{{voucherCode}}\"? Hành động này không thể hoàn tác."
     }
   },
   "commission": {
