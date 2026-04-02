@@ -15,7 +15,9 @@ export const useBookPackage = () => {
     defaultValues: {
       mentorPackageId: '',
       gatewayId: 'aa977b81-e134-4478-9fa2-5aea402057c5',
-      bookedByProjectId: null
+      bookedByProjectId: null,
+      voucherCode: null,
+      voucherIdempotencyKey: null
     },
     resolver: zodResolver(bookPackageSchema)
   })

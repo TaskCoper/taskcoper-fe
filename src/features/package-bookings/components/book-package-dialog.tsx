@@ -9,11 +9,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { Field, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMyProjectsInfinite } from '@/features/projects/hooks/use-get-my-projects-infinite'
+import { useGetVoucherByCode } from '@/features/vouchers/hooks/use-get-voucher-by-code'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
+import { DiscountType } from '@/types/voucher.type'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -32,13 +36,52 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
   const [open, setOpen] = useState(false)
   const [projectSearch, setProjectSearch] = useState('')
 
+  const voucherCode = methods.watch('voucherCode')
+  const { voucher, isLoadingVoucher } = useGetVoucherByCode({ voucherCode: voucherCode ?? undefined })
+
+  const discountAmount = useMemo(() => {
+    if (!voucher) return 0
+    if (voucher.discountType === DiscountType.Percentage) {
+      return (mentorPackage.price * voucher.discountValue) / 100
+    }
+    return voucher.discountValue
+  }, [voucher, mentorPackage.price])
+
+  const totalAmount = useMemo(
+    () => Math.max(0, mentorPackage.price - discountAmount),
+    [mentorPackage.price, discountAmount]
+  )
+
+  const voucherError = useMemo(() => {
+    if (!voucherCode || isLoadingVoucher) return null
+    if (!voucher) return t('packageBooking.bookPackage.voucherNotFound')
+
+    const now = new Date()
+    const start = new Date(voucher.startsAtUtc)
+    const end = new Date(voucher.endsAtUtc)
+
+    if (now < start) return t('packageBooking.bookPackage.voucherNotStarted')
+    if (now > end) return t('packageBooking.bookPackage.voucherExpired')
+
+    return null
+  }, [voucherCode, voucher, isLoadingVoucher, t])
+
+  const isVoucherLow = useMemo(() => {
+    return voucher?.usedStatus === 'Low'
+  }, [voucher])
+
   const onClose = () => {
     setOpen(false)
     methods.reset()
   }
 
   const onSubmit: SubmitHandler<BookPackageFormValues> = (body) => {
-    bookPackage({ body })
+    const updatedBody = {
+      ...body,
+      voucherIdempotencyKey: body.voucherCode ? crypto.randomUUID() : null
+    }
+
+    bookPackage({ body: updatedBody })
   }
 
   const {
@@ -60,6 +103,7 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
 
   useEffect(() => {
     const values = methods.getValues()
+
     methods.reset({
       ...values,
       mentorPackageId: mentorPackage.id
@@ -77,7 +121,7 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-2xl' onInteractOutside={onClose} showCloseButton={false}>
+      <DialogContent position='top-center' className='min-w-xl' onInteractOutside={onClose} showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t('packageBooking.bookPackage.title')}</DialogTitle>
           <DialogDescription>{t('packageBooking.bookPackage.description')}</DialogDescription>
@@ -121,9 +165,29 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
 
           <div className='my-3 border-t border-dashed border-border' />
 
-          <div className='flex items-center justify-between gap-3 font-mono'>
-            <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.total')}</p>
-            <p className='text-sm font-extrabold'>{formatCurrency(mentorPackage.price, mentorPackage.currency)}</p>
+          <div className='space-y-1.5'>
+            {isLoadingVoucher ? (
+              <div className='flex items-center justify-between gap-3 font-mono'>
+                <Skeleton className='h-3 w-16' />
+                <Skeleton className='h-3 w-20' />
+              </div>
+            ) : discountAmount > 0 ? (
+              <div className='flex items-center justify-between gap-3 font-mono'>
+                <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.discount')}</p>
+                <p className='text-sm text-destructive font-semibold'>
+                  -{formatCurrency(discountAmount, mentorPackage.currency)}
+                </p>
+              </div>
+            ) : null}
+
+            <div className='flex items-center justify-between gap-3 font-mono'>
+              <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.total')}</p>
+              {isLoadingVoucher ? (
+                <Skeleton className='h-4 w-24' />
+              ) : (
+                <p className='text-sm font-extrabold'>{formatCurrency(totalAmount, mentorPackage.currency)}</p>
+              )}
+            </div>
           </div>
         </Card>
 
@@ -156,7 +220,45 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
               )}
             />
 
-            <Button className='w-full' disabled={isBookingPackage}>
+            <Controller
+              name='voucherCode'
+              control={methods.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-1'>
+                  <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                    {t('packageBooking.bookPackage.voucherCode')}
+                    <span className='text-destructive font-semibold'>*</span>
+                  </FieldLabel>
+
+                  <Input
+                    {...field}
+                    id={field.name}
+                    value={field.value ?? ''}
+                    aria-invalid={fieldState.invalid}
+                    placeholder={t('packageBooking.bookPackage.voucherCodePlaceholder')}
+                    autoComplete='off'
+                    spellCheck={false}
+                  />
+
+                  <div className='min-h-4'>
+                    {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    {!fieldState.invalid && voucherError && (
+                      <p className='text-xs text-destructive font-medium'>{voucherError}</p>
+                    )}
+                    {!fieldState.invalid && !voucherError && isVoucherLow && (
+                      <p className='text-xs text-primary font-medium tracking-tight'>
+                        {t('packageBooking.bookPackage.voucherLowUsage')}
+                      </p>
+                    )}
+                  </div>
+                </Field>
+              )}
+            />
+
+            <Button
+              className='w-full'
+              disabled={isBookingPackage || (!!voucherCode && (!!voucherError || isLoadingVoucher))}
+            >
               {isBookingPackage ? <Spinner /> : null}
               {t('packageBooking.bookPackage.proceed')}
             </Button>

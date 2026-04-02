@@ -1931,7 +1931,14 @@
       "durationPerSession": "Duration / session",
       "min": "min",
       "total": "TOTAL",
-      "proceed": "Book now"
+      "proceed": "Book now",
+      "voucherCode": "Voucher code",
+      "voucherCodePlaceholder": "Enter your voucher code...",
+      "discount": "Discount",
+      "voucherNotFound": "Voucher not found",
+      "voucherNotStarted": "Voucher hasn't started yet",
+      "voucherExpired": "Voucher has expired",
+      "voucherLowUsage": "This voucher is running low on uses! Hurry up!"
     }
   },
   "pageTitle": {
