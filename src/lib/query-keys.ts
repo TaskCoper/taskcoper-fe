@@ -17,6 +17,7 @@ import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-sched
 import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import type { GetVoucherRedemptionsParams } from '@/features/vouchers/hooks/use-get-voucher-redemptions'
 import type { GetVouchersParams } from '@/features/vouchers/hooks/use-get-vouchers'
 
 export const queryKeys = {
@@ -355,6 +356,8 @@ export const queryKeys = {
     typeStats: () => [...queryKeys.vouchers.single, 'type-stats'] as const,
     targetStats: () => [...queryKeys.vouchers.single, 'target-stats'] as const,
     statusStats: () => [...queryKeys.vouchers.single, 'status-stats'] as const,
-    byCode: (voucherCode?: string) => [...queryKeys.vouchers.single, 'code', voucherCode] as const
+    byCode: (voucherCode?: string) => [...queryKeys.vouchers.single, 'code', voucherCode] as const,
+    redemptions: ({ voucherId, pageIndex, pageSize, sortBy, searchTerm }: GetVoucherRedemptionsParams) =>
+      [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   }
 } as const

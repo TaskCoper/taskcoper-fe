@@ -294,8 +294,9 @@
       "targets": "Đối tượng",
       "scope": "Phạm vi",
       "usageLimitPerUser": "Lượt dùng/người",
-      "isStackable": "Cộng dồn",
-      "createdOnUtc": "Ngày tạo"
+      "isStackable": "Có thể áp dụng cùng voucher khác",
+      "createdOnUtc": "Ngày tạo",
+      "dateFormat": "dd/MM/yyyy HH:mm"
     },
     "field": {
       "name": "Tên Voucher",
@@ -309,12 +310,12 @@
       "discountType": "Loại giảm giá",
       "discountValue": "Giá trị giảm giá",
       "discountValuePlaceholder": "Nhập giá trị...",
-      "totalUsageLimit": "Tổng lượt sử dụng",
+      "totalUsageLimit": "Số lượng",
       "totalUsageLimitPlaceholder": "Nhập tổng số lượt...",
       "usageLimitPerUser": "Lượt dùng mỗi người",
       "usageLimitPerUserPlaceholder": "Nhập số lượt/người...",
-      "isStackable": "Có thể cộng dồn",
-      "isStackableDescription": "Có thể sử dụng cùng với các voucher khác",
+      "isStackable": "Có thể áp dụng cùng voucher khác",
+      "isStackableDescription": "Bật để áp dụng cùng với các voucher khác.",
       "scope": "Phạm vi áp dụng",
       "description": "Mô tả",
       "descriptionPlaceholder": "Nhập mô tả voucher",
@@ -322,9 +323,6 @@
       "targetsPlaceholder": "Chọn đối tượng áp dụng...",
       "isActive": "Trạng thái",
       "isActiveDescription": "Cho biết voucher này có thể được sử dụng hay không."
-    },
-    "toast": {
-      "createSuccess": "Tạo voucher thành công"
     },
     "discountType": {
       "percent": "Phần trăm",
@@ -349,7 +347,9 @@
       "infoTitle": "Thông tin Voucher",
       "infoDescription": "Cập nhật thông tin chung và giới hạn sử dụng cho voucher này.",
       "targetsTitle": "Đối tượng áp dụng",
-      "targetsDescription": "Quản lý các gói mentor mà voucher này có thể áp dụng."
+      "targetsDescription": "Quản lý các gói mentor mà voucher này có thể áp dụng.",
+      "redemptionsTitle": "Lượt đổi Voucher",
+      "redemptionsDescription": "Xem và quản lý tất cả các lượt đổi cho voucher này."
     },
     "target": {
       "create": "Thêm đối tượng",
@@ -366,6 +366,24 @@
     "delete": {
       "title": "Xóa voucher",
       "description": "Bạn có chắc chắn muốn xóa voucher \"{{voucherCode}}\"? Hành động này không thể hoàn tác."
+    },
+    "redemption": {
+      "column": {
+        "user": "Người dùng",
+        "appliedTo": "Áp dụng cho",
+        "amountBeforeDiscount": "Giá gốc",
+        "discountAmount": "Giảm giá",
+        "amountAfterDiscount": "Giá sau giảm",
+        "status": "Trạng thái",
+        "appliedToType": "Loại đối tượng",
+        "redeemedAt": "Ngày áp dụng"
+      }
+    },
+    "redemptionStatus": {
+      "reserved": "Đã giữ",
+      "applied": "Đã áp dụng",
+      "released": "Đã giải phóng",
+      "canceled": "Đã hủy"
     }
   },
   "commission": {

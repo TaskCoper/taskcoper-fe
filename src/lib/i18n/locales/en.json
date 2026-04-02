@@ -294,8 +294,9 @@
       "targets": "Targets",
       "scope": "Scope",
       "usageLimitPerUser": "Limit per User",
-      "isStackable": "Stackable",
-      "createdOnUtc": "Created On"
+      "isStackable": "Can be used with other vouchers",
+      "createdOnUtc": "Created On",
+      "dateFormat": "dd/MM/yyyy HH:mm"
     },
     "field": {
       "name": "Voucher Name",
@@ -309,12 +310,12 @@
       "discountType": "Discount Type",
       "discountValue": "Discount Value",
       "discountValuePlaceholder": "Enter discount value",
-      "totalUsageLimit": "Total Usage Limit",
+      "totalUsageLimit": "Quantity",
       "totalUsageLimitPlaceholder": "Enter total usage limit",
       "usageLimitPerUser": "Usage Limit Per User",
       "usageLimitPerUserPlaceholder": "Enter usage limit per user",
-      "isStackable": "Is Stackable",
-      "isStackableDescription": "Can be combined with other vouchers",
+      "isStackable": "Can be used with other vouchers",
+      "isStackableDescription": "Can be combined with other vouchers.",
       "scope": "Voucher Scope",
       "description": "Description",
       "descriptionPlaceholder": "Enter voucher description",
@@ -322,9 +323,6 @@
       "targetsPlaceholder": "Select target packages...",
       "isActive": "Status",
       "isActiveDescription": "Indicates if this voucher can be used."
-    },
-    "toast": {
-      "createSuccess": "Voucher created successfully"
     },
     "discountType": {
       "percent": "Percent",
@@ -349,7 +347,9 @@
       "infoTitle": "Voucher Information",
       "infoDescription": "Update general information and usage limits for this voucher.",
       "targetsTitle": "Applicable Targets",
-      "targetsDescription": "Manage the mentor packages that this voucher can be applied to."
+      "targetsDescription": "Manage the mentor packages that this voucher can be applied to.",
+      "redemptionsTitle": "Voucher Redemptions",
+      "redemptionsDescription": "View and manage all redemptions for this voucher."
     },
     "target": {
       "create": "Add Targets",
@@ -366,6 +366,24 @@
     "delete": {
       "title": "Delete voucher",
       "description": "Are you sure you want to delete voucher \"{{voucherCode}}\"? This action cannot be undone."
+    },
+    "redemption": {
+      "column": {
+        "user": "User",
+        "appliedTo": "Applied To",
+        "amountBeforeDiscount": "Original Price",
+        "discountAmount": "Discount",
+        "amountAfterDiscount": "Final Price",
+        "status": "Status",
+        "appliedToType": "Target Type",
+        "redeemedAt": "Redeemed At"
+      }
+    },
+    "redemptionStatus": {
+      "reserved": "Reserved",
+      "applied": "Applied",
+      "released": "Released",
+      "canceled": "Canceled"
     }
   },
   "commission": {

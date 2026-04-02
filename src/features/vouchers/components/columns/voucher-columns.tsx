@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatCurrency } from '@/shared/utils'
+import { cn, formatCurrency } from '@/shared/utils'
 import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, type VoucherRow } from '@/types/voucher.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -37,9 +37,9 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       header: ({ column }) => <DataTableColumnHeader column={column} label='voucher.column.code' />,
       cell: ({ row }) => (
         <Link to={row.original.id}>
-          <Badge variant='outline' className='rounded-md hover:bg-muted cursor-pointer'>
+          <Badge variant='outline' className='rounded-md hover:bg-muted hover:underline cursor-pointer'>
             <TicketPercentIcon className='size-4 text-primary' />
-            <p className='font-mono font-medium'>{row.original.code}</p>
+            <p className='font-mono font-medium text-sm'>{row.original.code}</p>
           </Badge>
         </Link>
       ),
@@ -181,10 +181,17 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
                 <Link key={target.id} to={`/packages/${target.targetId}`}>
                   <Badge
                     variant='outline'
-                    className='text-xs rounded-sm w-16 bg-primary/10 border-primary border-dashed hover:bg-primary/20'
+                    className={cn(
+                      'text-xs rounded-sm w-16 border-dashed',
+                      target.isActive
+                        ? 'bg-primary/10 border-primary hover:bg-primary/20'
+                        : 'bg-gray-100 border-gray-400 hover:bg-gray-200'
+                    )}
                     title={target.targetName}
                   >
-                    <p className='truncate text-primary'>{target.targetName}</p>
+                    <p className={cn('truncate', target.isActive ? 'text-primary' : 'text-gray-400')}>
+                      {target.targetName}
+                    </p>
                   </Badge>
                 </Link>
               ))
