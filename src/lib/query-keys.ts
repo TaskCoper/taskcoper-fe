@@ -322,6 +322,7 @@ export const queryKeys = {
   // Vouchers
   vouchers: {
     all: ['vouchers'] as const,
+    single: ['voucher'] as const,
     list: ({
       pageIndex,
       pageSize,
@@ -349,10 +350,11 @@ export const queryKeys = {
         startTime,
         endTime
       ] as const,
-    detail: (voucherId?: string) => ['voucher', voucherId] as const,
-    scopeStats: () => ['voucher-scope-stats'] as const,
-    typeStats: () => ['voucher-type-stats'] as const,
-    targetStats: () => ['voucher-target-stats'] as const,
-    statusStats: () => ['voucher-status-stats'] as const
+    detail: (voucherId?: string) => [...queryKeys.vouchers.single, voucherId] as const,
+    scopeStats: () => [...queryKeys.vouchers.single, 'scope-stats'] as const,
+    typeStats: () => [...queryKeys.vouchers.single, 'type-stats'] as const,
+    targetStats: () => [...queryKeys.vouchers.single, 'target-stats'] as const,
+    statusStats: () => [...queryKeys.vouchers.single, 'status-stats'] as const,
+    byCode: (voucherCode?: string) => [...queryKeys.vouchers.single, 'code', voucherCode] as const
   }
 } as const

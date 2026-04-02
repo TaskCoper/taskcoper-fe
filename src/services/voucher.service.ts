@@ -61,6 +61,19 @@ class VoucherService {
     return data.value
   }
 
+  getVoucherByCode = async ({ voucherCode }: { voucherCode?: string }) => {
+    if (!voucherCode) return null
+    const { data } = await api.get<
+      BaseResponse<
+        Pick<VoucherRow, 'id' | 'code' | 'name' | 'discountType' | 'discountValue' | 'startsAtUtc' | 'endsAtUtc'> & {
+          usedStatus: 'High' | 'Medium' | 'Low'
+        }
+      >
+    >(`/v1/${this.baseUrl}/code/${voucherCode}`)
+
+    return data.value
+  }
+
   updateVoucher = async ({ body }: { body: UpdateVoucherFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.voucherId}`, body)
 

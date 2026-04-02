@@ -1931,7 +1931,14 @@
       "durationPerSession": "Thời lượng / buổi",
       "min": "phút",
       "total": "TỔNG",
-      "proceed": "Quất liền!"
+      "proceed": "Quất liền!",
+      "voucherCode": "Mã giảm giá",
+      "voucherCodePlaceholder": "Nhập mã giảm giá của bạn...",
+      "discount": "Giảm giá",
+      "voucherNotFound": "Không tìm thấy mã giảm giá",
+      "voucherNotStarted": "Mã giảm giá chưa được bắt đầu",
+      "voucherExpired": "Mã giảm giá đã hết hạn",
+      "voucherLowUsage": "Số lượt sử dụng mã giảm giá sắp hết! Nhanh tay lên!"
     }
   },
   "pageTitle": {
