@@ -1,91 +1,61 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import AddVoucherTargetsDialog from '@/features/vouchers/components/add-voucher-targets-dialog'
-import UpdateVoucherForm from '@/features/vouchers/components/update-voucher-form'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import StatCard from '@/features/projects/components/stat-card'
+import InfoTab from '@/features/vouchers/components/tabs/info-tab'
+import RedemptionsTab from '@/features/vouchers/components/tabs/redemptions-tab'
+import TargetsTab from '@/features/vouchers/components/tabs/targets-tab'
 import { useDeleteVoucher } from '@/features/vouchers/hooks/use-delete-voucher'
-import { useDeleteVoucherTarget } from '@/features/vouchers/hooks/use-delete-voucher-target'
 import { useGetVoucher } from '@/features/vouchers/hooks/use-get-voucher'
 import { useUpdateVoucher } from '@/features/vouchers/hooks/use-update-voucher'
 import type { UpdateVoucherFormValues } from '@/features/vouchers/validations'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { TargetTypeLabel, type VoucherTargetRow } from '@/types/voucher.type'
-import { PackageIcon, PlusIcon, TicketIcon, Trash2Icon } from 'lucide-react'
+import { formatCurrency } from '@/shared/utils'
+import { DiscountType, DiscountTypeLabel } from '@/types/voucher.type'
+import { HashIcon, TagIcon, TicketPercentIcon, UsersRoundIcon } from 'lucide-react'
 import { useEffect } from 'react'
-import { FormProvider, type SubmitHandler } from 'react-hook-form'
+import { type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 
 const VoucherSkeleton = () => (
-  <div className='max-w-4xl mx-auto p-6 space-y-12 pb-20'>
-    <div className='space-y-4'>
-      <div className='space-y-2'>
-        <div className='flex items-center gap-2'>
-          <Skeleton className='size-6 rounded-full' />
-          <Skeleton className='h-7 w-32' />
+  <div className='absolute inset-0 flex flex-col overflow-hidden'>
+    <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+      <div className='flex items-center gap-2'>
+        <div className='-space-y-0.5'>
+          <div className='flex items-center gap-2'>
+            <Skeleton className='size-6 rounded-full' />
+            <Skeleton className='h-8 w-48' />
+          </div>
+          <Skeleton className='h-4 w-64' />
         </div>
-        <Skeleton className='h-4 w-full' />
-        <Skeleton className='h-4 w-2/3' />
       </div>
 
-      <div className='space-y-4 pt-4'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          <div className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
-          </div>
-          <div className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
-          </div>
-        </div>
-        <div className='space-y-2'>
-          <Skeleton className='h-4 w-20' />
-          <Skeleton className='h-24 w-full' />
-        </div>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          <div className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
-          </div>
-          <div className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
-          </div>
-        </div>
-        <div className='flex justify-end gap-2'>
-          <Skeleton className='h-9 w-24' />
-          <Skeleton className='h-9 w-24' />
-        </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className='h-[82px] w-full rounded-xl' />
+        ))}
+      </div>
+
+      <div className='flex gap-2 border-b'>
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className='h-10 w-40' />
+        ))}
       </div>
     </div>
 
-    <div className='space-y-6'>
+    <div className='px-6 pt-6 space-y-6'>
       <div className='space-y-2'>
-        <div className='flex items-center gap-2'>
-          <Skeleton className='size-6 rounded-full' />
-          <Skeleton className='h-7 w-48' />
-        </div>
-        <Skeleton className='h-4 w-full' />
+        <Skeleton className='h-7 w-48' />
+        <Skeleton className='h-4 w-96' />
       </div>
 
-      <div className='space-y-2'>
-        <div className='flex justify-end'>
-          <Skeleton className='h-8 w-28' />
-        </div>
-        <div className='border rounded-lg overflow-hidden'>
-          <div className='divide-y'>
-            {[1, 2].map((i) => (
-              <div key={i} className='p-4 flex items-center justify-between gap-4'>
-                <Skeleton className='h-6 w-32' />
-                <Skeleton className='h-6 w-24 rounded-md' />
-                <Skeleton className='h-8 w-8' />
-              </div>
-            ))}
+      <div className='space-y-4'>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className='space-y-2'>
+            <Skeleton className='h-4 w-24' />
+            <Skeleton className='h-10 w-full' />
           </div>
-        </div>
+        ))}
       </div>
     </div>
   </div>
@@ -93,11 +63,14 @@ const VoucherSkeleton = () => (
 
 export default function MentorVoucherPage() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { t } = useTranslation()
   const { voucherId } = useParams<{ voucherId: string }>()
   const { confirm } = useConfirmStore()
   const { methods, updateVoucher, isUpdatingVoucher } = useUpdateVoucher()
   const { deleteVoucher, isDeletingVoucher } = useDeleteVoucher()
+
+  const currentTab = searchParams.get('tab') || 'info'
 
   const { voucher, isLoadingVoucher } = useGetVoucher({ voucherId })
 
@@ -144,6 +117,32 @@ export default function MentorVoucherPage() {
     updateVoucher({ body: values })
   }
 
+  const TABS = [
+    {
+      value: 'info',
+      label: t('voucher.page.infoTitle'),
+      content: (
+        <InfoTab
+          methods={methods}
+          onSubmit={onSubmit}
+          onDelete={handleDelete}
+          isDeleting={isDeletingVoucher}
+          isUpdating={isUpdatingVoucher}
+        />
+      )
+    },
+    {
+      value: 'targets',
+      label: t('voucher.page.targetsTitle'),
+      content: <TargetsTab voucher={voucher} />
+    },
+    {
+      value: 'redemptions',
+      label: t('voucher.page.redemptionsTitle'),
+      content: voucherId ? <RedemptionsTab voucherId={voucherId} /> : null
+    }
+  ]
+
   if (isLoadingVoucher) {
     return (
       <div className='absolute inset-0 overflow-auto'>
@@ -153,141 +152,75 @@ export default function MentorVoucherPage() {
   }
 
   return (
-    <div className='absolute inset-0 overflow-auto'>
-      <div className='max-w-4xl mx-auto p-6 space-y-12 pb-20'>
-        <div className='space-y-4'>
-          <div className='space-y-1'>
-            <div className='flex items-center gap-2'>
-              <TicketIcon className='size-6 text-primary' />
-              <p className='text-xl font-bold'>{t('voucher.page.infoTitle')}</p>
+    <div className='absolute inset-0 flex flex-col overflow-hidden'>
+      <Tabs
+        value={currentTab}
+        onValueChange={(value) => setSearchParams({ tab: value })}
+        className='flex flex-1 flex-col min-h-0'
+      >
+        <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+          <div className='flex items-center gap-2'>
+            <div className='-space-y-0.5'>
+              <div className='flex items-center gap-2'>
+                <TicketPercentIcon className='size-6 text-primary' />
+                <p className='text-2xl font-bold'>{voucher?.name}</p>
+              </div>
+              <p className='text-sm text-muted-foreground'>{voucher?.description}</p>
             </div>
-            <p className='text-sm text-muted-foreground'>{t('voucher.page.infoDescription')}</p>
           </div>
 
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4 pt-4'>
-              <UpdateVoucherForm />
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+            <StatCard
+              title={t('voucher.field.code')}
+              value={voucher?.code ?? '-'}
+              icon={<HashIcon className='size-4 text-white' />}
+              color='slate'
+            />
+            <StatCard
+              title={t('voucher.field.discountType')}
+              value={voucher ? t(DiscountTypeLabel[voucher.discountType]) : '-'}
+              icon={<TagIcon className='size-4 text-white' />}
+              color='purple'
+            />
+            <StatCard
+              title={t('voucher.field.discountValue')}
+              value={
+                voucher
+                  ? voucher.discountType === DiscountType.Percentage
+                    ? `${voucher.discountValue}%`
+                    : formatCurrency(voucher.discountValue)
+                  : '-'
+              }
+              icon={<TicketPercentIcon className='size-4 text-white' />}
+              color='blue'
+            />
+            <StatCard
+              title={t('voucher.column.usage')}
+              value={`${voucher?.usedCount ?? 0}/${voucher?.totalUsageLimit ?? 0}`}
+              icon={<UsersRoundIcon className='size-4 text-white' />}
+              color='green'
+            />
+          </div>
 
-              <div className='flex justify-end items-center gap-2'>
-                <Button
-                  type='button'
-                  size='sm'
-                  variant='outline'
-                  className='w-full sm:w-auto text-destructive border-destructive/40 hover:text-destructive'
-                  onClick={handleDelete}
-                  disabled={isDeletingVoucher || isUpdatingVoucher}
-                >
-                  {isDeletingVoucher ? <Spinner /> : null}
-                  {t('common.button.delete')}
-                </Button>
-
-                <Button
-                  type='submit'
-                  size='sm'
-                  className='w-full sm:w-auto'
-                  disabled={!methods.formState.isDirty || isUpdatingVoucher}
-                >
-                  {isUpdatingVoucher ? <Spinner /> : null}
-                  {t('common.button.save')}
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
+          <TabsList className='w-full justify-start rounded-none border-b p-0 bg-transparent gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden'>
+            {TABS.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                className='w-40 flex-none shrink-0 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
+                value={tab.value}
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
         </div>
 
-        <div className='space-y-6'>
-          <div className='space-y-1'>
-            <div className='flex items-center gap-2'>
-              <PackageIcon className='size-6 text-primary' />
-              <p className='text-xl font-bold'>{t('voucher.page.targetsTitle')}</p>
-            </div>
-            <p className='text-sm text-muted-foreground'>{t('voucher.page.targetsDescription')}</p>
-          </div>
-
-          <div className='flex flex-col gap-2'>
-            {voucher?.id ? (
-              <div className='ml-auto'>
-                <AddVoucherTargetsDialog voucherId={voucher.id}>
-                  <Button size='sm'>
-                    <PlusIcon />
-                    {t('voucher.target.item.create')}
-                  </Button>
-                </AddVoucherTargetsDialog>
-              </div>
-            ) : null}
-
-            <div className='border rounded-lg bg-card overflow-hidden'>
-              <Table>
-                <TableBody>
-                  {voucher?.targets?.map((target) => (
-                    <VoucherTargetRow key={target.id} target={target} voucherId={voucher.id} />
-                  ))}
-                  {(!voucher?.targets || voucher.targets.length === 0) && (
-                    <TableRow>
-                      <TableCell colSpan={3} className='h-32 text-center'>
-                        <div className='flex flex-col items-center justify-center gap-2 text-muted-foreground'>
-                          <PackageIcon className='size-8 opacity-20' />
-                          <p>{t('common.ui.noDataAvailable')}</p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-        </div>
-      </div>
+        {TABS.map((tab) => (
+          <TabsContent key={tab.value} className='px-6 pt-3 pb-20' value={tab.value}>
+            {tab.content}
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
-  )
-}
-
-const VoucherTargetRow = ({ target, voucherId }: { target: VoucherTargetRow; voucherId: string }) => {
-  const { t } = useTranslation()
-  const { confirm } = useConfirmStore()
-  const { deleteVoucherTarget, isDeletingVoucherTarget } = useDeleteVoucherTarget()
-
-  const handleDelete = async () => {
-    const ok = await confirm({
-      title: t('voucher.target.delete.title'),
-      description: t('voucher.target.delete.description', {
-        targetName: target.targetName
-      }),
-      confirmText: t('common.button.delete'),
-      cancelText: t('common.button.cancel'),
-      variant: 'destructive'
-    })
-
-    if (!ok) return
-
-    deleteVoucherTarget({ voucherId, targetId: target.targetId })
-  }
-
-  return (
-    <TableRow className='group transition-colors'>
-      <TableCell className='font-medium p-4'>
-        <div className='flex items-center gap-2'>
-          <p className='text-sm font-semibold'>{target.targetName}</p>
-        </div>
-      </TableCell>
-
-      <TableCell className='p-4 text-center'>
-        <Badge variant='secondary' className='rounded-md'>
-          {t(TargetTypeLabel[target.targetType])}
-        </Badge>
-      </TableCell>
-
-      <TableCell className='text-right p-4'>
-        <Button
-          size='icon-sm'
-          variant='ghost'
-          className='text-destructive hover:text-destructive hover:bg-destructive/10'
-          onClick={handleDelete}
-          disabled={isDeletingVoucherTarget}
-        >
-          {isDeletingVoucherTarget ? <Spinner /> : <Trash2Icon className='size-4' />}
-        </Button>
-      </TableCell>
-    </TableRow>
   )
 }

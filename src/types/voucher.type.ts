@@ -1,3 +1,5 @@
+import type { Currency } from './transaction.type'
+
 export const DiscountType = {
   Percentage: 'Percentage',
   FixedAmount: 'FixedAmount'
@@ -68,6 +70,7 @@ export interface VoucherTargetRow {
   isActive: boolean
   targetName: string
   targetDescription: string
+  coverImageUrl: string | null
 }
 
 export interface VoucherScopeStats {
@@ -89,4 +92,44 @@ export interface VoucherTargetStats {
 export interface VoucherStatusStats {
   status: string
   totalVouchers: number
+}
+
+export const VoucherRedemptionStatus = {
+  Reserved: 'Reserved',
+  Applied: 'Applied',
+  Released: 'Released',
+  Canceled: 'Canceled'
+} as const
+
+export type VoucherRedemptionStatus = (typeof VoucherRedemptionStatus)[keyof typeof VoucherRedemptionStatus]
+
+export const VoucherRedemptionStatusLabel: Record<VoucherRedemptionStatus, string> = {
+  [VoucherRedemptionStatus.Reserved]: 'voucher.redemptionStatus.reserved',
+  [VoucherRedemptionStatus.Applied]: 'voucher.redemptionStatus.applied',
+  [VoucherRedemptionStatus.Released]: 'voucher.redemptionStatus.released',
+  [VoucherRedemptionStatus.Canceled]: 'voucher.redemptionStatus.canceled'
+}
+
+export type VoucherRedemptionStatusLabel =
+  (typeof VoucherRedemptionStatusLabel)[keyof typeof VoucherRedemptionStatusLabel]
+
+export interface VoucherRedemptionRow {
+  redemptionId: string
+  redeemedByUserId: string
+  redeemedUserFirstName: string
+  redeemedUserLastName: string
+  redeemedUserEmail: string
+  redeemedUserImageUrl: string | null
+  appliedToType: TargetType
+  appliedToId: string
+  appliedToName: string
+  appliedToDescription: string
+  appliedToCoverImageUrl: string | null
+  amountBeforeDiscount: number
+  discountAmount: number
+  amountAfterDiscount: number
+  currency: Currency
+  status: VoucherRedemptionStatus
+  idempotencyKey: string
+  createdOnUtc: string
 }

@@ -64,7 +64,7 @@ export default function AddVoucherTargetsDialog({
       const pkg = mentorPackages.find((p) => p.id === id)
       if (pkg) {
         append({
-          targetType: TargetType.MENTOR_PACKAGE,
+          targetType: TargetType.MentorPackage,
           targetId: pkg.id,
           targetName: pkg.name
         })
@@ -135,10 +135,13 @@ export default function AddVoucherTargetsDialog({
               <p className='text-sm font-medium'>{t('voucher.target.selectedTargets')}</p>
 
               {fields.map((field, index) => (
-                <Card key={field.id} className='flex-row justify-between p-2 rounded-md group shadow-none'>
-                  <div className='flex items-center gap-2'>
-                    <PackageIcon className='size-4 text-muted-foreground' />
-                    <span className='text-sm font-medium'>{field.targetName}</span>
+                <Card
+                  key={field.id}
+                  className='grid grid-cols-[minmax(0,1fr)_auto] items-center p-2 rounded-md group shadow-none'
+                >
+                  <div className='flex items-center gap-2 min-w-0'>
+                    <PackageIcon className='size-4 text-muted-foreground shrink-0' />
+                    <span className='text-sm font-medium truncate'>{field.targetName}</span>
                   </div>
 
                   <Button type='button' variant='ghost' size='icon-sm' onClick={() => remove(index)}>

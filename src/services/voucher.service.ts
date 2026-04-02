@@ -1,3 +1,4 @@
+import type { GetVoucherRedemptionsParams } from '@/features/vouchers/hooks/use-get-voucher-redemptions'
 import type { GetVouchersParams } from '@/features/vouchers/hooks/use-get-vouchers'
 import type {
   AddVoucherTargetsFormValues,
@@ -6,6 +7,7 @@ import type {
 } from '@/features/vouchers/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type {
+  VoucherRedemptionRow,
   VoucherRow,
   VoucherScopeStats,
   VoucherStatusStats,
@@ -61,6 +63,22 @@ class VoucherService {
     return data.value
   }
 
+  getVoucherRedemptions = async ({
+    voucherId,
+    pageIndex,
+    pageSize,
+    sortBy,
+    searchTerm
+  }: GetVoucherRedemptionsParams) => {
+    if (!voucherId) return null
+    const { data } = await api.get<BasePaginationResponse<VoucherRedemptionRow>>(
+      `/v1/${this.baseUrl}/${voucherId}/redemptions`,
+      { params: { pageIndex, pageSize, sortBy, searchTerm } }
+    )
+
+    return data
+  }
+
   getVoucherByCode = async ({ voucherCode }: { voucherCode?: string }) => {
     if (!voucherCode) return null
     const { data } = await api.get<
@@ -70,6 +88,14 @@ class VoucherService {
         }
       >
     >(`/v1/${this.baseUrl}/code/${voucherCode}`)
+
+    return data.value
+  }
+
+  updateVoucherTargetStatus = async ({ body }: { body: { isActive: boolean; targetId: string } }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/targets/${body.targetId}/status`, {
+      isActive: body.isActive
+    })
 
     return data.value
   }
