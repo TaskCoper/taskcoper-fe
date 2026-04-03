@@ -318,7 +318,8 @@ export const queryKeys = {
   commissions: {
     all: ['commissions'] as const,
     list: ({ page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy }: GetCommissionsParams) =>
-      [...queryKeys.commissions.all, page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const
+      [...queryKeys.commissions.all, page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const,
+    public: () => [...queryKeys.commissions.all, 'public'] as const
   },
   // Vouchers
   vouchers: {
