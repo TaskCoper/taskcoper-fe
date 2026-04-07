@@ -64,7 +64,7 @@ export const uploadAttachmentSchema = (t: TFunction) =>
 export const uploadProjectAttachmentSchema = (t: TFunction) =>
   z
     .object({
-      projectId: z.uuid(),
+      projectIdentifier: z.string(),
       name: z.string(),
       url: z.string()
     })

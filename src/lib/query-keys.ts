@@ -86,9 +86,9 @@ export const queryKeys = {
       projectIdentifier,
       parentMilestoneId
     ],
-    resourceStats: (projectId?: string) => ['project-resource-stats', projectId] as const,
-    mimeTypeStats: (projectId?: string) => ['project-mime-type-stats', projectId] as const,
-    resourceMemberStats: (projectId?: string) => ['project-resource-member-stats', projectId] as const,
+    resourceStats: (projectIdentifier?: string) => ['project-resource-stats', projectIdentifier] as const,
+    mimeTypeStats: (projectIdentifier?: string) => ['project-mime-type-stats', projectIdentifier] as const,
+    resourceMemberStats: (projectIdentifier?: string) => ['project-resource-member-stats', projectIdentifier] as const,
     priorityStats: (identifier?: string, milestoneIdentifier?: string) => [
       'project-priority-stats',
       identifier,
@@ -138,7 +138,7 @@ export const queryKeys = {
         isWatchingTask
       ] as const,
     listParent: (parentMilestoneIdentifier?: string) => [...queryKeys.tasks.all, parentMilestoneIdentifier] as const,
-    detail: (taskId?: string) => ['task', taskId] as const,
+    detail: (taskIdentifier?: string) => ['task', taskIdentifier] as const,
     members: (taskId?: string) => ['taskMembers', taskId] as const,
     myAssigned: (identifier?: string, userId?: string) => ['my-assigned-tasks', identifier, userId] as const
   },
@@ -190,7 +190,7 @@ export const queryKeys = {
   projectResources: {
     all: (projectId?: string) => ['project-resources', projectId] as const,
     list: ({
-      projectId,
+      projectIdentifier,
       pageIndex,
       pageSize,
       sortBy,
@@ -200,7 +200,18 @@ export const queryKeys = {
       mimeTypes,
       memberIds
     }: UseGetProjectResourcesParams) =>
-      ['project-resources', projectId, pageIndex, pageSize, sortBy, name, from, to, mimeTypes, memberIds] as const
+      [
+        'project-resources',
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        sortBy,
+        name,
+        from,
+        to,
+        mimeTypes,
+        memberIds
+      ] as const
   },
   // Efficiency
   efficiency: {
@@ -251,7 +262,7 @@ export const queryKeys = {
   projectRevenues: {
     all: (projectId?: string) => ['project-revenues', projectId] as const,
     list: ({
-      projectId,
+      projectIdentifier,
       pageIndex,
       pageSize,
       labelIds,
@@ -262,7 +273,7 @@ export const queryKeys = {
       endDate
     }: GetProjectRevenuesParams) =>
       [
-        ...queryKeys.projectRevenues.all(projectId),
+        ...queryKeys.projectRevenues.all(projectIdentifier),
         pageIndex,
         pageSize,
         labelIds,
@@ -272,14 +283,14 @@ export const queryKeys = {
         startDate,
         endDate
       ] as const,
-    stats: (projectId?: string) => ['project-revenue-stats', projectId] as const,
-    typeStats: (projectId?: string) => ['project-revenue-type-stats', projectId] as const
+    stats: (projectIdentifier?: string) => ['project-revenue-stats', projectIdentifier] as const,
+    typeStats: (projectIdentifier?: string) => ['project-revenue-type-stats', projectIdentifier] as const
   },
   // Project Revenue Labels
   projectRevenueLabels: {
     all: (projectId?: string) => ['project-revenue-labels', projectId] as const,
-    list: (projectId?: string) => [...queryKeys.projectRevenueLabels.all(projectId)] as const,
-    stats: (projectId?: string) => ['project-revenue-labels-stats', projectId] as const
+    list: (projectIdentifier?: string) => [...queryKeys.projectRevenueLabels.all(projectIdentifier)] as const,
+    stats: (projectIdentifier?: string) => ['project-revenue-labels-stats', projectIdentifier] as const
   },
   // Meetings
   meetings: {
@@ -291,8 +302,8 @@ export const queryKeys = {
     my: ({ activeFrom, activeTo }: GetMyMeetingsParams) => [...queryKeys.meetings.allMy, activeFrom, activeTo] as const,
     detail: (meetingId?: string) => ['meeting', meetingId] as const,
     allProject: ['meetings', 'project'] as const,
-    project: ({ projectId, activeFrom, activeTo }: GetProjectMeetingsParams) =>
-      [...queryKeys.meetings.allProject, projectId, activeFrom, activeTo] as const
+    project: ({ projectIdentifier, activeFrom, activeTo }: GetProjectMeetingsParams) =>
+      [...queryKeys.meetings.allProject, projectIdentifier, activeFrom, activeTo] as const
   },
   // Transactions
   transactions: {

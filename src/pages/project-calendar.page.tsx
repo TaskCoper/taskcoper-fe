@@ -5,13 +5,13 @@ import { useCallback, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 export default function ProjectCalendarPage() {
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
   const navigate = useNavigate()
 
   const [dateRange, setDateRange] = useState({ activeFrom: '', activeTo: '' })
 
   const { projectMeetings = [] } = useGetProjectMeetings({
-    projectId: projectId || '',
+    projectIdentifier: identifier || '',
     ...dateRange
   })
 

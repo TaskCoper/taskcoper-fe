@@ -2,11 +2,11 @@ import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetProjectRevenueTypeStats = ({ projectId }: { projectId?: string }) => {
+export const useGetProjectRevenueTypeStats = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { data: revenueTypeStats = [], isLoading: isLoadingRevenueTypeStats } = useQuery({
-    queryKey: queryKeys.projectRevenues.typeStats(projectId),
-    queryFn: () => projectService.getProjectRevenueTypeStats({ projectId }),
-    enabled: !!projectId
+    queryKey: queryKeys.projectRevenues.typeStats(projectIdentifier),
+    queryFn: () => projectService.getProjectRevenueTypeStats({ projectIdentifier }),
+    enabled: !!projectIdentifier
   })
 
   return { revenueTypeStats, isLoadingRevenueTypeStats }

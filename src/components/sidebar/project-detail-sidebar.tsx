@@ -36,7 +36,7 @@ interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar>
 
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
   const { user } = useAuthStore()
   const location = useLocation()
 
@@ -112,7 +112,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
   const activeItem = navMain.find((item) => item.url === activeSegment) || navMain[1]
 
   const { assignedTasks, isLoadingAssignedTasks } = useGetMyAssignedTasks({
-    projectId,
+    projectIdentifier: identifier,
     userId: user?.UserId,
     enabled: activeItem.hasSecondSidebar
   })
@@ -157,7 +157,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
               <SidebarMenu>
                 {navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <Link to={`/projects/${projectId}/${item.url}`}>
+                    <Link to={`/projects/${identifier}/${item.url}`}>
                       <SidebarMenuButton
                         tooltip={{
                           children: item.title,

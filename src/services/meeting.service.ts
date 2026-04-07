@@ -44,9 +44,9 @@ class MeetingService {
     return data.value.items
   }
 
-  getProjectMeetings = async ({ projectId, activeFrom, activeTo }: GetProjectMeetingsParams) => {
+  getProjectMeetings = async ({ projectIdentifier, activeFrom, activeTo }: GetProjectMeetingsParams) => {
     const { data } = await api.get<BasePaginationResponse<MeetingBooking>>(
-      `/v1/${this.baseUrl}/bookings/projects/${projectId}`,
+      `/v1/${this.baseUrl}/bookings/projects/${projectIdentifier}`,
       {
         params: {
           activeFrom,

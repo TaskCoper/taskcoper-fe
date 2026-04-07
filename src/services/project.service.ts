@@ -196,10 +196,10 @@ class ProjectService {
     return data.value
   }
 
-  getMyAssignedTasks = async ({ projectId, userId }: { projectId?: string; userId?: string }) => {
-    if (!projectId || !userId) return null
+  getMyAssignedTasks = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
+    if (!projectIdentifier || !userId) return null
     const { data } = await api.get<BasePaginationResponse<TaskPreview>>(
-      `/v1/${this.baseUrl}/${projectId}/members/${userId}/tasks`
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/tasks`
     )
 
     return data
@@ -236,7 +236,7 @@ class ProjectService {
   }
 
   getProjectResources = async ({
-    projectId,
+    projectIdentifier,
     pageIndex,
     pageSize,
     sortBy,
@@ -246,9 +246,9 @@ class ProjectService {
     mimeTypes,
     memberIds
   }: UseGetProjectResourcesParams) => {
-    if (!projectId) return null
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
-      `/v1/${this.baseUrl}/${projectId}/resources`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources`,
       {
         params: {
           pageIndex,
@@ -308,28 +308,28 @@ class ProjectService {
     return data
   }
 
-  getProjectResourceStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectResourceStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BaseResponse<ProjectResourceStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/statistic`
     )
 
     return data.value
   }
 
-  getProjectMimeTypeStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectMimeTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectMimeTypeStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/mime-types/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/mime-types/statistic`
     )
 
     return data
   }
 
-  getProjectResourceMemberStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectResourceMemberStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResourceMemberStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/members/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/members/statistic`
     )
 
     return data
@@ -353,19 +353,24 @@ class ProjectService {
   }
 
   uploadAttachment = async ({ body }: { body: UploadProjectAttachmentFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/resources`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/resources`,
+      body
+    )
 
     return data.value
   }
 
-  deleteAttachment = async ({ projectId, resourceId }: { projectId: string; resourceId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
+  deleteAttachment = async ({ projectIdentifier, resourceId }: { projectIdentifier: string; resourceId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/${resourceId}`
+    )
 
     return data.value
   }
 
   getProjectRevenues = async ({
-    projectId,
+    projectIdentifier,
     pageIndex,
     pageSize,
     labelIds,
@@ -375,96 +380,115 @@ class ProjectService {
     startDate,
     endDate
   }: GetProjectRevenuesParams) => {
-    if (!projectId) return null
-    const { data } = await api.get<BasePaginationResponse<Revenue>>(`/v1/${this.baseUrl}/${projectId}/revenues`, {
-      params: {
-        pageIndex,
-        pageSize,
-        labelIds,
-        searchTerm,
-        type,
-        sortBy,
-        startDate,
-        endDate
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BasePaginationResponse<Revenue>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues`,
+      {
+        params: {
+          pageIndex,
+          pageSize,
+          labelIds,
+          searchTerm,
+          type,
+          sortBy,
+          startDate,
+          endDate
+        }
       }
-    })
+    )
 
     return data
   }
 
-  getProjectRevenueStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BaseResponse<RevenueStats>>(`/v1/${this.baseUrl}/${projectId}/revenues/health-check`)
+  getProjectRevenueStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BaseResponse<RevenueStats>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/health-check`
+    )
 
     return data.value
   }
 
   addProjectRevenue = async ({ body }: { body: AddProjectRevenueFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues`,
+      body
+    )
 
     return data.value
   }
 
   updateProjectRevenue = async ({ body }: { body: UpdateProjectRevenueFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${body.projectId}/revenues/${body.projectTransactionId}`,
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/${body.projectTransactionId}`,
       body
     )
 
     return data.value
   }
 
-  deleteProjectRevenue = async ({ projectId, revenueId }: { projectId: string; revenueId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/revenues/${revenueId}`)
+  deleteProjectRevenue = async ({ projectIdentifier, revenueId }: { projectIdentifier: string; revenueId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/${revenueId}`
+    )
 
     return data.value
   }
 
-  getProjectRevenueLabelStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueLabelStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<RevenueLabelStats>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/labels`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/labels`
     )
 
     return data.value.items
   }
 
-  getProjectRevenueTypeStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<RevenueTypeStats>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/types`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/types`
     )
 
     return data.value.items
   }
 
-  getProjectRevenueLabels = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/labels`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels`
     )
 
     return data
   }
 
   addProjectRevenueLabel = async ({ body }: { body: AddProjectRevenueLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues/labels`, body)
-
-    return data.value
-  }
-
-  updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${body.projectId}/revenues/labels/${body.id}`,
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels`,
       body
     )
 
     return data.value
   }
 
-  deleteProjectRevenueLabel = async ({ projectId, labelId }: { projectId: string; labelId: string }) => {
+  updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels/${body.id}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteProjectRevenueLabel = async ({
+    projectIdentifier,
+    labelId
+  }: {
+    projectIdentifier: string
+    labelId: string
+  }) => {
     const { data } = await api.delete<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/labels/${labelId}`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels/${labelId}`
     )
 
     return data.value

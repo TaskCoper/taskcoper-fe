@@ -20,13 +20,13 @@ import AddLabelForm from './add-label-form'
 import UpdateLabelForm from './update-label-form'
 
 interface RevenueLabelComboboxProps {
-  projectId: string
+  projectIdentifier: string
   selectedLabelIds: string[]
   onSelectionChange: (labelIds: string[]) => void
 }
 
 export default function RevenueLabelCombobox({
-  projectId,
+  projectIdentifier,
   selectedLabelIds,
   onSelectionChange
 }: RevenueLabelComboboxProps) {
@@ -37,7 +37,7 @@ export default function RevenueLabelCombobox({
   const [isDeleting, setIsDeleting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { revenueLabels, isLoadingRevenueLabels } = useGetProjectRevenueLabels({ projectId })
+  const { revenueLabels, isLoadingRevenueLabels } = useGetProjectRevenueLabels({ projectIdentifier })
   const allLabels = useMemo(() => revenueLabels?.value?.items ?? [], [revenueLabels])
   const filteredLabels = allLabels.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
@@ -50,7 +50,7 @@ export default function RevenueLabelCombobox({
     methods: addLabelMethods,
     addProjectRevenueLabel,
     isAddingProjectRevenueLabel
-  } = useAddProjectRevenueLabel({ projectId })
+  } = useAddProjectRevenueLabel({ projectIdentifier })
 
   const onSubmitAddLabel: SubmitHandler<AddProjectRevenueLabelFormValues> = (body) => {
     addProjectRevenueLabel({ body })
@@ -61,7 +61,7 @@ export default function RevenueLabelCombobox({
     methods: updateLabelMethods,
     updateProjectRevenueLabel,
     isUpdatingProjectRevenueLabel
-  } = useUpdateProjectRevenueLabel({ projectId })
+  } = useUpdateProjectRevenueLabel({ projectIdentifier })
 
   const onSubmitUpdateLabel: SubmitHandler<UpdateProjectRevenueLabelFormValues> = (body) => {
     updateProjectRevenueLabel({ body })
@@ -75,13 +75,15 @@ export default function RevenueLabelCombobox({
       id: label.id,
       name: label.name,
       color: label.color,
-      projectId
+      projectIdentifier
     })
   }
 
-  const { deleteProjectRevenueLabel, isDeletingProjectRevenueLabel } = useDeleteProjectRevenueLabel({ projectId })
+  const { deleteProjectRevenueLabel, isDeletingProjectRevenueLabel } = useDeleteProjectRevenueLabel({
+    projectIdentifier
+  })
   const onDeleteProjectLabel = (labelId: string) => {
-    deleteProjectRevenueLabel({ projectId, labelId })
+    deleteProjectRevenueLabel({ projectIdentifier, labelId })
     onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
     setIsDeleting(false)
     setEditLabel(null)
@@ -119,12 +121,12 @@ export default function RevenueLabelCombobox({
   useEffect(() => {
     if (open) {
       addLabelMethods.reset({
-        projectId,
+        projectIdentifier,
         color: defaultColor,
         name: ''
       })
     }
-  }, [open, addLabelMethods, projectId, defaultColor])
+  }, [open, addLabelMethods, projectIdentifier, defaultColor])
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
@@ -137,12 +139,10 @@ export default function RevenueLabelCombobox({
                   key={label.id}
                   className={cn(
                     label.color || 'bg-gray-200',
-                    'inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-xs font-semibold'
+                    'inline-flex items-center gap-1 rounded-sm px-1.5 h-5 text-xs font-semibold'
                   )}
                 >
-                  <span className={cn('truncate max-w-20', getColorTextClass(label.color ?? ''))}>
-                    {label.name || t('common.ui.none')}
-                  </span>
+                  <span className={cn('truncate w-10', getColorTextClass(label.color ?? ''))}>{label.name}</span>
                   <XIcon
                     className={cn('size-3 shrink-0 cursor-pointer', getColorTextClass(label.color ?? ''))}
                     onClick={(e) => {

@@ -17,7 +17,9 @@ export default function ProjectStoragePage() {
     identifier
   })
 
-  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({ projectId: project?.id })
+  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({
+    projectIdentifier: identifier
+  })
 
   useEffect(() => {
     if (project) {
@@ -61,7 +63,7 @@ export default function ProjectStoragePage() {
           </div>
         </div>
 
-        {project?.id ? <ProjectStorageTable projectId={project.id} /> : null}
+        {identifier ? <ProjectStorageTable projectIdentifier={identifier} /> : null}
       </div>
 
       <Outlet />

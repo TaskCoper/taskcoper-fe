@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface UseUploadProjectAttachmentProps {
-  projectId: string
+  projectIdentifier: string
 }
 
-export const useUploadProjectAttachment = ({ projectId }: UseUploadProjectAttachmentProps) => {
+export const useUploadProjectAttachment = ({ projectIdentifier }: UseUploadProjectAttachmentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -24,10 +24,10 @@ export const useUploadProjectAttachment = ({ projectId }: UseUploadProjectAttach
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })
     }
   })
 

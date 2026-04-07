@@ -76,10 +76,10 @@ export default function TaskDialogPage() {
 
   const { user } = useAuthStore()
   const { t, i18n } = useTranslation()
-  const { identifier, milestoneIdentifier, taskId } = useParams<{
+  const { identifier, milestoneIdentifier, taskIdentifier } = useParams<{
     identifier: string
     milestoneIdentifier: string
-    taskId: string
+    taskIdentifier: string
   }>()
 
   const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
@@ -96,11 +96,11 @@ export default function TaskDialogPage() {
 
   const sensors = useDndSensors()
 
-  const { task, isLoadingTask } = useGetTask({ taskId })
-  const { comments, isLoadingComments } = useGetComments({ taskId })
-  const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId })
-  const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId })
-  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId })
+  const { task, isLoadingTask } = useGetTask({ taskIdentifier })
+  const { comments, isLoadingComments } = useGetComments({ taskId: task?.taskId })
+  const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId: task?.taskId })
+  const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId: task?.taskId })
+  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId: task?.taskId })
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
@@ -112,14 +112,14 @@ export default function TaskDialogPage() {
     methods: updateTaskMethods,
     updateTask,
     isUpdatingTask
-  } = useUpdateTask({ taskId, identifier, milestoneIdentifier })
+  } = useUpdateTask({ taskId: task?.taskId, identifier, milestoneIdentifier })
   const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
     methods: addCommentMethods,
     addComment,
     isAddingComment
-  } = useAddComment({ taskId, identifier, milestoneIdentifier })
+  } = useAddComment({ taskId: task?.taskId, identifier, milestoneIdentifier })
   const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
 
   const {
@@ -130,7 +130,7 @@ export default function TaskDialogPage() {
     activeChildSubtask,
     groupedSubtasks,
     parentSubtasksIds
-  } = useSubtaskDnd({ taskId, subtasks, identifier, milestoneIdentifier })
+  } = useSubtaskDnd({ taskId: task?.taskId, subtasks, identifier, milestoneIdentifier })
 
   const {
     isEditing: isEditingName,
@@ -354,8 +354,8 @@ export default function TaskDialogPage() {
                   variant={task?.backgroundImage ? 'outline' : 'ghost'}
                   size='icon-sm'
                   onClick={() => {
-                    if (!taskId) return
-                    toggleWatchTask({ taskId, isWatching: false })
+                    if (!task?.taskId) return
+                    toggleWatchTask({ taskId: task.taskId, isWatching: false })
                   }}
                 >
                   <EyeIcon />
@@ -376,12 +376,12 @@ export default function TaskDialogPage() {
                 </Button>
               </BackgroundImagePopover>
 
-              {taskId && task?.taskName && identifier && milestoneIdentifier && task.milestoneId ? (
+              {task?.taskId && task?.taskName && identifier && milestoneIdentifier && task.milestoneId ? (
                 <TaskDetailMenu
                   projectIdentifier={identifier}
                   parentMilestoneIdentifier={milestoneIdentifier}
                   milestoneId={task.milestoneId}
-                  taskId={taskId}
+                  taskId={task.taskId}
                   taskName={task.taskName}
                   onDeleteSuccess={goBack}
                   open={openTaskDetailMenu}
@@ -452,10 +452,10 @@ export default function TaskDialogPage() {
                       </PriorityPopover>
                     ) : null}
 
-                    {(task?.taskLabels.length ?? 0) === 0 && identifier && taskId && milestoneIdentifier ? (
+                    {(task?.taskLabels.length ?? 0) === 0 && identifier && task?.taskId && milestoneIdentifier ? (
                       <LabelPopover
                         projectIdentifier={identifier}
-                        taskId={taskId}
+                        taskId={task.taskId}
                         parentMilestoneIdentifier={milestoneIdentifier}
                         taskLabels={task?.taskLabels ?? []}
                       >
@@ -475,10 +475,10 @@ export default function TaskDialogPage() {
                       </DatePopover>
                     ) : null}
 
-                    {identifier && taskId && milestoneIdentifier ? (
+                    {identifier && task?.taskId && milestoneIdentifier ? (
                       <SubtaskPopover
                         projectIdentifier={identifier}
-                        taskId={taskId}
+                        taskId={task.taskId}
                         parentMilestoneIdentifier={milestoneIdentifier}
                       >
                         <Button variant='outline' size='sm'>
@@ -490,11 +490,11 @@ export default function TaskDialogPage() {
 
                     {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
                     identifier &&
-                    taskId &&
+                    task?.taskId &&
                     milestoneIdentifier ? (
                       <AssigneePopover
                         projectIdentifier={identifier}
-                        taskId={taskId}
+                        taskId={task.taskId}
                         parentMilestoneIdentifier={milestoneIdentifier}
                       >
                         <Button variant='outline' size='sm'>
@@ -504,9 +504,9 @@ export default function TaskDialogPage() {
                       </AssigneePopover>
                     ) : null}
 
-                    {taskId && identifier && milestoneIdentifier ? (
+                    {task?.taskId && identifier && milestoneIdentifier ? (
                       <AttachmentPopover
-                        taskId={taskId}
+                        taskId={task.taskId}
                         projectIdentifier={identifier}
                         parentMilestoneIdentifier={milestoneIdentifier}
                       >
@@ -574,10 +574,10 @@ export default function TaskDialogPage() {
                         </div>
                       ))}
 
-                      {identifier && taskId && milestoneIdentifier ? (
+                      {identifier && task?.taskId && milestoneIdentifier ? (
                         <LabelPopover
                           projectIdentifier={identifier}
-                          taskId={taskId}
+                          taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
                           taskLabels={task?.taskLabels ?? []}
                         >
@@ -607,10 +607,10 @@ export default function TaskDialogPage() {
                           </Avatar>
                         ))}
 
-                      {identifier && taskId && milestoneIdentifier ? (
+                      {identifier && task?.taskId && milestoneIdentifier ? (
                         <AssigneePopover
                           projectIdentifier={identifier}
-                          taskId={taskId}
+                          taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
                         >
                           <Button className='rounded-full size-8' size='icon' variant='secondary'>
@@ -774,9 +774,9 @@ export default function TaskDialogPage() {
               </div>
 
               {/* Attachments */}
-              {(attachments?.value.totalCount ?? 0) > 0 && taskId && identifier && milestoneIdentifier ? (
+              {(attachments?.value.totalCount ?? 0) > 0 && task?.taskId && identifier && milestoneIdentifier ? (
                 <AttachmentsSection
-                  taskId={taskId}
+                  taskId={task.taskId}
                   projectIdentifier={identifier}
                   parentMilestoneIdentifier={milestoneIdentifier}
                   attachments={attachments?.value.items ?? []}
@@ -795,14 +795,14 @@ export default function TaskDialogPage() {
                 <SortableContext items={parentSubtasksIds} strategy={verticalListSortingStrategy}>
                   <div className='mt-10 space-y-8 pb-6'>
                     {groupedSubtasks?.map((subtask) => {
-                      if (taskId && identifier && milestoneIdentifier) {
+                      if (task?.taskId && identifier && milestoneIdentifier) {
                         return (
                           <SortableParentSubtaskCard
                             key={subtask.id}
                             subtask={subtask}
                             projectIdentifier={identifier}
                             parentMilestoneIdentifier={milestoneIdentifier}
-                            taskId={taskId}
+                            taskId={task.taskId}
                             editingSubtaskId={editingSubtaskId}
                             setEditingSubtaskId={setEditingSubtaskId}
                           />
@@ -814,22 +814,22 @@ export default function TaskDialogPage() {
                 </SortableContext>
 
                 <DragOverlay dropAnimation={defaultDropAnimation} modifiers={[snapCenterToCursor]}>
-                  {activeParentSubtask && taskId && identifier && milestoneIdentifier && (
+                  {activeParentSubtask && task?.taskId && identifier && milestoneIdentifier && (
                     <SortableParentSubtaskCard
                       isOverlay
                       subtask={activeParentSubtask}
                       projectIdentifier={identifier}
                       parentMilestoneIdentifier={milestoneIdentifier}
-                      taskId={taskId}
+                      taskId={task.taskId}
                       editingSubtaskId={editingSubtaskId}
                       setEditingSubtaskId={setEditingSubtaskId}
                     />
                   )}
-                  {activeChildSubtask && taskId && identifier && milestoneIdentifier && (
+                  {activeChildSubtask && task?.taskId && identifier && milestoneIdentifier && (
                     <SortableSubtaskCard
                       isOverlay
                       subtask={activeChildSubtask}
-                      taskId={taskId}
+                      taskId={task.taskId}
                       projectIdentifier={identifier}
                       parentMilestoneIdentifier={milestoneIdentifier}
                     />
@@ -900,13 +900,13 @@ export default function TaskDialogPage() {
                 />
               )}
 
-              {taskId && identifier && milestoneIdentifier ? (
+              {task?.taskId && identifier && milestoneIdentifier ? (
                 <div className='space-y-6 pb-6'>
                   {comments?.value.items.map((comment) => (
                     <CommentCard
                       key={comment.commentId}
                       comment={comment}
-                      taskId={taskId}
+                      taskId={task.taskId}
                       projectIdentifier={identifier}
                       parentMilestoneIdentifier={milestoneIdentifier}
                     />

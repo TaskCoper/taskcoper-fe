@@ -32,10 +32,10 @@ interface ProjectBoardProps {
 }
 
 export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBoardProps) {
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const queryKey = queryKeys.milestones.byParent(projectId, milestoneId)
+  const queryKey = queryKeys.milestones.byParent(identifier, milestoneIdentifier)
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
 
@@ -44,8 +44,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
 
   const { updateMilestone } = useUpdateMilestone()
   const { moveTask } = useMoveTask({
-    projectId,
-    parentMilestoneId: milestoneId,
+    projectIdentifier: identifier,
+    milestoneIdentifier,
     milestoneId: activeTask?.milestoneId
   })
 
@@ -169,7 +169,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
 
       const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: activeId,
-        parentId: milestoneId,
+        parentMilestoneIdentifier: milestoneIdentifier,
         milestoneName: activeData.column.name,
         position: newPosition
       })
@@ -248,7 +248,9 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
             </div>
           )}
         </SortableContext>
-        {projectId && milestoneId ? <AddMilestoneButton projectId={projectId} parentId={milestoneId} /> : null}
+        {identifier && milestoneIdentifier ? (
+          <AddMilestoneButton projectIdentifier={identifier} parentMilestoneIdentifier={milestoneIdentifier} />
+        ) : null}
       </ProjectContainer>
 
       <DragOverlay>

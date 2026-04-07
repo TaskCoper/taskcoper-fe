@@ -20,15 +20,15 @@ export const useUpdateProjectRevenue = () => {
   const { mutate: updateProjectRevenue, isPending: isUpdatingProjectRevenue } = useMutation({
     mutationFn: projectService.updateProjectRevenue,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectId) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier) })
 
       const previousRevenues = queryClient.getQueriesData<BasePaginationResponse<Revenue>>({
-        queryKey: queryKeys.projectRevenues.all(variables.body.projectId)
+        queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier)
       })
 
       queryClient.setQueriesData<BasePaginationResponse<Revenue>>(
         {
-          queryKey: queryKeys.projectRevenues.all(variables.body.projectId)
+          queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier)
         },
         (old) => {
           if (!old) return old
@@ -60,7 +60,10 @@ export const useUpdateProjectRevenue = () => {
     },
     onError: (error, variables, context) => {
       if (context?.previousRevenues) {
-        queryClient.setQueryData(queryKeys.projectRevenues.all(variables.body.projectId), context.previousRevenues)
+        queryClient.setQueryData(
+          queryKeys.projectRevenues.all(variables.body.projectIdentifier),
+          context.previousRevenues
+        )
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -68,10 +71,12 @@ export const useUpdateProjectRevenue = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.body.projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projectRevenueLabels.stats(variables.body.projectIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.body.projectIdentifier) })
     }
   })
 
