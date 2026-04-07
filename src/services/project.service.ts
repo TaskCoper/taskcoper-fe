@@ -100,10 +100,10 @@ class ProjectService {
     return data
   }
 
-  getMilestones = async ({ projectId, parentMilestoneId }: GetMilestonesParams) => {
-    if (!projectId || !parentMilestoneId) return null
+  getMilestones = async ({ projectIdentifier, parentMilestoneIdentifier }: GetMilestonesParams) => {
+    if (!projectIdentifier || !parentMilestoneIdentifier) return null
     const { data } = await api.get<BaseResponse<MilestoneWithTasks>>(
-      `/v1/${this.baseUrl}/${projectId}/milestones/${parentMilestoneId}`
+      `/v1/${this.baseUrl}/${projectIdentifier}/milestones/${parentMilestoneIdentifier}`
     )
 
     return data.value
@@ -205,15 +205,20 @@ class ProjectService {
     return data
   }
 
-  getLabels = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BasePaginationResponse<Label>>(`/v1/${this.baseUrl}/${projectId}/task-labels`)
+  getLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BasePaginationResponse<Label>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/task-labels`
+    )
 
     return data
   }
 
   addLabel = async ({ body }: { body: AddProjectLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/task-labels`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/task-labels`,
+      body
+    )
 
     return data.value
   }
@@ -261,13 +266,13 @@ class ProjectService {
     return data
   }
 
-  getProjectLabelStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getProjectLabelStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectLabelStats>>(
-      `/v1/${this.baseUrl}/${projectId}/task-labels/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/task-labels/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -275,13 +280,13 @@ class ProjectService {
     return data
   }
 
-  getTaskStatusStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getTaskStatusStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<TaskStatusStats>>(
-      `/v1/${this.baseUrl}/${projectId}/tasks-status/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/tasks-status/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -289,13 +294,13 @@ class ProjectService {
     return data
   }
 
-  getProjectMemberStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getProjectMemberStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectMemberStats>>(
-      `/v1/${this.baseUrl}/${projectId}/members-tasks/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/members-tasks/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -330,13 +335,16 @@ class ProjectService {
     return data
   }
 
-  getProjectPriorityStats = async ({ projectId, parentMilestoneId }: UseGetProjectPriorityStatsParams) => {
-    if (!projectId) return null
+  getProjectPriorityStats = async ({
+    projectIdentifier,
+    parentMilestoneIdentifier
+  }: UseGetProjectPriorityStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectPriorityStats>>(
-      `/v1/${this.baseUrl}/${projectId}/tasks-priority/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/tasks-priority/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )

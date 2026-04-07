@@ -62,7 +62,7 @@ interface RichTextEditorProps {
   onMentionIdsChange?: (mentionIds: string[]) => void
   invalid?: boolean
   error?: { message?: string }
-  projectId?: string
+  projectIdentifier?: string
   mentionedUsers?: MentionUser[]
 }
 
@@ -94,7 +94,7 @@ export default function RichTextEditor({
   placeholder = 'richTextEditor.placeholder',
   invalid = false,
   error,
-  projectId,
+  projectIdentifier,
   mentionedUsers = []
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
@@ -135,14 +135,14 @@ export default function RichTextEditor({
       const parsedQuery = query || undefined
       const result = await queryClient.fetchQuery({
         queryKey: queryKeys.projects.members.list({
-          projectId,
+          identifier: projectIdentifier,
           searchTerm: parsedQuery,
           pageIndex: 1,
           pageSize: 5
         }),
         queryFn: () =>
           projectService.getProjectMembers({
-            projectId,
+            identifier: projectIdentifier,
             searchTerm: parsedQuery,
             pageIndex: DEFAULT_PAGE_INDEX,
             pageSize: 5

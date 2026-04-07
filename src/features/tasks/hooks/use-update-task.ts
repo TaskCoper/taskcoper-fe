@@ -11,11 +11,11 @@ import { updateTaskSchema, type UpdateTaskFormValues } from '../validations'
 
 interface UseUpdateTaskProps {
   taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  identifier?: string
+  milestoneIdentifier?: string
 }
 
-export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdateTaskProps) => {
+export const useUpdateTask = ({ taskId, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -75,17 +75,19 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
         queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.priorityStats(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        if (identifier) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.projects.taskStatusStats(identifier, milestoneIdentifier)
+          })
+          queryClient.invalidateQueries({ queryKey: queryKeys.projects.priorityStats(identifier, milestoneIdentifier) })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (identifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.UserId) })
       }
     }
   })

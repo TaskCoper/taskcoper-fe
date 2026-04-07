@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import type { AddProjectLabelFormValues } from '../validations'
 import { addProjectLabelSchema } from '../validations'
 
-export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
+export const useAddProjectLabel = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -21,11 +21,13 @@ export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
   const { mutate: addProjectLabel, isPending: isAddingProjectLabel } = useMutation({
     mutationFn: projectService.addLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projects.labels(projectId) })
-      const previousData = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectId))
+      await queryClient.cancelQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
+      const previousData = queryClient.getQueryData<BasePaginationResponse<Label>>(
+        queryKeys.projects.labels(projectIdentifier)
+      )
 
       if (previousData) {
-        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectId), (old) => {
+        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectIdentifier), (old) => {
           if (!old) return old
 
           const newLabel: Label = {
@@ -34,7 +36,7 @@ export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
             color: variables.body.color,
             createdOnUtc: new Date().toISOString(),
             modifiedOnUtc: new Date().toISOString(),
-            projectId: variables.body.projectId
+            projectSlug: projectIdentifier
           }
 
           return {
@@ -51,14 +53,14 @@ export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
     },
     onSuccess: () => {
       methods.reset({
-        projectId,
+        projectIdentifier,
         name: '',
         color: ''
       })
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousData)
+        queryClient.setQueryData(queryKeys.projects.labels(projectIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -66,8 +68,8 @@ export const useAddProjectLabel = ({ projectId }: { projectId: string }) => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })
 

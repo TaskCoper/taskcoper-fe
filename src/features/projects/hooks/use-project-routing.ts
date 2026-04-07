@@ -29,26 +29,30 @@ export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRo
   const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
 
   const shouldDisplayTabs = activeSegment === 'milestones'
-  const currentMilestoneId = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
-  const activeTabValue = currentMilestoneId || items[0]?.id || ''
 
-  const handleTabChange = (milestoneId: string) => {
+  // Renamed to reflect the use of slug
+  const currentMilestoneSlug = shouldDisplayTabs ? location.pathname.split('/milestones/')[1]?.split('/')[0] : ''
+  const activeTabValue = currentMilestoneSlug || items[0]?.slug || ''
+
+  const handleTabChange = (milestoneSlug: string) => {
     if (identifier) {
-      setLastActiveMilestone(identifier, milestoneId)
+      setLastActiveMilestone(identifier, milestoneSlug)
     }
-    navigate({ pathname: `milestones/${milestoneId}`, search: window.location.search }, { replace: true })
+    navigate({ pathname: `milestones/${milestoneSlug}`, search: window.location.search }, { replace: true })
   }
 
   // Auto-navigate to saved milestone or first milestone when landing on project or milestones root
   useEffect(() => {
     if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot) && identifier) {
-      const savedMilestoneId = getLastActiveMilestone(identifier)
-      const milestoneExists = savedMilestoneId && items.some((item) => item.id === savedMilestoneId)
+      const savedMilestoneSlug = getLastActiveMilestone(identifier)
 
-      // Use saved milestone if it exists, otherwise fall back to first milestone
-      const targetMilestoneId = milestoneExists ? savedMilestoneId : items[0].id
+      // Match against the slug rather than the ID
+      const milestoneExists = savedMilestoneSlug && items.some((item) => item.slug === savedMilestoneSlug)
 
-      navigate({ pathname: `milestones/${targetMilestoneId}`, search: window.location.search }, { replace: true })
+      // Use saved milestone if it exists, otherwise fall back to first milestone's slug
+      const targetMilestoneSlug = milestoneExists ? savedMilestoneSlug : items[0].slug
+
+      navigate({ pathname: `milestones/${targetMilestoneSlug}`, search: window.location.search }, { replace: true })
     }
   }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, identifier, getLastActiveMilestone])
 
@@ -57,7 +61,7 @@ export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRo
     isProjectRoot,
     isMilestonesRoot,
     shouldDisplayTabs,
-    currentMilestoneId,
+    currentMilestoneSlug, // Exporting the new variable name
     activeTabValue,
     handleTabChange
   }

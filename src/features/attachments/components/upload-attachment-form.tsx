@@ -18,15 +18,15 @@ import { type UploadAttachmentFormValues } from '../validations'
 
 interface UploadAttachmentFormProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   onUploadComplete?: () => void
 }
 
 export default function UploadAttachmentForm({
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   onUploadComplete
 }: UploadAttachmentFormProps) {
   const { t } = useTranslation()
@@ -34,7 +34,11 @@ export default function UploadAttachmentForm({
   const [isUploading, setIsUploading] = useState(false)
 
   const { uploadFileAsync } = useUploadFile()
-  const { uploadAttachmentAsync, getNextPosition } = useUploadAttachment({ taskId, projectId, parentMilestoneId })
+  const { uploadAttachmentAsync, getNextPosition } = useUploadAttachment({
+    taskId,
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
 
   const handleFilesChange = async (files: File[]) => {
     if (files.length === 0) return

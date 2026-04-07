@@ -6,6 +6,7 @@ export interface TaskPreview {
   id: string
   name: string
   milestoneId: string
+  slug: string
   position: number
   startDate: string | null
   endDate: string | null

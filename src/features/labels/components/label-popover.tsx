@@ -24,17 +24,17 @@ import UpdateLabelForm from './update-label-form'
 
 interface LabelPopoverProps {
   children: React.ReactNode
-  projectId: string
+  projectIdentifier: string
   taskId: string
-  parentMilestoneId: string
+  parentMilestoneIdentifier: string
   taskLabels: TaskLabel[]
 }
 
 export default function LabelPopover({
   children,
-  projectId,
+  projectIdentifier,
   taskId,
-  parentMilestoneId,
+  parentMilestoneIdentifier,
   taskLabels
 }: LabelPopoverProps) {
   const [open, setOpen] = useState(false)
@@ -44,11 +44,11 @@ export default function LabelPopover({
   const [isDeleting, setIsDeleting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { labels, isLoadingLabels } = useGetProjectLabels({ projectId, enabled: open })
+  const { labels, isLoadingLabels } = useGetProjectLabels({ projectIdentifier, enabled: open })
   const filteredLabels =
     labels?.value.items.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase())) || []
 
-  const { methods: addLabelMethods, addProjectLabel, isAddingProjectLabel } = useAddProjectLabel({ projectId })
+  const { methods: addLabelMethods, addProjectLabel, isAddingProjectLabel } = useAddProjectLabel({ projectIdentifier })
   const onSubmitAddLabel: SubmitHandler<AddProjectLabelFormValues> = (body) => {
     addProjectLabel({ body })
     setMode('view')
@@ -59,9 +59,9 @@ export default function LabelPopover({
     updateProjectLabel,
     isUpdatingProjectLabel
   } = useUpdateProjectLabel({
-    projectId,
+    projectIdentifier,
     taskId,
-    parentMilestoneId
+    parentMilestoneIdentifier
   })
   const onSubmitUpdateLabel: SubmitHandler<UpdateProjectLabelFormValues> = (body) => {
     updateProjectLabel({ body })
@@ -82,7 +82,7 @@ export default function LabelPopover({
     methods: addTaskLabelMethods,
     addTaskLabel,
     isAddingTaskLabel
-  } = useAddTaskLabel({ taskId, projectId, parentMilestoneId, enabled: open })
+  } = useAddTaskLabel({ taskId, projectIdentifier, parentMilestoneIdentifier, enabled: open })
   const onAddTaskLabel = () => {
     const result = addTaskLabelSchema.safeParse(addTaskLabelMethods.getValues())
 
@@ -91,15 +91,19 @@ export default function LabelPopover({
     }
   }
 
-  const { deleteTaskLabel, isDeletingTaskLabel } = useDeleteTaskLabel({ taskId, projectId, parentMilestoneId })
+  const { deleteTaskLabel, isDeletingTaskLabel } = useDeleteTaskLabel({
+    taskId,
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
   const onDeleteTaskLabel = (id: string) => {
     deleteTaskLabel({ id })
   }
 
   const { deleteProjectLabel, isDeletingProjectLabel } = useDeleteProjectLabel({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const onDeleteProjectLabel = (labelId: string) => {
     deleteProjectLabel({ labelId })
@@ -126,12 +130,12 @@ export default function LabelPopover({
   useEffect(() => {
     if (open) {
       addLabelMethods.reset({
-        projectId,
+        projectIdentifier,
         color: defaultColor,
         name: ''
       })
     }
-  }, [open, addLabelMethods, projectId, defaultColor])
+  }, [open, addLabelMethods, projectIdentifier, defaultColor])
 
   useEffect(() => {
     if (open) {

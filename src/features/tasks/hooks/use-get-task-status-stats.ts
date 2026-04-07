@@ -5,19 +5,19 @@ import type { TaskStatusStats } from '@/types/task.type'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetTaskStatusStats = ({
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: {
-  projectId: string
-  parentMilestoneId?: string
+  projectIdentifier: string
+  parentMilestoneIdentifier?: string
 }) => {
   const {
     data: taskStatusStats = getDefaultPaginationResponse<TaskStatusStats>(),
     isLoading: isLoadingTaskStatusStats
   } = useQuery({
-    queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId),
-    queryFn: () => projectService.getTaskStatusStats({ projectId, parentMilestoneId }),
-    enabled: !!projectId
+    queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier),
+    queryFn: () => projectService.getTaskStatusStats({ projectIdentifier, parentMilestoneIdentifier }),
+    enabled: !!projectIdentifier
   })
 
   return { taskStatusStats, isLoadingTaskStatusStats }

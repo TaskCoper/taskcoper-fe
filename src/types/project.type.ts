@@ -26,6 +26,7 @@ export interface Project {
   id: string
   name: string
   description: string | null
+  slug: string
   startDate: string | null
   endDate: string | null
   coverImage: string | null

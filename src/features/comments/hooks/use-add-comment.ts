@@ -10,11 +10,11 @@ import { addTaskCommentSchema, type AddTaskCommentFormValues } from '../validati
 
 interface UseAddCommentProps {
   taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  identifier?: string
+  milestoneIdentifier?: string
 }
 
-export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCommentProps) => {
+export const useAddComment = ({ taskId, identifier, milestoneIdentifier }: UseAddCommentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -43,15 +43,15 @@ export const useAddComment = ({ taskId, projectId, parentMilestoneId }: UseAddCo
         queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        if (identifier) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
-      if (projectId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (identifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.UserId) })
       }
     }
   })

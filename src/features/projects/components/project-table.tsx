@@ -25,16 +25,16 @@ import { useLocation } from 'react-router'
 import { useGetProjectMemberStats } from '../hooks/use-get-project-member-stats'
 
 interface ProjectTableProps {
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTableProps) {
+export default function ProjectTable({ projectIdentifier, parentMilestoneIdentifier }: ProjectTableProps) {
   const { t } = useTranslation()
   const location = useLocation()
   const { confirm } = useConfirmStore()
   const { user } = useAuthStore()
-  const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId })
+  const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier })
 
   const onDeleteTask = useCallback(
     async (taskId: string, taskName: string) => {
@@ -54,19 +54,34 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
 
   const columns = useMemo(
     () =>
-      getColumns({ projectId, parentMilestoneId, onDeleteTask, userId: user?.UserId, searchParams: location.search }),
-    [projectId, parentMilestoneId, onDeleteTask, user?.UserId, location.search]
+      getColumns({
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        onDeleteTask,
+        userId: user?.UserId,
+        searchParams: location.search
+      }),
+    [projectIdentifier, parentMilestoneIdentifier, onDeleteTask, user?.UserId, location.search]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
     prefix: 'tasks'
   })
 
-  const { labelStats, isLoadingLabelStats } = useGetProjectLabelStats({ projectId, parentMilestoneId })
-  const { milestoneStats, isLoadingMilestoneStats } = useGetMilestoneStats({ parentMilestoneId })
-  const { taskStatusStats, isLoadingTaskStatusStats } = useGetTaskStatusStats({ projectId, parentMilestoneId })
-  const { projectMemberStats, isLoadingProjectMemberStats } = useGetProjectMemberStats({ projectId, parentMilestoneId })
-  const { priorityStats, isLoadingPriorityStats } = useGetProjectPriorityStats({ projectId, parentMilestoneId })
+  const { labelStats, isLoadingLabelStats } = useGetProjectLabelStats({ projectIdentifier, parentMilestoneIdentifier })
+  const { milestoneStats, isLoadingMilestoneStats } = useGetMilestoneStats({ parentMilestoneIdentifier })
+  const { taskStatusStats, isLoadingTaskStatusStats } = useGetTaskStatusStats({
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
+  const { projectMemberStats, isLoadingProjectMemberStats } = useGetProjectMemberStats({
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
+  const { priorityStats, isLoadingPriorityStats } = useGetProjectPriorityStats({
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
 
   const [startDateFilter] = useQueryState('tasks_startDate', parseAsArrayOf(parseAsString))
   const [endDateFilter] = useQueryState('tasks_endDate', parseAsArrayOf(parseAsString))
@@ -90,7 +105,7 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
   const isWatchingTask = isWatchingTaskFilter ?? undefined
 
   const { tasks, isLoadingTasks } = useGetTasks({
-    parentMilestoneId,
+    parentMilestoneIdentifier,
     pageIndex: page,
     pageSize: limit,
     sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy.toLowerCase()}` : sortBy.toLowerCase()) : undefined,
@@ -185,14 +200,17 @@ export default function ProjectTable({ projectId, parentMilestoneId }: ProjectTa
     <div className='pb-24'>
       <DataTable table={table} isLoading={isLoading}>
         <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-          <AddTaskPopover projectId={projectId} parentMilestoneId={parentMilestoneId}>
+          <AddTaskPopover projectIdentifier={projectIdentifier} parentMilestoneIdentifier={parentMilestoneIdentifier}>
             <Button size='sm'>
               <PlusCircleIcon />
               {t('task.table.addCard')}
             </Button>
           </AddTaskPopover>
 
-          <AddMilestonePopover projectId={projectId} parentId={parentMilestoneId}>
+          <AddMilestonePopover
+            projectIdentifier={projectIdentifier}
+            parentMilestoneIdentifier={parentMilestoneIdentifier}
+          >
             <Button size='sm'>
               <PlusCircleIcon />
               {t('task.table.addList')}

@@ -6,7 +6,7 @@ import { updateMilestoneSchema } from '@/features/milestones/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
-import type { Milestone, MilestoneTabDragData } from '@/types/milestone.type'
+import type { MilestoneTabDragData, ParentMilestone } from '@/types/milestone.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { XIcon } from 'lucide-react'
@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 
 interface SortableMilestoneTabProps {
-  milestone: Milestone
+  milestone: ParentMilestone
   isActive: boolean
   queryKey: unknown[]
   onDeleteSuccess?: () => void
@@ -59,7 +59,7 @@ export const SortableMilestoneTab = ({
     data: {
       type: 'MilestoneTab',
       milestone
-    } satisfies MilestoneTabDragData,
+    } as MilestoneTabDragData,
     attributes: {
       roleDescription: 'MilestoneTab'
     }
@@ -100,7 +100,7 @@ export const SortableMilestoneTab = ({
       asChild
       {...attributes}
       {...listeners}
-      value={milestone.id}
+      value={milestone.slug}
       className='inline-flex items-center data-[state=active]:bg-transparent justify-center whitespace-nowrap p-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative h-9 rounded-none border-b-2 border-b-transparent font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none'
     >
       <div

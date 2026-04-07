@@ -11,11 +11,11 @@ type CacheData = BasePaginationResponse<ParentMilestone> | MilestoneWithTasks
 export const useUpdateMilestone = ({
   shouldInvalidate,
   queryKey,
-  parentMilestoneId
+  parentMilestoneIdentifier
 }: {
   shouldInvalidate?: boolean
   queryKey?: readonly unknown[]
-  parentMilestoneId?: string
+  parentMilestoneIdentifier?: string
 } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
@@ -75,8 +75,8 @@ export const useUpdateMilestone = ({
         queryClient.invalidateQueries({ queryKey })
       }
 
-      if (parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
       }
     }
   })

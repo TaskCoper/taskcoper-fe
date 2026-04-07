@@ -8,11 +8,15 @@ import { toast } from 'sonner'
 
 interface UseDeleteTaskLabelProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export const useDeleteTaskLabel = ({ taskId, projectId, parentMilestoneId }: UseDeleteTaskLabelProps) => {
+export const useDeleteTaskLabel = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseDeleteTaskLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -50,10 +54,14 @@ export const useDeleteTaskLabel = ({ taskId, projectId, parentMilestoneId }: Use
         queryKey: queryKeys.tasks.detail(taskId)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStats(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.labelStats(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
     }
   })
 

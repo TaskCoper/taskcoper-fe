@@ -13,16 +13,21 @@ import { useGetProjectLabels } from './use-get-project-labels'
 
 interface UseAddTaskLabelProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   enabled?: boolean
 }
 
-export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled = true }: UseAddTaskLabelProps) => {
+export const useAddTaskLabel = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  enabled = true
+}: UseAddTaskLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
-  const { labels } = useGetProjectLabels({ projectId, enabled })
+  const { labels } = useGetProjectLabels({ projectIdentifier, enabled })
 
   const methods = useForm<AddTaskLabelFormValues>({
     resolver: zodResolver(addTaskLabelSchema)
@@ -72,10 +77,14 @@ export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled 
         queryKey: queryKeys.tasks.detail(taskId)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStats(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.labelStats(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
     }
   })
 

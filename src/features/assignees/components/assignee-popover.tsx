@@ -15,9 +15,9 @@ import { useUnassignMember } from '../hooks/use-unassign-member'
 
 interface AssigneePopoverProps {
   children: React.ReactNode
-  projectId: string
+  projectIdentifier: string
   taskId: string
-  parentMilestoneId: string
+  parentMilestoneIdentifier: string
 }
 
 // display project members and task members
@@ -25,7 +25,12 @@ interface AssigneePopoverProps {
 // when user is searching the assigned members still appear in the result but with a remove button
 // if all projects members are assigned then the project members section will not be displayed
 
-export default function AssigneePopover({ children, projectId, taskId, parentMilestoneId }: AssigneePopoverProps) {
+export default function AssigneePopover({
+  children,
+  projectIdentifier,
+  taskId,
+  parentMilestoneIdentifier
+}: AssigneePopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
@@ -33,13 +38,17 @@ export default function AssigneePopover({ children, projectId, taskId, parentMil
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
 
   const { members, isLoadingMembers } = useGetProjectMembers({
-    projectId,
+    identifier: projectIdentifier,
     searchTerm: debouncedSearchTerm ? debouncedSearchTerm : undefined
   })
   const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId })
 
-  const { assignMember, isAssigningMember } = useAssignMember({ taskId, projectId, parentMilestoneId })
-  const { unassignMember, isUnassigningMember } = useUnassignMember({ taskId, projectId, parentMilestoneId })
+  const { assignMember, isAssigningMember } = useAssignMember({ taskId, projectIdentifier, parentMilestoneIdentifier })
+  const { unassignMember, isUnassigningMember } = useUnassignMember({
+    taskId,
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
 
   const actualTaskMembers = useMemo(
     () => taskMembers?.value.items.filter((m) => m.isMemberInTask) ?? [],

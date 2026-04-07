@@ -4,15 +4,15 @@ import { useUpdateTaskStatus } from '../../hooks/use-update-task-status'
 
 interface StatusCellProps {
   row: TaskRow
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function StatusCell({ row, projectId, parentMilestoneId }: StatusCellProps) {
+export default function StatusCell({ row, projectIdentifier, parentMilestoneIdentifier }: StatusCellProps) {
   const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
     taskId: row.id,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   return (

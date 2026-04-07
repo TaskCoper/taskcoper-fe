@@ -8,11 +8,11 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface UseToggleWatchTaskParams {
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  milestoneIdentifier?: string
 }
 
-export const useToggleWatchTask = ({ projectId, parentMilestoneId }: UseToggleWatchTaskParams = {}) => {
+export const useToggleWatchTask = ({ projectIdentifier, milestoneIdentifier }: UseToggleWatchTaskParams = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -78,11 +78,13 @@ export const useToggleWatchTask = ({ projectId, parentMilestoneId }: UseToggleWa
     onSettled: (_data, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.members(variables.taskId) })
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, milestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
     }
   })

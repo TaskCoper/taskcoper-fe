@@ -70,44 +70,45 @@ export const queryKeys = {
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const
     },
     parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
-    labels: (projectId?: string) => ['project-labels', projectId],
-    labelStatsAll: (projectId: string) => ['project-label-stats', projectId],
-    labelStats: (projectId: string, parentMilestoneId?: string) => [
-      ...queryKeys.projects.labelStatsAll(projectId),
+    labels: (projectIdentifier?: string) => ['project-labels', projectIdentifier],
+    labelStatsAll: (projectIdentifier: string) => ['project-label-stats', projectIdentifier],
+    labelStats: (projectIdentifier: string, parentMilestoneId?: string) => [
+      ...queryKeys.projects.labelStatsAll(projectIdentifier),
       parentMilestoneId
     ],
-    taskStatusStats: (projectId: string, parentMilestoneId?: string) => [
+    taskStatusStats: (projectIdentifier: string, parentMilestoneIdentifier?: string) => [
       'project-task-status-stats',
-      projectId,
-      parentMilestoneId
+      projectIdentifier,
+      parentMilestoneIdentifier
     ],
-    memberStats: (projectId: string, parentMilestoneId?: string) => [
+    memberStats: (projectIdentifier: string, parentMilestoneId?: string) => [
       'project-member-stats',
-      projectId,
+      projectIdentifier,
       parentMilestoneId
     ],
     resourceStats: (projectId?: string) => ['project-resource-stats', projectId] as const,
     mimeTypeStats: (projectId?: string) => ['project-mime-type-stats', projectId] as const,
     resourceMemberStats: (projectId?: string) => ['project-resource-member-stats', projectId] as const,
-    priorityStats: (projectId?: string, parentMilestoneId?: string) => [
+    priorityStats: (identifier?: string, milestoneIdentifier?: string) => [
       'project-priority-stats',
-      projectId,
-      parentMilestoneId
+      identifier,
+      milestoneIdentifier
     ]
   },
   // Milestones
   milestones: {
     all: ['milestones'] as const,
-    byParent: (projectId?: string, parentMilestoneId?: string) => ['milestones', projectId, parentMilestoneId] as const,
+    byParent: (identifier?: string, parentMilestoneIdentifier?: string) =>
+      ['milestones', identifier, parentMilestoneIdentifier] as const,
     tasks: (milestoneId?: string) => ['milestones-tasks', milestoneId] as const,
-    childMilestones: (parentMilestoneId?: string) => ['child-milestones', parentMilestoneId] as const,
-    stats: (parentMilestoneId?: string) => ['milestone-stats', parentMilestoneId] as const
+    childMilestones: (parentMilestoneIdentifier?: string) => ['child-milestones', parentMilestoneIdentifier] as const,
+    stats: (parentMilestoneIdentifier?: string) => ['milestone-stats', parentMilestoneIdentifier] as const
   },
   // Tasks
   tasks: {
     all: ['tasks'] as const,
     list: ({
-      parentMilestoneId,
+      parentMilestoneIdentifier,
       pageIndex,
       pageSize,
       sortBy,
@@ -122,7 +123,7 @@ export const queryKeys = {
       isWatchingTask
     }: UseGetTasksParams) =>
       [
-        ...queryKeys.tasks.listParent(parentMilestoneId),
+        ...queryKeys.tasks.listParent(parentMilestoneIdentifier),
         pageIndex,
         pageSize,
         sortBy,
@@ -136,10 +137,10 @@ export const queryKeys = {
         priorities,
         isWatchingTask
       ] as const,
-    listParent: (parentMilestoneId?: string) => [...queryKeys.tasks.all, parentMilestoneId] as const,
+    listParent: (parentMilestoneIdentifier?: string) => [...queryKeys.tasks.all, parentMilestoneIdentifier] as const,
     detail: (taskId?: string) => ['task', taskId] as const,
     members: (taskId?: string) => ['taskMembers', taskId] as const,
-    myAssigned: (projectId?: string, userId?: string) => ['my-assigned-tasks', projectId, userId] as const
+    myAssigned: (identifier?: string, userId?: string) => ['my-assigned-tasks', identifier, userId] as const
   },
   // Subtasks
   subtasks: {

@@ -12,12 +12,16 @@ import { toast } from 'sonner'
 import { updateProjectLabelSchema, type UpdateProjectLabelFormValues } from '../validations'
 
 interface UpdateProjectLabelProps {
-  projectId: string
+  projectIdentifier: string
   taskId: string
-  parentMilestoneId: string
+  parentMilestoneIdentifier: string
 }
 
-export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: UpdateProjectLabelProps) => {
+export const useUpdateProjectLabel = ({
+  projectIdentifier,
+  taskId,
+  parentMilestoneIdentifier
+}: UpdateProjectLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -34,7 +38,7 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
   const { mutate: updateProjectLabel, isPending: isUpdatingProjectLabel } = useMutation({
     mutationFn: projectService.updateLabel,
     onMutate: async ({ body }) => {
-      const queryKey = ['project-labels', projectId]
+      const queryKey = ['project-labels', projectIdentifier]
       await queryClient.cancelQueries({ queryKey })
 
       const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
@@ -73,7 +77,7 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
     },
     onError: (error, _variables, context) => {
       if (context?.previousLabels) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousLabels)
+        queryClient.setQueryData(queryKeys.projects.labels(projectIdentifier), context.previousLabels)
       }
 
       if (context?.previousTask) {
@@ -88,11 +92,13 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
       queryClient.invalidateQueries({
         queryKey: queryKeys.tasks.detail(taskId)
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })
 

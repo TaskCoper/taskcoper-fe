@@ -12,17 +12,17 @@ import { addTaskSchema, type AddTaskFormValues } from '../validations'
 
 export const useAddTask = ({
   milestoneId: initialMilestoneId,
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: {
   milestoneId?: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const [isTriggered, setIsTriggered] = useState(false)
-  const { milestones } = useGetMilestones({ projectId, parentMilestoneId, enabled: isTriggered })
+  const { milestones } = useGetMilestones({ projectIdentifier, parentMilestoneIdentifier, enabled: isTriggered })
 
   const methods = useForm<AddTaskFormValues>({
     defaultValues: {
@@ -66,9 +66,12 @@ export const useAddTask = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(milestoneId) })
     }
   })

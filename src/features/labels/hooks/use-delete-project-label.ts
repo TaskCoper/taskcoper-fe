@@ -10,11 +10,15 @@ import { toast } from 'sonner'
 
 interface UseDeleteProjectLabelProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: UseDeleteProjectLabelProps) => {
+export const useDeleteProjectLabel = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseDeleteProjectLabelProps) => {
   const queryClient = useQueryClient()
   const { user } = useAuthStore()
   const { t } = useTranslation()
@@ -22,15 +26,15 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
   const { mutate: deleteProjectLabel, isPending: isDeletingProjectLabel } = useMutation({
     mutationFn: projectService.deleteLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projects.labels(projectId) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
 
       const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(
-        queryKeys.projects.labels(projectId)
+        queryKeys.projects.labels(projectIdentifier)
       )
       const previousTask = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskId))
 
       if (previousLabels) {
-        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectId), (old) => {
+        queryClient.setQueryData<BasePaginationResponse<Label>>(queryKeys.projects.labels(projectIdentifier), (old) => {
           if (!old) return old
 
           return {
@@ -58,7 +62,7 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
     },
     onError: (error, _variables, context) => {
       if (context?.previousLabels) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousLabels)
+        queryClient.setQueryData(queryKeys.projects.labels(projectIdentifier), context.previousLabels)
       }
 
       if (context?.previousTask) {
@@ -73,11 +77,13 @@ export const useDeleteProjectLabel = ({ taskId, projectId, parentMilestoneId }: 
       queryClient.invalidateQueries({
         queryKey: queryKeys.tasks.detail(taskId)
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })
 

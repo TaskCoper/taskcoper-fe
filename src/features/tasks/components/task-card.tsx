@@ -46,12 +46,12 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
   const navigate = useNavigate()
 
   const { user } = useAuthStore()
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const { areLabelsExpanded, toggleLabelsExpanded } = useTaskUIStore()
   const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
     taskId: task.id,
-    projectId,
-    parentMilestoneId: milestoneId
+    projectIdentifier: identifier,
+    parentMilestoneIdentifier: milestoneIdentifier
   })
 
   const isWatchingTask = task.members.find((x) => !x.isMemberInTask && x.userId === user?.UserId) !== undefined
@@ -77,7 +77,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(({ task, dragging, st
   }
 
   const handleCardClick = () => {
-    navigate(`${location.pathname}/tasks/${task.id}`)
+    navigate(`${location.pathname}/tasks/${task.slug}`)
   }
 
   return (

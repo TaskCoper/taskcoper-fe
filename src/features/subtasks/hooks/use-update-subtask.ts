@@ -14,8 +14,8 @@ import { type UpdateSubtaskFormValues, updateSubtaskSchema } from '../validation
 
 interface UpdateSubtaskProps {
   taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  identifier?: string
+  milestoneIdentifier?: string
 }
 
 interface UpdateSubtaskVariables {
@@ -26,7 +26,7 @@ interface UpdateSubtaskVariables {
 }
 
 // TODO: when update subtask at assigned tasks section but not in the parent milestone tab of that task, the UI will not be updated accordingly
-export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: UpdateSubtaskProps = {}) => {
+export const useUpdateSubtask = ({ taskId, identifier, milestoneIdentifier }: UpdateSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -131,15 +131,15 @@ export const useUpdateSubtask = ({ taskId, projectId, parentMilestoneId }: Updat
         queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        if (identifier) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (identifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.UserId) })
       }
     }
   })

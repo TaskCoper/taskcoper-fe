@@ -12,16 +12,21 @@ import UploadAttachmentForm from './upload-attachment-form'
 interface AttachmentPopoverProps {
   children: React.ReactNode
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function AttachmentPopover({ children, taskId, projectId, parentMilestoneId }: AttachmentPopoverProps) {
+export default function AttachmentPopover({
+  children,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: AttachmentPopoverProps) {
   const { t } = useTranslation()
   const { methods, uploadAttachment, isUploadingAttachment, open, setOpen, recalculatePosition } = useUploadAttachment({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const onSubmit: SubmitHandler<UploadAttachmentFormValues> = (body) => {
@@ -83,8 +88,8 @@ export default function AttachmentPopover({ children, taskId, projectId, parentM
             <form className='flex flex-col' onSubmit={methods.handleSubmit(onSubmit)}>
               <UploadAttachmentForm
                 taskId={taskId}
-                projectId={projectId}
-                parentMilestoneId={parentMilestoneId}
+                projectIdentifier={projectIdentifier}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
                 onUploadComplete={onClose}
               />
 

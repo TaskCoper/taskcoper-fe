@@ -33,14 +33,14 @@ import { getTaskPriorityIcon } from '../../constants'
 import StatusCell from './status-cell'
 
 export const getColumns = ({
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   onDeleteTask,
   userId,
   searchParams
 }: {
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   onDeleteTask: (taskId: string, taskName: string) => void
   userId?: string
   searchParams?: string
@@ -102,7 +102,13 @@ export const getColumns = ({
         variant: 'radio'
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.status' className='mx-auto' />,
-      cell: ({ row }) => <StatusCell row={row.original} projectId={projectId} parentMilestoneId={parentMilestoneId} />,
+      cell: ({ row }) => (
+        <StatusCell
+          row={row.original}
+          projectIdentifier={projectIdentifier}
+          parentMilestoneIdentifier={parentMilestoneIdentifier}
+        />
+      ),
       enableColumnFilter: true,
       enableSorting: false,
       enableHiding: true,
@@ -370,7 +376,7 @@ export const getColumns = ({
               <DropdownMenuItem
                 onClick={async () => {
                   const baseUrl = window.location.origin
-                  const taskUrl = `${baseUrl}/projects/${projectId}/milestones/${parentMilestoneId}/tasks/${id}?mode=table`
+                  const taskUrl = `${baseUrl}/projects/${projectIdentifier}/milestones/${parentMilestoneIdentifier}/tasks/${id}?mode=table`
 
                   try {
                     await navigator.clipboard.writeText(taskUrl)

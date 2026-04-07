@@ -118,7 +118,7 @@ export default function ProjectDetailLayout() {
       const targetMilestone = items[targetIndex]
 
       if (targetMilestone) {
-        handleTabChange(targetMilestone.id)
+        handleTabChange(targetMilestone.slug)
       }
     },
     [items, handleTabChange, identifier, removeLastActiveMilestone, navigate]
@@ -219,7 +219,7 @@ export default function ProjectDetailLayout() {
                               <SortableMilestoneTab
                                 key={milestone.id}
                                 milestone={milestone}
-                                isActive={activeTabValue === milestone.id}
+                                isActive={activeTabValue === milestone.slug}
                                 queryKey={queryKey}
                                 onDeleteSuccess={createDeleteHandler(milestone.id)}
                                 canDelete={items.length > 1}

@@ -6,13 +6,18 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface UseDeleteTaskProps {
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
   milestoneId?: string
   onDeleteSuccess?: () => void
 }
 
-export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess }: UseDeleteTaskProps) => {
+export const useDeleteTask = ({
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  milestoneId,
+  onDeleteSuccess
+}: UseDeleteTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -29,17 +34,21 @@ export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDel
       onDeleteSuccess?.()
     },
     onSettled: () => {
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       }
 
       if (milestoneId) {

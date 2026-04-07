@@ -16,26 +16,26 @@ interface AttachmentMenuProps {
   children: React.ReactNode
   attachment: Attachment
   taskId: string
-  parentMilestoneId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
 export default function AttachmentMenu({
   children,
   attachment,
   taskId,
-  parentMilestoneId,
-  projectId
+  parentMilestoneIdentifier,
+  projectIdentifier
 }: AttachmentMenuProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment({ projectId })
+  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment({ projectIdentifier })
   const { deleteAttachment, isDeletingAttachment } = useDeleteAttachment({
-    parentMilestoneId,
-    projectId
+    parentMilestoneIdentifier,
+    projectIdentifier
   })
 
   const onSubmit: SubmitHandler<UpdateAttachmentFormValues> = (body) => {
