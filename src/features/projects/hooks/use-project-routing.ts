@@ -4,12 +4,12 @@ import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 interface UseProjectRoutingProps {
-  projectId?: string
+  identifier?: string
   items: ParentMilestone[]
   isLoading: boolean
 }
 
-export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRoutingProps) => {
+export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRoutingProps) => {
   const location = useLocation()
   const navigate = useNavigate()
   const { getLastActiveMilestone, setLastActiveMilestone } = useMilestonePreferencesStore()
@@ -24,7 +24,7 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
   }, [location.pathname])
 
   const isProjectRoot =
-    location.pathname === `/projects/${projectId}` || location.pathname === `/projects/${projectId}/`
+    location.pathname === `/projects/${identifier}` || location.pathname === `/projects/${identifier}/`
 
   const isMilestonesRoot = location.pathname.endsWith('/milestones') || location.pathname.endsWith('/milestones/')
 
@@ -33,16 +33,16 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
   const activeTabValue = currentMilestoneId || items[0]?.id || ''
 
   const handleTabChange = (milestoneId: string) => {
-    if (projectId) {
-      setLastActiveMilestone(projectId, milestoneId)
+    if (identifier) {
+      setLastActiveMilestone(identifier, milestoneId)
     }
     navigate({ pathname: `milestones/${milestoneId}`, search: window.location.search }, { replace: true })
   }
 
   // Auto-navigate to saved milestone or first milestone when landing on project or milestones root
   useEffect(() => {
-    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot) && projectId) {
-      const savedMilestoneId = getLastActiveMilestone(projectId)
+    if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot) && identifier) {
+      const savedMilestoneId = getLastActiveMilestone(identifier)
       const milestoneExists = savedMilestoneId && items.some((item) => item.id === savedMilestoneId)
 
       // Use saved milestone if it exists, otherwise fall back to first milestone
@@ -50,7 +50,7 @@ export const useProjectRouting = ({ projectId, items, isLoading }: UseProjectRou
 
       navigate({ pathname: `milestones/${targetMilestoneId}`, search: window.location.search }, { replace: true })
     }
-  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, projectId, getLastActiveMilestone])
+  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, identifier, getLastActiveMilestone])
 
   return {
     activeSegment,

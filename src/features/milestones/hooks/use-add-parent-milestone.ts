@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { addParentMilestoneSchema, type AddParentMilestoneFormValues } from '../validations'
 
-export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
+export const useAddParentMilestone = ({ identifier }: { identifier: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const { parentMilestones } = useGetParentMilestones({ projectId })
+  const { parentMilestones } = useGetParentMilestones({ identifier })
 
   const existingParentMilestones = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])
   const calculatedPosition = useMemo(
@@ -25,7 +25,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
   const methods = useForm<AddParentMilestoneFormValues>({
     defaultValues: {
       milestoneName: '',
-      projectId,
+      projectIdentifier: identifier,
       position: calculatedPosition
     },
     resolver: zodResolver(addParentMilestoneSchema(t))
@@ -45,7 +45,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
       const newPosition = calculateNewItemPosition(existingParentMilestones)
       methods.reset({
         milestoneName: '',
-        projectId,
+        projectIdentifier: identifier,
         position: newPosition
       })
       setOpen(false)
@@ -56,7 +56,7 @@ export const useAddParentMilestone = ({ projectId }: { projectId: string }) => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.parentMilestones(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.parentMilestones(identifier) })
     }
   })
 

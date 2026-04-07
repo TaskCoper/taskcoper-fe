@@ -9,7 +9,7 @@ export const addParentMilestoneSchema = (t: TFunction) => {
         .trim()
         .min(1, t('milestone.validation.milestoneName.minLength'))
         .max(255, t('milestone.validation.milestoneName.maxLength')),
-      projectId: z.uuid(t('milestone.validation.projectId.invalid')),
+      projectIdentifier: z.string(),
       position: z.number({ message: t('milestone.validation.position.invalid') })
     })
     .strict()

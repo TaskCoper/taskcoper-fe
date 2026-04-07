@@ -9,6 +9,7 @@ export interface ProjectPreview {
   logoImage: string | null
   teamSize: string | null
   schoolSubject: string | null
+  slug: string
 }
 
 export interface ProjectMember {

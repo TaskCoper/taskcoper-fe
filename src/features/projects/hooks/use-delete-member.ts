@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useDeleteMember = ({ projectId }: { projectId: string }) => {
+export const useDeleteMember = ({ identifier }: { identifier: string }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
 
@@ -19,7 +19,7 @@ export const useDeleteMember = ({ projectId }: { projectId: string }) => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(identifier) })
     }
   })
 

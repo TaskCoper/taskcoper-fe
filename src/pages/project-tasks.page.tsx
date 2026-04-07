@@ -14,14 +14,17 @@ import { Outlet, useParams } from 'react-router'
 export default function ProjectTasksPage() {
   const { t } = useTranslation()
   const [mode, setMode] = useQueryState('mode', parseAsStringEnum(['board', 'table']).withDefault('board'))
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+
+  const { identifier, milestoneId } = useParams<{ identifier: string; milestoneId: string }>()
+
+  const { project } = useGetProject({
+    identifier
+  })
+
   const { milestones, isLoadingMilestones } = useGetMilestones({
-    projectId,
+    projectId: project?.id,
     parentMilestoneId: milestoneId,
     enabled: mode === 'board'
-  })
-  const { project } = useGetProject({
-    projectId
   })
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export default function ProjectTasksPage() {
   return (
     <>
       <div className='w-full h-full relative'>
-        {mode === 'board' && milestoneId && projectId ? (
+        {mode === 'board' && milestoneId && project?.id ? (
           <div className='w-full h-full bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
             {isLoadingMilestones ? (
               <div className='flex items-start gap-3 p-4'>
@@ -47,9 +50,9 @@ export default function ProjectTasksPage() {
           </div>
         ) : null}
 
-        {mode === 'table' && milestoneId && projectId ? (
+        {mode === 'table' && milestoneId && project?.id ? (
           <div className='w-full h-full p-4'>
-            <ProjectTable projectId={projectId} parentMilestoneId={milestoneId} />
+            <ProjectTable projectId={project.id} parentMilestoneId={milestoneId} />
           </div>
         ) : null}
 

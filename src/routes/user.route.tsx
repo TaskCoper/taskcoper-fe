@@ -162,7 +162,7 @@ export const userRoutes: RouteObject[] = [
                 ]
               },
               {
-                path: 'projects/:projectId',
+                path: 'projects/:identifier',
                 element: <ProjectDetailLayout />,
                 children: [
                   {

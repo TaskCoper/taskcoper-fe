@@ -91,10 +91,10 @@ class ProjectService {
     return data.value
   }
 
-  getParentMilestones = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getParentMilestones = async ({ identifier }: { identifier?: string }) => {
+    if (!identifier) return null
     const { data } = await api.get<BasePaginationResponse<ParentMilestone>>(
-      `/v1/${this.baseUrl}/${projectId}/milestones/parents`
+      `/v1/${this.baseUrl}/${identifier}/milestones/parents`
     )
 
     return data
@@ -110,14 +110,14 @@ class ProjectService {
   }
 
   getProjectMembers = async ({
-    projectId,
+    identifier,
     searchTerm,
     pageIndex,
     pageSize,
     excludeIds
   }: UseGetProjectMembersParams) => {
-    if (!projectId) return getDefaultPaginationResponse<ProjectMember>()
-    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+    if (!identifier) return getDefaultPaginationResponse<ProjectMember>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${identifier}/members`, {
       params: {
         searchTerm,
         pageIndex,
@@ -129,9 +129,9 @@ class ProjectService {
     return data
   }
 
-  getProject = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${projectId}`)
+  getProject = async ({ identifier }: { identifier?: string }) => {
+    if (!identifier) return null
+    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data.value
   }
@@ -167,9 +167,17 @@ class ProjectService {
     return data.value
   }
 
-  toggleEditor = async ({ projectId, userId, isEditor }: { projectId: string; userId: string; isEditor: boolean }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
-      projectId,
+  toggleEditor = async ({
+    identifier,
+    userId,
+    isEditor
+  }: {
+    identifier: string
+    userId: string
+    isEditor: boolean
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
+      identifier,
       userId,
       isEditor
     })
@@ -177,10 +185,10 @@ class ProjectService {
     return data.value
   }
 
-  deleteMember = async ({ projectId, userId }: { projectId: string; userId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+  deleteMember = async ({ identifier, userId }: { identifier: string; userId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
       data: {
-        projectId,
+        identifier,
         userId
       }
     })

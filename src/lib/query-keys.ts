@@ -63,13 +63,13 @@ export const queryKeys = {
       [...queryKeys.projects.allMy, userId, status, searchTerm, pageIndex, pageSize] as const,
     listMyInfinite: (userId?: string, status?: string[], searchTerm?: string, pageSize?: number) =>
       [...queryKeys.projects.allMy, 'infinite', userId, status, searchTerm, pageSize] as const,
-    detail: (projectId?: string) => ['project', projectId] as const,
+    detail: (identifier?: string) => ['project', identifier] as const,
     members: {
-      all: (projectId?: string) => ['members', projectId] as const,
-      list: ({ projectId, searchTerm, pageIndex, pageSize, excludeIds }: UseGetProjectMembersParams) =>
-        [...queryKeys.projects.members.all(projectId), searchTerm, pageIndex, pageSize, excludeIds] as const
+      all: (identifier?: string) => ['members', identifier] as const,
+      list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: UseGetProjectMembersParams) =>
+        [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const
     },
-    parentMilestones: (projectId?: string) => ['parent-milestones', projectId] as const,
+    parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
     labels: (projectId?: string) => ['project-labels', projectId],
     labelStatsAll: (projectId: string) => ['project-label-stats', projectId],
     labelStats: (projectId: string, parentMilestoneId?: string) => [
