@@ -211,7 +211,7 @@ export interface RevenueStats {
 
 // APIs
 export interface InviteMembersPayload {
-  projectId: string
+  projectIdentifier: string
   inviteMembers: {
     email: string
     isEditor: boolean

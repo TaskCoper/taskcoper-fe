@@ -137,7 +137,7 @@ class ProjectService {
   }
 
   inviteMembers = async ({ body }: { body: InviteMembersPayload }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/invite`, body)
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/invite`, body)
 
     return data.value
   }

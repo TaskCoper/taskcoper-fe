@@ -295,7 +295,7 @@ export default function ProjectInfoPage() {
               <ProjectMembersSection
                 members={members?.value.items ?? []}
                 totalMembers={members?.value.items.length ?? 0}
-                projectId={project?.id}
+                projectIdentifier={project?.slug}
                 isCurrentUserMain={isCurrentUserMain}
               />
             </div>

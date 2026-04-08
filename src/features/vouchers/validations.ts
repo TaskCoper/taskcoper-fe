@@ -31,7 +31,7 @@ export const createVoucherSchema = (t: TFunction) => {
     })
     .superRefine((data, ctx) => {
       // Validate discount value based on type
-      if (data.discountType === DiscountType.PERCENTAGE && data.discountValue > 100) {
+      if (data.discountType === DiscountType.Percentage && data.discountValue > 100) {
         ctx.addIssue({
           code: 'custom',
           message: t('voucher.validation.discountPercentMax'),
@@ -49,7 +49,7 @@ export const createVoucherSchema = (t: TFunction) => {
       }
 
       // Validate targets if scope is specific
-      if (data.scope === Scope.SPECIFIC_TARGETS && (!data.targets || data.targets.length === 0)) {
+      if (data.scope === Scope.SpecificTargets && (!data.targets || data.targets.length === 0)) {
         ctx.addIssue({
           code: 'custom',
           message: t('voucher.validation.targetsRequired'),

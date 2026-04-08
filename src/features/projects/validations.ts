@@ -49,7 +49,7 @@ export const domainSchema = (t: TFunction) => {
 export const inviteMembersSchema = (t: TFunction) => {
   return z
     .object({
-      projectId: z.uuid(t('project.inviteMembers.validation.projectId.invalid')),
+      projectIdentifier: z.string(),
       hasExpiration: z.boolean(),
       expirationDate: z.iso.datetime().nullable(),
       inviteMembers: z.array(memberSchema(t)).min(1, t('project.inviteMembers.validation.inviteMembers.minLength'))
