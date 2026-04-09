@@ -29,6 +29,7 @@ import type {
   ProjectMember,
   ProjectMemberStats,
   ProjectMimeTypeStats,
+  ProjectPermission,
   ProjectPreview,
   ProjectPriorityStats,
   ProjectResource,
@@ -489,6 +490,15 @@ class ProjectService {
   }) => {
     const { data } = await api.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels/${labelId}`
+    )
+
+    return data.value
+  }
+
+  getMyProjectPermissions = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BaseResponse<ProjectPermission>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/permissions/me`
     )
 
     return data.value

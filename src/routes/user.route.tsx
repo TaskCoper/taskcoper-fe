@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
+import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
@@ -170,74 +171,119 @@ export const userRoutes: RouteObject[] = [
                     element: null
                   },
                   {
-                    path: 'milestones',
-                    element: null
-                  },
-                  {
-                    path: 'revenue',
-                    element: <ProjectRevenuePage />
-                  },
-                  {
-                    path: 'milestones/:milestoneIdentifier',
-                    element: <ProjectTasksPage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='TASKS' />,
                     children: [
                       {
-                        path: 'tasks/:taskIdentifier',
-                        element: <TaskDialogPage />
+                        path: 'milestones',
+                        element: null
+                      },
+                      {
+                        path: 'milestones/:milestoneIdentifier',
+                        element: <ProjectTasksPage />,
+                        children: [
+                          {
+                            path: 'tasks/:taskIdentifier',
+                            element: <TaskDialogPage />
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    path: 'info',
-                    element: <ProjectInfoPage />
-                  },
-                  {
-                    path: 'calendar',
-                    element: <ProjectCalendarPage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='REVENUE' />,
                     children: [
                       {
-                        path: 'meetings/:meetingId',
-                        element: <MeetingDialogPage />
+                        path: 'revenue',
+                        element: <ProjectRevenuePage />
                       }
                     ]
                   },
                   {
-                    path: 'performance',
-                    element: <ProjectPerformancePage />
-                  },
-                  {
-                    path: 'chat',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Chat Comming Soon</p>
-                      </div>
-                    )
-                  },
-                  {
-                    path: 'note',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Note Comming Soon</p>
-                      </div>
-                    )
-                  },
-                  {
-                    path: 'storage',
-                    element: <ProjectStoragePage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='OVERVIEW' />,
                     children: [
                       {
-                        path: ':milestoneId/tasks/:taskId',
-                        element: <TaskDialogPage />
+                        path: 'info',
+                        element: <ProjectInfoPage />
                       }
                     ]
                   },
                   {
-                    path: 'settings',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Settings Comming Soon</p>
-                      </div>
-                    )
+                    element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
+                    children: [
+                      {
+                        path: 'calendar',
+                        element: <ProjectCalendarPage />,
+                        children: [
+                          {
+                            path: 'meetings/:meetingId',
+                            element: <MeetingDialogPage />
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
+                    children: [
+                      {
+                        path: 'performance',
+                        element: <ProjectPerformancePage />
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
+                    children: [
+                      {
+                        path: 'chat',
+                        element: (
+                          <div className='w-full h-full flex justify-center items-center'>
+                            <p className='text-2xl font-bold'>Chat Comming Soon</p>
+                          </div>
+                        )
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
+                    children: [
+                      {
+                        path: 'note',
+                        element: (
+                          <div className='w-full h-full flex justify-center items-center'>
+                            <p className='text-2xl font-bold'>Note Comming Soon</p>
+                          </div>
+                        )
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
+                    children: [
+                      {
+                        path: 'storage',
+                        element: <ProjectStoragePage />,
+                        children: [
+                          {
+                            path: ':milestoneId/tasks/:taskId',
+                            element: <TaskDialogPage />
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='SETTINGS' />,
+                    children: [
+                      {
+                        path: 'settings',
+                        element: (
+                          <div className='w-full h-full flex justify-center items-center'>
+                            <p className='text-2xl font-bold'>Settings Comming Soon</p>
+                          </div>
+                        )
+                      }
+                    ]
                   }
                 ]
               },

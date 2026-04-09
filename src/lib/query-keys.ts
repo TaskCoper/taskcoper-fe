@@ -93,7 +93,8 @@ export const queryKeys = {
       'project-priority-stats',
       identifier,
       milestoneIdentifier
-    ]
+    ],
+    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const
   },
   // Milestones
   milestones: {
