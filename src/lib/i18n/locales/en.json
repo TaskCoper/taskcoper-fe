@@ -846,6 +846,9 @@
     },
     "moveTask": {
       "title": "Move task",
+      "tabLabel": "Tab",
+      "milestoneLabel": "Milestone",
+      "positionLabel": "Position",
       "selectMilestone": "Select milestone",
       "selectPosition": "Select position",
       "move": "Move"

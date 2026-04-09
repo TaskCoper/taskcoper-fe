@@ -29,7 +29,7 @@ import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
 import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
 import DatePopover from '@/features/tasks/components/date-popover'
-import MoveTaskPopover from '@/features/tasks/components/move-task-popover'
+import MoveTaskPopoverV2 from '@/features/tasks/components/move-task-popover-v2'
 import PriorityPopover from '@/features/tasks/components/priority-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
@@ -336,7 +336,7 @@ export default function TaskDialogPage() {
               task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
             )}
           >
-            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
+            {/* {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
               <MoveTaskPopover
                 taskIdentifier={task.taskSlug}
                 projectIdentifier={identifier}
@@ -349,6 +349,21 @@ export default function TaskDialogPage() {
                   <ChevronDownIcon />
                 </Button>
               </MoveTaskPopover>
+            ) : null} */}
+
+            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
+              <MoveTaskPopoverV2
+                projectIdentifier={identifier}
+                taskIdentifier={task.taskSlug}
+                taskId={task.taskId}
+                taskParentMilestoneSlug={task.parentMilestoneSlug}
+                taskMilestoneId={task.milestoneId}
+              >
+                <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                  {task?.milestoneName}
+                  <ChevronDownIcon />
+                </Button>
+              </MoveTaskPopoverV2>
             ) : null}
 
             <div className='flex items-center gap-1'>

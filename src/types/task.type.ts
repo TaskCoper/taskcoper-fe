@@ -39,6 +39,9 @@ export interface TaskDetail {
   taskName: string
   milestoneId: string
   milestoneName: string
+  milestoneSlug: string
+  parentMilestoneId: string
+  parentMilestoneSlug: string
   taskDescription: string | null
   taskPosition: number
   priority: TaskPriority | null

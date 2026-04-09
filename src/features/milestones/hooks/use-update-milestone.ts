@@ -82,6 +82,7 @@ export const useUpdateMilestone = ({
       if (parentMilestoneIdentifier) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
       }
 
       if (projectIdentifier) {

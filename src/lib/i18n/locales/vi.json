@@ -846,6 +846,9 @@
     },
     "moveTask": {
       "title": "Di chuyển thẻ",
+      "tabLabel": "Tab",
+      "milestoneLabel": "Milestone",
+      "positionLabel": "Vị trí",
       "selectMilestone": "Chọn danh sách",
       "selectPosition": "Chọn vị trí",
       "move": "Di chuyển"
