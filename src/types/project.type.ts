@@ -9,6 +9,7 @@ export interface ProjectPreview {
   logoImage: string | null
   teamSize: string | null
   schoolSubject: string | null
+  slug: string
 }
 
 export interface ProjectMember {
@@ -25,6 +26,7 @@ export interface Project {
   id: string
   name: string
   description: string | null
+  slug: string
   startDate: string | null
   endDate: string | null
   coverImage: string | null
@@ -209,7 +211,7 @@ export interface RevenueStats {
 
 // APIs
 export interface InviteMembersPayload {
-  projectId: string
+  projectIdentifier: string
   inviteMembers: {
     email: string
     isEditor: boolean

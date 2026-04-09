@@ -1,5 +1,6 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import milestoneService from '@/services/milestone.service'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -11,14 +12,17 @@ type CacheData = BasePaginationResponse<ParentMilestone> | MilestoneWithTasks
 export const useUpdateMilestone = ({
   shouldInvalidate,
   queryKey,
-  parentMilestoneId
+  parentMilestoneIdentifier,
+  projectIdentifier
 }: {
   shouldInvalidate?: boolean
   queryKey?: readonly unknown[]
-  parentMilestoneId?: string
+  parentMilestoneIdentifier?: string
+  projectIdentifier?: string
 } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const { user } = useAuthStore()
 
   const { mutate: updateMilestone, isPending: isUpdatingMilestone } = useMutation({
     mutationFn: milestoneService.updateMilestone,
@@ -75,8 +79,13 @@ export const useUpdateMilestone = ({
         queryClient.invalidateQueries({ queryKey })
       }
 
-      if (parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      }
+
+      if (projectIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       }
     }
   })

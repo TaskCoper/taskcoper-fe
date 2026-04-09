@@ -23,8 +23,8 @@ import type { UpdateTaskCommentFormValues } from '../validations'
 interface CommentCardProps {
   comment: Comment
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
 const taskLogContent: Record<string, string> = {
@@ -46,7 +46,12 @@ const taskLogContent: Record<string, string> = {
   LabelDeletedToTaskActivity: 'activities.LabelDeletedToTaskActivity'
 }
 
-export default function CommentCard({ comment, taskId, projectId, parentMilestoneId }: CommentCardProps) {
+export default function CommentCard({
+  comment,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: CommentCardProps) {
   const { t, i18n } = useTranslation()
   const { user } = useAuthStore()
   const [isEditComment, setIsEditComment] = useState(false)
@@ -54,8 +59,8 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
 
   const { methods, updateComment, isUpdatingComment } = useUpdateComment()
   const { deleteComment, isDeletingComment } = useDeleteComment({
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const { control, reset, handleSubmit } = methods
@@ -150,7 +155,7 @@ export default function CommentCard({ comment, taskId, projectId, parentMileston
                       )
                     }}
                     compact
-                    projectId={projectId}
+                    projectIdentifier={projectIdentifier}
                     mentionedUsers={comment.mentionedUsers}
                   />
                 </Field>

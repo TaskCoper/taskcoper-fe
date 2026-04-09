@@ -11,14 +11,14 @@ interface ProjectMembersSectionProps {
   members: ProjectMember[]
   isCurrentUserMain: boolean
   totalMembers: number
-  projectId?: string
+  projectIdentifier?: string
 }
 
 export default function ProjectMembersSection({
   members,
   isCurrentUserMain,
   totalMembers,
-  projectId
+  projectIdentifier
 }: ProjectMembersSectionProps) {
   const { t } = useTranslation()
 
@@ -32,8 +32,8 @@ export default function ProjectMembersSection({
           <p className='text-xs text-muted-foreground'>{t('project.info.memberDescription')}</p>
         </div>
 
-        {projectId ? (
-          <UpdateProjectMembersDialog projectId={projectId} isCurrentUserMain={isCurrentUserMain}>
+        {projectIdentifier ? (
+          <UpdateProjectMembersDialog identifier={projectIdentifier} isCurrentUserMain={isCurrentUserMain}>
             <Button variant='ghost' size='icon-sm' type='button'>
               {isCurrentUserMain ? <SettingsIcon /> : <MoreHorizontalIcon />}
             </Button>
@@ -77,8 +77,8 @@ export default function ProjectMembersSection({
           ))}
         </div>
 
-        {projectId && isCurrentUserMain ? (
-          <InviteMembersDialog projectId={projectId}>
+        {projectIdentifier && isCurrentUserMain ? (
+          <InviteMembersDialog projectIdentifier={projectIdentifier}>
             <Button type='button' className='w-full'>
               <UserRoundPlusIcon />
               {t('project.info.inviteMembers')}

@@ -9,8 +9,8 @@ import AttachmentMenu from './attachment-menu'
 interface FileAttachmentProps {
   attachment: Attachment
   taskId: string
-  parentMilestoneId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
 function getFileExtension(filename: string): string {
@@ -25,7 +25,12 @@ function isImageMimeType(mimeType: string): boolean {
   return mimeType.startsWith('image/')
 }
 
-export default function FileAttachment({ attachment, taskId, parentMilestoneId, projectId }: FileAttachmentProps) {
+export default function FileAttachment({
+  attachment,
+  taskId,
+  parentMilestoneIdentifier,
+  projectIdentifier
+}: FileAttachmentProps) {
   const { t } = useTranslation()
   const isImage = isImageMimeType(attachment.mimeType)
   const extension = getFileExtension(attachment.name)
@@ -63,8 +68,8 @@ export default function FileAttachment({ attachment, taskId, parentMilestoneId, 
         <AttachmentMenu
           attachment={attachment}
           taskId={taskId}
-          parentMilestoneId={parentMilestoneId}
-          projectId={projectId}
+          parentMilestoneIdentifier={parentMilestoneIdentifier}
+          projectIdentifier={projectIdentifier}
         >
           <Button size='icon-sm' variant='secondary' className='size-6'>
             <MoreHorizontalIcon className='size-3' />

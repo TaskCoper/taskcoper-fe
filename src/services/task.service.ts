@@ -19,7 +19,7 @@ class TaskService {
 
   // for table view
   getTasks = async ({
-    parentMilestoneId,
+    parentMilestoneIdentifier,
     pageIndex,
     pageSize,
     sortBy,
@@ -35,7 +35,7 @@ class TaskService {
   }: UseGetTasksParams) => {
     const { data } = await api.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
       params: {
-        parentMilestoneId,
+        parentMilestoneIdentifier,
         pageIndex,
         pageSize,
         sortBy,
@@ -68,9 +68,9 @@ class TaskService {
     return data.value
   }
 
-  getTask = async ({ taskId }: { taskId?: string }) => {
-    if (!taskId) return null
-    const { data } = await api.get<BaseResponse<TaskDetail>>(`/v1/${this.baseUrl}/${taskId}`)
+  getTask = async ({ taskIdentifier }: { taskIdentifier?: string }) => {
+    if (!taskIdentifier) return null
+    const { data } = await api.get<BaseResponse<TaskDetail>>(`/v1/${this.baseUrl}/${taskIdentifier}`)
 
     return data.value
   }

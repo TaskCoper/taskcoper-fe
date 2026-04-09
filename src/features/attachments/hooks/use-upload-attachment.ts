@@ -13,11 +13,15 @@ import { useGetAttachments } from './use-get-attachments'
 
 interface UseUploadAttachmentProps {
   taskId: string
-  parentMilestoneId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
-export const useUploadAttachment = ({ taskId, parentMilestoneId, projectId }: UseUploadAttachmentProps) => {
+export const useUploadAttachment = ({
+  taskId,
+  parentMilestoneIdentifier,
+  projectIdentifier
+}: UseUploadAttachmentProps) => {
   const queryClient = useQueryClient()
   const { user } = useAuthStore()
   const { t } = useTranslation()
@@ -69,14 +73,16 @@ export const useUploadAttachment = ({ taskId, parentMilestoneId, projectId }: Us
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })
     }
   })
 

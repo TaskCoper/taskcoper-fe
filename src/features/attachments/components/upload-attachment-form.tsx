@@ -18,15 +18,15 @@ import { type UploadAttachmentFormValues } from '../validations'
 
 interface UploadAttachmentFormProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   onUploadComplete?: () => void
 }
 
 export default function UploadAttachmentForm({
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   onUploadComplete
 }: UploadAttachmentFormProps) {
   const { t } = useTranslation()
@@ -34,7 +34,11 @@ export default function UploadAttachmentForm({
   const [isUploading, setIsUploading] = useState(false)
 
   const { uploadFileAsync } = useUploadFile()
-  const { uploadAttachmentAsync, getNextPosition } = useUploadAttachment({ taskId, projectId, parentMilestoneId })
+  const { uploadAttachmentAsync, getNextPosition } = useUploadAttachment({
+    taskId,
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
 
   const handleFilesChange = async (files: File[]) => {
     if (files.length === 0) return
@@ -58,7 +62,7 @@ export default function UploadAttachmentForm({
             toast.loading(t('common.ui.uploading'), {
               id: toastId,
               description: (
-                <div className='w-full min-w-72 space-y-1'>
+                <div className='w-72 space-y-1'>
                   <p className='text-xs font-medium truncate'>{file.name}</p>
                   <Progress value={progress} className='w-full' />
                   <p className='text-xs text-muted-foreground'>{progress}%</p>

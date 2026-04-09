@@ -12,11 +12,15 @@ import { updateSubtaskStatusSchema, type UpdateSubtaskStatusFormValues } from '.
 
 interface UseUpdateSubtaskStatusProps {
   taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateSubtaskStatusProps = {}) => {
+export const useUpdateSubtaskStatus = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseUpdateSubtaskStatusProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -110,15 +114,17 @@ export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }:
         queryClient.invalidateQueries({ queryKey })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       }
     }
   })

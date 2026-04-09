@@ -12,15 +12,20 @@ import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
 interface SubtaskCardProps {
   subtask: Subtask
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function SubtaskCard({ subtask, taskId, projectId, parentMilestoneId }: SubtaskCardProps) {
+export default function SubtaskCard({
+  subtask,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: SubtaskCardProps) {
   const { t } = useTranslation()
   const { updateSubtask } = useUpdateSubtask({ taskId })
-  const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectId, parentMilestoneId })
-  const { deleteSubtask } = useDeleteSubtask({ taskId, projectId, parentMilestoneId })
+  const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectIdentifier, parentMilestoneIdentifier })
+  const { deleteSubtask } = useDeleteSubtask({ taskId, projectIdentifier, parentMilestoneIdentifier })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
     initialValue: subtask.name,

@@ -38,10 +38,10 @@ class MilestoneService {
     return data.value
   }
 
-  getChildMilestones = async ({ parentMilestoneId }: { parentMilestoneId?: string }) => {
-    if (!parentMilestoneId) return null
+  getChildMilestones = async ({ parentMilestoneIdentifier }: { parentMilestoneIdentifier?: string }) => {
+    if (!parentMilestoneIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ChildMilestone>>(
-      `/v1/${this.baseUrl}/${parentMilestoneId}/childrens`
+      `/v1/${this.baseUrl}/${parentMilestoneIdentifier}/childrens`
     )
 
     return data
@@ -54,10 +54,10 @@ class MilestoneService {
     return data
   }
 
-  getMilestoneStats = async ({ parentMilestoneId }: { parentMilestoneId?: string }) => {
-    if (!parentMilestoneId) return null
+  getMilestoneStats = async ({ parentMilestoneIdentifier }: { parentMilestoneIdentifier?: string }) => {
+    if (!parentMilestoneIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<MilestoneStats>>(
-      `/v1/${this.baseUrl}/${parentMilestoneId}/statistics`
+      `/v1/${this.baseUrl}/${parentMilestoneIdentifier}/statistics`
     )
 
     return data

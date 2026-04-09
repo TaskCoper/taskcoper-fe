@@ -12,17 +12,22 @@ import { toast } from 'sonner'
 import { useGetProjectLabels } from './use-get-project-labels'
 
 interface UseAddTaskLabelProps {
-  taskId: string
-  projectId: string
-  parentMilestoneId: string
+  taskIdentifier: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   enabled?: boolean
 }
 
-export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled = true }: UseAddTaskLabelProps) => {
+export const useAddTaskLabel = ({
+  taskIdentifier,
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  enabled = true
+}: UseAddTaskLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
-  const { labels } = useGetProjectLabels({ projectId, enabled })
+  const { labels } = useGetProjectLabels({ projectIdentifier, enabled })
 
   const methods = useForm<AddTaskLabelFormValues>({
     resolver: zodResolver(addTaskLabelSchema)
@@ -31,11 +36,11 @@ export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled 
   const { mutate: addTaskLabel, isPending: isAddingTaskLabel } = useMutation({
     mutationFn: taskService.addLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.detail(taskId) })
-      const previousData = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskId))
+      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
+      const previousData = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskIdentifier))
 
       if (previousData) {
-        queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskId), (old) => {
+        queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskIdentifier), (old) => {
           if (!old) return old
 
           const label = labels?.value.items.find((item) => item.id === variables.body.projectTaskLabelId)
@@ -60,7 +65,7 @@ export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled 
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.tasks.detail(taskId), context.previousData)
+        queryClient.setQueryData(queryKeys.tasks.detail(taskIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -69,13 +74,17 @@ export const useAddTaskLabel = ({ taskId, projectId, parentMilestoneId, enabled 
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tasks.detail(taskId)
+        queryKey: queryKeys.tasks.detail(taskIdentifier)
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStats(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.labelStats(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
     }
   })
 

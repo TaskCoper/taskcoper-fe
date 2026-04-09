@@ -10,15 +10,19 @@ import AddTaskWithMilestoneForm from './add-task-with-milestone-form'
 
 interface AddTaskPopoverProps {
   children: React.ReactNode
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function AddTaskPopover({ children, projectId, parentMilestoneId }: AddTaskPopoverProps) {
+export default function AddTaskPopover({
+  children,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: AddTaskPopoverProps) {
   const { t } = useTranslation()
   const { methods, isTriggered, setIsTriggered, addTask, isAddingTask, recalculatePosition } = useAddTask({
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const onSubmit: SubmitHandler<AddTaskFormValues> = (body) => {
@@ -32,7 +36,7 @@ export default function AddTaskPopover({ children, projectId, parentMilestoneId 
   }
 
   const { childMilestones, isLoadingChildMilestones } = useGetChildMilestones({
-    parentMilestoneId,
+    parentMilestoneIdentifier,
     enabled: isTriggered
   })
 

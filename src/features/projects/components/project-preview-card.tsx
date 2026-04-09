@@ -9,7 +9,7 @@ interface ProjectPreviewCardProps {
 
 export default function ProjectPreviewCard({ project }: ProjectPreviewCardProps) {
   return (
-    <Link to={`/projects/${project.id}`} className='hover:underline'>
+    <Link to={`/projects/${project.slug}`} className='hover:underline'>
       <Card className='gap-0 p-0 w-full h-full'>
         <div className='w-full h-4/6'>
           {project.coverImage ? (

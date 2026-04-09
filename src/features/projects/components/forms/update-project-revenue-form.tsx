@@ -10,7 +10,7 @@ export default function UpdateProjectRevenueForm() {
   const { t } = useTranslation()
   const { control, watch } = useFormContext<UpdateProjectRevenueFormValues>()
 
-  const projectId = watch('projectId')
+  const projectIdentifier = watch('projectIdentifier')
 
   return (
     <div className='space-y-2'>
@@ -70,7 +70,7 @@ export default function UpdateProjectRevenueForm() {
           <Field className='gap-1 mb-6'>
             <FieldLabel>{t('common.field.label')}</FieldLabel>
             <RevenueLabelCombobox
-              projectId={projectId}
+              projectIdentifier={projectIdentifier}
               selectedLabelIds={field.value}
               onSelectionChange={(labelIds) => field.onChange(labelIds)}
             />

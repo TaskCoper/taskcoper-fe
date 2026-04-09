@@ -162,7 +162,7 @@ export const userRoutes: RouteObject[] = [
                 ]
               },
               {
-                path: 'projects/:projectId',
+                path: 'projects/:identifier',
                 element: <ProjectDetailLayout />,
                 children: [
                   {
@@ -178,11 +178,11 @@ export const userRoutes: RouteObject[] = [
                     element: <ProjectRevenuePage />
                   },
                   {
-                    path: 'milestones/:milestoneId',
+                    path: 'milestones/:milestoneIdentifier',
                     element: <ProjectTasksPage />,
                     children: [
                       {
-                        path: 'tasks/:taskId',
+                        path: 'tasks/:taskIdentifier',
                         element: <TaskDialogPage />
                       }
                     ]

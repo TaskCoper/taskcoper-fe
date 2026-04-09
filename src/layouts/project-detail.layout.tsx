@@ -32,7 +32,7 @@ const secondSidebarRoutes = ['milestones']
 export default function ProjectDetailLayout() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
 
   const { user } = useAuthStore()
   const { removeLastActiveMilestone } = useMilestonePreferencesStore()
@@ -56,12 +56,12 @@ export default function ProjectDetailLayout() {
   // only fetch parent milestones when user is at /milestones
   const shouldFetchMilestones = activeSegment === 'milestones'
   const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({
-    projectId,
+    identifier,
     enabled: shouldFetchMilestones
   })
 
   // show member avatars next to the parent milestones tab
-  const { members, isLoadingMembers } = useGetProjectMembers({ projectId, enabled: shouldFetchMilestones })
+  const { members, isLoadingMembers } = useGetProjectMembers({ identifier, enabled: shouldFetchMilestones })
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -84,10 +84,10 @@ export default function ProjectDetailLayout() {
   const isCurrentUserMain =
     members?.value.items.find((member) => member.userId === user?.UserId && member.isMain) !== undefined
 
-  const queryKey = ['parent-milestones', projectId]
+  const queryKey = ['parent-milestones', identifier]
 
   const { shouldDisplayTabs, activeTabValue, handleTabChange } = useProjectRouting({
-    projectId,
+    identifier,
     items,
     isLoading: isLoadingParentMilestones
   })
@@ -106,10 +106,10 @@ export default function ProjectDetailLayout() {
 
       // if this is the last remaining tab, navigate to project info page
       if (items.length === 1) {
-        if (projectId) {
-          removeLastActiveMilestone(projectId)
+        if (identifier) {
+          removeLastActiveMilestone(identifier)
         }
-        navigate(`/projects/${projectId}/info`)
+        navigate(`/projects/${identifier}/info`)
         return
       }
 
@@ -118,10 +118,10 @@ export default function ProjectDetailLayout() {
       const targetMilestone = items[targetIndex]
 
       if (targetMilestone) {
-        handleTabChange(targetMilestone.id)
+        handleTabChange(targetMilestone.slug)
       }
     },
-    [items, handleTabChange, projectId, removeLastActiveMilestone, navigate]
+    [items, handleTabChange, identifier, removeLastActiveMilestone, navigate]
   )
 
   // callback received from ProjectDetailSidebar to notify us about task count
@@ -178,9 +178,9 @@ export default function ProjectDetailLayout() {
 
           {shouldDisplayTabs ? (
             <>
-              {projectId ? (
+              {identifier ? (
                 <div className='shrink-0'>
-                  <AddParentMilestonePopover projectId={projectId}>
+                  <AddParentMilestonePopover identifier={identifier}>
                     <Button variant='ghost' size='icon' className='size-7'>
                       <PlusIcon className='size-4' />
                     </Button>
@@ -219,7 +219,7 @@ export default function ProjectDetailLayout() {
                               <SortableMilestoneTab
                                 key={milestone.id}
                                 milestone={milestone}
-                                isActive={activeTabValue === milestone.id}
+                                isActive={activeTabValue === milestone.slug}
                                 queryKey={queryKey}
                                 onDeleteSuccess={createDeleteHandler(milestone.id)}
                                 canDelete={items.length > 1}
@@ -248,8 +248,8 @@ export default function ProjectDetailLayout() {
                   <Skeleton className='size-8 rounded-full' />
                   <Skeleton className='size-8 rounded-full' />
                 </div>
-              ) : projectId ? (
-                <UpdateProjectMembersDialog projectId={projectId} isCurrentUserMain={isCurrentUserMain}>
+              ) : identifier ? (
+                <UpdateProjectMembersDialog identifier={identifier} isCurrentUserMain={isCurrentUserMain}>
                   <div
                     role='button'
                     className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'

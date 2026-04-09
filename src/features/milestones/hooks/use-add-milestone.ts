@@ -10,19 +10,25 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { addMilestoneSchema, type AddMilestoneFormValues } from '../validations'
 
-export const useAddMilestone = ({ parentId, projectId }: { parentId: string; projectId: string }) => {
+export const useAddMilestone = ({
+  parentMilestoneIdentifier,
+  projectIdentifier
+}: {
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
+}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const [isTriggered, setIsTriggered] = useState(false)
-  const { milestones } = useGetMilestones({ projectId, parentMilestoneId: parentId, enabled: isTriggered })
+  const { milestones } = useGetMilestones({ projectIdentifier, parentMilestoneIdentifier, enabled: isTriggered })
 
   const existingMilestones = useMemo(() => milestones?.milestones ?? [], [milestones])
   const calculatedPosition = useMemo(() => calculateNewItemPosition(existingMilestones), [existingMilestones])
 
   const methods = useForm<AddMilestoneFormValues>({
     defaultValues: {
-      parentId,
-      projectId,
+      parentMilestoneIdentifier,
+      projectIdentifier,
       milestoneName: '',
       position: calculatedPosition
     },
@@ -32,12 +38,12 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
   useEffect(() => {
     const newPosition = calculateNewItemPosition(existingMilestones)
     methods.reset({
-      parentId,
-      projectId,
+      parentMilestoneIdentifier,
+      projectIdentifier,
       milestoneName: '',
       position: newPosition
     })
-  }, [projectId, parentId, existingMilestones, methods])
+  }, [projectIdentifier, parentMilestoneIdentifier, existingMilestones, methods])
 
   useEffect(() => {
     if (isTriggered) {
@@ -52,8 +58,8 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
       toast.success(message)
       const newPosition = calculateNewItemPosition(existingMilestones)
       methods.reset({
-        parentId,
-        projectId,
+        parentMilestoneIdentifier,
+        projectIdentifier,
         milestoneName: '',
         position: newPosition
       })
@@ -65,10 +71,12 @@ export const useAddMilestone = ({ parentId, projectId }: { parentId: string; pro
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
     }
   })
 

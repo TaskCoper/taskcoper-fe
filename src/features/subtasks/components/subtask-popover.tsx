@@ -13,16 +13,21 @@ import type { AddSubtaskFormValues } from '../validations'
 interface SubtaskPopoverProps {
   children: React.ReactNode
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function SubtaskPopover({ children, taskId, projectId, parentMilestoneId }: SubtaskPopoverProps) {
+export default function SubtaskPopover({
+  children,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: SubtaskPopoverProps) {
   const { t } = useTranslation()
   const { methods, addSubtask, isAddingSubtask, open, setOpen, recalculatePosition } = useAddSubtask({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   useEffect(() => {

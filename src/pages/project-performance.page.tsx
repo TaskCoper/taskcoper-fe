@@ -73,9 +73,13 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 export default function ProjectPerformancePage() {
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
 
   const [selectedYear, setSelectedYear] = useState(currentYear)
+
+  const { project } = useGetProject({
+    identifier
+  })
 
   const dateRange = useMemo(() => {
     const from = format(new Date(selectedYear, 0, 1), 'yyyy-MM-dd')
@@ -84,7 +88,7 @@ export default function ProjectPerformancePage() {
   }, [selectedYear])
 
   const { projectActivityStats } = useGetProjectHeatmap({
-    projectId,
+    projectId: project?.id,
     ...dateRange
   })
 
@@ -101,19 +105,19 @@ export default function ProjectPerformancePage() {
   })
 
   const { projectTopContributors } = useGetProjectTopContributors({
-    projectId,
+    projectId: project?.id,
     from: topContributorsFilters.from,
     to: topContributorsFilters.to
   })
 
   const { projectOnTimeCompleters } = useGetProjectOnTimeCompleters({
-    projectId,
+    projectId: project?.id,
     from: onTimeCompletersFilters.from,
     to: onTimeCompletersFilters.to
   })
 
   const { projectActivityStats: currentProjectActivityStats } = useGetProjectHeatmap({
-    projectId,
+    projectId: project?.id,
     ...currentDateRange
   })
 
@@ -135,7 +139,7 @@ export default function ProjectPerformancePage() {
   const formIsViewInMonth = appliedFilters.isViewInMonth
 
   const { projectTaskStats } = useGetProjectTaskStats({
-    projectId,
+    projectId: project?.id,
     from: formFrom,
     to: formTo,
     isViewInMonth: formIsViewInMonth
@@ -346,10 +350,6 @@ export default function ProjectPerformancePage() {
   //     </div>
   //   )
   // }
-
-  const { project } = useGetProject({
-    projectId
-  })
 
   useEffect(() => {
     if (project) {

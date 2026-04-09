@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import type { AddProjectRevenueLabelFormValues } from '../validations'
 import { addProjectRevenueLabelSchema } from '../validations'
 
-export const useAddProjectRevenueLabel = ({ projectId }: { projectId: string }) => {
+export const useAddProjectRevenueLabel = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -21,14 +21,14 @@ export const useAddProjectRevenueLabel = ({ projectId }: { projectId: string }) 
   const { mutate: addProjectRevenueLabel, isPending: isAddingProjectRevenueLabel } = useMutation({
     mutationFn: projectService.addProjectRevenueLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectId) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectIdentifier) })
       const previousData = queryClient.getQueryData<BasePaginationResponse<RevenueLabel>>(
-        queryKeys.projectRevenueLabels.list(projectId)
+        queryKeys.projectRevenueLabels.list(projectIdentifier)
       )
 
       if (previousData) {
         queryClient.setQueryData<BasePaginationResponse<RevenueLabel>>(
-          queryKeys.projectRevenueLabels.list(projectId),
+          queryKeys.projectRevenueLabels.list(projectIdentifier),
           (old) => {
             if (!old) return old
 
@@ -53,14 +53,14 @@ export const useAddProjectRevenueLabel = ({ projectId }: { projectId: string }) 
     },
     onSuccess: () => {
       methods.reset({
-        projectId,
+        projectIdentifier,
         name: '',
         color: ''
       })
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectId), context.previousData)
+        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -68,8 +68,8 @@ export const useAddProjectRevenueLabel = ({ projectId }: { projectId: string }) 
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectIdentifier) })
     }
   })
 

@@ -8,8 +8,8 @@ import { useParams } from 'react-router'
 
 export default function ProjectRevenuePage() {
   const { t, i18n } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
-  const { revenueStats, isLoadingRevenueStats } = useGetProjectRevenueStats({ projectId })
+  const { identifier } = useParams<{ identifier: string }>()
+  const { revenueStats, isLoadingRevenueStats } = useGetProjectRevenueStats({ projectIdentifier: identifier })
 
   return (
     <div className='p-6 space-y-6'>
@@ -73,7 +73,7 @@ export default function ProjectRevenuePage() {
         </div>
       </div>
 
-      {projectId ? <ProjectRevenueTable projectId={projectId} /> : null}
+      {identifier ? <ProjectRevenueTable projectIdentifier={identifier} /> : null}
     </div>
   )
 }

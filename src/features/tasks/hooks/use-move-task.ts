@@ -6,19 +6,21 @@ import { toast } from 'sonner'
 
 interface MoveTaskParams {
   isDragging?: boolean
-  projectId?: string
+  projectIdentifier?: string
   milestoneId?: string
+  taskIdentifier?: string
   targetMilestoneId?: string
-  parentMilestoneId?: string
+  milestoneIdentifier?: string
 }
 
 export const useMoveTask = ({
   isDragging = true,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  milestoneIdentifier,
   milestoneId,
+  taskIdentifier,
   targetMilestoneId
-}: MoveTaskParams = {}) => {
+}: MoveTaskParams) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -29,18 +31,20 @@ export const useMoveTask = ({
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.id) })
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
 
       if (!isDragging) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(variables.body.id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
       }
 
-      if (parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(milestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, milestoneIdentifier)
+          })
         }
       }
 

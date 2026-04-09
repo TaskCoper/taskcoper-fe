@@ -20,16 +20,16 @@ interface ParentMilestonesMenuProps {
 
 export default function ParentMilestonesMenu({ children, open, onOpenChange, items }: ParentMilestonesMenuProps) {
   const navigate = useNavigate()
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
 
-  const handleSelectMilestone = (selectedMilestoneId: string) => {
-    if (selectedMilestoneId === milestoneId) {
+  const handleSelectMilestone = (selectedMilestoneSlug: string) => {
+    if (selectedMilestoneSlug === milestoneIdentifier) {
       onOpenChange(false)
       return
     }
 
     setTimeout(() => {
-      navigate(`/projects/${projectId}/milestones/${selectedMilestoneId}`)
+      navigate(`/projects/${identifier}/milestones/${selectedMilestoneSlug}`)
     }, 500)
   }
 
@@ -40,10 +40,10 @@ export default function ParentMilestonesMenu({ children, open, onOpenChange, ite
         <DropdownMenuLabel>Tabs</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {items.map((item) => {
-          const isSelected = item.id === milestoneId
+          const isSelected = item.slug === milestoneIdentifier
 
           return (
-            <DropdownMenuItem key={item.id} onClick={() => handleSelectMilestone(item.id)}>
+            <DropdownMenuItem key={item.id} onClick={() => handleSelectMilestone(item.slug)}>
               <div className='flex justify-between items-center gap-4 w-full'>
                 <p className={cn('text-muted-foreground truncate', isSelected && 'font-semibold text-foreground')}>
                   {item.name}

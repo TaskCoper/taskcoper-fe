@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "dev:prod": "vite --mode production",
-    "build": "tsc && vite build",
-    "build:dev": "tsc && vite build --mode development",
+    "build": "tsc -b && vite build",
+    "build:dev": "tsc -b && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "check": "yarn run lint && tsc --noEmit"
+    "check": "yarn run lint && tsc -b",
+    "docker:build": "docker compose -f .docker/docker-compose.yml build --no-cache && docker compose -f .docker/docker-compose.yml up -d"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

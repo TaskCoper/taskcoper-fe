@@ -9,16 +9,20 @@ import AddMilestoneForm from './add-milestone-form'
 
 interface AddMilestonePopoverProps {
   children: React.ReactNode
-  parentId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
-export default function AddMilestonePopover({ children, parentId, projectId }: AddMilestonePopoverProps) {
+export default function AddMilestonePopover({
+  children,
+  parentMilestoneIdentifier,
+  projectIdentifier
+}: AddMilestonePopoverProps) {
   const { t } = useTranslation()
   const { methods, addMilestone, isAddingMilestone, isTriggered, setIsTriggered, recalculatePosition } =
     useAddMilestone({
-      parentId,
-      projectId
+      parentMilestoneIdentifier,
+      projectIdentifier
     })
 
   const onSubmit: SubmitHandler<AddMilestoneFormValues> = (body) => {

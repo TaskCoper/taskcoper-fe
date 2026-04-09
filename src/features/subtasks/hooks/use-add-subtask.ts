@@ -15,16 +15,16 @@ interface UseAddSubtaskProps {
   taskId?: string
   subtaskId?: string
   isAddingChildren?: boolean
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
 }
 
 export const useAddSubtask = ({
   taskId,
   subtaskId,
   isAddingChildren = false,
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: UseAddSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
@@ -86,15 +86,17 @@ export const useAddSubtask = ({
         queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       }
     }
   })

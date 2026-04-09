@@ -20,8 +20,8 @@ import SortableSubtaskCard from './sortable-subtask-card'
 interface ParentSubtaskCardProps {
   subtask: SubtaskWithChildren
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   editingSubtaskId: string | null
   setEditingSubtaskId: (value: string | null) => void
 }
@@ -31,8 +31,8 @@ export default function ParentSubtaskCard({
   taskId,
   editingSubtaskId,
   setEditingSubtaskId,
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: ParentSubtaskCardProps) {
   const { t } = useTranslation()
 
@@ -45,19 +45,19 @@ export default function ParentSubtaskCard({
     taskId,
     isAddingChildren: true,
     subtaskId: subtask.id,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const { updateSubtask } = useUpdateSubtask({ taskId })
   const { updateSubtaskStatus } = useUpdateSubtaskStatus({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const { deleteSubtask, isDeletingSubtask } = useDeleteSubtask({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
@@ -167,8 +167,8 @@ export default function ParentSubtaskCard({
                     key={children.id}
                     subtask={children}
                     taskId={taskId}
-                    projectId={projectId}
-                    parentMilestoneId={parentMilestoneId}
+                    projectIdentifier={projectIdentifier}
+                    parentMilestoneIdentifier={parentMilestoneIdentifier}
                   />
                 ))}
               </div>

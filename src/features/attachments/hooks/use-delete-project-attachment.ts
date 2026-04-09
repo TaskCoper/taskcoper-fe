@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface UseDeleteProjectAttachmentProps {
-  projectId: string
+  projectIdentifier: string
 }
 
-export const useDeleteProjectAttachment = ({ projectId }: UseDeleteProjectAttachmentProps) => {
+export const useDeleteProjectAttachment = ({ projectIdentifier }: UseDeleteProjectAttachmentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -27,10 +27,10 @@ export const useDeleteProjectAttachment = ({ projectId }: UseDeleteProjectAttach
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })
     }
   })
 

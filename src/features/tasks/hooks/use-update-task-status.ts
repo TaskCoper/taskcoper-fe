@@ -10,11 +10,15 @@ import { toast } from 'sonner'
 
 interface UseUpdateTaskStatusProps {
   taskId: string
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useUpdateTaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateTaskStatusProps) => {
+export const useUpdateTaskStatus = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseUpdateTaskStatusProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -22,18 +26,22 @@ export const useUpdateTaskStatus = ({ taskId, projectId, parentMilestoneId }: Us
   const { mutate: updateTaskStatus, isPending: isUpdatingTaskStatus } = useMutation({
     mutationFn: taskService.updateTaskStatus,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+      await queryClient.cancelQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
 
-      const previousMilestones = queryClient.getQueryData(queryKeys.milestones.byParent(projectId, parentMilestoneId))
+      const previousMilestones = queryClient.getQueryData(
+        queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      )
       const previousTask = queryClient.getQueryData(queryKeys.tasks.detail(taskId))
       const previousTasks = queryClient.getQueriesData<BasePaginationResponse<TaskRow>>({
-        queryKey: queryKeys.tasks.listParent(parentMilestoneId)
+        queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier)
       })
 
       if (previousMilestones) {
         queryClient.setQueryData<MilestoneWithTasks>(
-          queryKeys.milestones.byParent(projectId, parentMilestoneId),
+          queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier),
           (old) => {
             if (!old) return old
 
@@ -59,7 +67,7 @@ export const useUpdateTaskStatus = ({ taskId, projectId, parentMilestoneId }: Us
       }
 
       queryClient.setQueriesData<BasePaginationResponse<TaskRow>>(
-        { queryKey: queryKeys.tasks.listParent(parentMilestoneId) },
+        { queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) },
         (old) => {
           if (!old) return old
 
@@ -80,7 +88,7 @@ export const useUpdateTaskStatus = ({ taskId, projectId, parentMilestoneId }: Us
     onError: (error, _variables, context) => {
       if (context?.previousMilestones) {
         queryClient.setQueryData(
-          queryKeys.milestones.byParent(projectId, parentMilestoneId),
+          queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier),
           context.previousMilestones
         )
       }
@@ -103,16 +111,20 @@ export const useUpdateTaskStatus = ({ taskId, projectId, parentMilestoneId }: Us
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.UserId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
       }
     }
   })

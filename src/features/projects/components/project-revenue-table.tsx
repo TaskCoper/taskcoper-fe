@@ -5,6 +5,7 @@ import { useGetProjectRevenueLabelStats } from '@/features/labels/hooks/use-get-
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { cn, getColorTextClass } from '@/shared/utils'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { RevenueType, RevenueTypeLabel, type Revenue } from '@/types/project.type'
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
@@ -19,10 +20,10 @@ import AddProjectRevenueDialog from './dialogs/add-project-revenue-dialog'
 import UpdateProjectRevenueDialog from './dialogs/update-project-revenue-dialog'
 
 interface ProjectRevenueTableProps {
-  projectId: string
+  projectIdentifier: string
 }
 
-export default function ProjectRevenueTable({ projectId }: ProjectRevenueTableProps) {
+export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenueTableProps) {
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
 
@@ -39,10 +40,10 @@ export default function ProjectRevenueTable({ projectId }: ProjectRevenueTablePr
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteProjectRevenue({ projectId, revenueId: id })
+        deleteProjectRevenue({ projectIdentifier, revenueId: id })
       }
     },
-    [confirm, deleteProjectRevenue, t, projectId]
+    [confirm, deleteProjectRevenue, t, projectIdentifier]
   )
 
   const onEditRevenue = useCallback((revenue: Revenue) => {
@@ -67,7 +68,7 @@ export default function ProjectRevenueTable({ projectId }: ProjectRevenueTablePr
   const labels = labelFilter && labelFilter.length > 0 ? labelFilter : undefined
 
   const { projectRevenues, isLoadingProjectRevenues } = useGetProjectRevenues({
-    projectId,
+    projectIdentifier,
     pageIndex: page,
     pageSize: limit,
     sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
@@ -78,14 +79,18 @@ export default function ProjectRevenueTable({ projectId }: ProjectRevenueTablePr
     labelIds: labels
   })
 
-  const { revenueLabelStats, isLoadingRevenueLabelStats } = useGetProjectRevenueLabelStats({ projectId })
-  const { revenueTypeStats, isLoadingRevenueTypeStats } = useGetProjectRevenueTypeStats({ projectId })
+  const { revenueLabelStats, isLoadingRevenueLabelStats } = useGetProjectRevenueLabelStats({ projectIdentifier })
+  const { revenueTypeStats, isLoadingRevenueTypeStats } = useGetProjectRevenueTypeStats({ projectIdentifier })
 
   const filterOptionOverrides = useMemo(() => {
     return {
       labels:
         revenueLabelStats?.map((item) => ({
-          label: item.name,
+          label: (
+            <div className={cn('rounded-sm h-5 min-w-10 px-2 flex justify-center items-center', item.color)}>
+              <p className={cn('text-xs font-medium', getColorTextClass(item.color))}>{item.name}</p>
+            </div>
+          ),
           value: item.id,
           count: item.transactionCount
         })) ?? [],
@@ -122,14 +127,14 @@ export default function ProjectRevenueTable({ projectId }: ProjectRevenueTablePr
   return (
     <DataTable table={table} isLoading={isLoading}>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-        <AddProjectRevenueDialog projectId={projectId} type='CashIn'>
+        <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashIn'>
           <Button size='sm' className='bg-emerald-600 border-2 border-emerald-400 hover:bg-emerald-700'>
             <TrendingUpIcon />
             {t('project.addProjectRevenue.trigger.cashIn')}
           </Button>
         </AddProjectRevenueDialog>
 
-        <AddProjectRevenueDialog projectId={projectId} type='CashOut'>
+        <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashOut'>
           <Button size='sm' className='bg-rose-600 border-2 border-rose-400 hover:bg-rose-700'>
             <TrendingDownIcon />
             {t('project.addProjectRevenue.trigger.cashOut')}
@@ -139,7 +144,7 @@ export default function ProjectRevenueTable({ projectId }: ProjectRevenueTablePr
 
       <UpdateProjectRevenueDialog
         revenue={editingRevenue}
-        projectId={projectId}
+        projectIdentifier={projectIdentifier}
         open={!!editingRevenue}
         onOpenChange={(open) => {
           if (!open) setEditingRevenue(null)

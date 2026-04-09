@@ -34,12 +34,12 @@ interface ComboboxUserItem {
 
 interface InviteMembersDialogProps {
   children: React.ReactNode
-  projectId: string
+  projectIdentifier: string
 }
 
-export default function InviteMembersDialog({ children, projectId }: InviteMembersDialogProps) {
+export default function InviteMembersDialog({ children, projectIdentifier }: InviteMembersDialogProps) {
   const { t } = useTranslation()
-  const { methods, open, setOpen, inviteMembers, isInvitingMembers } = useInviteMembers({ projectId })
+  const { methods, open, setOpen, inviteMembers, isInvitingMembers } = useInviteMembers({ projectIdentifier })
 
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchQuery] = useDebounce(searchTerm, 500)
@@ -74,7 +74,7 @@ export default function InviteMembersDialog({ children, projectId }: InviteMembe
         : null
 
     const body: InviteMembersPayload = {
-      projectId: data.projectId,
+      projectIdentifier: data.projectIdentifier,
       inviteMembers: data.inviteMembers.map((u) => ({
         email: u.email,
         isEditor: u.isEditor,

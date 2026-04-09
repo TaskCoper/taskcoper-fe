@@ -9,16 +9,20 @@ import AddTaskForm from './add-task-form'
 
 interface AddTaskButtonProps {
   milestoneId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function AddTaskButton({ milestoneId, projectId, parentMilestoneId }: AddTaskButtonProps) {
+export default function AddTaskButton({
+  milestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: AddTaskButtonProps) {
   const { t } = useTranslation()
   const { methods, isTriggered, setIsTriggered, addTask, isAddingTask, recalculatePosition } = useAddTask({
     milestoneId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const onSubmit: SubmitHandler<AddTaskFormValues> = (body) => {

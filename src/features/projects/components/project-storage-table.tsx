@@ -25,19 +25,19 @@ import { formatMimeType } from '../utils'
 import { getColumns } from './columns/project-resource-columns'
 
 interface ProjectStorageTableProps {
-  projectId: string
+  projectIdentifier: string
 }
 
-export default function ProjectStorageTable({ projectId }: ProjectStorageTableProps) {
+export default function ProjectStorageTable({ projectIdentifier }: ProjectStorageTableProps) {
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { uploadFileAsync } = useUploadFile()
-  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectId })
+  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectIdentifier })
 
-  const { deleteAttachment } = useDeleteAttachment({ projectId })
-  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectId })
+  const { deleteAttachment } = useDeleteAttachment({ projectIdentifier })
+  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectIdentifier })
 
   const onDeleteResource = useCallback(
     async (resourceId: string, taskId: string) => {
@@ -65,10 +65,10 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteProjectAttachment({ projectId, resourceId })
+        deleteProjectAttachment({ projectIdentifier, resourceId })
       }
     },
-    [confirm, deleteProjectAttachment, projectId, t]
+    [confirm, deleteProjectAttachment, projectIdentifier, t]
   )
 
   const handleUploadFiles = useCallback(
@@ -76,7 +76,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
       for (const file of Array.from(files)) {
         const toastId = toast.loading(t('common.ui.uploading'), {
           description: (
-            <div className='w-full min-w-72 space-y-1'>
+            <div className='w-72 space-y-1'>
               <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
               <Progress value={0} className='w-full' />
               <p className='text-xs text-muted-foreground'>0%</p>
@@ -91,7 +91,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
               toast.loading(t('common.ui.uploading'), {
                 id: toastId,
                 description: (
-                  <div className='w-full min-w-72 space-y-1'>
+                  <div className='w-72 space-y-1'>
                     <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
                     <Progress value={progress} className='w-full' />
                     <p className='text-xs text-muted-foreground'>{progress}%</p>
@@ -104,7 +104,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
           if (url) {
             await uploadProjectAttachmentAsync({
               body: {
-                projectId,
+                projectIdentifier,
                 name: file.name,
                 url,
                 isUpload: true,
@@ -127,7 +127,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
         }
       }
     },
-    [projectId, t, uploadFileAsync, uploadProjectAttachmentAsync]
+    [projectIdentifier, t, uploadFileAsync, uploadProjectAttachmentAsync]
   )
 
   const columns = useMemo(
@@ -150,7 +150,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
   const mimeTypes = mimeTypeFilter && mimeTypeFilter.length > 0 ? mimeTypeFilter : undefined
 
   const { projectResources, isLoadingProjectResources } = useGetProjectResources({
-    projectId,
+    projectIdentifier,
     pageIndex: page,
     pageSize: limit,
     sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
@@ -160,9 +160,9 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
     memberIds,
     mimeTypes
   })
-  const { projectMimeTypeStats, isLoadingProjectMimeTypeStats } = useGetProjectMimeTypeStats({ projectId })
+  const { projectMimeTypeStats, isLoadingProjectMimeTypeStats } = useGetProjectMimeTypeStats({ projectIdentifier })
   const { projectResourceMemberStats, isLoadingProjectResourceMemberStats } = useGetProjectResourceMemberStats({
-    projectId
+    projectIdentifier
   })
 
   const filterOptionOverrides = useMemo(() => {

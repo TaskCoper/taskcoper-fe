@@ -6,22 +6,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useDeleteProjectRevenueLabel = ({ projectId }: { projectId: string }) => {
+export const useDeleteProjectRevenueLabel = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
   const { mutate: deleteProjectRevenueLabel, isPending: isDeletingProjectRevenueLabel } = useMutation({
     mutationFn: projectService.deleteProjectRevenueLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectId) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectIdentifier) })
 
       const previousData = queryClient.getQueryData<BasePaginationResponse<RevenueLabel>>(
-        queryKeys.projectRevenueLabels.list(projectId)
+        queryKeys.projectRevenueLabels.list(projectIdentifier)
       )
 
       if (previousData) {
         queryClient.setQueryData<BasePaginationResponse<RevenueLabel>>(
-          queryKeys.projectRevenueLabels.list(projectId),
+          queryKeys.projectRevenueLabels.list(projectIdentifier),
           (old) => {
             if (!old) return old
 
@@ -40,7 +40,7 @@ export const useDeleteProjectRevenueLabel = ({ projectId }: { projectId: string 
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectId), context.previousData)
+        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -48,8 +48,8 @@ export const useDeleteProjectRevenueLabel = ({ projectId }: { projectId: string 
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectIdentifier) })
     }
   })
 

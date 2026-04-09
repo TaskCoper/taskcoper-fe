@@ -17,12 +17,12 @@ import type { AddProjectRevenueFormValues } from '../../validations'
 import AddProjectRevenueForm from '../forms/add-project-revenue-form'
 
 interface AddProjectRevenueDialogProps {
-  projectId: string
+  projectIdentifier: string
   type: RevenueType
   children: React.ReactNode
 }
 
-export default function AddProjectRevenueDialog({ projectId, type, children }: AddProjectRevenueDialogProps) {
+export default function AddProjectRevenueDialog({ projectIdentifier, type, children }: AddProjectRevenueDialogProps) {
   const { t } = useTranslation()
   const { methods, addProjectRevenue, isAddingProjectRevenue } = useAddProjectRevenue()
   const [open, setOpen] = useState(false)
@@ -50,10 +50,10 @@ export default function AddProjectRevenueDialog({ projectId, type, children }: A
         note: '',
         type,
         labelIds: [],
-        projectId
+        projectIdentifier
       })
     }
-  }, [open, projectId, methods, type])
+  }, [open, projectIdentifier, methods, type])
 
   return (
     <Dialog

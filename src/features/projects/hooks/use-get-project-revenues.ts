@@ -3,7 +3,7 @@ import projectService from '@/services/project.service'
 import { useQuery } from '@tanstack/react-query'
 
 export interface GetProjectRevenuesParams {
-  projectId: string
+  projectIdentifier: string
   pageIndex?: number
   pageSize?: number
   labelIds?: string[]
@@ -15,7 +15,7 @@ export interface GetProjectRevenuesParams {
 }
 
 export const useGetProjectRevenues = ({
-  projectId,
+  projectIdentifier,
   pageIndex,
   pageSize,
   labelIds,
@@ -27,7 +27,7 @@ export const useGetProjectRevenues = ({
 }: GetProjectRevenuesParams) => {
   const { data: projectRevenues, isLoading: isLoadingProjectRevenues } = useQuery({
     queryKey: queryKeys.projectRevenues.list({
-      projectId,
+      projectIdentifier,
       pageIndex,
       pageSize,
       labelIds,
@@ -39,7 +39,7 @@ export const useGetProjectRevenues = ({
     }),
     queryFn: () =>
       projectService.getProjectRevenues({
-        projectId,
+        projectIdentifier,
         pageIndex,
         pageSize,
         labelIds,
@@ -49,7 +49,7 @@ export const useGetProjectRevenues = ({
         startDate,
         endDate
       }),
-    enabled: !!projectId
+    enabled: !!projectIdentifier
   })
 
   return { projectRevenues, isLoadingProjectRevenues }

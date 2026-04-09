@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { inviteMembersSchema, type InviteMembersFormValues } from '../validations'
 
-export const useInviteMembers = ({ projectId }: { projectId: string }) => {
+export const useInviteMembers = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const methods = useForm<InviteMembersFormValues>({
     defaultValues: {
-      projectId,
+      projectIdentifier,
       hasExpiration: false,
       expirationDate: null,
       inviteMembers: []
@@ -22,15 +22,15 @@ export const useInviteMembers = ({ projectId }: { projectId: string }) => {
   })
 
   useEffect(() => {
-    if (projectId) {
+    if (projectIdentifier) {
       methods.reset({
-        projectId,
+        projectIdentifier,
         hasExpiration: false,
         expirationDate: null,
         inviteMembers: []
       })
     }
-  }, [projectId, methods])
+  }, [projectIdentifier, methods])
 
   const { mutate: inviteMembers, isPending: isInvitingMembers } = useMutation({
     mutationFn: projectService.inviteMembers,

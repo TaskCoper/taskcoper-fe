@@ -29,15 +29,16 @@ import { useParams } from 'react-router'
 import { toast } from 'sonner'
 
 export default function ProjectInfoPage() {
-  const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
-  const { members, isLoadingMembers } = useGetProjectMembers({ projectId })
   const isMobile = useIsMobile()
+
+  const { t } = useTranslation()
+  const { identifier } = useParams<{ identifier: string }>()
   const { user } = useAuthStore()
 
-  const { project, isLoadingProject } = useGetProject({ projectId })
+  const { project, isLoadingProject } = useGetProject({ identifier })
+  const { members, isLoadingMembers } = useGetProjectMembers({ identifier: project?.id })
+  const { methods, updateProject, isUpdatingProject } = useUpdateProject({ projectId: project?.id })
 
-  const { methods, updateProject, isUpdatingProject } = useUpdateProject({ projectId })
   const { handleSubmit, reset, setValue, getValues } = methods
 
   const { uploadFileAsync } = useUploadFile()
@@ -95,7 +96,7 @@ export default function ProjectInfoPage() {
           toast.loading(t('common.ui.uploading'), {
             id: toastId,
             description: (
-              <div className='w-full min-w-72 space-y-1'>
+              <div className='w-72 space-y-1'>
                 <Progress value={progress} className='w-full' />
                 <p className='text-xs text-muted-foreground'>{progress}%</p>
               </div>
@@ -294,7 +295,7 @@ export default function ProjectInfoPage() {
               <ProjectMembersSection
                 members={members?.value.items ?? []}
                 totalMembers={members?.value.items.length ?? 0}
-                projectId={projectId}
+                projectIdentifier={project?.slug}
                 isCurrentUserMain={isCurrentUserMain}
               />
             </div>

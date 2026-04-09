@@ -5,19 +5,19 @@ import type { ProjectMemberStats } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetProjectMemberStats = ({
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: {
-  projectId: string
-  parentMilestoneId?: string
+  projectIdentifier: string
+  parentMilestoneIdentifier?: string
 }) => {
   const {
     data: projectMemberStats = getDefaultPaginationResponse<ProjectMemberStats>(),
     isLoading: isLoadingProjectMemberStats
   } = useQuery({
-    queryKey: queryKeys.projects.memberStats(projectId, parentMilestoneId),
-    queryFn: () => projectService.getProjectMemberStats({ projectId, parentMilestoneId }),
-    enabled: !!projectId
+    queryKey: queryKeys.projects.memberStats(projectIdentifier, parentMilestoneIdentifier),
+    queryFn: () => projectService.getProjectMemberStats({ projectIdentifier, parentMilestoneIdentifier }),
+    enabled: !!projectIdentifier
   })
 
   return { projectMemberStats, isLoadingProjectMemberStats }

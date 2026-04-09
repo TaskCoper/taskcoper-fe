@@ -23,7 +23,7 @@ import { useGetProjectMembers } from '../../hooks/use-get-project-members'
 import { useToggleEditor } from '../../hooks/use-toggle-editor'
 
 interface UpdateProjectMembersDialogProps {
-  projectId: string
+  identifier: string
   isCurrentUserMain: boolean
   children: React.ReactNode
 }
@@ -32,7 +32,7 @@ const getColumns = ({
   user,
   isCurrentUserMain,
   t,
-  projectId,
+  identifier,
   onToggleEditor,
   isTogglingEditor,
   onDeleteMember,
@@ -41,10 +41,10 @@ const getColumns = ({
   user: UserPayload | null
   isCurrentUserMain: boolean
   t: TFunction
-  projectId: string
-  onToggleEditor: ({ userId, isEditor, projectId }: { userId: string; isEditor: boolean; projectId: string }) => void
+  identifier: string
+  onToggleEditor: ({ userId, isEditor, identifier }: { userId: string; isEditor: boolean; identifier: string }) => void
   isTogglingEditor: boolean
-  onDeleteMember: ({ userId, projectId }: { userId: string; projectId: string }) => void
+  onDeleteMember: ({ userId, identifier }: { userId: string; identifier: string }) => void
   isDeletingMember: boolean
 }): ColumnDef<ProjectMember>[] => {
   const columns: ColumnDef<ProjectMember>[] = [
@@ -115,7 +115,7 @@ const getColumns = ({
               <Switch
                 checked={row.original.isEditor}
                 onCheckedChange={(checked) =>
-                  onToggleEditor({ userId: row.original.userId, isEditor: checked, projectId })
+                  onToggleEditor({ userId: row.original.userId, isEditor: checked, identifier })
                 }
                 disabled={isTogglingEditor}
               />
@@ -156,7 +156,7 @@ const getColumns = ({
                   })
 
                   if (ok) {
-                    onDeleteMember({ userId: row.original.userId, projectId })
+                    onDeleteMember({ userId: row.original.userId, identifier })
                   }
                 }}
                 disabled={isDeletingMember}
@@ -176,16 +176,16 @@ const getColumns = ({
 }
 
 export default function UpdateProjectMembersDialog({
-  projectId,
+  identifier,
   isCurrentUserMain,
   children
 }: UpdateProjectMembersDialogProps) {
   const [open, setOpen] = useState(false)
   const { user } = useAuthStore()
   const { t } = useTranslation()
-  const { members } = useGetProjectMembers({ projectId })
-  const { toggleEditor, isTogglingEditor } = useToggleEditor({ projectId })
-  const { deleteMember, isDeletingMember } = useDeleteMember({ projectId })
+  const { members } = useGetProjectMembers({ identifier })
+  const { toggleEditor, isTogglingEditor } = useToggleEditor({ identifier })
+  const { deleteMember, isDeletingMember } = useDeleteMember({ identifier })
 
   const columns = useMemo(
     () =>
@@ -193,13 +193,13 @@ export default function UpdateProjectMembersDialog({
         user,
         t,
         isCurrentUserMain,
-        projectId,
+        identifier,
         onToggleEditor: toggleEditor,
         isTogglingEditor,
         onDeleteMember: deleteMember,
         isDeletingMember
       }),
-    [user, t, isCurrentUserMain, projectId, toggleEditor, isTogglingEditor, deleteMember, isDeletingMember]
+    [user, t, isCurrentUserMain, identifier, toggleEditor, isTogglingEditor, deleteMember, isDeletingMember]
   )
 
   // eslint-disable-next-line react-hooks/incompatible-library

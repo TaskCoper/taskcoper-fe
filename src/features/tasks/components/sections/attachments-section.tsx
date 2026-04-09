@@ -8,15 +8,15 @@ import { useTranslation } from 'react-i18next'
 
 interface AttachmentsSectionProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   attachments: Attachment[]
 }
 
 export default function AttachmentsSection({
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   attachments
 }: AttachmentsSectionProps) {
   const { t } = useTranslation()
@@ -31,7 +31,11 @@ export default function AttachmentsSection({
         <div className='flex items-center justify-between w-full'>
           <p className='font-semibold'>{t('task.attachment.attachmentsSection')}</p>
 
-          <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId}>
+          <AttachmentPopover
+            taskId={taskId}
+            projectIdentifier={projectIdentifier}
+            parentMilestoneIdentifier={parentMilestoneIdentifier}
+          >
             <Button variant='secondary' size='sm'>
               {t('common.button.add')}
             </Button>
@@ -50,8 +54,8 @@ export default function AttachmentsSection({
                   key={attachment.projectResourceId}
                   attachment={attachment}
                   taskId={taskId}
-                  parentMilestoneId={parentMilestoneId}
-                  projectId={projectId}
+                  parentMilestoneIdentifier={parentMilestoneIdentifier}
+                  projectIdentifier={projectIdentifier}
                 />
               ))}
             </div>
@@ -67,8 +71,8 @@ export default function AttachmentsSection({
                 key={attachment.projectResourceId}
                 attachment={attachment}
                 taskId={taskId}
-                parentMilestoneId={parentMilestoneId}
-                projectId={projectId}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
+                projectIdentifier={projectIdentifier}
               />
             ))}
           </div>
