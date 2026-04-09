@@ -62,7 +62,7 @@ export default function UploadAttachmentForm({
             toast.loading(t('common.ui.uploading'), {
               id: toastId,
               description: (
-                <div className='w-full min-w-72 space-y-1'>
+                <div className='w-72 space-y-1'>
                   <p className='text-xs font-medium truncate'>{file.name}</p>
                   <Progress value={progress} className='w-full' />
                   <p className='text-xs text-muted-foreground'>{progress}%</p>

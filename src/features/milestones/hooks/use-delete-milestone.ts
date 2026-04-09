@@ -31,8 +31,10 @@ export const useDeleteMilestone = ({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey })
+
       if (parentMilestoneIdentifier) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
       }
     }
   })

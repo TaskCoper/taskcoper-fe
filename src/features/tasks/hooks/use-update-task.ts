@@ -10,12 +10,12 @@ import { toast } from 'sonner'
 import { updateTaskSchema, type UpdateTaskFormValues } from '../validations'
 
 interface UseUpdateTaskProps {
-  taskId?: string
+  taskIdentifier?: string
   identifier?: string
   milestoneIdentifier?: string
 }
 
-export const useUpdateTask = ({ taskId, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
+export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { user } = useAuthStore()
@@ -24,12 +24,12 @@ export const useUpdateTask = ({ taskId, identifier, milestoneIdentifier }: UseUp
     resolver: zodResolver(updateTaskSchema(t))
   })
 
-  const queryKey = queryKeys.tasks.detail(taskId)
+  const queryKey = queryKeys.tasks.detail(taskIdentifier)
 
   const { mutate: updateTask, isPending: isUpdatingTask } = useMutation({
     mutationFn: taskService.updateTask,
     onMutate: async (variables) => {
-      if (!taskId) return
+      if (!taskIdentifier) return
 
       await queryClient.cancelQueries({ queryKey })
       const previousData = queryClient.getQueryData<TaskDetail>(queryKey)
@@ -61,7 +61,7 @@ export const useUpdateTask = ({ taskId, identifier, milestoneIdentifier }: UseUp
       return { previousData }
     },
     onError: (error, _variables, context) => {
-      if (taskId && context?.previousData) {
+      if (taskIdentifier && context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData)
       }
 
@@ -70,9 +70,9 @@ export const useUpdateTask = ({ taskId, identifier, milestoneIdentifier }: UseUp
       })
     },
     onSettled: () => {
-      if (taskId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
+      if (taskIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
       }
 
       if (milestoneIdentifier) {

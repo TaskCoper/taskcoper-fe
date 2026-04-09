@@ -11,6 +11,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 
 interface SortableMilestoneTabProps {
@@ -31,7 +32,8 @@ export const SortableMilestoneTab = ({
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
 
-  const { updateMilestone } = useUpdateMilestone({ queryKey })
+  const { identifier } = useParams<{ identifier: string }>()
+  const { updateMilestone } = useUpdateMilestone({ queryKey, shouldInvalidate: true, projectIdentifier: identifier })
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
     queryKey,
     onSuccessCallback: onDeleteSuccess
@@ -43,7 +45,7 @@ export const SortableMilestoneTab = ({
     onSave: (newName) => {
       const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: milestone.id,
-        parentId: null,
+        parentMilestoneIdentifier: null,
         milestoneName: newName,
         position: milestone.position
       })

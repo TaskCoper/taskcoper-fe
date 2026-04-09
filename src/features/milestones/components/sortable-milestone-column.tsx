@@ -30,7 +30,10 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
   const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const [openDropdown, setOpenDropdown] = useState(false)
 
-  const { updateMilestone } = useUpdateMilestone({ queryKey, parentMilestoneIdentifier: milestoneIdentifier })
+  const { updateMilestone } = useUpdateMilestone({
+    queryKey,
+    parentMilestoneIdentifier: milestoneIdentifier
+  })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
     initialValue: column.name,

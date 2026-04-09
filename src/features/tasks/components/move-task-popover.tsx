@@ -17,6 +17,7 @@ interface MoveTaskPopoverProps {
   milestoneIdentifier: string
   milestoneId: string
   taskId: string
+  taskIdentifier: string
 }
 
 export default function MoveTaskPopover({
@@ -24,7 +25,8 @@ export default function MoveTaskPopover({
   projectIdentifier,
   milestoneIdentifier,
   milestoneId,
-  taskId
+  taskId,
+  taskIdentifier
 }: MoveTaskPopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -38,6 +40,7 @@ export default function MoveTaskPopover({
     projectIdentifier,
     milestoneIdentifier,
     milestoneId,
+    taskIdentifier,
     targetMilestoneId: selectedMilestoneId
   })
   const { childMilestones, isLoadingChildMilestones } = useGetChildMilestones({

@@ -65,7 +65,7 @@ import {
   UserRoundPlusIcon,
   XIcon
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
@@ -87,7 +87,7 @@ export default function TaskDialogPage() {
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
-  const descriptionRef = useRef<HTMLDivElement>(null)
+  const [descriptionElement, setDescriptionElement] = useState<HTMLDivElement | null>(null)
   const [isEditComment, setIsEditComment] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
@@ -112,7 +112,7 @@ export default function TaskDialogPage() {
     methods: updateTaskMethods,
     updateTask,
     isUpdatingTask
-  } = useUpdateTask({ taskId: task?.taskId, identifier, milestoneIdentifier })
+  } = useUpdateTask({ taskIdentifier, identifier, milestoneIdentifier })
   const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
@@ -217,20 +217,23 @@ export default function TaskDialogPage() {
   }, [open, task, resetComment])
 
   useEffect(() => {
-    if (!descriptionRef.current) return
+    if (!descriptionElement) return
 
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setShowDescriptionToggle(entry.target.scrollHeight > 384)
+    const checkHeight = () => {
+      if (descriptionElement) {
+        setShowDescriptionToggle(descriptionElement.scrollHeight > 384)
       }
-    })
+    }
 
-    observer.observe(descriptionRef.current)
+    checkHeight()
+
+    const observer = new ResizeObserver(checkHeight)
+
+    observer.observe(descriptionElement)
     return () => observer.disconnect()
-  }, [task?.taskDescription, isEditDescription])
+  }, [descriptionElement, task?.taskDescription, isEditDescription])
 
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
-    if (!updateTaskMethods.formState.isDirty) return
     updateTask({ body })
   }
 
@@ -333,8 +336,9 @@ export default function TaskDialogPage() {
               task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
             )}
           >
-            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId ? (
+            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
               <MoveTaskPopover
+                taskIdentifier={task.taskSlug}
                 projectIdentifier={identifier}
                 milestoneIdentifier={milestoneIdentifier}
                 milestoneId={task.milestoneId}
@@ -452,9 +456,14 @@ export default function TaskDialogPage() {
                       </PriorityPopover>
                     ) : null}
 
-                    {(task?.taskLabels.length ?? 0) === 0 && identifier && task?.taskId && milestoneIdentifier ? (
+                    {(task?.taskLabels.length ?? 0) === 0 &&
+                    identifier &&
+                    task?.taskSlug &&
+                    task?.taskId &&
+                    milestoneIdentifier ? (
                       <LabelPopover
                         projectIdentifier={identifier}
+                        taskSlug={task.taskSlug}
                         taskId={task.taskId}
                         parentMilestoneIdentifier={milestoneIdentifier}
                         taskLabels={task?.taskLabels ?? []}
@@ -574,9 +583,10 @@ export default function TaskDialogPage() {
                         </div>
                       ))}
 
-                      {identifier && task?.taskId && milestoneIdentifier ? (
+                      {identifier && task?.taskSlug && task?.taskId && milestoneIdentifier ? (
                         <LabelPopover
                           projectIdentifier={identifier}
+                          taskSlug={task.taskSlug}
                           taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
                           taskLabels={task?.taskLabels ?? []}
@@ -730,7 +740,7 @@ export default function TaskDialogPage() {
                     <div>
                       <div className='relative'>
                         <div
-                          ref={descriptionRef}
+                          ref={setDescriptionElement}
                           role='button'
                           className={cn('overflow-hidden transition-all', !isDescriptionExpanded && 'max-h-96')}
                         >

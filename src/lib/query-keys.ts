@@ -145,12 +145,12 @@ export const queryKeys = {
   // Subtasks
   subtasks: {
     all: ['subtasks'] as const,
-    byTask: (taskId?: string) => ['subtasks', taskId] as const
+    byTask: (taskIdentifier?: string) => ['subtasks', taskIdentifier] as const
   },
   // Comments
   comments: {
     all: ['comments'] as const,
-    byTask: (taskId?: string) => ['comments', taskId] as const
+    byTask: (taskIdentifier?: string) => ['comments', taskIdentifier] as const
   },
   // Notifications
   notifications: {
@@ -260,7 +260,7 @@ export const queryKeys = {
   },
   // Project Revenues
   projectRevenues: {
-    all: (projectId?: string) => ['project-revenues', projectId] as const,
+    all: (projectIdentifier?: string) => ['project-revenues', projectIdentifier] as const,
     list: ({
       projectIdentifier,
       pageIndex,

@@ -49,7 +49,7 @@ export const domainSchema = (t: TFunction) => {
 export const inviteMembersSchema = (t: TFunction) => {
   return z
     .object({
-      projectIdentifier: z.string(),
+      projectIdentifier: z.string().min(1),
       hasExpiration: z.boolean(),
       expirationDate: z.iso.datetime().nullable(),
       inviteMembers: z.array(memberSchema(t)).min(1, t('project.inviteMembers.validation.inviteMembers.minLength'))
@@ -156,14 +156,14 @@ export const addProjectRevenueSchema = (t: TFunction) => {
     type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
     note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
     labelIds: z.array(z.uuid()),
-    projectIdentifier: z.string()
+    projectIdentifier: z.string().min(1)
   })
 }
 
 export const updateProjectRevenueSchema = (t: TFunction) => {
   return z.object({
     projectTransactionId: z.uuid(),
-    projectIdentifier: z.string(),
+    projectIdentifier: z.string().min(1),
     name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
     amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
     type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),

@@ -65,6 +65,7 @@ export const useUpdateProjectRevenueLabel = ({ projectIdentifier }: { projectIde
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(projectIdentifier) })
     }
   })
 

@@ -76,7 +76,7 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
       for (const file of Array.from(files)) {
         const toastId = toast.loading(t('common.ui.uploading'), {
           description: (
-            <div className='w-full min-w-72 space-y-1'>
+            <div className='w-72 space-y-1'>
               <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
               <Progress value={0} className='w-full' />
               <p className='text-xs text-muted-foreground'>0%</p>
@@ -91,7 +91,7 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
               toast.loading(t('common.ui.uploading'), {
                 id: toastId,
                 description: (
-                  <div className='w-full min-w-72 space-y-1'>
+                  <div className='w-72 space-y-1'>
                     <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
                     <Progress value={progress} className='w-full' />
                     <p className='text-xs text-muted-foreground'>{progress}%</p>

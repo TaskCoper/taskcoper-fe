@@ -201,7 +201,9 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
                       <p className='text-muted-foreground text-sm'>{t('project.sidebar.noPendingTasks')}</p>
                     </div>
                   ) : (
-                    assignedTasks?.value.items.map((task) => <TaskCard key={task.id} task={task} />)
+                    assignedTasks?.value.items.map((task) => (
+                      <TaskCard key={task.id} task={task} shouldDisplayParentMilestone />
+                    ))
                   )}
                 </div>
               </SidebarGroupContent>

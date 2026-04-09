@@ -9,7 +9,7 @@ export const addParentMilestoneSchema = (t: TFunction) => {
         .trim()
         .min(1, t('milestone.validation.milestoneName.minLength'))
         .max(255, t('milestone.validation.milestoneName.maxLength')),
-      projectIdentifier: z.string(),
+      projectIdentifier: z.string().min(1),
       position: z.number({ message: t('milestone.validation.position.invalid') })
     })
     .strict()
@@ -18,13 +18,13 @@ export const addParentMilestoneSchema = (t: TFunction) => {
 export const addMilestoneSchema = (t: TFunction) => {
   return z
     .object({
-      parentMilestoneIdentifier: z.string(),
+      parentMilestoneIdentifier: z.string().min(1),
       milestoneName: z
         .string()
         .trim()
         .min(1, t('milestone.validation.milestoneName.minLength'))
         .max(255, t('milestone.validation.milestoneName.maxLength')),
-      projectIdentifier: z.string(),
+      projectIdentifier: z.string().min(1),
       position: z.number({ message: t('milestone.validation.position.invalid') })
     })
     .strict()

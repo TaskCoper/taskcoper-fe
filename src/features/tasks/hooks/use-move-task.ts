@@ -8,6 +8,7 @@ interface MoveTaskParams {
   isDragging?: boolean
   projectIdentifier?: string
   milestoneId?: string
+  taskIdentifier?: string
   targetMilestoneId?: string
   milestoneIdentifier?: string
 }
@@ -17,8 +18,9 @@ export const useMoveTask = ({
   projectIdentifier,
   milestoneIdentifier,
   milestoneId,
+  taskIdentifier,
   targetMilestoneId
-}: MoveTaskParams = {}) => {
+}: MoveTaskParams) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -29,11 +31,11 @@ export const useMoveTask = ({
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.id) })
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
 
       if (!isDragging) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(variables.body.id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
       }
 
       if (milestoneIdentifier) {

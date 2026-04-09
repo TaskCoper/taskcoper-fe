@@ -169,7 +169,10 @@ export const getColumns = ({ onDeleteRevenue, onEditRevenue }: GetColumnsProps):
         return (
           <div className='flex items-center gap-1 flex-wrap'>
             {row.original.labels.map((label) => (
-              <div key={label.id} className={cn('rounded-sm px-2 py-0.5', label.color)}>
+              <div
+                key={label.id}
+                className={cn('rounded-sm h-5 min-w-10 px-2 flex justify-center items-center', label.color)}
+              >
                 <p className={cn('text-xs font-medium', getColorTextClass(label.color))}>{label.name}</p>
               </div>
             ))}

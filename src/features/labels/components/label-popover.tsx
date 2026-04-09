@@ -25,6 +25,7 @@ import UpdateLabelForm from './update-label-form'
 interface LabelPopoverProps {
   children: React.ReactNode
   projectIdentifier: string
+  taskSlug: string
   taskId: string
   parentMilestoneIdentifier: string
   taskLabels: TaskLabel[]
@@ -33,6 +34,7 @@ interface LabelPopoverProps {
 export default function LabelPopover({
   children,
   projectIdentifier,
+  taskSlug,
   taskId,
   parentMilestoneIdentifier,
   taskLabels
@@ -60,7 +62,7 @@ export default function LabelPopover({
     isUpdatingProjectLabel
   } = useUpdateProjectLabel({
     projectIdentifier,
-    taskId,
+    taskIdentifier: taskSlug,
     parentMilestoneIdentifier
   })
   const onSubmitUpdateLabel: SubmitHandler<UpdateProjectLabelFormValues> = (body) => {
@@ -82,7 +84,7 @@ export default function LabelPopover({
     methods: addTaskLabelMethods,
     addTaskLabel,
     isAddingTaskLabel
-  } = useAddTaskLabel({ taskId, projectIdentifier, parentMilestoneIdentifier, enabled: open })
+  } = useAddTaskLabel({ taskIdentifier: taskSlug, projectIdentifier, parentMilestoneIdentifier, enabled: open })
   const onAddTaskLabel = () => {
     const result = addTaskLabelSchema.safeParse(addTaskLabelMethods.getValues())
 
@@ -92,7 +94,7 @@ export default function LabelPopover({
   }
 
   const { deleteTaskLabel, isDeletingTaskLabel } = useDeleteTaskLabel({
-    taskId,
+    taskIdentifier: taskSlug,
     projectIdentifier,
     parentMilestoneIdentifier
   })

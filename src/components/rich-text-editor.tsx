@@ -193,7 +193,7 @@ export default function RichTextEditor({
             toast.loading(t('common.ui.uploading'), {
               id: toastId,
               description: (
-                <div className='w-full min-w-72 space-y-1'>
+                <div className='w-72 space-y-1'>
                   <Progress value={progress} className='w-full' />
                   <p className='text-xs text-muted-foreground'>{progress}%</p>
                 </div>
@@ -370,7 +370,7 @@ export default function RichTextEditor({
                 toast.loading(t('common.ui.uploading'), {
                   id: toastId,
                   description: (
-                    <div className='w-full min-w-72 space-y-1'>
+                    <div className='w-72 space-y-1'>
                       <Progress value={progress} className='w-full' />
                       <p className='text-xs text-muted-foreground'>{progress}%</p>
                     </div>

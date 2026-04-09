@@ -79,7 +79,7 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
           description: null
         })
 
-        setValue('backgroundImage', url)
+        setValue('backgroundImage', url, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
         onSubmit()
         onClose()
       }
@@ -92,7 +92,7 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
   }
 
   const handleRemove = () => {
-    setValue('backgroundImage', null)
+    setValue('backgroundImage', null, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
     onSubmit()
     onClose()
   }

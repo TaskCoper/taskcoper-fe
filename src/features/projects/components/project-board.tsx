@@ -46,7 +46,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const { moveTask } = useMoveTask({
     projectIdentifier: identifier,
     milestoneIdentifier,
-    milestoneId: activeTask?.milestoneId
+    milestoneId: activeTask?.milestoneId,
+    taskIdentifier: activeTask?.slug
   })
 
   const sensors = useDndSensors()
