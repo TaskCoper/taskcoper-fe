@@ -23,9 +23,18 @@ interface SortableMilestoneColumnProps {
   tasks: TaskPreview[]
   isOverlay?: boolean
   queryKey: readonly unknown[]
+  canMoveMilestone?: boolean
+  canMoveTask?: boolean
 }
 
-export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {
+export default function SortableMilestoneColumn({
+  column,
+  tasks,
+  isOverlay,
+  queryKey,
+  canMoveMilestone = true,
+  canMoveTask = true
+}: SortableMilestoneColumnProps) {
   const { t } = useTranslation()
   const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -64,7 +73,8 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     } satisfies MilestoneColumnDragData,
     attributes: {
       roleDescription: `Column: ${column.name}`
-    }
+    },
+    disabled: !canMoveMilestone
   })
 
   const style = {
@@ -86,7 +96,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     <Card
       ref={setNodeRef}
       style={style}
-      {...(isEditing ? {} : { ...attributes, ...listeners })}
+      {...(isEditing || !canMoveMilestone ? {} : { ...attributes, ...listeners })}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
         className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-12.5rem)] overflow-hidden bg-muted cursor-pointer'
@@ -117,7 +127,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
         <div className='flex flex-col gap-2 p-2'>
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <SortableTaskCard task={task} key={task.id} />
+              <SortableTaskCard task={task} key={task.id} canMoveTask={canMoveTask} />
             ))}
           </SortableContext>
         </div>

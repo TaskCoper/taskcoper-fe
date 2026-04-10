@@ -2,6 +2,7 @@ import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
 import { cn, getColorTextClass } from '@/shared/utils'
@@ -49,6 +50,10 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
 
     const { user } = useAuthStore()
     const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
+
+    const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+    const canToggleTaskStatus = check('TASKS', 'canUpdate', 'canToggleTaskStatus')
+
     const { areLabelsExpanded, toggleLabelsExpanded } = useTaskUIStore()
     const { updateTaskStatus, isUpdatingTaskStatus } = useUpdateTaskStatus({
       taskId: task.id,
@@ -142,10 +147,11 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
               <Checkbox
                 className={cn(
                   'rounded-full border-foreground z-10 mt-0.5',
-                  !task.isCompleted && 'hidden group-hover/card:block'
+                  !task.isCompleted && 'hidden group-hover/card:block',
+                  !canToggleTaskStatus ? 'cursor-not-allowed' : ''
                 )}
                 checked={task.isCompleted}
-                disabled={isUpdatingTaskStatus}
+                disabled={isUpdatingTaskStatus || !canToggleTaskStatus}
                 onCheckedChange={(checked) => {
                   updateTaskStatus({ id: task.id, isCompleted: checked as boolean })
                 }}

@@ -22,6 +22,7 @@ import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import LabelPopover from '@/features/labels/components/label-popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import SortableParentSubtaskCard from '@/features/subtasks/components/sortable-parent-subtask-card'
 import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask-card'
 import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
@@ -81,6 +82,10 @@ export default function TaskDialogPage() {
     milestoneIdentifier: string
     taskIdentifier: string
   }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canMoveTask = check('TASKS', 'canUpdate', 'canMoveTask')
+  const canToggleTaskStatus = check('TASKS', 'canUpdate', 'canToggleTaskStatus')
 
   const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
 
@@ -351,7 +356,7 @@ export default function TaskDialogPage() {
               </MoveTaskPopover>
             ) : null} */}
 
-            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
+            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug && canMoveTask ? (
               <MoveTaskPopoverV2
                 projectIdentifier={identifier}
                 taskIdentifier={task.taskSlug}
@@ -364,7 +369,11 @@ export default function TaskDialogPage() {
                   <ChevronDownIcon />
                 </Button>
               </MoveTaskPopoverV2>
-            ) : null}
+            ) : (
+              <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                {task?.milestoneName}
+              </Button>
+            )}
 
             <div className='flex items-center gap-1'>
               {isWatchingTask ? (
@@ -436,6 +445,7 @@ export default function TaskDialogPage() {
               <div className='flex gap-2'>
                 <Checkbox
                   checked={task?.isCompleted}
+                  disabled={!canToggleTaskStatus}
                   onCheckedChange={(checked) => {
                     const result = updateTaskSchema(t).safeParse({
                       ...updateTaskMethods.getValues(),
@@ -446,7 +456,11 @@ export default function TaskDialogPage() {
                       updateTask({ body: result.data })
                     }
                   }}
-                  className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')}
+                  className={cn(
+                    'rounded-full border-foreground',
+                    isEditingName ? 'mt-5' : 'mt-2.5',
+                    !canToggleTaskStatus ? 'cursor-not-allowed' : ''
+                  )}
                 />
                 <div className='space-y-4'>
                   {isEditingName ? (

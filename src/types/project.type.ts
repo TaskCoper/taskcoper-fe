@@ -1,3 +1,4 @@
+import type { ProjectRole, SectionPermission } from './project-permission.type'
 import type { TaskPriority } from './task.type'
 
 export interface ProjectPreview {
@@ -209,39 +210,10 @@ export interface RevenueStats {
   netRevenue: number
 }
 
-export type SectionKey =
-  | 'OVERVIEW'
-  | 'TASKS'
-  | 'PERFORMANCE'
-  | 'CALENDAR'
-  | 'CHAT'
-  | 'NOTE'
-  | 'STORAGE'
-  | 'REVENUE'
-  | 'SETTINGS'
-
-export type ActionKey = 'canRead' | 'canWrite' | 'canUpdate' | 'canDelete'
-
-export interface Role {
-  id: string
-  name: string
-  isSystem: boolean
-  isDefault: boolean
-}
-
-export interface SectionPermission {
-  sectionKey: SectionKey
-  canRead: boolean
-  canWrite: boolean
-  canUpdate: boolean
-  canDelete: boolean
-  extensions?: Record<string, unknown>
-}
-
 export interface ProjectPermission {
   projectId: string
   effectiveRoleNames: string[]
-  roles: Role[]
+  roles: ProjectRole[]
   sections: SectionPermission[]
 }
 

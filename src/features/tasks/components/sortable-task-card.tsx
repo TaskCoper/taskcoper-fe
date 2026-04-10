@@ -6,9 +6,10 @@ import TaskCard from './task-card'
 interface SortableTaskCardProps {
   task: TaskPreview
   isOverlay?: boolean
+  canMoveTask?: boolean
 }
 
-export default function SortableTaskCard({ task, isOverlay }: SortableTaskCardProps) {
+export default function SortableTaskCard({ task, isOverlay, canMoveTask = true }: SortableTaskCardProps) {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: {
@@ -17,7 +18,8 @@ export default function SortableTaskCard({ task, isOverlay }: SortableTaskCardPr
     } satisfies TaskCardDragData,
     attributes: {
       roleDescription: 'Task'
-    }
+    },
+    disabled: !canMoveTask
   })
 
   const style = {
@@ -31,8 +33,7 @@ export default function SortableTaskCard({ task, isOverlay }: SortableTaskCardPr
       task={task}
       style={style}
       dragging={isOverlay ? 'overlay' : isDragging ? 'over' : undefined}
-      {...attributes}
-      {...listeners}
+      {...(canMoveTask ? { ...attributes, ...listeners } : {})}
     />
   )
 }

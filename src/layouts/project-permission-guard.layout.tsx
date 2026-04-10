@@ -1,6 +1,6 @@
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import { type SectionKey } from '@/types/project.type'
+import { type SectionKey } from '@/types/project-permission.type'
 import { Navigate, Outlet, useParams } from 'react-router'
 
 interface ProjectPermissionGuardLayoutProps {

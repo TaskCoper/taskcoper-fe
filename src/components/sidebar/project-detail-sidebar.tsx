@@ -131,7 +131,8 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
   const { assignedTasks, isLoadingAssignedTasks } = useGetMyAssignedTasks({
     projectIdentifier: identifier,
     userId: user?.UserId,
-    enabled: activeItem.hasSecondSidebar
+    enabled:
+      activeItem.hasSecondSidebar && location.pathname.split('/').includes('milestones') && can('TASKS', 'canRead')
   })
 
   useEffect(() => {
