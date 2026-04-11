@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card'
 import { Field } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { DATE_LOCALES } from '@/shared/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
@@ -56,6 +57,10 @@ export default function CommentCard({
   const { user } = useAuthStore()
   const [isEditComment, setIsEditComment] = useState(false)
   const [isDeleteComment, setIsDeleteComment] = useState(false)
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const { methods, updateComment, isUpdatingComment } = useUpdateComment()
   const { deleteComment, isDeletingComment } = useDeleteComment({
@@ -193,52 +198,56 @@ export default function CommentCard({
 
         {comment.userId === user?.UserId && !isEditComment ? (
           <div className='flex items-center gap-2'>
-            <p
-              className='text-xs text-muted-foreground cursor-pointer underline'
-              role='button'
-              onClick={() => setIsEditComment(true)}
-            >
-              {t('common.button.edit')}
-            </p>
+            {canUpdate ? (
+              <p
+                className='text-xs text-muted-foreground cursor-pointer underline'
+                role='button'
+                onClick={() => setIsEditComment(true)}
+              >
+                {t('common.button.edit')}
+              </p>
+            ) : null}
 
-            <Popover open={isDeleteComment} onOpenChange={setIsDeleteComment}>
-              <PopoverTrigger>
-                <p
-                  className={cn(
-                    'text-xs text-muted-foreground cursor-pointer underline',
-                    isDeleteComment && 'text-destructive'
-                  )}
-                  role='button'
-                >
-                  {t('common.button.delete')}
-                </p>
-              </PopoverTrigger>
+            {canDelete ? (
+              <Popover open={isDeleteComment} onOpenChange={setIsDeleteComment}>
+                <PopoverTrigger>
+                  <p
+                    className={cn(
+                      'text-xs text-muted-foreground cursor-pointer underline',
+                      isDeleteComment && 'text-destructive'
+                    )}
+                    role='button'
+                  >
+                    {t('common.button.delete')}
+                  </p>
+                </PopoverTrigger>
 
-              <PopoverContent className='p-0' side='bottom' align='start' sideOffset={8} onInteractOutside={onClose}>
-                <div className='p-3 space-y-2'>
-                  <div className='flex items-center justify-center relative mt-1'>
-                    <p className='text-sm font-bold whitespace-nowrap'>{t('task.comment.deleteComment.title')}</p>
-                    <Button variant='ghost' size='icon-sm' onClick={onClose} className='absolute right-0'>
-                      <XIcon />
+                <PopoverContent className='p-0' side='bottom' align='start' sideOffset={8} onInteractOutside={onClose}>
+                  <div className='p-3 space-y-2'>
+                    <div className='flex items-center justify-center relative mt-1'>
+                      <p className='text-sm font-bold whitespace-nowrap'>{t('task.comment.deleteComment.title')}</p>
+                      <Button variant='ghost' size='icon-sm' onClick={onClose} className='absolute right-0'>
+                        <XIcon />
+                      </Button>
+                    </div>
+
+                    <p className='text-sm text-muted-foreground'>{t('task.comment.deleteComment.description')}</p>
+
+                    <Button
+                      variant='destructive'
+                      className='w-full'
+                      disabled={isDeletingComment}
+                      onClick={() => {
+                        deleteComment({ commentId: comment.commentId, taskId })
+                        onClose()
+                      }}
+                    >
+                      {t('task.comment.deleteComment.confirmText')}
                     </Button>
                   </div>
-
-                  <p className='text-sm text-muted-foreground'>{t('task.comment.deleteComment.description')}</p>
-
-                  <Button
-                    variant='destructive'
-                    className='w-full'
-                    disabled={isDeletingComment}
-                    onClick={() => {
-                      deleteComment({ commentId: comment.commentId, taskId })
-                      onClose()
-                    }}
-                  >
-                    {t('task.comment.deleteComment.confirmText')}
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            ) : null}
           </div>
         ) : null}
       </div>

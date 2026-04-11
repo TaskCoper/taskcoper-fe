@@ -13,6 +13,7 @@ import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 
 interface SortableMilestoneTabProps {
   milestone: ParentMilestone
@@ -33,6 +34,10 @@ export const SortableMilestoneTab = ({
   const { confirm } = useConfirmStore()
 
   const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canUpdate = check('TASKS', 'canUpdate')
+
   const { updateMilestone } = useUpdateMilestone({ queryKey, shouldInvalidate: true, projectIdentifier: identifier })
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
     queryKey,
@@ -113,7 +118,7 @@ export const SortableMilestoneTab = ({
         )}
       >
         <Tooltip>
-          <TooltipTrigger asChild {...triggerProps}>
+          <TooltipTrigger asChild {...(canUpdate ? triggerProps : {})}>
             <p className='truncate font-medium w-full text-left'>{milestone.name}</p>
           </TooltipTrigger>
           <TooltipContent side='bottom'>

@@ -19,8 +19,12 @@ export interface ProjectMember {
   email: string
   avatar: string | null
   role: number
-  isMain: boolean
-  isEditor: boolean
+  roles: Array<{
+    id: string
+    name: string
+    isSystem: boolean
+    isDefault: boolean
+  }>
 }
 
 export interface Project {
@@ -41,6 +45,7 @@ export interface Project {
   organizationName: string | null
   organizationLogo: string | null
   domains: ProjectDomain[]
+  members: Array<ProjectMember>
 }
 
 export interface SystemProject {

@@ -50,9 +50,9 @@ export default function ProjectMembersSection({
             >
               <Avatar
                 className={cn(
-                  'ring-2 ring-slate-500 ring-offset-2',
-                  member.isMain && 'ring-indigo-500',
-                  member.isEditor && !member.isMain && 'ring-blue-500'
+                  'ring-2 ring-slate-500 ring-offset-2'
+                  // member.isMain && 'ring-indigo-500',
+                  // member.isEditor && !member.isMain && 'ring-blue-500'
                 )}
               >
                 <AvatarImage src={member.avatar ?? ''} />
@@ -63,13 +63,7 @@ export default function ProjectMembersSection({
                 <div className='flex items-center gap-1'>
                   <p className='text-sm font-medium truncate'>{member.fullName}</p>
 
-                  <p className='text-xs text-muted-foreground'>
-                    {member.isMain
-                      ? `(${t('role.owner')})`
-                      : member.isEditor
-                        ? `(${t('role.editor')})`
-                        : `(${t('role.viewer')})`}
-                  </p>
+                  <p className='text-xs text-muted-foreground'>{member.roles.map((role) => role.name).join(', ')}</p>
                 </div>
                 <p className='text-xs text-muted-foreground truncate'>{member.email}</p>
               </div>

@@ -41,6 +41,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const canMoveTask = check('TASKS', 'canUpdate', 'canMoveTask')
   const canMoveMilestone = check('TASKS', 'canUpdate', 'canMoveMilestone')
+  const canWrite = check('TASKS', 'canWrite')
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
 
@@ -260,7 +261,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
             </div>
           )}
         </SortableContext>
-        {identifier && milestoneIdentifier ? (
+        {identifier && milestoneIdentifier && canWrite ? (
           <AddMilestoneButton projectIdentifier={identifier} parentMilestoneIdentifier={milestoneIdentifier} />
         ) : null}
       </ProjectContainer>

@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useGetProjectMembers } from '@/features/projects/hooks/use-get-project-members'
-import { getAvatarFallback } from '@/shared/utils'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +19,7 @@ interface AssigneePopoverProps {
   projectIdentifier: string
   taskId: string
   parentMilestoneIdentifier: string
+  disabled?: boolean
 }
 
 // display project members and task members
@@ -29,13 +31,17 @@ export default function AssigneePopover({
   children,
   projectIdentifier,
   taskId,
-  parentMilestoneIdentifier
+  parentMilestoneIdentifier,
+  disabled = false
 }: AssigneePopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const { members, isLoadingMembers } = useGetProjectMembers({
     identifier: projectIdentifier,
@@ -84,7 +90,9 @@ export default function AssigneePopover({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         sideOffset={8}
         align='start'
@@ -123,17 +131,20 @@ export default function AssigneePopover({
                           role='button'
                           onClick={(e) => {
                             if (isAlreadyAssigned) {
-                              if (!isUnassigningMember) handleUnassignMember(e, member.userId)
+                              if (!isUnassigningMember && canDelete) handleUnassignMember(e, member.userId)
                             } else {
                               if (!isAssigningMember) handleAssignMember(e, member.userId)
                             }
                           }}
                           key={member.userId}
-                          className={`flex items-center gap-2.5 rounded-sm p-1 transition-opacity ${
+                          className={cn(
+                            'flex items-center gap-2.5 rounded-sm p-1 transition-opacity',
                             isAssigningMember || isUnassigningMember
                               ? 'opacity-50 cursor-not-allowed'
-                              : 'hover:bg-muted cursor-pointer'
-                          }`}
+                              : isAlreadyAssigned && !canDelete
+                                ? 'cursor-not-allowed opacity-70'
+                                : 'hover:bg-muted cursor-pointer'
+                          )}
                         >
                           <Avatar>
                             <AvatarImage src={member.avatar || ''} alt={member.fullName} />
@@ -143,7 +154,7 @@ export default function AssigneePopover({
                             <p className='text-sm font-medium'>{member.fullName}</p>
                             <p className='text-xs text-muted-foreground'>{member.email}</p>
                           </div>
-                          {isAlreadyAssigned && (
+                          {isAlreadyAssigned && canDelete && (
                             <Button
                               variant='ghost'
                               size='icon-sm'
@@ -181,7 +192,14 @@ export default function AssigneePopover({
                       <div
                         role='button'
                         key={taskMember.userId}
-                        className='flex items-center gap-2.5 hover:bg-muted cursor-pointer rounded-sm p-1 w-full'
+                        onClick={(e) => {
+                          if (canDelete && !isUnassigningMember) handleUnassignMember(e, taskMember.userId)
+                        }}
+                        className={cn(
+                          'flex items-center gap-2.5 rounded-sm p-1 w-full transition-opacity',
+                          !canDelete ? 'cursor-not-allowed opacity-70' : 'hover:bg-muted cursor-pointer',
+                          isUnassigningMember && 'opacity-50 cursor-not-allowed'
+                        )}
                       >
                         <Avatar>
                           <AvatarImage
@@ -200,15 +218,17 @@ export default function AssigneePopover({
                           <p className='text-xs text-muted-foreground truncate'>{taskMember.email}</p>
                         </div>
 
-                        <Button
-                          variant='ghost'
-                          size='icon-sm'
-                          className='size-6'
-                          onClick={(e) => handleUnassignMember(e, taskMember.userId)}
-                          disabled={isUnassigningMember}
-                        >
-                          <XIcon />
-                        </Button>
+                        {canDelete && (
+                          <Button
+                            variant='ghost'
+                            size='icon-sm'
+                            className='size-6'
+                            onClick={(e) => handleUnassignMember(e, taskMember.userId)}
+                            disabled={isUnassigningMember}
+                          >
+                            <XIcon />
+                          </Button>
+                        )}
                       </div>
                     ))
                   )}

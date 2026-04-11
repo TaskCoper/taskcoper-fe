@@ -15,7 +15,7 @@ import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ProjectMember } from '@/types/project.type'
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
-import { EditIcon, EyeIcon, Trash2Icon, UserCircleIcon } from 'lucide-react'
+import { Trash2Icon, UserCircleIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDeleteMember } from '../../hooks/use-delete-member'
@@ -113,7 +113,7 @@ const getColumns = ({
           return (
             <div className='flex justify-center'>
               <Switch
-                checked={row.original.isEditor}
+                // checked={row.original.isEditor}
                 onCheckedChange={(checked) =>
                   onToggleEditor({ userId: row.original.userId, isEditor: checked, identifier })
                 }
@@ -126,7 +126,7 @@ const getColumns = ({
         return (
           <div className='flex justify-center'>
             <span className='text-sm text-muted-foreground'>
-              {row.original.isEditor ? <EditIcon className='size-4' /> : <EyeIcon className='size-4' />}
+              {/* {row.original.isEditor ? <EditIcon className='size-4' /> : <EyeIcon className='size-4' />} */}
             </span>
           </div>
         )

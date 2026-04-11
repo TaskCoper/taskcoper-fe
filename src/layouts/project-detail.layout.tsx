@@ -14,11 +14,10 @@ import ParentMilestonesMenu from '@/features/milestones/components/parent-milest
 import { SortableMilestoneTab } from '@/features/milestones/components/sortable-milestone-tab'
 import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
 import { useParentMilestoneDragDrop } from '@/features/milestones/hooks/use-parent-milestone-drag-drop'
-import UpdateProjectMembersDialog from '@/features/projects/components/dialogs/update-project-members-dialog'
-import { useGetProjectMembers } from '@/features/projects/hooks/use-get-project-members'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import { useProjectRouting } from '@/features/projects/hooks/use-project-routing'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
@@ -34,8 +33,12 @@ export default function ProjectDetailLayout() {
   const location = useLocation()
   const { identifier } = useParams<{ identifier: string }>()
 
-  const { user } = useAuthStore()
   const { removeLastActiveMilestone } = useMilestonePreferencesStore()
+
+  const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canDelete = check('TASKS', 'canDelete')
+  const canRead = check('TASKS', 'canRead')
 
   const isMobile = useIsMobile()
   const sensors = useDndSensors()
@@ -47,21 +50,24 @@ export default function ProjectDetailLayout() {
     if (projectIndex !== -1 && parts.length > projectIndex + 2) {
       return parts[projectIndex + 2]
     }
-    return 'milestones'
+    return ''
   }, [location.pathname])
 
   // only show second sidebar on specific routes
   const hasSecondSidebar = secondSidebarRoutes.includes(activeSegment)
 
-  // only fetch parent milestones when user is at /milestones
-  const shouldFetchMilestones = activeSegment === 'milestones'
+  // only fetch parent milestones when user is at /milestones and has read permission
+  const shouldFetchMilestones = activeSegment === 'milestones' && !isLoadingPermissions && canRead
   const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({
     identifier,
     enabled: shouldFetchMilestones
   })
 
   // show member avatars next to the parent milestones tab
-  const { members, isLoadingMembers } = useGetProjectMembers({ identifier, enabled: shouldFetchMilestones })
+  // const { members, isLoadingMembers } = useGetProjectMembers({ identifier, enabled: shouldFetchMilestones })
+
+  const { project, isLoadingProject } = useGetProject({ identifier })
+
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -81,8 +87,9 @@ export default function ProjectDetailLayout() {
   const itemsId = useMemo(() => items.map((item) => item.id), [items])
 
   // check if the current user is the main/admin of this project
-  const isCurrentUserMain =
-    members?.value.items.find((member) => member.userId === user?.UserId && member.isMain) !== undefined
+  // const isCurrentUserMain =
+  //   project?.members?.find((member) => member.userId === user?.UserId && member.roles.some((role) => role.isSystem)) !==
+  //   undefined
 
   const queryKey = ['parent-milestones', identifier]
 
@@ -97,6 +104,16 @@ export default function ProjectDetailLayout() {
     items,
     queryKey
   })
+
+  // redirect to info page if user don't have read permission
+  useEffect(() => {
+    if (isLoadingPermissions) return
+
+    // if canRead is false, and user at root or milestones, redirect to info
+    if (!canRead && identifier && (activeSegment === '' || activeSegment === 'milestones')) {
+      navigate(`/projects/${identifier}/info`, { replace: true })
+    }
+  }, [isLoadingPermissions, canRead, identifier, activeSegment, navigate])
 
   // auto navigation when user delete parent milestone
   const createDeleteHandler = useCallback(
@@ -178,11 +195,11 @@ export default function ProjectDetailLayout() {
 
           {shouldDisplayTabs ? (
             <>
-              {identifier ? (
+              {identifier && canWrite ? (
                 <div className='shrink-0'>
                   <AddParentMilestonePopover identifier={identifier}>
                     <Button variant='ghost' size='icon' className='size-7'>
-                      <PlusIcon className='size-4' />
+                      <PlusIcon />
                     </Button>
                   </AddParentMilestonePopover>
                 </div>
@@ -222,7 +239,7 @@ export default function ProjectDetailLayout() {
                                 isActive={activeTabValue === milestone.slug}
                                 queryKey={queryKey}
                                 onDeleteSuccess={createDeleteHandler(milestone.id)}
-                                canDelete={items.length > 1}
+                                canDelete={items.length > 1 && canDelete}
                               />
                             ))}
                           </TabsList>
@@ -241,7 +258,7 @@ export default function ProjectDetailLayout() {
                 </div>
               )}
 
-              {isLoadingMembers ? (
+              {isLoadingProject ? (
                 <div className='flex items-center -space-x-2 *:ring-3 *:ring-background ml-auto'>
                   <Skeleton className='size-8 rounded-full' />
                   <Skeleton className='size-8 rounded-full' />
@@ -249,48 +266,55 @@ export default function ProjectDetailLayout() {
                   <Skeleton className='size-8 rounded-full' />
                 </div>
               ) : identifier ? (
-                <UpdateProjectMembersDialog identifier={identifier} isCurrentUserMain={isCurrentUserMain}>
-                  <div
-                    role='button'
-                    className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'
-                  >
-                    {members?.value.items.slice(0, 4).map((member, index) => (
-                      <AvatarWithTooltip
-                        key={member.userId}
-                        avatar={member.avatar}
-                        fullName={member.fullName}
-                        email={member.email}
-                        isActive={activeIndex === index}
-                        onMouseEnter={() => setActiveIndex(index)}
-                        onMouseLeave={() => setActiveIndex(null)}
-                      />
-                    ))}
+                // <UpdateProjectMembersDialog identifier={identifier} isCurrentUserMain={isCurrentUserMain}>
+                <div className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'>
+                  {project?.members?.slice(0, 4).map((member, index) => (
+                    <AvatarWithTooltip
+                      key={member.userId}
+                      avatar={member.avatar}
+                      fullName={member.fullName}
+                      email={member.email}
+                      isActive={activeIndex === index}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      onMouseLeave={() => setActiveIndex(null)}
+                    />
+                  ))}
 
-                    {(members?.value.totalCount ?? 0) > 4 && (
-                      <Avatar className='z-10 text-sm font-medium text-muted-foreground size-6'>
-                        <AvatarFallback>
-                          <p className='text-xs font-medium'>+{(members?.value.totalCount ?? 0) - 4}</p>
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                  </div>
-                </UpdateProjectMembersDialog>
-              ) : null}
+                  {(project?.members?.length ?? 0) > 4 && (
+                    <Avatar className='z-10 text-sm font-medium text-muted-foreground size-6'>
+                      <AvatarFallback>
+                        <p className='text-xs font-medium'>+{(project?.members?.length ?? 0) - 4}</p>
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+              ) : // </UpdateProjectMembersDialog>
+              null}
             </>
           ) : null}
         </header>
 
-        <Suspense
-          fallback={
+        <div className='flex-1 overflow-auto'>
+          {isLoadingPermissions ? (
             <div className='flex h-full w-full items-center justify-center'>
               <Spinner className='text-muted-foreground' />
             </div>
-          }
-        >
-          <div className='flex-1 overflow-auto'>
-            <Outlet />
-          </div>
-        </Suspense>
+          ) : !canRead && (activeSegment === '' || activeSegment === 'milestones') ? (
+            <div className='flex h-full w-full items-center justify-center'>
+              <Spinner className='text-muted-foreground' />
+            </div>
+          ) : (
+            <Suspense
+              fallback={
+                <div className='flex h-full w-full items-center justify-center'>
+                  <Spinner className='text-muted-foreground' />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

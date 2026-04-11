@@ -22,6 +22,7 @@ import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nu
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import { useGetProjectMemberStats } from '../hooks/use-get-project-member-stats'
 
 interface ProjectTableProps {
@@ -35,6 +36,11 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
   const { confirm } = useConfirmStore()
   const { user } = useAuthStore()
   const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier })
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canToggleStatus = check('TASKS', 'canUpdate', 'canToggleTaskStatus')
+  const canDelete = check('TASKS', 'canDelete')
 
   const onDeleteTask = useCallback(
     async (taskId: string, taskName: string) => {
@@ -59,9 +65,19 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
         parentMilestoneIdentifier,
         onDeleteTask,
         userId: user?.UserId,
-        searchParams: location.search
+        searchParams: location.search,
+        canToggleStatus,
+        canDelete
       }),
-    [projectIdentifier, parentMilestoneIdentifier, onDeleteTask, user?.UserId, location.search]
+    [
+      projectIdentifier,
+      parentMilestoneIdentifier,
+      onDeleteTask,
+      user?.UserId,
+      location.search,
+      canToggleStatus,
+      canDelete
+    ]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -200,22 +216,28 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
     <div className='pb-24'>
       <DataTable table={table} isLoading={isLoading}>
         <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-          <AddTaskPopover projectIdentifier={projectIdentifier} parentMilestoneIdentifier={parentMilestoneIdentifier}>
-            <Button size='sm'>
-              <PlusCircleIcon />
-              {t('task.table.addCard')}
-            </Button>
-          </AddTaskPopover>
-
-          <AddMilestonePopover
-            projectIdentifier={projectIdentifier}
-            parentMilestoneIdentifier={parentMilestoneIdentifier}
-          >
-            <Button size='sm'>
-              <PlusCircleIcon />
-              {t('task.table.addList')}
-            </Button>
-          </AddMilestonePopover>
+          {canWrite ? (
+            <>
+              <AddTaskPopover
+                projectIdentifier={projectIdentifier}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
+              >
+                <Button size='sm'>
+                  <PlusCircleIcon />
+                  {t('task.table.addCard')}
+                </Button>
+              </AddTaskPopover>
+              <AddMilestonePopover
+                projectIdentifier={projectIdentifier}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
+              >
+                <Button size='sm'>
+                  <PlusCircleIcon />
+                  {t('task.table.addList')}
+                </Button>
+              </AddMilestonePopover>
+            </>
+          ) : null}
         </DataTableToolbar>
       </DataTable>
     </div>

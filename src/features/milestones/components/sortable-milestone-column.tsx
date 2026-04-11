@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import AddTaskButton from '@/features/tasks/components/add-task-button'
 import SortableTaskCard from '@/features/tasks/components/sortable-task-card'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
@@ -38,6 +39,10 @@ export default function SortableMilestoneColumn({
   const { t } = useTranslation()
   const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const [openDropdown, setOpenDropdown] = useState(false)
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const { updateMilestone } = useUpdateMilestone({
     queryKey,
@@ -106,7 +111,10 @@ export default function SortableMilestoneColumn({
         {isEditing ? (
           <Input type='text' className='h-8 text-sm font-semibold' {...inputProps} />
         ) : (
-          <p className='font-semibold text-sm cursor-text' {...triggerProps}>
+          <p
+            className={cn('font-semibold text-sm', canUpdate ? 'cursor-text' : 'cursor-default')}
+            {...(canUpdate ? triggerProps : {})}
+          >
             {column.name}
           </p>
         )}
@@ -133,7 +141,7 @@ export default function SortableMilestoneColumn({
         </div>
       </div>
 
-      {column.id && identifier && milestoneIdentifier ? (
+      {column.id && identifier && milestoneIdentifier && canWrite ? (
         <div className='px-2 pb-2'>
           <AddTaskButton
             milestoneId={column.id as string}
