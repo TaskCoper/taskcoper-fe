@@ -20,6 +20,7 @@ export interface ProjectRole {
 
 export interface SectionExtensionsMap {
   TASKS: TaskSectionExtensions
+  STORAGE: StorageSectionExtensions
 }
 
 export type SectionExtensionType<K extends SectionKey> = K extends keyof SectionExtensionsMap
@@ -42,5 +43,11 @@ export interface TaskSectionExtensions {
     canMoveTask: boolean
     canMoveMilestone: boolean
     canToggleTaskStatus: boolean
+  }
+}
+
+export interface StorageSectionExtensions {
+  canRead: {
+    canDownload: boolean
   }
 }

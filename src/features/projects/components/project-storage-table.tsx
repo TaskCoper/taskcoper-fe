@@ -18,6 +18,7 @@ import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import { useGetProjectMimeTypeStats } from '../hooks/use-get-project-mime-type-stats'
 import { useGetProjectResourceMemberStats } from '../hooks/use-get-project-resource-member-stats'
 import { useGetProjectResources } from '../hooks/use-get-project-resources'
@@ -30,6 +31,12 @@ interface ProjectStorageTableProps {
 
 export default function ProjectStorageTable({ projectIdentifier }: ProjectStorageTableProps) {
   const { t } = useTranslation()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('STORAGE', 'canWrite')
+  const canDelete = check('STORAGE', 'canDelete')
+  const canDownload = check('STORAGE', 'canRead', 'canDownload')
+
   const { confirm } = useConfirmStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -131,8 +138,8 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
   )
 
   const columns = useMemo(
-    () => getColumns({ onDeleteResource, onDeleteProjectResource }),
-    [onDeleteResource, onDeleteProjectResource]
+    () => getColumns({ onDeleteResource, onDeleteProjectResource, canDelete, canDownload }),
+    [onDeleteResource, onDeleteProjectResource, canDelete, canDownload]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -188,7 +195,12 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
     pageCount: Math.ceil((projectResources?.value?.totalCount ?? 0) / limit),
     initialState: {
       sorting: (sorting ?? []) as ExtendedColumnSort<ProjectResource>[],
-      columnPinning: { right: ['actions'] }
+      columnPinning: { right: canDownload || canDelete ? ['actions'] : [] },
+      columnVisibility: {
+        actions: canDownload || canDelete,
+        mimeType: false,
+        memberId: false
+      }
     },
     getRowId: ({ id }) => id,
     shallow: false,
@@ -206,23 +218,27 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
   return (
     <DataTable table={table} isLoading={isLoading}>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-        <input
-          ref={fileInputRef}
-          type='file'
-          multiple
-          className='hidden'
-          onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
-              handleUploadFiles(e.target.files)
-              e.target.value = ''
-            }
-          }}
-        />
+        {canWrite ? (
+          <>
+            <input
+              ref={fileInputRef}
+              type='file'
+              multiple
+              className='hidden'
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  handleUploadFiles(e.target.files)
+                  e.target.value = ''
+                }
+              }}
+            />
 
-        <Button size='sm' onClick={() => fileInputRef.current?.click()}>
-          <UploadIcon />
-          {t('projectStorage.uploadFile')}
-        </Button>
+            <Button size='sm' onClick={() => fileInputRef.current?.click()}>
+              <UploadIcon />
+              {t('projectStorage.uploadFile')}
+            </Button>
+          </>
+        ) : null}
       </DataTableToolbar>
     </DataTable>
   )
