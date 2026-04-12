@@ -2,6 +2,7 @@ import FileDropzone from '@/components/file-dropzone'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import type { ErrorResponse } from '@/lib/axios'
 import { MAX_BACKGROUND_SIZE } from '@/shared/constants'
@@ -9,6 +10,7 @@ import type { AxiosError } from 'axios'
 import { ImageOffIcon, XIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 import { toast } from 'sonner'
 
 interface BackgroundImagePopoverProps {
@@ -16,16 +18,25 @@ interface BackgroundImagePopoverProps {
   onSubmit: () => void
   open: boolean
   setOpen: (open: boolean) => void
+  disabled?: boolean
 }
 
-export default function BackgroundImagePopover({ children, onSubmit, open, setOpen }: BackgroundImagePopoverProps) {
+export default function BackgroundImagePopover({
+  children,
+  onSubmit,
+  open,
+  setOpen,
+  disabled = false
+}: BackgroundImagePopoverProps) {
   const onClose = () => {
     setOpen(false)
   }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         onInteractOutside={onClose}
         sideOffset={8}
@@ -47,6 +58,11 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
   const { t } = useTranslation()
   const { watch, setValue } = useFormContext()
   const backgroundImage = watch('backgroundImage')
+
+  const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const { uploadFileAsync } = useUploadFile()
 
@@ -113,9 +129,11 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
       )}
 
       <div className='flex justify-end items-center gap-2'>
-        <Button size='sm' variant='ghost' onClick={handleRemove}>
-          {t('common.button.remove')}
-        </Button>
+        {canDelete ? (
+          <Button size='sm' variant='ghost' onClick={handleRemove}>
+            {t('common.button.remove')}
+          </Button>
+        ) : null}
 
         <FileDropzone
           onFileChange={handleUpload}

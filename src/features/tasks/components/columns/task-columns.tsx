@@ -37,13 +37,17 @@ export const getColumns = ({
   parentMilestoneIdentifier,
   onDeleteTask,
   userId,
-  searchParams
+  searchParams,
+  canToggleStatus = true,
+  canDelete = true
 }: {
   projectIdentifier: string
   parentMilestoneIdentifier: string
   onDeleteTask: (taskId: string, taskName: string) => void
   userId?: string
   searchParams?: string
+  canToggleStatus?: boolean
+  canDelete?: boolean
 }): ColumnDef<TaskRow>[] => {
   return [
     {
@@ -107,6 +111,7 @@ export const getColumns = ({
           row={row.original}
           projectIdentifier={projectIdentifier}
           parentMilestoneIdentifier={parentMilestoneIdentifier}
+          canToggleStatus={canToggleStatus}
         />
       ),
       enableColumnFilter: true,
@@ -396,9 +401,11 @@ export const getColumns = ({
               <DropdownMenuItem asChild>
                 <Link to={`tasks/${id}${searchParams ?? '?mode=table'}`}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
-                {i18next.t('task.column.delete')}
-              </DropdownMenuItem>
+              {canDelete ? (
+                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
+                  {i18next.t('task.column.delete')}
+                </DropdownMenuItem>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         )

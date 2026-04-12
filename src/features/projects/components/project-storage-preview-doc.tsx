@@ -1,3 +1,4 @@
+import { cn } from '@/shared/utils'
 import { ExternalLinkIcon, FileIcon, ImageIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,9 +7,10 @@ interface PdfPreviewProps {
   url: string
   name: string
   mimeType: string
+  canDownload?: boolean
 }
 
-export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
+export function PdfPreview({ url, name, mimeType, canDownload = true }: PdfPreviewProps) {
   const { t } = useTranslation()
   const [show, setShow] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -88,12 +90,19 @@ export function PdfPreview({ url, name, mimeType }: PdfPreviewProps) {
         }}
         onMouseMove={handleMove}
         onMouseLeave={() => setShow(false)}
-        onClick={() => window.open(url, '_blank', 'noreferrer')}
-        className='group inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition cursor-pointer'
+        onClick={() => canDownload && window.open(url, '_blank', 'noreferrer')}
+        className={cn(
+          'group inline-flex items-center gap-1 text-sm font-medium text-foreground transition cursor-pointer',
+          canDownload ? 'hover:text-primary' : ''
+        )}
       >
-        <span className='truncate max-w-[160px] group-hover:underline underline-offset-2'>{name}</span>
+        <span className={cn('truncate max-w-[160px]', canDownload ? 'group-hover:underline underline-offset-2' : '')}>
+          {name}
+        </span>
 
-        <ExternalLinkIcon className='size-3 opacity-0 group-hover:opacity-60 transition shrink-0' />
+        {canDownload ? (
+          <ExternalLinkIcon className='size-3 opacity-0 group-hover:opacity-60 transition shrink-0' />
+        ) : null}
       </span>
 
       {show && (

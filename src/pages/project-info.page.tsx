@@ -5,23 +5,19 @@ import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import UpdateProjectInfoDialog from '@/features/projects/components/dialogs/update-project-info-dialog'
 import ProjectDomainsSection from '@/features/projects/components/sections/project-domains-section'
 import ProjectGeneralSection from '@/features/projects/components/sections/project-general-section'
 import ProjectMembersSection from '@/features/projects/components/sections/project-members-section'
 import ProjectTimelineSection from '@/features/projects/components/sections/project-timeline-section'
 import { useGetProject } from '@/features/projects/hooks/use-get-project'
-import { useGetProjectMembers } from '@/features/projects/hooks/use-get-project-members'
 import { useUpdateProject } from '@/features/projects/hooks/use-update-project'
 import type { UpdateProjectFormValues } from '@/features/projects/validations'
-import { useIsMobile } from '@/hooks/use-mobile'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import type { ErrorResponse } from '@/lib/axios'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import type { AxiosError } from 'axios'
-import { BookOpenIcon, CameraIcon, EditIcon, ImageOffIcon } from 'lucide-react'
+import { BookOpenIcon, CameraIcon, ImageOffIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { FormProvider, type Path, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -29,21 +25,18 @@ import { useParams } from 'react-router'
 import { toast } from 'sonner'
 
 export default function ProjectInfoPage() {
-  const isMobile = useIsMobile()
-
   const { t } = useTranslation()
   const { identifier } = useParams<{ identifier: string }>()
-  const { user } = useAuthStore()
 
   const { project, isLoadingProject } = useGetProject({ identifier })
-  const { members, isLoadingMembers } = useGetProjectMembers({ identifier: project?.id })
+  // const { members, isLoadingMembers } = useGetProjectMembers({ identifier: project?.id })
   const { methods, updateProject, isUpdatingProject } = useUpdateProject({ projectId: project?.id })
 
   const { handleSubmit, reset, setValue, getValues } = methods
 
   const { uploadFileAsync } = useUploadFile()
-  const isCurrentUserMain =
-    members?.value.items.find((member) => member.userId === user?.UserId && member.isMain) !== undefined
+  // const isCurrentUserMain =
+  //   members?.value.items.find((member) => member.userId === user?.UserId && member.isMain) !== undefined
 
   useEffect(() => {
     if (project) {
@@ -122,7 +115,7 @@ export default function ProjectInfoPage() {
     }
   }
 
-  if (isLoadingProject || isLoadingMembers) {
+  if (isLoadingProject) {
     return (
       <div className='grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10'>
         <Skeleton className='h-24 col-span-1 lg:col-span-12' />
@@ -145,7 +138,8 @@ export default function ProjectInfoPage() {
             <div className='relative h-48 sm:h-52'>
               <FileDropzone
                 onFileChange={(file) => handleUpload(file, 'coverImage')}
-                className={cn('size-full group/cover relative', !isCurrentUserMain && 'cursor-default')}
+                // className={cn('size-full group/cover relative', !isCurrentUserMain && 'cursor-default')}
+                className={cn('size-full group/cover relative')}
                 maxSize={MAX_COVER_SIZE}
                 accept={{
                   'image/png': ['.png'],
@@ -153,7 +147,7 @@ export default function ProjectInfoPage() {
                   'image/webp': ['.webp'],
                   'image/svg+xml': ['.svg']
                 }}
-                disabled={!isCurrentUserMain}
+                // disabled={!isCurrentUserMain}
               >
                 {project?.coverImage ? (
                   <img
@@ -171,7 +165,8 @@ export default function ProjectInfoPage() {
                   variant='outline'
                   size='sm'
                   type='button'
-                  className={cn('hidden', isCurrentUserMain && 'group-hover/cover:flex absolute bottom-2 right-2')}
+                  // className={cn('hidden', isCurrentUserMain && 'group-hover/cover:flex absolute bottom-2 right-2')}
+                  className={cn('hidden')}
                 >
                   <CameraIcon />
                   {t('project.addCoverImage')}
@@ -181,8 +176,8 @@ export default function ProjectInfoPage() {
               <FileDropzone
                 onFileChange={(file) => handleUpload(file, 'logoImage')}
                 className={cn(
-                  'absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl border-4 border-background bg-muted shadow-sm',
-                  !isCurrentUserMain && 'cursor-default'
+                  'absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl border-4 border-background bg-muted shadow-sm'
+                  // !isCurrentUserMain && 'cursor-default'
                 )}
                 maxSize={MAX_LOGO_SIZE}
                 accept={{
@@ -191,7 +186,7 @@ export default function ProjectInfoPage() {
                   'image/webp': ['.webp'],
                   'image/svg+xml': ['.svg']
                 }}
-                disabled={!isCurrentUserMain}
+                // disabled={!isCurrentUserMain}
               >
                 {project?.logoImage ? (
                   <img
@@ -209,13 +204,14 @@ export default function ProjectInfoPage() {
                   variant='outline'
                   size='icon-sm'
                   type='button'
-                  className={cn('hidden', isCurrentUserMain && 'group-hover/logo:flex absolute bottom-2 right-2')}
+                  // className={cn('hidden', isCurrentUserMain && 'group-hover/logo:flex absolute bottom-2 right-2')}
+                  className={cn('hidden')}
                 >
                   <CameraIcon className='size-4' />
                 </Button>
               </FileDropzone>
 
-              {isCurrentUserMain ? (
+              {/* {isCurrentUserMain ? (
                 <UpdateProjectInfoDialog isPending={isUpdatingProject}>
                   <Button
                     type='button'
@@ -228,7 +224,7 @@ export default function ProjectInfoPage() {
                     {isMobile ? null : t('common.button.edit')}
                   </Button>
                 </UpdateProjectInfoDialog>
-              ) : null}
+              ) : null} */}
             </div>
 
             <div className='mt-16 mb-8 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4'>
@@ -276,27 +272,27 @@ export default function ProjectInfoPage() {
                 teamEmail={project?.teamEmail ?? null}
                 schoolSubject={project?.schoolSubject ?? null}
                 isPending={isUpdatingProject}
-                isCurrentUserMain={isCurrentUserMain}
+                isCurrentUserMain={false}
               />
               <Separator />
               <ProjectDomainsSection
                 domains={project?.domains ?? []}
                 isPending={isUpdatingProject}
-                isCurrentUserMain={isCurrentUserMain}
+                isCurrentUserMain={false}
               />
               <Separator />
               <ProjectTimelineSection
                 startDate={project?.startDate ?? ''}
                 endDate={project?.endDate ?? ''}
                 isPending={isUpdatingProject}
-                isCurrentUserMain={isCurrentUserMain}
+                isCurrentUserMain={false}
               />
               <Separator />
               <ProjectMembersSection
-                members={members?.value.items ?? []}
-                totalMembers={members?.value.items.length ?? 0}
+                members={project?.members ?? []}
+                totalMembers={project?.members?.length ?? 0}
                 projectIdentifier={project?.slug}
-                isCurrentUserMain={isCurrentUserMain}
+                isCurrentUserMain={false}
               />
             </div>
           </div>

@@ -4,18 +4,21 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { addDays, format } from 'date-fns'
 import { XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 import { minutesToReminder, reminderToMinutes, TaskReminder } from '../constants'
 
 interface DatePopoverProps {
   children: React.ReactNode
   onSubmit: () => void
   onRemove: () => void
+  disabled?: boolean
 }
 
 interface DateUpdates {
@@ -29,9 +32,13 @@ const minDate = new Date('1900-01-01')
 const maxDate = new Date(new Date().getFullYear() + 10, 11, 31)
 const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/
 
-export default function DatePopover({ children, onSubmit, onRemove }: DatePopoverProps) {
+export default function DatePopover({ children, onSubmit, onRemove, disabled = false }: DatePopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const [localStartTime, setLocalStartTime] = useState('')
   const [localEndTime, setLocalEndTime] = useState('')
@@ -243,7 +250,9 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
 
   return (
     <Popover modal open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         side='bottom'
         align='start'
@@ -356,9 +365,11 @@ export default function DatePopover({ children, onSubmit, onRemove }: DatePopove
             <Button className='w-full' onClick={handleSave} disabled={!isDirty}>
               {t('common.button.save')}
             </Button>
-            <Button className='w-full' variant='secondary' onClick={handleRemove}>
-              {t('common.button.remove')}
-            </Button>
+            {canDelete ? (
+              <Button className='w-full' variant='secondary' onClick={handleRemove}>
+                {t('common.button.remove')}
+              </Button>
+            ) : null}
           </div>
         </div>
       </PopoverContent>

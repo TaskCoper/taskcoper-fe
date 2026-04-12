@@ -2,6 +2,7 @@ import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-mileston
 import type { ParentMilestone } from '@/types/milestone.type'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
+import { useGetMyProjectPermissions } from './use-get-my-project-permissions'
 
 interface UseProjectRoutingProps {
   identifier?: string
@@ -13,6 +14,8 @@ export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRo
   const location = useLocation()
   const navigate = useNavigate()
   const { getLastActiveMilestone, setLastActiveMilestone } = useMilestonePreferencesStore()
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canRead = check('TASKS', 'canRead')
 
   const activeSegment = useMemo(() => {
     const parts = location.pathname.split('/')
@@ -44,6 +47,11 @@ export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRo
   // Auto-navigate to saved milestone or first milestone when landing on project or milestones root
   useEffect(() => {
     if (!isLoading && items.length > 0 && (isProjectRoot || isMilestonesRoot) && identifier) {
+      if (!canRead) {
+        navigate(`/projects/${identifier}/info`, { replace: true })
+        return
+      }
+
       const savedMilestoneSlug = getLastActiveMilestone(identifier)
 
       // Match against the slug rather than the ID

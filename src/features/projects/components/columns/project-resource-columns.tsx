@@ -22,12 +22,16 @@ import { formatBytes, formatMimeType } from '../../utils'
 
 export const getColumns = ({
   onDeleteResource,
-  onDeleteProjectResource
+  onDeleteProjectResource,
+  canDelete = true,
+  canDownload = true
 }: {
   onDeleteResource: (resourceId: string, taskId: string) => void
   onDeleteProjectResource: (resourceId: string) => void
+  canDelete?: boolean
+  canDownload?: boolean
 }): ColumnDef<ProjectResource>[] => {
-  return [
+  const columns: ColumnDef<ProjectResource>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -75,7 +79,12 @@ export const getColumns = ({
           </div>
 
           <div>
-            <PdfPreview url={row.original.url} name={row.original.name} mimeType={row.original.mimeType} />
+            <PdfPreview
+              url={row.original.url}
+              name={row.original.name}
+              mimeType={row.original.mimeType}
+              canDownload={canDownload}
+            />
             <p className='text-xs text-muted-foreground'>{formatMimeType(row.original.mimeType)}</p>
           </div>
         </div>
@@ -210,18 +219,24 @@ export const getColumns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>{i18next.t('projectStorage.actions.actions')}</DropdownMenuLabel>
-              <DropdownMenuItem asChild>
-                <a href={url} download={name} target='_blank' rel='noreferrer'>
-                  {i18next.t('projectStorage.actions.download')}
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className='focus:text-destructive'
-                onClick={() => (task ? onDeleteResource(id, task.id) : onDeleteProjectResource(id))}
-              >
-                {i18next.t('projectStorage.actions.delete')}
-              </DropdownMenuItem>
+              {canDownload ? (
+                <DropdownMenuItem asChild>
+                  <a href={url} download={name} target='_blank' rel='noreferrer'>
+                    {i18next.t('projectStorage.actions.download')}
+                  </a>
+                </DropdownMenuItem>
+              ) : null}
+              {canDelete ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className='focus:text-destructive'
+                    onClick={() => (task ? onDeleteResource(id, task.id) : onDeleteProjectResource(id))}
+                  >
+                    {i18next.t('projectStorage.actions.delete')}
+                  </DropdownMenuItem>
+                </>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -257,4 +272,6 @@ export const getColumns = ({
       size: 0
     }
   ]
+
+  return canDownload || canDelete ? columns : columns.filter((col) => col.id !== 'actions')
 }

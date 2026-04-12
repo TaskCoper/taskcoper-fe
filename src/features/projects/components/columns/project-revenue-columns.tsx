@@ -20,10 +20,17 @@ import { MoreHorizontalIcon, SearchIcon, TrendingDownIcon, TrendingUpIcon } from
 interface GetColumnsProps {
   onDeleteRevenue?: (id: string, revenueName: string) => void
   onEditRevenue?: (revenue: Revenue) => void
+  canUpdate?: boolean
+  canDelete?: boolean
 }
 
-export const getColumns = ({ onDeleteRevenue, onEditRevenue }: GetColumnsProps): ColumnDef<Revenue>[] => {
-  return [
+export const getColumns = ({
+  onDeleteRevenue,
+  onEditRevenue,
+  canUpdate = true,
+  canDelete = true
+}: GetColumnsProps): ColumnDef<Revenue>[] => {
+  const columns: ColumnDef<Revenue>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -258,12 +265,17 @@ export const getColumns = ({ onDeleteRevenue, onEditRevenue }: GetColumnsProps):
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>{i18next.t('projectRevenue.actions.actions')}</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => onEditRevenue?.(row.original)}>
-                {i18next.t('projectRevenue.actions.edit')}
-              </DropdownMenuItem>
-              <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteRevenue?.(id, name)}>
-                {i18next.t('projectRevenue.actions.delete')}
-              </DropdownMenuItem>
+              {canUpdate ? (
+                <DropdownMenuItem onClick={() => onEditRevenue?.(row.original)}>
+                  {i18next.t('projectRevenue.actions.edit')}
+                </DropdownMenuItem>
+              ) : null}
+
+              {canDelete ? (
+                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteRevenue?.(id, name)}>
+                  {i18next.t('projectRevenue.actions.delete')}
+                </DropdownMenuItem>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -271,4 +283,6 @@ export const getColumns = ({ onDeleteRevenue, onEditRevenue }: GetColumnsProps):
       size: 40
     }
   ]
+
+  return canUpdate || canDelete ? columns : columns.filter((col) => col.id !== 'actions')
 }

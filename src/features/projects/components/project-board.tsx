@@ -24,6 +24,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import ProjectContainer from './project-container'
 
 interface ProjectBoardProps {
@@ -36,6 +37,11 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const queryKey = queryKeys.milestones.byParent(identifier, milestoneIdentifier)
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canMoveTask = check('TASKS', 'canUpdate', 'canMoveTask')
+  const canMoveMilestone = check('TASKS', 'canUpdate', 'canMoveMilestone')
+  const canWrite = check('TASKS', 'canWrite')
 
   const columnsId = useMemo(() => initialColumns.map((col) => col.id), [initialColumns])
 
@@ -153,6 +159,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
     let newPosition = 0
 
     if (activeData?.type === 'MilestoneColumn' && originalColumn) {
+      if (!canMoveMilestone) return
+
       const currentIndex = initialColumns.findIndex((col) => col.id === activeId)
       newPosition = calculateReorderPosition(initialColumns, currentIndex)
 
@@ -182,6 +190,8 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
     }
 
     if (activeData?.type === 'TaskCard' && originalTask) {
+      if (!canMoveTask) return
+
       const tasksClone = [...initialTasks]
       const activeIndex = tasksClone.findIndex((t) => t.id === activeId)
       const currentTask = tasksClone[activeIndex]
@@ -244,12 +254,14 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
                   column={col}
                   tasks={initialTasks.filter((task) => task.milestoneId === col.id)}
                   queryKey={queryKey}
+                  canMoveMilestone={canMoveMilestone}
+                  canMoveTask={canMoveTask}
                 />
               ))}
             </div>
           )}
         </SortableContext>
-        {identifier && milestoneIdentifier ? (
+        {identifier && milestoneIdentifier && canWrite ? (
           <AddMilestoneButton projectIdentifier={identifier} parentMilestoneIdentifier={milestoneIdentifier} />
         ) : null}
       </ProjectContainer>

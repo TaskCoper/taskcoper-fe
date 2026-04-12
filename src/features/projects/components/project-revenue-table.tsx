@@ -13,6 +13,7 @@ import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDeleteProjectRevenue } from '../hooks/use-delete-project-revenue'
+import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import { useGetProjectRevenueTypeStats } from '../hooks/use-get-project-revenue-type-stats'
 import { useGetProjectRevenues } from '../hooks/use-get-project-revenues'
 import { getColumns } from './columns/project-revenue-columns'
@@ -25,6 +26,11 @@ interface ProjectRevenueTableProps {
 
 export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenueTableProps) {
   const { t } = useTranslation()
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('REVENUE', 'canWrite')
+  const canUpdate = check('REVENUE', 'canUpdate')
+  const canDelete = check('REVENUE', 'canDelete')
+
   const { confirm } = useConfirmStore()
 
   const { deleteProjectRevenue } = useDeleteProjectRevenue()
@@ -50,7 +56,10 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
     setEditingRevenue(revenue)
   }, [])
 
-  const columns = useMemo(() => getColumns({ onDeleteRevenue, onEditRevenue }), [onDeleteRevenue, onEditRevenue])
+  const columns = useMemo(
+    () => getColumns({ onDeleteRevenue, onEditRevenue, canUpdate, canDelete }),
+    [onDeleteRevenue, onEditRevenue, canUpdate, canDelete]
+  )
 
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -109,7 +118,10 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
     pageCount: Math.ceil((projectRevenues?.value?.totalCount ?? 0) / limit),
     initialState: {
       sorting: (sorting ?? []) as ExtendedColumnSort<Revenue>[],
-      columnPinning: { right: ['actions'] }
+      columnPinning: { right: canUpdate || canDelete ? ['actions'] : [] },
+      columnVisibility: {
+        actions: canUpdate || canDelete
+      }
     },
     getRowId: ({ id }) => id,
     shallow: false,
@@ -127,19 +139,23 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
   return (
     <DataTable table={table} isLoading={isLoading}>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-        <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashIn'>
-          <Button size='sm' className='bg-emerald-600 border-2 border-emerald-400 hover:bg-emerald-700'>
-            <TrendingUpIcon />
-            {t('project.addProjectRevenue.trigger.cashIn')}
-          </Button>
-        </AddProjectRevenueDialog>
+        {canWrite ? (
+          <>
+            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashIn'>
+              <Button size='sm' className='bg-emerald-600 border-2 border-emerald-400 hover:bg-emerald-700'>
+                <TrendingUpIcon />
+                {t('project.addProjectRevenue.trigger.cashIn')}
+              </Button>
+            </AddProjectRevenueDialog>
 
-        <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashOut'>
-          <Button size='sm' className='bg-rose-600 border-2 border-rose-400 hover:bg-rose-700'>
-            <TrendingDownIcon />
-            {t('project.addProjectRevenue.trigger.cashOut')}
-          </Button>
-        </AddProjectRevenueDialog>
+            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashOut'>
+              <Button size='sm' className='bg-rose-600 border-2 border-rose-400 hover:bg-rose-700'>
+                <TrendingDownIcon />
+                {t('project.addProjectRevenue.trigger.cashOut')}
+              </Button>
+            </AddProjectRevenueDialog>
+          </>
+        ) : null}
       </DataTableToolbar>
 
       <UpdateProjectRevenueDialog

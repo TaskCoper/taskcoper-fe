@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronLeftIcon, CopyIcon, EyeIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -35,6 +36,9 @@ export default function TaskDetailMenu({
 }: TaskDetailMenuProps) {
   const { t } = useTranslation()
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const { toggleWatchTask } = useToggleWatchTask({ projectIdentifier, milestoneIdentifier: parentMilestoneIdentifier })
   const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier, milestoneId, onDeleteSuccess })
@@ -133,15 +137,17 @@ export default function TaskDetailMenu({
               <p>{t('task.copyLink.title')}</p>
             </Button>
 
-            <Button
-              size='sm'
-              className='w-full justify-start gap-2 rounded-none'
-              variant='ghost'
-              onClick={() => setIsDeleting(true)}
-            >
-              <Trash2Icon className='text-destructive' />
-              <p className='text-destructive'>{t('common.button.delete')}</p>
-            </Button>
+            {canDelete ? (
+              <Button
+                size='sm'
+                className='w-full justify-start gap-2 rounded-none'
+                variant='ghost'
+                onClick={() => setIsDeleting(true)}
+              >
+                <Trash2Icon className='text-destructive' />
+                <p className='text-destructive'>{t('common.button.delete')}</p>
+              </Button>
+            ) : null}
           </div>
         )}
       </PopoverContent>

@@ -15,13 +15,15 @@ interface SubtaskPopoverProps {
   taskId: string
   projectIdentifier: string
   parentMilestoneIdentifier: string
+  disabled?: boolean
 }
 
 export default function SubtaskPopover({
   children,
   taskId,
   projectIdentifier,
-  parentMilestoneIdentifier
+  parentMilestoneIdentifier,
+  disabled = false
 }: SubtaskPopoverProps) {
   const { t } = useTranslation()
   const { methods, addSubtask, isAddingSubtask, open, setOpen, recalculatePosition } = useAddSubtask({
@@ -57,7 +59,9 @@ export default function SubtaskPopover({
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
@@ -92,6 +96,7 @@ export default function SubtaskPopover({
                 </Field>
               )}
             />
+
             <Button disabled={isAddingSubtask}>
               {isAddingSubtask ? <Spinner /> : null}
               {t('common.button.add')}
