@@ -11,6 +11,7 @@ import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
+import type { GetProjectRoleParams } from '@/features/projects/hooks/use-get-project-role'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
@@ -97,7 +98,9 @@ export const queryKeys = {
     myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const,
     roles: {
       all: (identifier?: string) => ['project-roles', identifier] as const,
-      list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const
+      list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const,
+      detail: ({ projectIdentifier, roleId }: GetProjectRoleParams) =>
+        ['project-role', projectIdentifier, roleId] as const
     }
   },
   // Milestones

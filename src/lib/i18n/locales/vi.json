@@ -802,6 +802,36 @@
         "members": "Thành viên",
         "permissions": "Vai trò & Quyền"
       }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Xem",
+        "canWrite": "Thêm mới",
+        "canUpdate": "Cập nhật",
+        "canDelete": "Xóa"
+      }
+    },
+    "updateProjectRole": {
+      "title": "Cập nhật vai trò",
+      "description": "Quản lý thông tin và quyền hạn cho vai trò này",
+      "field": {
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc"
+        },
+        "description": {
+          "maxLength": "Mô tả không được vượt quá 255 ký tự"
+        }
+      }
     }
   },
   "projectRevenue": {

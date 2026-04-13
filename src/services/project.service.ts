@@ -17,7 +17,8 @@ import type {
   AddProjectRevenueFormValues,
   CreateProjectFormValues,
   UpdateProjectFormValues,
-  UpdateProjectRevenueFormValues
+  UpdateProjectRevenueFormValues,
+  UpdateProjectRoleFormValues
 } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -35,6 +36,7 @@ import type {
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  ProjectRoleDetail,
   ProjectRoleItem,
   Revenue,
   RevenueLabelStats,
@@ -533,6 +535,30 @@ class ProjectService {
     )
 
     return data
+  }
+
+  getProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier?: string; roleId?: string }) => {
+    if (!projectIdentifier || !roleId) return null
+    const { data } = await api.get<BaseResponse<ProjectRoleDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}/permissions`
+    )
+
+    return data.value
+  }
+
+  updateProjectRole = async ({ body }: { body: UpdateProjectRoleFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/roles/${body.roleId}`,
+      {
+        ...body,
+        permissions: body.permissions.map((per) => ({
+          ...per,
+          extensions: JSON.stringify(per.extensions)
+        }))
+      }
+    )
+
+    return data.value
   }
 }
 

@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProjectMembersTab from '@/features/projects/components/project-members-tab'
+import ProjectPermissionsTab from '@/features/projects/components/project-permissions-tab'
 import { InfoIcon, KeySquareIcon, UsersRoundIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useSearchParams } from 'react-router'
@@ -28,7 +29,7 @@ export default function ProjectSettingsPage() {
       value: 'permissions',
       label: t('project.settings.tabs.permissions'),
       icon: <KeySquareIcon />,
-      content: <div>Project Permissions</div>
+      content: <ProjectPermissionsTab projectIdentifier={identifier} />
     }
   ]
 
@@ -61,7 +62,7 @@ export default function ProjectSettingsPage() {
 
         <div className='flex-1 overflow-y-auto'>
           {TABS.map((tab) => (
-            <TabsContent key={tab.value} value={tab.value} className='px-6 pb-6 pt-3 focus-visible:outline-hidden m-0'>
+            <TabsContent key={tab.value} value={tab.value} className='px-6 pb-20 pt-3 focus-visible:outline-hidden m-0'>
               {tab.content}
             </TabsContent>
           ))}

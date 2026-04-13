@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { ProjectRoleName, ProjectRoleNameLabel } from '@/types/project-permission.type'
+import { ProjectRoleName } from '@/types/project-permission.type'
 import type { ProjectMember, ProjectRoleItem } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
@@ -117,9 +117,9 @@ export const getColumns = ({
               name={`role-${userId}`}
               label=''
               options={roles.map((role) => ({
-                label: i18next.t(ProjectRoleNameLabel[role.name]),
+                label: role.name,
                 value: role.id,
-                meta: { isSystem: role.isSystem, isDefault: role.isDefault, name: role.name }
+                meta: { isSystem: role.isSystem, isDefault: role.isDefault }
               }))}
               value={selectedRoleIds}
               onValueChange={(value) => onUpdateRole(userId, value)}
@@ -128,7 +128,7 @@ export const getColumns = ({
               triggerClassName='h-8 px-1!'
               displayError={false}
               customBadgeRender={(option) => {
-                const roleName = option.meta?.name as ProjectRoleName
+                const roleName = option.label as ProjectRoleName
                 const RoleIcon = RoleIconMap[roleName] || EyeIcon
 
                 return (
@@ -140,7 +140,7 @@ export const getColumns = ({
                   >
                     <RoleIcon className='size-3 shrink-0' />
 
-                    <p className='text-xs font-semibold'>{i18next.t(ProjectRoleNameLabel[roleName] || option.label)}</p>
+                    <p className='text-xs font-semibold'>{option.label}</p>
 
                     {/* {!!(option.meta?.isSystem || option.meta?.isDefault) && (
                       <TooltipProvider>

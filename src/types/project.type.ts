@@ -228,6 +228,13 @@ export interface ProjectRoleItem extends ProjectRole {
   permissions: SectionPermission[]
 }
 
+export interface ProjectRoleDetail {
+  id: string
+  name: ProjectRoleName
+  description: string
+  permissions: SectionPermission[]
+}
+
 // APIs
 export interface InviteMembersPayload {
   projectIdentifier: string

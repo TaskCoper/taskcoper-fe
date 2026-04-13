@@ -802,6 +802,36 @@
         "members": "Members",
         "permissions": "Roles & Permissions"
       }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Read",
+        "canWrite": "Write",
+        "canUpdate": "Update",
+        "canDelete": "Delete"
+      }
+    },
+    "updateProjectRole": {
+      "title": "Update role",
+      "description": "Manage information and permissions for this role",
+      "field": {
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required"
+        },
+        "description": {
+          "maxLength": "Description must not exceed 255 characters"
+        }
+      }
     }
   },
   "projectRevenue": {

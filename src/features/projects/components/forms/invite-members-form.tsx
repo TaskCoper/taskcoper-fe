@@ -3,9 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { ProjectRoleName, ProjectRoleNameLabel } from '@/types/project-permission.type'
+import { ProjectRoleName } from '@/types/project-permission.type'
 import type { ProjectRoleItem } from '@/types/project.type'
-import i18next from 'i18next'
 import { EyeIcon, XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -50,12 +49,12 @@ export default function InviteMembersForm({ fields, remove, roles = [] }: Invite
                 control={control}
                 name={`inviteMembers.${index}.roleIds`}
                 render={({ fieldState, field }) => (
-                  <Field data-invalid={fieldState.invalid} className='w-fit min-w-[200px]'>
+                  <Field data-invalid={fieldState.invalid} className='w-fit min-w-50'>
                     <MultiSelectField
                       name={field.name}
                       label=''
                       options={roles.map((role) => ({
-                        label: i18next.t(ProjectRoleNameLabel[role.name]),
+                        label: role.name,
                         value: role.id,
                         meta: { isSystem: role.isSystem, isDefault: role.isDefault, name: role.name }
                       }))}
@@ -76,9 +75,7 @@ export default function InviteMembersForm({ fields, remove, roles = [] }: Invite
                             )}
                           >
                             <RoleIcon className='size-3 shrink-0' />
-                            <p className='text-xs font-semibold'>
-                              {i18next.t(ProjectRoleNameLabel[roleName] || option.label)}
-                            </p>
+                            <p className='text-xs font-semibold'>{option.label}</p>
                           </div>
                         )
                       }}

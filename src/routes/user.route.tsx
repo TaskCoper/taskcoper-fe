@@ -22,6 +22,7 @@ const TaskDialogPage = lazy(() => import('@/pages/task-dialog.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const ProjectSettingsPage = lazy(() => import('@/pages/project-settings.page'))
 const ProjectMemberPage = lazy(() => import('@/pages/project-member.page'))
+const ProjectRolePage = lazy(() => import('@/pages/project-role.page'))
 
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
@@ -284,6 +285,10 @@ export const userRoutes: RouteObject[] = [
                       {
                         path: 'members/:memberId',
                         element: <ProjectMemberPage />
+                      },
+                      {
+                        path: 'roles/:roleId',
+                        element: <ProjectRolePage />
                       }
                     ]
                   }
