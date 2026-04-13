@@ -53,6 +53,22 @@ export const getColumns = ({
 }: GetColumnsProps): ColumnDef<ProjectMember>[] => {
   return [
     {
+      id: 'no',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          label={i18next.t('project.updateProjectMembers.column.no')}
+          className='flex mx-auto'
+        />
+      ),
+      cell: ({ row }) => {
+        return <p className='text-center'>{row.index + 1}</p>
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 30
+    },
+    {
       id: 'member',
       accessorKey: 'email',
       meta: {

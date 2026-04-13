@@ -115,8 +115,10 @@ export default function UpdateProjectRoleForm() {
               </div>
 
               {isTaskSection ? (
-                <div className='mb-2 rounded-md bg-muted/30 p-2 space-y-1'>
-                  <p className='text-[11px] font-semibold text-muted-foreground'>Task update extensions</p>
+                <div className='mb-2 p-2 space-y-2'>
+                  <p className='text-xs font-semibold text-muted-foreground'>
+                    {t('project.updateProjectRole.extensions.taskUpdateTitle')}
+                  </p>
 
                   <div className='flex flex-wrap items-center gap-4'>
                     <Controller
@@ -129,7 +131,7 @@ export default function UpdateProjectRoleForm() {
                             onCheckedChange={(checked) => field.onChange(checked === true)}
                             disabled={!permission.canUpdate}
                           />
-                          Move task
+                          {t('project.updateProjectRole.extensions.moveTask')}
                         </label>
                       )}
                     />
@@ -144,7 +146,7 @@ export default function UpdateProjectRoleForm() {
                             onCheckedChange={(checked) => field.onChange(checked === true)}
                             disabled={!permission.canUpdate}
                           />
-                          Move milestone
+                          {t('project.updateProjectRole.extensions.moveMilestone')}
                         </label>
                       )}
                     />
@@ -159,7 +161,7 @@ export default function UpdateProjectRoleForm() {
                             onCheckedChange={(checked) => field.onChange(checked === true)}
                             disabled={!permission.canUpdate}
                           />
-                          Toggle task status
+                          {t('project.updateProjectRole.extensions.toggleTaskStatus')}
                         </label>
                       )}
                     />
@@ -168,8 +170,10 @@ export default function UpdateProjectRoleForm() {
               ) : null}
 
               {isStorageSection ? (
-                <div className='mb-2 rounded-md bg-muted/30 p-2'>
-                  <p className='text-[11px] font-semibold text-muted-foreground'>Storage read extensions</p>
+                <div className='mb-2 p-2 space-y-2'>
+                  <p className='text-xs font-semibold text-muted-foreground'>
+                    {t('project.updateProjectRole.extensions.storageReadTitle')}
+                  </p>
 
                   <div className='mt-1 flex items-center gap-4'>
                     <Controller
@@ -182,7 +186,7 @@ export default function UpdateProjectRoleForm() {
                             onCheckedChange={(checked) => field.onChange(checked === true)}
                             disabled={!permission.canRead}
                           />
-                          Download files
+                          {t('project.updateProjectRole.extensions.downloadFiles')}
                         </label>
                       )}
                     />

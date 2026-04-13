@@ -586,6 +586,7 @@
         "cancelText": "Hủy"
       },
       "column": {
+        "no": "STT",
         "member": "Thành viên",
         "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
         "role": "Vai trò",
@@ -831,6 +832,25 @@
         "description": {
           "maxLength": "Mô tả không được vượt quá 255 ký tự"
         }
+      },
+      "extensions": {
+        "taskUpdateTitle": "Mở rộng cập nhật công việc",
+        "moveTask": "Di chuyển công việc",
+        "moveMilestone": "Di chuyển cột mốc",
+        "toggleTaskStatus": "Bật tắt trạng thái công việc",
+        "storageReadTitle": "Mở rộng quyền xem lưu trữ",
+        "downloadFiles": "Tải xuống tệp"
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Xóa vai trò",
+        "description": "Bạn có chắc chắn muốn xóa vai trò này không?"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "deleteTitle": "Xóa vai trò này",
+        "deleteDescription": "Sau khi xóa vai trò, bạn không thể hoàn tác. Vui lòng chắc chắn trước khi tiếp tục."
       }
     }
   },

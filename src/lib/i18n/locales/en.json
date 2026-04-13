@@ -586,6 +586,7 @@
         "cancelText": "Cancel"
       },
       "column": {
+        "no": "No",
         "member": "Member",
         "memberPlaceholder": "Search by name or email...",
         "role": "Role",
@@ -831,6 +832,25 @@
         "description": {
           "maxLength": "Description must not exceed 255 characters"
         }
+      },
+      "extensions": {
+        "taskUpdateTitle": "Task update extensions",
+        "moveTask": "Move task",
+        "moveMilestone": "Move milestone",
+        "toggleTaskStatus": "Toggle task status",
+        "storageReadTitle": "Storage read extensions",
+        "downloadFiles": "Download files"
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Delete role",
+        "description": "Are you sure you want to delete this role?"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "deleteTitle": "Delete this role",
+        "deleteDescription": "Once you delete a role, there is no going back. Please be certain."
       }
     }
   },

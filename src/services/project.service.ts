@@ -560,6 +560,12 @@ class ProjectService {
 
     return data.value
   }
+
+  deleteProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier: string; roleId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
+
+    return data.value
+  }
 }
 
 const projectService = new ProjectService()
