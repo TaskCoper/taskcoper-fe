@@ -1,4 +1,4 @@
-import type { ProjectRole, SectionPermission } from './project-permission.type'
+import type { ProjectRole, ProjectRoleName, SectionPermission } from './project-permission.type'
 import type { TaskPriority } from './task.type'
 
 export interface ProjectPreview {
@@ -21,7 +21,7 @@ export interface ProjectMember {
   role: number
   roles: Array<{
     id: string
-    name: string
+    name: ProjectRoleName
     isSystem: boolean
     isDefault: boolean
   }>
@@ -222,12 +222,18 @@ export interface ProjectPermission {
   sections: SectionPermission[]
 }
 
+export interface ProjectRoleItem extends ProjectRole {
+  description: string
+  memberCount: number
+  permissions: SectionPermission[]
+}
+
 // APIs
 export interface InviteMembersPayload {
   projectIdentifier: string
   inviteMembers: {
     email: string
-    isEditor: boolean
+    roleIds: string[]
     inviteExpireDate: string | null
   }[]
 }

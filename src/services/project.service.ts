@@ -35,6 +35,7 @@ import type {
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  ProjectRoleItem,
   Revenue,
   RevenueLabelStats,
   RevenueStats,
@@ -182,6 +183,27 @@ class ProjectService {
       userId,
       isEditor
     })
+
+    return data.value
+  }
+
+  updateMemberRoles = async ({
+    projectIdentifier,
+    userId,
+    roleIds
+  }: {
+    projectIdentifier: string
+    userId: string
+    roleIds: string[]
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/roles`,
+      {
+        projectIdentifier,
+        userId,
+        roleIds
+      }
+    )
 
     return data.value
   }
@@ -502,6 +524,15 @@ class ProjectService {
     )
 
     return data.value
+  }
+
+  getProjectRoles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectRoleItem>()
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleItem>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles`
+    )
+
+    return data
   }
 }
 

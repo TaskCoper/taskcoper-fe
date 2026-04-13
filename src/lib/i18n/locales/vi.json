@@ -24,6 +24,7 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "leave": "Rời khỏi",
       "delete": "Xóa",
       "insert": "Chèn",
       "download": "Tải xuống"
@@ -574,23 +575,30 @@
       }
     },
     "updateProjectMembers": {
-      "title": "Thành viên dự án",
-      "description": "Chỉnh sửa thành viên dự án",
+      "title": "Thành viên",
+      "description": "Quản lý thành viên của dự án",
       "confirm": {
         "title": "Gỡ bỏ thành viên",
         "description": "Bạn có chắc chắn muốn gỡ bỏ {{fullName}} khỏi dự án?",
+        "leaveTitle": "Rời khỏi dự án",
+        "leaveDescription": "Bạn có chắc chắn muốn rời khỏi dự án này không?",
         "confirmText": "Gỡ bỏ",
         "cancelText": "Hủy"
       },
       "column": {
         "member": "Thành viên",
+        "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
         "role": "Vai trò",
         "permission": "Quyền",
         "canEdit": "Người chỉnh sửa"
       },
       "role": {
-        "mentor": "Người hướng dẫn",
-        "student": "Sinh viên"
+        "owner": "Chủ sở hữu",
+        "admin": "Quản trị viên",
+        "editor": "Biên tập viên",
+        "viewer": "Người xem",
+        "systemTooltip": "Vai trò hệ thống",
+        "defaultTooltip": "Vai trò mặc định cho thành viên mới"
       }
     },
     "inviteMembers": {
@@ -784,6 +792,15 @@
         "note": {
           "maxLength": "Tối đa 255 ký tự"
         }
+      }
+    },
+    "settings": {
+      "title": "Cài đặt dự án",
+      "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
+      "tabs": {
+        "info": "Thông tin Dự án",
+        "members": "Thành viên",
+        "permissions": "Vai trò & Quyền"
       }
     }
   },

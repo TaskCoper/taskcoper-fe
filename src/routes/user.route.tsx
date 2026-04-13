@@ -19,6 +19,9 @@ const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
 const TaskDialogPage = lazy(() => import('@/pages/task-dialog.page'))
+const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
+const ProjectSettingsPage = lazy(() => import('@/pages/project-settings.page'))
+const ProjectMemberPage = lazy(() => import('@/pages/project-member.page'))
 
 const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
@@ -27,7 +30,6 @@ const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
-const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
 const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
@@ -277,11 +279,11 @@ export const userRoutes: RouteObject[] = [
                     children: [
                       {
                         path: 'settings',
-                        element: (
-                          <div className='w-full h-full flex justify-center items-center'>
-                            <p className='text-2xl font-bold'>Settings Comming Soon</p>
-                          </div>
-                        )
+                        element: <ProjectSettingsPage />
+                      },
+                      {
+                        path: 'members/:memberId',
+                        element: <ProjectMemberPage />
                       }
                     ]
                   }

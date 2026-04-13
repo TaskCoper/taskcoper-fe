@@ -90,7 +90,7 @@ export const getColumns = ({
             row.original.isCompleted ? 'line-through decoration-foreground/40 text-muted-foreground' : ''
           )}
         >
-          <p className='w-full truncate max-w-[500px] xl:max-w-none'>{row.original.name}</p>
+          <p className='w-full truncate max-w-125 xl:max-w-none'>{row.original.name}</p>
         </Link>
       ),
       enableSorting: true,

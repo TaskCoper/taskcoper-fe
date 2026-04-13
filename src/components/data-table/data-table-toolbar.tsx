@@ -135,7 +135,7 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
               placeholder={placeholder}
               value={(column.getFilterValue() as string) ?? ''}
               onValueChange={(value) => column.setFilterValue(value)}
-              className='h-8 min-w-64 peer pl-9'
+              className='h-8 min-w-72 peer pl-9'
               spellCheck={false}
             />
           </div>
@@ -147,7 +147,7 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
           placeholder={placeholder}
           value={(column.getFilterValue() as string) ?? ''}
           onValueChange={(value) => column.setFilterValue(value)}
-          className='h-8 w-40 lg:w-56'
+          className='h-8 min-w-72'
         />
       )
 

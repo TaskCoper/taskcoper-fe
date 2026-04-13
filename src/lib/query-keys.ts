@@ -94,7 +94,11 @@ export const queryKeys = {
       identifier,
       milestoneIdentifier
     ],
-    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const
+    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const,
+    roles: {
+      all: (identifier?: string) => ['project-roles', identifier] as const,
+      list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const
+    }
   },
   // Milestones
   milestones: {

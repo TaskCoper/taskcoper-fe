@@ -24,6 +24,7 @@
       "accept": "Accept",
       "decline": "Decline",
       "remove": "Remove",
+      "leave": "Leave",
       "delete": "Delete",
       "insert": "Insert",
       "download": "Download"
@@ -579,18 +580,25 @@
       "confirm": {
         "title": "Remove member",
         "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "leaveTitle": "Leave project",
+        "leaveDescription": "Are you sure you want to leave this project?",
         "confirmText": "Remove",
         "cancelText": "Cancel"
       },
       "column": {
         "member": "Member",
+        "memberPlaceholder": "Search by name or email...",
         "role": "Role",
         "permission": "Permission",
         "canEdit": "Editor"
       },
       "role": {
-        "mentor": "Mentor",
-        "student": "Student"
+        "owner": "Owner",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "systemTooltip": "System defined role",
+        "defaultTooltip": "Default role for new members"
       }
     },
     "inviteMembers": {
@@ -784,6 +792,15 @@
         "note": {
           "maxLength": "Max 255 characters"
         }
+      }
+    },
+    "settings": {
+      "title": "Project settings",
+      "description": "Manage general information and project permission configuration.",
+      "tabs": {
+        "info": "Project Information",
+        "members": "Members",
+        "permissions": "Roles & Permissions"
       }
     }
   },

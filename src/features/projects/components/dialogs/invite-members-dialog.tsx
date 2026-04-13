@@ -21,6 +21,7 @@ import { useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
+import { useGetProjectRoles } from '../../hooks/use-get-project-roles'
 import { useInviteMembers } from '../../hooks/use-invite-members'
 import type { InviteMemberItem, InviteMembersFormValues } from '../../validations'
 import InviteMembersForm from '../forms/invite-members-form'
@@ -40,6 +41,7 @@ interface InviteMembersDialogProps {
 export default function InviteMembersDialog({ children, projectIdentifier }: InviteMembersDialogProps) {
   const { t } = useTranslation()
   const { methods, open, setOpen, inviteMembers, isInvitingMembers } = useInviteMembers({ projectIdentifier })
+  const { projectRoles } = useGetProjectRoles({ identifier: projectIdentifier })
 
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchQuery] = useDebounce(searchTerm, 500)
@@ -77,7 +79,7 @@ export default function InviteMembersDialog({ children, projectIdentifier }: Inv
       projectIdentifier: data.projectIdentifier,
       inviteMembers: data.inviteMembers.map((u) => ({
         email: u.email,
-        isEditor: u.isEditor,
+        roleIds: u.roleIds,
         inviteExpireDate: finalExpireDate
       }))
     }
@@ -106,7 +108,7 @@ export default function InviteMembersDialog({ children, projectIdentifier }: Inv
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-sm sm:min-w-lg' onInteractOutside={onClose}>
+      <DialogContent position='top-center' className='min-w-xl sm:min-w-2xl' onInteractOutside={onClose}>
         <DialogHeader>
           <DialogTitle>{t('project.inviteMembers.title')}</DialogTitle>
           <DialogDescription>{t('project.inviteMembers.description')}</DialogDescription>
@@ -131,7 +133,7 @@ export default function InviteMembersDialog({ children, projectIdentifier }: Inv
                 email: user.email,
                 fullName: user.fullName,
                 avatar: user.avatar,
-                isEditor: false,
+                roleIds: [],
                 inviteExpireDate: null
               })}
               renderOption={(user) => (
@@ -150,7 +152,7 @@ export default function InviteMembersDialog({ children, projectIdentifier }: Inv
               onChange={(val) => replace(val)}
             />
 
-            <InviteMembersForm fields={fields} remove={remove} />
+            <InviteMembersForm fields={fields} remove={remove} roles={projectRoles.value.items} />
 
             <div className='rounded-md border border-dashed p-4 space-y-4 bg-muted/30 mt-4'>
               <Controller

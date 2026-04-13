@@ -29,7 +29,7 @@ export const memberSchema = (t: TFunction) => {
       email: z.email(t('project.inviteMembers.validation.users.email.invalid')).trim(),
       fullName: z.string().trim().min(1, t('project.inviteMembers.validation.users.fullName.required')),
       avatar: z.url({ message: t('project.inviteMembers.validation.users.avatar.invalid') }).nullable(),
-      isEditor: z.boolean(),
+      roleIds: z.array(z.uuid()).min(1),
       inviteExpireDate: z.iso
         .datetime({ message: t('project.inviteMembers.validation.users.inviteExpireDate.invalid') })
         .nullable()

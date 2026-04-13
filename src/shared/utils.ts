@@ -47,23 +47,25 @@ export function hasDraggableData<T extends Active | Over>(
   return false
 }
 
+const defaultPaginationResponse = {
+  value: {
+    items: [],
+    pageIndex: DEFAULT_PAGE_INDEX,
+    pageSize: DEFAULT_PAGE_SIZE,
+    totalCount: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
+  },
+  error: {
+    code: '',
+    message: ''
+  },
+  isSuccess: true,
+  isFailure: false
+}
+
 export function getDefaultPaginationResponse<T>(): BasePaginationResponse<T> {
-  return {
-    value: {
-      items: [],
-      pageIndex: DEFAULT_PAGE_INDEX,
-      pageSize: DEFAULT_PAGE_SIZE,
-      totalCount: 0,
-      hasNextPage: false,
-      hasPreviousPage: false
-    },
-    error: {
-      code: '',
-      message: ''
-    },
-    isSuccess: true,
-    isFailure: false
-  }
+  return defaultPaginationResponse as BasePaginationResponse<T>
 }
 
 /**
