@@ -813,8 +813,6 @@
       }
     },
     "updateProjectRole": {
-      "title": "Update role",
-      "description": "Manage information and permissions for this role",
       "field": {
         "name": {
           "label": "Role name",
@@ -833,6 +831,15 @@
           "maxLength": "Description must not exceed 255 characters"
         }
       },
+      "status": {
+        "saving": "Saving changes...",
+        "unsavedChanges": "You have unsaved changes.",
+        "noChanges": "No changes yet. Update permissions to enable save."
+      },
+      "unsavedChanges": {
+        "title": "Discard unsaved changes?",
+        "description": "You have unsaved changes on this role. Leaving now will discard them."
+      },
       "extensions": {
         "taskUpdateTitle": "Task update extensions",
         "moveTask": "Move task",
@@ -840,6 +847,166 @@
         "toggleTaskStatus": "Toggle task status",
         "storageReadTitle": "Storage read extensions",
         "downloadFiles": "Download files"
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Read tasks"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "View tasks in Kanban or Table"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Write tasks"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Create parent milestones, milestones, and tasks",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Add attachments, subtasks, and comments on tasks",
+              "assignMembersToTasks": "Assign members to tasks",
+              "createOrAssignLabelsToTasks": "Create or assign labels to tasks"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Delete tasks"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Delete parent milestones, milestones, and tasks",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Delete attachments, subtasks, and comments on tasks",
+              "unassignMembersFromTasks": "Unassign members from tasks",
+              "unassignLabelsFromTasks": "Unassign labels from tasks",
+              "deleteLabelsFromProject": "Delete labels from project"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Update tasks"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Update task name, description, priority, task points, background image, and due date",
+              "watchOrUnwatchTask": "Watch or unwatch task",
+              "updateMilestoneName": "Update milestone name",
+              "moveMilestone": "Move milestone",
+              "moveTaskBetweenMilestones": "Move task between milestones",
+              "toggleTaskStatus": "Toggle task status"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Read task performance"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "View task performance metrics"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Read project storage"
+            },
+            "extensions": {
+              "viewProjectStorage": "View project storage",
+              "downloadFiles": "Download files"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Write project storage"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Upload files to project storage"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Delete project storage"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Delete files from project storage"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Read project revenue"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "View revenue metrics"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Write project revenue"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Add income or expense records",
+              "addRevenueLabels": "Add revenue labels"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Update project revenue"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Update income or expense records",
+              "assignRevenueLabels": "Assign revenue labels"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Delete project revenue"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Delete income or expense records",
+              "unassignRevenueLabels": "Unassign revenue labels",
+              "deleteRevenueLabelsFromProject": "Delete revenue labels from project"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Read project settings"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "View project info, members, and roles"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Write project settings"
+            },
+            "extensions": {
+              "inviteMembers": "Invite members",
+              "createProjectRoles": "Create project roles"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Update project settings"
+            },
+            "extensions": {
+              "updateProjectRoles": "Update project roles",
+              "assignOrUnassignMemberRoles": "Assign or unassign member roles"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Delete project settings"
+            },
+            "extensions": {
+              "removeMembers": "Remove members",
+              "deleteProjectRoles": "Delete project roles"
+            }
+          }
+        }
       }
     },
     "deleteProjectRole": {

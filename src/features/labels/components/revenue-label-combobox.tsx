@@ -152,7 +152,9 @@ export default function RevenueLabelCombobox({
                     'inline-flex items-center gap-1 rounded-sm px-1.5 h-5 text-xs font-semibold'
                   )}
                 >
-                  <span className={cn('truncate w-10', getColorTextClass(label.color ?? ''))}>{label.name}</span>
+                  <span className={cn('truncate w-auto max-w-10', getColorTextClass(label.color ?? ''))}>
+                    {label.name}
+                  </span>
                   {canDelete ? (
                     <XIcon
                       className={cn('size-3 shrink-0 cursor-pointer', getColorTextClass(label.color ?? ''))}

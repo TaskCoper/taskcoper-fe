@@ -18,7 +18,12 @@ function AccordionItem({ className, ...props }: React.ComponentProps<typeof Acco
   )
 }
 
-function AccordionTrigger({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+function AccordionTrigger({
+  className,
+  children,
+  displayIcon = true,
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & { displayIcon?: boolean }) {
   return (
     <AccordionPrimitive.Header className='flex'>
       <AccordionPrimitive.Trigger
@@ -30,7 +35,9 @@ function AccordionTrigger({ className, children, ...props }: React.ComponentProp
         {...props}
       >
         {children}
-        <ChevronDownIcon className='size-4 shrink-0 transition-transform duration-200 text-muted-foreground' />
+        {displayIcon && (
+          <ChevronDownIcon className='size-4 shrink-0 transition-transform duration-200 text-muted-foreground' />
+        )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

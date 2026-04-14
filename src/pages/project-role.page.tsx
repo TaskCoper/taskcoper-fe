@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import UpdateProjectRoleForm from '@/features/projects/components/forms/update-project-role-form'
 import { useDeleteProjectRole } from '@/features/projects/hooks/use-delete-project-role'
@@ -11,7 +12,7 @@ import type { ProjectRoleItem } from '@/types/project.type'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
+import { useBeforeUnload, useBlocker, useNavigate, useParams } from 'react-router'
 
 const safeJsonParse = (value: string) => {
   try {
@@ -57,6 +58,56 @@ export default function ProjectRolePage() {
   const { role, isLoadingProjectRole } = useGetProjectRole({ projectIdentifier, roleId })
   const { methods, updateProjectRole, isUpdatingProjectRole } = useUpdateProjectRole({ projectIdentifier })
   const { deleteProjectRole } = useDeleteProjectRole()
+  const isDirty = methods.formState.isDirty
+  const isGuardEnabled = isDirty && !isUpdatingProjectRole
+  const blocker = useBlocker(isGuardEnabled)
+
+  useBeforeUnload(
+    (event) => {
+      if (!isGuardEnabled) {
+        return
+      }
+
+      event.preventDefault()
+      event.returnValue = ''
+    },
+    { capture: true }
+  )
+
+  useEffect(() => {
+    if (blocker.state !== 'blocked') {
+      return
+    }
+
+    let isCancelled = false
+
+    const runConfirm = async () => {
+      const ok = await confirm({
+        title: t('project.updateProjectRole.unsavedChanges.title'),
+        description: t('project.updateProjectRole.unsavedChanges.description'),
+        confirmText: t('common.button.leave'),
+        cancelText: t('common.button.cancel'),
+        variant: 'default'
+      })
+
+      if (isCancelled) {
+        return
+      }
+
+      if (ok) {
+        blocker.proceed()
+        return
+      }
+
+      blocker.reset()
+    }
+
+    runConfirm()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [blocker, confirm, t])
 
   const navigateToPermissions = () => {
     if (projectIdentifier) {
@@ -118,6 +169,12 @@ export default function ProjectRolePage() {
     })
   }, [projectIdentifier, role, methods])
 
+  const saveStateText = isUpdatingProjectRole
+    ? t('project.updateProjectRole.status.saving')
+    : isDirty
+      ? t('project.updateProjectRole.status.unsavedChanges')
+      : t('project.updateProjectRole.status.noChanges')
+
   if (isLoadingProjectRole) {
     return (
       <div className='flex w-full items-center justify-center py-10'>
@@ -126,44 +183,35 @@ export default function ProjectRolePage() {
     )
   }
 
-  if (!role) {
-    return (
-      <div className='space-y-4 px-6 py-6'>
-        <p className='text-sm text-muted-foreground'>{t('error.somethingWentWrong')}</p>
-        <Button variant='outline' onClick={navigateToPermissions}>
-          {t('common.button.cancel')}
-        </Button>
-      </div>
-    )
-  }
-
   return (
-    <div className='mx-auto w-full max-w-4xl space-y-4 px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
-      <div>
-        <h1 className='text-2xl font-bold'>{t('project.updateProjectRole.title')}</h1>
-        <p className='text-sm text-muted-foreground'>{t('project.updateProjectRole.description')}</p>
-      </div>
-
+    <div className='mx-auto w-full space-y-8 px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
           <UpdateProjectRoleForm />
 
-          <div className='flex items-center justify-end gap-2'>
-            <Button variant='ghost' type='button' onClick={navigateToPermissions} disabled={isUpdatingProjectRole}>
-              {t('common.button.cancel')}
-            </Button>
+          <Card className='sticky bottom-4 z-20 shadow-none rounded-md py-2 pl-4 pr-2'>
+            <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+              <p className='text-xs text-muted-foreground'>{saveStateText}</p>
 
-            <Button disabled={!projectIdentifier || !methods.formState.isDirty || isUpdatingProjectRole}>
-              {isUpdatingProjectRole ? <Spinner /> : null}
-              {t('common.button.save')}
-            </Button>
-          </div>
+              <div className='flex items-center justify-end gap-2'>
+                <Button variant='ghost' type='button' onClick={navigateToPermissions} disabled={isUpdatingProjectRole}>
+                  {t('common.button.cancel')}
+                </Button>
+
+                <Button disabled={!projectIdentifier || !isDirty || isUpdatingProjectRole}>
+                  {isUpdatingProjectRole ? <Spinner /> : null}
+                  {t('common.button.save')}
+                </Button>
+              </div>
+            </div>
+          </Card>
         </form>
       </FormProvider>
 
       <div className='space-y-2'>
         <p className='text-xl font-medium'>{t('project.deleteProjectRole.dangerZone.title')}</p>
-        <div className='p-3 border border-destructive text-destructive-foreground rounded-md'>
+
+        <div className='rounded-md border border-destructive p-3 text-destructive-foreground'>
           <div className='flex items-center justify-between gap-2'>
             <div>
               <p className='text-sm font-medium'>{t('project.deleteProjectRole.dangerZone.deleteTitle')}</p>
@@ -173,7 +221,7 @@ export default function ProjectRolePage() {
             </div>
             <div className='flex-1' />
 
-            <Button variant='destructive' onClick={onDelete}>
+            <Button type='button' variant='destructive' onClick={onDelete}>
               {t('common.button.delete')}
             </Button>
           </div>
