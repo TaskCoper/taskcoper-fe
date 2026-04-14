@@ -100,7 +100,8 @@ export const queryKeys = {
       all: (identifier?: string) => ['project-roles', identifier] as const,
       list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const,
       detail: ({ projectIdentifier, roleId }: GetProjectRoleParams) =>
-        ['project-role', projectIdentifier, roleId] as const
+        ['project-role', projectIdentifier, roleId] as const,
+      templates: (projectIdentifier?: string) => ['project-role-templates', projectIdentifier] as const
     }
   },
   // Milestones

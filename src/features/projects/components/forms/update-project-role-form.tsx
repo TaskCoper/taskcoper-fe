@@ -18,6 +18,7 @@ import {
   SettingsIcon,
   WalletIcon
 } from 'lucide-react'
+import { useId } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateProjectRoleFormValues } from '../../validations'
@@ -526,6 +527,10 @@ const getExtensionValue = (
 }
 
 export default function UpdateProjectRoleForm() {
+  const uniqueId = useId()
+  const nameFieldId = `${uniqueId}-role-name`
+  const descriptionFieldId = `${uniqueId}-role-description`
+
   const { t } = useTranslation()
   const { watch, setValue, formState } = useFormContext<UpdateProjectRoleFormValues>()
 
@@ -588,6 +593,7 @@ export default function UpdateProjectRoleForm() {
           {isEditingName ? (
             <Input
               {...nameInputProps}
+              id={nameFieldId}
               maxLength={255}
               className='h-9 font-semibold'
               aria-invalid={!!nameError}
@@ -613,6 +619,7 @@ export default function UpdateProjectRoleForm() {
           {isEditingDescription ? (
             <Textarea
               {...descriptionInputProps}
+              id={descriptionFieldId}
               rows={3}
               maxLength={255}
               className='min-h-20 resize-none'
@@ -666,18 +673,19 @@ export default function UpdateProjectRoleForm() {
                           value={`${permission.sectionKey}-${action}`}
                           className='px-3 last:border-b-0'
                         >
-                          <AccordionTrigger className='py-2.5 hover:no-underline' displayIcon={false}>
-                            <div className='flex items-center justify-between gap-3 w-full'>
+                          <div className='flex items-center justify-between gap-3 w-full'>
+                            <AccordionTrigger className='py-2.5 hover:no-underline flex-1' displayIcon={false}>
                               <p className='text-sm'>{t(ActionKeyLabel[action])}</p>
-                              <Switch
-                                checked={parentChecked}
-                                onCheckedChange={(checked) =>
-                                  handleActionToggle(idx, action, checked === true, allExtensions)
-                                }
-                                onClick={(event) => event.stopPropagation()}
-                              />
-                            </div>
-                          </AccordionTrigger>
+                            </AccordionTrigger>
+
+                            <Switch
+                              checked={parentChecked}
+                              onCheckedChange={(checked) =>
+                                handleActionToggle(idx, action, checked === true, allExtensions)
+                              }
+                              onClick={(event) => event.stopPropagation()}
+                            />
+                          </div>
 
                           <AccordionContent className='pb-3'>
                             {allExtensions.length ? (
@@ -690,7 +698,7 @@ export default function UpdateProjectRoleForm() {
 
                                   return (
                                     <label
-                                      key={extension.id}
+                                      key={`${permission.sectionKey}-${action}-${extension.name}`}
                                       className='inline-flex w-full items-center justify-between gap-3 pl-4'
                                     >
                                       <p>{t(extension.name)}</p>

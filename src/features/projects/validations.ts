@@ -207,13 +207,26 @@ export const updateProjectRoleSchema = (t: TFunction) => {
   })
 }
 
-export const addProjectRoleSchema = () => {
+export const addProjectRoleSchema = (t: TFunction) => {
   return z.object({
-    projectIdentifier: z.string().min(1),
-    name: z.string().min(1).max(255),
-    description: z.string().max(255),
+    projectIdentifier: z.string().min(1, t('project.addProjectRole.validation.projectIdentifier.minLength')),
+    name: z
+      .string()
+      .trim()
+      .min(1, t('project.addProjectRole.validation.name.minLength'))
+      .max(255, t('project.addProjectRole.validation.name.maxLength')),
+    description: z.string().trim().max(255, t('project.addProjectRole.validation.description.maxLength')),
     isDefault: z.boolean(),
-    templateKey: z.string().min(1).nullable()
+    permissions: z.array(
+      z.object({
+        sectionKey: z.enum(SectionKey),
+        canRead: z.boolean(),
+        canWrite: z.boolean(),
+        canUpdate: z.boolean(),
+        canDelete: z.boolean(),
+        extensions: z.union([taskSectionExtensionsSchema, storageSectionExtensionsSchema]).nullable()
+      })
+    )
   })
 }
 

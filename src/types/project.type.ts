@@ -228,6 +228,8 @@ export interface ProjectRoleItem extends ProjectRole {
   permissions: SectionPermission[]
 }
 
+export type ProjectRoleTemplate = Omit<ProjectRoleItem, 'id' | 'memberCount'>
+
 export interface ProjectRoleDetail {
   id: string
   name: ProjectRoleName

@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import UpdateProjectRoleForm from '@/features/projects/components/forms/update-project-role-form'
 import { useDeleteProjectRole } from '@/features/projects/hooks/use-delete-project-role'
@@ -47,6 +48,45 @@ const normalizeExtensions = (
   }
 
   return undefined
+}
+
+const ProjectRolePageSkeleton = () => {
+  return (
+    <div className='mx-auto w-full space-y-8 px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
+      <div className='space-y-4'>
+        <div className='space-y-2'>
+          <Skeleton className='h-9 w-72' />
+          <Skeleton className='h-5 w-full max-w-xl' />
+        </div>
+
+        <div className='rounded-md border p-3 space-y-3'>
+          <Skeleton className='h-10 w-full' />
+          <Skeleton className='h-10 w-full' />
+          <Skeleton className='h-10 w-full' />
+          <Skeleton className='h-10 w-full' />
+        </div>
+
+        <Card className='sticky bottom-4 z-20 shadow-none rounded-md py-2 pl-4 pr-2'>
+          <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+            <Skeleton className='h-4 w-40' />
+
+            <div className='flex items-center justify-end gap-2'>
+              <Skeleton className='h-9 w-24' />
+              <Skeleton className='h-9 w-24' />
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <div className='space-y-2'>
+        <Skeleton className='h-7 w-48' />
+        <div className='rounded-md p-3 space-y-2'>
+          <Skeleton className='h-5 w-72' />
+          <Skeleton className='h-4 w-full max-w-lg' />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function ProjectRolePage() {
@@ -119,14 +159,7 @@ export default function ProjectRolePage() {
   }
 
   const onSubmit: SubmitHandler<UpdateProjectRoleFormValues> = (body) => {
-    updateProjectRole(
-      { body },
-      {
-        onSuccess: () => {
-          navigateToPermissions()
-        }
-      }
-    )
+    updateProjectRole({ body })
   }
 
   const onDelete = async () => {
@@ -176,11 +209,7 @@ export default function ProjectRolePage() {
       : t('project.updateProjectRole.status.noChanges')
 
   if (isLoadingProjectRole) {
-    return (
-      <div className='flex w-full items-center justify-center py-10'>
-        <Spinner />
-      </div>
-    )
+    return <ProjectRolePageSkeleton />
   }
 
   return (

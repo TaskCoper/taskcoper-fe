@@ -728,6 +728,36 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "New role",
+      "description": "Add a new role to the project to assign permissions to team members.",
+      "field": {
+        "template": {
+          "label": "Template",
+          "placeholder": "Select template"
+        },
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "projectIdentifier": {
+          "minLength": "Project is required"
+        }
+      }
+    },
     "views": {
       "board": "Kanban View",
       "table": "Table View"
@@ -810,7 +840,10 @@
         "canWrite": "Write",
         "canUpdate": "Update",
         "canDelete": "Delete"
-      }
+      },
+      "noRolesDefined": "No roles defined yet",
+      "addRole": "Add role",
+      "memberCount": "({{count}} members)"
     },
     "updateProjectRole": {
       "field": {

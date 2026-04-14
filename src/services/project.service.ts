@@ -15,6 +15,7 @@ import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type {
   AddProjectRevenueFormValues,
+  AddProjectRoleFormValues,
   CreateProjectFormValues,
   UpdateProjectFormValues,
   UpdateProjectRevenueFormValues,
@@ -38,6 +39,7 @@ import type {
   ProjectResourceStats,
   ProjectRoleDetail,
   ProjectRoleItem,
+  ProjectRoleTemplate,
   Revenue,
   RevenueLabelStats,
   RevenueStats,
@@ -563,6 +565,26 @@ class ProjectService {
 
   deleteProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier: string; roleId: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
+
+    return data.value
+  }
+
+  getProjectRoleTemplates = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleTemplate>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/template`
+    )
+
+    return data
+  }
+
+  addProjectRole = async ({ body }: { body: AddProjectRoleFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/roles`, {
+      ...body,
+      permissions: body.permissions.map((per) => ({
+        ...per,
+        extensions: JSON.stringify(per.extensions)
+      }))
+    })
 
     return data.value
   }

@@ -728,6 +728,36 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "Vai trò mới",
+      "description": "Thêm vai trò mới vào dự án để phân quyền cho các thành viên trong nhóm.",
+      "field": {
+        "template": {
+          "label": "Mẫu vai trò",
+          "placeholder": "Chọn mẫu vai trò"
+        },
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "projectIdentifier": {
+          "minLength": "Vui lòng chọn dự án"
+        }
+      }
+    },
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
@@ -810,7 +840,10 @@
         "canWrite": "Thêm mới",
         "canUpdate": "Cập nhật",
         "canDelete": "Xóa"
-      }
+      },
+      "noRolesDefined": "Chưa có vai trò nào",
+      "addRole": "Thêm vai trò",
+      "memberCount": "({{count}} thành viên)"
     },
     "updateProjectRole": {
       "field": {
