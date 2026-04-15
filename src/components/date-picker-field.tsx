@@ -20,6 +20,7 @@ interface DatePickerFieldProps<T extends FieldValues> extends DateConstraints {
   name: Path<T>
   label: string
   control?: Control<T>
+  onValueChange?: (value: string | null) => void
   placeholder?: string
   isRequired?: boolean
   isDisabled?: boolean
@@ -31,6 +32,7 @@ export function DatePickerField<T extends FieldValues>({
   name,
   label,
   control: propsControl,
+  onValueChange,
   placeholder = 'datePickerField.placeholder',
   isRequired = false,
   isDisabled = false,
@@ -99,6 +101,7 @@ export function DatePickerField<T extends FieldValues>({
                     onClick={(e) => {
                       e.stopPropagation()
                       field.onChange(null)
+                      onValueChange?.(null)
                     }}
                   >
                     <XCircleIcon className='size-4 opacity-50 hover:opacity-100' />
@@ -116,7 +119,9 @@ export function DatePickerField<T extends FieldValues>({
                 mode='single'
                 selected={field.value ? new Date(field.value) : undefined}
                 onSelect={(date) => {
-                  field.onChange(date?.toISOString())
+                  const newValue = date?.toISOString() ?? null
+                  field.onChange(newValue)
+                  onValueChange?.(newValue)
                   setOpen(false)
                 }}
                 disabled={disabledDays}

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { updateProjectSchema, type UpdateProjectFormValues } from '../validations'
 
-export const useUpdateProject = ({ projectId }: { projectId?: string }) => {
+export const useUpdateProject = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
 
@@ -17,16 +17,17 @@ export const useUpdateProject = ({ projectId }: { projectId?: string }) => {
 
   const { mutate: updateProject, isPending: isUpdatingProject } = useMutation({
     mutationFn: projectService.updateProject,
-    onSuccess: (message) => {
-      toast.success(message)
-    },
+    // onSuccess: (message) => {
+    //   toast.success(message)
+    // },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
     }
   })
 

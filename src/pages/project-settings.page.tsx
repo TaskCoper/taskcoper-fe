@@ -1,6 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import ProjectInfoTab from '@/features/projects/components/project-info-tab'
 import ProjectMembersTab from '@/features/projects/components/project-members-tab'
 import ProjectPermissionsTab from '@/features/projects/components/project-permissions-tab'
+import { useGetProject } from '@/features/projects/hooks/use-get-project'
 import { InfoIcon, KeySquareIcon, UsersRoundIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useSearchParams } from 'react-router'
@@ -12,12 +14,14 @@ export default function ProjectSettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTab = searchParams.get('tab') || 'info'
 
+  const { project } = useGetProject({ identifier })
+
   const TABS = [
     {
       value: 'info',
       label: t('project.settings.tabs.info'),
       icon: <InfoIcon />,
-      content: <div>Project Info </div>
+      content: <ProjectInfoTab projectIdentifier={identifier} />
     },
     {
       value: 'members',
@@ -42,7 +46,7 @@ export default function ProjectSettingsPage() {
       >
         <div className='bg-muted/50 px-6 pt-6 space-y-6 border-b'>
           <div>
-            <h1 className='text-2xl font-bold tracking-tight'>{t('project.settings.title')}</h1>
+            <h1 className='text-2xl font-bold tracking-tight'>{project?.name}</h1>
             <p className='text-sm text-muted-foreground'>{t('project.settings.description')}</p>
           </div>
 

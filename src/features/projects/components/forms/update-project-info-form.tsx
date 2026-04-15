@@ -28,7 +28,6 @@ export default function UpdateProjectInfoForm() {
               placeholder={t('project.updateProjectInfo.field.name.placeholder')}
               autoComplete='off'
               spellCheck={false}
-              autoFocus={true}
             />
 
             <div className='min-h-4'>

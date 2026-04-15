@@ -11,7 +11,7 @@ export default function UpdateProjectGeneralForm() {
   const { control } = useFormContext<UpdateProjectFormValues>()
 
   return (
-    <div className='flex flex-col gap-2 w-full'>
+    <div className='flex flex-col gap-4 w-full'>
       <Controller
         name='teamSize'
         control={control}
@@ -29,9 +29,9 @@ export default function UpdateProjectGeneralForm() {
               value={field.value ?? ''}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
@@ -53,9 +53,9 @@ export default function UpdateProjectGeneralForm() {
               spellCheck={false}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
@@ -77,9 +77,9 @@ export default function UpdateProjectGeneralForm() {
               value={field.value ?? ''}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
