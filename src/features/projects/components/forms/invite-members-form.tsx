@@ -3,13 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { ProjectRoleName } from '@/types/project-permission.type'
 import type { ProjectRoleItem } from '@/types/project.type'
-import { EyeIcon, XIcon } from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { InviteMembersFormValues } from '../../validations'
-import { RoleColorMap, RoleIconMap } from '../columns/project-member-columns'
 
 interface InviteMembersFormProps {
   fields: FieldArrayWithId<InviteMembersFormValues, 'inviteMembers'>[]
@@ -64,17 +62,8 @@ export default function InviteMembersForm({ fields, remove, roles = [] }: Invite
                       triggerClassName={cn('h-8', field.value.length > 0 ? 'px-1!' : 'px-2!')}
                       displayError={false}
                       customBadgeRender={(option) => {
-                        const roleName = option.meta?.name as ProjectRoleName
-                        const RoleIcon = RoleIconMap[roleName] || EyeIcon
-
                         return (
-                          <div
-                            className={cn(
-                              'flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border',
-                              RoleColorMap[roleName] || 'bg-muted text-muted-foreground'
-                            )}
-                          >
-                            <RoleIcon className='size-3 shrink-0' />
+                          <div className='flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border'>
                             <p className='text-xs font-semibold'>{option.label}</p>
                           </div>
                         )

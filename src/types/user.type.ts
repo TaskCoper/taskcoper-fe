@@ -23,6 +23,7 @@ export interface User {
   domains: Domain[]
   createdOnUtc: string
   isGrantGoogleCalendarAccess: boolean
+  slug: string
 }
 
 export interface MentionUser {
@@ -72,4 +73,5 @@ export interface Mentor {
   rating: number
   createdOnUtc: string
   domains: { id: string; name: string }[]
+  slug: string
 }

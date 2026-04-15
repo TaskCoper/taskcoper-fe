@@ -1,5 +1,4 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { useSyncTimezone } from '@/features/auth/hooks/use-sync-timezone'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { getUserType } from '@/shared/utils'
 import { Navigate, Outlet, useLocation } from 'react-router'
@@ -13,7 +12,7 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   const { isAuthenticated, isVerificationRequired, user } = useAuthStore()
   const { me, isGettingMe } = useGetMe()
 
-  useSyncTimezone(me)
+  // useSyncTimezone(me)
 
   const location = useLocation()
 

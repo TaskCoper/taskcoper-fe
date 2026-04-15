@@ -20,7 +20,7 @@ const html =
 const COLLAPSED_HEIGHT = 300
 
 interface AllTabProps {
-  userDetail?: UserDetail
+  userDetail?: UserDetail | null
 }
 
 export default function AllTab({ userDetail }: AllTabProps) {

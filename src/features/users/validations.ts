@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 import z from 'zod'
+import { UUID_REGEX } from '../projects/validations'
 
 const regex = /(?:\+84|0084|0)[235789][0-9]{1,2}[0-9]{7}(?:[^\d]+|$)/g
 
@@ -46,7 +47,8 @@ export const updateMeSchema = (t: TFunction) => {
         .trim()
         .nullable()
         .transform((val) => (val === '' ? null : val)),
-      wardCode: z.number().positive().or(z.literal(-1))
+      wardCode: z.number().positive().or(z.literal(-1)),
+      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
     })
     .strict()
 }

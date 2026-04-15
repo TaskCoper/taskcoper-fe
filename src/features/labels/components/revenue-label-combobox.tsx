@@ -44,7 +44,7 @@ export default function RevenueLabelCombobox({
   const canUpdate = check('REVENUE', 'canUpdate')
 
   const { revenueLabels, isLoadingRevenueLabels } = useGetProjectRevenueLabels({ projectIdentifier })
-  const allLabels = useMemo(() => revenueLabels?.value?.items ?? [], [revenueLabels])
+  const allLabels = useMemo(() => revenueLabels.value.items, [revenueLabels])
   const filteredLabels = allLabels.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
   const selectedLabels = useMemo(

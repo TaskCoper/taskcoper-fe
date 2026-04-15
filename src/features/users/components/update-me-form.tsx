@@ -3,6 +3,7 @@ import FileDropzone from '@/components/file-dropzone'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import DomainMultiSelect from '@/features/mentors/components/domain-multi-select'
 import type { Province, Ward } from '@/services/map.service'
 import { MAX_AVATAR_SIZE } from '@/shared/constants'
 import { getAvatarFallback } from '@/shared/utils'
@@ -187,6 +188,30 @@ export default function UpdateMeForm({
 
       <div className='space-y-3'>
         <p className='text-lg font-semibold'>{t('user.updateProfile.section.other')}</p>
+
+        <Controller
+          name='domainIds'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-2 mt-3'>
+              <FieldLabel htmlFor={field.name} className='gap-1 items-baseline'>
+                {t('user.updateProfile.field.domain.label')}
+                <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+              </FieldLabel>
+
+              <DomainMultiSelect
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
+                placeholder={t('network.filter.domainPlaceholder')}
+                maxBadges={6}
+              />
+
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
 
         <div>
           <div className='flex items-center gap-4'>

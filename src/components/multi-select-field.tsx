@@ -94,31 +94,37 @@ export default function MultiSelectField<T extends FieldValues>({
         aria-invalid={fieldInvalid}
         disabled={disabled}
         className={cn(
-          'w-full justify-between font-normal py-2',
+          'justify-between font-normal py-2 h-8 px-1! w-fit max-w-full overflow-hidden gap-1',
           fieldValues.length === 0 && 'text-muted-foreground',
           fieldInvalid && 'border-destructive focus-visible:ring-destructive',
           triggerClassName
         )}
       >
-        <div className='flex flex-wrap gap-1 items-center text-left'>
+        <div className='flex flex-nowrap items-center gap-1 flex-1 min-w-0 max-w-full overflow-hidden whitespace-nowrap'>
           {fieldValues.length > 0 ? (
-            fieldValues.length > 3 ? (
-              <p>
+            fieldValues.length > 100 ? (
+              <p className='truncate px-1'>
                 {fieldValues.length} {t('common.ui.selected')}
               </p>
             ) : (
               selectedOptions.map((option) =>
                 customBadgeRender ? (
-                  <React.Fragment key={option.value}>{customBadgeRender(option)}</React.Fragment>
+                  <div key={option.value} className='max-w-full shrink-0'>
+                    {customBadgeRender(option)}
+                  </div>
                 ) : (
-                  <Badge variant='secondary' className={cn('rounded-sm', badgeClassName)} key={option.value}>
-                    {option.label}
+                  <Badge
+                    variant='secondary'
+                    className={cn('rounded-sm max-w-24 shrink-0', badgeClassName)}
+                    key={option.value}
+                  >
+                    <span className='truncate max-w-24 block'>{option.label}</span>
                   </Badge>
                 )
               )
             )
           ) : (
-            <span className='truncate'>{t(placeholder)}</span>
+            <span className='truncate px-2'>{t(placeholder)}</span>
           )}
         </div>
         <ChevronsUpDown className='shrink-0 opacity-50' />

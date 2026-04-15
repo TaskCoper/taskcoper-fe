@@ -82,11 +82,11 @@ export const userRoutes: RouteObject[] = [
             element: <UserDefaultLayout />,
             children: [
               {
-                path: 'users/:userId',
+                path: 'users/:userIdentifier',
                 element: <ProfilePage />
               },
               {
-                path: 'users/:userId/settings',
+                path: 'users/:userIdentifier/settings',
                 element: <SettingsPage />
               },
               {
@@ -283,7 +283,7 @@ export const userRoutes: RouteObject[] = [
                         element: <ProjectSettingsPage />
                       },
                       {
-                        path: 'members/:memberId',
+                        path: 'members/:memberIdentifier',
                         element: <ProjectMemberPage />
                       },
                       {

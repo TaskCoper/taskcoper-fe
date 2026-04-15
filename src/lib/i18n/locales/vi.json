@@ -589,9 +589,22 @@
         "no": "STT",
         "member": "Thành viên",
         "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
+        "phoneNumber": "Số điện thoại",
+        "noPhoneNumber": "Chưa có số điện thoại",
+        "positionTitles": "Chức danh",
+        "noPositionTitles": "Không có chức danh",
         "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò",
         "permission": "Quyền",
         "canEdit": "Người chỉnh sửa"
+      },
+      "positionTitle": {
+        "title": "Chức danh",
+        "searchPlaceholder": "Nhập để tìm chức danh...",
+        "createTitle": "Tạo chức danh",
+        "editTitle": "Chỉnh sửa chức danh",
+        "deleteTitle": "Xóa chức danh",
+        "deleteConfirmation": "Bạn có chắc chắn muốn xóa chức danh này không?"
       },
       "role": {
         "owner": "Chủ sở hữu",
@@ -601,6 +614,11 @@
         "systemTooltip": "Vai trò hệ thống",
         "defaultTooltip": "Vai trò mặc định cho thành viên mới"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "Chưa có múi giờ",
+      "noPhoneNumber": "Chưa có số điện thoại",
+      "noAddress": "Chưa có địa chỉ"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
@@ -1461,6 +1479,9 @@
           "label": "Phường/Xã",
           "placeholder": "Chọn phường/xã",
           "searchPlaceholder": "Tìm phường/xã..."
+        },
+        "domain": {
+          "label": "Lĩnh vực"
         }
       },
       "validation": {
@@ -1485,10 +1506,10 @@
       }
     },
     "profileDialog": {
-      "settings": "Cài đặt",
-      "profileAndDisplay": "Hồ sơ và hiển thị",
+      "settings": "Cài đặt tài khoản",
+      "profileAndDisplay": "Hồ sơ & hiển thị",
       "password": "Mật khẩu",
-      "connectedApps": "Ứng dụng liên kết",
+      "connectedApps": "Ứng dụng đã kết nối",
       "googleCalendar": "Google Calendar",
       "connectWithCalendar": "Kết nối với Lịch",
       "googleCallback": {

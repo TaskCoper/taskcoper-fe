@@ -19,12 +19,22 @@ export interface ProjectMember {
   email: string
   avatar: string | null
   role: number
+  slug: string
+  phoneNumber: string | null
+  positionTitles: Array<Pick<ProjectPositionTitle, 'id' | 'name' | 'color'>>
   roles: Array<{
     id: string
     name: ProjectRoleName
     isSystem: boolean
     isDefault: boolean
   }>
+}
+
+export interface ProjectPositionTitle {
+  id: string
+  name: string
+  description: string | null
+  color: string
 }
 
 export interface Project {

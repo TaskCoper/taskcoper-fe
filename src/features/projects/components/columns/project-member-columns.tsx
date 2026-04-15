@@ -10,13 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { cn, getAvatarFallback } from '@/shared/utils'
-import { ProjectRoleName } from '@/types/project-permission.type'
+import { getAvatarFallback } from '@/shared/utils'
 import type { ProjectMember, ProjectRoleItem } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
-import { CrownIcon, EyeIcon, MoreHorizontalIcon, PencilIcon, SearchIcon, SettingsIcon } from 'lucide-react'
+import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
+import ProjectPositionTitleCombobox from '../project-position-title-combobox'
 
 interface GetColumnsProps {
   currentUserId?: string
@@ -26,20 +26,6 @@ interface GetColumnsProps {
   isUpdatingRole: boolean
   isDeletingMember: boolean
   projectIdentifier?: string
-}
-
-export const RoleIconMap: Record<ProjectRoleName, React.ElementType> = {
-  [ProjectRoleName.Owner]: CrownIcon,
-  [ProjectRoleName.Admin]: SettingsIcon,
-  [ProjectRoleName.Editor]: PencilIcon,
-  [ProjectRoleName.Viewer]: EyeIcon
-}
-
-export const RoleColorMap: Record<ProjectRoleName, string> = {
-  [ProjectRoleName.Owner]: 'bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/20',
-  [ProjectRoleName.Admin]: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/20',
-  [ProjectRoleName.Editor]: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
-  [ProjectRoleName.Viewer]: 'bg-slate-500/15 text-slate-700 dark:text-slate-400 border-slate-500/20'
 }
 
 export const getColumns = ({
@@ -81,7 +67,7 @@ export const getColumns = ({
         <DataTableColumnHeader column={column} label={i18next.t('project.updateProjectMembers.column.member')} />
       ),
       cell: ({ row }) => {
-        const { userId, fullName, avatar } = row.original
+        const { userId, fullName, avatar, slug } = row.original
         const isSelf = userId === currentUserId
 
         return (
@@ -92,7 +78,7 @@ export const getColumns = ({
             </Avatar>
             <div className='-space-y-0.5'>
               <Link
-                to={`/projects/${projectIdentifier}/members/${userId}`}
+                to={`/projects/${projectIdentifier}/members/${slug}`}
                 className='hover:underline hover:text-primary'
               >
                 <p className='text-sm font-medium'>
@@ -110,6 +96,65 @@ export const getColumns = ({
       size: 200
     },
     {
+      id: 'phoneNumber',
+      accessorKey: 'phoneNumber',
+      meta: {
+        label: i18next.t('project.updateProjectMembers.column.phoneNumber')
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          label={i18next.t('project.updateProjectMembers.column.phoneNumber')}
+          className='mx-auto'
+        />
+      ),
+      cell: ({ row }) => {
+        if (!row.original.phoneNumber) {
+          return (
+            <p className='text-center text-muted-foreground'>
+              {i18next.t('project.updateProjectMembers.column.noPhoneNumber')}
+            </p>
+          )
+        }
+
+        return <p className='text-center'>{row.original.phoneNumber}</p>
+      },
+      enableColumnFilter: true,
+      enableSorting: false,
+      size: 150
+    },
+    {
+      id: 'positionTitles',
+      accessorKey: 'positionTitles',
+      meta: {
+        label: i18next.t('project.updateProjectMembers.column.positionTitles'),
+        variant: 'multiSelect'
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          label={i18next.t('project.updateProjectMembers.column.positionTitles')}
+        />
+      ),
+      cell: ({ row }) => {
+        const { userId, positionTitles } = row.original
+
+        return (
+          <div className='w-full'>
+            <ProjectPositionTitleCombobox
+              projectIdentifier={projectIdentifier}
+              userId={userId}
+              selectedPositionTitles={positionTitles}
+            />
+          </div>
+        )
+      },
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 180
+    },
+    {
       id: 'roles',
       accessorKey: 'roles',
       meta: {
@@ -117,21 +162,18 @@ export const getColumns = ({
         variant: 'multiSelect'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={i18next.t('project.updateProjectMembers.column.role')}
-          className='mx-auto'
-        />
+        <DataTableColumnHeader column={column} label={i18next.t('project.updateProjectMembers.column.role')} />
       ),
       cell: ({ row }) => {
         const { userId, roles: memberRoles } = row.original
         const selectedRoleIds = memberRoles.map((role) => role.id)
 
         return (
-          <div className='flex justify-center'>
+          <div className='max-w-full'>
             <MultiSelectField
               name={`role-${userId}`}
               label=''
+              className='w-fit min-w-40'
               options={roles.map((role) => ({
                 label: role.name,
                 value: role.id,
@@ -140,55 +182,13 @@ export const getColumns = ({
               value={selectedRoleIds}
               onValueChange={(value) => onUpdateRole(userId, value)}
               disabled={isUpdatingRole}
-              placeholder='project.updateProjectMembers.column.role'
-              triggerClassName='h-8 px-1!'
+              placeholder='project.updateProjectMembers.column.rolePlaceholder'
+              triggerClassName='h-8 w-fit px-1!'
               displayError={false}
               customBadgeRender={(option) => {
-                const roleName = option.label as ProjectRoleName
-                const RoleIcon = RoleIconMap[roleName] || EyeIcon
-
                 return (
-                  <div
-                    className={cn(
-                      'flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border',
-                      RoleColorMap[roleName] || 'bg-muted text-muted-foreground'
-                    )}
-                  >
-                    <RoleIcon className='size-3 shrink-0' />
-
-                    <p className='text-xs font-semibold'>{option.label}</p>
-
-                    {/* {!!(option.meta?.isSystem || option.meta?.isDefault) && (
-                      <TooltipProvider>
-                        <div className='flex items-center gap-0.5 border-l pl-1 border-current/30'>
-                          {option.meta?.isSystem ? (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className='inline-flex cursor-help'>
-                                  <ShieldIcon className='size-3 shrink-0' />
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                {i18next.t('project.updateProjectMembers.role.systemTooltip')}
-                              </TooltipContent>
-                            </Tooltip>
-                          ) : null}
-
-                          {option.meta?.isDefault ? (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className='inline-flex cursor-help'>
-                                  <StarIcon className='size-3 shrink-0' />
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                {i18next.t('project.updateProjectMembers.role.defaultTooltip')}
-                              </TooltipContent>
-                            </Tooltip>
-                          ) : null}
-                        </div>
-                      </TooltipProvider>
-                    )} */}
+                  <div className='flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border max-w-full'>
+                    <p className='text-xs font-semibold truncate max-w-20'>{option.label}</p>
                   </div>
                 )
               }}

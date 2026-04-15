@@ -3,7 +3,7 @@ import { RevenueType } from '@/types/project.type'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
-const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 
 export const createProjectSchema = (t: TFunction) => {
   return z
@@ -230,6 +230,17 @@ export const addProjectRoleSchema = (t: TFunction) => {
   })
 }
 
+export const addProjectPositionTitleSchema = z.object({
+  projectIdentifier: z.string().min(1),
+  name: z.string().trim().min(1).max(255),
+  description: z.string().trim().max(255),
+  color: z.string().trim().max(255)
+})
+
+export const updateProjectPositionTitleSchema = addProjectPositionTitleSchema.extend({
+  titleId: z.uuid()
+})
+
 export type CreateProjectFormValues = z.infer<ReturnType<typeof createProjectSchema>>
 export type InviteMembersFormValues = z.infer<ReturnType<typeof inviteMembersSchema>>
 export type InviteMemberItem = z.infer<ReturnType<typeof memberSchema>>
@@ -241,3 +252,5 @@ export type UpdateProjectRoleFormValues = z.infer<ReturnType<typeof updateProjec
 export type TaskSectionExtensionsFormValues = z.infer<typeof taskSectionExtensionsSchema>
 export type StorageSectionExtensionsFormValues = z.infer<typeof storageSectionExtensionsSchema>
 export type AddProjectRoleFormValues = z.infer<ReturnType<typeof addProjectRoleSchema>>
+export type AddProjectPositionTitleFormValues = z.infer<typeof addProjectPositionTitleSchema>
+export type UpdateProjectPositionTitleFormValues = z.infer<typeof updateProjectPositionTitleSchema>
