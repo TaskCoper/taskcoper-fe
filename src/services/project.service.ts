@@ -14,10 +14,14 @@ import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type {
+  AddProjectPositionTitleFormValues,
   AddProjectRevenueFormValues,
+  AddProjectRoleFormValues,
   CreateProjectFormValues,
   UpdateProjectFormValues,
-  UpdateProjectRevenueFormValues
+  UpdateProjectPositionTitleFormValues,
+  UpdateProjectRevenueFormValues,
+  UpdateProjectRoleFormValues
 } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -27,14 +31,20 @@ import type {
   InviteMembersPayload,
   Project,
   ProjectMember,
+  ProjectMemberDetail,
+  ProjectMemberPositionTitle,
   ProjectMemberStats,
   ProjectMimeTypeStats,
   ProjectPermission,
+  ProjectPositionTitle,
   ProjectPreview,
   ProjectPriorityStats,
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  ProjectRoleDetail,
+  ProjectRoleItem,
+  ProjectRoleTemplate,
   Revenue,
   RevenueLabelStats,
   RevenueStats,
@@ -182,6 +192,27 @@ class ProjectService {
       userId,
       isEditor
     })
+
+    return data.value
+  }
+
+  updateMemberRoles = async ({
+    projectIdentifier,
+    userId,
+    roleIds
+  }: {
+    projectIdentifier: string
+    userId: string
+    roleIds: string[]
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/roles`,
+      {
+        projectIdentifier,
+        userId,
+        roleIds
+      }
+    )
 
     return data.value
   }
@@ -455,7 +486,7 @@ class ProjectService {
   }
 
   getProjectRevenueLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
-    if (!projectIdentifier) return null
+    if (!projectIdentifier) return getDefaultPaginationResponse<RevenueLabel>()
     const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels`
     )
@@ -499,6 +530,166 @@ class ProjectService {
     if (!projectIdentifier) return null
     const { data } = await api.get<BaseResponse<ProjectPermission>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/permissions/me`
+    )
+
+    return data.value
+  }
+
+  getProjectRoles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectRoleItem>()
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleItem>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles`
+    )
+
+    return data
+  }
+
+  getProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier?: string; roleId?: string }) => {
+    if (!projectIdentifier || !roleId) return null
+    const { data } = await api.get<BaseResponse<ProjectRoleDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}/permissions`
+    )
+
+    return data.value
+  }
+
+  updateProjectRole = async ({ body }: { body: UpdateProjectRoleFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/roles/${body.roleId}`,
+      {
+        ...body,
+        permissions: body.permissions.map((per) => ({
+          ...per,
+          extensions: JSON.stringify(per.extensions)
+        }))
+      }
+    )
+
+    return data.value
+  }
+
+  deleteProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier: string; roleId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
+
+    return data.value
+  }
+
+  getProjectRoleTemplates = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleTemplate>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/template`
+    )
+
+    return data
+  }
+
+  addProjectRole = async ({ body }: { body: AddProjectRoleFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/roles`, {
+      ...body,
+      permissions: body.permissions.map((per) => ({
+        ...per,
+        extensions: JSON.stringify(per.extensions)
+      }))
+    })
+
+    return data.value
+  }
+
+  getProjectPositionTitles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectPositionTitle>()
+    const { data } = await api.get<BasePaginationResponse<ProjectPositionTitle>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles`
+    )
+
+    return data
+  }
+
+  addProjectPositionTitle = async ({ body }: { body: AddProjectPositionTitleFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles`,
+      body
+    )
+
+    return data.value
+  }
+
+  updateProjectPositionTitle = async ({ body }: { body: UpdateProjectPositionTitleFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles/${body.titleId}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId
+  }: {
+    projectIdentifier: string
+    titleId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}`
+    )
+    return data.value
+  }
+
+  assignProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId,
+    userId
+  }: {
+    projectIdentifier: string
+    titleId: string
+    userId: string
+  }) => {
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members`,
+      {
+        userId,
+        projectIdentifier,
+        titleId
+      }
+    )
+
+    return data.value
+  }
+
+  unassignProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId,
+    userId
+  }: {
+    projectIdentifier: string
+    titleId: string
+    userId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members/${userId}`
+    )
+
+    return data.value
+  }
+
+  getProjectMemberPositionTitles = async ({
+    projectIdentifier,
+    userId
+  }: {
+    projectIdentifier?: string
+    userId?: string
+  }) => {
+    if (!projectIdentifier || !userId) return getDefaultPaginationResponse<ProjectMemberPositionTitle>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberPositionTitle>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/position-titles`
+    )
+
+    return data
+  }
+
+  getProjectMember = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
+    if (!projectIdentifier || !userId) return null
+    const { data } = await api.get<BaseResponse<ProjectMemberDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}`
     )
 
     return data.value

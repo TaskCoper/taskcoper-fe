@@ -22,7 +22,8 @@ export const useUpdateMe = () => {
       city: '',
       cityCode: -1,
       state: '',
-      wardCode: -1
+      wardCode: -1,
+      domainIds: []
     },
     resolver: zodResolver(updateMeSchema(t))
   })

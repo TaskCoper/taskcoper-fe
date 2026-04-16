@@ -195,29 +195,31 @@ export default function LabelPopover({
                   <div className='space-y-1'>
                     {filteredLabels.map((label) => (
                       <div key={label.id} className='flex items-center'>
-                        <Checkbox
-                          checked={selectedLabelIds.includes(label.id)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              addTaskLabelMethods.setValue('projectTaskLabelId', label.id)
-                              onAddTaskLabel()
-                            } else {
-                              if (canDelete) {
-                                const id = taskLabels.find((tl) => tl.projectTaskLabelId === label.id)?.id
-                                if (id) onDeleteTaskLabel(id)
+                        {canWrite ? (
+                          <Checkbox
+                            checked={selectedLabelIds.includes(label.id)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                addTaskLabelMethods.setValue('projectTaskLabelId', label.id)
+                                onAddTaskLabel()
+                              } else {
+                                if (canDelete) {
+                                  const id = taskLabels.find((tl) => tl.projectTaskLabelId === label.id)?.id
+                                  if (id) onDeleteTaskLabel(id)
+                                }
                               }
+                            }}
+                            disabled={
+                              isAddingTaskLabel ||
+                              isDeletingTaskLabel ||
+                              (selectedLabelIds.includes(label.id) && !canDelete)
                             }
-                          }}
-                          disabled={
-                            isAddingTaskLabel ||
-                            isDeletingTaskLabel ||
-                            (selectedLabelIds.includes(label.id) && !canDelete)
-                          }
-                          className={cn(
-                            'mr-2',
-                            selectedLabelIds.includes(label.id) && !canDelete && 'cursor-not-allowed'
-                          )}
-                        />
+                            className={cn(
+                              'mr-2',
+                              selectedLabelIds.includes(label.id) && !canDelete && 'cursor-not-allowed'
+                            )}
+                          />
+                        ) : null}
                         <div
                           className={cn(
                             label.color || 'bg-gray-200',

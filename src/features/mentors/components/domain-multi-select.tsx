@@ -86,7 +86,7 @@ export default function DomainMultiSelect({
           <Command shouldFilter={false}>
             <CommandInput placeholder={resolvedPlaceholder} onValueChange={(v) => debouncedSearch(v)} className='h-9' />
 
-            <CommandList className='max-h-[220px] overflow-y-auto overflow-x-hidden'>
+            <CommandList className='max-h-55 overflow-y-auto overflow-x-hidden'>
               {isLoading && domains.length === 0 && (
                 <div className='flex items-center justify-center py-6 text-sm text-muted-foreground gap-2'>
                   <Spinner className='size-4' />
@@ -144,7 +144,7 @@ export default function DomainMultiSelect({
             <Badge
               key={domain.id}
               variant='secondary'
-              className='gap-1 pr-1 pl-2.5 py-1 text-xs font-medium max-w-[180px]'
+              className='rounded-md gap-1 pr-1 pl-2.5 py-1 text-xs font-medium max-w-45'
             >
               <span className='truncate'>{domain.name}</span>
               <button

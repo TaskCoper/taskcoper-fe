@@ -64,6 +64,7 @@ interface RichTextEditorProps {
   error?: { message?: string }
   projectIdentifier?: string
   mentionedUsers?: MentionUser[]
+  className?: string
 }
 
 // Helper function to extract user IDs from Tiptap's JSON structure.
@@ -95,7 +96,8 @@ export default function RichTextEditor({
   invalid = false,
   error,
   projectIdentifier,
-  mentionedUsers = []
+  mentionedUsers = [],
+  className
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
@@ -421,7 +423,10 @@ export default function RichTextEditor({
       extensions: extensions,
       editorProps: {
         attributes: {
-          class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
+          class: cn(
+            'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto',
+            className
+          )
         }
       },
       content: finalContent,

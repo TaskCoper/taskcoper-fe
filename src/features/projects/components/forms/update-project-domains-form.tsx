@@ -7,9 +7,10 @@ import type { UpdateProjectFormValues } from '../../validations'
 interface UpdateProjectDomainsFormProps {
   fields: FieldArrayWithId<UpdateProjectFormValues, 'domainIds'>[]
   remove: UseFieldArrayRemove
+  onRemoveDomain?: () => void
 }
 
-export default function UpdateProjectDomainsForm({ fields, remove }: UpdateProjectDomainsFormProps) {
+export default function UpdateProjectDomainsForm({ fields, remove, onRemoveDomain }: UpdateProjectDomainsFormProps) {
   const { t } = useTranslation()
 
   if (fields.length === 0) {
@@ -27,7 +28,15 @@ export default function UpdateProjectDomainsForm({ fields, remove }: UpdateProje
           <div key={field.id} className='flex items-center justify-between gap-3'>
             <p className='text-sm font-medium'>{field.name}</p>
 
-            <Button variant='ghost' size='icon-sm' onClick={() => remove(index)}>
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon-sm'
+              onClick={() => {
+                remove(index)
+                onRemoveDomain?.()
+              }}
+            >
               <XIcon />
             </Button>
           </div>

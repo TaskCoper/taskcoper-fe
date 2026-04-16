@@ -18,19 +18,26 @@ function AccordionItem({ className, ...props }: React.ComponentProps<typeof Acco
   )
 }
 
-function AccordionTrigger({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+function AccordionTrigger({
+  className,
+  children,
+  displayIcon = true,
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & { displayIcon?: boolean }) {
   return (
     <AccordionPrimitive.Header className='flex'>
       <AccordionPrimitive.Trigger
         data-slot='accordion-trigger'
         className={cn(
-          'flex flex-1 items-center justify-between py-4 text-left text-sm font-medium transition-all hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
+          'cursor-pointer flex flex-1 items-center justify-between py-4 text-left text-sm font-medium transition-all hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
           className
         )}
         {...props}
       >
         {children}
-        <ChevronDownIcon className='size-4 shrink-0 transition-transform duration-200 text-muted-foreground' />
+        {displayIcon && (
+          <ChevronDownIcon className='size-4 shrink-0 transition-transform duration-200 text-muted-foreground' />
+        )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )
@@ -40,7 +47,7 @@ function AccordionContent({ className, children, ...props }: React.ComponentProp
   return (
     <AccordionPrimitive.Content
       data-slot='accordion-content'
-      className='overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down'
+      className='bg-background overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down'
       {...props}
     >
       <div className={cn('pt-0 pb-4', className)}>{children}</div>

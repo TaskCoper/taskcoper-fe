@@ -24,6 +24,7 @@
       "accept": "Accept",
       "decline": "Decline",
       "remove": "Remove",
+      "leave": "Leave",
       "delete": "Delete",
       "insert": "Insert",
       "download": "Download"
@@ -579,19 +580,58 @@
       "confirm": {
         "title": "Remove member",
         "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "leaveTitle": "Leave project",
+        "leaveDescription": "Are you sure you want to leave this project?",
         "confirmText": "Remove",
         "cancelText": "Cancel"
       },
       "column": {
+        "no": "No",
         "member": "Member",
+        "memberPlaceholder": "Search by name or email...",
+        "phoneNumber": "Phone Number",
+        "noPhoneNumber": "No phone number",
+        "positionTitles": "Position titles",
+        "noPositionTitles": "No position titles",
         "role": "Role",
+        "rolePlaceholder": "Select role",
         "permission": "Permission",
         "canEdit": "Editor"
       },
+      "positionTitle": {
+        "title": "Position titles",
+        "searchPlaceholder": "Type to search position titles...",
+        "createTitle": "Create position title",
+        "editTitle": "Edit position title",
+        "deleteTitle": "Delete position title",
+        "deleteConfirmation": "Are you sure you want to delete this position title?"
+      },
       "role": {
-        "mentor": "Mentor",
-        "student": "Student"
+        "owner": "Owner",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "systemTooltip": "System defined role",
+        "defaultTooltip": "Default role for new members"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "No time zone",
+      "noPhoneNumber": "No phone number",
+      "noAddress": "No address",
+      "noStatus": "No status",
+      "noRoles": "No roles",
+      "noDomains": "No domains",
+      "positionTitles": "Position titles",
+      "domains": "Domains"
+    },
+    "memberStatus": {
+      "free": "Free",
+      "busy": "Busy"
+    },
+    "memberTaskTable": {
+      "title": "Task table",
+      "description": "Task list for this member"
     },
     "inviteMembers": {
       "title": "New members",
@@ -719,6 +759,36 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "New role",
+      "description": "Add a new role to the project to assign permissions to team members.",
+      "field": {
+        "template": {
+          "label": "Template",
+          "placeholder": "Select template"
+        },
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "projectIdentifier": {
+          "minLength": "Project is required"
+        }
+      }
+    },
     "views": {
       "board": "Kanban View",
       "table": "Table View"
@@ -784,6 +854,234 @@
         "note": {
           "maxLength": "Max 255 characters"
         }
+      }
+    },
+    "settings": {
+      "title": "Project settings",
+      "description": "Manage general information and project permission configuration.",
+      "tabs": {
+        "info": "Project Information",
+        "members": "Members",
+        "permissions": "Roles & Permissions"
+      }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Read",
+        "canWrite": "Write",
+        "canUpdate": "Update",
+        "canDelete": "Delete"
+      },
+      "noRolesDefined": "No roles defined yet",
+      "addRole": "Add role",
+      "memberCount": "({{count}} members)"
+    },
+    "updateProjectRole": {
+      "field": {
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required"
+        },
+        "description": {
+          "maxLength": "Description must not exceed 255 characters"
+        }
+      },
+      "status": {
+        "saving": "Saving changes...",
+        "unsavedChanges": "You have unsaved changes.",
+        "noChanges": "No changes yet. Update permissions to enable save."
+      },
+      "unsavedChanges": {
+        "title": "Discard unsaved changes?",
+        "description": "You have unsaved changes on this role. Leaving now will discard them."
+      },
+      "extensions": {
+        "taskUpdateTitle": "Task update extensions",
+        "moveTask": "Move task",
+        "moveMilestone": "Move milestone",
+        "toggleTaskStatus": "Toggle task status",
+        "storageReadTitle": "Storage read extensions",
+        "downloadFiles": "Download files"
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Read tasks"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "View tasks in Kanban or Table"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Write tasks"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Create parent milestones, milestones, and tasks",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Add attachments, subtasks, and comments on tasks",
+              "assignMembersToTasks": "Assign members to tasks",
+              "createOrAssignLabelsToTasks": "Create or assign labels to tasks"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Delete tasks"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Delete parent milestones, milestones, and tasks",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Delete attachments, subtasks, and comments on tasks",
+              "unassignMembersFromTasks": "Unassign members from tasks",
+              "unassignLabelsFromTasks": "Unassign labels from tasks",
+              "deleteLabelsFromProject": "Delete labels from project"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Update tasks"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Update task name, description, priority, task points, background image, and due date",
+              "watchOrUnwatchTask": "Watch or unwatch task",
+              "updateMilestoneName": "Update milestone name",
+              "moveMilestone": "Move milestone",
+              "moveTaskBetweenMilestones": "Move task between milestones",
+              "toggleTaskStatus": "Toggle task status"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Read task performance"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "View task performance metrics"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Read project storage"
+            },
+            "extensions": {
+              "viewProjectStorage": "View project storage",
+              "downloadFiles": "Download files"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Write project storage"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Upload files to project storage"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Delete project storage"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Delete files from project storage"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Read project revenue"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "View revenue metrics"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Write project revenue"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Add income or expense records",
+              "addRevenueLabels": "Add revenue labels"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Update project revenue"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Update income or expense records",
+              "assignRevenueLabels": "Assign revenue labels"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Delete project revenue"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Delete income or expense records",
+              "unassignRevenueLabels": "Unassign revenue labels",
+              "deleteRevenueLabelsFromProject": "Delete revenue labels from project"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Read project settings"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "View project info, members, and roles"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Write project settings"
+            },
+            "extensions": {
+              "inviteMembers": "Invite members",
+              "createProjectRoles": "Create project roles"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Update project settings"
+            },
+            "extensions": {
+              "updateProjectRoles": "Update project roles",
+              "assignOrUnassignMemberRoles": "Assign or unassign member roles"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Delete project settings"
+            },
+            "extensions": {
+              "removeMembers": "Remove members",
+              "deleteProjectRoles": "Delete project roles"
+            }
+          }
+        }
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Delete role",
+        "description": "Are you sure you want to delete this role?"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "deleteTitle": "Delete this role",
+        "deleteDescription": "Once you delete a role, there is no going back. Please be certain."
       }
     }
   },
@@ -1194,6 +1492,9 @@
           "label": "Ward",
           "placeholder": "Select ward",
           "searchPlaceholder": "Search ward..."
+        },
+        "domain": {
+          "label": "Domains"
         }
       },
       "validation": {
@@ -1218,8 +1519,8 @@
       }
     },
     "profileDialog": {
-      "settings": "Settings",
-      "profileAndDisplay": "Profile and display",
+      "settings": "Account Settings",
+      "profileAndDisplay": "Profile & Display",
       "password": "Password",
       "connectedApps": "Connected Apps",
       "googleCalendar": "Google Calendar",

@@ -551,7 +551,7 @@ export default function TaskDialogPage() {
                         projectIdentifier={identifier}
                         taskId={task.taskId}
                         parentMilestoneIdentifier={milestoneIdentifier}
-                        disabled={!canUpdate}
+                        disabled={!canWrite}
                       >
                         <Button variant='outline' size='sm'>
                           <UserRoundPlusIcon />
@@ -675,7 +675,7 @@ export default function TaskDialogPage() {
                           projectIdentifier={identifier}
                           taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
-                          disabled={!canUpdate}
+                          disabled={!canWrite}
                         >
                           <Button className='rounded-full size-8' size='icon' variant='secondary'>
                             <PlusIcon />

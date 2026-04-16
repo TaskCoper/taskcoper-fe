@@ -11,6 +11,7 @@ interface DataTableProps<TData> extends React.ComponentProps<'div'> {
   table: TanstackTable<TData>
   actionBar?: React.ReactNode
   isLoading?: boolean
+  pageSizeOptions?: number[]
   renderSubComponent?: (props: { row: Row<TData> }) => React.ReactNode
 }
 
@@ -18,6 +19,7 @@ export function DataTable<TData>({
   table,
   actionBar,
   renderSubComponent,
+  pageSizeOptions,
   children,
   className,
   isLoading = false,
@@ -99,7 +101,7 @@ export function DataTable<TData>({
         </Table>
       </div>
       <div className='flex flex-col gap-2.5'>
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} pageSizeOptions={pageSizeOptions} />
         {actionBar && table.getFilteredSelectedRowModel().rows.length > 0 && actionBar}
       </div>
     </div>

@@ -11,6 +11,7 @@ import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
 import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
+import type { GetProjectRoleParams } from '@/features/projects/hooks/use-get-project-role'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
@@ -67,7 +68,9 @@ export const queryKeys = {
     members: {
       all: (identifier?: string) => ['members', identifier] as const,
       list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: UseGetProjectMembersParams) =>
-        [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const
+        [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
+      detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
+        ['members', 'detail', projectIdentifier, userId] as const
     },
     parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
     labels: (projectIdentifier?: string) => ['project-labels', projectIdentifier],
@@ -94,7 +97,20 @@ export const queryKeys = {
       identifier,
       milestoneIdentifier
     ],
-    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const
+    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const,
+    roles: {
+      all: (identifier?: string) => ['project-roles', identifier] as const,
+      list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const,
+      detail: ({ projectIdentifier, roleId }: GetProjectRoleParams) =>
+        ['project-role', projectIdentifier, roleId] as const,
+      templates: (projectIdentifier?: string) => ['project-role-templates', projectIdentifier] as const
+    },
+    positionTitles: {
+      all: (identifier?: string) => ['project-position-titles', identifier] as const,
+      list: (identifier?: string) => [...queryKeys.projects.positionTitles.all(identifier)] as const,
+      member: (projectIdentifier?: string, userId?: string) =>
+        ['project-member-position-titles', projectIdentifier, userId] as const
+    }
   },
   // Milestones
   milestones: {
@@ -217,8 +233,8 @@ export const queryKeys = {
   // Efficiency
   efficiency: {
     heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) => ['heatmap', projectId, from, to] as const,
-    taskStats: ({ projectId, from, to, parentMilestoneId, isViewInMonth }: GetProjectTaskStatsParams) =>
-      ['task-stats', projectId, from, to, parentMilestoneId, isViewInMonth] as const,
+    taskStats: ({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }: GetProjectTaskStatsParams) =>
+      ['task-stats', projectId, from, to, parentMilestoneId, isViewInMonth, userId] as const,
     topContributors: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
       ['top-contributors', projectId, from, to] as const,
     onTimeCompleters: ({ projectId, from, to }: GetProjectTopContributorsParams) =>

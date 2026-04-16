@@ -24,6 +24,7 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "leave": "Rời khỏi",
       "delete": "Xóa",
       "insert": "Chèn",
       "download": "Tải xuống"
@@ -574,24 +575,63 @@
       }
     },
     "updateProjectMembers": {
-      "title": "Thành viên dự án",
-      "description": "Chỉnh sửa thành viên dự án",
+      "title": "Thành viên",
+      "description": "Quản lý thành viên của dự án",
       "confirm": {
         "title": "Gỡ bỏ thành viên",
         "description": "Bạn có chắc chắn muốn gỡ bỏ {{fullName}} khỏi dự án?",
+        "leaveTitle": "Rời khỏi dự án",
+        "leaveDescription": "Bạn có chắc chắn muốn rời khỏi dự án này không?",
         "confirmText": "Gỡ bỏ",
         "cancelText": "Hủy"
       },
       "column": {
+        "no": "STT",
         "member": "Thành viên",
+        "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
+        "phoneNumber": "Số điện thoại",
+        "noPhoneNumber": "Chưa có số điện thoại",
+        "positionTitles": "Chức danh",
+        "noPositionTitles": "Không có chức danh",
         "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò",
         "permission": "Quyền",
         "canEdit": "Người chỉnh sửa"
       },
+      "positionTitle": {
+        "title": "Chức danh",
+        "searchPlaceholder": "Nhập để tìm chức danh...",
+        "createTitle": "Tạo chức danh",
+        "editTitle": "Chỉnh sửa chức danh",
+        "deleteTitle": "Xóa chức danh",
+        "deleteConfirmation": "Bạn có chắc chắn muốn xóa chức danh này không?"
+      },
       "role": {
-        "mentor": "Người hướng dẫn",
-        "student": "Sinh viên"
+        "owner": "Chủ sở hữu",
+        "admin": "Quản trị viên",
+        "editor": "Biên tập viên",
+        "viewer": "Người xem",
+        "systemTooltip": "Vai trò hệ thống",
+        "defaultTooltip": "Vai trò mặc định cho thành viên mới"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "Chưa có múi giờ",
+      "noPhoneNumber": "Chưa có số điện thoại",
+      "noAddress": "Chưa có địa chỉ",
+      "noStatus": "Chưa có trạng thái",
+      "noRoles": "Chưa có vai trò",
+      "noDomains": "Chưa có lĩnh vực",
+      "positionTitles": "Chức danh",
+      "domains": "Lĩnh vực"
+    },
+    "memberStatus": {
+      "free": "Rảnh",
+      "busy": "Bận"
+    },
+    "memberTaskTable": {
+      "title": "Bảng công việc",
+      "description": "Danh sách công việc của thành viên"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
@@ -719,6 +759,36 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "Vai trò mới",
+      "description": "Thêm vai trò mới vào dự án để phân quyền cho các thành viên trong nhóm.",
+      "field": {
+        "template": {
+          "label": "Mẫu vai trò",
+          "placeholder": "Chọn mẫu vai trò"
+        },
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "projectIdentifier": {
+          "minLength": "Vui lòng chọn dự án"
+        }
+      }
+    },
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
@@ -784,6 +854,234 @@
         "note": {
           "maxLength": "Tối đa 255 ký tự"
         }
+      }
+    },
+    "settings": {
+      "title": "Cài đặt dự án",
+      "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
+      "tabs": {
+        "info": "Thông tin Dự án",
+        "members": "Thành viên",
+        "permissions": "Vai trò & Quyền"
+      }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Xem",
+        "canWrite": "Thêm mới",
+        "canUpdate": "Cập nhật",
+        "canDelete": "Xóa"
+      },
+      "noRolesDefined": "Chưa có vai trò nào",
+      "addRole": "Thêm vai trò",
+      "memberCount": "({{count}} thành viên)"
+    },
+    "updateProjectRole": {
+      "field": {
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc"
+        },
+        "description": {
+          "maxLength": "Mô tả không được vượt quá 255 ký tự"
+        }
+      },
+      "status": {
+        "saving": "Đang lưu thay đổi...",
+        "unsavedChanges": "Bạn có thay đổi chưa lưu.",
+        "noChanges": "Chưa có thay đổi. Cập nhật quyền để bật lưu."
+      },
+      "unsavedChanges": {
+        "title": "Bỏ thay đổi chưa lưu?",
+        "description": "Bạn có thay đổi chưa lưu cho vai trò này. Nếu rời đi bây giờ, các thay đổi sẽ bị mất."
+      },
+      "extensions": {
+        "taskUpdateTitle": "Mở rộng cập nhật công việc",
+        "moveTask": "Di chuyển công việc",
+        "moveMilestone": "Di chuyển cột mốc",
+        "toggleTaskStatus": "Bật tắt trạng thái công việc",
+        "storageReadTitle": "Mở rộng quyền xem lưu trữ",
+        "downloadFiles": "Tải xuống tệp"
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Xem công việc"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "Xem công việc ở dạng Kanban hoặc Bảng"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Thêm mới công việc"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Tạo cột mốc cha, cột mốc và công việc",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Thêm tệp đính kèm, công việc con và bình luận cho công việc",
+              "assignMembersToTasks": "Giao thành viên vào công việc",
+              "createOrAssignLabelsToTasks": "Tạo hoặc gán nhãn cho công việc"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Xóa công việc"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Xóa cột mốc cha, cột mốc và công việc",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Xóa tệp đính kèm, công việc con và bình luận trên công việc",
+              "unassignMembersFromTasks": "Gỡ thành viên khỏi công việc",
+              "unassignLabelsFromTasks": "Gỡ nhãn khỏi công việc",
+              "deleteLabelsFromProject": "Xóa nhãn khỏi dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Cập nhật công việc"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Cập nhật tên, mô tả, độ ưu tiên, điểm công việc, ảnh nền và hạn chót của công việc",
+              "watchOrUnwatchTask": "Theo dõi hoặc bỏ theo dõi công việc",
+              "updateMilestoneName": "Cập nhật tên cột mốc",
+              "moveMilestone": "Di chuyển cột mốc",
+              "moveTaskBetweenMilestones": "Di chuyển công việc giữa các cột mốc",
+              "toggleTaskStatus": "Bật hoặc tắt trạng thái công việc"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Xem hiệu suất công việc"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "Xem các chỉ số hiệu suất công việc"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Xem kho lưu trữ dự án"
+            },
+            "extensions": {
+              "viewProjectStorage": "Xem kho lưu trữ dự án",
+              "downloadFiles": "Tải xuống tệp"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Thêm mới kho lưu trữ dự án"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Tải tệp lên kho lưu trữ dự án"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Xóa kho lưu trữ dự án"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Xóa tệp khỏi kho lưu trữ dự án"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Xem doanh thu dự án"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "Xem các chỉ số doanh thu"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Thêm mới doanh thu dự án"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Thêm khoản thu hoặc khoản chi",
+              "addRevenueLabels": "Thêm nhãn doanh thu"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Cập nhật doanh thu dự án"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Cập nhật khoản thu hoặc khoản chi",
+              "assignRevenueLabels": "Gán nhãn doanh thu"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Xóa doanh thu dự án"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Xóa khoản thu hoặc khoản chi",
+              "unassignRevenueLabels": "Gỡ nhãn doanh thu",
+              "deleteRevenueLabelsFromProject": "Xóa nhãn doanh thu khỏi dự án"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Xem cài đặt dự án"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "Xem thông tin dự án, thành viên và vai trò"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Thêm mới cài đặt dự án"
+            },
+            "extensions": {
+              "inviteMembers": "Mời thành viên",
+              "createProjectRoles": "Tạo vai trò dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Cập nhật cài đặt dự án"
+            },
+            "extensions": {
+              "updateProjectRoles": "Cập nhật vai trò dự án",
+              "assignOrUnassignMemberRoles": "Gán hoặc gỡ vai trò thành viên"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Xóa cài đặt dự án"
+            },
+            "extensions": {
+              "removeMembers": "Xóa thành viên",
+              "deleteProjectRoles": "Xóa vai trò dự án"
+            }
+          }
+        }
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Xóa vai trò",
+        "description": "Bạn có chắc chắn muốn xóa vai trò này không?"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "deleteTitle": "Xóa vai trò này",
+        "deleteDescription": "Sau khi xóa vai trò, bạn không thể hoàn tác. Vui lòng chắc chắn trước khi tiếp tục."
       }
     }
   },
@@ -1194,6 +1492,9 @@
           "label": "Phường/Xã",
           "placeholder": "Chọn phường/xã",
           "searchPlaceholder": "Tìm phường/xã..."
+        },
+        "domain": {
+          "label": "Lĩnh vực"
         }
       },
       "validation": {
@@ -1218,10 +1519,10 @@
       }
     },
     "profileDialog": {
-      "settings": "Cài đặt",
-      "profileAndDisplay": "Hồ sơ và hiển thị",
+      "settings": "Cài đặt tài khoản",
+      "profileAndDisplay": "Hồ sơ & hiển thị",
       "password": "Mật khẩu",
-      "connectedApps": "Ứng dụng liên kết",
+      "connectedApps": "Ứng dụng đã kết nối",
       "googleCalendar": "Google Calendar",
       "connectWithCalendar": "Kết nối với Lịch",
       "googleCallback": {

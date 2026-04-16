@@ -22,15 +22,11 @@ export const useGetProjectMembers = ({
   enabled = true,
   excludeIds
 }: UseGetProjectMembersParams) => {
-  const {
-    data: members = getDefaultPaginationResponse<ProjectMember>(),
-    isLoading: isLoadingMembers,
-    error
-  } = useQuery({
+  const { data: members = getDefaultPaginationResponse<ProjectMember>(), isLoading: isLoadingMembers } = useQuery({
     queryKey: queryKeys.projects.members.list({ identifier, searchTerm, pageIndex, pageSize, excludeIds }),
     queryFn: () => projectService.getProjectMembers({ identifier, searchTerm, pageIndex, pageSize, excludeIds }),
     enabled: !!identifier && !!enabled
   })
 
-  return { members, isLoadingMembers, error }
+  return { members, isLoadingMembers }
 }

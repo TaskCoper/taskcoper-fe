@@ -70,7 +70,7 @@ export const useGetTasks = ({
         priorities,
         isWatchingTask
       }),
-    enabled: enabled && !!parentMilestoneIdentifier
+    enabled
   })
 
   return { tasks, isLoadingTasks }

@@ -131,7 +131,7 @@ export default function MentorPackagePage() {
     if (!mentorPackage) return
 
     const ok = await confirm({
-      title: t('mentorPackage.delete.title', { defaultValue: 'Delete package' }),
+      title: t('mentorPackage.delete.title'),
       description:
         t('mentorPackage.delete.description', {
           packageName: mentorPackage.name,
@@ -284,7 +284,7 @@ const MentorPackageRuleRow = ({ rule, mentorPackageId }: { rule: MentorPackageRu
 
   const handleDelete = async () => {
     const ok = await confirm({
-      title: t('mentorPackageRule.delete.title', { defaultValue: 'Delete rule' }),
+      title: t('mentorPackageRule.delete.title'),
       description:
         t('mentorPackageRule.delete.description', {
           no: rule.no,

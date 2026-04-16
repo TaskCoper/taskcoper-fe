@@ -48,7 +48,7 @@ export default function MentorPackageDialog({ mentorPackage, children }: MentorP
 
   const handleDelete = async () => {
     const ok = await confirm({
-      title: t('mentorPackage.delete.title', { defaultValue: 'Delete package' }),
+      title: t('mentorPackage.delete.title'),
       description:
         t('mentorPackage.delete.description', {
           packageName: mentorPackage.name,

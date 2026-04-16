@@ -86,7 +86,7 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
         </div>
       )}
 
-      <Link to={`/users/${mentor.id}`} className='ml-auto mt-auto'>
+      <Link to={`/users/${mentor.slug}`} className='ml-auto mt-auto'>
         <Button size='sm'>
           {t('expertNetwork.viewProfile')}
           <ArrowRightIcon />

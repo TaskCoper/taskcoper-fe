@@ -1,26 +1,82 @@
-export type SectionKey =
-  | 'OVERVIEW'
-  | 'TASKS'
-  | 'PERFORMANCE'
-  | 'CALENDAR'
-  | 'CHAT'
-  | 'NOTE'
-  | 'STORAGE'
-  | 'REVENUE'
-  | 'SETTINGS'
+import type {
+  StorageSectionExtensionsFormValues,
+  TaskSectionExtensionsFormValues
+} from '@/features/projects/validations'
 
-export type ActionKey = 'canRead' | 'canWrite' | 'canUpdate' | 'canDelete'
+export const SectionKey = {
+  OVERVIEW: 'OVERVIEW',
+  TASKS: 'TASKS',
+  PERFORMANCE: 'PERFORMANCE',
+  CALENDAR: 'CALENDAR',
+  CHAT: 'CHAT',
+  NOTE: 'NOTE',
+  STORAGE: 'STORAGE',
+  REVENUE: 'REVENUE',
+  SETTINGS: 'SETTINGS'
+} as const
+
+export type SectionKey = (typeof SectionKey)[keyof typeof SectionKey]
+
+export const SectionKeyLabel: Record<SectionKey, string> = {
+  [SectionKey.OVERVIEW]: 'project.sidebar.aboutProject',
+  [SectionKey.TASKS]: 'project.sidebar.tasks',
+  [SectionKey.PERFORMANCE]: 'project.sidebar.performance',
+  [SectionKey.CALENDAR]: 'project.sidebar.calendar',
+  [SectionKey.CHAT]: 'project.sidebar.chat',
+  [SectionKey.NOTE]: 'project.sidebar.note',
+  [SectionKey.STORAGE]: 'project.sidebar.storage',
+  [SectionKey.REVENUE]: 'project.sidebar.revenue',
+  [SectionKey.SETTINGS]: 'project.sidebar.settings'
+} as const
+
+export type SectionKeyLabel = (typeof SectionKeyLabel)[keyof typeof SectionKeyLabel]
+
+export const ActionKey = {
+  canRead: 'canRead',
+  canWrite: 'canWrite',
+  canUpdate: 'canUpdate',
+  canDelete: 'canDelete'
+} as const
+
+export type ActionKey = (typeof ActionKey)[keyof typeof ActionKey]
+
+export const ActionKeyLabel: Record<ActionKey, string> = {
+  [ActionKey.canRead]: 'project.permissions.action.canRead',
+  [ActionKey.canWrite]: 'project.permissions.action.canWrite',
+  [ActionKey.canUpdate]: 'project.permissions.action.canUpdate',
+  [ActionKey.canDelete]: 'project.permissions.action.canDelete'
+} as const
+
+export type ActionKeyLabel = (typeof ActionKeyLabel)[keyof typeof ActionKeyLabel]
+
+export const ProjectRoleName = {
+  Owner: 'Owner',
+  Admin: 'Admin',
+  Editor: 'Editor',
+  Viewer: 'Viewer'
+} as const
+
+export type ProjectRoleName = (typeof ProjectRoleName)[keyof typeof ProjectRoleName]
+
+export const ProjectRoleNameLabel: Record<ProjectRoleName, string> = {
+  [ProjectRoleName.Owner]: 'project.updateProjectMembers.role.owner',
+  [ProjectRoleName.Admin]: 'project.updateProjectMembers.role.admin',
+  [ProjectRoleName.Editor]: 'project.updateProjectMembers.role.editor',
+  [ProjectRoleName.Viewer]: 'project.updateProjectMembers.role.viewer'
+} as const
+
+export type ProjectRoleNameLabel = (typeof ProjectRoleNameLabel)[keyof typeof ProjectRoleNameLabel]
 
 export interface ProjectRole {
   id: string
-  name: string
+  name: ProjectRoleName
   isSystem: boolean
   isDefault: boolean
 }
 
 export interface SectionExtensionsMap {
-  TASKS: TaskSectionExtensions
-  STORAGE: StorageSectionExtensions
+  TASKS: TaskSectionExtensionsFormValues
+  STORAGE: StorageSectionExtensionsFormValues
 }
 
 export type SectionExtensionType<K extends SectionKey> = K extends keyof SectionExtensionsMap
@@ -37,17 +93,3 @@ export type SectionPermission = {
     extensions?: SectionExtensionType<K> | string
   }
 }[SectionKey]
-
-export interface TaskSectionExtensions {
-  canUpdate: {
-    canMoveTask: boolean
-    canMoveMilestone: boolean
-    canToggleTaskStatus: boolean
-  }
-}
-
-export interface StorageSectionExtensions {
-  canRead: {
-    canDownload: boolean
-  }
-}

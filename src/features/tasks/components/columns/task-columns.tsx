@@ -38,17 +38,30 @@ export const getColumns = ({
   onDeleteTask,
   userId,
   searchParams,
+  taskDetailBasePath,
+  enableMemberFilter = true,
   canToggleStatus = true,
   canDelete = true
 }: {
   projectIdentifier: string
-  parentMilestoneIdentifier: string
+  parentMilestoneIdentifier?: string
   onDeleteTask: (taskId: string, taskName: string) => void
   userId?: string
   searchParams?: string
+  taskDetailBasePath?: string
+  enableMemberFilter?: boolean
   canToggleStatus?: boolean
   canDelete?: boolean
 }): ColumnDef<TaskRow>[] => {
+  const buildTaskPath = (taskId: string) => {
+    if (taskDetailBasePath) {
+      const basePath = taskDetailBasePath.endsWith('/') ? taskDetailBasePath.slice(0, -1) : taskDetailBasePath
+      return `${basePath}/${taskId}${searchParams ?? '?mode=table'}`
+    }
+
+    return `tasks/${taskId}${searchParams ?? '?mode=table'}`
+  }
+
   return [
     {
       id: 'select',
@@ -84,13 +97,13 @@ export const getColumns = ({
       header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.card' />,
       cell: ({ row }) => (
         <Link
-          to={`tasks/${row.original.id}${searchParams ?? '?mode=table'}`}
+          to={buildTaskPath(row.original.id)}
           className={cn(
             'hover:underline',
             row.original.isCompleted ? 'line-through decoration-foreground/40 text-muted-foreground' : ''
           )}
         >
-          <p className='w-full truncate max-w-[500px] xl:max-w-none'>{row.original.name}</p>
+          <p className='w-full truncate max-w-125 xl:max-w-none'>{row.original.name}</p>
         </Link>
       ),
       enableSorting: true,
@@ -380,8 +393,7 @@ export const getColumns = ({
               <DropdownMenuLabel>{i18next.t('systemProjects.actions.actions')}</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={async () => {
-                  const baseUrl = window.location.origin
-                  const taskUrl = `${baseUrl}/projects/${projectIdentifier}/milestones/${parentMilestoneIdentifier}/tasks/${id}?mode=table`
+                  const taskUrl = new URL(buildTaskPath(id), window.location.href).toString()
 
                   try {
                     await navigator.clipboard.writeText(taskUrl)
@@ -399,7 +411,7 @@ export const getColumns = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to={`tasks/${id}${searchParams ?? '?mode=table'}`}>{i18next.t('task.column.viewDetails')}</Link>
+                <Link to={buildTaskPath(id)}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
               {canDelete ? (
                 <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
@@ -423,7 +435,7 @@ export const getColumns = ({
       cell: () => null,
       enableSorting: false,
       enableHiding: false,
-      enableColumnFilter: true,
+      enableColumnFilter: enableMemberFilter,
       size: 0
     }
   ]

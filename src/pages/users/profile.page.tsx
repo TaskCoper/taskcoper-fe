@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import AllTab from '@/features/users/components/tabs/all-tab'
 import { useGetUser } from '@/features/users/hooks/use-get-user'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { UNDERLINE_TAB_CLASSNAME } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { BadgeCheckIcon, GlobeIcon, ImageOffIcon, MailIcon, PhoneIcon, SettingsIcon } from 'lucide-react'
@@ -25,11 +25,11 @@ export default function ProfilePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const { userId } = useParams<{ userId: string }>()
-  const { user: me } = useAuthStore()
-  const isOwnProfile = userId === me?.UserId
+  const { userIdentifier } = useParams<{ userIdentifier: string }>()
+  const { me } = useGetMe()
+  const isOwnProfile = userIdentifier === me?.slug
 
-  const { user, isGettingUser } = useGetUser({ userId })
+  const { user, isGettingUser } = useGetUser({ userIdentifier })
 
   useEffect(() => {
     if (user) {
@@ -210,7 +210,7 @@ export default function ProfilePage() {
               </TabsList>
 
               {isOwnProfile && (
-                <Button variant='secondary' size='icon-sm' onClick={() => navigate(`/users/${me?.UserId}/settings`)}>
+                <Button variant='secondary' size='icon-sm' onClick={() => navigate(`/users/${me?.slug}/settings`)}>
                   <SettingsIcon />
                 </Button>
               )}

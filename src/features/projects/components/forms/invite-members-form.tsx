@@ -1,8 +1,9 @@
+import MultiSelectField from '@/components/multi-select-field'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { getAvatarFallback } from '@/shared/utils'
+import { cn, getAvatarFallback } from '@/shared/utils'
+import type { ProjectRoleItem } from '@/types/project.type'
 import { XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -11,9 +12,10 @@ import type { InviteMembersFormValues } from '../../validations'
 interface InviteMembersFormProps {
   fields: FieldArrayWithId<InviteMembersFormValues, 'inviteMembers'>[]
   remove: UseFieldArrayRemove
+  roles?: ProjectRoleItem[]
 }
 
-export default function InviteMembersForm({ fields, remove }: InviteMembersFormProps) {
+export default function InviteMembersForm({ fields, remove, roles = [] }: InviteMembersFormProps) {
   const { t } = useTranslation()
   const { control } = useFormContext<InviteMembersFormValues>()
 
@@ -43,22 +45,30 @@ export default function InviteMembersForm({ fields, remove }: InviteMembersFormP
             <div className='flex items-center gap-1'>
               <Controller
                 control={control}
-                name={`inviteMembers.${index}.isEditor`}
+                name={`inviteMembers.${index}.roleIds`}
                 render={({ fieldState, field }) => (
-                  <Field data-invalid={fieldState.invalid} className='w-fit'>
-                    <Select
+                  <Field data-invalid={fieldState.invalid} className='w-fit min-w-50'>
+                    <MultiSelectField
                       name={field.name}
-                      value={field.value ? 'edit' : 'view'}
-                      onValueChange={(val) => field.onChange(val === 'edit')}
-                    >
-                      <SelectTrigger size='sm'>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='view'>{t('common.ui.viewOnly')}</SelectItem>
-                        <SelectItem value='edit'>{t('common.ui.canEdit')}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      label=''
+                      options={roles.map((role) => ({
+                        label: role.name,
+                        value: role.id,
+                        meta: { isSystem: role.isSystem, isDefault: role.isDefault, name: role.name }
+                      }))}
+                      value={field.value ?? []}
+                      onValueChange={field.onChange}
+                      placeholder='project.updateProjectMembers.column.role'
+                      triggerClassName={cn('h-8', field.value.length > 0 ? 'px-1!' : 'px-2!')}
+                      displayError={false}
+                      customBadgeRender={(option) => {
+                        return (
+                          <div className='flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border'>
+                            <p className='text-xs font-semibold'>{option.label}</p>
+                          </div>
+                        )
+                      }}
+                    />
                   </Field>
                 )}
               />

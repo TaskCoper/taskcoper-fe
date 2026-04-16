@@ -131,6 +131,7 @@ export default function ProfileSection() {
         city: me.city,
         cityCode,
         wardCode: -1,
+        domainIds: me.domains.map((domain) => domain.id),
         phoneNumber: me.phoneNumber,
         state: me.state
       })
