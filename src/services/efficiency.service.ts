@@ -25,7 +25,8 @@ class EfficiencyService {
     from,
     to,
     parentMilestoneId,
-    isViewInMonth
+    isViewInMonth,
+    userId
   }: GetProjectTaskStatsParams) => {
     const { data } = await api.get<BaseResponse<ProjectTaskStats[]>>(
       `/v1/${this.baseUrl}/${projectId}/statistics/tasks`,
@@ -34,7 +35,8 @@ class EfficiencyService {
           from,
           to,
           parentMilestoneId,
-          isViewInMonth
+          isViewInMonth,
+          userId
         }
       }
     )

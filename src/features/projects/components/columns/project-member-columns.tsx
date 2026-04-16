@@ -78,7 +78,7 @@ export const getColumns = ({
             </Avatar>
             <div className='-space-y-0.5'>
               <Link
-                to={`/projects/${projectIdentifier}/members/${slug}`}
+                to={`/projects/${projectIdentifier}/members/${slug}?tasks_isCompleted=false`}
                 className='hover:underline hover:text-primary'
               >
                 <p className='text-sm font-medium'>

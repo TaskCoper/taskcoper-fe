@@ -31,6 +31,8 @@ import type {
   InviteMembersPayload,
   Project,
   ProjectMember,
+  ProjectMemberDetail,
+  ProjectMemberPositionTitle,
   ProjectMemberStats,
   ProjectMimeTypeStats,
   ProjectPermission,
@@ -664,6 +666,30 @@ class ProjectService {
   }) => {
     const { data } = await api.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members/${userId}`
+    )
+
+    return data.value
+  }
+
+  getProjectMemberPositionTitles = async ({
+    projectIdentifier,
+    userId
+  }: {
+    projectIdentifier?: string
+    userId?: string
+  }) => {
+    if (!projectIdentifier || !userId) return getDefaultPaginationResponse<ProjectMemberPositionTitle>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberPositionTitle>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/position-titles`
+    )
+
+    return data
+  }
+
+  getProjectMember = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
+    if (!projectIdentifier || !userId) return null
+    const { data } = await api.get<BaseResponse<ProjectMemberDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}`
     )
 
     return data.value

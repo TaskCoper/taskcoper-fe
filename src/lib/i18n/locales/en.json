@@ -618,7 +618,20 @@
     "memberProfile": {
       "noTimeZone": "No time zone",
       "noPhoneNumber": "No phone number",
-      "noAddress": "No address"
+      "noAddress": "No address",
+      "noStatus": "No status",
+      "noRoles": "No roles",
+      "noDomains": "No domains",
+      "positionTitles": "Position titles",
+      "domains": "Domains"
+    },
+    "memberStatus": {
+      "free": "Free",
+      "busy": "Busy"
+    },
+    "memberTaskTable": {
+      "title": "Task table",
+      "description": "Task list for this member"
     },
     "inviteMembers": {
       "title": "New members",

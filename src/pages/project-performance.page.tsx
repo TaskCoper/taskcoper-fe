@@ -321,7 +321,7 @@ export default function ProjectPerformancePage() {
   //         <div className='space-y-4'>
   //           <div className='flex flex-wrap gap-4'>
   //             {Array.from({ length: 5 }).map((_, i) => (
-  //               <Skeleton key={i} className='h-[116px] flex-1 min-w-[200px] rounded-xl' />
+  //               <Skeleton key={i} className='h-[116px] flex-1 min-w-50 rounded-xl' />
   //             ))}
   //           </div>
 
@@ -368,7 +368,7 @@ export default function ProjectPerformancePage() {
         {/* Statistics cards */}
         <div className='space-y-4'>
           <div className='flex flex-wrap gap-4'>
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statTasks')}
                 value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
@@ -379,7 +379,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statSubtasks')}
                 value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
@@ -390,7 +390,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statCompleted')}
                 value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
@@ -401,7 +401,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statComments')}
                 value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
@@ -412,7 +412,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statFiles')}
                 value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}

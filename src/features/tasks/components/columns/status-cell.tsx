@@ -6,7 +6,7 @@ import { useUpdateTaskStatus } from '../../hooks/use-update-task-status'
 interface StatusCellProps {
   row: TaskRow
   projectIdentifier: string
-  parentMilestoneIdentifier: string
+  parentMilestoneIdentifier?: string
   canToggleStatus?: boolean
 }
 

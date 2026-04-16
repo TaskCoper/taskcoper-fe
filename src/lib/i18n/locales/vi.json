@@ -618,7 +618,20 @@
     "memberProfile": {
       "noTimeZone": "Chưa có múi giờ",
       "noPhoneNumber": "Chưa có số điện thoại",
-      "noAddress": "Chưa có địa chỉ"
+      "noAddress": "Chưa có địa chỉ",
+      "noStatus": "Chưa có trạng thái",
+      "noRoles": "Chưa có vai trò",
+      "noDomains": "Chưa có lĩnh vực",
+      "positionTitles": "Chức danh",
+      "domains": "Lĩnh vực"
+    },
+    "memberStatus": {
+      "free": "Rảnh",
+      "busy": "Bận"
+    },
+    "memberTaskTable": {
+      "title": "Bảng công việc",
+      "description": "Danh sách công việc của thành viên"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
