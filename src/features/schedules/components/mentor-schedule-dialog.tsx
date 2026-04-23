@@ -172,12 +172,16 @@ export default function MentorScheduleDialog({
 
   const onSubmit = () => {
     if (meetingId) {
+      const sortedSlots = [...selectedTimeSlots].sort(
+        (a, b) => new Date(a.startTimeUtc).getTime() - new Date(b.startTimeUtc).getTime()
+      )
+
       rescheduleMeeting(
         {
           body: {
             meetingId,
-            startTimeUtc: selectedTimeSlots[0].startTimeUtc,
-            endTimeUtc: selectedTimeSlots[selectedTimeSlots.length - 1].endTimeUtc,
+            startTimeUtc: sortedSlots[0].startTimeUtc,
+            endTimeUtc: sortedSlots[sortedSlots.length - 1].endTimeUtc,
             reason
           }
         },
@@ -254,7 +258,7 @@ export default function MentorScheduleDialog({
               </Button>
 
               <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
-                <SelectTrigger size='sm' className='w-[140px] text-sm font-medium bg-background'>
+                <SelectTrigger size='sm' className='w-35 text-sm font-medium bg-background'>
                   <SelectValue>{currentWeekLabel}</SelectValue>
                 </SelectTrigger>
                 <SelectContent
@@ -276,7 +280,7 @@ export default function MentorScheduleDialog({
             </div>
 
             <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
-              <SelectTrigger size='sm' className='w-[90px] text-sm bg-background'>
+              <SelectTrigger size='sm' className='w-22.5 text-sm bg-background'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent side='bottom' sideOffset={8}>
@@ -318,7 +322,7 @@ export default function MentorScheduleDialog({
                       </p>
                     </div>
 
-                    <div className='space-y-2 min-h-[80px]'>
+                    <div className='space-y-2 min-h-20'>
                       {day.slots.map((slot) => {
                         const isBooked = bookedSchedule[index].slots.some(
                           (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc
@@ -443,7 +447,7 @@ export default function MentorScheduleDialog({
               placeholder={t('meeting.detail.rescheduleReasonPlaceholder')}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className='min-h-[100px]'
+              className='min-h-25'
             />
           </div>
         )}

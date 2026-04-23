@@ -45,6 +45,9 @@
       "email": {
         "invalid": "Email không hợp lệ"
       },
+      "timeZone": {
+        "invalid": "Múi giờ không hợp lệ"
+      },
       "required": "Trường này là bắt buộc",
       "maxLength": {
         "20": "Tối đa 20 ký tự",
@@ -1525,6 +1528,7 @@
       "settings": "Cài đặt tài khoản",
       "profileAndDisplay": "Hồ sơ & hiển thị",
       "password": "Mật khẩu",
+      "location": "Vị trí",
       "connectedApps": "Ứng dụng đã kết nối",
       "googleCalendar": "Google Calendar",
       "connectWithCalendar": "Kết nối với Lịch",
@@ -1569,6 +1573,17 @@
       "accountCenterDesc": "Quản lý phần cài đặt tài khoản của bạn",
       "otherSettingsTitle": "Cài đặt khác",
       "otherSettingsDesc": "Quản lý các cài đặt khác liên quan đến tài khoản của bạn"
+    },
+    "location": {
+      "description": "Chọn múi giờ được sử dụng cho lịch và các cuộc họp của bạn.",
+      "field": {
+        "timeZone": {
+          "label": "Múi giờ",
+          "placeholder": "Chọn múi giờ",
+          "searchPlaceholder": "Tìm múi giờ...",
+          "emptyMessage": "Không tìm thấy múi giờ."
+        }
+      }
     }
   },
   "auth": {

@@ -45,6 +45,9 @@
       "email": {
         "invalid": "Invalid email address"
       },
+      "timeZone": {
+        "invalid": "Invalid time zone"
+      },
       "required": "This field is required",
       "maxLength": {
         "20": "Max 20 characters",
@@ -1525,6 +1528,7 @@
       "settings": "Account Settings",
       "profileAndDisplay": "Profile & Display",
       "password": "Password",
+      "location": "Location",
       "connectedApps": "Connected Apps",
       "googleCalendar": "Google Calendar",
       "connectWithCalendar": "Connect with Calendar",
@@ -1569,6 +1573,17 @@
       "accountCenterDesc": "Manage your account settings",
       "otherSettingsTitle": "Other settings",
       "otherSettingsDesc": "Manage other settings related to your account"
+    },
+    "location": {
+      "description": "Select the time zone used for your schedule and meetings.",
+      "field": {
+        "timeZone": {
+          "label": "Time zone",
+          "placeholder": "Select a time zone",
+          "searchPlaceholder": "Search time zone...",
+          "emptyMessage": "No time zone found."
+        }
+      }
     }
   },
   "auth": {

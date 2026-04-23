@@ -48,7 +48,7 @@ export const updateMentorPackageSchema = (t: TFunction) =>
     price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
     currency: z.enum(['Vnd', 'Usd']),
     isActive: z.boolean(),
-    sortOrder: z.number().int()
+    position: z.number().int()
   })
 
 export type CreateMentorPackageFormValues = z.infer<ReturnType<typeof createMentorPackageSchema>>

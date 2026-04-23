@@ -23,7 +23,8 @@ export const useUpdateMe = () => {
       cityCode: -1,
       state: '',
       wardCode: -1,
-      domainIds: []
+      domainIds: [],
+      timeZone: null
     },
     resolver: zodResolver(updateMeSchema(t))
   })

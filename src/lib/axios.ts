@@ -66,7 +66,7 @@ api.interceptors.request.use((config) => {
   const currentLanguage = i18n.language || 'en'
 
   config.headers['Accept-Language'] = currentLanguage
-  config.headers['Timezone'] = timezone
+  config.headers['X-Timezone'] = timezone
 
   const { accessToken } = useAuthStore.getState()
   if (accessToken && !config.url?.includes('/users/refresh_token')) {

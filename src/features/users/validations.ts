@@ -49,7 +49,12 @@ export const updateMeSchema = (t: TFunction) => {
         .transform((val) => (val === '' ? null : val)),
       wardCode: z.number().positive().or(z.literal(-1)),
       domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid'))),
-      coverImageUrl: z.url().nullable()
+      coverImageUrl: z.url().nullable(),
+      timeZone: z
+        .enum(Intl.supportedValuesOf('timeZone'), {
+          message: t('common.validation.timeZone.invalid')
+        })
+        .nullable()
     })
     .strict()
 }

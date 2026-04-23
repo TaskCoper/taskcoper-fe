@@ -64,7 +64,8 @@ export default function ProfileSection() {
         wardCode: -1,
         domainIds: me.domains.map((domain) => domain.id),
         phoneNumber: me.phoneNumber,
-        state: me.state
+        state: me.state,
+        timeZone: me.timeZone
       })
 
       if (cityCode !== -1) {

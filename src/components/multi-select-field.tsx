@@ -70,6 +70,7 @@ export default function MultiSelectField<T extends FieldValues>({
   const context = useFormContext<T>()
   const control = propsControl || context?.control
   const isStandalone = propsValue !== undefined && onValueChange !== undefined
+  const optionMap = React.useMemo(() => new Map(options.map((option) => [option.value, option])), [options])
 
   if (!control && !isStandalone) {
     throw new Error(
@@ -84,7 +85,9 @@ export default function MultiSelectField<T extends FieldValues>({
     fieldError?: FieldError,
     fieldName?: string
   ) => {
-    const selectedOptions = options.filter((option) => fieldValues.includes(option.value))
+    const selectedOptions = fieldValues
+      .map((value) => optionMap.get(value))
+      .filter((option): option is Option => Boolean(option))
 
     const TriggerButton = (
       <Button
@@ -230,36 +233,88 @@ function MultiOptionList({
   searchPlaceholder: string
   emptyMessage: string
 }) {
+  const ITEM_HEIGHT = 34
+  const MAX_LIST_HEIGHT = 288
+  const OVERSCAN = 8
+
+  const [query, setQuery] = React.useState('')
+  const deferredQuery = React.useDeferredValue(query)
+  const [scrollTop, setScrollTop] = React.useState(0)
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null)
+  const selectedValueSet = React.useMemo(() => new Set(selectedValues), [selectedValues])
+
+  const filteredOptions = React.useMemo(() => {
+    const normalizedQuery = deferredQuery.trim().toLowerCase()
+    if (!normalizedQuery) return options
+
+    return options.filter(
+      (option) =>
+        option.label.toLowerCase().includes(normalizedQuery) || option.value.toLowerCase().includes(normalizedQuery)
+    )
+  }, [options, deferredQuery])
+
+  const totalHeight = filteredOptions.length * ITEM_HEIGHT
+  const viewportHeight = Math.min(totalHeight || ITEM_HEIGHT, MAX_LIST_HEIGHT)
+  const startIndex = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN)
+  const endIndex = Math.min(filteredOptions.length, Math.ceil((scrollTop + viewportHeight) / ITEM_HEIGHT) + OVERSCAN)
+  const visibleOptions = filteredOptions.slice(startIndex, endIndex)
+
+  React.useEffect(() => {
+    setScrollTop(0)
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0
+    }
+  }, [deferredQuery])
+
   return (
-    <Command className='w-full'>
-      <CommandInput placeholder={searchPlaceholder} className='h-9' />
-      <CommandList>
-        <CommandEmpty>{emptyMessage}</CommandEmpty>
-        <CommandGroup>
-          {options.map((option) => {
-            const isSelected = selectedValues.includes(option.value)
-            return (
-              <CommandItem
-                key={option.value}
-                value={option.label}
-                onSelect={() => {
-                  const newValues = isSelected
-                    ? selectedValues.filter((v) => v !== option.value)
-                    : [...selectedValues, option.value]
-                  onSelect(newValues)
-                }}
-              >
-                {option.label}
-                <CheckIcon
-                  className={cn(
-                    'ml-auto h-4 w-4 transition-opacity text-primary',
-                    isSelected ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-              </CommandItem>
-            )
-          })}
-        </CommandGroup>
+    <Command className='w-full' shouldFilter={false}>
+      <CommandInput value={query} onValueChange={setQuery} placeholder={searchPlaceholder} className='h-9' />
+      <CommandList className='max-h-none overflow-visible'>
+        {filteredOptions.length === 0 ? (
+          <CommandEmpty>{emptyMessage}</CommandEmpty>
+        ) : (
+          <div
+            ref={scrollContainerRef}
+            className='overflow-y-auto'
+            style={{ maxHeight: MAX_LIST_HEIGHT, height: viewportHeight }}
+            onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
+          >
+            <CommandGroup className='relative p-0' style={{ height: totalHeight }}>
+              {visibleOptions.map((option, index) => {
+                const virtualIndex = startIndex + index
+                const isSelected = selectedValueSet.has(option.value)
+
+                return (
+                  <CommandItem
+                    key={option.value}
+                    value={option.label}
+                    onSelect={() => {
+                      const newValues = isSelected
+                        ? selectedValues.filter((v) => v !== option.value)
+                        : [...selectedValues, option.value]
+                      onSelect(newValues)
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: virtualIndex * ITEM_HEIGHT,
+                      left: 0,
+                      right: 0,
+                      height: ITEM_HEIGHT
+                    }}
+                  >
+                    {option.label}
+                    <CheckIcon
+                      className={cn(
+                        'ml-auto h-4 w-4 transition-opacity text-primary',
+                        isSelected ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          </div>
+        )}
       </CommandList>
     </Command>
   )

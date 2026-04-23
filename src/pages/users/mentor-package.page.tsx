@@ -122,7 +122,7 @@ export default function MentorPackagePage() {
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         isActive: mentorPackage.isActive,
-        sortOrder: mentorPackage.sortOrder
+        position: mentorPackage.position
       })
     }
   }, [mentorPackage, methods])

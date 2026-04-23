@@ -99,6 +99,7 @@ export default function ProfilePage() {
             city: user.city,
             state: user.state,
             domainIds: user.domains.map((domain) => domain.id),
+            timeZone: user.timeZone,
             ...buildImagePayload(uploadedUrl)
           }
         },
@@ -163,7 +164,8 @@ export default function ProfilePage() {
           state: user.state,
           domainIds: user.domains.map((domain) => domain.id),
           avatar: null,
-          coverImageUrl: user.coverImageUrl
+          coverImageUrl: user.coverImageUrl,
+          timeZone: user.timeZone
         }
       },
       {
@@ -190,7 +192,8 @@ export default function ProfilePage() {
           state: user.state,
           domainIds: user.domains.map((domain) => domain.id),
           avatar: user.avatar,
-          coverImageUrl: null
+          coverImageUrl: null,
+          timeZone: user.timeZone
         }
       },
       {

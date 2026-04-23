@@ -1,16 +1,17 @@
 import { Card } from '@/components/ui/card'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import ConnectedAppsSection from '@/features/users/components/connected-apps-section'
+import LocationSection from '@/features/users/components/location-section'
 import PasswordSection from '@/features/users/components/password-section'
 import ProfileSection from '@/features/users/components/profile-section'
 import { cn } from '@/shared/utils'
-import { InfoIcon, LockKeyholeIcon, PuzzleIcon, SearchIcon, type LucideIcon } from 'lucide-react'
+import { GlobeIcon, InfoIcon, LockKeyholeIcon, PuzzleIcon, SearchIcon, type LucideIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
 import { useTranslation } from 'react-i18next'
 
-type Section = 'profile' | 'password' | 'apps'
+type Section = 'profile' | 'password' | 'apps' | 'location'
 
-const sections: Section[] = ['profile', 'password', 'apps']
+const sections: Section[] = ['profile', 'password', 'apps', 'location']
 
 type SectionMeta = {
   titleKey: string
@@ -54,6 +55,12 @@ const sectionGroups: SectionGroupConfig[] = [
         nameKey: 'user.profileDialog.password',
         icon: LockKeyholeIcon,
         content: <PasswordSection />
+      },
+      {
+        key: 'location',
+        nameKey: 'user.profileDialog.location',
+        icon: GlobeIcon,
+        content: <LocationSection />
       }
     ]
   },

@@ -11,7 +11,7 @@ export interface MentorPackage {
   price: number
   currency: Currency
   isActive: boolean
-  sortOrder: number
+  position: number
   createdOnUtc: string
   modifiedOnUtc: string | null
   coverImageUrl: string | null
