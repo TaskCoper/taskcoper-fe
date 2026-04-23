@@ -185,7 +185,7 @@ export default function UserDefaultLayout() {
         </div>
       </header>
 
-      <main className='flex-1 h-full w-full relative'>
+      <main className='flex-1 min-h-0 w-full relative overflow-hidden'>
         <Suspense
           fallback={
             <div className='flex h-full w-full items-center justify-center'>

@@ -3,15 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { MAX_BACKGROUND_SIZE } from '@/shared/constants'
-import type { AxiosError } from 'axios'
 import { ImageOffIcon, XIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
-import { toast } from 'sonner'
 
 interface BackgroundImagePopoverProps {
   children: React.ReactNode
@@ -64,47 +61,26 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
   const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const canDelete = check('TASKS', 'canDelete')
 
-  const { uploadFileAsync } = useUploadFile()
+  const { uploadFileWithToast } = useUploadFileWithToast()
 
   const handleUpload = async (file: File | null) => {
     if (!file) return
 
-    const toastId = toast.loading(t('common.ui.uploading'), {
-      description: t('common.ui.pleaseWait')
+    const url = await uploadFileWithToast({
+      file,
+      renderProgress: (progress) => (
+        <div className='w-full min-w-48 space-y-1'>
+          <Progress value={progress} className='w-full' />
+          <p className='text-xs text-muted-foreground'>{progress}%</p>
+        </div>
+      )
     })
 
-    try {
-      const url = await uploadFileAsync({
-        file,
-        onProgress: (progress) => {
-          toast.loading(t('common.ui.uploading'), {
-            id: toastId,
-            description: (
-              <div className='w-full min-w-48 space-y-1'>
-                <Progress value={progress} className='w-full' />
-                <p className='text-xs text-muted-foreground'>{progress}%</p>
-              </div>
-            )
-          })
-        }
-      })
+    if (!url) return
 
-      if (url) {
-        toast.success(t('common.ui.uploadSuccess'), {
-          id: toastId,
-          description: null
-        })
-
-        setValue('backgroundImage', url, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
-        onSubmit()
-        onClose()
-      }
-    } catch (error) {
-      toast(t('error.somethingWentWrong'), {
-        id: toastId,
-        description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-      })
-    }
+    setValue('backgroundImage', url, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+    onSubmit()
+    onClose()
   }
 
   const handleRemove = () => {

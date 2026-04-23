@@ -18,7 +18,7 @@ import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
-import { GlobeIcon, LogOut, UserCircle2Icon } from 'lucide-react'
+import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -102,6 +102,10 @@ export default function NavUser({ user }: NavUserProps) {
               </DropdownMenuPortal>
             </DropdownMenuSub>
           </DropdownMenuGroup>
+          <DropdownMenuItem onSelect={() => navigate(`/users/${user?.slug}/settings`)}>
+            <SettingsIcon />
+            {t('account.settings')}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className='focus:text-destructive' onClick={onSignOut} disabled={isSigningOut}>
             <LogOut className='focus:text-destructive' />

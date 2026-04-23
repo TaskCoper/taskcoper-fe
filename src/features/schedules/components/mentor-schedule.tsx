@@ -127,67 +127,71 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
   }
 
   return (
-    <Card className='p-4 shadow-none rounded-lg bg-muted/20 gap-6'>
-      <div className='flex items-start justify-between'>
-        <div>
-          <div className='flex items-center gap-2'>
-            <CalendarDaysIcon className='size-4' />
-            <p className='text-sm font-medium'>{t('meeting.mentorSchedule.title')}</p>
+    <Card
+      className={cn('p-4 shadow-none rounded-lg bg-muted/20', scheduleData.value.totalCount === 0 ? 'gap-4' : 'gap-6')}
+    >
+      {scheduleData?.value?.totalCount > 0 ? (
+        <div className='flex items-start justify-between'>
+          <div>
+            <div className='flex items-center gap-2'>
+              <CalendarDaysIcon className='size-4' />
+              <p className='text-sm font-medium'>{t('meeting.mentorSchedule.title')}</p>
+            </div>
+            <p className='text-xs text-muted-foreground'>
+              {t('meeting.mentorSchedule.weekLabel', {
+                week: getISOWeek(currentWeekStart),
+                month: format(currentWeekStart, 'MMMM yyyy', { locale: dateLocale })
+              })}
+            </p>
           </div>
-          <p className='text-xs text-muted-foreground'>
-            {t('meeting.mentorSchedule.weekLabel', {
-              week: getISOWeek(currentWeekStart),
-              month: format(currentWeekStart, 'MMMM yyyy', { locale: dateLocale })
-            })}
-          </p>
-        </div>
-
-        <div className='flex items-center gap-3'>
-          <Button size='sm' variant='outline' onClick={handleToday}>
-            {t('schedule.timeline.today')}
-          </Button>
-
-          <div className='flex items-center gap-1'>
-            <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
-              <ChevronLeftIcon />
+          <div className='flex items-center gap-3'>
+            <Button size='sm' variant='outline' onClick={handleToday}>
+              {t('schedule.timeline.today')}
             </Button>
 
-            <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
-              <SelectTrigger size='sm' className='w-[140px] text-sm font-medium bg-background'>
-                <SelectValue>{currentWeekLabel}</SelectValue>
+            <div className='flex items-center gap-1'>
+              <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
+                <ChevronLeftIcon />
+              </Button>
+
+              <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
+                <SelectTrigger size='sm' className='w-[140px] text-sm font-medium bg-background'>
+                  <SelectValue>{currentWeekLabel}</SelectValue>
+                </SelectTrigger>
+                <SelectContent
+                  side='bottom'
+                  sideOffset={8}
+                  className='max-h-[calc(var(--radix-select-content-available-height)-8px)]'
+                >
+                  {weekOptions.map((w) => (
+                    <SelectItem key={w.value} value={w.value}>
+                      {w.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
+                <ChevronRightIcon />
+              </Button>
+            </div>
+
+            <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
+              <SelectTrigger size='sm' className='w-[90px] text-sm bg-background'>
+                <SelectValue />
               </SelectTrigger>
-              <SelectContent
-                side='bottom'
-                sideOffset={8}
-                className='max-h-[calc(var(--radix-select-content-available-height)-8px)]'
-              >
-                {weekOptions.map((w) => (
-                  <SelectItem key={w.value} value={w.value}>
-                    {w.label}
+              <SelectContent side='bottom' sideOffset={8}>
+                {yearOptions.map((y) => (
+                  <SelectItem key={y} value={y.toString()}>
+                    {y}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-
-            <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
-              <ChevronRightIcon />
-            </Button>
           </div>
-
-          <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
-            <SelectTrigger size='sm' className='w-[90px] text-sm bg-background'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent side='bottom' sideOffset={8}>
-              {yearOptions.map((y) => (
-                <SelectItem key={y} value={y.toString()}>
-                  {y}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          \
         </div>
-      </div>
+      ) : null}
 
       {isLoadingSchedule || isLoadingMentorMeetings ? (
         <div className='grid grid-cols-7 gap-2'>
@@ -197,6 +201,12 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
               <Skeleton className='h-20 rounded-md' />
             </div>
           ))}
+        </div>
+      ) : scheduleData?.value?.totalCount === 0 ? (
+        <div className='flex flex-col items-center justify-center py-10 px-4 text-center'>
+          <CalendarDaysIcon className='size-10 text-muted-foreground mb-4 opacity-50' />
+          <p className='text-sm font-medium'>{t('meeting.mentorSchedule.empty')}</p>
+          <p className='text-xs text-muted-foreground'>{t('meeting.mentorSchedule.emptyDescription')}</p>
         </div>
       ) : (
         <div className='grid grid-cols-7 gap-2'>
@@ -254,16 +264,18 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
         </div>
       )}
 
-      <div className='flex justify-center items-center gap-4 text-xs mt-2'>
-        <div className='flex items-center gap-1.5'>
-          <div className='size-2.5 rounded-full bg-emerald-500' />
-          <span className='text-muted-foreground'>{t('meeting.mentorSchedule.available')}</span>
+      {scheduleData?.value?.totalCount > 0 && (
+        <div className='flex justify-center items-center gap-4 text-xs mt-2'>
+          <div className='flex items-center gap-1.5'>
+            <div className='size-2.5 rounded-full bg-emerald-500' />
+            <span className='text-muted-foreground'>{t('meeting.mentorSchedule.available')}</span>
+          </div>
+          <div className='flex items-center gap-1.5'>
+            <div className='size-2.5 rounded-full bg-muted-foreground/30' />
+            <span className='text-muted-foreground'>{t('meeting.mentorSchedule.booked')}</span>
+          </div>
         </div>
-        <div className='flex items-center gap-1.5'>
-          <div className='size-2.5 rounded-full bg-muted-foreground/30' />
-          <span className='text-muted-foreground'>{t('meeting.mentorSchedule.booked')}</span>
-        </div>
-      </div>
+      )}
 
       <BookMeetingDialog
         open={dialogOpen}

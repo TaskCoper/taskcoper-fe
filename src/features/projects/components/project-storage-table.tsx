@@ -7,7 +7,7 @@ import { useDeleteProjectAttachment } from '@/features/attachments/hooks/use-del
 import { useUploadProjectAttachment } from '@/features/attachments/hooks/use-upload-project-attachment'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useUploadFile } from '@/hooks/use-upload-file'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { ErrorResponse } from '@/lib/axios'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
@@ -17,7 +17,6 @@ import { UploadIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import { useGetProjectMimeTypeStats } from '../hooks/use-get-project-mime-type-stats'
 import { useGetProjectResourceMemberStats } from '../hooks/use-get-project-resource-member-stats'
@@ -40,7 +39,7 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
   const { confirm } = useConfirmStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const { uploadFileAsync } = useUploadFile()
+  const { uploadFileWithToast } = useUploadFileWithToast()
   const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectIdentifier })
 
   const { deleteAttachment } = useDeleteAttachment({ projectIdentifier })
@@ -81,34 +80,24 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
   const handleUploadFiles = useCallback(
     async (files: FileList) => {
       for (const file of Array.from(files)) {
-        const toastId = toast.loading(t('common.ui.uploading'), {
-          description: (
+        await uploadFileWithToast({
+          file,
+          loadingDescription: (
             <div className='w-72 space-y-1'>
               <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
               <Progress value={0} className='w-full' />
               <p className='text-xs text-muted-foreground'>0%</p>
             </div>
-          )
-        })
-
-        try {
-          const url = await uploadFileAsync({
-            file,
-            onProgress: (progress) => {
-              toast.loading(t('common.ui.uploading'), {
-                id: toastId,
-                description: (
-                  <div className='w-72 space-y-1'>
-                    <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
-                    <Progress value={progress} className='w-full' />
-                    <p className='text-xs text-muted-foreground'>{progress}%</p>
-                  </div>
-                )
-              })
-            }
-          })
-
-          if (url) {
+          ),
+          successDescription: file.name,
+          renderProgress: (progress) => (
+            <div className='w-72 space-y-1'>
+              <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
+              <Progress value={progress} className='w-full' />
+              <p className='text-xs text-muted-foreground'>{progress}%</p>
+            </div>
+          ),
+          onUploaded: async (url) => {
             await uploadProjectAttachmentAsync({
               body: {
                 projectIdentifier,
@@ -120,21 +109,12 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
                 bytes: file.size
               }
             })
-
-            toast.success(t('common.ui.uploadSuccess'), {
-              id: toastId,
-              description: file.name
-            })
-          }
-        } catch (error) {
-          toast(t('error.somethingWentWrong'), {
-            id: toastId,
-            description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-          })
-        }
+          },
+          errorDescription: (error) => (error as AxiosError<ErrorResponse>).response?.data?.detail
+        })
       }
     },
-    [projectIdentifier, t, uploadFileAsync, uploadProjectAttachmentAsync]
+    [projectIdentifier, uploadFileWithToast, uploadProjectAttachmentAsync]
   )
 
   const columns = useMemo(

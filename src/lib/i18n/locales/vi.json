@@ -226,7 +226,9 @@
       "weekLabel": "Tuần {{week}} - {{month}}",
       "available": "Trống",
       "booked": "Đã đặt",
-      "selected": "Đã chọn"
+      "selected": "Đã chọn",
+      "empty": "Chưa có lịch hẹn",
+      "emptyDescription": "Mentor này chưa thiết lập bất kỳ lịch rảnh nào."
     },
     "detail": {
       "session": "Buổi {{sequence}}",
@@ -1461,6 +1463,7 @@
   },
   "account": {
     "account": "Tài khoản",
+    "settings": "Cài đặt",
     "language": "Ngôn ngữ",
     "logout": "Đăng xuất"
   },
@@ -1549,7 +1552,24 @@
       "projects": "Dự án",
       "files": "Ảnh & Video"
     },
-    "logoImageAlt": "{{name}} Logo"
+    "logoImageAlt": "{{name}} Logo",
+    "profile": {
+      "addCoverImage": "Thêm ảnh bìa",
+      "chooseCoverImage": "Chọn ảnh bìa",
+      "deleteCoverImage": "Xóa ảnh bìa",
+      "chooseAvatar": "Chọn ảnh đại diện",
+      "deleteAvatar": "Xóa ảnh đại diện",
+      "verifiedByTaskCoper": "Kiểm định bởi TaskCoper",
+      "noEmail": "Chưa có email",
+      "noPhoneNumber": "Chưa có số điện thoại"
+    },
+    "settings": {
+      "searchSettings": "Tìm kiếm cài đặt",
+      "accountCenterTitle": "Trung tâm tài khoản",
+      "accountCenterDesc": "Quản lý phần cài đặt tài khoản của bạn",
+      "otherSettingsTitle": "Cài đặt khác",
+      "otherSettingsDesc": "Quản lý các cài đặt khác liên quan đến tài khoản của bạn"
+    }
   },
   "auth": {
     "signIn": {
@@ -2413,6 +2433,21 @@
             "content": "Bạn có quyền truy cập, chỉnh sửa hoặc yêu cầu xóa dữ liệu cá nhân của mình bất kỳ lúc nào thông qua cài đặt tài khoản."
           }
         }
+      }
+    }
+  },
+  "mentor": {
+    "updateProfile": {
+      "shortBio": {
+        "title": "Cập nhật giới thiệu ngắn",
+        "description": "Mô tả ngắn gọn về chuyên môn và kinh nghiệm của bạn.",
+        "label": "Giới thiệu ngắn",
+        "placeholder": "Nhập giới thiệu ngắn của bạn"
+      },
+      "description": {
+        "title": "Cập nhật README",
+        "description": "Cập nhật thông tin chi tiết cho hồ sơ chuyên gia của bạn.",
+        "label": "Mô tả"
       }
     }
   }

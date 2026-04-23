@@ -24,7 +24,8 @@ const ProjectSettingsPage = lazy(() => import('@/pages/project-settings.page'))
 const ProjectMemberPage = lazy(() => import('@/pages/project-member.page'))
 const ProjectRolePage = lazy(() => import('@/pages/project-role.page'))
 
-const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+// const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+const SettingsPage = lazy(() => import('@/pages/users/settingsv2.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 

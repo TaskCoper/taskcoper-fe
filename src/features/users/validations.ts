@@ -48,7 +48,8 @@ export const updateMeSchema = (t: TFunction) => {
         .nullable()
         .transform((val) => (val === '' ? null : val)),
       wardCode: z.number().positive().or(z.literal(-1)),
-      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
+      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid'))),
+      coverImageUrl: z.url().nullable()
     })
     .strict()
 }

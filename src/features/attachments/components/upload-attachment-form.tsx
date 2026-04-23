@@ -4,7 +4,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { useUploadFile } from '@/hooks/use-upload-file'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { ErrorResponse } from '@/lib/axios'
 import { MAX_ATTACHMENT_SIZE, POSITION_GAP } from '@/shared/constants'
 import { prepareFileUpload } from '@/shared/utils'
@@ -12,7 +12,6 @@ import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import { useUploadAttachment } from '../hooks/use-upload-attachment'
 import { type UploadAttachmentFormValues } from '../validations'
 
@@ -33,7 +32,7 @@ export default function UploadAttachmentForm({
   const { control } = useFormContext<UploadAttachmentFormValues>()
   const [isUploading, setIsUploading] = useState(false)
 
-  const { uploadFileAsync } = useUploadFile()
+  const { uploadFileWithToast } = useUploadFileWithToast()
   const { uploadAttachmentAsync, getNextPosition } = useUploadAttachment({
     taskId,
     projectIdentifier,
@@ -50,35 +49,25 @@ export default function UploadAttachmentForm({
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      const toastId = toast.loading(t('common.ui.uploading'), {
-        description: `${file.name} - ${t('common.ui.pleaseWait')}`
-      })
-
-      try {
-        const { key, contentType } = prepareFileUpload(file)
-        const url = await uploadFileAsync({
-          file,
-          onProgress: (progress) => {
-            toast.loading(t('common.ui.uploading'), {
-              id: toastId,
-              description: (
-                <div className='w-72 space-y-1'>
-                  <p className='text-xs font-medium truncate'>{file.name}</p>
-                  <Progress value={progress} className='w-full' />
-                  <p className='text-xs text-muted-foreground'>{progress}%</p>
-                </div>
-              )
-            })
-          }
-        })
-
-        if (url) {
+      const { key, contentType } = prepareFileUpload(file)
+      const url = await uploadFileWithToast({
+        file,
+        loadingDescription: `${file.name} - ${t('common.ui.pleaseWait')}`,
+        successDescription: file.name,
+        renderProgress: (progress) => (
+          <div className='w-72 space-y-1'>
+            <p className='text-xs font-medium truncate'>{file.name}</p>
+            <Progress value={progress} className='w-full' />
+            <p className='text-xs text-muted-foreground'>{progress}%</p>
+          </div>
+        ),
+        onUploaded: async (uploadedUrl) => {
           await uploadAttachmentAsync({
             body: {
               taskId,
               commentId: null,
               name: file.name,
-              url,
+              url: uploadedUrl,
               position: currentPosition,
               isUpload: true,
               storageKey: key,
@@ -88,28 +77,16 @@ export default function UploadAttachmentForm({
           })
 
           currentPosition += POSITION_GAP
-
-          toast.success(t('common.ui.uploadSuccess'), {
-            id: toastId,
-            description: file.name
-          })
           successCount++
 
           if (successCount === totalFiles) {
             onUploadComplete?.()
           }
-        } else {
-          toast.error(t('error.somethingWentWrong'), {
-            id: toastId,
-            description: file.name
-          })
-        }
-      } catch (error) {
-        toast.error(t('error.somethingWentWrong'), {
-          id: toastId,
-          description: (error as AxiosError<ErrorResponse>).response?.data?.detail || file.name
-        })
-      }
+        },
+        errorDescription: (error) => (error as AxiosError<ErrorResponse>).response?.data?.detail || file.name
+      })
+
+      if (!url) continue
     }
 
     setIsUploading(false)

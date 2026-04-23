@@ -1,13 +1,8 @@
 import { ComboboxField } from '@/components/combobox-field'
-import FileDropzone from '@/components/file-dropzone'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import DomainMultiSelect from '@/features/mentors/components/domain-multi-select'
 import type { Province, Ward } from '@/services/map.service'
-import { MAX_AVATAR_SIZE } from '@/shared/constants'
-import { getAvatarFallback } from '@/shared/utils'
-import { XIcon } from 'lucide-react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateMeFormValues } from '../validations'
@@ -17,72 +12,17 @@ interface UpdateMeFormProps {
   wards: Ward[]
   isLoadingProvinces: boolean
   isLoadingWards: boolean
-  onAvatarChange: (file: File | null) => void
-  pendingAvatarPreview: string | null
 }
 
-export default function UpdateMeForm({
-  provinces,
-  wards,
-  isLoadingProvinces,
-  isLoadingWards,
-  onAvatarChange,
-  pendingAvatarPreview
-}: UpdateMeFormProps) {
+export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isLoadingWards }: UpdateMeFormProps) {
   const { t } = useTranslation()
   const { control, setValue, watch } = useFormContext<UpdateMeFormValues>()
 
   const cityCodeForm = watch('cityCode')
-  const avatarForm = watch('avatar')
-  const nameForm = `${watch('firstName')} ${watch('lastName')}`
-
-  // use pending preview if available, otherwise use form avatar
-  const displayAvatar = pendingAvatarPreview ?? avatarForm
-
-  const handleAvatarSelect = (file: File | null) => {
-    if (file) {
-      onAvatarChange(file)
-    }
-  }
-
-  const handleRemoveAvatar = () => {
-    onAvatarChange(null)
-    setValue('avatar', null, { shouldDirty: true })
-  }
 
   return (
-    <div className='space-y-6 mt-8'>
+    <div className='space-y-6'>
       <div className='space-y-8'>
-        <div className='relative w-fit mx-auto'>
-          <FileDropzone
-            onFileChange={handleAvatarSelect}
-            className='size-24 group/logo rounded-full border-4 border-background bg-muted shrink-0 flex justify-center items-center'
-            maxSize={MAX_AVATAR_SIZE}
-            accept={{
-              'image/png': ['.png'],
-              'image/jpeg': ['.jpg', '.jpeg'],
-              'image/webp': ['.webp'],
-              'image/svg+xml': ['.svg']
-            }}
-          >
-            <Avatar className='size-24'>
-              <AvatarImage src={displayAvatar ?? ''} />
-              <AvatarFallback className='text-2xl'>{getAvatarFallback(nameForm)}</AvatarFallback>
-            </Avatar>
-          </FileDropzone>
-
-          {displayAvatar && (
-            <button
-              type='button'
-              onClick={handleRemoveAvatar}
-              className='cursor-pointer absolute bottom-0 right-2 size-5 rounded-full bg-destructive flex items-center justify-center hover:bg-destructive/90 transition-colors shadow-sm'
-              aria-label='Remove avatar'
-            >
-              <XIcon className='size-3.5 text-white' />
-            </button>
-          )}
-        </div>
-
         <div className='flex items-center gap-4'>
           <Controller
             name='firstName'

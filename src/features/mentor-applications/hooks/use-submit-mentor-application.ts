@@ -1,4 +1,4 @@
-import { useUploadFile } from '@/hooks/use-upload-file'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { ErrorResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
 import mentorApplicationService from '@/services/mentor-application.service'
@@ -32,7 +32,7 @@ export const useSubmitMentorApplication = () => {
 
   const [uploadStatuses, setUploadStatuses] = useState<Record<number, FileUploadStatus>>({})
 
-  const { uploadFileAsync } = useUploadFile({ onError: () => {} })
+  const { uploadFileAsync } = useUploadFileWithToast({ onError: () => {} })
 
   const clearUploadStatuses = () => setUploadStatuses({})
 

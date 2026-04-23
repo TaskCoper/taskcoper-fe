@@ -226,7 +226,9 @@
       "weekLabel": "Week {{week}} - {{month}}",
       "available": "Available",
       "booked": "Booked",
-      "selected": "Selected"
+      "selected": "Selected",
+      "empty": "No schedule yet",
+      "emptyDescription": "This mentor has not set up any availability schedule."
     },
     "detail": {
       "session": "Session {{sequence}}",
@@ -1461,6 +1463,7 @@
   },
   "account": {
     "account": "Account",
+    "settings": "Settings",
     "language": "Language",
     "logout": "Logout"
   },
@@ -1549,7 +1552,24 @@
       "projects": "Projects",
       "files": "Photos & Videos"
     },
-    "logoImageAlt": "{{name}} Logo"
+    "logoImageAlt": "{{name}} Logo",
+    "profile": {
+      "addCoverImage": "Add cover image",
+      "chooseCoverImage": "Choose cover image",
+      "deleteCoverImage": "Delete cover image",
+      "chooseAvatar": "Choose avatar",
+      "deleteAvatar": "Delete avatar",
+      "verifiedByTaskCoper": "Verified by TaskCoper",
+      "noEmail": "No email",
+      "noPhoneNumber": "No phone number"
+    },
+    "settings": {
+      "searchSettings": "Search settings",
+      "accountCenterTitle": "Account Center",
+      "accountCenterDesc": "Manage your account settings",
+      "otherSettingsTitle": "Other settings",
+      "otherSettingsDesc": "Manage other settings related to your account"
+    }
   },
   "auth": {
     "signIn": {
@@ -2413,6 +2433,21 @@
             "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
           }
         }
+      }
+    }
+  },
+  "mentor": {
+    "updateProfile": {
+      "shortBio": {
+        "title": "Update Short Bio",
+        "description": "Briefly describe your expertise and experience.",
+        "label": "Short Bio",
+        "placeholder": "Enter your short bio"
+      },
+      "description": {
+        "title": "Update README",
+        "description": "Update your detailed mentor profile description.",
+        "label": "Description"
       }
     }
   }

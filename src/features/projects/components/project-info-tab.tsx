@@ -6,16 +6,13 @@ import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useGetDomains } from '@/hooks/use-get-domains'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
-import type { AxiosError } from 'axios'
 import { CameraIcon, ImageOffIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, type Path, type SubmitHandler, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import { useGetProject } from '../hooks/use-get-project'
 import { useUpdateProject } from '../hooks/use-update-project'
 import type { DomainItem, UpdateProjectFormValues } from '../validations'
@@ -78,7 +75,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
     [domains.value.items]
   )
 
-  const { uploadFileAsync } = useUploadFile()
+  const { uploadFileWithToast } = useUploadFileWithToast()
 
   const onSubmit: SubmitHandler<UpdateProjectFormValues> = (body) => {
     updateProject({
@@ -120,41 +117,20 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
   const handleUpload = async (file: File | null, name: Path<UpdateProjectFormValues>) => {
     if (!file) return
 
-    const toastId = toast.loading(t('common.ui.uploading'), {
-      description: t('common.ui.pleaseWait')
+    const url = await uploadFileWithToast({
+      file,
+      renderProgress: (progress) => (
+        <div className='w-72 space-y-1'>
+          <Progress value={progress} className='w-full' />
+          <p className='text-xs text-muted-foreground'>{progress}%</p>
+        </div>
+      )
     })
 
-    try {
-      const url = await uploadFileAsync({
-        file,
-        onProgress: (progress) => {
-          toast.loading(t('common.ui.uploading'), {
-            id: toastId,
-            description: (
-              <div className='w-72 space-y-1'>
-                <Progress value={progress} className='w-full' />
-                <p className='text-xs text-muted-foreground'>{progress}%</p>
-              </div>
-            )
-          })
-        }
-      })
+    if (!url) return
 
-      if (url) {
-        toast.success(t('common.ui.uploadSuccess'), {
-          id: toastId,
-          description: null
-        })
-
-        setValue(name, url, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
-        onSubmit(getValues())
-      }
-    } catch (error) {
-      toast(t('error.somethingWentWrong'), {
-        id: toastId,
-        description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-      })
-    }
+    setValue(name, url, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
+    onSubmit(getValues())
   }
 
   if (isLoadingProject) {
