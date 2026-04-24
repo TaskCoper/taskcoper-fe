@@ -1,9 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME } from '@/features/tasks/constants'
+import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { type MeetingBooking } from '@/types/meeting.type'
+import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { format } from 'date-fns'
+import { PresentationIcon, UsersRoundIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface CalendarEventProps {
@@ -16,14 +18,29 @@ interface CalendarEventProps {
 
 export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
   const { t } = useTranslation()
+  const { user } = useAuthStore()
+
+  const isMentor = meeting.mentorUserId === user?.UserId
   const theme = getMeetingStatusTheme(meeting.status)
 
+  if (isMentor && (!meeting.status || meeting.status === MeetingStatus.BOOKED)) {
+    theme.block =
+      'border-violet-400 bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-md shadow-violet-500/20'
+    theme.dot = 'bg-violet-500 shadow-[0_0_8px_rgba(167,139,250,0.8)]'
+    theme.avatar = 'bg-violet-800 text-violet-100'
+  }
+
   const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`
+
+  const displayName = isMentor ? '' : mentorFullName
 
   const projectText = meeting.projectId && meeting.project ? `[${meeting.project.name}] - ` : ''
   const titleText = meeting.packageBookingId
     ? `${t('meeting.detail.session', { sequence: meeting.packageSequence })} - ${meeting.packageName}`
-    : `${t('meeting.detail.meetingWith')} ${mentorFullName}`
+    : isMentor
+      ? t('meeting.detail.mentoringSession')
+      : `${t('meeting.detail.meetingWith')} ${mentorFullName}`
+
   const title = `${projectText}${titleText}`
 
   const startTime = meeting.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : ''
@@ -39,7 +56,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
           'hover:bg-accent/80 hover:scale-101 transition-colors',
           className
         )}
-        title={`${title}\n${timeString}\nw/ ${mentorFullName}`}
+        title={`${title}\n${timeString}\nw/ ${displayName}`}
         onClick={(e) => {
           e.stopPropagation()
           onClick?.(meeting)
@@ -59,7 +76,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
     <div
       className={cn(
         'absolute rounded-md overflow-hidden cursor-pointer group transition-all',
-        'border-l-4 hover:scale-101',
+        'border-l-4 hover:scale-[1.02] hover:z-10',
         theme.block,
         isCompact ? 'flex items-center px-1.5 gap-1.5' : 'flex flex-col px-2 py-1.5',
         className
@@ -68,7 +85,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
         minHeight: 22,
         ...style
       }}
-      title={`${title}\n${timeString}\nw/ ${mentorFullName}`}
+      title={`${title}\n${timeString}\nw/ ${displayName}`}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.(meeting)
@@ -81,18 +98,29 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
         </>
       ) : (
         <>
-          <p className='text-xs font-semibold truncate leading-tight'>{title}</p>
-          {timeString && <p className='text-[11px] font-medium truncate mt-0.5 leading-tight'>{timeString}</p>}
+          <p className='text-xs font-semibold truncate leading-tight drop-shadow-sm'>{title}</p>
+          {timeString && (
+            <p className='text-[11px] font-medium truncate mt-0.5 leading-tight opacity-90'>{timeString}</p>
+          )}
 
           {height >= CALENDAR_HOUR_HEIGHT - 2 && (
-            <div className='flex items-center gap-1.5 mt-auto pt-1'>
-              <Avatar className='size-4'>
-                <AvatarImage src={meeting.mentor.avatarUrl ?? ''} />
-                <AvatarFallback className={cn('text-[8px]', theme.avatar)}>
-                  {getAvatarFallback(mentorFullName)}
-                </AvatarFallback>
-              </Avatar>
-              <p className='text-[11px] font-medium truncate opacity-90'>{mentorFullName}</p>
+            <div className='flex items-center justify-between mt-auto pt-1'>
+              <div className='flex items-center gap-1.5 overflow-hidden'>
+                {!isMentor && (
+                  <Avatar className='size-4 shadow-sm ring-1 ring-white/20'>
+                    <AvatarImage src={meeting.mentor.avatarUrl ?? ''} />
+                    <AvatarFallback className={cn('text-[8px] font-bold', theme.avatar)}>
+                      {getAvatarFallback(displayName)}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <p className='text-[11px] truncate opacity-95'>{displayName}</p>
+              </div>
+              {isMentor ? (
+                <PresentationIcon className='size-3.5 shrink-0 ml-1 drop-shadow-sm' />
+              ) : (
+                <UsersRoundIcon className='size-3.5 shrink-0 ml-1 drop-shadow-sm' />
+              )}
             </div>
           )}
         </>

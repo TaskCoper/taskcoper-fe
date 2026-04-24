@@ -6,13 +6,17 @@ import {
 } from '@/features/tasks/constants'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
-import { addDays, format, isSameDay, isToday, setHours, startOfWeek } from 'date-fns'
+import type { MeetingRule } from '@/types/schedule.type'
+import { addDays, format, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay, startOfWeek } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface WeekViewProps {
   date: Date
   meetings: MeetingBooking[]
   onMeetingClick?: (meeting: MeetingBooking) => void
+  schedules?: MeetingRule[]
+  showSchedulesOverlay?: boolean
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -22,11 +26,12 @@ function getWeekDays(date: Date) {
   return Array.from({ length: 7 }, (_, i) => addDays(start, i))
 }
 
-export default function WeekView({ date, meetings, onMeetingClick }: WeekViewProps) {
+export default function WeekView({ date, meetings, onMeetingClick, schedules, showSchedulesOverlay }: WeekViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [timezone] = useState(getTimezoneOffsetString())
   const days = getWeekDays(date)
   const now = new Date()
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -86,6 +91,25 @@ export default function WeekView({ date, meetings, onMeetingClick }: WeekViewPro
           const layouted = layoutDayEvents(dayMeetings, day)
           const currentTimeTop = today ? ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT : null
 
+          const dayOfWeek = day.getDay()
+          const startOfCurrentDay = startOfDay(day)
+
+          const daySchedules = schedules?.filter((s) => {
+            if (s.dayOfWeek !== dayOfWeek) return false
+
+            if (s.activeFrom) {
+              const fromDate = startOfDay(new Date(s.activeFrom))
+              if (isBefore(startOfCurrentDay, fromDate)) return false
+            }
+
+            if (s.activeTo) {
+              const toDate = startOfDay(new Date(s.activeTo))
+              if (isAfter(startOfCurrentDay, toDate)) return false
+            }
+
+            return true
+          })
+
           return (
             <div key={day.toISOString()} className='flex-1 relative border-l'>
               {HOURS.map((hour) => (
@@ -95,6 +119,43 @@ export default function WeekView({ date, meetings, onMeetingClick }: WeekViewPro
                   style={{ top: hour * HOUR_HEIGHT, height: HOUR_HEIGHT }}
                 />
               ))}
+
+              {showSchedulesOverlay &&
+                daySchedules?.map((rule) => {
+                  if (!rule.startTimeUtc || !rule.endTimeUtc) return null
+                  const [startHour, startMin] = rule.startTimeUtc.split(':').map(Number)
+                  const [endHour, endMin] = rule.endTimeUtc.split(':').map(Number)
+
+                  const top = (startHour + startMin / 60) * HOUR_HEIGHT
+                  const height = (endHour + endMin / 60) * HOUR_HEIGHT - top - 4
+
+                  let bgClass = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-900 dark:text-emerald-400' // permanent
+                  let labelText = t('schedule.timeline.legend.permanent')
+
+                  if (rule.activeFrom && rule.activeTo) {
+                    bgClass = 'bg-purple-500/15 border-purple-500/30 text-purple-900 dark:text-purple-400' // range
+                    labelText = `${format(new Date(rule.activeFrom), 'dd/MM/yy')} - ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+                  } else if (rule.activeFrom) {
+                    bgClass = 'bg-blue-500/15 border-blue-500/30 text-blue-900 dark:text-blue-400' // fromOnly
+                    labelText = `${t('schedule.timeline.activeFrom')} ${format(new Date(rule.activeFrom), 'dd/MM/yy')}`
+                  } else if (rule.activeTo) {
+                    bgClass = 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-400' // toOnly
+                    labelText = `${t('schedule.timeline.activeTo')} ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+                  }
+
+                  return (
+                    <div
+                      key={rule.id}
+                      className={cn(
+                        'absolute w-[calc(100%-6px)] left-0.5 z-0 border border-dashed rounded-md pointer-events-none flex flex-col p-2 overflow-hidden',
+                        bgClass
+                      )}
+                      style={{ top, height }}
+                    >
+                      <p className='text-xs font-semibold opacity-80 truncate leading-tight'>{labelText}</p>
+                    </div>
+                  )
+                })}
 
               {layouted.map((ev) => {
                 const widthPercent = 100 / ev.totalColumns

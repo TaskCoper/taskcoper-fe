@@ -14,19 +14,17 @@ export default function MiniCalendarSidebar({ selectedDate, onDateSelect }: Mini
   }, [selectedDate])
 
   return (
-    <div className='hidden lg:block'>
-      <Calendar
-        mode='single'
-        selected={selectedDate}
-        month={month}
-        onMonthChange={setMonth}
-        onSelect={(date) => {
-          if (date) {
-            onDateSelect(date)
-          }
-        }}
-        className='p-0'
-      />
-    </div>
+    <Calendar
+      mode='single'
+      selected={selectedDate}
+      month={month}
+      onMonthChange={setMonth}
+      onSelect={(date) => {
+        if (date) {
+          onDateSelect(date)
+        }
+      }}
+      className='p-0 w-full'
+    />
   )
 }

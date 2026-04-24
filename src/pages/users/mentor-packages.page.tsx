@@ -36,7 +36,7 @@ export default function MentorPackagesPage() {
 
   const changeSortOrder = (pkg: MentorPackage, direction: 'up' | 'down') => {
     const delta = direction === 'up' ? -1 : 1
-    const nextSortOrder = pkg.sortOrder + delta
+    const nextSortOrder = pkg.position + delta
     if (nextSortOrder < 0) return
 
     updateMentorPackage({
@@ -49,7 +49,7 @@ export default function MentorPackagesPage() {
         price: String(pkg.price),
         currency: pkg.currency,
         isActive: pkg.isActive,
-        sortOrder: nextSortOrder
+        position: nextSortOrder
       }
     })
   }
@@ -144,7 +144,7 @@ export default function MentorPackagesPage() {
                       type='button'
                       size='icon'
                       variant='ghost'
-                      disabled={isUpdatingMentorPackage || mentorPackage.sortOrder <= 0 || index === 0}
+                      disabled={isUpdatingMentorPackage || mentorPackage.position <= 0 || index === 0}
                       onClick={() => changeSortOrder(mentorPackage, 'up')}
                     >
                       <ArrowUpIcon />

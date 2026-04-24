@@ -112,6 +112,8 @@
       "filter": "Filter",
       "month": "Month",
       "week": "Week",
+      "day": "Day",
+      "today": "Today",
       "files": "files",
       "openMenu": "Open menu",
       "comingSoon": "Coming Soon",
@@ -168,8 +170,21 @@
     },
     "button": {
       "create": "Create Schedule",
-      "viewSchedules": "View Schedules",
+      "viewSchedules": "Config Schedules",
       "update": "Update Schedule"
+    },
+    "popover": {
+      "title": "Schedules",
+      "showOverlay": "Show schedule overlay",
+      "description": "Display your active schedules on the calendar.",
+      "manageSchedules": "Manage Schedules"
+    },
+    "filter": {
+      "title": "Display schedule",
+      "all": "All",
+      "mine": "Mine",
+      "mentor": "Mentor's",
+      "purchasedPackages": "Purchased packages"
     },
     "update": {
       "description": "Update your schedule information."
@@ -235,6 +250,7 @@
     },
     "detail": {
       "session": "Session {{sequence}}",
+      "mentoringSession": "Mentoring Session",
       "meetingWith": "Meeting with",
       "to": "to",
       "joinViaGoogleMeet": "Join via Google Meet",

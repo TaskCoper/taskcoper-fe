@@ -112,6 +112,8 @@
       "filter": "Lọc",
       "month": "Tháng",
       "week": "Tuần",
+      "day": "Ngày",
+      "today": "Hôm nay",
       "files": "tệp",
       "openMenu": "Mở menu",
       "comingSoon": "Sắp ra mắt",
@@ -168,8 +170,21 @@
     },
     "button": {
       "create": "Tạo lịch",
-      "viewSchedules": "Xem lịch",
+      "viewSchedules": "Cấu hình lịch rảnh",
       "update": "Cập nhật lịch"
+    },
+    "popover": {
+      "title": "Lịch rảnh",
+      "showOverlay": "Hiển thị lớp phủ lịch",
+      "description": "Hiển thị lịch rảnh của bạn trên lịch.",
+      "manageSchedules": "Quản lý Lịch"
+    },
+    "filter": {
+      "title": "Hiển thị lịch",
+      "all": "Tất cả",
+      "mine": "Của tôi",
+      "mentor": "Của mentor",
+      "purchasedPackages": "Các gói đã mua"
     },
     "update": {
       "description": "Cập nhật thông tin lịch của bạn."
@@ -235,6 +250,7 @@
     },
     "detail": {
       "session": "Buổi {{sequence}}",
+      "mentoringSession": "Phiên Hướng dẫn",
       "meetingWith": "Gặp gỡ",
       "to": "đến",
       "joinViaGoogleMeet": "Tham gia bằng Google Meet",

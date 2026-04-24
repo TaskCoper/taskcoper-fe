@@ -6,22 +6,27 @@ import {
 } from '@/features/tasks/constants'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
-import { format, isSameDay, isToday, setHours } from 'date-fns'
+import type { MeetingRule } from '@/types/schedule.type'
+import { format, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface DayViewProps {
   date: Date
   meetings: MeetingBooking[]
   onMeetingClick?: (meeting: MeetingBooking) => void
+  schedules?: MeetingRule[]
+  showSchedulesOverlay?: boolean
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
-export default function DayView({ date, meetings, onMeetingClick }: DayViewProps) {
+export default function DayView({ date, meetings, onMeetingClick, schedules, showSchedulesOverlay }: DayViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [timezone] = useState(getTimezoneOffsetString())
   const now = new Date()
   const isCurrentDay = isToday(date)
+  const { t } = useTranslation()
 
   const dayMeetings = meetings.filter((meeting) => {
     if (!meeting.startTimeUtc) return false
@@ -37,6 +42,25 @@ export default function DayView({ date, meetings, onMeetingClick }: DayViewProps
   }, [])
 
   const currentTimeTop = isCurrentDay ? ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT : null
+
+  const dayOfWeek = date.getDay()
+  const startOfCurrentDay = startOfDay(date)
+
+  const daySchedules = schedules?.filter((s) => {
+    if (s.dayOfWeek !== dayOfWeek) return false
+
+    if (s.activeFrom) {
+      const fromDate = startOfDay(new Date(s.activeFrom))
+      if (isBefore(startOfCurrentDay, fromDate)) return false
+    }
+
+    if (s.activeTo) {
+      const toDate = startOfDay(new Date(s.activeTo))
+      if (isAfter(startOfCurrentDay, toDate)) return false
+    }
+
+    return true
+  })
 
   return (
     <div ref={scrollRef} className='flex-1 overflow-y-auto'>
@@ -73,6 +97,46 @@ export default function DayView({ date, meetings, onMeetingClick }: DayViewProps
         ))}
 
         <div className='absolute inset-y-0 right-0' style={{ left: TIME_GUTTER_WIDTH }}>
+          {showSchedulesOverlay &&
+            daySchedules?.map((rule) => {
+              if (!rule.startTimeUtc || !rule.endTimeUtc) return null
+              const [startHour, startMin] = rule.startTimeUtc.split(':').map(Number)
+              const [endHour, endMin] = rule.endTimeUtc.split(':').map(Number)
+
+              const top = (startHour + startMin / 60) * HOUR_HEIGHT
+              const height = (endHour + endMin / 60) * HOUR_HEIGHT - top
+
+              let bgClass = 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' // permanent
+              let labelText = t('schedule.timeline.legend.permanent')
+
+              if (rule.activeFrom && rule.activeTo) {
+                bgClass = 'bg-purple-500/10 border-purple-500/30 text-purple-700 dark:text-purple-400' // range
+                labelText = `${format(new Date(rule.activeFrom), 'dd/MM/yy')} - ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+              } else if (rule.activeFrom) {
+                bgClass = 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-400' // fromOnly
+                labelText = `${t('schedule.timeline.activeFrom')} ${format(new Date(rule.activeFrom), 'dd/MM/yy')}`
+              } else if (rule.activeTo) {
+                bgClass = 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400' // toOnly
+                labelText = `${t('schedule.timeline.activeTo')} ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+              }
+
+              return (
+                <div
+                  key={rule.id}
+                  className={cn(
+                    'absolute w-[calc(100%-8px)] left-1 z-0 border border-dashed rounded-md pointer-events-none flex flex-col p-1 overflow-hidden',
+                    bgClass
+                  )}
+                  style={{ top, height }}
+                >
+                  <span className='text-[10px] font-semibold opacity-90 truncate leading-tight'>
+                    {t('meeting.mentorSchedule.available')}
+                  </span>
+                  <span className='text-[9px] font-medium opacity-70 truncate leading-tight'>{labelText}</span>
+                </div>
+              )
+            })}
+
           {layouted.map((ev) => {
             const widthPercent = 100 / ev.totalColumns
             const leftPercent = ev.column * widthPercent
@@ -86,7 +150,8 @@ export default function DayView({ date, meetings, onMeetingClick }: DayViewProps
                   top: ev.top + 1,
                   height: ev.height - 2,
                   left: `calc(${leftPercent}% + 2px)`,
-                  width: `calc(${widthPercent}% - 14px)`
+                  width: `calc(${widthPercent}% - 14px)`,
+                  zIndex: 10
                 }}
               />
             )

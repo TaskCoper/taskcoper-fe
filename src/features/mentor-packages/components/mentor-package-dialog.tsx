@@ -41,7 +41,7 @@ export default function MentorPackageDialog({ mentorPackage, children }: MentorP
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         isActive: mentorPackage.isActive,
-        sortOrder: mentorPackage.sortOrder
+        position: mentorPackage.position
       })
     }
   }, [open, mentorPackage, methods])

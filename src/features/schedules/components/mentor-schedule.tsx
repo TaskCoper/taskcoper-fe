@@ -189,7 +189,6 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
               </SelectContent>
             </Select>
           </div>
-          \
         </div>
       ) : null}
 

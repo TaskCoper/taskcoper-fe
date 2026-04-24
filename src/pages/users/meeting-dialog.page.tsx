@@ -3,7 +3,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import MeetingDetailMenu from '@/features/meetings/components/meeting-detail-menu'
 import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
@@ -70,8 +69,8 @@ const getStatusIcon = (status: MeetingStatus) => {
 export default function MeetingDialogPage() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(true)
-  const { me } = useGetMe()
-  const { meetingId } = useParams()
+
+  const { meetingId } = useParams<{ meetingId: string }>()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
   const { t } = useTranslation()
   const [isRescheduling, setIsRescheduling] = useState(false)
@@ -244,19 +243,27 @@ export default function MeetingDialogPage() {
             <div className='flex items-center gap-4'>
               <VideoIcon className='size-4' />
               <div className='-space-y-1'>
-                <Link
-                  to={meeting?.meetingLink || ''}
-                  target='_blank'
-                  className='hover:underline text-primary hover:text-primary'
-                >
-                  <p className='text-sm font-medium'>{t('meeting.detail.joinViaGoogleMeet')}</p>
-                </Link>
                 {meeting?.meetingLink ? (
-                  <p className='text-xs text-foreground/80'>
-                    {meeting.meetingLink.replace('https://', '')} {t('meeting.detail.maxGuests')}
-                  </p>
+                  <>
+                    <Link
+                      to={meeting?.meetingLink || ''}
+                      target='_blank'
+                      className='hover:underline text-primary hover:text-primary'
+                    >
+                      <p className='text-sm font-medium'>{t('meeting.detail.joinViaGoogleMeet')}</p>
+                    </Link>
+
+                    <p className='text-xs text-foreground/80'>
+                      {meeting.meetingLink.replace('https://', '')} {t('meeting.detail.maxGuests')}
+                    </p>
+                  </>
                 ) : (
-                  <p className='text-xs'>{t('meeting.detail.noLinkYet')}</p>
+                  <>
+                    <p className='hover:underline text-primary hover:text-primary text-sm font-medium'>
+                      {t('meeting.detail.joinViaGoogleMeet')}
+                    </p>
+                    <p className='text-xs'>{t('meeting.detail.noLinkYet')}</p>
+                  </>
                 )}
               </div>
             </div>
@@ -401,37 +408,23 @@ export default function MeetingDialogPage() {
             <div className='space-y-2.5'>
               <p className='text-sm font-medium'>{t('meeting.detail.participants')}</p>
 
-              {meeting?.projectId && meeting.project ? (
-                meeting.project.members.map((member) => (
-                  <Link to={`/users/${member.userId}`} className='flex items-center gap-2' key={member.userId}>
-                    <Avatar>
-                      <AvatarImage src={member.avatarUrl ?? undefined} className='hover:brightness-90' />
-                      <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
-                    </Avatar>
+              {meeting?.projectId && meeting.project
+                ? meeting.project.members.map((member) => (
+                    <Link to={`/users/${member.userId}`} className='flex items-center gap-2' key={member.userId}>
+                      <Avatar>
+                        <AvatarImage src={member.avatarUrl ?? undefined} className='hover:brightness-90' />
+                        <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
+                      </Avatar>
 
-                    <div className='-space-y-0.5'>
-                      <p className='text-sm font-medium'>
-                        {member.firstName} {member.lastName}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>{member.email}</p>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <Link to={`/users/${me?.id}`} className='flex items-center gap-2'>
-                  <Avatar>
-                    <AvatarImage src={me?.avatar ?? undefined} className='hover:brightness-90' />
-                    <AvatarFallback>{getAvatarFallback(`${me?.firstName} ${me?.lastName}`)}</AvatarFallback>
-                  </Avatar>
-
-                  <div className='-space-y-0.5'>
-                    <p className='text-sm font-medium'>
-                      {me?.firstName} {me?.lastName}
-                    </p>
-                    <p className='text-xs text-muted-foreground'>{me?.email}</p>
-                  </div>
-                </Link>
-              )}
+                      <div className='-space-y-0.5'>
+                        <p className='text-sm font-medium'>
+                          {member.firstName} {member.lastName}
+                        </p>
+                        <p className='text-xs text-muted-foreground'>{member.email}</p>
+                      </div>
+                    </Link>
+                  ))
+                : null}
             </div>
           </div>
         </div>
