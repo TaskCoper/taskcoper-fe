@@ -27,7 +27,8 @@
       "leave": "Rời khỏi",
       "delete": "Xóa",
       "insert": "Chèn",
-      "download": "Tải xuống"
+      "download": "Tải xuống",
+      "back": "Quay lại"
     },
     "field": {
       "label": "Nhãn",
@@ -466,7 +467,12 @@
     "bookingNote": "Bạn chỉ có thể chọn các khoảng thời gian liên tiếp nhau. Vui lòng chọn {{slots}} khoảng thời gian liên tiếp để đặt lịch.",
     "completedProgress": "Hoàn thành {{progress}}%",
     "meetButton": "Meet",
-    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm"
+    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm",
+    "purchasedPackages": "Gói đã mua",
+    "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
+    "hasUpcomingMeeting": "Bạn đã có một lịch hẹn sắp tới",
+    "upcomingMeetingNote": "Hoàn thành buổi gặp dự kiến vào {{date}} trước khi đặt buổi tiếp theo.",
+    "viewMeeting": "Xem lịch hẹn"
   },
   "project": {
     "title": "Dự án của tôi",

@@ -257,6 +257,7 @@ export interface RevenueStats {
 
 export interface ProjectPermission {
   projectId: string
+  ownerId: string
   effectiveRoleNames: string[]
   roles: ProjectRole[]
   sections: SectionPermission[]

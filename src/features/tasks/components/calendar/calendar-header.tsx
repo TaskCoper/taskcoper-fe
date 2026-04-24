@@ -31,7 +31,7 @@ export default function CalendarHeader({
     <div className='flex items-center border-b shrink-0 gap-2 h-13 px-2.5'>
       <div className='flex items-center gap-2'>
         {user?.Role === 'Mentor' ? (
-          <Link to='schedules' className='block'>
+          <Link to='/calendar/schedules' className='block'>
             <Button size='sm' variant='outline' className='w-full justify-start gap-2'>
               <CalendarCogIcon />
               {t('schedule.button.viewSchedules')}

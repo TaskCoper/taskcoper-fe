@@ -25,9 +25,9 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
 
   if (isMentor && (!meeting.status || meeting.status === MeetingStatus.BOOKED)) {
     theme.block =
-      'border-violet-400 bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-md shadow-violet-500/20'
-    theme.dot = 'bg-violet-500 shadow-[0_0_8px_rgba(167,139,250,0.8)]'
-    theme.avatar = 'bg-violet-800 text-violet-100'
+      'border-orange-300 bg-gradient-to-br from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white shadow-md shadow-orange-400/15'
+    theme.dot = 'bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.6)]'
+    theme.avatar = 'bg-orange-700 text-orange-100'
   }
 
   const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`

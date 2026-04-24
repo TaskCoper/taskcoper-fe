@@ -36,6 +36,7 @@ export interface PurchasedMentorPackage extends MentorPackage {
   packageBookingId: string
   mentorUserId: string
   meetings: Meeting[]
+  projectOwnerId: string
   mentor: {
     email: string
     firstName: string

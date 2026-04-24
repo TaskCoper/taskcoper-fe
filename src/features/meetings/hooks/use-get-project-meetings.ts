@@ -3,7 +3,7 @@ import meetingService from '@/services/meeting.service'
 import { useQuery } from '@tanstack/react-query'
 
 export interface GetProjectMeetingsParams {
-  projectIdentifier: string
+  projectIdentifier?: string
   activeFrom: string
   activeTo: string
 }

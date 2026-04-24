@@ -1,4 +1,3 @@
-import { Separator } from '@/components/ui/separator'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import CalendarHeader, { type CalendarViewMode } from '@/features/tasks/components/calendar/calendar-header'
 import DayView from '@/features/tasks/components/calendar/day-view'
@@ -117,8 +116,6 @@ export default function CalendarViewContainer({
           <div className='px-4 pt-4'>
             <MiniCalendarSidebar selectedDate={currentDate} onDateSelect={handleDateSelect} />
           </div>
-
-          <Separator className='mt-2' />
 
           {sidebarContent}
         </div>

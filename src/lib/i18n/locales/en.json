@@ -27,7 +27,8 @@
       "leave": "Leave",
       "delete": "Delete",
       "insert": "Insert",
-      "download": "Download"
+      "download": "Download",
+      "back": "Back"
     },
     "field": {
       "label": "Label",
@@ -466,7 +467,12 @@
     "bookingNote": "You can only select consecutive time slots. Please select {{slots}} consecutive time slots to book a meeting.",
     "completedProgress": "Completed {{progress}}%",
     "meetButton": "Meet",
-    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm"
+    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm",
+    "purchasedPackages": "Purchased packages",
+    "selectPackageToBook": "Select your purchased package to book.",
+    "hasUpcomingMeeting": "You have an upcoming meeting",
+    "upcomingMeetingNote": "Complete the scheduled meeting on {{date}} before booking the next one.",
+    "viewMeeting": "View meeting"
   },
   "project": {
     "title": "My Projects",

@@ -261,6 +261,8 @@ export const queryKeys = {
     all: ['mentor-packages'] as const,
     my: () => [...queryKeys.mentorPackages.all, 'my'] as const,
     purchased: () => [...queryKeys.mentorPackages.all, 'purchased'] as const,
+    projectPurchased: (projectIdentifier?: string) =>
+      [...queryKeys.mentorPackages.purchased(), 'project', projectIdentifier] as const,
     purchasedDetail: (packageId?: string) => [...queryKeys.mentorPackages.purchased(), packageId] as const,
     list: ({ mentorId }: { mentorId?: string }) => [...queryKeys.mentorPackages.all, mentorId] as const,
     listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>

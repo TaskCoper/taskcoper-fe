@@ -21,9 +21,8 @@ import { AlertCircleIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface MentorScheduleDialogProps {
+export interface MentorScheduleContentProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
   selectedTimeSlots: SelectedTimeSlot[]
   onSelectedTimeSlotsChange: (selectedTimeSlots: SelectedTimeSlot[]) => void
   limitSlots?: number
@@ -31,13 +30,12 @@ interface MentorScheduleDialogProps {
   bookByProjectId: string | null
   packageBookingId: string | null
   packageSessionNumber: number | null
-  nextRule: PurchasedMentorPackageRule
   meetingId?: string
+  onSuccess: () => void
 }
 
-export default function MentorScheduleDialog({
+export function MentorScheduleContent({
   open,
-  onOpenChange,
   mentorUserId,
   selectedTimeSlots,
   onSelectedTimeSlotsChange,
@@ -45,9 +43,9 @@ export default function MentorScheduleDialog({
   bookByProjectId,
   packageBookingId,
   packageSessionNumber,
-  nextRule,
-  meetingId
-}: MentorScheduleDialogProps) {
+  meetingId,
+  onSuccess
+}: MentorScheduleContentProps) {
   const { user } = useAuthStore()
   const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({ packageId: packageBookingId ?? undefined })
   const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting({
@@ -55,8 +53,7 @@ export default function MentorScheduleDialog({
     mentorId: mentorUserId
   })
 
-  const { t, i18n } = useTranslation()
-  const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
+  const { t } = useTranslation()
 
   const today = new Date()
   const [selectedYear, setSelectedYear] = useState<number>(getYear(today))
@@ -170,7 +167,7 @@ export default function MentorScheduleDialog({
     })
   }, [methods, mentorUserId, bookByProjectId, packageBookingId, packageSessionNumber, user?.UserId, selectedTimeSlots])
 
-  const onSubmit = () => {
+  const handleSubmit = () => {
     if (meetingId) {
       const sortedSlots = [...selectedTimeSlots].sort(
         (a, b) => new Date(a.startTimeUtc).getTime() - new Date(b.startTimeUtc).getTime()
@@ -187,8 +184,8 @@ export default function MentorScheduleDialog({
         },
         {
           onSuccess: () => {
-            onOpenChange(false)
             onSelectedTimeSlotsChange([])
+            onSuccess()
           }
         }
       )
@@ -196,29 +193,24 @@ export default function MentorScheduleDialog({
     }
 
     bookMeeting(
-      {
-        body: methods.getValues()
-      },
+      { body: methods.getValues() },
       {
         onSuccess: () => {
-          onOpenChange(false)
           onSelectedTimeSlotsChange([])
+          onSuccess()
         }
       }
     )
   }
 
   const isPending = isBookingMeeting || isReschedulingMeeting
-
   const isSelectionFull = selectedTimeSlots.length === limitSlots
   const isSelectionStarted = selectedTimeSlots.length > 0
 
-  // Helper to check if a slot is adjacent to current selection
   const isAdjacent = (slot: { dayOfWeek: number; startTime: string; endTime: string }) => {
     if (selectedTimeSlots.length === 0) return true
     if (selectedTimeSlots[0].dayOfWeek !== slot.dayOfWeek) return false
 
-    // Check if it matches the start of the first slot or end of the last slot
     const startTimes = selectedTimeSlots.map((s) => s.startTime).sort()
     const endTimes = selectedTimeSlots.map((s) => s.endTime).sort()
 
@@ -227,6 +219,258 @@ export default function MentorScheduleDialog({
 
     return slot.endTime === firstStart || slot.startTime === lastEnd
   }
+
+  return (
+    <>
+      <div className='flex flex-col gap-4 bg-muted/40 rounded-lg p-4'>
+        <div className='flex items-center justify-end gap-3 flex-wrap'>
+          <Button size='sm' variant='outline' onClick={handleToday}>
+            {t('schedule.timeline.today')}
+          </Button>
+
+          <div className='flex items-center gap-1'>
+            <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
+              <ChevronLeftIcon />
+            </Button>
+
+            <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
+              <SelectTrigger size='sm' className='w-35 text-sm font-medium bg-background'>
+                <SelectValue>{currentWeekLabel}</SelectValue>
+              </SelectTrigger>
+              <SelectContent
+                side='bottom'
+                sideOffset={8}
+                className='max-h-[calc(var(--radix-select-content-available-height)-8px)]'
+              >
+                {weekOptions.map((w) => (
+                  <SelectItem key={w.value} value={w.value}>
+                    {w.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
+              <ChevronRightIcon />
+            </Button>
+          </div>
+
+          <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
+            <SelectTrigger size='sm' className='w-22.5 text-sm bg-background'>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent side='bottom' sideOffset={8}>
+              {yearOptions.map((y) => (
+                <SelectItem key={y} value={y.toString()}>
+                  {y}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {isLoadingSchedule || isLoadingMentorMeetings ? (
+          <div className='grid grid-cols-7 gap-2'>
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className='flex flex-col gap-2'>
+                <Skeleton className='h-10 rounded-lg' />
+                <Skeleton className='h-20 rounded-md' />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className='grid grid-cols-7 gap-2'>
+            {schedule.map((day, index) => {
+              const dayIsToday = isToday(day.date)
+              const isPastDay = day.date.getTime() < new Date().setHours(0, 0, 0, 0)
+
+              return (
+                <div key={index} className='flex flex-col gap-2'>
+                  <div
+                    className={cn(
+                      'text-center rounded-lg py-1 transition-colors border border-border',
+                      dayIsToday ? 'bg-primary text-primary-foreground' : 'bg-background/60'
+                    )}
+                  >
+                    <p className='text-xs font-medium'>{t(`schedule.timeline.${DAY_OF_WEEKS[index].key}`)}</p>
+                    <p className={cn('text-[10px] font-medium', dayIsToday ? 'text-white' : 'text-muted-foreground')}>
+                      ({format(day.date, 'dd/MM')})
+                    </p>
+                  </div>
+
+                  <div className='space-y-2 min-h-20'>
+                    {day.slots.map((slot) => {
+                      const isBooked = bookedSchedule[index].slots.some(
+                        (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc
+                      )
+
+                      const now = new Date()
+                      const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`
+                      const isPassedTime = dayIsToday && slot.startTimeUtc < currentTimeStr
+
+                      const isSelected = selectedTimeSlots.some(
+                        (s) =>
+                          s.startTime === slot.startTimeUtc &&
+                          s.endTime === slot.endTimeUtc &&
+                          s.dayOfWeek === slot.dayOfWeek
+                      )
+
+                      const isAdjacentSlot = isAdjacent({
+                        dayOfWeek: slot.dayOfWeek,
+                        startTime: slot.startTimeUtc,
+                        endTime: slot.endTimeUtc
+                      })
+
+                      const isDisabled =
+                        isBooked ||
+                        isPastDay ||
+                        isPassedTime ||
+                        (isSelectionStarted && selectedTimeSlots[0].dayOfWeek !== slot.dayOfWeek) ||
+                        (isSelectionFull && !isSelected) ||
+                        (!isSelected && isSelectionStarted && !isAdjacentSlot)
+
+                      return (
+                        <button
+                          key={`${slot.dayOfWeek}-${slot.startTimeUtc}`}
+                          type='button'
+                          disabled={isDisabled}
+                          onClick={() => {
+                            if (isDisabled) return
+
+                            if (isSelected) {
+                              const startTimes = selectedTimeSlots.map((s) => s.startTime).sort()
+                              const endTimes = selectedTimeSlots.map((s) => s.endTime).sort()
+                              const isEnd =
+                                slot.startTimeUtc === startTimes[0] || slot.endTimeUtc === endTimes[endTimes.length - 1]
+
+                              if (!isEnd && selectedTimeSlots.length > 2) {
+                                return
+                              }
+
+                              onSelectedTimeSlotsChange(
+                                selectedTimeSlots.filter(
+                                  (s) =>
+                                    s.startTime !== slot.startTimeUtc ||
+                                    s.endTime !== slot.endTimeUtc ||
+                                    s.dayOfWeek !== slot.dayOfWeek
+                                )
+                              )
+                              return
+                            }
+                            onSelectedTimeSlotsChange([
+                              ...selectedTimeSlots,
+                              {
+                                dayOfWeek: slot.dayOfWeek,
+                                startTime: slot.startTimeUtc,
+                                endTime: slot.endTimeUtc,
+                                startTimeUtc: combineDateTimeToUtc(day.date, slot.startTimeUtc),
+                                endTimeUtc: combineDateTimeToUtc(day.date, slot.endTimeUtc)
+                              }
+                            ])
+                          }}
+                          className={cn(
+                            'w-full p-2 rounded-md text-center transition-all duration-200 border',
+                            isDisabled
+                              ? 'bg-muted/50 border-muted text-muted-foreground cursor-not-allowed shadow-none'
+                              : 'border-dashed cursor-pointer hover:scale-[1.02] hover:shadow-sm bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400',
+                            isSelected && 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-400'
+                          )}
+                        >
+                          <p className='text-xs font-semibold leading-tight'>{formatTimeRange(slot)}</p>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        <div className='flex justify-center items-center gap-4 text-xs'>
+          <div className='flex items-center gap-1.5'>
+            <div className='size-2.5 rounded-full bg-emerald-500' />
+            <span className='text-muted-foreground'>{t('meeting.mentorSchedule.available')}</span>
+          </div>
+          <div className='flex items-center gap-1.5'>
+            <div className='size-2.5 rounded-full bg-muted-foreground/30' />
+            <span className='text-muted-foreground'>{t('meeting.mentorSchedule.booked')}</span>
+          </div>
+          <div className='flex items-center gap-1.5 text-blue-500'>
+            <div className='size-2.5 rounded-full bg-blue-500' />
+            <span className='font-medium'>{t('meeting.mentorSchedule.selected')}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className='bg-primary/5 p-4 border border-primary border-dashed rounded-md flex items-center gap-2'>
+        <AlertCircleIcon className='size-5 text-primary' />
+        <p className='text-sm text-primary'>
+          <span className='font-bold'>{t('purchasedPackage.note')}</span>{' '}
+          {t('purchasedPackage.bookingNote', { slots: limitSlots })}
+        </p>
+      </div>
+
+      {meetingId && (
+        <div className='space-y-2'>
+          <Label className='text-sm font-medium'>{t('meeting.detail.cancelReasonLabel')}</Label>
+          <Textarea
+            placeholder={t('meeting.detail.rescheduleReasonPlaceholder')}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            className='min-h-25'
+          />
+        </div>
+      )}
+
+      <div className='flex items-center gap-2 justify-end'>
+        <Button
+          variant='outline'
+          onClick={() => onSelectedTimeSlotsChange([])}
+          disabled={selectedTimeSlots.length === 0}
+        >
+          {t('dataTable.toolbar.reset')}
+        </Button>
+
+        <Button disabled={!isSelectionFull || isPending} onClick={handleSubmit}>
+          {isPending ? <Spinner /> : null}
+          {t('purchasedPackage.confirmBooking')}
+        </Button>
+      </div>
+    </>
+  )
+}
+
+interface MentorScheduleDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  selectedTimeSlots: SelectedTimeSlot[]
+  onSelectedTimeSlotsChange: (selectedTimeSlots: SelectedTimeSlot[]) => void
+  limitSlots?: number
+  mentorUserId: string
+  bookByProjectId: string | null
+  packageBookingId: string | null
+  packageSessionNumber: number | null
+  nextRule: PurchasedMentorPackageRule
+  meetingId?: string
+}
+
+export default function MentorScheduleDialog({
+  open,
+  onOpenChange,
+  mentorUserId,
+  selectedTimeSlots,
+  onSelectedTimeSlotsChange,
+  limitSlots = 1,
+  bookByProjectId,
+  packageBookingId,
+  packageSessionNumber,
+  nextRule,
+  meetingId
+}: MentorScheduleDialogProps) {
+  const { t, i18n } = useTranslation()
+  const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
+  const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -246,226 +490,18 @@ export default function MentorScheduleDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className='flex flex-col gap-4 bg-muted/40 rounded-lg p-4'>
-          <div className='flex items-center justify-end gap-3 flex-wrap'>
-            <Button size='sm' variant='outline' onClick={handleToday}>
-              {t('schedule.timeline.today')}
-            </Button>
-
-            <div className='flex items-center gap-1'>
-              <Button size='icon-sm' variant='outline' onClick={handlePrevWeek}>
-                <ChevronLeftIcon />
-              </Button>
-
-              <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
-                <SelectTrigger size='sm' className='w-35 text-sm font-medium bg-background'>
-                  <SelectValue>{currentWeekLabel}</SelectValue>
-                </SelectTrigger>
-                <SelectContent
-                  side='bottom'
-                  sideOffset={8}
-                  className='max-h-[calc(var(--radix-select-content-available-height)-8px)]'
-                >
-                  {weekOptions.map((w) => (
-                    <SelectItem key={w.value} value={w.value}>
-                      {w.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button size='icon-sm' variant='outline' onClick={handleNextWeek}>
-                <ChevronRightIcon />
-              </Button>
-            </div>
-
-            <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
-              <SelectTrigger size='sm' className='w-22.5 text-sm bg-background'>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent side='bottom' sideOffset={8}>
-                {yearOptions.map((y) => (
-                  <SelectItem key={y} value={y.toString()}>
-                    {y}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {isLoadingSchedule || isLoadingMentorMeetings ? (
-            <div className='grid grid-cols-7 gap-2'>
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} className='flex flex-col gap-2'>
-                  <Skeleton className='h-10 rounded-lg' />
-                  <Skeleton className='h-20 rounded-md' />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className='grid grid-cols-7 gap-2'>
-              {schedule.map((day, index) => {
-                const dayIsToday = isToday(day.date)
-                const isPastDay = day.date.getTime() < new Date().setHours(0, 0, 0, 0)
-
-                return (
-                  <div key={index} className='flex flex-col gap-2'>
-                    <div
-                      className={cn(
-                        'text-center rounded-lg py-1 transition-colors border border-border',
-                        dayIsToday ? 'bg-primary text-primary-foreground' : 'bg-background/60'
-                      )}
-                    >
-                      <p className='text-xs font-medium'>{t(`schedule.timeline.${DAY_OF_WEEKS[index].key}`)}</p>
-                      <p className={cn('text-[10px] font-medium', dayIsToday ? 'text-white' : 'text-muted-foreground')}>
-                        ({format(day.date, 'dd/MM')})
-                      </p>
-                    </div>
-
-                    <div className='space-y-2 min-h-20'>
-                      {day.slots.map((slot) => {
-                        const isBooked = bookedSchedule[index].slots.some(
-                          (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc
-                        )
-
-                        const now = new Date()
-                        const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`
-                        const isPassedTime = dayIsToday && slot.startTimeUtc < currentTimeStr
-
-                        const isSelected = selectedTimeSlots.some(
-                          (s) =>
-                            s.startTime === slot.startTimeUtc &&
-                            s.endTime === slot.endTimeUtc &&
-                            s.dayOfWeek === slot.dayOfWeek
-                        )
-
-                        const isAdjacentSlot = isAdjacent({
-                          dayOfWeek: slot.dayOfWeek,
-                          startTime: slot.startTimeUtc,
-                          endTime: slot.endTimeUtc
-                        })
-
-                        const isDisabled =
-                          isBooked ||
-                          isPastDay ||
-                          isPassedTime ||
-                          (isSelectionStarted && selectedTimeSlots[0].dayOfWeek !== slot.dayOfWeek) ||
-                          (isSelectionFull && !isSelected) ||
-                          (!isSelected && isSelectionStarted && !isAdjacentSlot)
-
-                        return (
-                          <button
-                            key={`${slot.dayOfWeek}-${slot.startTimeUtc}`}
-                            type='button'
-                            disabled={isDisabled}
-                            onClick={() => {
-                              if (isDisabled) return
-
-                              if (isSelected) {
-                                // When deselecting, we only allow deselecting from ends to keep it consecutive
-                                const startTimes = selectedTimeSlots.map((s) => s.startTime).sort()
-                                const endTimes = selectedTimeSlots.map((s) => s.endTime).sort()
-                                const isEnd =
-                                  slot.startTimeUtc === startTimes[0] ||
-                                  slot.endTimeUtc === endTimes[endTimes.length - 1]
-
-                                if (!isEnd && selectedTimeSlots.length > 2) {
-                                  // Prevent middle deselection if it breaks contiguity
-                                  return
-                                }
-
-                                onSelectedTimeSlotsChange(
-                                  selectedTimeSlots.filter(
-                                    (s) =>
-                                      s.startTime !== slot.startTimeUtc ||
-                                      s.endTime !== slot.endTimeUtc ||
-                                      s.dayOfWeek !== slot.dayOfWeek
-                                  )
-                                )
-                                return
-                              }
-                              onSelectedTimeSlotsChange([
-                                ...selectedTimeSlots,
-                                {
-                                  dayOfWeek: slot.dayOfWeek,
-                                  startTime: slot.startTimeUtc,
-                                  endTime: slot.endTimeUtc,
-                                  // startTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.startTimeUtc}Z`,
-                                  // endTimeUtc: `${format(day.date, 'yyyy-MM-dd')}T${slot.endTimeUtc}Z`
-                                  startTimeUtc: combineDateTimeToUtc(day.date, slot.startTimeUtc),
-                                  endTimeUtc: combineDateTimeToUtc(day.date, slot.endTimeUtc)
-                                }
-                              ])
-                            }}
-                            className={cn(
-                              'w-full p-2 rounded-md text-center transition-all duration-200 border',
-                              isDisabled
-                                ? 'bg-muted/50 border-muted text-muted-foreground cursor-not-allowed shadow-none'
-                                : 'border-dashed cursor-pointer hover:scale-[1.02] hover:shadow-sm bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400',
-                              isSelected && 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-400'
-                            )}
-                          >
-                            <p className='text-xs font-semibold leading-tight'>{formatTimeRange(slot)}</p>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-
-          <div className='flex justify-center items-center gap-4 text-xs'>
-            <div className='flex items-center gap-1.5'>
-              <div className='size-2.5 rounded-full bg-emerald-500' />
-              <span className='text-muted-foreground'>{t('meeting.mentorSchedule.available')}</span>
-            </div>
-            <div className='flex items-center gap-1.5'>
-              <div className='size-2.5 rounded-full bg-muted-foreground/30' />
-              <span className='text-muted-foreground'>{t('meeting.mentorSchedule.booked')}</span>
-            </div>
-            <div className='flex items-center gap-1.5 text-blue-500'>
-              <div className='size-2.5 rounded-full bg-blue-500' />
-              <span className='font-medium'>{t('meeting.mentorSchedule.selected')}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className='bg-primary/5 p-4 border border-primary border-dashed rounded-md flex items-center gap-2'>
-          <AlertCircleIcon className='size-5 text-primary' />
-          <p className='text-sm text-primary'>
-            <span className='font-bold'>{t('purchasedPackage.note')}</span>{' '}
-            {t('purchasedPackage.bookingNote', { slots: limitSlots })}
-          </p>
-        </div>
-
-        {meetingId && (
-          <div className='space-y-2'>
-            <Label className='text-sm font-medium'>{t('meeting.detail.cancelReasonLabel')}</Label>
-            <Textarea
-              placeholder={t('meeting.detail.rescheduleReasonPlaceholder')}
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className='min-h-25'
-            />
-          </div>
-        )}
-
-        <div className='flex items-center gap-2 justify-end'>
-          <Button
-            variant='outline'
-            onClick={() => onSelectedTimeSlotsChange([])}
-            disabled={selectedTimeSlots.length === 0}
-          >
-            {t('dataTable.toolbar.reset')}
-          </Button>
-
-          <Button disabled={!isSelectionFull || isPending} onClick={onSubmit}>
-            {isPending ? <Spinner /> : null}
-            {t('purchasedPackage.confirmBooking')}
-          </Button>
-        </div>
+        <MentorScheduleContent
+          open={open}
+          mentorUserId={mentorUserId}
+          selectedTimeSlots={selectedTimeSlots}
+          onSelectedTimeSlotsChange={onSelectedTimeSlotsChange}
+          limitSlots={limitSlots}
+          bookByProjectId={bookByProjectId}
+          packageBookingId={packageBookingId}
+          packageSessionNumber={packageSessionNumber}
+          meetingId={meetingId}
+          onSuccess={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
   )

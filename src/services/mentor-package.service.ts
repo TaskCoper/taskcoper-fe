@@ -49,6 +49,15 @@ class MentorPackageService {
     return data.value
   }
 
+  getProjectPurchasedMentorPackages = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<PurchasedMentorPackage>()
+    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(
+      `/v1/${this.baseUrl}/projects/${projectIdentifier}`
+    )
+
+    return data
+  }
+
   getMentorPackage = async ({ packageId }: { packageId?: string }) => {
     if (!packageId) return null
     const { data } = await api.get<BaseResponse<MentorPackageDetail>>(`/v1/${this.baseUrl}/${packageId}`)
