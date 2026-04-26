@@ -1,6 +1,7 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProjectLabelStats } from '@/features/labels/hooks/use-get-project-label-stats'
 import { useGetProjectPriorityStats } from '@/features/labels/hooks/use-get-project-priority-stats'
 import AddMilestonePopover from '@/features/milestones/components/add-milestone-popover'
@@ -13,7 +14,6 @@ import { useGetTaskStatusStats } from '@/features/tasks/hooks/use-get-task-statu
 import { useGetTasks } from '@/features/tasks/hooks/use-get-tasks'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { TaskPriorityLabel, type TaskRow } from '@/types/task.type'
@@ -34,7 +34,7 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
   const { t } = useTranslation()
   const location = useLocation()
   const { confirm } = useConfirmStore()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier })
 
   const { check } = useGetMyProjectPermissions({ projectIdentifier })
@@ -64,20 +64,12 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
         projectIdentifier,
         parentMilestoneIdentifier,
         onDeleteTask,
-        userId: user?.UserId,
+        userId: user?.id,
         searchParams: location.search,
         canToggleStatus,
         canDelete
       }),
-    [
-      projectIdentifier,
-      parentMilestoneIdentifier,
-      onDeleteTask,
-      user?.UserId,
-      location.search,
-      canToggleStatus,
-      canDelete
-    ]
+    [projectIdentifier, parentMilestoneIdentifier, onDeleteTask, user?.id, location.search, canToggleStatus, canDelete]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,

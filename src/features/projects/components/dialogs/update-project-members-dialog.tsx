@@ -10,9 +10,10 @@ import {
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useAuthStore, type UserPayload } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ProjectMember } from '@/types/project.type'
+import type { User } from '@/types/user.type'
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { Trash2Icon, UserCircleIcon } from 'lucide-react'
@@ -38,7 +39,7 @@ const getColumns = ({
   onDeleteMember,
   isDeletingMember
 }: {
-  user: UserPayload | null
+  user: User | null | undefined
   isCurrentUserMain: boolean
   t: TFunction
   identifier: string
@@ -62,7 +63,7 @@ const getColumns = ({
           <div>
             <p className='font-medium'>
               {row.original.fullName}{' '}
-              {user?.UserId === row.original.userId ? (
+              {user?.id === row.original.userId ? (
                 <span className='text-xs text-muted-foreground'>({t('common.ui.me')})</span>
               ) : null}
             </p>
@@ -138,7 +139,7 @@ const getColumns = ({
     columns.push({
       id: 'actions',
       cell: ({ row }) => {
-        if (row.original.userId !== user?.UserId) {
+        if (row.original.userId !== user?.id) {
           return (
             <div className='flex justify-center'>
               <Button
@@ -181,7 +182,7 @@ export default function UpdateProjectMembersDialog({
   children
 }: UpdateProjectMembersDialogProps) {
   const [open, setOpen] = useState(false)
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
   const { members } = useGetProjectMembers({ identifier })
   const { toggleEditor, isTogglingEditor } = useToggleEditor({ identifier })

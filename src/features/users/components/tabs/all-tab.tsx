@@ -8,7 +8,6 @@ import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-m
 import UpdateMentorDescriptionDialog from '@/features/mentors/components/dialogs/update-mentor-description-dialog'
 import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
 import MentorSchedule from '@/features/schedules/components/mentor-schedule'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { UserDetail } from '@/types/user.type'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, EditIcon } from 'lucide-react'
@@ -24,12 +23,11 @@ interface AllTabProps {
 
 export default function AllTab({ userDetail }: AllTabProps) {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
-  const { me } = useGetMe()
+  const { me: user } = useGetMe()
 
   const isMentor = userDetail?.role === 'Mentor'
-  const isHidden = user?.UserId === userDetail?.id
-  const isViewingOwnProfile = me?.id === userDetail?.id
+  const isViewingOwnProfile = user?.id === userDetail?.id
+  const isHidden = isViewingOwnProfile
 
   const [isExpanded, setIsExpanded] = useState(false)
   const [needsCollapse, setNeedsCollapse] = useState(false)

@@ -2,7 +2,7 @@ import InfiniteSelect from '@/components/infinite-select'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import type { ScheduleSlot } from '@/types/schedule.type'
@@ -39,7 +39,7 @@ export default function BookMeetingForm({
   fetchNextProjects,
   onSearchProjects
 }: BookMeetingFormProps) {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { clearErrors, control, setValue } = useFormContext<BookMeetingFormValues>()
 
   const { t } = useTranslation()
@@ -74,13 +74,13 @@ export default function BookMeetingForm({
   }, [activeDay, activeSlot, setValue])
 
   useEffect(() => {
-    if (user?.UserId) {
-      setValue('bookByUserId', user.UserId, {
+    if (user?.id) {
+      setValue('bookByUserId', user.id, {
         shouldDirty: false,
         shouldValidate: true
       })
     }
-  }, [setValue, user?.UserId])
+  }, [setValue, user?.id])
 
   const isSlotBooked = (dayIndex: number, slot: ScheduleSlot) =>
     bookedSchedule[dayIndex]?.slots.some((b) => b.startTimeUtc === slot.startTimeUtc) ?? false

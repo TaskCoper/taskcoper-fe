@@ -1,6 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { useAuthStore } from '@/lib/zustand/auth.store'
-import { getUserType } from '@/shared/utils'
+import { getRoleHomePath, getUserType } from '@/shared/utils'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
@@ -9,8 +8,7 @@ interface AuthGuardLayoutProps {
 }
 
 export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) {
-  const { isAuthenticated, isVerificationRequired, user } = useAuthStore()
-  const { me, isGettingMe } = useGetMe()
+  const { me, isGettingMe, isAuthenticated, isVerificationRequired } = useGetMe()
 
   // useSyncTimezone(me)
 
@@ -18,7 +16,7 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
 
   const isOnVerifyPage = location.pathname === '/verify-email'
 
-  if (isAuthenticated && isGettingMe) {
+  if (isGettingMe) {
     return (
       <div className='h-screen flex items-center justify-center'>
         <img src={logo} alt='TaskCoper' className='h-16 w-auto' />
@@ -31,11 +29,7 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   }
 
   if (requiresAuth) {
-    if (!isAuthenticated) {
-      return <Navigate to='/sign-in' replace />
-    }
-
-    if (!me && !isOnVerifyPage) {
+    if (!isAuthenticated || (!me && !isOnVerifyPage)) {
       return <Navigate to='/sign-in' replace />
     }
 
@@ -43,11 +37,7 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   }
 
   if (isAuthenticated && me && !isVerificationRequired && !isOnVerifyPage) {
-    const userType = getUserType(user)
-
-    if (userType === 'superAdmin') return <Navigate to='/dashboard' replace />
-    if (userType === 'orgAdmin') return <Navigate to='/manage' replace />
-    return <Navigate to='/projects' replace />
+    return <Navigate to={getRoleHomePath(getUserType(me))} replace />
   }
 
   return <Outlet />

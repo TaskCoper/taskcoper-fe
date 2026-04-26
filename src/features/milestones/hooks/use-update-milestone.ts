@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import milestoneService from '@/services/milestone.service'
 import type { MilestoneWithTasks, ParentMilestone } from '@/types/milestone.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -22,7 +22,7 @@ export const useUpdateMilestone = ({
 } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: updateMilestone, isPending: isUpdatingMilestone } = useMutation({
     mutationFn: milestoneService.updateMilestone,
@@ -86,7 +86,7 @@ export const useUpdateMilestone = ({
       }
 
       if (projectIdentifier) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
     }
   })

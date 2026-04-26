@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { addTaskLabelSchema, type AddTaskLabelFormValues } from '@/features/tasks/validations'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { TaskLabel } from '@/types/label.type'
 import type { TaskDetail } from '@/types/task.type'
@@ -26,7 +26,7 @@ export const useAddTaskLabel = ({
 }: UseAddTaskLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { labels } = useGetProjectLabels({ projectIdentifier, enabled })
 
   const methods = useForm<AddTaskLabelFormValues>({
@@ -84,7 +84,7 @@ export const useAddTaskLabel = ({
         queryKey: queryKeys.projects.labelStats(projectIdentifier, parentMilestoneIdentifier)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
     }
   })
 

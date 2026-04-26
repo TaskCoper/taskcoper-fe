@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import PurchasedMentorPackageCard from '@/features/mentor-packages/components/purchased-mentor-package-card'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 const responsiveColSpan = 'col-span-12 sm:col-span-6 md:col-span-4'
 
@@ -38,8 +39,10 @@ export default function PurchaseHistoryPage() {
         {purchasedMentorPackages.value.totalCount ? (
           <div className='grid grid-cols-12 gap-6'>
             {purchasedMentorPackages.value.items.map((pkg) => (
-              <div key={pkg.id} className={responsiveColSpan}>
-                <PurchasedMentorPackageCard mentorPackage={pkg} />
+              <div key={pkg.packageBookingId} className={responsiveColSpan}>
+                <Link to={`packages/${pkg.packageBookingId}`}>
+                  <PurchasedMentorPackageCard mentorPackage={pkg} />
+                </Link>
               </div>
             ))}
           </div>

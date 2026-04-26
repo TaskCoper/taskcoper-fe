@@ -10,10 +10,10 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import TaskCard from '@/features/tasks/components/task-card'
 import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigned-tasks'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,
@@ -38,7 +38,7 @@ interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar>
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
   const { t } = useTranslation()
   const { identifier } = useParams<{ identifier: string }>()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const location = useLocation()
 
   const navMain = useMemo(
@@ -130,7 +130,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
 
   const { assignedTasks, isLoadingAssignedTasks } = useGetMyAssignedTasks({
     projectIdentifier: identifier,
-    userId: user?.UserId,
+    userId: user?.id,
     enabled:
       activeItem.hasSecondSidebar && location.pathname.split('/').includes('milestones') && can('TASKS', 'canRead')
   })

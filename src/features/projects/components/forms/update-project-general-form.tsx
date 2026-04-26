@@ -1,12 +1,12 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateProjectFormValues } from '../../validations'
 
 export default function UpdateProjectGeneralForm() {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
   const { control } = useFormContext<UpdateProjectFormValues>()
 
@@ -84,7 +84,7 @@ export default function UpdateProjectGeneralForm() {
         )}
       />
 
-      {user?.OrganizationId ? (
+      {user?.organizationId ? (
         <Controller
           name='schoolSubject'
           control={control}

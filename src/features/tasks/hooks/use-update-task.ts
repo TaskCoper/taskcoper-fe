@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { TaskDetail } from '@/types/task.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,7 +18,7 @@ interface UseUpdateTaskProps {
 export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<UpdateTaskFormValues>({
     resolver: zodResolver(updateTaskSchema(t))
@@ -86,8 +86,8 @@ export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier 
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
-      if (identifier && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.UserId) })
+      if (identifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
       }
     }
   })

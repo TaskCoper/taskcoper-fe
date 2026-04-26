@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import { getUserType } from '@/shared/utils'
 import { GraduationCap, XIcon } from 'lucide-react'
@@ -13,15 +12,14 @@ export default function BecomeMentorWidget() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
 
-  const { user: jwtUser } = useAuthStore()
   const { me, isGettingMe } = useGetMe()
   const { dismiss, isDismissed } = useMentorWidgetStore()
 
-  const userType = getUserType(jwtUser)
+  const userType = getUserType(me)
   const isMentor = me?.role?.toLowerCase() === 'mentor'
   const isAtRoute = pathname.startsWith('/applications')
 
-  if (!jwtUser || userType !== 'user' || isGettingMe || isMentor || isDismissed() || isAtRoute) {
+  if (!me || userType !== 'user' || isGettingMe || isMentor || isDismissed() || isAtRoute) {
     return null
   }
 

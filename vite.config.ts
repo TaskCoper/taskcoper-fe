@@ -7,7 +7,16 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    port: 3000
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'https://taskcoper-api.bentran1vn.com',
+        changeOrigin: true,
+        // CRITICAL: Tells the proxy to replace the backend's domain with localhost
+        // in the Set-Cookie header so your browser accepts it.
+        cookieDomainRewrite: 'localhost'
+      }
+    }
   },
   resolve: {
     alias: {

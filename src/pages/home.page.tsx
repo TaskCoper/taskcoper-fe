@@ -11,7 +11,6 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   ArrowRight,
@@ -101,8 +100,7 @@ export default function HomePage() {
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
   const { me, isGettingMe } = useGetMe()
-  const { user } = useAuthStore()
-  const { org } = useGetOrg({ orgId: user?.OrganizationId })
+  const { org } = useGetOrg({ orgId: me?.organizationId })
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
   return (
@@ -247,10 +245,10 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className='flex-1 flex items-center justify-center pt-14 sm:pt-16 pb-4 relative'>
           {/* CONSTRAINT CONTAINER: Keeps cards close to text on large screens */}
-          <div className='w-full max-w-[1600px] mx-auto h-full relative flex items-center justify-center'>
+          <div className='w-full max-w-400 mx-auto h-full relative flex items-center justify-center'>
             {/* Decorative Orbs */}
             <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
+              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 sm:w-225 h-150 bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
             </div>
 
             {/* --- LEFT SIDE CARDS (Hidden on screens smaller than 2xl) --- */}

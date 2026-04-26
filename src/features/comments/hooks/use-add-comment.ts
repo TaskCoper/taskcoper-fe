@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -17,7 +17,7 @@ interface UseAddCommentProps {
 export const useAddComment = ({ taskId, identifier, milestoneIdentifier }: UseAddCommentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<AddTaskCommentFormValues>({
     resolver: zodResolver(addTaskCommentSchema(t))
@@ -51,7 +51,7 @@ export const useAddComment = ({ taskId, identifier, milestoneIdentifier }: UseAd
       }
 
       if (identifier) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.UserId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
       }
     }
   })

@@ -17,6 +17,7 @@ import AssigneePopover from '@/features/assignees/components/assignee-popover'
 import { useGetTaskMembers } from '@/features/assignees/hooks/use-get-task-members'
 import AttachmentPopover from '@/features/attachments/components/attachment-popover'
 import { useGetAttachments } from '@/features/attachments/hooks/use-get-attachments'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import CommentCard from '@/features/comments/components/comment-card'
 import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
@@ -41,7 +42,6 @@ import { useToggleWatchTask } from '@/features/tasks/hooks/use-toggle-watch-task
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { TaskPriorityLabel } from '@/types/task.type'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
@@ -75,7 +75,7 @@ export default function TaskDialogPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t, i18n } = useTranslation()
   const { identifier, milestoneIdentifier, taskIdentifier } = useParams<{
     identifier: string
@@ -113,7 +113,7 @@ export default function TaskDialogPage() {
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
 
   const isWatchingTask =
-    taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.UserId) !== undefined
+    taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.id) !== undefined
 
   const {
     methods: updateTaskMethods,

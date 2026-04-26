@@ -653,7 +653,7 @@ export default function UpdateProjectRoleForm() {
 
             return (
               <AccordionItem key={permission.sectionKey} value={`section-${permission.sectionKey}`} className='px-3'>
-                <AccordionTrigger className='py-3 hover:no-underline'>
+                <AccordionTrigger className='py-3'>
                   <span className='inline-flex items-center gap-2 font-medium'>
                     <SectionIcon className='size-4 text-primary' />
                     {t(SectionKeyLabel[permission.sectionKey])}
@@ -674,7 +674,7 @@ export default function UpdateProjectRoleForm() {
                           className='px-3 last:border-b-0'
                         >
                           <div className='flex items-center justify-between gap-3 w-full'>
-                            <AccordionTrigger className='py-2.5 hover:no-underline flex-1' displayIcon={false}>
+                            <AccordionTrigger className='py-2.5 flex-1' displayIcon={false}>
                               <p className='text-sm'>{t(ActionKeyLabel[action])}</p>
                             </AccordionTrigger>
 

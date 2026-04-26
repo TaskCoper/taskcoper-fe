@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { TaskMember } from '@/types/task.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -15,7 +15,7 @@ interface UseToggleWatchTaskParams {
 export const useToggleWatchTask = ({ projectIdentifier, milestoneIdentifier }: UseToggleWatchTaskParams = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutateAsync: toggleWatchTask, isPending: isTogglingWatchTask } = useMutation({
     mutationFn: taskService.toggleWatchTask,
@@ -25,7 +25,7 @@ export const useToggleWatchTask = ({ projectIdentifier, milestoneIdentifier }: U
 
       if (previousData && user) {
         // if user is already a task member, skip optimistic update
-        const isActualMember = previousData.value.items.some((m) => m.userId === user.UserId && m.isMemberInTask)
+        const isActualMember = previousData.value.items.some((m) => m.userId === user.id && m.isMemberInTask)
         if (isActualMember) return { previousData, taskId }
 
         queryClient.setQueryData<BasePaginationResponse<TaskMember>>(queryKeys.tasks.members(taskId), (old) => {
@@ -33,10 +33,10 @@ export const useToggleWatchTask = ({ projectIdentifier, milestoneIdentifier }: U
 
           if (isWatching) {
             const newWatcher: TaskMember = {
-              userId: user.UserId,
+              userId: user.id,
               firstName: '',
               lastName: '',
-              email: user.Email,
+              email: user.email,
               avatar: null,
               isMemberInTask: false
             }
@@ -51,7 +51,7 @@ export const useToggleWatchTask = ({ projectIdentifier, milestoneIdentifier }: U
             }
           }
 
-          const filtered = old.value.items.filter((m) => !(m.userId === user.UserId && !m.isMemberInTask))
+          const filtered = old.value.items.filter((m) => !(m.userId === user.id && !m.isMemberInTask))
 
           return {
             ...old,

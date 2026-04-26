@@ -2,8 +2,8 @@ import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { TaskMember, TaskPreview } from '@/types/task.type'
@@ -48,7 +48,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
     const location = useLocation()
     const navigate = useNavigate()
 
-    const { user } = useAuthStore()
+    const { me: user } = useGetMe()
     const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
 
     const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
@@ -61,7 +61,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
       parentMilestoneIdentifier: milestoneIdentifier
     })
 
-    const isWatchingTask = task.members.find((x) => !x.isMemberInTask && x.userId === user?.UserId) !== undefined
+    const isWatchingTask = task.members.find((x) => !x.isMemberInTask && x.userId === user?.id) !== undefined
 
     const isDisplayIcons =
       isWatchingTask ||

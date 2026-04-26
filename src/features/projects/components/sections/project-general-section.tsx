@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { BookOpenIcon, MailIcon, PhoneIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import UpdateProjectGeneralDialog from '../dialogs/update-project-general-dialog'
@@ -22,7 +22,7 @@ export default function ProjectGeneralSection({
   isCurrentUserMain
 }: ProjectGeneralSectionProps) {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const getItems = () => {
     return [
@@ -41,7 +41,7 @@ export default function ProjectGeneralSection({
         value: teamEmail,
         icon: MailIcon
       },
-      ...(user?.OrganizationId
+      ...(user?.organizationId
         ? [
             {
               label: t('project.info.schoolSubject'),

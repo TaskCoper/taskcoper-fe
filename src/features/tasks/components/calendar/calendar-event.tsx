@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME } from '@/features/tasks/constants'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { format } from 'date-fns'
@@ -18,16 +18,16 @@ interface CalendarEventProps {
 
 export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
-  const isMentor = meeting.mentorUserId === user?.UserId
+  const isMentor = meeting.mentorUserId === user?.id
   const theme = getMeetingStatusTheme(meeting.status)
 
   if (isMentor && (!meeting.status || meeting.status === MeetingStatus.BOOKED)) {
     theme.block =
-      'border-violet-400 bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-md shadow-violet-500/20'
-    theme.dot = 'bg-violet-500 shadow-[0_0_8px_rgba(167,139,250,0.8)]'
-    theme.avatar = 'bg-violet-800 text-violet-100'
+      'border-orange-300 bg-gradient-to-br from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white shadow-md shadow-orange-400/15'
+    theme.dot = 'bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.6)]'
+    theme.avatar = 'bg-orange-700 text-orange-100'
   }
 
   const mentorFullName = `${meeting.mentor.firstName} ${meeting.mentor.lastName}`

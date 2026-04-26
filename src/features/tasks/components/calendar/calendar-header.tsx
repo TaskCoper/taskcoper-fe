@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { CalendarCogIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -25,13 +25,13 @@ export default function CalendarHeader({
   onToday
 }: CalendarHeaderProps) {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   return (
     <div className='flex items-center border-b shrink-0 gap-2 h-13 px-2.5'>
       <div className='flex items-center gap-2'>
-        {user?.Role === 'Mentor' ? (
-          <Link to='schedules' className='block'>
+        {user?.role === 'Mentor' ? (
+          <Link to='/calendar/schedules' className='block'>
             <Button size='sm' variant='outline' className='w-full justify-start gap-2'>
               <CalendarCogIcon />
               {t('schedule.button.viewSchedules')}
