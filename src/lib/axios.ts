@@ -1,7 +1,7 @@
 import config from '@/shared/config'
+import { clearAllUserPreferences } from '@/shared/utils'
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import i18n from './i18n/i18n'
-import { useAuthStore } from './zustand/auth.store'
 
 interface ApiResponse {
   isSuccess: boolean
@@ -31,11 +31,13 @@ export interface ErrorResponse {
   title: string
   status: number
   detail: string
+  messageCode: string
   errors: Record<string, unknown>[] | null
 }
 
 export const api = axios.create({
   baseURL: `${config.baseURL}/api`,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json'
@@ -68,58 +70,45 @@ api.interceptors.request.use((config) => {
   config.headers['Accept-Language'] = currentLanguage
   config.headers['X-Timezone'] = timezone
 
-  const { accessToken } = useAuthStore.getState()
-  if (accessToken && !config.url?.includes('/users/refresh_token')) {
-    config.headers.Authorization = `Bearer ${accessToken}`
-  }
-
   return config
 })
 
-const refreshAccessToken = async (): Promise<string | null> => {
-  const { refreshToken, accessToken } = useAuthStore.getState()
-  if (!refreshToken || !accessToken) {
-    return null
-  }
-
+const refreshAccessToken = async (): Promise<boolean> => {
   try {
-    const { data } = await axios.post<
-      BaseResponse<{
-        accessToken: string
-        refreshToken: string
-      }>
-    >(
+    await axios.post(
       `${config.baseURL}/api/v1/users/refresh_token`,
-      { accessToken, refreshToken },
+      {},
       {
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json'
         }
       }
     )
 
-    useAuthStore.getState().updateTokens({
-      accessToken: data.value.accessToken,
-      refreshToken: data.value.refreshToken
-    })
-
-    return data.value.accessToken
+    return true
   } catch (err) {
-    console.error('Token refresh failed', err)
-    useAuthStore.getState().signOut()
-    return null
+    const error = err as AxiosError<ErrorResponse>
+
+    // If refresh token is invalid => redirect to sign in page
+    if (error.response?.data?.messageCode === 'InvalidRefreshToken') {
+      clearAllUserPreferences()
+      window.location.href = '/sign-in'
+    }
+
+    return false
   }
 }
 
 let isRefreshing = false
-let refreshSubscribers: ((token: string) => void)[] = []
+let refreshSubscribers: ((error: AxiosError | null) => void)[] = []
 
-const subscribeTokenRefresh = (cb: (token: string) => void) => {
+const subscribeTokenRefresh = (cb: (error: AxiosError | null) => void) => {
   refreshSubscribers.push(cb)
 }
 
-const onRefreshed = (token: string) => {
-  refreshSubscribers.forEach((cb) => cb(token))
+const onRefreshed = (error: AxiosError | null = null) => {
+  refreshSubscribers.forEach((cb) => cb(error))
   refreshSubscribers = []
 }
 
@@ -127,31 +116,32 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
+    const status = error.response?.status
+    const messageCode = (error.response?.data as ErrorResponse)?.messageCode
 
-    // TODO: need more check instead of just the status
-    const isUnauthorized = error.response?.status === 401
-
-    // 2. IMPORTANT: Don't try to refresh if the failed request WAS the refresh token endpoint
+    const isExpiredAccessToken = status === 401 && messageCode === 'ExpiredAccessToken'
     const isRefreshRequest = originalRequest.url?.includes('/users/refresh_token')
 
-    if (!originalRequest || !isUnauthorized || isRefreshRequest) {
-      if (isRefreshRequest) {
-        useAuthStore.getState().signOut()
-      }
+    if (!originalRequest || !isExpiredAccessToken || isRefreshRequest) {
       return Promise.reject(error)
     }
 
     if (originalRequest._retry) {
-      useAuthStore.getState().signOut()
       return Promise.reject(error)
     }
 
     originalRequest._retry = true
 
+    // If a refresh is already in progress, wait for it to finish then retry
     if (isRefreshing) {
-      return new Promise((resolve) => {
-        subscribeTokenRefresh((token) => {
-          originalRequest.headers.Authorization = `Bearer ${token}`
+      return new Promise((resolve, reject) => {
+        subscribeTokenRefresh((err) => {
+          // Updated: Reject the promise if the refresh failed
+          if (err) {
+            return reject(err)
+          }
+          // After the token is refreshed, retry the original request.
+          // The browser will automatically use the newly set cookie.
           resolve(api(originalRequest))
         })
       })
@@ -159,18 +149,20 @@ api.interceptors.response.use(
 
     isRefreshing = true
 
-    const newToken = await refreshAccessToken()
+    const isRefreshSuccessful = await refreshAccessToken()
 
     isRefreshing = false
 
-    if (!newToken) {
-      window.location.href = '/'
+    if (!isRefreshSuccessful) {
+      // Notify queued requests that the refresh failed
+      onRefreshed(error)
       return Promise.reject(error)
     }
 
-    onRefreshed(newToken)
-    originalRequest.headers.Authorization = `Bearer ${newToken}`
+    // Notify queued requests of success
+    onRefreshed(null)
 
+    // Retry the original request. The browser will automatically use the newly set cookie.
     return api(originalRequest)
   }
 )

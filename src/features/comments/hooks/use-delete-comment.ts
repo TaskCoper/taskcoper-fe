@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { Comment } from '@/types/comment.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -15,7 +15,7 @@ interface UseDeleteCommentProps {
 export const useDeleteComment = ({ projectIdentifier, parentMilestoneIdentifier }: UseDeleteCommentProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: deleteComment, isPending: isDeletingComment } = useMutation({
     mutationFn: taskService.deleteComment,
@@ -59,7 +59,7 @@ export const useDeleteComment = ({ projectIdentifier, parentMilestoneIdentifier 
         queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
     }
   })
 

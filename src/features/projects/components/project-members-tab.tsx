@@ -1,9 +1,9 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import type { ProjectMember } from '@/types/project.type'
@@ -23,7 +23,7 @@ interface ProjectMembersTabProps {
 
 export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersTabProps) {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { confirm } = useConfirmStore()
 
   const { projectRoles, isLoadingProjectRoles } = useGetProjectRoles({ identifier: projectIdentifier })
@@ -55,7 +55,7 @@ export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersT
     () =>
       getColumns({
         projectIdentifier,
-        currentUserId: user?.UserId,
+        currentUserId: user?.id,
         roles: projectRoles.value.items,
         onUpdateRole: (userId, roleIds) =>
           updateMemberRoles({ userId, roleIds, projectIdentifier: projectIdentifier! }),
@@ -64,7 +64,7 @@ export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersT
         isDeletingMember
       }),
     [
-      user?.UserId,
+      user?.id,
       projectRoles,
       updateMemberRoles,
       projectIdentifier,

@@ -9,6 +9,7 @@ interface MentorWidgetState {
   dismissedAt: number | null
   dismiss: () => void
   isDismissed: () => boolean
+  clearAll: () => void
 }
 
 export const useMentorWidgetStore = create<MentorWidgetState>()(
@@ -20,6 +21,9 @@ export const useMentorWidgetStore = create<MentorWidgetState>()(
         const { dismissedAt } = get()
         if (!dismissedAt) return false
         return Date.now() - dismissedAt < WEEK
+      },
+      clearAll: () => {
+        set({ dismissedAt: null })
       }
     }),
     {

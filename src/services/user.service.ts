@@ -80,7 +80,7 @@ class UserService {
       city: me.city,
       state: me.state,
       timeZone,
-      domainIds: me.domains.map((d) => d.id)
+      domainIds: me.domains.map((d: { id: string }) => d.id)
     }
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
 

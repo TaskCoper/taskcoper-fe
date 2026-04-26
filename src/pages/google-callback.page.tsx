@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useVerifyGoogleCallback } from '@/features/users/hooks/use-verify-google-callback'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn } from '@/shared/utils'
 import { CalendarIcon, CheckCircle2Icon, Loader2Icon, XCircleIcon } from 'lucide-react'
 import { useEffect } from 'react'
@@ -63,7 +63,7 @@ function StatusCard({ status }: { status: Status }) {
 
 export default function GoogleCallbackPage() {
   const navigate = useNavigate()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
   const { verifyGoogleCallback, isVerifyingGoogleCallback, isGoogleCallbackSuccess, isGoogleCallbackError } =
     useVerifyGoogleCallback()
@@ -78,12 +78,12 @@ export default function GoogleCallbackPage() {
         { code },
         {
           onSuccess: () => {
-            setTimeout(() => navigate(`/users/${user?.UserId}`, { replace: true }), 1500)
+            setTimeout(() => navigate(`/users/${user?.id}`, { replace: true }), 1500)
           }
         }
       )
     }
-  }, [verifyGoogleCallback, navigate, user?.UserId])
+  }, [verifyGoogleCallback, navigate, user?.id])
 
   return (
     <div className='bg-dot relative flex h-screen w-full items-center justify-center p-4'>

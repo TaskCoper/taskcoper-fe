@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import notificationService from '@/services/notification.service'
 import { useQuery } from '@tanstack/react-query'
 
@@ -8,16 +8,16 @@ interface UseGetUnreadCountOptions {
 }
 
 export const useGetUnreadCount = ({ enabled = true }: UseGetUnreadCountOptions = {}) => {
-  const { user } = useAuthStore()
+  const { me: user, isAuthenticated } = useGetMe()
 
   const {
     data: unreadCount = 0,
     isLoading: isLoadingUnreadCount,
     error
   } = useQuery({
-    queryKey: queryKeys.notifications.unreadCount.byUser(user?.UserId),
+    queryKey: queryKeys.notifications.unreadCount.byUser(user?.id),
     queryFn: () => notificationService.getUnreadCount(),
-    enabled
+    enabled: enabled && isAuthenticated
   })
 
   return { unreadCount, isLoadingUnreadCount, error }

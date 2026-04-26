@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import projectService from '@/services/project.service'
 import type { Label } from '@/types/label.type'
 import type { TaskDetail } from '@/types/task.type'
@@ -20,7 +20,7 @@ export const useDeleteProjectLabel = ({
   parentMilestoneIdentifier
 }: UseDeleteProjectLabelProps) => {
   const queryClient = useQueryClient()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
 
   const { mutate: deleteProjectLabel, isPending: isDeletingProjectLabel } = useMutation({
@@ -82,7 +82,7 @@ export const useDeleteProjectLabel = ({
         queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })

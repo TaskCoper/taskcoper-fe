@@ -5,12 +5,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useBookMeeting } from '@/features/meetings/hooks/use-book-meeting'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import { useRescheduleMeeting } from '@/features/meetings/hooks/use-reschedule-meeting'
 import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
@@ -46,7 +46,7 @@ export function MentorScheduleContent({
   meetingId,
   onSuccess
 }: MentorScheduleContentProps) {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({ packageId: packageBookingId ?? undefined })
   const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting({
     packageId: packageBookingId ?? undefined,
@@ -159,13 +159,13 @@ export function MentorScheduleContent({
       bookByProjectId,
       packageBookingId,
       packageSessionNumber,
-      bookByUserId: user?.UserId,
+      bookByUserId: user?.id,
       bookingTimeSlots: selectedTimeSlots.map((slot) => ({
         startTimeUtc: slot.startTimeUtc,
         endTimeUtc: slot.endTimeUtc
       }))
     })
-  }, [methods, mentorUserId, bookByProjectId, packageBookingId, packageSessionNumber, user?.UserId, selectedTimeSlots])
+  }, [methods, mentorUserId, bookByProjectId, packageBookingId, packageSessionNumber, user?.id, selectedTimeSlots])
 
   const handleSubmit = () => {
     if (meetingId) {

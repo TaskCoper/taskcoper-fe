@@ -16,9 +16,9 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import { MentorScheduleContent } from '@/features/schedules/components/mentor-schedule-dialog'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
 import { MeetingStatus } from '@/types/meeting.type'
 import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
@@ -44,7 +44,7 @@ export default function BookMeetingFromCalendarDialog({
   packages
 }: BookMeetingFromCalendarDialogProps) {
   const { t, i18n } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
 
@@ -153,7 +153,7 @@ export default function BookMeetingFromCalendarDialog({
         {!isScheduleStep && (
           <div className='grid grid-cols-3 gap-4 mt-2'>
             {packages
-              .filter((x) => x.projectOwnerId === user?.UserId)
+              .filter((x) => x.projectOwnerId === user?.id)
               .map((pkg) => {
                 const completed =
                   pkg.meetings?.filter((m) => m.status === MeetingStatus.COMPLETED && !m.parentId).length ?? 0

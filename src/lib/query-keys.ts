@@ -196,7 +196,7 @@ export const queryKeys = {
   },
   // Organizations
   organizations: {
-    detail: (organizationId?: string) => ['organization', organizationId] as const,
+    detail: (organizationId?: string | null) => ['organization', organizationId] as const,
     stats: () => ['organization-stats'] as const
   },
   // Roles

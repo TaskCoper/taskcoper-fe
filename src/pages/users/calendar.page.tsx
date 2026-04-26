@@ -4,11 +4,11 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyMeetings } from '@/features/meetings/hooks/use-get-my-meetings'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import CalendarViewContainer from '@/features/tasks/components/calendar/calendar-view-container'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
@@ -31,7 +31,7 @@ export default function CalendarPage() {
   const [showSchedulesOverlay, setShowSchedulesOverlay] = useQueryState('overlay', parseAsBoolean.withDefault(true))
 
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { myMeetings } = useGetMyMeetings({
     ...dateRange,
@@ -69,7 +69,7 @@ export default function CalendarPage() {
       <Separator className='mt-4' />
 
       <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
-        {user?.Role === 'Mentor' && (
+        {user?.role === 'Mentor' && (
           <div className='space-y-2 px-3'>
             <div className='flex items-start space-x-2'>
               <Checkbox

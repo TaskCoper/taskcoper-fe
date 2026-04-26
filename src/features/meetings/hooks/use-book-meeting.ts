@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import meetingService from '@/services/meeting.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -15,13 +15,13 @@ interface UseBookMeetingOptions {
 export const useBookMeeting = ({ packageId }: UseBookMeetingOptions = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<BookMeetingFormValues>({
     defaultValues: {
       mentorId: '',
       bookingTimeSlots: [],
-      bookByUserId: user?.UserId ?? '',
+      bookByUserId: user?.id ?? '',
       bookByProjectId: null,
       packageBookingId: null,
       packageSessionNumber: null

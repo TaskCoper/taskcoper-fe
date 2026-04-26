@@ -6,8 +6,8 @@ import { Card } from '@/components/ui/card'
 import { Field } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { DATE_LOCALES } from '@/shared/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import type { Comment } from '@/types/comment.type'
@@ -54,7 +54,7 @@ export default function CommentCard({
   parentMilestoneIdentifier
 }: CommentCardProps) {
   const { t, i18n } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const [isEditComment, setIsEditComment] = useState(false)
   const [isDeleteComment, setIsDeleteComment] = useState(false)
 
@@ -196,7 +196,7 @@ export default function CommentCard({
           </Card>
         )}
 
-        {comment.userId === user?.UserId && !isEditComment ? (
+        {comment.userId === user?.id && !isEditComment ? (
           <div className='flex items-center gap-2'>
             {canUpdate ? (
               <p

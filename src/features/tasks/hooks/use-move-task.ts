@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +27,7 @@ export const useMoveTask = ({
   targetMilestoneIdentifier
 }: MoveTaskParams) => {
   const queryClient = useQueryClient()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
 
   const { mutate: moveTask, isPending: isMovingTask } = useMutation({
@@ -40,7 +40,7 @@ export const useMoveTask = ({
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
 
       if (!isDragging) {
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })

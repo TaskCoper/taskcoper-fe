@@ -1,5 +1,6 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProjectLabelStats } from '@/features/labels/hooks/use-get-project-label-stats'
 import { useGetProjectPriorityStats } from '@/features/labels/hooks/use-get-project-priority-stats'
 import { useGetMilestoneStats } from '@/features/milestones/hooks/use-get-milestone-stats'
@@ -10,7 +11,6 @@ import { useGetTaskStatusStats } from '@/features/tasks/hooks/use-get-task-statu
 import { useGetTasks } from '@/features/tasks/hooks/use-get-tasks'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { TaskPriorityLabel, type TaskRow } from '@/types/task.type'
@@ -37,7 +37,7 @@ export default function ProjectMemberTaskTable({
   const { t } = useTranslation()
   const location = useLocation()
   const { confirm } = useConfirmStore()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier })
 
   const { check } = useGetMyProjectPermissions({ projectIdentifier })
@@ -70,7 +70,7 @@ export default function ProjectMemberTaskTable({
         projectIdentifier,
         parentMilestoneIdentifier,
         onDeleteTask,
-        userId: user?.UserId,
+        userId: user?.id,
         searchParams: location.search,
         taskDetailBasePath,
         enableMemberFilter: false,
@@ -81,7 +81,7 @@ export default function ProjectMemberTaskTable({
       projectIdentifier,
       parentMilestoneIdentifier,
       onDeleteTask,
-      user?.UserId,
+      user?.id,
       location.search,
       taskDetailBasePath,
       canToggleStatus,

@@ -39,7 +39,7 @@ export default function PurchaseHistoryPage() {
         {purchasedMentorPackages.value.totalCount ? (
           <div className='grid grid-cols-12 gap-6'>
             {purchasedMentorPackages.value.items.map((pkg) => (
-              <div key={pkg.id} className={responsiveColSpan}>
+              <div key={pkg.packageBookingId} className={responsiveColSpan}>
                 <Link to={`packages/${pkg.packageBookingId}`}>
                   <PurchasedMentorPackageCard mentorPackage={pkg} />
                 </Link>

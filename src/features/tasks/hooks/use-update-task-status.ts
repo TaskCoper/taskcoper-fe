@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { MilestoneWithTasks } from '@/types/milestone.type'
 import type { TaskDetail, TaskRow } from '@/types/task.type'
@@ -21,7 +21,7 @@ export const useUpdateTaskStatus = ({
 }: UseUpdateTaskStatusProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: updateTaskStatus, isPending: isUpdatingTaskStatus } = useMutation({
     mutationFn: taskService.updateTaskStatus,
@@ -123,8 +123,8 @@ export const useUpdateTaskStatus = ({
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectIdentifier && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      if (projectIdentifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
     }
   })

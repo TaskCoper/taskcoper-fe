@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,
@@ -32,7 +32,7 @@ type NavItem = {
 export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation()
   const location = useLocation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const navMain = useMemo(
     (): NavItem[] => [
@@ -52,7 +52,7 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         url: '/purchases',
         icon: ShoppingBagIcon
       },
-      ...(user?.Role !== 'Mentor'
+      ...(user?.role !== 'Mentor'
         ? [
             {
               title: t('project.sidebar.applicationHistory'),
@@ -61,7 +61,7 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
             }
           ]
         : []),
-      ...(user?.Role === 'Mentor'
+      ...(user?.role === 'Mentor'
         ? [
             {
               title: t('mentorPackage.sidebar.meetingSessionPackages'),
@@ -81,7 +81,7 @@ export default function ProjectsSidebar({ ...props }: React.ComponentProps<typeo
         icon: HistoryIcon
       }
     ],
-    [t, user?.Role]
+    [t, user?.role]
   )
 
   const activeSegment = useMemo(() => {

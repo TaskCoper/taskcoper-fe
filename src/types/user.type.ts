@@ -24,6 +24,7 @@ export interface User {
   createdOnUtc: string
   isGrantGoogleCalendarAccess: boolean
   slug: string
+  isEmailVerified: boolean
 }
 
 export interface MentionUser {

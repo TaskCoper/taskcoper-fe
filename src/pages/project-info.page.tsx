@@ -5,8 +5,8 @@ import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProject } from '@/features/projects/hooks/use-get-project'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { DATE_LOCALES } from '@/shared/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { format } from 'date-fns'
@@ -19,7 +19,7 @@ import { useParams } from 'react-router'
 export default function ProjectInfoPage() {
   const { t, i18n } = useTranslation()
   const { identifier } = useParams<{ identifier: string }>()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { project, isLoadingProject } = useGetProject({ identifier })
 
@@ -42,7 +42,7 @@ export default function ProjectInfoPage() {
       value: project?.teamEmail ?? null,
       icon: MailIcon
     },
-    ...(user?.OrganizationId
+    ...(user?.organizationId
       ? [
           {
             label: t('project.info.schoolSubject'),

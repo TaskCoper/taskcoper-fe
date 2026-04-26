@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProjectMeetings } from '@/features/meetings/hooks/use-get-project-meetings'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetProjectPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-project-purchased-mentor-packages'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import CalendarViewContainer from '@/features/tasks/components/calendar/calendar-view-container'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
@@ -28,7 +28,7 @@ export default function ProjectCalendarPage() {
     'pkgs',
     parseAsArrayOf(parseAsString).withDefault([])
   )
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { permissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
 
   const { projectMeetings } = useGetProjectMeetings({
@@ -49,7 +49,7 @@ export default function ProjectCalendarPage() {
 
   const sidebarContent = (
     <div>
-      {hasPackages && permissions?.ownerId === user?.UserId && (
+      {hasPackages && permissions?.ownerId === user?.id && (
         <div className='px-3'>
           <BookMeetingFromCalendarDialog
             open={bookMeetingOpen}

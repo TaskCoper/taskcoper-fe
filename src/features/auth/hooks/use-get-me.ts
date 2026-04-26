@@ -1,21 +1,23 @@
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import userService from '@/services/user.service'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetMe = () => {
-  const { isAuthenticated, user: jwtUser } = useAuthStore()
-
-  const isVerified = jwtUser?.IsVerified === 'true'
-
-  const { data: me, isLoading: isGettingMe } = useQuery({
+  const {
+    data: me,
+    isLoading: isGettingMe,
+    isError
+  } = useQuery({
     queryKey: queryKeys.auth.me(),
     queryFn: userService.getMe,
-    enabled: isAuthenticated && isVerified
+    retry: false,
+    throwOnError: false
   })
 
   return {
     me,
-    isGettingMe: isAuthenticated && isVerified ? isGettingMe : false
+    isGettingMe,
+    isAuthenticated: !!me && !isError,
+    isVerificationRequired: !!me && !me.isEmailVerified
   }
 }

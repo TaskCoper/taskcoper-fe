@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 interface NavUserProps {
   user?: User
@@ -46,6 +47,19 @@ export default function NavUser({ user }: NavUserProps) {
     setLanguage(value)
     await i18n.changeLanguage(value)
     queryClient.invalidateQueries()
+  }
+
+  if (!user) {
+    return (
+      <div className='flex items-center gap-2'>
+        <Button asChild variant='ghost' size='sm'>
+          <Link to='/sign-in'>{t('auth.signIn.label')}</Link>
+        </Button>
+        <Button asChild size='sm'>
+          <Link to='/sign-up'>{t('auth.signUp.label')}</Link>
+        </Button>
+      </div>
+    )
   }
 
   return (

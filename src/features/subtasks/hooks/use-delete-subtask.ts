@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -21,7 +21,7 @@ export const useDeleteSubtask = ({
 }: UseDeleteSubtaskProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: deleteSubtask, isPending: isDeletingSubtask } = useMutation({
     mutationFn: subtaskService.deleteSubtask,
@@ -93,8 +93,8 @@ export const useDeleteSubtask = ({
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectIdentifier && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      if (projectIdentifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
     }
   })

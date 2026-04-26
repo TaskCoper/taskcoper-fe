@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,7 @@ export const useDeleteTask = ({
 }: UseDeleteTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: deleteTask, isPending: isDeletingTask } = useMutation({
     mutationFn: taskService.deleteTask,
@@ -47,8 +47,8 @@ export const useDeleteTask = ({
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
       }
 
-      if (projectIdentifier && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.UserId) })
+      if (projectIdentifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
 
       if (milestoneId) {
