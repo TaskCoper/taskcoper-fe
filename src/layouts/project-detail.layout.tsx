@@ -266,7 +266,6 @@ export default function ProjectDetailLayout() {
                   <Skeleton className='size-8 rounded-full' />
                 </div>
               ) : identifier ? (
-                // <UpdateProjectMembersDialog identifier={identifier} isCurrentUserMain={isCurrentUserMain}>
                 <div className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'>
                   {project?.members?.slice(0, 4).map((member, index) => (
                     <AvatarWithTooltip
@@ -288,8 +287,7 @@ export default function ProjectDetailLayout() {
                     </Avatar>
                   )}
                 </div>
-              ) : // </UpdateProjectMembersDialog>
-              null}
+              ) : null}
             </>
           ) : null}
         </header>

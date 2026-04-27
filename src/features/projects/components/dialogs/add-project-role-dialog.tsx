@@ -64,7 +64,7 @@ export default function AddProjectRoleDialog({ children, projectIdentifier }: Ad
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-4xl'>
+      <DialogContent position='top-center' className='min-w-2xl'>
         <DialogHeader>
           <DialogTitle>{t('project.addProjectRole.title')}</DialogTitle>
           <DialogDescription>{t('project.addProjectRole.description')}</DialogDescription>

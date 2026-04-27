@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const queryClient = useQueryClient()
   const { userIdentifier } = useParams<{ userIdentifier: string }>()
 
-  const { me } = useGetMe()
+  const { me, isGettingMe } = useGetMe()
   const { user, isGettingUser } = useGetUser({ userIdentifier })
   const { updateMe, isUpdatingMe } = useUpdateMe()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
@@ -254,7 +254,7 @@ export default function ProfilePage() {
 
   const [activeTab, setActiveTab] = useState<TabItem>(tabs[0])
 
-  if (isGettingUser) {
+  if (isGettingUser || isGettingMe) {
     return (
       <div className='w-full h-full overflow-y-auto'>
         <div className='bg-muted/60'>

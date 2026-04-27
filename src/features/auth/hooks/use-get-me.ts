@@ -1,6 +1,7 @@
 import { queryKeys } from '@/lib/query-keys'
 import userService from '@/services/user.service'
 import { useQuery } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 
 export const useGetMe = () => {
   const {
@@ -9,7 +10,17 @@ export const useGetMe = () => {
     isError
   } = useQuery({
     queryKey: queryKeys.auth.me(),
-    queryFn: userService.getMe,
+    queryFn: async () => {
+      try {
+        return await userService.getMe()
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 401) {
+          return null
+        }
+
+        throw error
+      }
+    },
     retry: false,
     throwOnError: false
   })
