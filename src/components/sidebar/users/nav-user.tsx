@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 
 interface NavUserProps {
-  user?: User
+  user?: User | null
 }
 
 export default function NavUser({ user }: NavUserProps) {
