@@ -15,8 +15,8 @@ export const useGetMyMeetings = ({ activeFrom, activeTo, packageBookingIds, mode
   const { data: myMeetings = [], isLoading: isLoadingMyMeetings } = useQuery({
     queryKey: queryKeys.meetings.my({ activeFrom, activeTo, packageBookingIds, mode }),
     queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo, packageBookingIds, mode }),
-    enabled: !!activeFrom && !!activeTo,
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    enabled: !!activeFrom && !!activeTo
   })
 
   return { myMeetings, isLoadingMyMeetings }

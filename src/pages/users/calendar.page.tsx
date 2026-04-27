@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyMeetings } from '@/features/meetings/hooks/use-get-my-meetings'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
@@ -15,6 +16,56 @@ import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQuery
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
+
+function CalendarPageSkeleton() {
+  return (
+    <div className='h-screen flex flex-col'>
+      <div className='flex flex-1 min-h-0 w-full max-h-[calc(100vh-3.5rem)]'>
+        <div className='flex w-72 shrink-0 flex-col gap-2 border-r overflow-auto'>
+          <div className='px-4 pt-4'>
+            <Skeleton className='h-64 w-full rounded-xl' />
+          </div>
+
+          <div className='px-3 pt-2'>
+            <Skeleton className='h-9 w-full rounded-md' />
+          </div>
+
+          <Separator className='mt-2' />
+
+          <div className='flex flex-col gap-4 px-3 py-2'>
+            <Skeleton className='h-4 w-28' />
+            <div className='space-y-3'>
+              <Skeleton className='h-5 w-full' />
+              <Skeleton className='h-5 w-5/6' />
+              <Skeleton className='h-5 w-4/5' />
+            </div>
+
+            <Skeleton className='h-4 w-40' />
+            <div className='space-y-3'>
+              <Skeleton className='h-5 w-full' />
+              <Skeleton className='h-5 w-11/12' />
+              <Skeleton className='h-5 w-10/12' />
+            </div>
+          </div>
+        </div>
+
+        <div className='flex-1 flex flex-col min-h-0'>
+          <div className='border-b px-4 py-3 flex items-center justify-between gap-3'>
+            <Skeleton className='h-7 w-44' />
+            <div className='flex items-center gap-2'>
+              <Skeleton className='h-8 w-24 rounded-md' />
+              <Skeleton className='h-8 w-28 rounded-md' />
+            </div>
+          </div>
+
+          <div className='flex-1 px-4 pb-4 pt-3'>
+            <Skeleton className='size-full rounded-xl' />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function CalendarPage() {
   const navigate = useNavigate()
@@ -31,14 +82,14 @@ export default function CalendarPage() {
   const [showSchedulesOverlay, setShowSchedulesOverlay] = useQueryState('overlay', parseAsBoolean.withDefault(true))
 
   const { t } = useTranslation()
-  const { me: user } = useGetMe()
+  const { me: user, isGettingMe } = useGetMe()
 
-  const { myMeetings } = useGetMyMeetings({
+  const { myMeetings, isLoadingMyMeetings } = useGetMyMeetings({
     ...dateRange,
     packageBookingIds: selectedPackageBookingIds ?? [],
     mode: (mode ?? []).length > 0 ? (mode ?? []) : []
   })
-  const { purchasedMentorPackages } = useGetPurchasedMentorPackages()
+  const { purchasedMentorPackages, isLoadingPurchasedMentorPackages } = useGetPurchasedMentorPackages()
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
@@ -163,6 +214,10 @@ export default function CalendarPage() {
       </div>
     </div>
   )
+
+  if (isGettingMe || isLoadingPurchasedMentorPackages || isLoadingMyMeetings) {
+    return <CalendarPageSkeleton />
+  }
 
   return (
     <CalendarViewContainer
