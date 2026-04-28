@@ -207,7 +207,7 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
       </Sidebar>
 
       {activeItem.hasSecondSidebar ? (
-        <Sidebar collapsible='none' className='hidden w-[340px] md:flex shrink-0'>
+        <Sidebar collapsible='none' className='hidden w-85 md:flex shrink-0'>
           <SidebarHeader className='gap-3.5 border-b p-4'>
             <div className='flex w-full items-center justify-between'>
               <div className='text-foreground text-base font-medium'>

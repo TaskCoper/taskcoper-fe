@@ -62,7 +62,7 @@ export const useProjectRouting = ({ identifier, items, isLoading }: UseProjectRo
 
       navigate({ pathname: `milestones/${targetMilestoneSlug}`, search: window.location.search }, { replace: true })
     }
-  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, identifier, getLastActiveMilestone])
+  }, [isLoading, items, isProjectRoot, isMilestonesRoot, navigate, identifier, getLastActiveMilestone, canRead])
 
   return {
     activeSegment,

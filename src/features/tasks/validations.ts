@@ -49,10 +49,12 @@ export const updateTaskSchema = (t: TFunction) => {
         .positive({ message: t('common.validation.number.positive') })
         .nullable(),
       mentionUsers: z.array(
-        z.object({
-          userId: z.uuid(),
-          mentionId: z.uuid().nullable()
-        })
+        z
+          .object({
+            userId: z.uuid(),
+            mentionId: z.uuid().nullable()
+          })
+          .strict()
       )
     })
     .strict()

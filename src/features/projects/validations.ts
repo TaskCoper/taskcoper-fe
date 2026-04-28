@@ -151,95 +151,146 @@ export const updateProjectSchema = (t: TFunction) => {
 }
 
 export const addProjectRevenueSchema = (t: TFunction) => {
-  return z.object({
-    name: z.string().trim().min(1, t('project.addProjectRevenue.validation.name.minLength')),
-    amount: z.number().min(1, t('project.addProjectRevenue.validation.amount.min')),
-    type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
-    note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
-    labelIds: z.array(z.uuid()),
-    projectIdentifier: z.string().min(1)
-  })
+  return z
+    .object({
+      name: z.string().trim().min(1, t('project.addProjectRevenue.validation.name.minLength')),
+      amount: z.number().min(1, t('project.addProjectRevenue.validation.amount.min')),
+      type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+      note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
+      labelIds: z.array(z.uuid()),
+      projectIdentifier: z.string().min(1)
+    })
+    .strict()
 }
 
 export const updateProjectRevenueSchema = (t: TFunction) => {
-  return z.object({
-    projectTransactionId: z.uuid(),
-    projectIdentifier: z.string().min(1),
-    name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
-    amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
-    type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
-    note: z.string().trim().max(255, t('project.updateProjectRevenue.validation.note.maxLength')),
-    labelIds: z.array(z.uuid())
-  })
+  return z
+    .object({
+      projectTransactionId: z.uuid(),
+      projectIdentifier: z.string().min(1),
+      name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
+      amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
+      type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+      note: z.string().trim().max(255, t('project.updateProjectRevenue.validation.note.maxLength')),
+      labelIds: z.array(z.uuid())
+    })
+    .strict()
 }
 
-export const taskSectionExtensionsSchema = z.object({
-  canUpdate: z.object({
-    canMoveTask: z.boolean(),
-    canMoveMilestone: z.boolean(),
-    canToggleTaskStatus: z.boolean()
+export const taskSectionExtensionsSchema = z
+  .object({
+    canUpdate: z
+      .object({
+        canMoveTask: z.boolean(),
+        canMoveMilestone: z.boolean(),
+        canToggleTaskStatus: z.boolean()
+      })
+      .strict()
   })
-})
+  .strict()
 
-export const storageSectionExtensionsSchema = z.object({
-  canRead: z.object({
-    canDownload: z.boolean()
+export const storageSectionExtensionsSchema = z
+  .object({
+    canRead: z
+      .object({
+        canDownload: z.boolean()
+      })
+      .strict()
   })
-})
+  .strict()
+
+export const calendarSectionExtensionsSchema = z
+  .object({
+    canWrite: z
+      .object({
+        canPurchasePackage: z.boolean(),
+        canBookMeeting: z.boolean()
+      })
+      .strict(),
+    canUpdate: z
+      .object({
+        canRescheduleMeeting: z.boolean()
+      })
+      .strict(),
+    canDelete: z
+      .object({
+        canCancelMeeting: z.boolean()
+      })
+      .strict()
+  })
+  .strict()
 
 export const updateProjectRoleSchema = (t: TFunction) => {
-  return z.object({
-    projectIdentifier: z.string().min(1),
-    roleId: z.uuid(),
-    name: z.string().trim().min(1, t('project.updateProjectRole.validation.name.minLength')),
-    description: z.string().trim().max(255, t('project.updateProjectRole.validation.description.maxLength')),
-    isDefault: z.boolean(),
-    permissions: z.array(
-      z.object({
-        sectionKey: z.enum(SectionKey),
-        canRead: z.boolean(),
-        canWrite: z.boolean(),
-        canUpdate: z.boolean(),
-        canDelete: z.boolean(),
-        extensions: z.union([taskSectionExtensionsSchema, storageSectionExtensionsSchema, z.string()]).optional()
-      })
-    )
-  })
+  return z
+    .object({
+      projectIdentifier: z.string().min(1),
+      roleId: z.uuid(),
+      name: z.string().trim().min(1, t('project.updateProjectRole.validation.name.minLength')),
+      description: z.string().trim().max(255, t('project.updateProjectRole.validation.description.maxLength')),
+      isDefault: z.boolean(),
+      permissions: z.array(
+        z
+          .object({
+            sectionKey: z.enum(SectionKey),
+            canRead: z.boolean(),
+            canWrite: z.boolean(),
+            canUpdate: z.boolean(),
+            canDelete: z.boolean(),
+            extensions: z
+              .union([taskSectionExtensionsSchema, storageSectionExtensionsSchema, calendarSectionExtensionsSchema])
+              .optional()
+          })
+          .strict()
+      )
+    })
+    .strict()
 }
 
 export const addProjectRoleSchema = (t: TFunction) => {
-  return z.object({
-    projectIdentifier: z.string().min(1, t('project.addProjectRole.validation.projectIdentifier.minLength')),
-    name: z
-      .string()
-      .trim()
-      .min(1, t('project.addProjectRole.validation.name.minLength'))
-      .max(255, t('project.addProjectRole.validation.name.maxLength')),
-    description: z.string().trim().max(255, t('project.addProjectRole.validation.description.maxLength')),
-    isDefault: z.boolean(),
-    permissions: z.array(
-      z.object({
-        sectionKey: z.enum(SectionKey),
-        canRead: z.boolean(),
-        canWrite: z.boolean(),
-        canUpdate: z.boolean(),
-        canDelete: z.boolean(),
-        extensions: z.union([taskSectionExtensionsSchema, storageSectionExtensionsSchema]).nullable()
-      })
-    )
-  })
+  return z
+    .object({
+      projectIdentifier: z.string().min(1, t('project.addProjectRole.validation.projectIdentifier.minLength')),
+      name: z
+        .string()
+        .trim()
+        .min(1, t('project.addProjectRole.validation.name.minLength'))
+        .max(255, t('project.addProjectRole.validation.name.maxLength')),
+      description: z.string().trim().max(255, t('project.addProjectRole.validation.description.maxLength')),
+      isDefault: z.boolean(),
+      permissions: z
+        .array(
+          z
+            .object({
+              sectionKey: z.enum(SectionKey),
+              canRead: z.boolean(),
+              canWrite: z.boolean(),
+              canUpdate: z.boolean(),
+              canDelete: z.boolean(),
+              extensions: z
+                .union([taskSectionExtensionsSchema, storageSectionExtensionsSchema, calendarSectionExtensionsSchema])
+                .nullable()
+            })
+            .strict()
+        )
+        .min(1, t('project.addProjectRole.validation.permissions.minLength'))
+    })
+    .strict()
 }
 
-export const addProjectPositionTitleSchema = z.object({
-  projectIdentifier: z.string().min(1),
-  name: z.string().trim().min(1).max(255),
-  description: z.string().trim().max(255),
-  color: z.string().trim().max(255)
-})
+export const addProjectPositionTitleSchema = z
+  .object({
+    projectIdentifier: z.string().min(1),
+    name: z.string().trim().min(1).max(255),
+    description: z.string().trim().max(255),
+    color: z.string().trim().max(255)
+  })
+  .strict()
 
-export const updateProjectPositionTitleSchema = addProjectPositionTitleSchema.extend({
-  titleId: z.uuid()
-})
+export const updateProjectPositionTitleSchema = addProjectPositionTitleSchema
+  .extend({
+    titleId: z.uuid()
+  })
+  .strict()
 
 export type CreateProjectFormValues = z.infer<ReturnType<typeof createProjectSchema>>
 export type InviteMembersFormValues = z.infer<ReturnType<typeof inviteMembersSchema>>
@@ -249,8 +300,11 @@ export type UpdateProjectFormValues = z.infer<ReturnType<typeof updateProjectSch
 export type AddProjectRevenueFormValues = z.infer<ReturnType<typeof addProjectRevenueSchema>>
 export type UpdateProjectRevenueFormValues = z.infer<ReturnType<typeof updateProjectRevenueSchema>>
 export type UpdateProjectRoleFormValues = z.infer<ReturnType<typeof updateProjectRoleSchema>>
-export type TaskSectionExtensionsFormValues = z.infer<typeof taskSectionExtensionsSchema>
-export type StorageSectionExtensionsFormValues = z.infer<typeof storageSectionExtensionsSchema>
 export type AddProjectRoleFormValues = z.infer<ReturnType<typeof addProjectRoleSchema>>
 export type AddProjectPositionTitleFormValues = z.infer<typeof addProjectPositionTitleSchema>
 export type UpdateProjectPositionTitleFormValues = z.infer<typeof updateProjectPositionTitleSchema>
+
+// Permissions
+export type TaskSectionExtensionsFormValues = z.infer<typeof taskSectionExtensionsSchema>
+export type StorageSectionExtensionsFormValues = z.infer<typeof storageSectionExtensionsSchema>
+export type CalendarSectionExtensionsFormValues = z.infer<typeof calendarSectionExtensionsSchema>

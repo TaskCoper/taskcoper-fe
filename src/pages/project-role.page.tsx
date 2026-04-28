@@ -9,7 +9,7 @@ import { useUpdateProjectRole } from '@/features/projects/hooks/use-update-proje
 import type { UpdateProjectRoleFormValues } from '@/features/projects/validations'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { SectionKey } from '@/types/project-permission.type'
-import type { ProjectRoleItem } from '@/types/project.type'
+import type { ProjectRoleDetail, ProjectRoleItem } from '@/types/project.type'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -47,8 +47,43 @@ const normalizeExtensions = (
     }
   }
 
+  if (sectionKey === SectionKey.CALENDAR) {
+    return {
+      canWrite: {
+        canPurchasePackage: parsed?.canWrite?.canPurchasePackage === true,
+        canBookMeeting: parsed?.canWrite?.canBookMeeting === true
+      },
+      canUpdate: {
+        canRescheduleMeeting: parsed?.canUpdate?.canRescheduleMeeting === true
+      },
+      canDelete: {
+        canCancelMeeting: parsed?.canDelete?.canCancelMeeting === true
+      }
+    }
+  }
+
   return undefined
 }
+
+const mapRoleToFormValues = (projectIdentifier: string, role: ProjectRoleDetail): UpdateProjectRoleFormValues => ({
+  projectIdentifier,
+  roleId: role.id,
+  name: role.name,
+  description: role.description ?? '',
+  isDefault: false,
+  permissions: Object.values(SectionKey).map((sectionKey) => {
+    const current = role.permissions.find((permission) => permission.sectionKey === sectionKey)
+
+    return {
+      sectionKey,
+      canRead: current?.canRead ?? false,
+      canWrite: current?.canWrite ?? false,
+      canUpdate: current?.canUpdate ?? false,
+      canDelete: current?.canDelete ?? false,
+      extensions: normalizeExtensions(sectionKey, current?.extensions)
+    }
+  })
+})
 
 const ProjectRolePageSkeleton = () => {
   return (
@@ -150,6 +185,10 @@ export default function ProjectRolePage() {
   }, [blocker, confirm, t])
 
   const navigateToPermissions = () => {
+    if (projectIdentifier && role) {
+      methods.reset(mapRoleToFormValues(projectIdentifier, role))
+    }
+
     if (projectIdentifier) {
       navigate(`/projects/${projectIdentifier}/settings?tab=permissions`)
       return
@@ -159,7 +198,14 @@ export default function ProjectRolePage() {
   }
 
   const onSubmit: SubmitHandler<UpdateProjectRoleFormValues> = (body) => {
-    updateProjectRole({ body })
+    updateProjectRole(
+      { body },
+      {
+        onSuccess: () => {
+          methods.reset(body)
+        }
+      }
+    )
   }
 
   const onDelete = async () => {
@@ -181,25 +227,7 @@ export default function ProjectRolePage() {
   useEffect(() => {
     if (!projectIdentifier || !role) return
 
-    methods.reset({
-      projectIdentifier,
-      roleId: role.id,
-      name: role.name,
-      description: role.description ?? '',
-      isDefault: false,
-      permissions: Object.values(SectionKey).map((sectionKey) => {
-        const current = role.permissions.find((permission) => permission.sectionKey === sectionKey)
-
-        return {
-          sectionKey,
-          canRead: current?.canRead ?? false,
-          canWrite: current?.canWrite ?? false,
-          canUpdate: current?.canUpdate ?? false,
-          canDelete: current?.canDelete ?? false,
-          extensions: normalizeExtensions(sectionKey, current?.extensions)
-        }
-      })
-    })
+    methods.reset(mapRoleToFormValues(projectIdentifier, role))
   }, [projectIdentifier, role, methods])
 
   const saveStateText = isUpdatingProjectRole
@@ -218,9 +246,9 @@ export default function ProjectRolePage() {
         <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
           <UpdateProjectRoleForm />
 
-          <Card className='sticky bottom-4 z-20 shadow-none rounded-md py-2 pl-4 pr-2'>
+          <Card className='sticky bottom-20 z-20 rounded-md py-2 pl-4 pr-2'>
             <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-              <p className='text-xs text-muted-foreground'>{saveStateText}</p>
+              <p className='text-xs font-medium'>{saveStateText}</p>
 
               <div className='flex items-center justify-end gap-2'>
                 <Button variant='ghost' type='button' onClick={navigateToPermissions} disabled={isUpdatingProjectRole}>

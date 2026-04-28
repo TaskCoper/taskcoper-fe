@@ -42,32 +42,36 @@ export const updateProjectLabelSchema = (t: TFunction) => {
 }
 
 export const addProjectRevenueLabelSchema = (t: TFunction) => {
-  return z.object({
-    projectIdentifier: z.string().min(1),
-    name: z
-      .string()
-      .max(255, { message: t('task.label.validation.name.maxLength') })
-      .or(z.literal('')),
-    color: z
-      .string()
-      .max(255, { message: t('task.label.validation.color.maxLength') })
-      .or(z.literal(''))
-  })
+  return z
+    .object({
+      projectIdentifier: z.string().min(1),
+      name: z
+        .string()
+        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .or(z.literal('')),
+      color: z
+        .string()
+        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .or(z.literal(''))
+    })
+    .strict()
 }
 
 export const updateProjectRevenueLabelSchema = (t: TFunction) => {
-  return z.object({
-    id: z.uuid({ message: t('task.label.validation.id.invalid') }),
-    name: z
-      .string()
-      .max(255, { message: t('task.label.validation.name.maxLength') })
-      .or(z.literal('')),
-    color: z
-      .string()
-      .max(255, { message: t('task.label.validation.color.maxLength') })
-      .or(z.literal('')),
-    projectIdentifier: z.string().min(1)
-  })
+  return z
+    .object({
+      id: z.uuid({ message: t('task.label.validation.id.invalid') }),
+      name: z
+        .string()
+        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .or(z.literal('')),
+      color: z
+        .string()
+        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .or(z.literal('')),
+      projectIdentifier: z.string().min(1)
+    })
+    .strict()
 }
 
 export type AddProjectLabelFormValues = z.infer<ReturnType<typeof addProjectLabelSchema>>

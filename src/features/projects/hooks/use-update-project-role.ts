@@ -29,6 +29,12 @@ export const useUpdateProjectRole = ({ projectIdentifier }: { projectIdentifier?
       const identifier = variables.body.projectIdentifier || projectIdentifier
 
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.roles.all(identifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.roles.detail({
+          projectIdentifier: identifier,
+          roleId: variables.body.roleId
+        })
+      })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.myPermissions(identifier) })
     }
   })

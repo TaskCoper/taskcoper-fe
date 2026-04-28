@@ -28,7 +28,8 @@
       "delete": "Xóa",
       "insert": "Chèn",
       "download": "Tải xuống",
-      "back": "Quay lại"
+      "back": "Quay lại",
+      "upload": "Tải ảnh"
     },
     "field": {
       "label": "Nhãn",
@@ -185,7 +186,21 @@
       "all": "Tất cả",
       "mine": "Của tôi",
       "mentor": "Của mentor",
-      "purchasedPackages": "Các gói đã mua"
+      "purchasedPackages": "Các gói đã mua",
+      "packageGroups": {
+        "personal": {
+          "title": "Cá nhân",
+          "description": "Các gói lịch hẹn cho cá nhân"
+        },
+        "project": {
+          "title": "Dự án",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi có quyền đặt lịch"
+        },
+        "member": {
+          "title": "Thành viên",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi là thành viên"
+        }
+      }
     },
     "update": {
       "description": "Cập nhật thông tin lịch của bạn."
@@ -811,6 +826,9 @@
         "description": {
           "maxLength": "Tối đa 255 ký tự"
         },
+        "permissions": {
+          "minLength": "Vui lòng chọn mẫu vai trò"
+        },
         "projectIdentifier": {
           "minLength": "Vui lòng chọn dự án"
         }
@@ -937,7 +955,8 @@
         "moveMilestone": "Di chuyển cột mốc",
         "toggleTaskStatus": "Bật tắt trạng thái công việc",
         "storageReadTitle": "Mở rộng quyền xem lưu trữ",
-        "downloadFiles": "Tải xuống tệp"
+        "downloadFiles": "Tải xuống tệp",
+        "empty": "Chưa có quyền chi tiết được cấu hình."
       },
       "permissionsConfig": {
         "tasks": {
@@ -993,6 +1012,41 @@
             },
             "extensions": {
               "viewTaskPerformanceMetrics": "Xem các chỉ số hiệu suất công việc"
+            }
+          }
+        },
+        "calendar": {
+          "canRead": {
+            "permission": {
+              "readCalendar": "Xem lịch"
+            },
+            "extensions": {
+              "viewProjectCalendar": "Xem lịch dự án"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeCalendar": "Thêm mới lịch"
+            },
+            "extensions": {
+              "purchaseMeetingPackage": "Mua gói lịch hẹn",
+              "bookMeeting": "Đặt lịch hẹn"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateCalendar": "Cập nhật lịch"
+            },
+            "extensions": {
+              "rescheduleMeeting": "Đổi lịch hẹn"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteCalendar": "Xóa lịch"
+            },
+            "extensions": {
+              "cancelMeeting": "Hủy lịch hẹn"
             }
           }
         },
@@ -2268,6 +2322,8 @@
       "pricePlaceholder": "Nhập giá",
       "currency": "Tiền tệ",
       "currencyPlaceholder": "Chọn tiền tệ",
+      "coverImage": "Ảnh bìa",
+      "coverImageHint": "Nhấn vào vùng ảnh để chọn ảnh bìa, sau đó bấm Lưu để tải lên.",
       "isActive": "Kích hoạt",
       "isActiveDescription": "Nếu tắt, gói này sẽ không hiển thị/không thể được chọn."
     },

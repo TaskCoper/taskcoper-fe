@@ -57,7 +57,8 @@ export default function ProjectDetailLayout() {
   const hasSecondSidebar = secondSidebarRoutes.includes(activeSegment)
 
   // only fetch parent milestones when user is at /milestones and has read permission
-  const shouldFetchMilestones = activeSegment === 'milestones' && !isLoadingPermissions && canRead
+  const shouldFetchMilestones =
+    (activeSegment === 'milestones' || activeSegment === '') && !isLoadingPermissions && canRead
   const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({
     identifier,
     enabled: shouldFetchMilestones

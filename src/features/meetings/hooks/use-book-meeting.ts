@@ -10,9 +10,10 @@ import { bookMeetingSchema, type BookMeetingFormValues } from '../validations'
 
 interface UseBookMeetingOptions {
   packageId?: string
+  projectIdentifier?: string
 }
 
-export const useBookMeeting = ({ packageId }: UseBookMeetingOptions = {}) => {
+export const useBookMeeting = ({ packageId, projectIdentifier }: UseBookMeetingOptions = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { me: user } = useGetMe()
@@ -45,6 +46,10 @@ export const useBookMeeting = ({ packageId }: UseBookMeetingOptions = {}) => {
 
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
+
+      if (projectIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allProject(projectIdentifier) })
       }
     }
   })

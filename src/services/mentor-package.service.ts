@@ -1,3 +1,4 @@
+import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type {
   CreateMentorPackageFormValues,
   UpdateMentorPackageFormValues
@@ -36,8 +37,10 @@ class MentorPackageService {
     return data
   }
 
-  getPurchasedMentorPackages = async () => {
-    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`)
+  getPurchasedMentorPackages = async ({ mode }: GetPurchasedMentorPackagesParams) => {
+    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`, {
+      params: { mode }
+    })
 
     return data
   }

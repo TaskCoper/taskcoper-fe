@@ -49,7 +49,8 @@ export default function MentorPackagesPage() {
         price: String(pkg.price),
         currency: pkg.currency,
         isActive: pkg.isActive,
-        position: nextSortOrder
+        position: nextSortOrder,
+        coverImageUrl: pkg.coverImageUrl || null
       }
     })
   }

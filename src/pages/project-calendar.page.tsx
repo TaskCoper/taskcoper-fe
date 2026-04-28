@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProjectMeetings } from '@/features/meetings/hooks/use-get-project-meetings'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetProjectPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-project-purchased-mentor-packages'
@@ -70,8 +69,9 @@ export default function ProjectCalendarPage() {
     'pkgs',
     parseAsArrayOf(parseAsString).withDefault([])
   )
-  const { me: user, isGettingMe } = useGetMe()
-  const { permissions, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+
+  const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canBookMeeting = check('CALENDAR', 'canWrite', 'canBookMeeting')
 
   const { projectMeetings, isLoadingProjectMeetings } = useGetProjectMeetings({
     projectIdentifier: identifier,
@@ -93,7 +93,7 @@ export default function ProjectCalendarPage() {
 
   const sidebarContent = (
     <div>
-      {hasPackages && permissions?.ownerId === user?.id && (
+      {hasPackages && canBookMeeting && (
         <div className='px-3'>
           <BookMeetingFromCalendarDialog
             open={bookMeetingOpen}
@@ -110,51 +110,53 @@ export default function ProjectCalendarPage() {
 
       <Separator className='mt-4' />
 
-      <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
-        <Accordion
-          type='multiple'
-          defaultValue={
-            projectMentorPackages.value.totalCount > 0 || selectedPackageBookingIds?.length === 0 ? ['item-1'] : []
-          }
-        >
-          <AccordionItem value='item-1'>
-            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
-              {t('schedule.filter.purchasedPackages')}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className='space-y-4 px-3 py-2'>
-                {projectMentorPackages.value.items.map((pkg) => (
-                  <div key={pkg.id} className='flex items-center gap-2'>
-                    <Checkbox
-                      id={`pkg-${pkg.packageBookingId}`}
-                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
-                        } else {
-                          setSelectedPackageBookingIds(
-                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
-                          )
-                        }
-                      }}
-                    />
-                    <Label
-                      htmlFor={`pkg-${pkg.packageBookingId}`}
-                      className='text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
-                    >
-                      {pkg.name || pkg.packageBookingId}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
+      {hasPackages ? (
+        <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
+          <Accordion
+            type='multiple'
+            defaultValue={
+              projectMentorPackages.value.totalCount > 0 || selectedPackageBookingIds?.length === 0 ? ['item-1'] : []
+            }
+          >
+            <AccordionItem value='item-1'>
+              <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+                {t('schedule.filter.purchasedPackages')}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className='space-y-4 px-3 py-2'>
+                  {projectMentorPackages.value.items.map((pkg) => (
+                    <div key={pkg.id} className='flex items-center gap-2'>
+                      <Checkbox
+                        id={`pkg-${pkg.packageBookingId}`}
+                        checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                          } else {
+                            setSelectedPackageBookingIds(
+                              (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                            )
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={`pkg-${pkg.packageBookingId}`}
+                        className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                      >
+                        {pkg.name || pkg.packageBookingId}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      ) : null}
     </div>
   )
 
-  if (isGettingMe || isLoadingPermissions || isLoadingProjectMentorPackages || isLoadingProjectMeetings) {
+  if (isLoadingPermissions || isLoadingProjectMentorPackages || isLoadingProjectMeetings) {
     return <ProjectCalendarPageSkeleton />
   }
 

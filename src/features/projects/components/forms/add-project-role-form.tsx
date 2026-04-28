@@ -101,12 +101,13 @@ const normalizePermissionExtensions = (extensions: unknown): AddProjectRolePermi
 
 export default function AddProjectRoleForm() {
   const { t } = useTranslation()
-  const { control, setValue, watch } = useFormContext<AddProjectRoleFormValues>()
+  const { control, setValue, watch, formState } = useFormContext<AddProjectRoleFormValues>()
   const [isTemplateSelectOpen, setIsTemplateSelectOpen] = useState(false)
   const [selectedTemplateIndex, setSelectedTemplateIndex] = useState<string | undefined>()
 
   const projectIdentifier = watch('projectIdentifier')
   const permissions = watch('permissions') ?? EMPTY_PERMISSIONS
+  const permissionsError = (formState.errors.permissions as { message?: string } | undefined)?.message
   const { projectRoleTemplates, isLoadingProjectRoleTemplates } = useGetProjectRoleTemplates({ projectIdentifier })
   const templateItems = projectRoleTemplates?.value.items ?? []
 
@@ -213,8 +214,11 @@ export default function AddProjectRoleForm() {
         )}
       />
 
-      <Field className='gap-1'>
-        <FieldLabel htmlFor='projectRoleTemplate'>{t('project.addProjectRole.field.template.label')}</FieldLabel>
+      <Field data-invalid={Boolean(permissionsError)} className='gap-1'>
+        <FieldLabel htmlFor='projectRoleTemplate' className='gap-0.5'>
+          {t('project.addProjectRole.field.template.label')}
+          <span className='text-destructive font-semibold'>*</span>
+        </FieldLabel>
         <Select
           open={isTemplateSelectOpen}
           onOpenChange={setIsTemplateSelectOpen}
@@ -239,6 +243,10 @@ export default function AddProjectRoleForm() {
             ))}
           </SelectContent>
         </Select>
+
+        <div className='min-h-4'>
+          {permissionsError ? <FieldError className='text-xs' errors={[{ message: permissionsError }]} /> : null}
+        </div>
       </Field>
 
       {permissions.length > 0 ? (

@@ -53,6 +53,9 @@ export default function AddProjectRoleDialog({ children, projectIdentifier }: Ad
     }
   }, [open, projectIdentifier, methods])
 
+  console.log(methods.getValues())
+  console.log(methods.formState.errors)
+
   return (
     <Dialog
       open={open}

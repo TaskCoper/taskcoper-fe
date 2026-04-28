@@ -79,7 +79,7 @@ export default function CalendarPage() {
   )
   const [mode, setMode] = useQueryState('mode', parseAsArrayOf(parseAsInteger).withDefault([]))
 
-  const [showSchedulesOverlay, setShowSchedulesOverlay] = useQueryState('overlay', parseAsBoolean.withDefault(true))
+  const [showSchedulesOverlay, setShowSchedulesOverlay] = useQueryState('overlay', parseAsBoolean.withDefault(false))
 
   const { t } = useTranslation()
   const { me: user, isGettingMe } = useGetMe()
@@ -87,9 +87,17 @@ export default function CalendarPage() {
   const { myMeetings, isLoadingMyMeetings } = useGetMyMeetings({
     ...dateRange,
     packageBookingIds: selectedPackageBookingIds ?? [],
-    mode: (mode ?? []).length > 0 ? (mode ?? []) : []
+    mode: (mode ?? []).length > 0 && user?.role === 'Mentor' ? mode : []
   })
-  const { purchasedMentorPackages, isLoadingPurchasedMentorPackages } = useGetPurchasedMentorPackages()
+
+  const { purchasedMentorPackages: projectPackages, isLoadingPurchasedMentorPackages: isLoadingProjectPackages } =
+    useGetPurchasedMentorPackages({ mode: [1] })
+  const {
+    purchasedMentorPackages: memberProjectPackages,
+    isLoadingPurchasedMentorPackages: isLoadingMemberProjectPackages
+  } = useGetPurchasedMentorPackages({ mode: [2] })
+  const { purchasedMentorPackages: personalPackages, isLoadingPurchasedMentorPackages: isLoadingPersonalPackages } =
+    useGetPurchasedMentorPackages({ mode: [3] })
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
@@ -98,7 +106,10 @@ export default function CalendarPage() {
     [navigate, location.search]
   )
 
-  const hasPackages = purchasedMentorPackages.value.totalCount > 0
+  const hasPackages =
+    personalPackages.value.totalCount > 0 ||
+    memberProjectPackages.value.totalCount > 0 ||
+    projectPackages.value.totalCount > 0
 
   const sidebarContent = (
     <div className='mt-2'>
@@ -107,7 +118,7 @@ export default function CalendarPage() {
           <BookMeetingFromCalendarDialog
             open={bookMeetingOpen}
             onOpenChange={setBookMeetingOpen}
-            packages={purchasedMentorPackages.value.items}
+            packages={[...personalPackages.value.items, ...projectPackages.value.items]}
           >
             <Button className='w-full' size='sm'>
               <CalendarPlusIcon />
@@ -119,7 +130,7 @@ export default function CalendarPage() {
 
       <Separator className='mt-4' />
 
-      <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
+      <div className='flex flex-col justify-between gap-8 mt-2 px-2'>
         {user?.role === 'Mentor' && (
           <div className='space-y-2 px-3'>
             <div className='flex items-start space-x-2'>
@@ -141,50 +152,50 @@ export default function CalendarPage() {
           </div>
         )}
 
-        <div className='space-y-3 px-3'>
-          <p className='text-sm font-medium'>{t('schedule.filter.title')}</p>
+        {user?.role === 'Mentor' ? (
+          <div className='space-y-3 px-3'>
+            <p className='text-sm font-medium'>{t('schedule.filter.title')}</p>
 
-          <RadioGroup
-            value={(mode ?? []).length === 0 ? 'all' : String((mode ?? [])[0])}
-            onValueChange={(val) => {
-              if (val === 'all') setMode([])
-              else setMode([parseInt(val, 10)])
-            }}
-          >
-            <div className='flex items-center gap-2'>
-              <RadioGroupItem value='all' id='mode-all' />
-              <Label htmlFor='mode-all' className='cursor-pointer font-normal'>
-                {t('schedule.filter.all')}
-              </Label>
-            </div>
-            <div className='flex items-center gap-2'>
-              <RadioGroupItem value='0' id='mode-me' />
-              <Label htmlFor='mode-me' className='cursor-pointer font-normal'>
-                {t('schedule.filter.mine')}
-              </Label>
-            </div>
-            <div className='flex items-center gap-2'>
-              <RadioGroupItem value='1' id='mode-mentor' />
-              <Label htmlFor='mode-mentor' className='cursor-pointer font-normal'>
-                {t('schedule.filter.mentor')}
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+            <RadioGroup
+              value={(mode ?? []).length === 0 ? 'all' : String((mode ?? [])[0])}
+              onValueChange={(val) => {
+                if (val === 'all') setMode([])
+                else setMode([parseInt(val, 10)])
+              }}
+            >
+              <div className='flex items-center gap-2'>
+                <RadioGroupItem value='all' id='mode-all' />
+                <Label htmlFor='mode-all' className='cursor-pointer font-normal'>
+                  {t('schedule.filter.all')}
+                </Label>
+              </div>
+              <div className='flex items-center gap-2'>
+                <RadioGroupItem value='0' id='mode-me' />
+                <Label htmlFor='mode-me' className='cursor-pointer font-normal'>
+                  {t('schedule.filter.mine')}
+                </Label>
+              </div>
+              <div className='flex items-center gap-2'>
+                <RadioGroupItem value='1' id='mode-mentor' />
+                <Label htmlFor='mode-mentor' className='cursor-pointer font-normal'>
+                  {t('schedule.filter.mentor')}
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+        ) : null}
 
-        <Accordion
-          type='multiple'
-          defaultValue={
-            purchasedMentorPackages.value.totalCount > 0 || selectedPackageBookingIds?.length === 0 ? ['item-1'] : []
-          }
-        >
-          <AccordionItem value='item-1'>
+        <Accordion type='multiple' defaultValue={['item-1', 'item-2', 'item-3']} className='space-y-2'>
+          <AccordionItem value='item-1' className='border-none'>
             <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
-              {t('schedule.filter.purchasedPackages')}
+              {t('schedule.filter.packageGroups.personal.title')}
             </AccordionTrigger>
             <AccordionContent>
-              <div className='space-y-4 px-3 py-2'>
-                {purchasedMentorPackages.value.items.map((pkg) => (
+              <div className='space-y-4 px-3'>
+                <p className='text-xs text-muted-foreground'>
+                  {t('schedule.filter.packageGroups.personal.description')}
+                </p>
+                {personalPackages.value.items.map((pkg) => (
                   <div key={pkg.packageBookingId} className='flex items-center gap-2'>
                     <Checkbox
                       id={`pkg-${pkg.packageBookingId}`}
@@ -201,7 +212,75 @@ export default function CalendarPage() {
                     />
                     <Label
                       htmlFor={`pkg-${pkg.packageBookingId}`}
-                      className='text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                    >
+                      {pkg.name || pkg.packageBookingId}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value='item-2' className='border-none'>
+            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+              {t('schedule.filter.packageGroups.project.title')}
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className='space-y-4 px-3'>
+                <p className='text-xs text-muted-foreground'>
+                  {t('schedule.filter.packageGroups.project.description')}
+                </p>
+                {projectPackages.value.items.map((pkg) => (
+                  <div key={pkg.packageBookingId} className='flex items-center gap-2'>
+                    <Checkbox
+                      id={`pkg-${pkg.packageBookingId}`}
+                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                        } else {
+                          setSelectedPackageBookingIds(
+                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                          )
+                        }
+                      }}
+                    />
+                    <Label
+                      htmlFor={`pkg-${pkg.packageBookingId}`}
+                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                    >
+                      {pkg.name || pkg.packageBookingId}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value='item-3' className='border-none'>
+            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+              {t('schedule.filter.packageGroups.member.title')}
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className='space-y-4 px-3'>
+                <p className='text-xs text-muted-foreground'>{t('schedule.filter.packageGroups.member.description')}</p>
+                {memberProjectPackages.value.items.map((pkg) => (
+                  <div key={pkg.packageBookingId} className='flex items-center gap-2'>
+                    <Checkbox
+                      id={`pkg-${pkg.packageBookingId}`}
+                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                        } else {
+                          setSelectedPackageBookingIds(
+                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                          )
+                        }
+                      }}
+                    />
+                    <Label
+                      htmlFor={`pkg-${pkg.packageBookingId}`}
+                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
                     >
                       {pkg.name || pkg.packageBookingId}
                     </Label>
@@ -215,7 +294,13 @@ export default function CalendarPage() {
     </div>
   )
 
-  if (isGettingMe || isLoadingPurchasedMentorPackages || isLoadingMyMeetings) {
+  if (
+    isGettingMe ||
+    isLoadingPersonalPackages ||
+    isLoadingMemberProjectPackages ||
+    isLoadingProjectPackages ||
+    isLoadingMyMeetings
+  ) {
     return <CalendarPageSkeleton />
   }
 
@@ -226,6 +311,7 @@ export default function CalendarPage() {
       onDateRangeChange={setDateRange}
       sidebarContent={sidebarContent}
       showSchedulesOverlay={showSchedulesOverlay}
+      displayConfigButton
     />
   )
 }

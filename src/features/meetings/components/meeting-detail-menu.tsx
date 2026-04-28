@@ -9,6 +9,8 @@ import { CalendarClockIcon, ChevronLeftIcon, InfoIcon, Trash2Icon, XIcon } from 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCancelMeeting } from '../hooks/use-cancel-meeting'
+import { useParams } from 'react-router'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 
 interface MeetingDetailMenuProps {
   meetingId: string
@@ -39,6 +41,9 @@ export default function MeetingDetailMenu({
   const [reason, setReason] = useState('')
 
   const { cancelMeeting, isCancellingMeeting } = useCancelMeeting({ mentorId, packageId })
+  const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
 
   const handleCancelMeeting = () => {
     if (!reason.trim()) return
@@ -66,8 +71,10 @@ export default function MeetingDetailMenu({
     ? differenceInHours(new Date(startTimeUtc), new Date()) < MIN_HOURS_TO_CANCEL
     : false
 
-  const canReschedule = status === MeetingStatus.BOOKED && !isWithinHours
-  const canCancel = status === MeetingStatus.BOOKED && !isWithinHours
+  const canReschedule =
+    status === MeetingStatus.BOOKED && !isWithinHours && check('CALENDAR', 'canUpdate', 'canRescheduleMeeting')
+  const canCancel =
+    status === MeetingStatus.BOOKED && !isWithinHours && check('CALENDAR', 'canDelete', 'canCancelMeeting')
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>

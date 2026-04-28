@@ -1,4 +1,5 @@
 import type {
+  CalendarSectionExtensionsFormValues,
   StorageSectionExtensionsFormValues,
   TaskSectionExtensionsFormValues
 } from '@/features/projects/validations'
@@ -77,6 +78,7 @@ export interface ProjectRole {
 export interface SectionExtensionsMap {
   TASKS: TaskSectionExtensionsFormValues
   STORAGE: StorageSectionExtensionsFormValues
+  CALENDAR: CalendarSectionExtensionsFormValues
 }
 
 export type SectionExtensionType<K extends SectionKey> = K extends keyof SectionExtensionsMap

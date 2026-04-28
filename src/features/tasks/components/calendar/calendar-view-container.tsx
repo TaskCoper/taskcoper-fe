@@ -29,6 +29,7 @@ interface CalendarViewContainerProps {
   sidebarContent?: React.ReactNode
   sidebarHeader?: React.ReactNode
   showSchedulesOverlay?: boolean
+  displayConfigButton?: boolean
 }
 
 export default function CalendarViewContainer({
@@ -37,7 +38,8 @@ export default function CalendarViewContainer({
   onDateRangeChange,
   sidebarContent,
   sidebarHeader,
-  showSchedulesOverlay: showSchedulesOverlayProp
+  showSchedulesOverlay: showSchedulesOverlayProp,
+  displayConfigButton = false
 }: CalendarViewContainerProps) {
   const [currentDate, setCurrentDate] = useQueryState('date', parseAsIsoDateTime.withDefault(new Date()))
   const [viewMode, setViewMode] = useQueryState(
@@ -45,7 +47,7 @@ export default function CalendarViewContainer({
     parseAsStringEnum<CalendarViewMode>(['day', 'week', 'month'] as const).withDefault('week')
   )
 
-  const [internalShowSchedulesOverlay] = useState(true)
+  const [internalShowSchedulesOverlay] = useState(false)
   const showSchedulesOverlay = showSchedulesOverlayProp ?? internalShowSchedulesOverlay
 
   const { schedules } = useGetMySchedules({ isActive: true })
@@ -124,6 +126,7 @@ export default function CalendarViewContainer({
           <CalendarHeader
             title={headerTitle}
             viewMode={viewMode}
+            displayConfigButton={displayConfigButton}
             onViewModeChange={setViewMode}
             onPrev={handlePrev}
             onNext={handleNext}

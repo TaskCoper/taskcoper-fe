@@ -10,6 +10,7 @@ export type CalendarViewMode = 'day' | 'week' | 'month'
 interface CalendarHeaderProps {
   title: string
   viewMode: CalendarViewMode
+  displayConfigButton?: boolean
   onViewModeChange: (mode: CalendarViewMode) => void
   onPrev: () => void
   onNext: () => void
@@ -19,6 +20,7 @@ interface CalendarHeaderProps {
 export default function CalendarHeader({
   title,
   viewMode,
+  displayConfigButton = false,
   onViewModeChange,
   onPrev,
   onNext,
@@ -30,7 +32,7 @@ export default function CalendarHeader({
   return (
     <div className='flex items-center border-b shrink-0 gap-2 h-13 px-2.5'>
       <div className='flex items-center gap-2'>
-        {user?.role === 'Mentor' ? (
+        {user?.role === 'Mentor' && displayConfigButton ? (
           <Link to='/calendar/schedules' className='block'>
             <Button size='sm' variant='outline' className='w-full justify-start gap-2'>
               <CalendarCogIcon />

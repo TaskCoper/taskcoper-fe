@@ -16,7 +16,6 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import { MentorScheduleContent } from '@/features/schedules/components/mentor-schedule-dialog'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
@@ -27,7 +26,7 @@ import { enUS, vi } from 'date-fns/locale'
 import { CalendarDaysIcon, EyeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link, useParams } from 'react-router'
 import PurchasedMentorPackageCard from './purchased-mentor-package-card'
 
 interface BookMeetingFromCalendarDialogProps {
@@ -44,9 +43,9 @@ export default function BookMeetingFromCalendarDialog({
   packages
 }: BookMeetingFromCalendarDialogProps) {
   const { t, i18n } = useTranslation()
-  const { me: user } = useGetMe()
 
   const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
+  const { identifier } = useParams<{ identifier: string }>()
 
   const [selectedPackage, setSelectedPackage] = useState<PurchasedMentorPackage | null>(null)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
@@ -122,7 +121,7 @@ export default function BookMeetingFromCalendarDialog({
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                      <BreadcrumbPage className='truncate max-w-[300px]'>{selectedPackage.name}</BreadcrumbPage>
+                      <BreadcrumbPage className='truncate max-w-75'>{selectedPackage.name}</BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
                 </Breadcrumb>
@@ -152,24 +151,22 @@ export default function BookMeetingFromCalendarDialog({
 
         {!isScheduleStep && (
           <div className='grid grid-cols-3 gap-4 mt-2'>
-            {packages
-              .filter((x) => x.projectOwnerId === user?.id)
-              .map((pkg) => {
-                const completed =
-                  pkg.meetings?.filter((m) => m.status === MeetingStatus.COMPLETED && !m.parentId).length ?? 0
-                const total = pkg.totalSessions ?? 1
-                const isDone = completed >= total
+            {packages.map((pkg) => {
+              const completed =
+                pkg.meetings?.filter((m) => m.status === MeetingStatus.COMPLETED && !m.parentId).length ?? 0
+              const total = pkg.totalSessions ?? 1
+              const isDone = completed >= total
 
-                return (
-                  <div
-                    key={pkg.packageBookingId}
-                    onClick={() => !isDone && setSelectedPackage(pkg)}
-                    className={isDone ? 'opacity-80 cursor-not-allowed' : 'cursor-pointer'}
-                  >
-                    <PurchasedMentorPackageCard mentorPackage={pkg} />
-                  </div>
-                )
-              })}
+              return (
+                <div
+                  key={pkg.packageBookingId}
+                  onClick={() => !isDone && setSelectedPackage(pkg)}
+                  className={isDone ? 'opacity-80 cursor-not-allowed' : 'cursor-pointer'}
+                >
+                  <PurchasedMentorPackageCard mentorPackage={pkg} />
+                </div>
+              )
+            })}
           </div>
         )}
 
@@ -216,6 +213,7 @@ export default function BookMeetingFromCalendarDialog({
                   mentorUserId={detail.mentorUserId}
                   selectedTimeSlots={selectedTimeSlots}
                   onSelectedTimeSlotsChange={setSelectedTimeSlots}
+                  projectIdentifier={identifier}
                   limitSlots={limitSlots}
                   bookByProjectId={detail.projectId}
                   packageBookingId={detail.packageBookingId}

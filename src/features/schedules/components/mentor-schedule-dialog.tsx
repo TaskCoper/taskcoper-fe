@@ -27,6 +27,7 @@ export interface MentorScheduleContentProps {
   onSelectedTimeSlotsChange: (selectedTimeSlots: SelectedTimeSlot[]) => void
   limitSlots?: number
   mentorUserId: string
+  projectIdentifier?: string
   bookByProjectId: string | null
   packageBookingId: string | null
   packageSessionNumber: number | null
@@ -44,10 +45,15 @@ export function MentorScheduleContent({
   packageBookingId,
   packageSessionNumber,
   meetingId,
+  projectIdentifier,
   onSuccess
 }: MentorScheduleContentProps) {
   const { me: user } = useGetMe()
-  const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({ packageId: packageBookingId ?? undefined })
+  const { methods, bookMeeting, isBookingMeeting } = useBookMeeting({
+    packageId: packageBookingId ?? undefined,
+    projectIdentifier
+  })
+
   const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting({
     packageId: packageBookingId ?? undefined,
     mentorId: mentorUserId
@@ -423,7 +429,7 @@ export function MentorScheduleContent({
         </div>
       )}
 
-      <div className='flex items-center gap-2 justify-end'>
+      <div className='flex items-center gap-2 justify-end mt-4'>
         <Button
           variant='outline'
           onClick={() => onSelectedTimeSlotsChange([])}

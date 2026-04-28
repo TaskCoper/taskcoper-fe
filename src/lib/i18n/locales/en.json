@@ -28,7 +28,8 @@
       "delete": "Delete",
       "insert": "Insert",
       "download": "Download",
-      "back": "Back"
+      "back": "Back",
+      "upload": "Upload"
     },
     "field": {
       "label": "Label",
@@ -185,7 +186,21 @@
       "all": "All",
       "mine": "Mine",
       "mentor": "Mentor's",
-      "purchasedPackages": "Purchased packages"
+      "purchasedPackages": "Purchased packages",
+      "packageGroups": {
+        "personal": {
+          "title": "Personal",
+          "description": "Personal meeting packages"
+        },
+        "project": {
+          "title": "Project",
+          "description": "Project-owned meeting packages that you are allowed to book"
+        },
+        "member": {
+          "title": "Member",
+          "description": "Project-owned meeting packages from projects where you are a member"
+        }
+      }
     },
     "update": {
       "description": "Update your schedule information."
@@ -811,6 +826,9 @@
         "description": {
           "maxLength": "Max 255 characters"
         },
+        "permissions": {
+          "minLength": "Please choose a template"
+        },
         "projectIdentifier": {
           "minLength": "Project is required"
         }
@@ -937,7 +955,8 @@
         "moveMilestone": "Move milestone",
         "toggleTaskStatus": "Toggle task status",
         "storageReadTitle": "Storage read extensions",
-        "downloadFiles": "Download files"
+        "downloadFiles": "Download files",
+        "empty": "No detailed permissions configured."
       },
       "permissionsConfig": {
         "tasks": {
@@ -993,6 +1012,41 @@
             },
             "extensions": {
               "viewTaskPerformanceMetrics": "View task performance metrics"
+            }
+          }
+        },
+        "calendar": {
+          "canRead": {
+            "permission": {
+              "readCalendar": "Read calendar"
+            },
+            "extensions": {
+              "viewProjectCalendar": "View project calendar"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeCalendar": "Write calendar"
+            },
+            "extensions": {
+              "purchaseMeetingPackage": "Purchase meeting package",
+              "bookMeeting": "Book meeting"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateCalendar": "Update calendar"
+            },
+            "extensions": {
+              "rescheduleMeeting": "Reschedule meeting"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteCalendar": "Delete calendar"
+            },
+            "extensions": {
+              "cancelMeeting": "Cancel meeting"
             }
           }
         },
@@ -2268,6 +2322,8 @@
       "pricePlaceholder": "Enter price",
       "currency": "Currency",
       "currencyPlaceholder": "Select currency",
+      "coverImage": "Cover image",
+      "coverImageHint": "Click the image area to choose a cover, then press Save to upload.",
       "isActive": "Active",
       "isActiveDescription": "If disabled, this package will not be visible/available."
     },
