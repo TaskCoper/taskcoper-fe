@@ -230,25 +230,25 @@ export default function ProfilePage() {
         label: t('user.tabs.all'),
         value: 'all',
         content: <AllTab userDetail={user} />
-      },
-      {
-        id: 50,
-        label: t('user.tabs.info'),
-        value: 'info',
-        content: <div>Comming Soon</div>
-      },
-      {
-        id: 100,
-        label: t('user.tabs.projects'),
-        value: 'projects',
-        content: <div>Comming Soon</div>
-      },
-      {
-        id: 150,
-        label: t('user.tabs.files'),
-        value: 'files',
-        content: <div>Comming Soon</div>
       }
+      // {
+      //   id: 50,
+      //   label: t('user.tabs.info'),
+      //   value: 'info',
+      //   content: <div>Comming Soon</div>
+      // },
+      // {
+      //   id: 100,
+      //   label: t('user.tabs.projects'),
+      //   value: 'projects',
+      //   content: <div>Comming Soon</div>
+      // },
+      // {
+      //   id: 150,
+      //   label: t('user.tabs.files'),
+      //   value: 'files',
+      //   content: <div>Comming Soon</div>
+      // }
     ]
   }, [t, user])
 
@@ -583,7 +583,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className='w-full max-w-315 mx-auto py-2'>
+      <div className='w-full max-w-315 mx-auto py-4'>
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.value} className='px-4'>
             {tab.content}

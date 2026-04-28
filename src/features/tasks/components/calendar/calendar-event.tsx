@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { CALENDAR_HOUR_HEIGHT, CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME } from '@/features/tasks/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
@@ -21,7 +20,11 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
   const { me: user } = useGetMe()
 
   const isMentor = meeting.mentorUserId === user?.id
-  const theme = getMeetingStatusTheme(meeting.status)
+  const theme = {
+    dot: 'bg-blue-500',
+    block: 'border-blue-500 bg-blue-600 hover:bg-blue-700 text-white',
+    avatar: 'bg-blue-600 text-white'
+  }
 
   if (isMentor && (!meeting.status || meeting.status === MeetingStatus.BOOKED)) {
     theme.block =

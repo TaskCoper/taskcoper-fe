@@ -20,6 +20,7 @@ export interface UseGetTasksParams {
   memberIds?: string[]
   priorities?: (string | null)[]
   isWatchingTask?: boolean
+  projectIdentifier?: string
 }
 
 export const useGetTasks = ({
@@ -36,6 +37,7 @@ export const useGetTasks = ({
   memberIds,
   priorities,
   isWatchingTask,
+  projectIdentifier,
   enabled = true
 }: UseGetTasksParams) => {
   const { data: tasks = getDefaultPaginationResponse<TaskRow>(), isLoading: isLoadingTasks } = useQuery({
@@ -52,6 +54,7 @@ export const useGetTasks = ({
       name,
       memberIds,
       priorities,
+      projectIdentifier,
       isWatchingTask
     }),
     queryFn: () =>
@@ -68,6 +71,7 @@ export const useGetTasks = ({
         name,
         memberIds,
         priorities,
+        projectIdentifier,
         isWatchingTask
       }),
     enabled

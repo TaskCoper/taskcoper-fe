@@ -24,13 +24,12 @@ import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { MenuIcon, PlusIcon } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
+import { Outlet, useMatches, useNavigate, useParams } from 'react-router'
 
 const secondSidebarRoutes = ['milestones']
 
 export default function ProjectDetailLayout() {
   const navigate = useNavigate()
-  const location = useLocation()
   const { identifier } = useParams<{ identifier: string }>()
 
   const { removeLastActiveMilestone } = useMilestonePreferencesStore()
@@ -43,15 +42,23 @@ export default function ProjectDetailLayout() {
   const isMobile = useIsMobile()
   const sensors = useDndSensors()
 
+  const matches = useMatches()
+
   // get the current route for later checks
   const activeSegment = useMemo(() => {
-    const parts = location.pathname.split('/')
-    const projectIndex = parts.findIndex((p: string) => p === 'projects')
-    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
-      return parts[projectIndex + 2]
+    const matchWithSidebar = [...matches]
+      .reverse()
+      .find((match) => match.handle && typeof match.handle === 'object' && 'sidebarItem' in match.handle)
+    if (
+      matchWithSidebar &&
+      matchWithSidebar.handle &&
+      typeof matchWithSidebar.handle === 'object' &&
+      'sidebarItem' in matchWithSidebar.handle
+    ) {
+      return matchWithSidebar.handle.sidebarItem as string
     }
     return ''
-  }, [location.pathname])
+  }, [matches])
 
   // only show second sidebar on specific routes
   const hasSecondSidebar = secondSidebarRoutes.includes(activeSegment)
@@ -219,7 +226,7 @@ export default function ProjectDetailLayout() {
               {isLoadingParentMilestones ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
-                <div className='flex-1 max-w-4/6 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+                <div className='flex-1 max-w-4/6 overflow-x-auto'>
                   <div className='flex items-center gap-2'>
                     <DndContext
                       collisionDetection={customCollisionDetection}

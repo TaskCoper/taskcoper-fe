@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import MeetingDetailMenu from '@/features/meetings/components/meeting-detail-menu'
 import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
@@ -72,6 +73,8 @@ export default function MeetingDialogPage() {
 
   const { meetingId } = useParams<{ meetingId: string }>()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
+  const { me } = useGetMe()
+
   const { t } = useTranslation()
   const [isRescheduling, setIsRescheduling] = useState(false)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
@@ -158,14 +161,7 @@ export default function MeetingDialogPage() {
         position='top-center'
         showCloseButton={false}
       >
-        <DialogHeader
-          className={cn(
-            'px-6 py-4 space-y-1',
-            getMeetingStatusTheme(meeting?.status).block.includes('bg-')
-              ? getMeetingStatusTheme(meeting?.status).block
-              : 'bg-primary text-white'
-          )}
-        >
+        <DialogHeader className='px-6 py-4 space-y-1 bg-muted'>
           <VisuallyHidden>
             <DialogDescription>
               {meeting?.projectId && meeting?.project ? `[${meeting.project.name}] - ` : null}
@@ -207,17 +203,17 @@ export default function MeetingDialogPage() {
           </DialogTitle>
 
           <div className='flex items-center gap-2'>
-            <p className='px-3 py-2 bg-white/20 rounded-md text-sm text-white font-medium backdrop-blur-sm'>
+            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
               {meeting?.startTimeUtc ? format(new Date(meeting.startTimeUtc), t('meeting.detail.dateFormat')) : '-'}
             </p>
-            <p className='px-3 py-2 bg-white/20 rounded-md text-sm text-white font-medium backdrop-blur-sm'>
+            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
               {meeting?.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : '-'}
             </p>
-            <p className='text-sm text-white/80 font-medium px-1'>{t('meeting.detail.to')}</p>
-            <p className='px-3 py-2 bg-white/20 rounded-md text-sm text-white font-medium backdrop-blur-sm'>
+            <p className='text-sm font-medium px-1'>{t('meeting.detail.to')}</p>
+            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
               {meeting?.endTimeUtc ? format(new Date(meeting.endTimeUtc), 'h:mm a') : '-'}
             </p>
-            <p className='text-sm text-white/80 ml-2'>{getTimezoneString()}</p>
+            <p className='text-sm ml-2'>{getTimezoneString()}</p>
           </div>
 
           <div className='absolute top-4 right-4 flex items-center gap-1'>
@@ -229,6 +225,7 @@ export default function MeetingDialogPage() {
                 mentorId={meeting.mentorUserId}
                 packageId={meeting.packageBookingId}
                 onReschedule={() => setIsRescheduling(true)}
+                calendarPermission={meeting.calendarPermission}
               >
                 <Button variant='secondary' size='icon-sm' className='size-7'>
                   <MoreHorizontalIcon />
@@ -389,7 +386,7 @@ export default function MeetingDialogPage() {
               <p className='text-sm font-medium'>{t('meeting.detail.mentor')}</p>
 
               <Link to={`/users/${meeting?.mentorUserId}`} className='flex items-center gap-2'>
-                <Avatar className='ring-2 ring-primary ring-offset-2'>
+                <Avatar>
                   <AvatarImage className='hover:brightness-90' src={meeting?.mentor.avatarUrl ?? undefined} />
                   <AvatarFallback>
                     {getAvatarFallback(`${meeting?.mentor.firstName} ${meeting?.mentor.lastName}`)}
@@ -397,7 +394,7 @@ export default function MeetingDialogPage() {
                 </Avatar>
 
                 <div className='-space-y-0.5'>
-                  <p className='text-sm font-medium'>
+                  <p className='text-sm font-medium hover:underline hover:text-primary'>
                     {meeting?.mentor.firstName} {meeting?.mentor.lastName}
                   </p>
                   <p className='text-xs text-muted-foreground'>{meeting?.mentor.email}</p>
@@ -408,23 +405,37 @@ export default function MeetingDialogPage() {
             <div className='space-y-2.5'>
               <p className='text-sm font-medium'>{t('meeting.detail.participants')}</p>
 
-              {meeting?.projectId && meeting.project
-                ? meeting.project.members.map((member) => (
-                    <Link to={`/users/${member.userId}`} className='flex items-center gap-2' key={member.userId}>
-                      <Avatar>
-                        <AvatarImage src={member.avatarUrl ?? undefined} className='hover:brightness-90' />
-                        <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
-                      </Avatar>
+              {meeting?.projectId && meeting.project ? (
+                meeting.project.members.map((member) => (
+                  <Link to={`/users/${member.slug}`} className='flex items-center gap-2' key={member.userId}>
+                    <Avatar>
+                      <AvatarImage src={member.avatarUrl ?? undefined} className='hover:brightness-90' />
+                      <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
+                    </Avatar>
 
-                      <div className='-space-y-0.5'>
-                        <p className='text-sm font-medium'>
-                          {member.firstName} {member.lastName}
-                        </p>
-                        <p className='text-xs text-muted-foreground'>{member.email}</p>
-                      </div>
-                    </Link>
-                  ))
-                : null}
+                    <div className='-space-y-0.5'>
+                      <p className='text-sm font-medium hover:underline hover:text-primary'>
+                        {member.firstName} {member.lastName}
+                      </p>
+                      <p className='text-xs text-muted-foreground'>{member.email}</p>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <Link to={`/users/${me?.slug}`} className='flex items-center gap-2' key={me?.id}>
+                  <Avatar>
+                    <AvatarImage src={me?.avatar ?? undefined} className='hover:brightness-90' />
+                    <AvatarFallback>{getAvatarFallback(`${me?.firstName} ${me?.lastName}`)}</AvatarFallback>
+                  </Avatar>
+
+                  <div className='-space-y-0.5'>
+                    <p className='text-sm font-medium'>
+                      {me?.firstName} {me?.lastName}
+                    </p>
+                    <p className='text-xs text-muted-foreground'>{me?.email}</p>
+                  </div>
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -2,13 +2,11 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import BookMeetingDialog from '@/features/meetings/components/book-meeting-dialog'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import { formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
-import type { ScheduleSlot } from '@/types/schedule.type'
 import { addWeeks, endOfWeek, format, getISOWeek, getYear, startOfWeek, subWeeks } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { CalendarDaysIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
@@ -78,15 +76,15 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
     [currentWeekStart, weekEnd]
   )
 
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [initialSlot, setInitialSlot] = useState<ScheduleSlot | undefined>()
-  const [initialDate, setInitialDate] = useState<Date | undefined>()
+  // const [dialogOpen, setDialogOpen] = useState(false)
+  // const [initialSlot, setInitialSlot] = useState<ScheduleSlot | undefined>()
+  // const [initialDate, setInitialDate] = useState<Date | undefined>()
 
-  const handleOpenDialog = (slot: ScheduleSlot, date: Date) => {
-    setInitialSlot(slot)
-    setInitialDate(date)
-    setDialogOpen(true)
-  }
+  // const handleOpenDialog = (slot: ScheduleSlot, date: Date) => {
+  //   setInitialSlot(slot)
+  //   setInitialDate(date)
+  //   setDialogOpen(true)
+  // }
 
   const { t, i18n } = useTranslation()
   const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
@@ -244,7 +242,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
                         key={`${slot.dayOfWeek}-${slot.startTimeUtc}`}
                         type='button'
                         disabled={isDisabled}
-                        onClick={() => !isDisabled && handleOpenDialog(slot, day.date)}
+                        // onClick={() => !isDisabled && handleOpenDialog(slot, day.date)}
                         className={cn(
                           'w-full p-2 rounded-md text-center transition-all duration-200 border',
                           isDisabled
@@ -276,7 +274,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
         </div>
       )}
 
-      <BookMeetingDialog
+      {/* <BookMeetingDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         mentorId={userId}
@@ -284,7 +282,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
         bookedSchedule={bookedSchedule}
         initialDate={initialDate}
         initialSlot={initialSlot}
-      />
+      /> */}
     </Card>
   )
 }

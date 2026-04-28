@@ -79,7 +79,7 @@ const VoucherTargetCard = ({ target, voucherId }: { target: VoucherTargetRow; vo
       {target.coverImageUrl ? (
         <img src={target.coverImageUrl} alt={target.targetName} className='h-40 w-full object-cover' />
       ) : (
-        <div className='h-40 bg-muted-foreground' />
+        <div className='h-40 bg-muted' />
       )}
 
       <div>

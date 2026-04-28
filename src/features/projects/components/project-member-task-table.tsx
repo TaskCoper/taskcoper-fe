@@ -139,7 +139,8 @@ export default function ProjectMemberTaskTable({
     memberIds: memberId ? [memberId] : undefined,
     priorities,
     isWatchingTask,
-    enabled: !!memberId
+    enabled: !!memberId,
+    projectIdentifier
   })
 
   const filterOptionOverrides = useMemo(() => {

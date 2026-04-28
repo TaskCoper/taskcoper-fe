@@ -29,7 +29,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useParams } from 'react-router'
+import { Link, useLocation, useMatches, useParams } from 'react-router'
 
 interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onTaskCountChange?: (count: number, isLoading: boolean) => void
@@ -117,14 +117,21 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
     return navMain.filter((item) => can(item.sectionKey, 'canRead'))
   }, [navMain, can])
 
+  const matches = useMatches()
   const activeSegment = useMemo(() => {
-    const parts = location.pathname.split('/')
-    const projectIndex = parts.findIndex((p) => p === 'projects')
-    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
-      return parts[projectIndex + 2]
+    const matchWithSidebar = [...matches]
+      .reverse()
+      .find((match) => match.handle && typeof match.handle === 'object' && 'sidebarItem' in match.handle)
+    if (
+      matchWithSidebar &&
+      matchWithSidebar.handle &&
+      typeof matchWithSidebar.handle === 'object' &&
+      'sidebarItem' in matchWithSidebar.handle
+    ) {
+      return matchWithSidebar.handle.sidebarItem as string
     }
     return 'milestones'
-  }, [location.pathname])
+  }, [matches])
 
   const activeItem = filteredNavMain.find((item) => item.url === activeSegment) || filteredNavMain[0] || navMain[1]
 

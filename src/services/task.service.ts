@@ -31,7 +31,8 @@ class TaskService {
     name,
     memberIds,
     priorities,
-    isWatchingTask
+    isWatchingTask,
+    projectIdentifier
   }: UseGetTasksParams) => {
     const { data } = await api.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
       params: {
@@ -49,7 +50,8 @@ class TaskService {
         searchTerm: name,
         memberIds,
         priorities,
-        isWatching: isWatchingTask
+        isWatching: isWatchingTask,
+        projectIdentifier
       }
     })
 

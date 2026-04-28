@@ -130,7 +130,7 @@ export default function CalendarPage() {
 
       <Separator className='mt-4' />
 
-      <div className='flex flex-col justify-between gap-8 mt-2 px-2'>
+      <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
         {user?.role === 'Mentor' && (
           <div className='space-y-2 px-3'>
             <div className='flex items-start space-x-2'>
@@ -164,19 +164,19 @@ export default function CalendarPage() {
               }}
             >
               <div className='flex items-center gap-2'>
-                <RadioGroupItem value='all' id='mode-all' />
+                <RadioGroupItem value='all' id='mode-all' className='border-2' />
                 <Label htmlFor='mode-all' className='cursor-pointer font-normal'>
                   {t('schedule.filter.all')}
                 </Label>
               </div>
               <div className='flex items-center gap-2'>
-                <RadioGroupItem value='0' id='mode-me' />
+                <RadioGroupItem value='0' id='mode-me' className='border-orange-600 text-orange-600 border-2' />
                 <Label htmlFor='mode-me' className='cursor-pointer font-normal'>
                   {t('schedule.filter.mine')}
                 </Label>
               </div>
               <div className='flex items-center gap-2'>
-                <RadioGroupItem value='1' id='mode-mentor' />
+                <RadioGroupItem value='1' id='mode-mentor' className='border-blue-600 text-blue-600 border-2' />
                 <Label htmlFor='mode-mentor' className='cursor-pointer font-normal'>
                   {t('schedule.filter.mentor')}
                 </Label>
@@ -186,109 +186,126 @@ export default function CalendarPage() {
         ) : null}
 
         <Accordion type='multiple' defaultValue={['item-1', 'item-2', 'item-3']} className='space-y-2'>
-          <AccordionItem value='item-1' className='border-none'>
-            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
-              {t('schedule.filter.packageGroups.personal.title')}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className='space-y-4 px-3'>
-                <p className='text-xs text-muted-foreground'>
-                  {t('schedule.filter.packageGroups.personal.description')}
-                </p>
-                {personalPackages.value.items.map((pkg) => (
-                  <div key={pkg.packageBookingId} className='flex items-center gap-2'>
-                    <Checkbox
-                      id={`pkg-${pkg.packageBookingId}`}
-                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
-                        } else {
-                          setSelectedPackageBookingIds(
-                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
-                          )
-                        }
-                      }}
-                    />
-                    <Label
-                      htmlFor={`pkg-${pkg.packageBookingId}`}
-                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
-                    >
-                      {pkg.name || pkg.packageBookingId}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='item-2' className='border-none'>
-            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
-              {t('schedule.filter.packageGroups.project.title')}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className='space-y-4 px-3'>
-                <p className='text-xs text-muted-foreground'>
-                  {t('schedule.filter.packageGroups.project.description')}
-                </p>
-                {projectPackages.value.items.map((pkg) => (
-                  <div key={pkg.packageBookingId} className='flex items-center gap-2'>
-                    <Checkbox
-                      id={`pkg-${pkg.packageBookingId}`}
-                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
-                        } else {
-                          setSelectedPackageBookingIds(
-                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
-                          )
-                        }
-                      }}
-                    />
-                    <Label
-                      htmlFor={`pkg-${pkg.packageBookingId}`}
-                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
-                    >
-                      {pkg.name || pkg.packageBookingId}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='item-3' className='border-none'>
-            <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
-              {t('schedule.filter.packageGroups.member.title')}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className='space-y-4 px-3'>
-                <p className='text-xs text-muted-foreground'>{t('schedule.filter.packageGroups.member.description')}</p>
-                {memberProjectPackages.value.items.map((pkg) => (
-                  <div key={pkg.packageBookingId} className='flex items-center gap-2'>
-                    <Checkbox
-                      id={`pkg-${pkg.packageBookingId}`}
-                      checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
-                        } else {
-                          setSelectedPackageBookingIds(
-                            (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
-                          )
-                        }
-                      }}
-                    />
-                    <Label
-                      htmlFor={`pkg-${pkg.packageBookingId}`}
-                      className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
-                    >
-                      {pkg.name || pkg.packageBookingId}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
+          {personalPackages.value.totalCount > 0 ? (
+            <AccordionItem value='item-1' className='border-none'>
+              <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+                {t('schedule.filter.packageGroups.personal.title')}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className='space-y-4 px-3'>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('schedule.filter.packageGroups.personal.description')}
+                  </p>
+                  {personalPackages.value.items.map((pkg) => (
+                    <div key={pkg.packageBookingId} className='flex items-center gap-2'>
+                      <Checkbox
+                        id={`pkg-${pkg.packageBookingId}`}
+                        checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                          } else {
+                            setSelectedPackageBookingIds(
+                              (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                            )
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={`pkg-${pkg.packageBookingId}`}
+                        className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                      >
+                        {pkg.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ) : null}
+
+          {projectPackages.value.totalCount > 0 ? (
+            <AccordionItem value='item-2' className='border-none'>
+              <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+                {t('schedule.filter.packageGroups.project.title')}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className='space-y-4 px-3'>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('schedule.filter.packageGroups.project.description')}
+                  </p>
+                  {projectPackages.value.items.map((pkg) => (
+                    <div key={pkg.packageBookingId} className='flex items-center gap-2'>
+                      <Checkbox
+                        id={`pkg-${pkg.packageBookingId}`}
+                        checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                          } else {
+                            setSelectedPackageBookingIds(
+                              (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                            )
+                          }
+                        }}
+                      />
+
+                      <div>
+                        <Label
+                          htmlFor={`pkg-${pkg.packageBookingId}`}
+                          className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                        >
+                          {pkg.name}
+                        </Label>
+                        <p className='text-xs text-muted-foreground line-clamp-1'>{pkg.project?.name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ) : null}
+
+          {memberProjectPackages.value.totalCount > 0 ? (
+            <AccordionItem value='item-3' className='border-none'>
+              <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
+                {t('schedule.filter.packageGroups.member.title')}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className='space-y-4 px-3'>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('schedule.filter.packageGroups.member.description')}
+                  </p>
+                  {memberProjectPackages.value.items.map((pkg) => (
+                    <div key={pkg.packageBookingId} className='flex items-center gap-2'>
+                      <Checkbox
+                        id={`pkg-${pkg.packageBookingId}`}
+                        checked={(selectedPackageBookingIds ?? []).includes(pkg.packageBookingId)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedPackageBookingIds([...(selectedPackageBookingIds ?? []), pkg.packageBookingId])
+                          } else {
+                            setSelectedPackageBookingIds(
+                              (selectedPackageBookingIds ?? []).filter((id) => id !== pkg.packageBookingId)
+                            )
+                          }
+                        }}
+                      />
+                      <div>
+                        <Label
+                          htmlFor={`pkg-${pkg.packageBookingId}`}
+                          className='text-sm font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer line-clamp-1'
+                        >
+                          {pkg.name}
+                        </Label>
+                        <p className='text-xs text-muted-foreground line-clamp-1'>{pkg.project?.name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ) : null}
         </Accordion>
       </div>
     </div>

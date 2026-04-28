@@ -2,15 +2,16 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { MeetingStatus } from '@/types/meeting.type'
+import type { SectionPermission } from '@/types/project-permission.type'
 import { differenceInHours } from 'date-fns'
 import { CalendarClockIcon, ChevronLeftIcon, InfoIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCancelMeeting } from '../hooks/use-cancel-meeting'
 import { useParams } from 'react-router'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useCancelMeeting } from '../hooks/use-cancel-meeting'
 
 interface MeetingDetailMenuProps {
   meetingId: string
@@ -19,6 +20,7 @@ interface MeetingDetailMenuProps {
   status: MeetingStatus
   startTimeUtc?: string
   children: React.ReactNode
+  calendarPermission: Extract<SectionPermission, { sectionKey: 'CALENDAR' }>
   onReschedule: () => void
   onCancelSuccess?: () => void
 }
@@ -32,6 +34,7 @@ export default function MeetingDetailMenu({
   packageId,
   startTimeUtc,
   children,
+  calendarPermission,
   onReschedule,
   onCancelSuccess
 }: MeetingDetailMenuProps) {
@@ -71,10 +74,23 @@ export default function MeetingDetailMenu({
     ? differenceInHours(new Date(startTimeUtc), new Date()) < MIN_HOURS_TO_CANCEL
     : false
 
-  const canReschedule =
-    status === MeetingStatus.BOOKED && !isWithinHours && check('CALENDAR', 'canUpdate', 'canRescheduleMeeting')
-  const canCancel =
-    status === MeetingStatus.BOOKED && !isWithinHours && check('CALENDAR', 'canDelete', 'canCancelMeeting')
+  const canAction = status === MeetingStatus.BOOKED && !isWithinHours
+
+  const canReschedule = identifier
+    ? canAction && check('CALENDAR', 'canUpdate', 'canRescheduleMeeting')
+    : canAction &&
+      calendarPermission?.canUpdate &&
+      (typeof calendarPermission.extensions === 'string'
+        ? JSON.parse(calendarPermission.extensions).canUpdate.canRescheduleMeeting
+        : calendarPermission.extensions?.canUpdate.canRescheduleMeeting)
+
+  const canCancel = identifier
+    ? canAction && check('CALENDAR', 'canDelete', 'canCancelMeeting')
+    : canAction &&
+      calendarPermission?.canDelete &&
+      (typeof calendarPermission.extensions === 'string'
+        ? JSON.parse(calendarPermission.extensions).canDelete.canCancelMeeting
+        : calendarPermission.extensions?.canDelete.canCancelMeeting)
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>

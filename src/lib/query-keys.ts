@@ -138,6 +138,7 @@ export const queryKeys = {
       name,
       memberIds,
       priorities,
+      projectIdentifier,
       isWatchingTask
     }: UseGetTasksParams) =>
       [
@@ -153,6 +154,7 @@ export const queryKeys = {
         name,
         memberIds,
         priorities,
+        projectIdentifier,
         isWatchingTask
       ] as const,
     listParent: (parentMilestoneIdentifier?: string) => [...queryKeys.tasks.all, parentMilestoneIdentifier] as const,

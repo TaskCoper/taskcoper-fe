@@ -176,6 +176,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='TASKS' />,
+                    handle: { sidebarItem: 'milestones' },
                     children: [
                       {
                         path: 'milestones',
@@ -195,6 +196,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='REVENUE' />,
+                    handle: { sidebarItem: 'revenue' },
                     children: [
                       {
                         path: 'revenue',
@@ -204,6 +206,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='OVERVIEW' />,
+                    handle: { sidebarItem: 'info' },
                     children: [
                       {
                         path: 'info',
@@ -213,6 +216,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
+                    handle: { sidebarItem: 'calendar' },
                     children: [
                       {
                         path: 'calendar',
@@ -228,6 +232,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
+                    handle: { sidebarItem: 'performance' },
                     children: [
                       {
                         path: 'performance',
@@ -237,6 +242,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
+                    handle: { sidebarItem: 'chat' },
                     children: [
                       {
                         path: 'chat',
@@ -250,6 +256,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
+                    handle: { sidebarItem: 'note' },
                     children: [
                       {
                         path: 'note',
@@ -263,6 +270,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
+                    handle: { sidebarItem: 'storage' },
                     children: [
                       {
                         path: 'storage',
@@ -278,6 +286,7 @@ export const userRoutes: RouteObject[] = [
                   },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='SETTINGS' />,
+                    handle: { sidebarItem: 'settings' },
                     children: [
                       {
                         path: 'settings',
