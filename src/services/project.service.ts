@@ -694,6 +694,14 @@ class ProjectService {
 
     return data.value
   }
+
+  getProjectsForPackage = async () => {
+    const { data } = await api.get<
+      BasePaginationResponse<Pick<Project, 'id' | 'slug' | 'name' | 'logoImage' | 'coverImage'>>
+    >(`/v1/${this.baseUrl}/me/bookable-for-mentor-package`)
+
+    return data
+  }
 }
 
 const projectService = new ProjectService()

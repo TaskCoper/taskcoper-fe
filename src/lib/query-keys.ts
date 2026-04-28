@@ -111,7 +111,8 @@ export const queryKeys = {
       list: (identifier?: string) => [...queryKeys.projects.positionTitles.all(identifier)] as const,
       member: (projectIdentifier?: string, userId?: string) =>
         ['project-member-position-titles', projectIdentifier, userId] as const
-    }
+    },
+    forPackage: () => ['projects-for-package'] as const
   },
   // Milestones
   milestones: {

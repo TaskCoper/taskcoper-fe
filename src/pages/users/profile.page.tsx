@@ -294,9 +294,45 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className='w-full max-w-315 mx-auto py-4 px-4 space-y-4'>
-          <Skeleton className='h-32 w-full rounded-lg' />
-          <Skeleton className='h-24 w-full rounded-lg' />
+        <div className='w-full max-w-315 mx-auto py-4 px-4'>
+          <div className='pb-20 grid grid-cols-12 gap-4'>
+            <div className='col-span-3 space-y-12'>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <Skeleton className='size-5 rounded-full' />
+                  <Skeleton className='h-4 w-16' />
+                </div>
+                <div className='flex items-center flex-wrap gap-1'>
+                  <Skeleton className='h-5 w-16 rounded-sm' />
+                  <Skeleton className='h-5 w-20 rounded-sm' />
+                  <Skeleton className='h-5 w-14 rounded-sm' />
+                </div>
+              </div>
+            </div>
+
+            <div className='col-span-9 space-y-4'>
+              <div className='grid grid-cols-12 gap-2'>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className='shrink-0 col-span-4 rounded-lg border overflow-hidden bg-card'>
+                    <Skeleton className='w-full h-28 rounded-none' />
+                    <div className='p-2 space-y-3'>
+                      <div className='flex items-center justify-between gap-2'>
+                        <Skeleton className='h-4 w-24' />
+                        <Skeleton className='h-4 w-12' />
+                      </div>
+                      <div className='space-y-1.5'>
+                        <Skeleton className='h-3 w-full' />
+                        <Skeleton className='h-3 w-2/3' />
+                      </div>
+                      <Skeleton className='h-8 w-full mt-1' />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Skeleton className='h-[400px] w-full rounded-lg' />
+            </div>
+          </div>
         </div>
       </div>
     )
