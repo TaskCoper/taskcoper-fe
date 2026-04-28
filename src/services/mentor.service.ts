@@ -1,5 +1,6 @@
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
-import api, { type BasePaginationResponse } from '@/lib/axios'
+import type { UpdateMentorProfileFormValues } from '@/features/mentors/validations'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { Mentor } from '@/types/user.type'
 
 class MentorService {
@@ -18,6 +19,12 @@ class MentorService {
     })
 
     return data
+  }
+
+  updateMentorProfile = async ({ body }: { body: UpdateMentorProfileFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.userIdentifier}`, body)
+
+    return data.value
   }
 }
 

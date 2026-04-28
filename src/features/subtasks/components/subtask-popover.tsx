@@ -13,16 +13,23 @@ import type { AddSubtaskFormValues } from '../validations'
 interface SubtaskPopoverProps {
   children: React.ReactNode
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
+  disabled?: boolean
 }
 
-export default function SubtaskPopover({ children, taskId, projectId, parentMilestoneId }: SubtaskPopoverProps) {
+export default function SubtaskPopover({
+  children,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  disabled = false
+}: SubtaskPopoverProps) {
   const { t } = useTranslation()
   const { methods, addSubtask, isAddingSubtask, open, setOpen, recalculatePosition } = useAddSubtask({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   useEffect(() => {
@@ -52,7 +59,9 @@ export default function SubtaskPopover({ children, taskId, projectId, parentMile
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
@@ -87,6 +96,7 @@ export default function SubtaskPopover({ children, taskId, projectId, parentMile
                 </Field>
               )}
             />
+
             <Button disabled={isAddingSubtask}>
               {isAddingSubtask ? <Spinner /> : null}
               {t('common.button.add')}

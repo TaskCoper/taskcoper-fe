@@ -2,30 +2,38 @@ import FileDropzone from '@/components/file-dropzone'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { MAX_BACKGROUND_SIZE } from '@/shared/constants'
-import type { AxiosError } from 'axios'
 import { ImageOffIcon, XIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
+import { useParams } from 'react-router'
 
 interface BackgroundImagePopoverProps {
   children: React.ReactNode
   onSubmit: () => void
   open: boolean
   setOpen: (open: boolean) => void
+  disabled?: boolean
 }
 
-export default function BackgroundImagePopover({ children, onSubmit, open, setOpen }: BackgroundImagePopoverProps) {
+export default function BackgroundImagePopover({
+  children,
+  onSubmit,
+  open,
+  setOpen,
+  disabled = false
+}: BackgroundImagePopoverProps) {
   const onClose = () => {
     setOpen(false)
   }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         onInteractOutside={onClose}
         sideOffset={8}
@@ -48,51 +56,35 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
   const { watch, setValue } = useFormContext()
   const backgroundImage = watch('backgroundImage')
 
-  const { uploadFileAsync } = useUploadFile()
+  const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
+
+  const { uploadFileWithToast } = useUploadFileWithToast()
 
   const handleUpload = async (file: File | null) => {
     if (!file) return
 
-    const toastId = toast.loading(t('common.ui.uploading'), {
-      description: t('common.ui.pleaseWait')
+    const url = await uploadFileWithToast({
+      file,
+      renderProgress: (progress) => (
+        <div className='w-full min-w-48 space-y-1'>
+          <Progress value={progress} className='w-full' />
+          <p className='text-xs text-muted-foreground'>{progress}%</p>
+        </div>
+      )
     })
 
-    try {
-      const url = await uploadFileAsync({
-        file,
-        onProgress: (progress) => {
-          toast.loading(t('common.ui.uploading'), {
-            id: toastId,
-            description: (
-              <div className='w-full min-w-48 space-y-1'>
-                <Progress value={progress} className='w-full' />
-                <p className='text-xs text-muted-foreground'>{progress}%</p>
-              </div>
-            )
-          })
-        }
-      })
+    if (!url) return
 
-      if (url) {
-        toast.success(t('common.ui.uploadSuccess'), {
-          id: toastId,
-          description: null
-        })
-
-        setValue('backgroundImage', url)
-        onSubmit()
-        onClose()
-      }
-    } catch (error) {
-      toast(t('error.somethingWentWrong'), {
-        id: toastId,
-        description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-      })
-    }
+    setValue('backgroundImage', url, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+    onSubmit()
+    onClose()
   }
 
   const handleRemove = () => {
-    setValue('backgroundImage', null)
+    setValue('backgroundImage', null, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
     onSubmit()
     onClose()
   }
@@ -113,9 +105,11 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
       )}
 
       <div className='flex justify-end items-center gap-2'>
-        <Button size='sm' variant='ghost' onClick={handleRemove}>
-          {t('common.button.remove')}
-        </Button>
+        {canDelete ? (
+          <Button size='sm' variant='ghost' onClick={handleRemove}>
+            {t('common.button.remove')}
+          </Button>
+        ) : null}
 
         <FileDropzone
           onFileChange={handleUpload}

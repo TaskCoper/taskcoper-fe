@@ -1,3 +1,4 @@
+import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import CalendarHeader, { type CalendarViewMode } from '@/features/tasks/components/calendar/calendar-header'
 import DayView from '@/features/tasks/components/calendar/day-view'
 import MiniCalendarSidebar from '@/features/tasks/components/calendar/mini-calendar-sidebar'
@@ -17,7 +18,7 @@ import {
   subMonths,
   subWeeks
 } from 'date-fns'
-import { parseAsStringEnum, useQueryState } from 'nuqs'
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Outlet } from 'react-router'
 
@@ -26,19 +27,30 @@ interface CalendarViewContainerProps {
   onMeetingClick: (meeting: MeetingBooking) => void
   onDateRangeChange: (range: { activeFrom: string; activeTo: string }) => void
   sidebarContent?: React.ReactNode
+  sidebarHeader?: React.ReactNode
+  showSchedulesOverlay?: boolean
+  displayConfigButton?: boolean
 }
 
 export default function CalendarViewContainer({
   meetings,
   onMeetingClick,
   onDateRangeChange,
-  sidebarContent
+  sidebarContent,
+  sidebarHeader,
+  showSchedulesOverlay: showSchedulesOverlayProp,
+  displayConfigButton = false
 }: CalendarViewContainerProps) {
-  const [currentDate, setCurrentDate] = useState(() => new Date())
+  const [currentDate, setCurrentDate] = useQueryState('date', parseAsIsoDateTime.withDefault(new Date()))
   const [viewMode, setViewMode] = useQueryState(
     'view',
-    parseAsStringEnum<CalendarViewMode>(['day', 'week', 'month']).withDefault('week')
+    parseAsStringEnum<CalendarViewMode>(['day', 'week', 'month'] as const).withDefault('week')
   )
+
+  const [internalShowSchedulesOverlay] = useState(false)
+  const showSchedulesOverlay = showSchedulesOverlayProp ?? internalShowSchedulesOverlay
+
+  const { schedules } = useGetMySchedules({ isActive: true })
 
   // Compute dynamic date range based on view mode
   const { activeFrom, activeTo } = useMemo(() => {
@@ -65,28 +77,27 @@ export default function CalendarViewContainer({
   }, [activeFrom, activeTo, onDateRangeChange])
 
   const handlePrev = useCallback(() => {
-    setCurrentDate((d) => {
-      if (viewMode === 'day') return subDays(d, 1)
-      if (viewMode === 'week') return subWeeks(d, 1)
-      return subMonths(d, 1)
-    })
-  }, [viewMode])
+    if (viewMode === 'day') setCurrentDate(subDays(currentDate, 1))
+    else if (viewMode === 'week') setCurrentDate(subWeeks(currentDate, 1))
+    else setCurrentDate(subMonths(currentDate, 1))
+  }, [viewMode, currentDate, setCurrentDate])
 
   const handleNext = useCallback(() => {
-    setCurrentDate((d) => {
-      if (viewMode === 'day') return addDays(d, 1)
-      if (viewMode === 'week') return addWeeks(d, 1)
-      return addMonths(d, 1)
-    })
-  }, [viewMode])
+    if (viewMode === 'day') setCurrentDate(addDays(currentDate, 1))
+    else if (viewMode === 'week') setCurrentDate(addWeeks(currentDate, 1))
+    else setCurrentDate(addMonths(currentDate, 1))
+  }, [viewMode, currentDate, setCurrentDate])
 
   const handleToday = useCallback(() => {
     setCurrentDate(new Date())
-  }, [])
+  }, [setCurrentDate])
 
-  const handleDateSelect = useCallback((date: Date) => {
-    setCurrentDate(date)
-  }, [])
+  const handleDateSelect = useCallback(
+    (date: Date) => {
+      setCurrentDate(date)
+    },
+    [setCurrentDate]
+  )
 
   const headerTitle = (() => {
     if (viewMode === 'day') {
@@ -102,8 +113,11 @@ export default function CalendarViewContainer({
   return (
     <div className='h-screen flex flex-col'>
       <div className='flex flex-1 min-h-0 w-full max-h-[calc(100vh-3.5rem)]'>
-        <div className='flex flex-col gap-2 border-r p-4'>
-          <MiniCalendarSidebar selectedDate={currentDate} onDateSelect={handleDateSelect} />
+        <div className='flex w-72 shrink-0 flex-col gap-2 border-r overflow-auto'>
+          {sidebarHeader}
+          <div className='px-4 pt-4'>
+            <MiniCalendarSidebar selectedDate={currentDate} onDateSelect={handleDateSelect} />
+          </div>
 
           {sidebarContent}
         </div>
@@ -112,14 +126,31 @@ export default function CalendarViewContainer({
           <CalendarHeader
             title={headerTitle}
             viewMode={viewMode}
+            displayConfigButton={displayConfigButton}
             onViewModeChange={setViewMode}
             onPrev={handlePrev}
             onNext={handleNext}
             onToday={handleToday}
           />
 
-          {viewMode === 'day' && <DayView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />}
-          {viewMode === 'week' && <WeekView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />}
+          {viewMode === 'day' && (
+            <DayView
+              date={currentDate}
+              meetings={meetings}
+              onMeetingClick={onMeetingClick}
+              schedules={schedules?.value?.items}
+              showSchedulesOverlay={showSchedulesOverlay}
+            />
+          )}
+          {viewMode === 'week' && (
+            <WeekView
+              date={currentDate}
+              meetings={meetings}
+              onMeetingClick={onMeetingClick}
+              schedules={schedules?.value?.items}
+              showSchedulesOverlay={showSchedulesOverlay}
+            />
+          )}
           {viewMode === 'month' && <MonthView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />}
         </div>
       </div>

@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
+import AuthRedirectPage from '@/pages/auth-redirect.page'
 import HomePage from '@/pages/home.page'
 import { lazy } from 'react'
 import { type RouteObject } from 'react-router'
@@ -31,6 +32,10 @@ export const publicRoutes: RouteObject[] = [
         element: <ForgotPasswordPage />
       }
     ]
+  },
+  {
+    path: '/redirect',
+    element: <AuthRedirectPage />
   },
   {
     element: <AuthGuardLayout requiresAuth={false} />,

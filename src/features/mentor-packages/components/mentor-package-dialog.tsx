@@ -41,14 +41,14 @@ export default function MentorPackageDialog({ mentorPackage, children }: MentorP
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         isActive: mentorPackage.isActive,
-        sortOrder: mentorPackage.sortOrder
+        position: mentorPackage.position
       })
     }
   }, [open, mentorPackage, methods])
 
   const handleDelete = async () => {
     const ok = await confirm({
-      title: t('mentorPackage.delete.title', { defaultValue: 'Delete package' }),
+      title: t('mentorPackage.delete.title'),
       description:
         t('mentorPackage.delete.description', {
           packageName: mentorPackage.name,

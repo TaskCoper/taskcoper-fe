@@ -6,10 +6,13 @@ export interface TaskPreview {
   id: string
   name: string
   milestoneId: string
+  slug: string
   position: number
   startDate: string | null
   endDate: string | null
   priority: TaskPriority | null
+  parentMilestoneName: string
+  parentMilestoneSlug: string
   members: TaskMember[]
   totalSubtasks: number
   hasDescription: boolean
@@ -32,9 +35,13 @@ export interface TaskCardDragData {
 
 export interface TaskDetail {
   taskId: string
+  taskSlug: string
   taskName: string
   milestoneId: string
   milestoneName: string
+  milestoneSlug: string
+  parentMilestoneId: string
+  parentMilestoneSlug: string
   taskDescription: string | null
   taskPosition: number
   priority: TaskPriority | null

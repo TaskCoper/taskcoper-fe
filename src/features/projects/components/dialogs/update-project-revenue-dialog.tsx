@@ -11,14 +11,14 @@ import UpdateProjectRevenueForm from '../forms/update-project-revenue-form'
 
 interface UpdateProjectRevenueDialogProps {
   revenue: Revenue | null
-  projectId: string
+  projectIdentifier: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
 export default function UpdateProjectRevenueDialog({
   revenue,
-  projectId,
+  projectIdentifier,
   open,
   onOpenChange
 }: UpdateProjectRevenueDialogProps) {
@@ -44,7 +44,7 @@ export default function UpdateProjectRevenueDialog({
     if (revenue && open) {
       methods.reset({
         projectTransactionId: revenue.id,
-        projectId,
+        projectIdentifier,
         name: revenue.name,
         amount: revenue.amount,
         type: revenue.type,
@@ -52,7 +52,7 @@ export default function UpdateProjectRevenueDialog({
         labelIds: revenue.labels.map((l) => l.id)
       })
     }
-  }, [revenue, projectId, methods, open])
+  }, [revenue, projectIdentifier, methods, open])
 
   return (
     <Dialog

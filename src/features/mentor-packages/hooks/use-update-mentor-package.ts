@@ -20,7 +20,8 @@ export const useUpdateMentorPackage = () => {
       price: '0',
       currency: 'Vnd',
       isActive: true,
-      sortOrder: 0
+      position: 0,
+      coverImageUrl: null
     },
     resolver: zodResolver(updateMentorPackageSchema(t))
   })

@@ -30,7 +30,14 @@ export default function CreateSchedulesDialog({ children }: CreateSchedulesDialo
       startTime: body.startTime.split(':').length === 2 ? `${body.startTime}:00` : body.startTime,
       endTime: body.endTime.split(':').length === 2 ? `${body.endTime}:00` : body.endTime
     }
-    createSchedules({ body: formattedBody })
+    createSchedules(
+      { body: formattedBody },
+      {
+        onSuccess: () => {
+          setOpen(false)
+        }
+      }
+    )
   }
 
   const onClose = () => {

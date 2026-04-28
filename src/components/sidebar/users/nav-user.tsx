@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,13 +19,13 @@ import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import { getAvatarFallback } from '@/shared/utils'
 import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
-import { GlobeIcon, LogOut, UserCircle2Icon } from 'lucide-react'
+import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 interface NavUserProps {
-  user?: User
+  user?: User | null
 }
 
 export default function NavUser({ user }: NavUserProps) {
@@ -46,6 +47,19 @@ export default function NavUser({ user }: NavUserProps) {
     setLanguage(value)
     await i18n.changeLanguage(value)
     queryClient.invalidateQueries()
+  }
+
+  if (!user) {
+    return (
+      <div className='flex items-center gap-2'>
+        <Button asChild variant='ghost' size='sm'>
+          <Link to='/sign-in'>{t('auth.signIn.label')}</Link>
+        </Button>
+        <Button asChild size='sm'>
+          <Link to='/sign-up'>{t('auth.signUp.label')}</Link>
+        </Button>
+      </div>
+    )
   }
 
   return (
@@ -83,7 +97,7 @@ export default function NavUser({ user }: NavUserProps) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={() => navigate(`/users/${user?.id}`)}>
+            <DropdownMenuItem onSelect={() => navigate(`/users/${user?.slug}`)}>
               <UserCircle2Icon />
               {t('account.account')}
             </DropdownMenuItem>
@@ -102,6 +116,10 @@ export default function NavUser({ user }: NavUserProps) {
               </DropdownMenuPortal>
             </DropdownMenuSub>
           </DropdownMenuGroup>
+          <DropdownMenuItem onSelect={() => navigate(`/users/${user?.slug}/settings`)}>
+            <SettingsIcon />
+            {t('account.settings')}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className='focus:text-destructive' onClick={onSignOut} disabled={isSigningOut}>
             <LogOut className='focus:text-destructive' />

@@ -56,8 +56,9 @@ class UserService {
     return data.value
   }
 
-  getUser = async ({ userId }: { userId: string }) => {
-    const { data } = await api.get<BaseResponse<UserDetail>>(`/v1/${this.baseUrl}/${userId}`)
+  getUser = async ({ userIdentifier }: { userIdentifier?: string }) => {
+    if (!userIdentifier) return null
+    const { data } = await api.get<BaseResponse<UserDetail>>(`/v1/${this.baseUrl}/${userIdentifier}`)
 
     return data.value
   }
@@ -78,7 +79,8 @@ class UserService {
       address: me.address,
       city: me.city,
       state: me.state,
-      timeZone
+      timeZone,
+      domainIds: me.domains.map((d: { id: string }) => d.id)
     }
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
 

@@ -2,16 +2,21 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import VerifyEmailForm from '@/features/auth/components/verify-email-form'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useSignOut } from '@/features/auth/hooks/use-sign-out'
+import { queryKeys } from '@/lib/query-keys'
+import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate } from 'react-router'
 
 export default function VerifyEmailPage() {
   const { t } = useTranslation()
-  const { user, isVerificationRequired, setVerificationRequired, signOut } = useAuthStore()
+  const { me: user, isVerificationRequired } = useGetMe()
+  const { signOut } = useSignOut()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  if (!user?.Email) {
+  if (!user?.email) {
     return (
       <div className='h-screen flex items-center justify-center'>
         <Spinner />
@@ -24,13 +29,14 @@ export default function VerifyEmailPage() {
   }
 
   const handleVerifySuccess = () => {
-    setVerificationRequired(false)
+    queryClient.invalidateQueries({ queryKey: queryKeys.auth.me() })
     navigate('/projects', { replace: true })
   }
 
   const handleSignOut = () => {
-    signOut()
-    navigate('/sign-in', { replace: true })
+    if (user.email) {
+      signOut({ email: user.email })
+    }
   }
 
   return (
@@ -45,7 +51,7 @@ export default function VerifyEmailPage() {
         </div>
 
         <div className='col-span-1 lg:col-span-5 flex flex-col justify-center items-center px-4 py-8 lg:py-0 lg:px-8'>
-          <VerifyEmailForm email={user.Email} onSuccess={handleVerifySuccess} />
+          <VerifyEmailForm email={user.email} onSuccess={handleVerifySuccess} />
 
           <Button type='button' variant='link' className='mt-8 lg:mt-10' onClick={handleSignOut}>
             {t('auth.signUp.verifyEmail.useDifferentAccount')}

@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import type { Attachment } from '@/types/attachment.type'
 import { ChevronLeftIcon, XIcon } from 'lucide-react'
@@ -16,26 +17,30 @@ interface AttachmentMenuProps {
   children: React.ReactNode
   attachment: Attachment
   taskId: string
-  parentMilestoneId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
 export default function AttachmentMenu({
   children,
   attachment,
   taskId,
-  parentMilestoneId,
-  projectId
+  parentMilestoneIdentifier,
+  projectIdentifier
 }: AttachmentMenuProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment({ projectId })
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
+
+  const { methods, updateAttachment, isUpdatingAttachment } = useUpdateAttachment({ projectIdentifier })
   const { deleteAttachment, isDeletingAttachment } = useDeleteAttachment({
-    parentMilestoneId,
-    projectId
+    parentMilestoneIdentifier,
+    projectIdentifier
   })
 
   const onSubmit: SubmitHandler<UpdateAttachmentFormValues> = (body) => {
@@ -80,6 +85,10 @@ export default function AttachmentMenu({
       }
     }
   }, [isEditing, methods, attachment, taskId])
+
+  if (!canDelete && !canUpdate) {
+    return null
+  }
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
@@ -156,23 +165,27 @@ export default function AttachmentMenu({
           </div>
         ) : (
           <div className='py-2'>
-            <Button
-              size='sm'
-              className='w-full justify-start gap-2 rounded-none'
-              variant='ghost'
-              onClick={() => setIsEditing(true)}
-            >
-              <p>{t('common.button.edit')}</p>
-            </Button>
+            {canUpdate ? (
+              <Button
+                size='sm'
+                className='w-full justify-start gap-2 rounded-none'
+                variant='ghost'
+                onClick={() => setIsEditing(true)}
+              >
+                <p>{t('common.button.edit')}</p>
+              </Button>
+            ) : null}
 
-            <Button
-              size='sm'
-              className='w-full justify-start gap-2 rounded-none'
-              variant='ghost'
-              onClick={() => setIsDeleting(true)}
-            >
-              <p className='text-destructive'>{t('common.button.delete')}</p>
-            </Button>
+            {canDelete ? (
+              <Button
+                size='sm'
+                className='w-full justify-start gap-2 rounded-none'
+                variant='ghost'
+                onClick={() => setIsDeleting(true)}
+              >
+                <p className='text-destructive'>{t('common.button.delete')}</p>
+              </Button>
+            ) : null}
           </div>
         )}
       </PopoverContent>

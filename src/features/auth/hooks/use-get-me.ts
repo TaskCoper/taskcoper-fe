@@ -1,21 +1,34 @@
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import userService from '@/services/user.service'
 import { useQuery } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 
 export const useGetMe = () => {
-  const { isAuthenticated, user: jwtUser } = useAuthStore()
-
-  const isVerified = jwtUser?.IsVerified === 'true'
-
-  const { data: me, isLoading: isGettingMe } = useQuery({
+  const {
+    data: me,
+    isLoading: isGettingMe,
+    isError
+  } = useQuery({
     queryKey: queryKeys.auth.me(),
-    queryFn: userService.getMe,
-    enabled: isAuthenticated && isVerified
+    queryFn: async () => {
+      try {
+        return await userService.getMe()
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 401) {
+          return null
+        }
+
+        throw error
+      }
+    },
+    retry: false,
+    throwOnError: false
   })
 
   return {
     me,
-    isGettingMe: isAuthenticated && isVerified ? isGettingMe : false
+    isGettingMe,
+    isAuthenticated: !!me && !isError,
+    isVerificationRequired: !!me && !me.isEmailVerified
   }
 }

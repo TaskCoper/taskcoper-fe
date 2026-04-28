@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import projectService from '@/services/project.service'
 import type { Label } from '@/types/label.type'
 import type { TaskDetail } from '@/types/task.type'
@@ -12,15 +12,19 @@ import { toast } from 'sonner'
 import { updateProjectLabelSchema, type UpdateProjectLabelFormValues } from '../validations'
 
 interface UpdateProjectLabelProps {
-  projectId: string
-  taskId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  taskIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: UpdateProjectLabelProps) => {
+export const useUpdateProjectLabel = ({
+  projectIdentifier,
+  taskIdentifier,
+  parentMilestoneIdentifier
+}: UpdateProjectLabelProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<UpdateProjectLabelFormValues>({
     defaultValues: {
@@ -34,11 +38,11 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
   const { mutate: updateProjectLabel, isPending: isUpdatingProjectLabel } = useMutation({
     mutationFn: projectService.updateLabel,
     onMutate: async ({ body }) => {
-      const queryKey = ['project-labels', projectId]
+      const queryKey = ['project-labels', projectIdentifier]
       await queryClient.cancelQueries({ queryKey })
 
       const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
-      const previousTask = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskId))
+      const previousTask = queryClient.getQueryData<TaskDetail>(queryKeys.tasks.detail(taskIdentifier))
 
       if (previousLabels) {
         queryClient.setQueryData<BasePaginationResponse<Label>>(queryKey, (old) => {
@@ -57,7 +61,7 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
       }
 
       if (previousTask) {
-        queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskId), (old) => {
+        queryClient.setQueryData<TaskDetail>(queryKeys.tasks.detail(taskIdentifier), (old) => {
           if (!old) return old
 
           return {
@@ -73,11 +77,11 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
     },
     onError: (error, _variables, context) => {
       if (context?.previousLabels) {
-        queryClient.setQueryData(queryKeys.projects.labels(projectId), context.previousLabels)
+        queryClient.setQueryData(queryKeys.projects.labels(projectIdentifier), context.previousLabels)
       }
 
       if (context?.previousTask) {
-        queryClient.setQueryData(queryKeys.tasks.detail(taskId), context.previousTask)
+        queryClient.setQueryData(queryKeys.tasks.detail(taskIdentifier), context.previousTask)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -86,13 +90,15 @@ export const useUpdateProjectLabel = ({ projectId, taskId, parentMilestoneId }: 
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tasks.detail(taskId)
+        queryKey: queryKeys.tasks.detail(taskIdentifier)
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })
 

@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import type { TaskDetail } from '@/types/task.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,26 +10,26 @@ import { toast } from 'sonner'
 import { updateTaskSchema, type UpdateTaskFormValues } from '../validations'
 
 interface UseUpdateTaskProps {
-  taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  taskIdentifier?: string
+  identifier?: string
+  milestoneIdentifier?: string
 }
 
-export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdateTaskProps) => {
+export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<UpdateTaskFormValues>({
     resolver: zodResolver(updateTaskSchema(t))
   })
 
-  const queryKey = queryKeys.tasks.detail(taskId)
+  const queryKey = queryKeys.tasks.detail(taskIdentifier)
 
   const { mutate: updateTask, isPending: isUpdatingTask } = useMutation({
     mutationFn: taskService.updateTask,
     onMutate: async (variables) => {
-      if (!taskId) return
+      if (!taskIdentifier) return
 
       await queryClient.cancelQueries({ queryKey })
       const previousData = queryClient.getQueryData<TaskDetail>(queryKey)
@@ -61,7 +61,7 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
       return { previousData }
     },
     onError: (error, _variables, context) => {
-      if (taskId && context?.previousData) {
+      if (taskIdentifier && context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData)
       }
 
@@ -70,22 +70,24 @@ export const useUpdateTask = ({ taskId, projectId, parentMilestoneId }: UseUpdat
       })
     },
     onSettled: () => {
-      if (taskId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
+      if (taskIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.priorityStats(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        if (identifier) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.projects.taskStatusStats(identifier, milestoneIdentifier)
+          })
+          queryClient.invalidateQueries({ queryKey: queryKeys.projects.priorityStats(identifier, milestoneIdentifier) })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (identifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
       }
     }
   })

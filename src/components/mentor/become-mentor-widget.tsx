@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
+import { getUserType } from '@/shared/utils'
 import { GraduationCap, XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
@@ -13,6 +14,7 @@ export default function BecomeMentorWidget() {
   const { me, isGettingMe } = useGetMe()
   const { dismiss, isDismissed } = useMentorWidgetStore()
 
+  const userType = getUserType(me)
   const isMentor = me?.role?.toLowerCase() === 'mentor'
   const isAtRoute =
     pathname.startsWith('/applications') ||
@@ -20,7 +22,7 @@ export default function BecomeMentorWidget() {
     pathname.startsWith('/sign-in') ||
     pathname.startsWith('/sign-up')
 
-  if (isGettingMe || isMentor || isDismissed() || isAtRoute) {
+  if (!me || userType !== 'user' || isGettingMe || isMentor || isDismissed() || isAtRoute) {
     return null
   }
 

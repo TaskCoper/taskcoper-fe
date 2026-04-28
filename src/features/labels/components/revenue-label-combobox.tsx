@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { RevenueLabel } from '@/types/label.type'
 import { ChevronDownIcon, ChevronLeftIcon, PencilIcon, XIcon } from 'lucide-react'
@@ -20,13 +21,13 @@ import AddLabelForm from './add-label-form'
 import UpdateLabelForm from './update-label-form'
 
 interface RevenueLabelComboboxProps {
-  projectId: string
+  projectIdentifier: string
   selectedLabelIds: string[]
   onSelectionChange: (labelIds: string[]) => void
 }
 
 export default function RevenueLabelCombobox({
-  projectId,
+  projectIdentifier,
   selectedLabelIds,
   onSelectionChange
 }: RevenueLabelComboboxProps) {
@@ -37,8 +38,13 @@ export default function RevenueLabelCombobox({
   const [isDeleting, setIsDeleting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { revenueLabels, isLoadingRevenueLabels } = useGetProjectRevenueLabels({ projectId })
-  const allLabels = useMemo(() => revenueLabels?.value?.items ?? [], [revenueLabels])
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('REVENUE', 'canWrite')
+  const canDelete = check('REVENUE', 'canDelete')
+  const canUpdate = check('REVENUE', 'canUpdate')
+
+  const { revenueLabels, isLoadingRevenueLabels } = useGetProjectRevenueLabels({ projectIdentifier })
+  const allLabels = useMemo(() => revenueLabels.value.items, [revenueLabels])
   const filteredLabels = allLabels.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
   const selectedLabels = useMemo(
@@ -50,7 +56,7 @@ export default function RevenueLabelCombobox({
     methods: addLabelMethods,
     addProjectRevenueLabel,
     isAddingProjectRevenueLabel
-  } = useAddProjectRevenueLabel({ projectId })
+  } = useAddProjectRevenueLabel({ projectIdentifier })
 
   const onSubmitAddLabel: SubmitHandler<AddProjectRevenueLabelFormValues> = (body) => {
     addProjectRevenueLabel({ body })
@@ -61,7 +67,7 @@ export default function RevenueLabelCombobox({
     methods: updateLabelMethods,
     updateProjectRevenueLabel,
     isUpdatingProjectRevenueLabel
-  } = useUpdateProjectRevenueLabel({ projectId })
+  } = useUpdateProjectRevenueLabel({ projectIdentifier })
 
   const onSubmitUpdateLabel: SubmitHandler<UpdateProjectRevenueLabelFormValues> = (body) => {
     updateProjectRevenueLabel({ body })
@@ -75,13 +81,15 @@ export default function RevenueLabelCombobox({
       id: label.id,
       name: label.name,
       color: label.color,
-      projectId
+      projectIdentifier
     })
   }
 
-  const { deleteProjectRevenueLabel, isDeletingProjectRevenueLabel } = useDeleteProjectRevenueLabel({ projectId })
+  const { deleteProjectRevenueLabel, isDeletingProjectRevenueLabel } = useDeleteProjectRevenueLabel({
+    projectIdentifier
+  })
   const onDeleteProjectLabel = (labelId: string) => {
-    deleteProjectRevenueLabel({ projectId, labelId })
+    deleteProjectRevenueLabel({ projectIdentifier, labelId })
     onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
     setIsDeleting(false)
     setEditLabel(null)
@@ -90,14 +98,18 @@ export default function RevenueLabelCombobox({
 
   const handleToggleLabel = (labelId: string) => {
     if (selectedLabelIds.includes(labelId)) {
-      onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
+      if (canDelete) {
+        onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
+      }
     } else {
       onSelectionChange([...selectedLabelIds, labelId])
     }
   }
 
   const handleRemoveLabel = (labelId: string) => {
-    onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
+    if (canDelete) {
+      onSelectionChange(selectedLabelIds.filter((id) => id !== labelId))
+    }
   }
 
   const handleClose = () => {
@@ -119,12 +131,12 @@ export default function RevenueLabelCombobox({
   useEffect(() => {
     if (open) {
       addLabelMethods.reset({
-        projectId,
+        projectIdentifier,
         color: defaultColor,
         name: ''
       })
     }
-  }, [open, addLabelMethods, projectId, defaultColor])
+  }, [open, addLabelMethods, projectIdentifier, defaultColor])
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
@@ -137,19 +149,21 @@ export default function RevenueLabelCombobox({
                   key={label.id}
                   className={cn(
                     label.color || 'bg-gray-200',
-                    'inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-xs font-semibold'
+                    'inline-flex items-center gap-1 rounded-sm px-1.5 h-5 text-xs font-semibold'
                   )}
                 >
-                  <span className={cn('truncate max-w-20', getColorTextClass(label.color ?? ''))}>
-                    {label.name || t('common.ui.none')}
+                  <span className={cn('truncate w-auto max-w-10', getColorTextClass(label.color ?? ''))}>
+                    {label.name}
                   </span>
-                  <XIcon
-                    className={cn('size-3 shrink-0 cursor-pointer', getColorTextClass(label.color ?? ''))}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleRemoveLabel(label.id)
-                    }}
-                  />
+                  {canDelete ? (
+                    <XIcon
+                      className={cn('size-3 shrink-0 cursor-pointer', getColorTextClass(label.color ?? ''))}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveLabel(label.id)
+                      }}
+                    />
+                  ) : null}
                 </span>
               ))
             ) : (
@@ -196,7 +210,11 @@ export default function RevenueLabelCombobox({
                         <Checkbox
                           checked={selectedLabelIds.includes(label.id)}
                           onCheckedChange={() => handleToggleLabel(label.id)}
-                          className='mr-2'
+                          disabled={selectedLabelIds.includes(label.id) && !canDelete}
+                          className={cn(
+                            'mr-2',
+                            selectedLabelIds.includes(label.id) && !canDelete && 'cursor-not-allowed'
+                          )}
                         />
                         <div
                           className={cn(
@@ -210,18 +228,22 @@ export default function RevenueLabelCombobox({
                             </p>
                           ) : null}
                         </div>
-                        <Button className='ml-1' variant='ghost' size='icon-sm' onClick={() => onUpdateLabel(label)}>
-                          <PencilIcon />
-                        </Button>
+                        {canUpdate ? (
+                          <Button className='ml-1' variant='ghost' size='icon-sm' onClick={() => onUpdateLabel(label)}>
+                            <PencilIcon />
+                          </Button>
+                        ) : null}
                       </div>
                     ))}
                   </div>
                 </div>
               ) : null}
 
-              <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
-                {t('task.label.createLabel')}
-              </Button>
+              {canWrite ? (
+                <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
+                  {t('task.label.createLabel')}
+                </Button>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -337,15 +359,17 @@ export default function RevenueLabelCombobox({
                       {t('common.button.save')}
                     </Button>
 
-                    <Button
-                      type='button'
-                      size='sm'
-                      variant='destructive'
-                      disabled={isDeletingProjectRevenueLabel}
-                      onClick={() => setIsDeleting(true)}
-                    >
-                      {t('common.button.delete')}
-                    </Button>
+                    {canDelete ? (
+                      <Button
+                        type='button'
+                        size='sm'
+                        variant='destructive'
+                        disabled={isDeletingProjectRevenueLabel}
+                        onClick={() => setIsDeleting(true)}
+                      >
+                        {t('common.button.delete')}
+                      </Button>
+                    ) : null}
                   </div>
                 </form>
               </FormProvider>

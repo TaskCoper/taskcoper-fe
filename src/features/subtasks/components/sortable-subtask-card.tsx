@@ -7,16 +7,16 @@ import SubtaskCard from './subtask-card'
 interface SortableSubtaskCardProps {
   subtask: Subtask
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   isOverlay?: boolean
 }
 
 export default function SortableSubtaskCard({
   subtask,
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   isOverlay = false
 }: SortableSubtaskCardProps) {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -39,14 +39,24 @@ export default function SortableSubtaskCard({
   if (isOverlay) {
     return (
       <Card className='border-2 border-primary p-2 rounded-md'>
-        <SubtaskCard subtask={subtask} taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId} />
+        <SubtaskCard
+          subtask={subtask}
+          taskId={taskId}
+          projectIdentifier={projectIdentifier}
+          parentMilestoneIdentifier={parentMilestoneIdentifier}
+        />
       </Card>
     )
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <SubtaskCard subtask={subtask} taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId} />
+      <SubtaskCard
+        subtask={subtask}
+        taskId={taskId}
+        projectIdentifier={projectIdentifier}
+        parentMilestoneIdentifier={parentMilestoneIdentifier}
+      />
     </div>
   )
 }

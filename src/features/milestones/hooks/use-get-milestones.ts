@@ -4,15 +4,19 @@ import { useQuery } from '@tanstack/react-query'
 
 export interface GetMilestonesParams {
   enabled?: boolean
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useGetMilestones = ({ projectId, parentMilestoneId, enabled = true }: GetMilestonesParams) => {
+export const useGetMilestones = ({
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  enabled = true
+}: GetMilestonesParams) => {
   const { data: milestones, isLoading: isLoadingMilestones } = useQuery({
-    queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId),
-    queryFn: () => projectService.getMilestones({ projectId, parentMilestoneId }),
-    enabled: enabled && !!projectId && !!parentMilestoneId
+    queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier),
+    queryFn: () => projectService.getMilestones({ projectIdentifier, parentMilestoneIdentifier }),
+    enabled: enabled && !!projectIdentifier && !!parentMilestoneIdentifier
   })
 
   return { milestones, isLoadingMilestones }

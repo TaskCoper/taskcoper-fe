@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import projectService from '@/services/project.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -22,13 +22,13 @@ export const useGetMyProjects = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE
 }: GetMyProjectsParams) => {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { data: myProjects = getDefaultPaginationResponse<ProjectPreview>(), isLoading: isLoadingMyProjects } =
     useQuery({
-      queryKey: queryKeys.projects.listMy(user?.UserId, status, searchTerm, pageIndex, pageSize),
-      queryFn: () => projectService.getMyProjects({ userId: user?.UserId, status, searchTerm, pageIndex, pageSize }),
-      enabled: !!user?.UserId && enabled
+      queryKey: queryKeys.projects.listMy(user?.id, status, searchTerm, pageIndex, pageSize),
+      queryFn: () => projectService.getMyProjects({ userId: user?.id, status, searchTerm, pageIndex, pageSize }),
+      enabled: !!user?.id && enabled
     })
 
   return { myProjects, isLoadingMyProjects }

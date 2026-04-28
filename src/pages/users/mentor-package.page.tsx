@@ -1,6 +1,8 @@
+import FileDropzone from '@/components/file-dropzone'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
@@ -12,10 +14,13 @@ import { useDeleteMentorPackage } from '@/features/mentor-packages/hooks/use-del
 import { useGetMentorPackage } from '@/features/mentor-packages/hooks/use-get-mentor-package'
 import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
 import type { UpdateMentorPackageFormValues } from '@/features/mentor-packages/validations'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { MAX_COVER_SIZE } from '@/shared/constants'
+import { cn } from '@/shared/utils'
 import type { MentorPackageRule } from '@/types/mentor-package.type'
-import { CheckIcon, ClockIcon, PackageIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { CameraIcon, CheckIcon, ClockIcon, ImageOffIcon, PackageIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
@@ -107,9 +112,13 @@ export default function MentorPackagePage() {
   const { packageId } = useParams<{ packageId: string }>()
   const { confirm } = useConfirmStore()
   const { methods, updateMentorPackage, isUpdatingMentorPackage } = useUpdateMentorPackage()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const { deleteMentorPackage, isDeletingMentorPackage } = useDeleteMentorPackage()
+  const [pendingCoverFile, setPendingCoverFile] = useState<File | null>(null)
+  const [pendingCoverPreview, setPendingCoverPreview] = useState<string | null>(null)
 
   const { mentorPackage, isLoadingMentorPackage } = useGetMentorPackage({ packageId })
+  const coverImageUrl = methods.watch('coverImageUrl')
 
   useEffect(() => {
     if (mentorPackage) {
@@ -121,22 +130,58 @@ export default function MentorPackagePage() {
         totalSessions: mentorPackage.totalSessions.toString(),
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
+        coverImageUrl: mentorPackage.coverImageUrl,
         isActive: mentorPackage.isActive,
-        sortOrder: mentorPackage.sortOrder
+        position: mentorPackage.position
       })
     }
   }, [mentorPackage, methods])
+
+  useEffect(() => {
+    return () => {
+      if (pendingCoverPreview) {
+        URL.revokeObjectURL(pendingCoverPreview)
+      }
+    }
+  }, [pendingCoverPreview])
+
+  const handleCoverImageChange = useCallback(
+    (file: File | null) => {
+      if (pendingCoverPreview) {
+        URL.revokeObjectURL(pendingCoverPreview)
+      }
+
+      if (!file) {
+        setPendingCoverFile(null)
+        setPendingCoverPreview(null)
+        methods.setValue('coverImageUrl', mentorPackage?.coverImageUrl ?? null, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true
+        })
+        return
+      }
+
+      const previewUrl = URL.createObjectURL(file)
+      setPendingCoverFile(file)
+      setPendingCoverPreview(previewUrl)
+      methods.setValue('coverImageUrl', previewUrl, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      })
+    },
+    [methods, mentorPackage?.coverImageUrl, pendingCoverPreview]
+  )
 
   const handleDelete = async () => {
     if (!mentorPackage) return
 
     const ok = await confirm({
-      title: t('mentorPackage.delete.title', { defaultValue: 'Delete package' }),
-      description:
-        t('mentorPackage.delete.description', {
-          packageName: mentorPackage.name,
-          defaultValue: `Are you sure you want to delete "${mentorPackage.name}"?`
-        }) ?? undefined,
+      title: t('mentorPackage.delete.title'),
+      description: t('mentorPackage.delete.description', {
+        packageName: mentorPackage.name
+      }),
       confirmText: t('common.button.delete'),
       cancelText: t('common.button.cancel'),
       variant: 'destructive'
@@ -152,8 +197,47 @@ export default function MentorPackagePage() {
     )
   }
 
-  const onSubmit: SubmitHandler<UpdateMentorPackageFormValues> = (values) => {
-    updateMentorPackage({ body: values })
+  const onSubmit: SubmitHandler<UpdateMentorPackageFormValues> = async (values) => {
+    let coverImageUrl = values.coverImageUrl
+
+    const shouldUploadPendingCover =
+      Boolean(pendingCoverFile) && Boolean(pendingCoverPreview) && values.coverImageUrl === pendingCoverPreview
+
+    if (shouldUploadPendingCover && pendingCoverFile) {
+      const uploadedUrl = await uploadFileWithToast({
+        file: pendingCoverFile,
+        showSuccessToast: false,
+        renderProgress: (progress) => (
+          <div className='w-72 space-y-1'>
+            <Progress value={progress} className='w-full' />
+            <p className='text-xs text-muted-foreground'>{progress}%</p>
+          </div>
+        )
+      })
+
+      if (!uploadedUrl) return
+
+      coverImageUrl = uploadedUrl
+    }
+
+    updateMentorPackage(
+      {
+        body: {
+          ...values,
+          coverImageUrl
+        }
+      },
+      {
+        onSuccess: () => {
+          if (pendingCoverPreview) {
+            URL.revokeObjectURL(pendingCoverPreview)
+          }
+
+          setPendingCoverPreview(null)
+          setPendingCoverFile(null)
+        }
+      }
+    )
   }
 
   if (isLoadingMentorPackage) {
@@ -178,6 +262,51 @@ export default function MentorPackagePage() {
 
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4 pt-4'>
+              <div className='space-y-2'>
+                <p className='text-sm font-medium'>{t('mentorPackage.form.coverImage')}</p>
+
+                <FileDropzone
+                  value={coverImageUrl}
+                  onFileChange={handleCoverImageChange}
+                  className={cn(
+                    'group/cover relative h-48 rounded-xl border border-dashed border-border overflow-hidden'
+                  )}
+                  maxSize={MAX_COVER_SIZE}
+                  accept={{
+                    'image/png': ['.png'],
+                    'image/jpeg': ['.jpg', '.jpeg'],
+                    'image/webp': ['.webp'],
+                    'image/svg+xml': ['.svg']
+                  }}
+                  disabled={isUploading || isUpdatingMentorPackage}
+                >
+                  {coverImageUrl ? (
+                    <img
+                      src={coverImageUrl}
+                      alt={t('mentorPackage.form.coverImage')}
+                      className='size-full object-cover'
+                    />
+                  ) : (
+                    <div className='size-full flex items-center justify-center bg-muted/50'>
+                      <ImageOffIcon className='size-10 text-muted-foreground' />
+                    </div>
+                  )}
+
+                  <Button
+                    type='button'
+                    size='sm'
+                    variant='secondary'
+                    className='absolute bottom-3 right-3 gap-1.5 opacity-100 sm:opacity-0 sm:group-hover/cover:opacity-100 transition-opacity'
+                    disabled={isUploading || isUpdatingMentorPackage}
+                  >
+                    <CameraIcon className='size-4' />
+                    {t('common.button.upload')}
+                  </Button>
+                </FileDropzone>
+
+                <p className='text-xs text-muted-foreground'>{t('mentorPackage.form.coverImageHint')}</p>
+              </div>
+
               <UpdateMentorPackageForm />
 
               <div className='flex justify-end items-center gap-2'>
@@ -187,7 +316,7 @@ export default function MentorPackagePage() {
                   variant='outline'
                   className='w-full sm:w-auto text-destructive border-destructive/40 hover:text-destructive'
                   onClick={handleDelete}
-                  disabled={isDeletingMentorPackage || isUpdatingMentorPackage}
+                  disabled={isDeletingMentorPackage || isUpdatingMentorPackage || isUploading}
                 >
                   {isDeletingMentorPackage ? <Spinner /> : null}
                   {t('common.button.delete')}
@@ -197,9 +326,9 @@ export default function MentorPackagePage() {
                   type='submit'
                   size='sm'
                   className='w-full sm:w-auto'
-                  disabled={!methods.formState.isDirty || isUpdatingMentorPackage}
+                  disabled={!methods.formState.isDirty || isUpdatingMentorPackage || isUploading}
                 >
-                  {isUpdatingMentorPackage ? <Spinner /> : null}
+                  {isUpdatingMentorPackage || isUploading ? <Spinner /> : null}
                   {t('common.button.save')}
                 </Button>
               </div>
@@ -284,12 +413,10 @@ const MentorPackageRuleRow = ({ rule, mentorPackageId }: { rule: MentorPackageRu
 
   const handleDelete = async () => {
     const ok = await confirm({
-      title: t('mentorPackageRule.delete.title', { defaultValue: 'Delete rule' }),
-      description:
-        t('mentorPackageRule.delete.description', {
-          no: rule.no,
-          defaultValue: `Are you sure you want to delete session ${rule.no}?`
-        }) ?? undefined,
+      title: t('mentorPackageRule.delete.title'),
+      description: t('mentorPackageRule.delete.description', {
+        no: rule.no
+      }),
       confirmText: t('common.button.delete'),
       cancelText: t('common.button.cancel'),
       variant: 'destructive'

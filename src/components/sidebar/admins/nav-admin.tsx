@@ -25,7 +25,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface NavAdminProps {
-  user?: User
+  user?: User | null
 }
 
 export function NavAdmin({ user }: NavAdminProps) {

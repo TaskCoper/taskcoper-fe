@@ -6,7 +6,7 @@ import type { ProjectResource } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface UseGetProjectResourcesParams {
-  projectId?: string
+  projectIdentifier?: string
   pageIndex?: number
   pageSize?: number
   sortBy?: string
@@ -18,7 +18,7 @@ export interface UseGetProjectResourcesParams {
 }
 
 export const useGetProjectResources = ({
-  projectId,
+  projectIdentifier,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   sortBy,
@@ -33,7 +33,7 @@ export const useGetProjectResources = ({
     isLoading: isLoadingProjectResources
   } = useQuery({
     queryKey: queryKeys.projectResources.list({
-      projectId,
+      projectIdentifier,
       pageIndex,
       pageSize,
       sortBy,
@@ -45,7 +45,7 @@ export const useGetProjectResources = ({
     }),
     queryFn: () =>
       projectService.getProjectResources({
-        projectId,
+        projectIdentifier,
         pageIndex,
         pageSize,
         sortBy,
@@ -55,7 +55,7 @@ export const useGetProjectResources = ({
         mimeTypes,
         memberIds
       }),
-    enabled: !!projectId
+    enabled: !!projectIdentifier
   })
 
   return { projectResources, isLoadingProjectResources }

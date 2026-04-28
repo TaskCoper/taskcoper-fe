@@ -1,14 +1,19 @@
 import { Progress } from '@/components/ui/progress'
 import { MeetingStatus } from '@/types/meeting.type'
 import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
+import { format } from 'date-fns'
+import { ClockIcon, FolderIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 interface PurchasedMentorPackageCardProps {
   mentorPackage: PurchasedMentorPackage
+  displayProject?: boolean
 }
 
-export default function PurchasedMentorPackageCard({ mentorPackage }: PurchasedMentorPackageCardProps) {
+export default function PurchasedMentorPackageCard({
+  mentorPackage,
+  displayProject = true
+}: PurchasedMentorPackageCardProps) {
   const { t } = useTranslation()
 
   const progress =
@@ -17,32 +22,42 @@ export default function PurchasedMentorPackageCard({ mentorPackage }: PurchasedM
     100
 
   return (
-    <Link to={`packages/${mentorPackage.packageBookingId}`}>
-      <div className='space-y-3'>
-        <div className='h-36 w-full'>
-          <img
-            src={mentorPackage.coverImageUrl ?? ''}
-            alt={mentorPackage.name}
-            className='w-full h-full object-cover transition duration-300 hover:brightness-80'
-          />
-        </div>
+    <div className='space-y-3'>
+      <div className='h-36 w-full'>
+        <img
+          src={mentorPackage.coverImageUrl ?? ''}
+          alt={mentorPackage.name}
+          className='w-full h-full object-cover transition duration-300 hover:brightness-80'
+        />
+      </div>
 
-        <div className='-space-y-1.5'>
+      <div>
+        {displayProject && mentorPackage.project ? (
+          <div className='h-4 flex items-center gap-1'>
+            <FolderIcon className='size-3' />
+            <p className='text-xs truncate'>{mentorPackage.project.name}</p>
+          </div>
+        ) : (
+          <div className='h-4 flex items-center gap-1'>
+            <ClockIcon className='size-3' />
+            <p className='text-xs'>{format(new Date(mentorPackage.createdOnUtc), 'dd/MM/yyyy')}</p>
+          </div>
+        )}
+
+        <div className='-space-y-1'>
           <p className='text-lg font-semibold truncate'>{mentorPackage.name}</p>
-          <Link to={`/users/${mentorPackage.mentorUserId}`}>
-            <p className='text-sm text-muted-foreground hover:text-primary inline-block hover:underline'>
-              {mentorPackage.mentor.firstName} {mentorPackage.mentor.lastName}
-            </p>
-          </Link>
-        </div>
-
-        <div className='space-y-0.5'>
-          <Progress value={progress} className='h-1' />
-          <p className='text-xs text-foreground/80 font-medium'>
-            {t('purchasedPackage.completedProgress', { progress: progress.toFixed(0) })}
+          <p className='text-sm text-muted-foreground'>
+            {mentorPackage.mentor.firstName} {mentorPackage.mentor.lastName}
           </p>
         </div>
       </div>
-    </Link>
+
+      <div className='space-y-0.5'>
+        <Progress value={progress} className='h-1' />
+        <p className='text-xs text-foreground/80 font-medium'>
+          {t('purchasedPackage.completedProgress', { progress: progress.toFixed(0) })}
+        </p>
+      </div>
+    </div>
   )
 }

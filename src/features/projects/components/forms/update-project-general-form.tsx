@@ -1,17 +1,17 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateProjectFormValues } from '../../validations'
 
 export default function UpdateProjectGeneralForm() {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
   const { control } = useFormContext<UpdateProjectFormValues>()
 
   return (
-    <div className='flex flex-col gap-2 w-full'>
+    <div className='flex flex-col gap-4 w-full'>
       <Controller
         name='teamSize'
         control={control}
@@ -29,9 +29,9 @@ export default function UpdateProjectGeneralForm() {
               value={field.value ?? ''}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
@@ -53,9 +53,9 @@ export default function UpdateProjectGeneralForm() {
               spellCheck={false}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
@@ -77,14 +77,14 @@ export default function UpdateProjectGeneralForm() {
               value={field.value ?? ''}
             />
 
-            <div className='min-h-4'>
+            {/* <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </div>
+            </div> */}
           </Field>
         )}
       />
 
-      {user?.OrganizationId ? (
+      {user?.organizationId ? (
         <Controller
           name='schoolSubject'
           control={control}

@@ -1,6 +1,6 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import subtaskService from '@/services/subtask.service'
 import type { Subtask } from '@/types/subtask.type'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,14 +12,18 @@ import { updateSubtaskStatusSchema, type UpdateSubtaskStatusFormValues } from '.
 
 interface UseUpdateSubtaskStatusProps {
   taskId?: string
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }: UseUpdateSubtaskStatusProps = {}) => {
+export const useUpdateSubtaskStatus = ({
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseUpdateSubtaskStatusProps = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const methods = useForm<UpdateSubtaskStatusFormValues>({
     resolver: zodResolver(updateSubtaskStatusSchema(t))
@@ -110,15 +114,17 @@ export const useUpdateSubtaskStatus = ({ taskId, projectId, parentMilestoneId }:
         queryClient.invalidateQueries({ queryKey })
       }
 
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
     }
   })

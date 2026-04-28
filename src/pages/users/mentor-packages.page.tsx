@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import CreateMentorPackageDialog from '@/features/mentor-packages/components/create-mentor-package-dialog'
 import { useGetMyMentorPackages } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
-import { formatCurrency } from '@/shared/utils'
+import { calculateReorderPosition, formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { ArrowDownIcon, ArrowUpIcon, CheckCircle2Icon, CircleIcon, ClockIcon, PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -35,9 +35,17 @@ export default function MentorPackagesPage() {
   const { updateMentorPackage, isUpdatingMentorPackage } = useUpdateMentorPackage()
 
   const changeSortOrder = (pkg: MentorPackage, direction: 'up' | 'down') => {
-    const delta = direction === 'up' ? -1 : 1
-    const nextSortOrder = pkg.sortOrder + delta
-    if (nextSortOrder < 0) return
+    const currentIndex = items.findIndex((item) => item.id === pkg.id)
+    if (currentIndex === -1) return
+
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+    if (newIndex < 0 || newIndex >= items.length) return
+
+    const reorderedItems = [...items]
+    const [movedItem] = reorderedItems.splice(currentIndex, 1)
+    reorderedItems.splice(newIndex, 0, movedItem)
+
+    const nextSortOrder = calculateReorderPosition(reorderedItems, newIndex)
 
     updateMentorPackage({
       body: {
@@ -49,7 +57,8 @@ export default function MentorPackagesPage() {
         price: String(pkg.price),
         currency: pkg.currency,
         isActive: pkg.isActive,
-        sortOrder: nextSortOrder
+        position: nextSortOrder,
+        coverImageUrl: pkg.coverImageUrl || null
       }
     })
   }
@@ -144,7 +153,7 @@ export default function MentorPackagesPage() {
                       type='button'
                       size='icon'
                       variant='ghost'
-                      disabled={isUpdatingMentorPackage || mentorPackage.sortOrder <= 0 || index === 0}
+                      disabled={isUpdatingMentorPackage || mentorPackage.position <= 0 || index === 0}
                       onClick={() => changeSortOrder(mentorPackage, 'up')}
                     >
                       <ArrowUpIcon />

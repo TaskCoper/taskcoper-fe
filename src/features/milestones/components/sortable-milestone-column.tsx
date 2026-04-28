@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import AddTaskButton from '@/features/tasks/components/add-task-button'
 import SortableTaskCard from '@/features/tasks/components/sortable-task-card'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
@@ -23,14 +24,30 @@ interface SortableMilestoneColumnProps {
   tasks: TaskPreview[]
   isOverlay?: boolean
   queryKey: readonly unknown[]
+  canMoveMilestone?: boolean
+  canMoveTask?: boolean
 }
 
-export default function SortableMilestoneColumn({ column, tasks, isOverlay, queryKey }: SortableMilestoneColumnProps) {
+export default function SortableMilestoneColumn({
+  column,
+  tasks,
+  isOverlay,
+  queryKey,
+  canMoveMilestone = true,
+  canMoveTask = true
+}: SortableMilestoneColumnProps) {
   const { t } = useTranslation()
-  const { projectId, milestoneId: parentMilestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const [openDropdown, setOpenDropdown] = useState(false)
 
-  const { updateMilestone } = useUpdateMilestone({ queryKey, parentMilestoneId })
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canUpdate = check('TASKS', 'canUpdate')
+
+  const { updateMilestone } = useUpdateMilestone({
+    queryKey,
+    parentMilestoneIdentifier: milestoneIdentifier
+  })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
     initialValue: column.name,
@@ -38,7 +55,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     onSave: (newName) => {
       const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: column.id,
-        parentId: parentMilestoneId,
+        parentMilestoneIdentifier: milestoneIdentifier,
         milestoneName: newName,
         position: column.position
       })
@@ -61,7 +78,8 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     } satisfies MilestoneColumnDragData,
     attributes: {
       roleDescription: `Column: ${column.name}`
-    }
+    },
+    disabled: !canMoveMilestone
   })
 
   const style = {
@@ -83,7 +101,7 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
     <Card
       ref={setNodeRef}
       style={style}
-      {...(isEditing ? {} : { ...attributes, ...listeners })}
+      {...(isEditing || !canMoveMilestone ? {} : { ...attributes, ...listeners })}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
         className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-12.5rem)] overflow-hidden bg-muted cursor-pointer'
@@ -93,7 +111,10 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
         {isEditing ? (
           <Input type='text' className='h-8 text-sm font-semibold' {...inputProps} />
         ) : (
-          <p className='font-semibold text-sm cursor-text' {...triggerProps}>
+          <p
+            className={cn('font-semibold text-sm', canUpdate ? 'cursor-text' : 'cursor-default')}
+            {...(canUpdate ? triggerProps : {})}
+          >
             {column.name}
           </p>
         )}
@@ -114,18 +135,18 @@ export default function SortableMilestoneColumn({ column, tasks, isOverlay, quer
         <div className='flex flex-col gap-2 p-2'>
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <SortableTaskCard task={task} key={task.id} />
+              <SortableTaskCard task={task} key={task.id} canMoveTask={canMoveTask} />
             ))}
           </SortableContext>
         </div>
       </div>
 
-      {column.id && projectId && parentMilestoneId ? (
+      {column.id && identifier && milestoneIdentifier && canWrite ? (
         <div className='px-2 pb-2'>
           <AddTaskButton
             milestoneId={column.id as string}
-            projectId={projectId}
-            parentMilestoneId={parentMilestoneId}
+            projectIdentifier={identifier}
+            parentMilestoneIdentifier={milestoneIdentifier}
           />
         </div>
       ) : null}

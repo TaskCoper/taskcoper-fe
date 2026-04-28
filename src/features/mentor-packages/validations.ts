@@ -25,31 +25,36 @@ export const positiveNumberString = (t: TFunction, errorKey: string) =>
   })
 
 export const createMentorPackageSchema = (t: TFunction) =>
-  z.object({
-    name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-    description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
-    durationInMinutes: z
-      .number({ error: t('mentorPackage.validation.durationPositive') })
-      .positive(t('mentorPackage.validation.durationPositive')),
-    totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
-    price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
-    currency: z.enum(['Vnd', 'Usd'])
-  })
+  z
+    .object({
+      name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
+      description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
+      durationInMinutes: z
+        .number({ error: t('mentorPackage.validation.durationPositive') })
+        .positive(t('mentorPackage.validation.durationPositive')),
+      totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
+      price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
+      currency: z.enum(['Vnd', 'Usd'])
+    })
+    .strict()
 
 export const updateMentorPackageSchema = (t: TFunction) =>
-  z.object({
-    mentorPackageId: z.uuid(),
-    name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-    description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
-    durationInMinutes: z
-      .number({ error: t('mentorPackage.validation.durationPositive') })
-      .positive(t('mentorPackage.validation.durationPositive')),
-    totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
-    price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
-    currency: z.enum(['Vnd', 'Usd']),
-    isActive: z.boolean(),
-    sortOrder: z.number().int()
-  })
+  z
+    .object({
+      mentorPackageId: z.uuid(),
+      name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
+      description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
+      durationInMinutes: z
+        .number({ error: t('mentorPackage.validation.durationPositive') })
+        .positive(t('mentorPackage.validation.durationPositive')),
+      coverImageUrl: z.url().nullable(),
+      totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
+      price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
+      currency: z.enum(['Vnd', 'Usd']),
+      isActive: z.boolean(),
+      position: z.number().int()
+    })
+    .strict()
 
 export type CreateMentorPackageFormValues = z.infer<ReturnType<typeof createMentorPackageSchema>>
 export type UpdateMentorPackageFormValues = z.infer<ReturnType<typeof updateMentorPackageSchema>>

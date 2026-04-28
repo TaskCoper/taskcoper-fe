@@ -1,5 +1,5 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import projectService from '@/services/project.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import type { ProjectPreview } from '@/types/project.type'
@@ -14,13 +14,13 @@ export const useGetMyProjectsInfinite = ({
   pageSize = DEFAULT_PAGE_SIZE,
   enabled = true
 }: GetMyProjectsInfiniteParams = {}) => {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const query = useInfiniteQuery({
-    queryKey: queryKeys.projects.listMyInfinite(user?.UserId, status, searchTerm, pageSize),
+    queryKey: queryKeys.projects.listMyInfinite(user?.id, status, searchTerm, pageSize),
     queryFn: ({ pageParam = DEFAULT_PAGE_INDEX }) =>
       projectService.getMyProjects({
-        userId: user?.UserId,
+        userId: user?.id,
         status,
         searchTerm,
         pageIndex: pageParam as number,
@@ -32,7 +32,7 @@ export const useGetMyProjectsInfinite = ({
       const totalPages = Math.ceil(totalCount / pageSize)
       return pageIndex < totalPages ? pageIndex + 1 : undefined
     },
-    enabled: !!user?.UserId && enabled
+    enabled: !!user?.id && enabled
   })
 
   const projects: ProjectPreview[] = query.data?.pages.flatMap((p) => p.value.items) ?? []

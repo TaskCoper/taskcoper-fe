@@ -1,9 +1,7 @@
-import { useAuthStore, type UserPayload } from '@/lib/zustand/auth.store'
+import { queryKeys } from '@/lib/query-keys'
 import userService from '@/services/user.service'
-import { getUserType } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { jwtDecode } from 'jwt-decode'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -12,8 +10,8 @@ import { createSignInSchema, type SignInFormValues } from '../validations'
 
 export const useSignIn = () => {
   const { t } = useTranslation()
-  const { signIn: signInAuth } = useAuthStore()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const signInMethods = useForm<SignInFormValues>({
     defaultValues: {
@@ -25,21 +23,9 @@ export const useSignIn = () => {
 
   const { mutate: signIn, isPending: isSigningIn } = useMutation({
     mutationFn: userService.signIn,
-    onSuccess: (data) => {
-      signInAuth(data.accessToken, data.refreshToken)
-      const user = jwtDecode<UserPayload>(data.accessToken)
-      const userType = getUserType(user)
-
-      if (user.IsVerified === 'false') {
-        navigate('/')
-      } else if (userType === 'superAdmin') {
-        navigate('/dashboard', { replace: true })
-      } else if (userType === 'orgAdmin') {
-        navigate('/manage', { replace: true })
-      } else {
-        navigate('/projects', { replace: true })
-      }
-
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: queryKeys.auth.me() })
+      navigate('/redirect', { replace: true })
       signInMethods.reset()
     },
     onError: (error) => {

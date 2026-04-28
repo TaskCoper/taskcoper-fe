@@ -9,7 +9,6 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   BellIcon,
@@ -65,9 +64,8 @@ export default function UserDefaultLayout() {
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
-  const { user } = useAuthStore()
   const { me, isGettingMe } = useGetMe()
-  const { org } = useGetOrg({ orgId: user?.OrganizationId })
+  const { org } = useGetOrg({ orgId: me?.organizationId })
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
 
   return (
@@ -185,7 +183,7 @@ export default function UserDefaultLayout() {
         </div>
       </header>
 
-      <main className='flex-1 h-full w-full relative'>
+      <main className='flex-1 min-h-0 w-full relative overflow-hidden'>
         <Suspense
           fallback={
             <div className='flex h-full w-full items-center justify-center'>

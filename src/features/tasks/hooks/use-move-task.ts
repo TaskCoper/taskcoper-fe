@@ -1,3 +1,4 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
 import taskService from '@/services/task.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -6,20 +7,27 @@ import { toast } from 'sonner'
 
 interface MoveTaskParams {
   isDragging?: boolean
-  projectId?: string
+  projectIdentifier?: string
   milestoneId?: string
+  taskIdentifier?: string
   targetMilestoneId?: string
-  parentMilestoneId?: string
+  milestoneIdentifier?: string
+  currentMilestoneIdentifier?: string
+  targetMilestoneIdentifier?: string
 }
 
 export const useMoveTask = ({
   isDragging = true,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  milestoneIdentifier,
   milestoneId,
-  targetMilestoneId
-}: MoveTaskParams = {}) => {
+  taskIdentifier,
+  targetMilestoneId,
+  currentMilestoneIdentifier,
+  targetMilestoneIdentifier
+}: MoveTaskParams) => {
   const queryClient = useQueryClient()
+  const { me: user } = useGetMe()
   const { t } = useTranslation()
 
   const { mutate: moveTask, isPending: isMovingTask } = useMutation({
@@ -29,18 +37,34 @@ export const useMoveTask = ({
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.id) })
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
 
       if (!isDragging) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(variables.body.id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
       }
 
-      if (parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
+      if (milestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(milestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
+      }
+
+      if (currentMilestoneIdentifier) {
+        if (targetMilestoneIdentifier) {
+          if (currentMilestoneIdentifier !== targetMilestoneIdentifier) {
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
+            })
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.milestones.byParent(projectIdentifier, targetMilestoneIdentifier)
+            })
+          } else {
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
+            })
+          }
         }
       }
 

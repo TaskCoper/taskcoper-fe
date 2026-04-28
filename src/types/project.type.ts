@@ -1,4 +1,19 @@
+import type { ProjectRole, ProjectRoleName, SectionPermission } from './project-permission.type'
 import type { TaskPriority } from './task.type'
+
+export const MemberStatus = {
+  Free: 'Free',
+  Busy: 'Busy'
+} as const
+
+export type MemberStatus = (typeof MemberStatus)[keyof typeof MemberStatus]
+
+export const MemberStatusLabel: Record<MemberStatus, string> = {
+  [MemberStatus.Free]: 'project.memberStatus.free',
+  [MemberStatus.Busy]: 'project.memberStatus.busy'
+}
+
+export type MemberStatusLabel = (typeof MemberStatusLabel)[keyof typeof MemberStatusLabel]
 
 export interface ProjectPreview {
   id: string
@@ -9,6 +24,7 @@ export interface ProjectPreview {
   logoImage: string | null
   teamSize: string | null
   schoolSubject: string | null
+  slug: string
 }
 
 export interface ProjectMember {
@@ -17,14 +33,45 @@ export interface ProjectMember {
   email: string
   avatar: string | null
   role: number
-  isMain: boolean
-  isEditor: boolean
+  slug: string
+  phoneNumber: string | null
+  positionTitles: Array<Pick<ProjectPositionTitle, 'id' | 'name' | 'color'>>
+  roles: Array<{
+    id: string
+    name: ProjectRoleName
+    isSystem: boolean
+    isDefault: boolean
+  }>
+}
+
+export interface ProjectMemberDetail extends ProjectMember {
+  firstName: string
+  lastName: string
+  joinedOnUtc: string
+  domains: ProjectDomain[]
+  activeTaskCount: number
+  status: MemberStatus
+}
+
+export interface ProjectPositionTitle {
+  id: string
+  name: string
+  description: string | null
+  color: string
+}
+
+export interface ProjectMemberPositionTitle extends ProjectPositionTitle {
+  projectId: string
+  memberCount: number
+  createdOnUtc: string
+  modifiedOnUtc: string
 }
 
 export interface Project {
   id: string
   name: string
   description: string | null
+  slug: string
   startDate: string | null
   endDate: string | null
   coverImage: string | null
@@ -38,6 +85,7 @@ export interface Project {
   organizationName: string | null
   organizationLogo: string | null
   domains: ProjectDomain[]
+  members: Array<ProjectMember>
 }
 
 export interface SystemProject {
@@ -207,12 +255,35 @@ export interface RevenueStats {
   netRevenue: number
 }
 
+export interface ProjectPermission {
+  projectId: string
+  ownerId: string
+  effectiveRoleNames: string[]
+  roles: ProjectRole[]
+  sections: SectionPermission[]
+}
+
+export interface ProjectRoleItem extends ProjectRole {
+  description: string
+  memberCount: number
+  permissions: SectionPermission[]
+}
+
+export type ProjectRoleTemplate = Omit<ProjectRoleItem, 'id' | 'memberCount'>
+
+export interface ProjectRoleDetail {
+  id: string
+  name: ProjectRoleName
+  description: string
+  permissions: SectionPermission[]
+}
+
 // APIs
 export interface InviteMembersPayload {
-  projectId: string
+  projectIdentifier: string
   inviteMembers: {
     email: string
-    isEditor: boolean
+    roleIds: string[]
     inviteExpireDate: string | null
   }[]
 }

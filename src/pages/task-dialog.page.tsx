@@ -17,11 +17,13 @@ import AssigneePopover from '@/features/assignees/components/assignee-popover'
 import { useGetTaskMembers } from '@/features/assignees/hooks/use-get-task-members'
 import AttachmentPopover from '@/features/attachments/components/attachment-popover'
 import { useGetAttachments } from '@/features/attachments/hooks/use-get-attachments'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import CommentCard from '@/features/comments/components/comment-card'
 import { useAddComment } from '@/features/comments/hooks/use-add-comment'
 import { useGetComments } from '@/features/comments/hooks/use-get-comments'
 import type { AddTaskCommentFormValues } from '@/features/comments/validations'
 import LabelPopover from '@/features/labels/components/label-popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import SortableParentSubtaskCard from '@/features/subtasks/components/sortable-parent-subtask-card'
 import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask-card'
 import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
@@ -29,7 +31,7 @@ import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
 import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
 import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
 import DatePopover from '@/features/tasks/components/date-popover'
-import MoveTaskPopover from '@/features/tasks/components/move-task-popover'
+import MoveTaskPopoverV2 from '@/features/tasks/components/move-task-popover-v2'
 import PriorityPopover from '@/features/tasks/components/priority-popover'
 import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
 import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
@@ -40,7 +42,6 @@ import { useToggleWatchTask } from '@/features/tasks/hooks/use-toggle-watch-task
 import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { TaskPriorityLabel } from '@/types/task.type'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
@@ -65,7 +66,7 @@ import {
   UserRoundPlusIcon,
   XIcon
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
@@ -74,16 +75,26 @@ export default function TaskDialogPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
   const { t, i18n } = useTranslation()
-  const { projectId, milestoneId, taskId } = useParams<{ projectId: string; milestoneId: string; taskId: string }>()
+  const { identifier, milestoneIdentifier, taskIdentifier } = useParams<{
+    identifier: string
+    milestoneIdentifier: string
+    taskIdentifier: string
+  }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canMoveTask = check('TASKS', 'canUpdate', 'canMoveTask')
+  const canToggleTaskStatus = check('TASKS', 'canUpdate', 'canToggleTaskStatus')
+  const canWrite = check('TASKS', 'canWrite')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
 
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
-  const descriptionRef = useRef<HTMLDivElement>(null)
+  const [descriptionElement, setDescriptionElement] = useState<HTMLDivElement | null>(null)
   const [isEditComment, setIsEditComment] = useState(false)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
@@ -92,30 +103,30 @@ export default function TaskDialogPage() {
 
   const sensors = useDndSensors()
 
-  const { task, isLoadingTask } = useGetTask({ taskId })
-  const { comments, isLoadingComments } = useGetComments({ taskId })
-  const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId })
-  const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId })
-  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId })
+  const { task, isLoadingTask } = useGetTask({ taskIdentifier })
+  const { comments, isLoadingComments } = useGetComments({ taskId: task?.taskId })
+  const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId: task?.taskId })
+  const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId: task?.taskId })
+  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId: task?.taskId })
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
 
   const isWatchingTask =
-    taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.UserId) !== undefined
+    taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.id) !== undefined
 
   const {
     methods: updateTaskMethods,
     updateTask,
     isUpdatingTask
-  } = useUpdateTask({ taskId, projectId, parentMilestoneId: milestoneId })
+  } = useUpdateTask({ taskIdentifier, identifier, milestoneIdentifier })
   const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
     methods: addCommentMethods,
     addComment,
     isAddingComment
-  } = useAddComment({ taskId, projectId, parentMilestoneId: milestoneId })
+  } = useAddComment({ taskId: task?.taskId, identifier, milestoneIdentifier })
   const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
 
   const {
@@ -126,7 +137,7 @@ export default function TaskDialogPage() {
     activeChildSubtask,
     groupedSubtasks,
     parentSubtasksIds
-  } = useSubtaskDnd({ taskId, subtasks, projectId, parentMilestoneId: milestoneId })
+  } = useSubtaskDnd({ taskId: task?.taskId, subtasks, identifier, milestoneIdentifier })
 
   const {
     isEditing: isEditingName,
@@ -162,16 +173,16 @@ export default function TaskDialogPage() {
     }
   })
 
-  const { toggleWatchTask } = useToggleWatchTask({ projectId, parentMilestoneId: milestoneId })
+  const { toggleWatchTask } = useToggleWatchTask({ projectIdentifier: identifier, milestoneIdentifier })
 
   const goBack = () => {
     // Check if we're in the storage route
     if (location.pathname.includes('/storage/')) {
       // Navigate back to storage page
-      navigate(`/projects/${projectId}/storage${location.search}`)
+      navigate(`/projects/${identifier}/storage${location.search}`)
     } else {
       // Navigate back to milestones page
-      navigate(`/projects/${projectId}/milestones/${milestoneId}${location.search}`)
+      navigate(`/projects/${identifier}/milestones/${milestoneIdentifier}${location.search}`)
     }
   }
 
@@ -213,20 +224,23 @@ export default function TaskDialogPage() {
   }, [open, task, resetComment])
 
   useEffect(() => {
-    if (!descriptionRef.current) return
+    if (!descriptionElement) return
 
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setShowDescriptionToggle(entry.target.scrollHeight > 384)
+    const checkHeight = () => {
+      if (descriptionElement) {
+        setShowDescriptionToggle(descriptionElement.scrollHeight > 384)
       }
-    })
+    }
 
-    observer.observe(descriptionRef.current)
+    checkHeight()
+
+    const observer = new ResizeObserver(checkHeight)
+
+    observer.observe(descriptionElement)
     return () => observer.disconnect()
-  }, [task?.taskDescription, isEditDescription])
+  }, [descriptionElement, task?.taskDescription, isEditDescription])
 
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
-    if (!updateTaskMethods.formState.isDirty) return
     updateTask({ body })
   }
 
@@ -329,10 +343,11 @@ export default function TaskDialogPage() {
               task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
             )}
           >
-            {projectId && milestoneId && task?.taskId && task?.milestoneId ? (
+            {/* {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
               <MoveTaskPopover
-                projectId={projectId}
-                parentMilestoneId={milestoneId}
+                taskIdentifier={task.taskSlug}
+                projectIdentifier={identifier}
+                milestoneIdentifier={milestoneIdentifier}
                 milestoneId={task.milestoneId}
                 taskId={task.taskId}
               >
@@ -341,7 +356,26 @@ export default function TaskDialogPage() {
                   <ChevronDownIcon />
                 </Button>
               </MoveTaskPopover>
-            ) : null}
+            ) : null} */}
+
+            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug && canMoveTask ? (
+              <MoveTaskPopoverV2
+                projectIdentifier={identifier}
+                taskIdentifier={task.taskSlug}
+                taskId={task.taskId}
+                taskParentMilestoneSlug={task.parentMilestoneSlug}
+                taskMilestoneId={task.milestoneId}
+              >
+                <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                  {task?.milestoneName}
+                  <ChevronDownIcon />
+                </Button>
+              </MoveTaskPopoverV2>
+            ) : (
+              <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                {task?.milestoneName}
+              </Button>
+            )}
 
             <div className='flex items-center gap-1'>
               {isWatchingTask ? (
@@ -350,8 +384,8 @@ export default function TaskDialogPage() {
                   variant={task?.backgroundImage ? 'outline' : 'ghost'}
                   size='icon-sm'
                   onClick={() => {
-                    if (!taskId) return
-                    toggleWatchTask({ taskId, isWatching: false })
+                    if (!task?.taskId) return
+                    toggleWatchTask({ taskId: task.taskId, isWatching: false })
                   }}
                 >
                   <EyeIcon />
@@ -362,6 +396,7 @@ export default function TaskDialogPage() {
                 onSubmit={handleSubmitTask(onSubmitUpdateTask)}
                 open={openBackgroundImagePopover}
                 setOpen={setOpenBackgroundImagePopover}
+                disabled={!canUpdate}
               >
                 <Button
                   className={cn('rounded-full', openBackgroundImagePopover ? 'bg-primary/10 text-primary' : '')}
@@ -372,12 +407,12 @@ export default function TaskDialogPage() {
                 </Button>
               </BackgroundImagePopover>
 
-              {taskId && task?.taskName && projectId && milestoneId && task.milestoneId ? (
+              {task?.taskId && task?.taskName && identifier && milestoneIdentifier && task.milestoneId ? (
                 <TaskDetailMenu
-                  projectId={projectId}
-                  parentMilestoneId={milestoneId}
+                  projectIdentifier={identifier}
+                  parentMilestoneIdentifier={milestoneIdentifier}
                   milestoneId={task.milestoneId}
-                  taskId={taskId}
+                  taskId={task.taskId}
                   taskName={task.taskName}
                   onDeleteSuccess={goBack}
                   open={openTaskDetailMenu}
@@ -413,6 +448,7 @@ export default function TaskDialogPage() {
               <div className='flex gap-2'>
                 <Checkbox
                   checked={task?.isCompleted}
+                  disabled={!canToggleTaskStatus}
                   onCheckedChange={(checked) => {
                     const result = updateTaskSchema(t).safeParse({
                       ...updateTaskMethods.getValues(),
@@ -423,15 +459,23 @@ export default function TaskDialogPage() {
                       updateTask({ body: result.data })
                     }
                   }}
-                  className={cn('rounded-full border-foreground', isEditingName ? 'mt-5' : 'mt-2')}
+                  className={cn(
+                    'rounded-full border-foreground',
+                    isEditingName ? 'mt-5' : 'mt-2.5',
+                    !canToggleTaskStatus ? 'cursor-not-allowed' : ''
+                  )}
                 />
                 <div className='space-y-4'>
                   {isEditingName ? (
                     <Input className='text-3xl! font-bold w-full h-14' {...nameInputProps} />
                   ) : (
                     <p
-                      className={cn('text-3xl font-bold cursor-text', task?.isCompleted ? 'text-muted-foreground' : '')}
-                      {...nameTriggerProps}
+                      className={cn(
+                        'text-3xl font-bold cursor-text',
+                        task?.isCompleted ? 'text-muted-foreground' : '',
+                        canUpdate ? 'cursor-text' : 'cursor-default'
+                      )}
+                      {...(canUpdate ? nameTriggerProps : {})}
                     >
                       {task?.taskName}
                     </p>
@@ -440,7 +484,11 @@ export default function TaskDialogPage() {
                   {/* Action Buttons */}
                   <div className='flex items-center gap-2 flex-wrap'>
                     {!task?.priority ? (
-                      <PriorityPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemovePriority}>
+                      <PriorityPopover
+                        onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                        onRemove={handleRemovePriority}
+                        disabled={!canUpdate}
+                      >
                         <Button variant='outline' size='sm'>
                           <ChevronsUpIcon />
                           {t('task.priority.title')}
@@ -448,12 +496,18 @@ export default function TaskDialogPage() {
                       </PriorityPopover>
                     ) : null}
 
-                    {(task?.taskLabels.length ?? 0) === 0 && projectId && taskId && milestoneId ? (
+                    {(task?.taskLabels.length ?? 0) === 0 &&
+                    identifier &&
+                    task?.taskSlug &&
+                    task?.taskId &&
+                    milestoneIdentifier ? (
                       <LabelPopover
-                        projectId={projectId}
-                        taskId={taskId}
-                        parentMilestoneId={milestoneId}
+                        projectIdentifier={identifier}
+                        taskSlug={task.taskSlug}
+                        taskId={task.taskId}
+                        parentMilestoneIdentifier={milestoneIdentifier}
                         taskLabels={task?.taskLabels ?? []}
+                        disabled={!canUpdate}
                       >
                         <Button variant='outline' size='sm'>
                           <TagIcon />
@@ -463,7 +517,11 @@ export default function TaskDialogPage() {
                     ) : null}
 
                     {!task?.taskStartDate && !task?.taskEndDate ? (
-                      <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
+                      <DatePopover
+                        onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                        onRemove={handleRemoveDate}
+                        disabled={!canUpdate}
+                      >
                         <Button variant='outline' size='sm'>
                           <ClockIcon />
                           {t('common.field.date')}
@@ -471,8 +529,13 @@ export default function TaskDialogPage() {
                       </DatePopover>
                     ) : null}
 
-                    {projectId && taskId && milestoneId ? (
-                      <SubtaskPopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
+                    {identifier && task?.taskId && milestoneIdentifier ? (
+                      <SubtaskPopover
+                        projectIdentifier={identifier}
+                        taskId={task.taskId}
+                        parentMilestoneIdentifier={milestoneIdentifier}
+                        disabled={!canWrite}
+                      >
                         <Button variant='outline' size='sm'>
                           <SquareCheckBigIcon />
                           {t('task.subtask.subtask')}
@@ -481,10 +544,15 @@ export default function TaskDialogPage() {
                     ) : null}
 
                     {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
-                    projectId &&
-                    taskId &&
-                    milestoneId ? (
-                      <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
+                    identifier &&
+                    task?.taskId &&
+                    milestoneIdentifier ? (
+                      <AssigneePopover
+                        projectIdentifier={identifier}
+                        taskId={task.taskId}
+                        parentMilestoneIdentifier={milestoneIdentifier}
+                        disabled={!canWrite}
+                      >
                         <Button variant='outline' size='sm'>
                           <UserRoundPlusIcon />
                           {t('task.assignee.assignee')}
@@ -492,8 +560,13 @@ export default function TaskDialogPage() {
                       </AssigneePopover>
                     ) : null}
 
-                    {taskId && projectId && milestoneId ? (
-                      <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={milestoneId}>
+                    {task?.taskId && identifier && milestoneIdentifier ? (
+                      <AttachmentPopover
+                        taskId={task.taskId}
+                        projectIdentifier={identifier}
+                        parentMilestoneIdentifier={milestoneIdentifier}
+                        disabled={!canWrite}
+                      >
                         <Button variant='outline' size='sm'>
                           <PaperclipIcon />
                           {t('task.attachment.attachment')}
@@ -510,7 +583,11 @@ export default function TaskDialogPage() {
                   <div className='space-y-1'>
                     <p className='text-sm font-semibold text-muted-foreground'>{t('task.priority.title')}</p>
 
-                    <PriorityPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemovePriority}>
+                    <PriorityPopover
+                      onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                      onRemove={handleRemovePriority}
+                      disabled={!canUpdate}
+                    >
                       <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
                         <div className='flex items-center gap-2 min-w-10'>
                           {getTaskPriorityIcon()[task.priority]}
@@ -525,7 +602,7 @@ export default function TaskDialogPage() {
                 <div className='space-y-1'>
                   <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.storyPoints')}</p>
 
-                  <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)}>
+                  <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} disabled={!canUpdate}>
                     <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
                       {task?.estimatedPoints ? (
                         <p className='font-semibold min-w-10'>{task.estimatedPoints}</p>
@@ -558,12 +635,14 @@ export default function TaskDialogPage() {
                         </div>
                       ))}
 
-                      {projectId && taskId && milestoneId ? (
+                      {identifier && task?.taskSlug && task?.taskId && milestoneIdentifier ? (
                         <LabelPopover
-                          projectId={projectId}
-                          taskId={taskId}
-                          parentMilestoneId={milestoneId}
+                          projectIdentifier={identifier}
+                          taskSlug={task.taskSlug}
+                          taskId={task.taskId}
+                          parentMilestoneIdentifier={milestoneIdentifier}
                           taskLabels={task?.taskLabels ?? []}
+                          disabled={!canUpdate}
                         >
                           <Button variant='secondary' size='icon-sm'>
                             <PlusIcon />
@@ -591,8 +670,13 @@ export default function TaskDialogPage() {
                           </Avatar>
                         ))}
 
-                      {projectId && taskId && milestoneId ? (
-                        <AssigneePopover projectId={projectId} taskId={taskId} parentMilestoneId={milestoneId}>
+                      {identifier && task?.taskId && milestoneIdentifier ? (
+                        <AssigneePopover
+                          projectIdentifier={identifier}
+                          taskId={task.taskId}
+                          parentMilestoneIdentifier={milestoneIdentifier}
+                          disabled={!canWrite}
+                        >
                           <Button className='rounded-full size-8' size='icon' variant='secondary'>
                             <PlusIcon />
                           </Button>
@@ -613,7 +697,11 @@ export default function TaskDialogPage() {
                           : t('task.detail.dueDate')}
                     </p>
 
-                    <DatePopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} onRemove={handleRemoveDate}>
+                    <DatePopover
+                      onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                      onRemove={handleRemoveDate}
+                      disabled={!canUpdate}
+                    >
                       <Button variant='secondary' size='sm'>
                         {task?.taskStartDate ? (
                           <p className='font-semibold'>
@@ -638,7 +726,7 @@ export default function TaskDialogPage() {
                 <div className='w-full space-y-4'>
                   <div className='flex items-start justify-between'>
                     <p className='font-semibold'>{t('common.field.description')}</p>
-                    {!isEditDescription && task?.taskDescription ? (
+                    {!isEditDescription && task?.taskDescription && canUpdate ? (
                       <Button variant='secondary' size='sm' onClick={() => setIsEditDescription(true)}>
                         {t('common.button.edit')}
                       </Button>
@@ -676,7 +764,7 @@ export default function TaskDialogPage() {
                                   { shouldDirty: true }
                                 )
                               }}
-                              projectId={projectId}
+                              projectIdentifier={identifier}
                               mentionedUsers={task?.mentionedUsers}
                             />
                           </Field>
@@ -710,7 +798,7 @@ export default function TaskDialogPage() {
                     <div>
                       <div className='relative'>
                         <div
-                          ref={descriptionRef}
+                          ref={setDescriptionElement}
                           role='button'
                           className={cn('overflow-hidden transition-all', !isDescriptionExpanded && 'max-h-96')}
                         >
@@ -747,18 +835,19 @@ export default function TaskDialogPage() {
                       placeholder={t('task.description.addDescription')}
                       className='resize-none w-full font-semibold'
                       readOnly
-                      onClick={() => setIsEditDescription(true)}
+                      disabled={!canUpdate}
+                      onClick={() => canUpdate && setIsEditDescription(true)}
                     />
                   )}
                 </div>
               </div>
 
               {/* Attachments */}
-              {(attachments?.value.totalCount ?? 0) > 0 && taskId && projectId && milestoneId ? (
+              {(attachments?.value.totalCount ?? 0) > 0 && task?.taskId && identifier && milestoneIdentifier ? (
                 <AttachmentsSection
-                  taskId={taskId}
-                  projectId={projectId}
-                  parentMilestoneId={milestoneId}
+                  taskId={task.taskId}
+                  projectIdentifier={identifier}
+                  parentMilestoneIdentifier={milestoneIdentifier}
                   attachments={attachments?.value.items ?? []}
                 />
               ) : null}
@@ -775,14 +864,14 @@ export default function TaskDialogPage() {
                 <SortableContext items={parentSubtasksIds} strategy={verticalListSortingStrategy}>
                   <div className='mt-10 space-y-8 pb-6'>
                     {groupedSubtasks?.map((subtask) => {
-                      if (taskId && projectId && milestoneId) {
+                      if (task?.taskId && identifier && milestoneIdentifier) {
                         return (
                           <SortableParentSubtaskCard
                             key={subtask.id}
                             subtask={subtask}
-                            projectId={projectId}
-                            parentMilestoneId={milestoneId}
-                            taskId={taskId}
+                            projectIdentifier={identifier}
+                            parentMilestoneIdentifier={milestoneIdentifier}
+                            taskId={task.taskId}
                             editingSubtaskId={editingSubtaskId}
                             setEditingSubtaskId={setEditingSubtaskId}
                           />
@@ -794,24 +883,24 @@ export default function TaskDialogPage() {
                 </SortableContext>
 
                 <DragOverlay dropAnimation={defaultDropAnimation} modifiers={[snapCenterToCursor]}>
-                  {activeParentSubtask && taskId && projectId && milestoneId && (
+                  {activeParentSubtask && task?.taskId && identifier && milestoneIdentifier && (
                     <SortableParentSubtaskCard
                       isOverlay
                       subtask={activeParentSubtask}
-                      projectId={projectId}
-                      parentMilestoneId={milestoneId}
-                      taskId={taskId}
+                      projectIdentifier={identifier}
+                      parentMilestoneIdentifier={milestoneIdentifier}
+                      taskId={task.taskId}
                       editingSubtaskId={editingSubtaskId}
                       setEditingSubtaskId={setEditingSubtaskId}
                     />
                   )}
-                  {activeChildSubtask && taskId && projectId && milestoneId && (
+                  {activeChildSubtask && task?.taskId && identifier && milestoneIdentifier && (
                     <SortableSubtaskCard
                       isOverlay
                       subtask={activeChildSubtask}
-                      taskId={taskId}
-                      projectId={projectId}
-                      parentMilestoneId={milestoneId}
+                      taskId={task.taskId}
+                      projectIdentifier={identifier}
+                      parentMilestoneIdentifier={milestoneIdentifier}
                     />
                   )}
                 </DragOverlay>
@@ -843,7 +932,7 @@ export default function TaskDialogPage() {
                               { shouldDirty: true }
                             )
                           }}
-                          projectId={projectId}
+                          projectIdentifier={identifier}
                         />
                       </div>
                     )}
@@ -871,24 +960,24 @@ export default function TaskDialogPage() {
                     </Button>
                   </div>
                 </div>
-              ) : (
+              ) : canWrite ? (
                 <Input
                   placeholder={t('task.comment.addComment')}
-                  className='font-semibold bg-background'
+                  className={cn('font-semibold bg-background', !canWrite && 'cursor-not-allowed')}
                   readOnly
                   onClick={() => setIsEditComment(true)}
                 />
-              )}
+              ) : null}
 
-              {taskId && projectId && milestoneId ? (
+              {task?.taskId && identifier && milestoneIdentifier ? (
                 <div className='space-y-6 pb-6'>
                   {comments?.value.items.map((comment) => (
                     <CommentCard
                       key={comment.commentId}
                       comment={comment}
-                      taskId={taskId}
-                      projectId={projectId}
-                      parentMilestoneId={milestoneId}
+                      taskId={task.taskId}
+                      projectIdentifier={identifier}
+                      parentMilestoneIdentifier={milestoneIdentifier}
                     />
                   ))}
                 </div>

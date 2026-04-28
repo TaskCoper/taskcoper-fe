@@ -2,11 +2,13 @@ import { sortedTaskLabelColors } from '@/features/labels/constants'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { RoleType } from '@/layouts/role-guard.layout'
 import type { BasePaginationResponse } from '@/lib/axios'
-import type { UserPayload } from '@/lib/zustand/auth.store'
+import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
+import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
 import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/types/subtask.type'
 import type { TaskCardDragData } from '@/types/task.type'
 import type { Currency } from '@/types/transaction.type'
+import type { User } from '@/types/user.type'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -47,23 +49,25 @@ export function hasDraggableData<T extends Active | Over>(
   return false
 }
 
+const defaultPaginationResponse = {
+  value: {
+    items: [],
+    pageIndex: DEFAULT_PAGE_INDEX,
+    pageSize: DEFAULT_PAGE_SIZE,
+    totalCount: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
+  },
+  error: {
+    code: '',
+    message: ''
+  },
+  isSuccess: true,
+  isFailure: false
+}
+
 export function getDefaultPaginationResponse<T>(): BasePaginationResponse<T> {
-  return {
-    value: {
-      items: [],
-      pageIndex: DEFAULT_PAGE_INDEX,
-      pageSize: DEFAULT_PAGE_SIZE,
-      totalCount: 0,
-      hasNextPage: false,
-      hasPreviousPage: false
-    },
-    error: {
-      code: '',
-      message: ''
-    },
-    isSuccess: true,
-    isFailure: false
-  }
+  return defaultPaginationResponse as BasePaginationResponse<T>
 }
 
 /**
@@ -165,12 +169,18 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   }
 }
 
-export const getUserType = (user: UserPayload | null): RoleType | null => {
+export const getUserType = (user: User | null | undefined): RoleType | null => {
   if (!user) return null
-  if (user.Role === 'Admin' && !user.OrganizationId) return 'superAdmin'
-  if (user.Role === 'Admin' && user.OrganizationId) return 'orgAdmin'
+  if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
+  if (user.role === 'Admin' && user.organizationId) return 'orgAdmin'
 
   return 'user'
+}
+
+export const getRoleHomePath = (userType: RoleType | null): string => {
+  if (userType === 'superAdmin') return '/dashboard'
+  if (userType === 'orgAdmin') return '/manage'
+  return '/projects'
 }
 
 export const formatCurrency = (price: number, currency?: Currency) => {
@@ -196,4 +206,9 @@ export const getTimezoneOffsetString = () => {
   const gmt = `GMT${sign}${String(hours).padStart(2, '0')}`
 
   return minutes > 0 ? `${gmt}:${String(minutes).padStart(2, '0')}` : gmt
+}
+
+export const clearAllUserPreferences = () => {
+  useMilestonePreferencesStore.getState().clearAll()
+  useMentorWidgetStore.getState().clearAll()
 }

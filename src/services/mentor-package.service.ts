@@ -1,3 +1,4 @@
+import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type {
   CreateMentorPackageFormValues,
   UpdateMentorPackageFormValues
@@ -36,8 +37,10 @@ class MentorPackageService {
     return data
   }
 
-  getPurchasedMentorPackages = async () => {
-    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`)
+  getPurchasedMentorPackages = async ({ mode }: GetPurchasedMentorPackagesParams) => {
+    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`, {
+      params: { mode }
+    })
 
     return data
   }
@@ -47,6 +50,15 @@ class MentorPackageService {
     const { data } = await api.get<BaseResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me/${packageId}`)
 
     return data.value
+  }
+
+  getProjectPurchasedMentorPackages = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<PurchasedMentorPackage>()
+    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(
+      `/v1/${this.baseUrl}/projects/${projectIdentifier}`
+    )
+
+    return data
   }
 
   getMentorPackage = async ({ packageId }: { packageId?: string }) => {

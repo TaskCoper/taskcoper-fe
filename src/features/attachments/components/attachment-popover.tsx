@@ -12,16 +12,23 @@ import UploadAttachmentForm from './upload-attachment-form'
 interface AttachmentPopoverProps {
   children: React.ReactNode
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
+  disabled?: boolean
 }
 
-export default function AttachmentPopover({ children, taskId, projectId, parentMilestoneId }: AttachmentPopoverProps) {
+export default function AttachmentPopover({
+  children,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  disabled = false
+}: AttachmentPopoverProps) {
   const { t } = useTranslation()
   const { methods, uploadAttachment, isUploadingAttachment, open, setOpen, recalculatePosition } = useUploadAttachment({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const onSubmit: SubmitHandler<UploadAttachmentFormValues> = (body) => {
@@ -66,7 +73,9 @@ export default function AttachmentPopover({ children, taskId, projectId, parentM
         setOpen(open)
       }}
     >
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 min-w-80 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
@@ -83,8 +92,8 @@ export default function AttachmentPopover({ children, taskId, projectId, parentM
             <form className='flex flex-col' onSubmit={methods.handleSubmit(onSubmit)}>
               <UploadAttachmentForm
                 taskId={taskId}
-                projectId={projectId}
-                parentMilestoneId={parentMilestoneId}
+                projectIdentifier={projectIdentifier}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
                 onUploadComplete={onClose}
               />
 

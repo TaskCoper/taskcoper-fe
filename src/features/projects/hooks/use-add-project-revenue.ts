@@ -27,10 +27,12 @@ export const useAddProjectRevenue = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(variables.body.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.body.projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projectRevenueLabels.stats(variables.body.projectIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.body.projectIdentifier) })
     }
   })
 

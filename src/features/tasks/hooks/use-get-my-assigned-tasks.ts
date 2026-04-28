@@ -5,20 +5,20 @@ import type { TaskPreview } from '@/types/task.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface GetMyAssignedTasksParams {
-  projectId?: string
+  projectIdentifier?: string
   userId?: string
   enabled?: boolean
 }
 
-export const useGetMyAssignedTasks = ({ projectId, userId, enabled = true }: GetMyAssignedTasksParams) => {
+export const useGetMyAssignedTasks = ({ projectIdentifier, userId, enabled = true }: GetMyAssignedTasksParams) => {
   const {
     data: assignedTasks = getDefaultPaginationResponse<TaskPreview>(),
     isLoading: isLoadingAssignedTasks,
     error
   } = useQuery({
-    queryKey: queryKeys.tasks.myAssigned(projectId, userId),
-    queryFn: () => projectService.getMyAssignedTasks({ projectId, userId }),
-    enabled: !!projectId && !!userId && enabled
+    queryKey: queryKeys.tasks.myAssigned(projectIdentifier, userId),
+    queryFn: () => projectService.getMyAssignedTasks({ projectIdentifier, userId }),
+    enabled: !!projectIdentifier && !!userId && enabled
   })
 
   return { assignedTasks, isLoadingAssignedTasks, error }

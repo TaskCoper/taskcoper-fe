@@ -4,12 +4,14 @@ export interface Milestone {
   id: string
   name: string
   position: number
+  slug: string
 }
 
 export interface ParentMilestone {
   id: string
   name: string
   position: number
+  slug: string
 }
 
 export interface ChildMilestone {

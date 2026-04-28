@@ -8,6 +8,7 @@ export interface GetProjectTaskStatsParams {
   to: string
   parentMilestoneId?: string
   isViewInMonth?: boolean
+  userId?: string
   // true -> data is divided by weeks
   // false -> data is divided by months
   // both controlled by from and to
@@ -18,11 +19,13 @@ export const useGetProjectTaskStats = ({
   from,
   to,
   parentMilestoneId,
-  isViewInMonth = false
+  isViewInMonth = false,
+  userId
 }: GetProjectTaskStatsParams) => {
   const { data: projectTaskStats, isLoading: isLoadingProjectTaskStats } = useQuery({
-    queryKey: queryKeys.efficiency.taskStats({ projectId, from, to, parentMilestoneId, isViewInMonth }),
-    queryFn: () => efficiencyService.getProjectTaskStats({ projectId, from, to, parentMilestoneId, isViewInMonth }),
+    queryKey: queryKeys.efficiency.taskStats({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }),
+    queryFn: () =>
+      efficiencyService.getProjectTaskStats({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }),
     enabled: !!projectId && !!from && !!to
   })
 

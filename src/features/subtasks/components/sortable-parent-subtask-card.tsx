@@ -7,8 +7,8 @@ import ParentSubtaskCard from './parent-subtask-card'
 interface SortableParentSubtaskCardProps {
   subtask: SubtaskWithChildren
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   editingSubtaskId: string | null
   setEditingSubtaskId: (value: string | null) => void
   isOverlay?: boolean
@@ -17,8 +17,8 @@ interface SortableParentSubtaskCardProps {
 export default function SortableParentSubtaskCard({
   subtask,
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   editingSubtaskId,
   setEditingSubtaskId,
   isOverlay = false
@@ -46,8 +46,8 @@ export default function SortableParentSubtaskCard({
         <ParentSubtaskCard
           subtask={subtask}
           taskId={taskId}
-          projectId={projectId}
-          parentMilestoneId={parentMilestoneId}
+          projectIdentifier={projectIdentifier}
+          parentMilestoneIdentifier={parentMilestoneIdentifier}
           editingSubtaskId={editingSubtaskId}
           setEditingSubtaskId={setEditingSubtaskId}
         />
@@ -60,8 +60,8 @@ export default function SortableParentSubtaskCard({
       <ParentSubtaskCard
         subtask={subtask}
         taskId={taskId}
-        projectId={projectId}
-        parentMilestoneId={parentMilestoneId}
+        projectIdentifier={projectIdentifier}
+        parentMilestoneIdentifier={parentMilestoneIdentifier}
         editingSubtaskId={editingSubtaskId}
         setEditingSubtaskId={setEditingSubtaskId}
       />

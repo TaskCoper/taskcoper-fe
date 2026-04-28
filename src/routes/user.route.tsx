@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
+import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.layout'
 import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
@@ -18,15 +19,19 @@ const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
 const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
 const TaskDialogPage = lazy(() => import('@/pages/task-dialog.page'))
+const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
+const ProjectSettingsPage = lazy(() => import('@/pages/project-settings.page'))
+const ProjectMemberPage = lazy(() => import('@/pages/project-member.page'))
+const ProjectRolePage = lazy(() => import('@/pages/project-role.page'))
 
-const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+// const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
+const SettingsPage = lazy(() => import('@/pages/users/settingsv2.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
 const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
 const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
-const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
 const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
@@ -78,11 +83,11 @@ export const userRoutes: RouteObject[] = [
             element: <UserDefaultLayout />,
             children: [
               {
-                path: 'users/:userId',
+                path: 'users/:userIdentifier',
                 element: <ProfilePage />
               },
               {
-                path: 'users/:userId/settings',
+                path: 'users/:userIdentifier/settings',
                 element: <SettingsPage />
               },
               {
@@ -162,7 +167,7 @@ export const userRoutes: RouteObject[] = [
                 ]
               },
               {
-                path: 'projects/:projectId',
+                path: 'projects/:identifier',
                 element: <ProjectDetailLayout />,
                 children: [
                   {
@@ -170,74 +175,132 @@ export const userRoutes: RouteObject[] = [
                     element: null
                   },
                   {
-                    path: 'milestones',
-                    element: null
-                  },
-                  {
-                    path: 'revenue',
-                    element: <ProjectRevenuePage />
-                  },
-                  {
-                    path: 'milestones/:milestoneId',
-                    element: <ProjectTasksPage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='TASKS' />,
+                    handle: { sidebarItem: 'milestones' },
                     children: [
                       {
-                        path: 'tasks/:taskId',
-                        element: <TaskDialogPage />
+                        path: 'milestones',
+                        element: null
+                      },
+                      {
+                        path: 'milestones/:milestoneIdentifier',
+                        element: <ProjectTasksPage />,
+                        children: [
+                          {
+                            path: 'tasks/:taskIdentifier',
+                            element: <TaskDialogPage />
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    path: 'info',
-                    element: <ProjectInfoPage />
-                  },
-                  {
-                    path: 'calendar',
-                    element: <ProjectCalendarPage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='REVENUE' />,
+                    handle: { sidebarItem: 'revenue' },
                     children: [
                       {
-                        path: 'meetings/:meetingId',
-                        element: <MeetingDialogPage />
+                        path: 'revenue',
+                        element: <ProjectRevenuePage />
                       }
                     ]
                   },
                   {
-                    path: 'performance',
-                    element: <ProjectPerformancePage />
-                  },
-                  {
-                    path: 'chat',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Chat Comming Soon</p>
-                      </div>
-                    )
-                  },
-                  {
-                    path: 'note',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Note Comming Soon</p>
-                      </div>
-                    )
-                  },
-                  {
-                    path: 'storage',
-                    element: <ProjectStoragePage />,
+                    element: <ProjectPermissionGuardLayout sectionKey='OVERVIEW' />,
+                    handle: { sidebarItem: 'info' },
                     children: [
                       {
-                        path: ':milestoneId/tasks/:taskId',
-                        element: <TaskDialogPage />
+                        path: 'info',
+                        element: <ProjectInfoPage />
                       }
                     ]
                   },
                   {
-                    path: 'settings',
-                    element: (
-                      <div className='w-full h-full flex justify-center items-center'>
-                        <p className='text-2xl font-bold'>Settings Comming Soon</p>
-                      </div>
-                    )
+                    element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
+                    handle: { sidebarItem: 'calendar' },
+                    children: [
+                      {
+                        path: 'calendar',
+                        element: <ProjectCalendarPage />,
+                        children: [
+                          {
+                            path: 'meetings/:meetingId',
+                            element: <MeetingDialogPage />
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
+                    handle: { sidebarItem: 'performance' },
+                    children: [
+                      {
+                        path: 'performance',
+                        element: <ProjectPerformancePage />
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
+                    handle: { sidebarItem: 'chat' },
+                    children: [
+                      {
+                        path: 'chat',
+                        element: (
+                          <div className='w-full h-full flex justify-center items-center'>
+                            <p className='text-2xl font-bold'>Chat Comming Soon</p>
+                          </div>
+                        )
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
+                    handle: { sidebarItem: 'note' },
+                    children: [
+                      {
+                        path: 'note',
+                        element: (
+                          <div className='w-full h-full flex justify-center items-center'>
+                            <p className='text-2xl font-bold'>Note Comming Soon</p>
+                          </div>
+                        )
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
+                    handle: { sidebarItem: 'storage' },
+                    children: [
+                      {
+                        path: 'storage',
+                        element: <ProjectStoragePage />,
+                        children: [
+                          {
+                            path: ':milestoneId/tasks/:taskId',
+                            element: <TaskDialogPage />
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    element: <ProjectPermissionGuardLayout sectionKey='SETTINGS' />,
+                    handle: { sidebarItem: 'settings' },
+                    children: [
+                      {
+                        path: 'settings',
+                        element: <ProjectSettingsPage />
+                      },
+                      {
+                        path: 'members/:memberIdentifier',
+                        element: <ProjectMemberPage />
+                      },
+                      {
+                        path: 'roles/:roleId',
+                        element: <ProjectRolePage />
+                      }
+                    ]
                   }
                 ]
               },

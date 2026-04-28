@@ -6,11 +6,15 @@ import { toast } from 'sonner'
 
 export interface DeleteMilestoneParams {
   queryKey: unknown[]
-  parentMilestoneId?: string
+  parentMilestoneIdentifier?: string
   onSuccessCallback?: () => void
 }
 
-export const useDeleteMilestone = ({ queryKey, parentMilestoneId, onSuccessCallback }: DeleteMilestoneParams) => {
+export const useDeleteMilestone = ({
+  queryKey,
+  parentMilestoneIdentifier,
+  onSuccessCallback
+}: DeleteMilestoneParams) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -27,8 +31,10 @@ export const useDeleteMilestone = ({ queryKey, parentMilestoneId, onSuccessCallb
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey })
-      if (parentMilestoneId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
+
+      if (parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
       }
     }
   })

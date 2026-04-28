@@ -11,12 +11,14 @@ import { Outlet, useParams } from 'react-router'
 
 export default function ProjectStoragePage() {
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
-
-  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({ projectId })
+  const { identifier } = useParams<{ identifier: string }>()
 
   const { project } = useGetProject({
-    projectId
+    identifier
+  })
+
+  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({
+    projectIdentifier: identifier
   })
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function ProjectStoragePage() {
           </div>
         </div>
 
-        {projectId ? <ProjectStorageTable projectId={projectId} /> : null}
+        {identifier ? <ProjectStorageTable projectIdentifier={identifier} /> : null}
       </div>
 
       <Outlet />

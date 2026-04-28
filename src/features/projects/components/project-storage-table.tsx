@@ -7,7 +7,7 @@ import { useDeleteProjectAttachment } from '@/features/attachments/hooks/use-del
 import { useUploadProjectAttachment } from '@/features/attachments/hooks/use-upload-project-attachment'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useUploadFile } from '@/hooks/use-upload-file'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { ErrorResponse } from '@/lib/axios'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
@@ -17,7 +17,7 @@ import { UploadIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
+import { useGetMyProjectPermissions } from '../hooks/use-get-my-project-permissions'
 import { useGetProjectMimeTypeStats } from '../hooks/use-get-project-mime-type-stats'
 import { useGetProjectResourceMemberStats } from '../hooks/use-get-project-resource-member-stats'
 import { useGetProjectResources } from '../hooks/use-get-project-resources'
@@ -25,19 +25,25 @@ import { formatMimeType } from '../utils'
 import { getColumns } from './columns/project-resource-columns'
 
 interface ProjectStorageTableProps {
-  projectId: string
+  projectIdentifier: string
 }
 
-export default function ProjectStorageTable({ projectId }: ProjectStorageTableProps) {
+export default function ProjectStorageTable({ projectIdentifier }: ProjectStorageTableProps) {
   const { t } = useTranslation()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('STORAGE', 'canWrite')
+  const canDelete = check('STORAGE', 'canDelete')
+  const canDownload = check('STORAGE', 'canRead', 'canDownload')
+
   const { confirm } = useConfirmStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const { uploadFileAsync } = useUploadFile()
-  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectId })
+  const { uploadFileWithToast } = useUploadFileWithToast()
+  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectIdentifier })
 
-  const { deleteAttachment } = useDeleteAttachment({ projectId })
-  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectId })
+  const { deleteAttachment } = useDeleteAttachment({ projectIdentifier })
+  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectIdentifier })
 
   const onDeleteResource = useCallback(
     async (resourceId: string, taskId: string) => {
@@ -65,46 +71,36 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteProjectAttachment({ projectId, resourceId })
+        deleteProjectAttachment({ projectIdentifier, resourceId })
       }
     },
-    [confirm, deleteProjectAttachment, projectId, t]
+    [confirm, deleteProjectAttachment, projectIdentifier, t]
   )
 
   const handleUploadFiles = useCallback(
     async (files: FileList) => {
       for (const file of Array.from(files)) {
-        const toastId = toast.loading(t('common.ui.uploading'), {
-          description: (
-            <div className='w-full min-w-72 space-y-1'>
+        await uploadFileWithToast({
+          file,
+          loadingDescription: (
+            <div className='w-72 space-y-1'>
               <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
               <Progress value={0} className='w-full' />
               <p className='text-xs text-muted-foreground'>0%</p>
             </div>
-          )
-        })
-
-        try {
-          const url = await uploadFileAsync({
-            file,
-            onProgress: (progress) => {
-              toast.loading(t('common.ui.uploading'), {
-                id: toastId,
-                description: (
-                  <div className='w-full min-w-72 space-y-1'>
-                    <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
-                    <Progress value={progress} className='w-full' />
-                    <p className='text-xs text-muted-foreground'>{progress}%</p>
-                  </div>
-                )
-              })
-            }
-          })
-
-          if (url) {
+          ),
+          successDescription: file.name,
+          renderProgress: (progress) => (
+            <div className='w-72 space-y-1'>
+              <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
+              <Progress value={progress} className='w-full' />
+              <p className='text-xs text-muted-foreground'>{progress}%</p>
+            </div>
+          ),
+          onUploaded: async (url) => {
             await uploadProjectAttachmentAsync({
               body: {
-                projectId,
+                projectIdentifier,
                 name: file.name,
                 url,
                 isUpload: true,
@@ -113,26 +109,17 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
                 bytes: file.size
               }
             })
-
-            toast.success(t('common.ui.uploadSuccess'), {
-              id: toastId,
-              description: file.name
-            })
-          }
-        } catch (error) {
-          toast(t('error.somethingWentWrong'), {
-            id: toastId,
-            description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-          })
-        }
+          },
+          errorDescription: (error) => (error as AxiosError<ErrorResponse>).response?.data?.detail
+        })
       }
     },
-    [projectId, t, uploadFileAsync, uploadProjectAttachmentAsync]
+    [projectIdentifier, uploadFileWithToast, uploadProjectAttachmentAsync]
   )
 
   const columns = useMemo(
-    () => getColumns({ onDeleteResource, onDeleteProjectResource }),
-    [onDeleteResource, onDeleteProjectResource]
+    () => getColumns({ onDeleteResource, onDeleteProjectResource, canDelete, canDownload }),
+    [onDeleteResource, onDeleteProjectResource, canDelete, canDownload]
   )
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
     columns,
@@ -150,7 +137,7 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
   const mimeTypes = mimeTypeFilter && mimeTypeFilter.length > 0 ? mimeTypeFilter : undefined
 
   const { projectResources, isLoadingProjectResources } = useGetProjectResources({
-    projectId,
+    projectIdentifier,
     pageIndex: page,
     pageSize: limit,
     sortBy: sortBy ? (orderBy === 'desc' ? `-${sortBy}` : sortBy) : undefined,
@@ -160,9 +147,9 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
     memberIds,
     mimeTypes
   })
-  const { projectMimeTypeStats, isLoadingProjectMimeTypeStats } = useGetProjectMimeTypeStats({ projectId })
+  const { projectMimeTypeStats, isLoadingProjectMimeTypeStats } = useGetProjectMimeTypeStats({ projectIdentifier })
   const { projectResourceMemberStats, isLoadingProjectResourceMemberStats } = useGetProjectResourceMemberStats({
-    projectId
+    projectIdentifier
   })
 
   const filterOptionOverrides = useMemo(() => {
@@ -188,7 +175,12 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
     pageCount: Math.ceil((projectResources?.value?.totalCount ?? 0) / limit),
     initialState: {
       sorting: (sorting ?? []) as ExtendedColumnSort<ProjectResource>[],
-      columnPinning: { right: ['actions'] }
+      columnPinning: { right: canDownload || canDelete ? ['actions'] : [] },
+      columnVisibility: {
+        actions: canDownload || canDelete,
+        mimeType: false,
+        memberId: false
+      }
     },
     getRowId: ({ id }) => id,
     shallow: false,
@@ -206,23 +198,27 @@ export default function ProjectStorageTable({ projectId }: ProjectStorageTablePr
   return (
     <DataTable table={table} isLoading={isLoading}>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
-        <input
-          ref={fileInputRef}
-          type='file'
-          multiple
-          className='hidden'
-          onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
-              handleUploadFiles(e.target.files)
-              e.target.value = ''
-            }
-          }}
-        />
+        {canWrite ? (
+          <>
+            <input
+              ref={fileInputRef}
+              type='file'
+              multiple
+              className='hidden'
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  handleUploadFiles(e.target.files)
+                  e.target.value = ''
+                }
+              }}
+            />
 
-        <Button size='sm' onClick={() => fileInputRef.current?.click()}>
-          <UploadIcon />
-          {t('projectStorage.uploadFile')}
-        </Button>
+            <Button size='sm' onClick={() => fileInputRef.current?.click()}>
+              <UploadIcon />
+              {t('projectStorage.uploadFile')}
+            </Button>
+          </>
+        ) : null}
       </DataTableToolbar>
     </DataTable>
   )

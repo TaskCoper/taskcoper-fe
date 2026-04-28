@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import PurchasedMentorPackageCard from '@/features/mentor-packages/components/purchased-mentor-package-card'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 const responsiveColSpan = 'col-span-12 sm:col-span-6 md:col-span-4'
 
@@ -28,26 +29,30 @@ export default function PurchaseHistoryPage() {
   }
 
   return (
-    <div className='max-w-7xl w-full mx-auto p-4'>
-      <div className='space-y-6'>
-        <div>
-          <p className='text-xl font-bold'>{t('purchaseHistory.title')}</p>
-          <p className='text-sm text-muted-foreground'>{t('purchaseHistory.description')}</p>
-        </div>
+    <div className='absolute inset-0 overflow-y-auto'>
+      <div className='max-w-7xl w-full mx-auto p-4 pb-20'>
+        <div className='space-y-6'>
+          <div>
+            <p className='text-xl font-bold'>{t('purchaseHistory.title')}</p>
+            <p className='text-sm text-muted-foreground'>{t('purchaseHistory.description')}</p>
+          </div>
 
-        {purchasedMentorPackages.value.totalCount ? (
-          <div className='grid grid-cols-12 gap-6'>
-            {purchasedMentorPackages.value.items.map((pkg) => (
-              <div key={pkg.id} className={responsiveColSpan}>
-                <PurchasedMentorPackageCard mentorPackage={pkg} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className='flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed'>
-            <p className='text-muted-foreground'>{t('common.ui.noDataAvailable')}</p>
-          </div>
-        )}
+          {purchasedMentorPackages.value.totalCount ? (
+            <div className='grid grid-cols-12 gap-6'>
+              {purchasedMentorPackages.value.items.map((pkg) => (
+                <div key={pkg.packageBookingId} className={responsiveColSpan}>
+                  <Link to={`packages/${pkg.packageBookingId}`}>
+                    <PurchasedMentorPackageCard mentorPackage={pkg} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className='flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed'>
+              <p className='text-muted-foreground'>{t('common.ui.noDataAvailable')}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

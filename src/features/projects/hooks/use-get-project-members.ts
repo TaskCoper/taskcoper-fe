@@ -6,7 +6,7 @@ import type { ProjectMember } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface UseGetProjectMembersParams {
-  projectId?: string
+  identifier?: string
   searchTerm?: string
   enabled?: boolean
   pageIndex?: number
@@ -15,22 +15,18 @@ export interface UseGetProjectMembersParams {
 }
 
 export const useGetProjectMembers = ({
-  projectId,
+  identifier,
   searchTerm,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   enabled = true,
   excludeIds
 }: UseGetProjectMembersParams) => {
-  const {
-    data: members = getDefaultPaginationResponse<ProjectMember>(),
-    isLoading: isLoadingMembers,
-    error
-  } = useQuery({
-    queryKey: queryKeys.projects.members.list({ projectId, searchTerm, pageIndex, pageSize, excludeIds }),
-    queryFn: () => projectService.getProjectMembers({ projectId, searchTerm, pageIndex, pageSize, excludeIds }),
-    enabled: !!projectId && !!enabled
+  const { data: members = getDefaultPaginationResponse<ProjectMember>(), isLoading: isLoadingMembers } = useQuery({
+    queryKey: queryKeys.projects.members.list({ identifier, searchTerm, pageIndex, pageSize, excludeIds }),
+    queryFn: () => projectService.getProjectMembers({ identifier, searchTerm, pageIndex, pageSize, excludeIds }),
+    enabled: !!identifier && !!enabled
   })
 
-  return { members, isLoadingMembers, error }
+  return { members, isLoadingMembers }
 }

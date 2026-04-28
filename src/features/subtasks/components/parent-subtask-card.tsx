@@ -4,7 +4,9 @@ import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { cn } from '@/shared/utils'
 import type { SubtaskWithChildren } from '@/types/subtask.type'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect, useMemo, useState } from 'react'
@@ -20,8 +22,8 @@ import SortableSubtaskCard from './sortable-subtask-card'
 interface ParentSubtaskCardProps {
   subtask: SubtaskWithChildren
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   editingSubtaskId: string | null
   setEditingSubtaskId: (value: string | null) => void
 }
@@ -31,8 +33,8 @@ export default function ParentSubtaskCard({
   taskId,
   editingSubtaskId,
   setEditingSubtaskId,
-  projectId,
-  parentMilestoneId
+  projectIdentifier,
+  parentMilestoneIdentifier
 }: ParentSubtaskCardProps) {
   const { t } = useTranslation()
 
@@ -40,24 +42,29 @@ export default function ParentSubtaskCard({
   const completedCount = subtask.children.filter((child) => child.isCompleted).length
   const progress = subtask.children.length === 0 ? 0 : (completedCount / subtask.children.length) * 100
 
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
+
   const [toggleViewCompleted, setToggleViewCompleted] = useState(true)
   const { methods, addSubtask, isAddingSubtask, recalculateChildrenPosition } = useAddSubtask({
     taskId,
     isAddingChildren: true,
     subtaskId: subtask.id,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const { updateSubtask } = useUpdateSubtask({ taskId })
   const { updateSubtaskStatus } = useUpdateSubtaskStatus({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const { deleteSubtask, isDeletingSubtask } = useDeleteSubtask({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
@@ -125,9 +132,20 @@ export default function ParentSubtaskCard({
         </div>
       ) : (
         <div className='flex gap-3'>
-          <Checkbox checked={subtask.isCompleted} onCheckedChange={handleCheckboxChange} className='mt-2 size-4' />
+          <Checkbox
+            checked={subtask.isCompleted}
+            onCheckedChange={handleCheckboxChange}
+            className='mt-2 size-4'
+            disabled={!canUpdate}
+          />
           <div className='flex justify-start items-center gap-2 w-full'>
-            <p className='font-semibold hover:bg-muted rounded-sm py-1' {...triggerProps}>
+            <p
+              className={cn(
+                'font-semibold hover:bg-muted rounded-sm py-1',
+                canUpdate ? 'cursor-text' : 'cursor-default'
+              )}
+              {...(canUpdate ? triggerProps : {})}
+            >
               {subtask.name}
             </p>
             <div className='flex-1' />
@@ -139,14 +157,16 @@ export default function ParentSubtaskCard({
               </Button>
             )}
 
-            <Button
-              variant='secondary'
-              size='sm'
-              onClick={() => deleteSubtask({ id: subtask.id })}
-              disabled={isDeletingSubtask}
-            >
-              {t('common.button.delete')}
-            </Button>
+            {canDelete ? (
+              <Button
+                variant='secondary'
+                size='sm'
+                onClick={() => deleteSubtask({ id: subtask.id })}
+                disabled={isDeletingSubtask}
+              >
+                {t('common.button.delete')}
+              </Button>
+            ) : null}
           </div>
         </div>
       )}
@@ -167,8 +187,8 @@ export default function ParentSubtaskCard({
                     key={children.id}
                     subtask={children}
                     taskId={taskId}
-                    projectId={projectId}
-                    parentMilestoneId={parentMilestoneId}
+                    projectIdentifier={projectIdentifier}
+                    parentMilestoneIdentifier={parentMilestoneIdentifier}
                   />
                 ))}
               </div>
@@ -220,7 +240,7 @@ export default function ParentSubtaskCard({
                   {t('common.button.cancel')}
                 </Button>
               </div>
-            ) : (
+            ) : canWrite ? (
               <Button
                 variant='secondary'
                 size='sm'
@@ -229,7 +249,7 @@ export default function ParentSubtaskCard({
               >
                 {t('task.subtask.addItem')}
               </Button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

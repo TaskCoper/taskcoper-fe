@@ -2,24 +2,28 @@ import { Button } from '@/components/ui/button'
 import AttachmentPopover from '@/features/attachments/components/attachment-popover'
 import FileAttachment from '@/features/attachments/components/file-attachment'
 import LinkAttachment from '@/features/attachments/components/link-attachment'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import type { Attachment } from '@/types/attachment.type'
 import { PaperclipIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface AttachmentsSectionProps {
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
   attachments: Attachment[]
 }
 
 export default function AttachmentsSection({
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   attachments
 }: AttachmentsSectionProps) {
   const { t } = useTranslation()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('TASKS', 'canWrite')
 
   const fileAttachments = attachments.filter((attachment) => attachment.isUpload)
   const linkAttachments = attachments.filter((attachment) => !attachment.isUpload)
@@ -31,11 +35,17 @@ export default function AttachmentsSection({
         <div className='flex items-center justify-between w-full'>
           <p className='font-semibold'>{t('task.attachment.attachmentsSection')}</p>
 
-          <AttachmentPopover taskId={taskId} projectId={projectId} parentMilestoneId={parentMilestoneId}>
-            <Button variant='secondary' size='sm'>
-              {t('common.button.add')}
-            </Button>
-          </AttachmentPopover>
+          {canWrite ? (
+            <AttachmentPopover
+              taskId={taskId}
+              projectIdentifier={projectIdentifier}
+              parentMilestoneIdentifier={parentMilestoneIdentifier}
+            >
+              <Button variant='secondary' size='sm'>
+                {t('common.button.add')}
+              </Button>
+            </AttachmentPopover>
+          ) : null}
         </div>
       </div>
 
@@ -50,8 +60,8 @@ export default function AttachmentsSection({
                   key={attachment.projectResourceId}
                   attachment={attachment}
                   taskId={taskId}
-                  parentMilestoneId={parentMilestoneId}
-                  projectId={projectId}
+                  parentMilestoneIdentifier={parentMilestoneIdentifier}
+                  projectIdentifier={projectIdentifier}
                 />
               ))}
             </div>
@@ -67,8 +77,8 @@ export default function AttachmentsSection({
                 key={attachment.projectResourceId}
                 attachment={attachment}
                 taskId={taskId}
-                parentMilestoneId={parentMilestoneId}
-                projectId={projectId}
+                parentMilestoneIdentifier={parentMilestoneIdentifier}
+                projectIdentifier={projectIdentifier}
               />
             ))}
           </div>

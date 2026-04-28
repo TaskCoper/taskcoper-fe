@@ -5,17 +5,20 @@ import type { ProjectPriorityStats } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface UseGetProjectPriorityStatsParams {
-  projectId: string
-  parentMilestoneId?: string
+  projectIdentifier: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useGetProjectPriorityStats = ({ projectId, parentMilestoneId }: UseGetProjectPriorityStatsParams) => {
+export const useGetProjectPriorityStats = ({
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseGetProjectPriorityStatsParams) => {
   const {
     data: priorityStats = getDefaultPaginationResponse<ProjectPriorityStats>(),
     isLoading: isLoadingPriorityStats
   } = useQuery({
-    queryKey: queryKeys.projects.priorityStats(projectId, parentMilestoneId),
-    queryFn: () => projectService.getProjectPriorityStats({ projectId, parentMilestoneId })
+    queryKey: queryKeys.projects.priorityStats(projectIdentifier, parentMilestoneIdentifier),
+    queryFn: () => projectService.getProjectPriorityStats({ projectIdentifier, parentMilestoneIdentifier })
   })
 
   return { priorityStats, isLoadingPriorityStats }

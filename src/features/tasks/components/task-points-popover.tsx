@@ -1,17 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 
 interface TaskPointsPopoverProps {
   children: React.ReactNode
   onSubmit: () => void
+  disabled?: boolean
 }
 
-export default function TaskPointsPopover({ children, onSubmit }: TaskPointsPopoverProps) {
+export default function TaskPointsPopover({ children, onSubmit, disabled = false }: TaskPointsPopoverProps) {
   const [open, setOpen] = useState(false)
 
   const onClose = () => {
@@ -20,7 +23,9 @@ export default function TaskPointsPopover({ children, onSubmit }: TaskPointsPopo
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         onInteractOutside={onClose}
         sideOffset={8}
@@ -46,6 +51,11 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
   const [localPoints, setLocalPoints] = useState<string>(estimatedPoints?.toString() || '')
   const currentAsString = estimatedPoints?.toString() ?? ''
   const hasChanged = localPoints !== currentAsString
+
+  const { identifier } = useParams<{ identifier: string }>()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const handleSave = () => {
     const points = localPoints === '' ? null : Number(localPoints)
@@ -91,9 +101,12 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
       />
 
       <div className='flex justify-end items-center gap-2'>
-        <Button variant='ghost' onClick={handleRemove}>
-          {t('common.button.remove')}
-        </Button>
+        {canDelete ? (
+          <Button variant='ghost' onClick={handleRemove}>
+            {t('common.button.remove')}
+          </Button>
+        ) : null}
+
         <Button onClick={handleSave} disabled={!hasChanged}>
           {t('common.button.save')}
         </Button>

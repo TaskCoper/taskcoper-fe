@@ -1,6 +1,6 @@
 export interface Label {
   id: string
-  projectId: string
+  projectSlug: string
   name: string
   color: string
   createdOnUtc: string

@@ -13,18 +13,20 @@ import { moveTaskSchema } from '../validations'
 
 interface MoveTaskPopoverProps {
   children: React.ReactNode
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  milestoneIdentifier: string
   milestoneId: string
   taskId: string
+  taskIdentifier: string
 }
 
 export default function MoveTaskPopover({
   children,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  milestoneIdentifier,
   milestoneId,
-  taskId
+  taskId,
+  taskIdentifier
 }: MoveTaskPopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -35,12 +37,16 @@ export default function MoveTaskPopover({
 
   const { moveTask, isMovingTask } = useMoveTask({
     isDragging: false,
-    projectId,
-    parentMilestoneId,
+    projectIdentifier,
+    milestoneIdentifier,
     milestoneId,
+    taskIdentifier,
     targetMilestoneId: selectedMilestoneId
   })
-  const { childMilestones, isLoadingChildMilestones } = useGetChildMilestones({ parentMilestoneId, enabled: open })
+  const { childMilestones, isLoadingChildMilestones } = useGetChildMilestones({
+    parentMilestoneIdentifier: milestoneIdentifier,
+    enabled: open
+  })
   const { tasks, isLoadingTasks } = useGetMilestoneTasks({ milestoneId: selectedMilestoneId, enabled: open })
 
   const taskCount = tasks?.value.items.length ?? 0

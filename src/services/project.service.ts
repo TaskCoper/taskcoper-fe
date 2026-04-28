@@ -14,10 +14,14 @@ import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use
 import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
 import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
 import type {
+  AddProjectPositionTitleFormValues,
   AddProjectRevenueFormValues,
+  AddProjectRoleFormValues,
   CreateProjectFormValues,
   UpdateProjectFormValues,
-  UpdateProjectRevenueFormValues
+  UpdateProjectPositionTitleFormValues,
+  UpdateProjectRevenueFormValues,
+  UpdateProjectRoleFormValues
 } from '@/features/projects/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
@@ -27,13 +31,20 @@ import type {
   InviteMembersPayload,
   Project,
   ProjectMember,
+  ProjectMemberDetail,
+  ProjectMemberPositionTitle,
   ProjectMemberStats,
   ProjectMimeTypeStats,
+  ProjectPermission,
+  ProjectPositionTitle,
   ProjectPreview,
   ProjectPriorityStats,
   ProjectResource,
   ProjectResourceMemberStats,
   ProjectResourceStats,
+  ProjectRoleDetail,
+  ProjectRoleItem,
+  ProjectRoleTemplate,
   Revenue,
   RevenueLabelStats,
   RevenueStats,
@@ -91,33 +102,33 @@ class ProjectService {
     return data.value
   }
 
-  getParentMilestones = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getParentMilestones = async ({ identifier }: { identifier?: string }) => {
+    if (!identifier) return null
     const { data } = await api.get<BasePaginationResponse<ParentMilestone>>(
-      `/v1/${this.baseUrl}/${projectId}/milestones/parents`
+      `/v1/${this.baseUrl}/${identifier}/milestones/parents`
     )
 
     return data
   }
 
-  getMilestones = async ({ projectId, parentMilestoneId }: GetMilestonesParams) => {
-    if (!projectId || !parentMilestoneId) return null
+  getMilestones = async ({ projectIdentifier, parentMilestoneIdentifier }: GetMilestonesParams) => {
+    if (!projectIdentifier || !parentMilestoneIdentifier) return null
     const { data } = await api.get<BaseResponse<MilestoneWithTasks>>(
-      `/v1/${this.baseUrl}/${projectId}/milestones/${parentMilestoneId}`
+      `/v1/${this.baseUrl}/${projectIdentifier}/milestones/${parentMilestoneIdentifier}`
     )
 
     return data.value
   }
 
   getProjectMembers = async ({
-    projectId,
+    identifier,
     searchTerm,
     pageIndex,
     pageSize,
     excludeIds
   }: UseGetProjectMembersParams) => {
-    if (!projectId) return getDefaultPaginationResponse<ProjectMember>()
-    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+    if (!identifier) return getDefaultPaginationResponse<ProjectMember>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${identifier}/members`, {
       params: {
         searchTerm,
         pageIndex,
@@ -129,15 +140,15 @@ class ProjectService {
     return data
   }
 
-  getProject = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${projectId}`)
+  getProject = async ({ identifier }: { identifier?: string }) => {
+    if (!identifier) return null
+    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data.value
   }
 
   inviteMembers = async ({ body }: { body: InviteMembersPayload }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/invite`, body)
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/invite`, body)
 
     return data.value
   }
@@ -167,9 +178,17 @@ class ProjectService {
     return data.value
   }
 
-  toggleEditor = async ({ projectId, userId, isEditor }: { projectId: string; userId: string; isEditor: boolean }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
-      projectId,
+  toggleEditor = async ({
+    identifier,
+    userId,
+    isEditor
+  }: {
+    identifier: string
+    userId: string
+    isEditor: boolean
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
+      identifier,
       userId,
       isEditor
     })
@@ -177,10 +196,31 @@ class ProjectService {
     return data.value
   }
 
-  deleteMember = async ({ projectId, userId }: { projectId: string; userId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/members`, {
+  updateMemberRoles = async ({
+    projectIdentifier,
+    userId,
+    roleIds
+  }: {
+    projectIdentifier: string
+    userId: string
+    roleIds: string[]
+  }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/roles`,
+      {
+        projectIdentifier,
+        userId,
+        roleIds
+      }
+    )
+
+    return data.value
+  }
+
+  deleteMember = async ({ identifier, userId }: { identifier: string; userId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
       data: {
-        projectId,
+        identifier,
         userId
       }
     })
@@ -188,24 +228,29 @@ class ProjectService {
     return data.value
   }
 
-  getMyAssignedTasks = async ({ projectId, userId }: { projectId?: string; userId?: string }) => {
-    if (!projectId || !userId) return null
+  getMyAssignedTasks = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
+    if (!projectIdentifier || !userId) return null
     const { data } = await api.get<BasePaginationResponse<TaskPreview>>(
-      `/v1/${this.baseUrl}/${projectId}/members/${userId}/tasks`
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/tasks`
     )
 
     return data
   }
 
-  getLabels = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BasePaginationResponse<Label>>(`/v1/${this.baseUrl}/${projectId}/task-labels`)
+  getLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BasePaginationResponse<Label>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/task-labels`
+    )
 
     return data
   }
 
   addLabel = async ({ body }: { body: AddProjectLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/task-labels`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/task-labels`,
+      body
+    )
 
     return data.value
   }
@@ -223,7 +268,7 @@ class ProjectService {
   }
 
   getProjectResources = async ({
-    projectId,
+    projectIdentifier,
     pageIndex,
     pageSize,
     sortBy,
@@ -233,9 +278,9 @@ class ProjectService {
     mimeTypes,
     memberIds
   }: UseGetProjectResourcesParams) => {
-    if (!projectId) return null
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
-      `/v1/${this.baseUrl}/${projectId}/resources`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources`,
       {
         params: {
           pageIndex,
@@ -253,13 +298,13 @@ class ProjectService {
     return data
   }
 
-  getProjectLabelStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getProjectLabelStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectLabelStats>>(
-      `/v1/${this.baseUrl}/${projectId}/task-labels/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/task-labels/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -267,13 +312,13 @@ class ProjectService {
     return data
   }
 
-  getTaskStatusStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getTaskStatusStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<TaskStatusStats>>(
-      `/v1/${this.baseUrl}/${projectId}/tasks-status/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/tasks-status/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -281,13 +326,13 @@ class ProjectService {
     return data
   }
 
-  getProjectMemberStats = async ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
-    if (!projectId) return null
+  getProjectMemberStats = async ({ projectIdentifier, parentMilestoneIdentifier }: UseGetProjectLabelStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectMemberStats>>(
-      `/v1/${this.baseUrl}/${projectId}/members-tasks/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/members-tasks/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -295,40 +340,43 @@ class ProjectService {
     return data
   }
 
-  getProjectResourceStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectResourceStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BaseResponse<ProjectResourceStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/statistic`
     )
 
     return data.value
   }
 
-  getProjectMimeTypeStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectMimeTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectMimeTypeStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/mime-types/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/mime-types/statistic`
     )
 
     return data
   }
 
-  getProjectResourceMemberStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectResourceMemberStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectResourceMemberStats>>(
-      `/v1/${this.baseUrl}/${projectId}/resources/members/statistic`
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/members/statistic`
     )
 
     return data
   }
 
-  getProjectPriorityStats = async ({ projectId, parentMilestoneId }: UseGetProjectPriorityStatsParams) => {
-    if (!projectId) return null
+  getProjectPriorityStats = async ({
+    projectIdentifier,
+    parentMilestoneIdentifier
+  }: UseGetProjectPriorityStatsParams) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<ProjectPriorityStats>>(
-      `/v1/${this.baseUrl}/${projectId}/tasks-priority/statistic`,
+      `/v1/${this.baseUrl}/${projectIdentifier}/tasks-priority/statistic`,
       {
         params: {
-          parentMilestoneId
+          parentMilestoneIdentifier
         }
       }
     )
@@ -337,19 +385,24 @@ class ProjectService {
   }
 
   uploadAttachment = async ({ body }: { body: UploadProjectAttachmentFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/resources`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/resources`,
+      body
+    )
 
     return data.value
   }
 
-  deleteAttachment = async ({ projectId, resourceId }: { projectId: string; resourceId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/resources/${resourceId}`)
+  deleteAttachment = async ({ projectIdentifier, resourceId }: { projectIdentifier: string; resourceId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/resources/${resourceId}`
+    )
 
     return data.value
   }
 
   getProjectRevenues = async ({
-    projectId,
+    projectIdentifier,
     pageIndex,
     pageSize,
     labelIds,
@@ -359,99 +412,295 @@ class ProjectService {
     startDate,
     endDate
   }: GetProjectRevenuesParams) => {
-    if (!projectId) return null
-    const { data } = await api.get<BasePaginationResponse<Revenue>>(`/v1/${this.baseUrl}/${projectId}/revenues`, {
-      params: {
-        pageIndex,
-        pageSize,
-        labelIds,
-        searchTerm,
-        type,
-        sortBy,
-        startDate,
-        endDate
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BasePaginationResponse<Revenue>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues`,
+      {
+        params: {
+          pageIndex,
+          pageSize,
+          labelIds,
+          searchTerm,
+          type,
+          sortBy,
+          startDate,
+          endDate
+        }
       }
-    })
+    )
 
     return data
   }
 
-  getProjectRevenueStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
-    const { data } = await api.get<BaseResponse<RevenueStats>>(`/v1/${this.baseUrl}/${projectId}/revenues/health-check`)
+  getProjectRevenueStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BaseResponse<RevenueStats>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/health-check`
+    )
 
     return data.value
   }
 
   addProjectRevenue = async ({ body }: { body: AddProjectRevenueFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues`, body)
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues`,
+      body
+    )
 
     return data.value
   }
 
   updateProjectRevenue = async ({ body }: { body: UpdateProjectRevenueFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${body.projectId}/revenues/${body.projectTransactionId}`,
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/${body.projectTransactionId}`,
       body
     )
 
     return data.value
   }
 
-  deleteProjectRevenue = async ({ projectId, revenueId }: { projectId: string; revenueId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/revenues/${revenueId}`)
+  deleteProjectRevenue = async ({ projectIdentifier, revenueId }: { projectIdentifier: string; revenueId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/${revenueId}`
+    )
 
     return data.value
   }
 
-  getProjectRevenueLabelStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueLabelStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<RevenueLabelStats>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/labels`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/labels`
     )
 
     return data.value.items
   }
 
-  getProjectRevenueTypeStats = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
     const { data } = await api.get<BasePaginationResponse<RevenueTypeStats>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/statistics/types`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/types`
     )
 
     return data.value.items
   }
 
-  getProjectRevenueLabels = async ({ projectId }: { projectId?: string }) => {
-    if (!projectId) return null
+  getProjectRevenueLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<RevenueLabel>()
     const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/labels`
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels`
     )
 
     return data
   }
 
   addProjectRevenueLabel = async ({ body }: { body: AddProjectRevenueLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}/revenues/labels`, body)
-
-    return data.value
-  }
-
-  updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${body.projectId}/revenues/labels/${body.id}`,
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels`,
       body
     )
 
     return data.value
   }
 
-  deleteProjectRevenueLabel = async ({ projectId, labelId }: { projectId: string; labelId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
-      `/v1/${this.baseUrl}/${projectId}/revenues/labels/${labelId}`
+  updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels/${body.id}`,
+      body
     )
 
     return data.value
+  }
+
+  deleteProjectRevenueLabel = async ({
+    projectIdentifier,
+    labelId
+  }: {
+    projectIdentifier: string
+    labelId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels/${labelId}`
+    )
+
+    return data.value
+  }
+
+  getMyProjectPermissions = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return null
+    const { data } = await api.get<BaseResponse<ProjectPermission>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/permissions/me`
+    )
+
+    return data.value
+  }
+
+  getProjectRoles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectRoleItem>()
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleItem>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles`
+    )
+
+    return data
+  }
+
+  getProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier?: string; roleId?: string }) => {
+    if (!projectIdentifier || !roleId) return null
+    const { data } = await api.get<BaseResponse<ProjectRoleDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}/permissions`
+    )
+
+    return data.value
+  }
+
+  updateProjectRole = async ({ body }: { body: UpdateProjectRoleFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/roles/${body.roleId}`,
+      {
+        ...body,
+        permissions: body.permissions.map((per) => ({
+          ...per,
+          extensions: JSON.stringify(per.extensions)
+        }))
+      }
+    )
+
+    return data.value
+  }
+
+  deleteProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier: string; roleId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
+
+    return data.value
+  }
+
+  getProjectRoleTemplates = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    const { data } = await api.get<BasePaginationResponse<ProjectRoleTemplate>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/roles/template`
+    )
+
+    return data
+  }
+
+  addProjectRole = async ({ body }: { body: AddProjectRoleFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/roles`, {
+      ...body,
+      permissions: body.permissions.map((per) => ({
+        ...per,
+        extensions: JSON.stringify(per.extensions)
+      }))
+    })
+
+    return data.value
+  }
+
+  getProjectPositionTitles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectPositionTitle>()
+    const { data } = await api.get<BasePaginationResponse<ProjectPositionTitle>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles`
+    )
+
+    return data
+  }
+
+  addProjectPositionTitle = async ({ body }: { body: AddProjectPositionTitleFormValues }) => {
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles`,
+      body
+    )
+
+    return data.value
+  }
+
+  updateProjectPositionTitle = async ({ body }: { body: UpdateProjectPositionTitleFormValues }) => {
+    const { data } = await api.put<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles/${body.titleId}`,
+      body
+    )
+
+    return data.value
+  }
+
+  deleteProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId
+  }: {
+    projectIdentifier: string
+    titleId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}`
+    )
+    return data.value
+  }
+
+  assignProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId,
+    userId
+  }: {
+    projectIdentifier: string
+    titleId: string
+    userId: string
+  }) => {
+    const { data } = await api.post<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members`,
+      {
+        userId,
+        projectIdentifier,
+        titleId
+      }
+    )
+
+    return data.value
+  }
+
+  unassignProjectPositionTitle = async ({
+    projectIdentifier,
+    titleId,
+    userId
+  }: {
+    projectIdentifier: string
+    titleId: string
+    userId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members/${userId}`
+    )
+
+    return data.value
+  }
+
+  getProjectMemberPositionTitles = async ({
+    projectIdentifier,
+    userId
+  }: {
+    projectIdentifier?: string
+    userId?: string
+  }) => {
+    if (!projectIdentifier || !userId) return getDefaultPaginationResponse<ProjectMemberPositionTitle>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberPositionTitle>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/position-titles`
+    )
+
+    return data
+  }
+
+  getProjectMember = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
+    if (!projectIdentifier || !userId) return null
+    const { data } = await api.get<BaseResponse<ProjectMemberDetail>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}`
+    )
+
+    return data.value
+  }
+
+  getProjectsForPackage = async () => {
+    const { data } = await api.get<
+      BasePaginationResponse<Pick<Project, 'id' | 'slug' | 'name' | 'logoImage' | 'coverImage'>>
+    >(`/v1/${this.baseUrl}/me/bookable-for-mentor-package`)
+
+    return data
   }
 }
 

@@ -24,9 +24,12 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "leave": "Rời khỏi",
       "delete": "Xóa",
       "insert": "Chèn",
-      "download": "Tải xuống"
+      "download": "Tải xuống",
+      "back": "Quay lại",
+      "upload": "Tải ảnh"
     },
     "field": {
       "label": "Nhãn",
@@ -43,6 +46,9 @@
     "validation": {
       "email": {
         "invalid": "Email không hợp lệ"
+      },
+      "timeZone": {
+        "invalid": "Múi giờ không hợp lệ"
       },
       "required": "Trường này là bắt buộc",
       "maxLength": {
@@ -108,6 +114,8 @@
       "filter": "Lọc",
       "month": "Tháng",
       "week": "Tuần",
+      "day": "Ngày",
+      "today": "Hôm nay",
       "files": "tệp",
       "openMenu": "Mở menu",
       "comingSoon": "Sắp ra mắt",
@@ -164,8 +172,35 @@
     },
     "button": {
       "create": "Tạo lịch",
-      "viewSchedules": "Xem lịch",
+      "viewSchedules": "Cấu hình lịch rảnh",
       "update": "Cập nhật lịch"
+    },
+    "popover": {
+      "title": "Lịch rảnh",
+      "showOverlay": "Hiển thị lớp phủ lịch",
+      "description": "Hiển thị lịch rảnh của bạn trên lịch.",
+      "manageSchedules": "Quản lý Lịch"
+    },
+    "filter": {
+      "title": "Hiển thị lịch",
+      "all": "Tất cả",
+      "mine": "Của tôi",
+      "mentor": "Của mentor",
+      "purchasedPackages": "Các gói đã mua",
+      "packageGroups": {
+        "personal": {
+          "title": "Cá nhân",
+          "description": "Các gói lịch hẹn cho cá nhân"
+        },
+        "project": {
+          "title": "Dự án",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi có quyền đặt lịch"
+        },
+        "member": {
+          "title": "Thành viên",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi là thành viên"
+        }
+      }
     },
     "update": {
       "description": "Cập nhật thông tin lịch của bạn."
@@ -225,10 +260,13 @@
       "weekLabel": "Tuần {{week}} - {{month}}",
       "available": "Trống",
       "booked": "Đã đặt",
-      "selected": "Đã chọn"
+      "selected": "Đã chọn",
+      "empty": "Chưa có lịch hẹn",
+      "emptyDescription": "Mentor này chưa thiết lập bất kỳ lịch rảnh nào."
     },
     "detail": {
       "session": "Buổi {{sequence}}",
+      "mentoringSession": "Phiên Hướng dẫn",
       "meetingWith": "Gặp gỡ",
       "to": "đến",
       "joinViaGoogleMeet": "Tham gia bằng Google Meet",
@@ -444,7 +482,12 @@
     "bookingNote": "Bạn chỉ có thể chọn các khoảng thời gian liên tiếp nhau. Vui lòng chọn {{slots}} khoảng thời gian liên tiếp để đặt lịch.",
     "completedProgress": "Hoàn thành {{progress}}%",
     "meetButton": "Meet",
-    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm"
+    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm",
+    "purchasedPackages": "Gói đã mua",
+    "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
+    "hasUpcomingMeeting": "Bạn đã có một lịch hẹn sắp tới",
+    "upcomingMeetingNote": "Hoàn thành buổi gặp dự kiến vào {{date}} trước khi đặt buổi tiếp theo.",
+    "viewMeeting": "Xem lịch hẹn"
   },
   "project": {
     "title": "Dự án của tôi",
@@ -574,24 +617,63 @@
       }
     },
     "updateProjectMembers": {
-      "title": "Thành viên dự án",
-      "description": "Chỉnh sửa thành viên dự án",
+      "title": "Thành viên",
+      "description": "Quản lý thành viên của dự án",
       "confirm": {
         "title": "Gỡ bỏ thành viên",
         "description": "Bạn có chắc chắn muốn gỡ bỏ {{fullName}} khỏi dự án?",
+        "leaveTitle": "Rời khỏi dự án",
+        "leaveDescription": "Bạn có chắc chắn muốn rời khỏi dự án này không?",
         "confirmText": "Gỡ bỏ",
         "cancelText": "Hủy"
       },
       "column": {
+        "no": "STT",
         "member": "Thành viên",
+        "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
+        "phoneNumber": "Số điện thoại",
+        "noPhoneNumber": "Chưa có số điện thoại",
+        "positionTitles": "Chức danh",
+        "noPositionTitles": "Không có chức danh",
         "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò",
         "permission": "Quyền",
         "canEdit": "Người chỉnh sửa"
       },
+      "positionTitle": {
+        "title": "Chức danh",
+        "searchPlaceholder": "Nhập để tìm chức danh...",
+        "createTitle": "Tạo chức danh",
+        "editTitle": "Chỉnh sửa chức danh",
+        "deleteTitle": "Xóa chức danh",
+        "deleteConfirmation": "Bạn có chắc chắn muốn xóa chức danh này không?"
+      },
       "role": {
-        "mentor": "Người hướng dẫn",
-        "student": "Sinh viên"
+        "owner": "Chủ sở hữu",
+        "admin": "Quản trị viên",
+        "editor": "Biên tập viên",
+        "viewer": "Người xem",
+        "systemTooltip": "Vai trò hệ thống",
+        "defaultTooltip": "Vai trò mặc định cho thành viên mới"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "Chưa có múi giờ",
+      "noPhoneNumber": "Chưa có số điện thoại",
+      "noAddress": "Chưa có địa chỉ",
+      "noStatus": "Chưa có trạng thái",
+      "noRoles": "Chưa có vai trò",
+      "noDomains": "Chưa có lĩnh vực",
+      "positionTitles": "Chức danh",
+      "domains": "Lĩnh vực"
+    },
+    "memberStatus": {
+      "free": "Rảnh",
+      "busy": "Bận"
+    },
+    "memberTaskTable": {
+      "title": "Bảng công việc",
+      "description": "Danh sách công việc của thành viên"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
@@ -719,6 +801,39 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "Vai trò mới",
+      "description": "Thêm vai trò mới vào dự án để phân quyền cho các thành viên trong nhóm.",
+      "field": {
+        "template": {
+          "label": "Mẫu vai trò",
+          "placeholder": "Chọn mẫu vai trò"
+        },
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "permissions": {
+          "minLength": "Vui lòng chọn mẫu vai trò"
+        },
+        "projectIdentifier": {
+          "minLength": "Vui lòng chọn dự án"
+        }
+      }
+    },
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
@@ -785,6 +900,270 @@
           "maxLength": "Tối đa 255 ký tự"
         }
       }
+    },
+    "settings": {
+      "title": "Cài đặt dự án",
+      "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
+      "tabs": {
+        "info": "Thông tin Dự án",
+        "members": "Thành viên",
+        "permissions": "Vai trò & Quyền"
+      }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Xem",
+        "canWrite": "Thêm mới",
+        "canUpdate": "Cập nhật",
+        "canDelete": "Xóa"
+      },
+      "noRolesDefined": "Chưa có vai trò nào",
+      "addRole": "Thêm vai trò",
+      "memberCount": "({{count}} thành viên)"
+    },
+    "updateProjectRole": {
+      "field": {
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc"
+        },
+        "description": {
+          "maxLength": "Mô tả không được vượt quá 255 ký tự"
+        }
+      },
+      "status": {
+        "saving": "Đang lưu thay đổi...",
+        "unsavedChanges": "Bạn có thay đổi chưa lưu.",
+        "noChanges": "Chưa có thay đổi. Cập nhật quyền để bật lưu."
+      },
+      "unsavedChanges": {
+        "title": "Bỏ thay đổi chưa lưu?",
+        "description": "Bạn có thay đổi chưa lưu cho vai trò này. Nếu rời đi bây giờ, các thay đổi sẽ bị mất."
+      },
+      "extensions": {
+        "taskUpdateTitle": "Mở rộng cập nhật công việc",
+        "moveTask": "Di chuyển công việc",
+        "moveMilestone": "Di chuyển cột mốc",
+        "toggleTaskStatus": "Bật tắt trạng thái công việc",
+        "storageReadTitle": "Mở rộng quyền xem lưu trữ",
+        "downloadFiles": "Tải xuống tệp",
+        "empty": "Chưa có quyền chi tiết được cấu hình."
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Xem công việc"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "Xem công việc ở dạng Kanban hoặc Bảng"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Thêm mới công việc"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Tạo cột mốc cha, cột mốc và công việc",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Thêm tệp đính kèm, công việc con và bình luận cho công việc",
+              "assignMembersToTasks": "Giao thành viên vào công việc",
+              "createOrAssignLabelsToTasks": "Tạo hoặc gán nhãn cho công việc"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Xóa công việc"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Xóa cột mốc cha, cột mốc và công việc",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Xóa tệp đính kèm, công việc con và bình luận trên công việc",
+              "unassignMembersFromTasks": "Gỡ thành viên khỏi công việc",
+              "unassignLabelsFromTasks": "Gỡ nhãn khỏi công việc",
+              "deleteLabelsFromProject": "Xóa nhãn khỏi dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Cập nhật công việc"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Cập nhật tên, mô tả, độ ưu tiên, điểm công việc, ảnh nền và hạn chót của công việc",
+              "watchOrUnwatchTask": "Theo dõi hoặc bỏ theo dõi công việc",
+              "updateMilestoneName": "Cập nhật tên cột mốc",
+              "moveMilestone": "Di chuyển cột mốc",
+              "moveTaskBetweenMilestones": "Di chuyển công việc giữa các cột mốc",
+              "toggleTaskStatus": "Bật hoặc tắt trạng thái công việc"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Xem hiệu suất công việc"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "Xem các chỉ số hiệu suất công việc"
+            }
+          }
+        },
+        "calendar": {
+          "canRead": {
+            "permission": {
+              "readCalendar": "Xem lịch"
+            },
+            "extensions": {
+              "viewProjectCalendar": "Xem lịch dự án"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeCalendar": "Thêm mới lịch"
+            },
+            "extensions": {
+              "purchaseMeetingPackage": "Mua gói lịch hẹn",
+              "bookMeeting": "Đặt lịch hẹn"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateCalendar": "Cập nhật lịch"
+            },
+            "extensions": {
+              "rescheduleMeeting": "Đổi lịch hẹn"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteCalendar": "Xóa lịch"
+            },
+            "extensions": {
+              "cancelMeeting": "Hủy lịch hẹn"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Xem kho lưu trữ dự án"
+            },
+            "extensions": {
+              "viewProjectStorage": "Xem kho lưu trữ dự án",
+              "downloadFiles": "Tải xuống tệp"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Thêm mới kho lưu trữ dự án"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Tải tệp lên kho lưu trữ dự án"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Xóa kho lưu trữ dự án"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Xóa tệp khỏi kho lưu trữ dự án"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Xem doanh thu dự án"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "Xem các chỉ số doanh thu"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Thêm mới doanh thu dự án"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Thêm khoản thu hoặc khoản chi",
+              "addRevenueLabels": "Thêm nhãn doanh thu"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Cập nhật doanh thu dự án"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Cập nhật khoản thu hoặc khoản chi",
+              "assignRevenueLabels": "Gán nhãn doanh thu"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Xóa doanh thu dự án"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Xóa khoản thu hoặc khoản chi",
+              "unassignRevenueLabels": "Gỡ nhãn doanh thu",
+              "deleteRevenueLabelsFromProject": "Xóa nhãn doanh thu khỏi dự án"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Xem cài đặt dự án"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "Xem thông tin dự án, thành viên và vai trò"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Thêm mới cài đặt dự án"
+            },
+            "extensions": {
+              "inviteMembers": "Mời thành viên",
+              "createProjectRoles": "Tạo vai trò dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Cập nhật cài đặt dự án"
+            },
+            "extensions": {
+              "updateProjectRoles": "Cập nhật vai trò dự án",
+              "assignOrUnassignMemberRoles": "Gán hoặc gỡ vai trò thành viên"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Xóa cài đặt dự án"
+            },
+            "extensions": {
+              "removeMembers": "Xóa thành viên",
+              "deleteProjectRoles": "Xóa vai trò dự án"
+            }
+          }
+        }
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Xóa vai trò",
+        "description": "Bạn có chắc chắn muốn xóa vai trò này không?"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "deleteTitle": "Xóa vai trò này",
+        "deleteDescription": "Sau khi xóa vai trò, bạn không thể hoàn tác. Vui lòng chắc chắn trước khi tiếp tục."
+      }
     }
   },
   "projectRevenue": {
@@ -846,6 +1225,9 @@
     },
     "moveTask": {
       "title": "Di chuyển thẻ",
+      "tabLabel": "Tab",
+      "milestoneLabel": "Milestone",
+      "positionLabel": "Vị trí",
       "selectMilestone": "Chọn danh sách",
       "selectPosition": "Chọn vị trí",
       "move": "Di chuyển"
@@ -1160,6 +1542,7 @@
   },
   "account": {
     "account": "Tài khoản",
+    "settings": "Cài đặt",
     "language": "Ngôn ngữ",
     "logout": "Đăng xuất"
   },
@@ -1191,6 +1574,9 @@
           "label": "Phường/Xã",
           "placeholder": "Chọn phường/xã",
           "searchPlaceholder": "Tìm phường/xã..."
+        },
+        "domain": {
+          "label": "Lĩnh vực"
         }
       },
       "validation": {
@@ -1215,10 +1601,11 @@
       }
     },
     "profileDialog": {
-      "settings": "Cài đặt",
-      "profileAndDisplay": "Hồ sơ và hiển thị",
+      "settings": "Cài đặt tài khoản",
+      "profileAndDisplay": "Hồ sơ & hiển thị",
       "password": "Mật khẩu",
-      "connectedApps": "Ứng dụng liên kết",
+      "location": "Vị trí",
+      "connectedApps": "Ứng dụng đã kết nối",
       "googleCalendar": "Google Calendar",
       "connectWithCalendar": "Kết nối với Lịch",
       "googleCallback": {
@@ -1245,7 +1632,35 @@
       "projects": "Dự án",
       "files": "Ảnh & Video"
     },
-    "logoImageAlt": "{{name}} Logo"
+    "logoImageAlt": "{{name}} Logo",
+    "profile": {
+      "addCoverImage": "Thêm ảnh bìa",
+      "chooseCoverImage": "Chọn ảnh bìa",
+      "deleteCoverImage": "Xóa ảnh bìa",
+      "chooseAvatar": "Chọn ảnh đại diện",
+      "deleteAvatar": "Xóa ảnh đại diện",
+      "verifiedByTaskCoper": "Kiểm định bởi TaskCoper",
+      "noEmail": "Chưa có email",
+      "noPhoneNumber": "Chưa có số điện thoại"
+    },
+    "settings": {
+      "searchSettings": "Tìm kiếm cài đặt",
+      "accountCenterTitle": "Trung tâm tài khoản",
+      "accountCenterDesc": "Quản lý phần cài đặt tài khoản của bạn",
+      "otherSettingsTitle": "Cài đặt khác",
+      "otherSettingsDesc": "Quản lý các cài đặt khác liên quan đến tài khoản của bạn"
+    },
+    "location": {
+      "description": "Chọn múi giờ được sử dụng cho lịch và các cuộc họp của bạn.",
+      "field": {
+        "timeZone": {
+          "label": "Múi giờ",
+          "placeholder": "Chọn múi giờ",
+          "searchPlaceholder": "Tìm múi giờ...",
+          "emptyMessage": "Không tìm thấy múi giờ."
+        }
+      }
+    }
   },
   "auth": {
     "signIn": {
@@ -1907,6 +2322,8 @@
       "pricePlaceholder": "Nhập giá",
       "currency": "Tiền tệ",
       "currencyPlaceholder": "Chọn tiền tệ",
+      "coverImage": "Ảnh bìa",
+      "coverImageHint": "Nhấn vào vùng ảnh để chọn ảnh bìa, sau đó bấm Lưu để tải lên.",
       "isActive": "Kích hoạt",
       "isActiveDescription": "Nếu tắt, gói này sẽ không hiển thị/không thể được chọn."
     },
@@ -2109,6 +2526,21 @@
             "content": "Bạn có quyền truy cập, chỉnh sửa hoặc yêu cầu xóa dữ liệu cá nhân của mình bất kỳ lúc nào thông qua cài đặt tài khoản."
           }
         }
+      }
+    }
+  },
+  "mentor": {
+    "updateProfile": {
+      "shortBio": {
+        "title": "Cập nhật giới thiệu ngắn",
+        "description": "Mô tả ngắn gọn về chuyên môn và kinh nghiệm của bạn.",
+        "label": "Giới thiệu ngắn",
+        "placeholder": "Nhập giới thiệu ngắn của bạn"
+      },
+      "description": {
+        "title": "Cập nhật README",
+        "description": "Cập nhật thông tin chi tiết cho hồ sơ chuyên gia của bạn.",
+        "label": "Mô tả"
       }
     }
   }

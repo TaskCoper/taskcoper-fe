@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { addTaskLabelSchema } from '@/features/tasks/validations'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { Label, TaskLabel } from '@/types/label.type'
@@ -24,18 +25,22 @@ import UpdateLabelForm from './update-label-form'
 
 interface LabelPopoverProps {
   children: React.ReactNode
-  projectId: string
+  projectIdentifier: string
+  taskSlug: string
   taskId: string
-  parentMilestoneId: string
+  parentMilestoneIdentifier: string
   taskLabels: TaskLabel[]
+  disabled?: boolean
 }
 
 export default function LabelPopover({
   children,
-  projectId,
+  projectIdentifier,
+  taskSlug,
   taskId,
-  parentMilestoneId,
-  taskLabels
+  parentMilestoneIdentifier,
+  taskLabels,
+  disabled = false
 }: LabelPopoverProps) {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<'view' | 'edit' | 'add'>('view')
@@ -44,11 +49,18 @@ export default function LabelPopover({
   const [isDeleting, setIsDeleting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { labels, isLoadingLabels } = useGetProjectLabels({ projectId, enabled: open })
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
+
+  const { labels, isLoadingLabels } = useGetProjectLabels({ projectIdentifier, enabled: open })
   const filteredLabels =
     labels?.value.items.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase())) || []
 
-  const { methods: addLabelMethods, addProjectLabel, isAddingProjectLabel } = useAddProjectLabel({ projectId })
+  const selectedLabelIds = useMemo(() => taskLabels.map((tl) => tl.projectTaskLabelId), [taskLabels])
+
+  const { methods: addLabelMethods, addProjectLabel, isAddingProjectLabel } = useAddProjectLabel({ projectIdentifier })
   const onSubmitAddLabel: SubmitHandler<AddProjectLabelFormValues> = (body) => {
     addProjectLabel({ body })
     setMode('view')
@@ -59,9 +71,9 @@ export default function LabelPopover({
     updateProjectLabel,
     isUpdatingProjectLabel
   } = useUpdateProjectLabel({
-    projectId,
-    taskId,
-    parentMilestoneId
+    projectIdentifier,
+    taskIdentifier: taskSlug,
+    parentMilestoneIdentifier
   })
   const onSubmitUpdateLabel: SubmitHandler<UpdateProjectLabelFormValues> = (body) => {
     updateProjectLabel({ body })
@@ -82,7 +94,7 @@ export default function LabelPopover({
     methods: addTaskLabelMethods,
     addTaskLabel,
     isAddingTaskLabel
-  } = useAddTaskLabel({ taskId, projectId, parentMilestoneId, enabled: open })
+  } = useAddTaskLabel({ taskIdentifier: taskSlug, projectIdentifier, parentMilestoneIdentifier, enabled: open })
   const onAddTaskLabel = () => {
     const result = addTaskLabelSchema.safeParse(addTaskLabelMethods.getValues())
 
@@ -91,15 +103,19 @@ export default function LabelPopover({
     }
   }
 
-  const { deleteTaskLabel, isDeletingTaskLabel } = useDeleteTaskLabel({ taskId, projectId, parentMilestoneId })
+  const { deleteTaskLabel, isDeletingTaskLabel } = useDeleteTaskLabel({
+    taskIdentifier: taskSlug,
+    projectIdentifier,
+    parentMilestoneIdentifier
+  })
   const onDeleteTaskLabel = (id: string) => {
     deleteTaskLabel({ id })
   }
 
   const { deleteProjectLabel, isDeletingProjectLabel } = useDeleteProjectLabel({
     taskId,
-    projectId,
-    parentMilestoneId
+    projectIdentifier,
+    parentMilestoneIdentifier
   })
   const onDeleteProjectLabel = (labelId: string) => {
     deleteProjectLabel({ labelId })
@@ -126,12 +142,12 @@ export default function LabelPopover({
   useEffect(() => {
     if (open) {
       addLabelMethods.reset({
-        projectId,
+        projectIdentifier,
         color: defaultColor,
         name: ''
       })
     }
-  }, [open, addLabelMethods, projectId, defaultColor])
+  }, [open, addLabelMethods, projectIdentifier, defaultColor])
 
   useEffect(() => {
     if (open) {
@@ -143,7 +159,9 @@ export default function LabelPopover({
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] w-80 overflow-y-auto'
@@ -177,22 +195,31 @@ export default function LabelPopover({
                   <div className='space-y-1'>
                     {filteredLabels.map((label) => (
                       <div key={label.id} className='flex items-center'>
-                        <Checkbox
-                          checked={taskLabels.some((taskLabel) => taskLabel.projectTaskLabelId === label.id)}
-                          disabled={isAddingTaskLabel || isDeletingTaskLabel}
-                          onCheckedChange={(value) => {
-                            if (value) {
-                              addTaskLabelMethods.setValue('projectTaskLabelId', label.id)
-                              onAddTaskLabel()
-                            } else {
-                              const id = taskLabels.find((taskLabel) => taskLabel.projectTaskLabelId === label.id)?.id
-                              if (id) {
-                                onDeleteTaskLabel(id)
+                        {canWrite ? (
+                          <Checkbox
+                            checked={selectedLabelIds.includes(label.id)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                addTaskLabelMethods.setValue('projectTaskLabelId', label.id)
+                                onAddTaskLabel()
+                              } else {
+                                if (canDelete) {
+                                  const id = taskLabels.find((tl) => tl.projectTaskLabelId === label.id)?.id
+                                  if (id) onDeleteTaskLabel(id)
+                                }
                               }
+                            }}
+                            disabled={
+                              isAddingTaskLabel ||
+                              isDeletingTaskLabel ||
+                              (selectedLabelIds.includes(label.id) && !canDelete)
                             }
-                          }}
-                          className='mr-2'
-                        />
+                            className={cn(
+                              'mr-2',
+                              selectedLabelIds.includes(label.id) && !canDelete && 'cursor-not-allowed'
+                            )}
+                          />
+                        ) : null}
                         <div
                           className={cn(
                             label.color || 'bg-gray-200',
@@ -205,18 +232,23 @@ export default function LabelPopover({
                             </p>
                           ) : null}
                         </div>
-                        <Button className='ml-1' variant='ghost' size='icon-sm' onClick={() => onUpdateLabel(label)}>
-                          <PencilIcon />
-                        </Button>
+
+                        {canUpdate ? (
+                          <Button className='ml-1' variant='ghost' size='icon-sm' onClick={() => onUpdateLabel(label)}>
+                            <PencilIcon />
+                          </Button>
+                        ) : null}
                       </div>
                     ))}
                   </div>
                 </div>
               ) : null}
 
-              <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
-                {t('task.label.createLabel')}
-              </Button>
+              {canWrite ? (
+                <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
+                  {t('task.label.createLabel')}
+                </Button>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -315,15 +347,17 @@ export default function LabelPopover({
                       {t('common.button.save')}
                     </Button>
 
-                    <Button
-                      type='button'
-                      size='sm'
-                      variant='destructive'
-                      disabled={isDeletingProjectLabel}
-                      onClick={() => setIsDeleting(true)}
-                    >
-                      {t('common.button.delete')}
-                    </Button>
+                    {canDelete ? (
+                      <Button
+                        type='button'
+                        size='sm'
+                        variant='destructive'
+                        disabled={isDeletingProjectLabel}
+                        onClick={() => setIsDeleting(true)}
+                      >
+                        {t('common.button.delete')}
+                      </Button>
+                    ) : null}
                   </div>
                 </form>
               </FormProvider>

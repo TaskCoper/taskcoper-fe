@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronLeftIcon, CopyIcon, EyeIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -10,9 +11,9 @@ import { useToggleWatchTask } from '../hooks/use-toggle-watch-task'
 
 interface TaskDetailMenuProps {
   taskId: string
-  projectId: string
+  projectIdentifier: string
   milestoneId: string
-  parentMilestoneId: string
+  parentMilestoneIdentifier: string
   taskName: string
   children: React.ReactNode
   open: boolean
@@ -23,8 +24,8 @@ interface TaskDetailMenuProps {
 
 export default function TaskDetailMenu({
   taskId,
-  projectId,
-  parentMilestoneId,
+  projectIdentifier,
+  parentMilestoneIdentifier,
   milestoneId,
   taskName,
   children,
@@ -36,8 +37,11 @@ export default function TaskDetailMenu({
   const { t } = useTranslation()
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const { toggleWatchTask } = useToggleWatchTask({ projectId, parentMilestoneId })
-  const { deleteTask } = useDeleteTask({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess })
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
+
+  const { toggleWatchTask } = useToggleWatchTask({ projectIdentifier, milestoneIdentifier: parentMilestoneIdentifier })
+  const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier, milestoneId, onDeleteSuccess })
 
   const handleToggleWatchTask = () => {
     toggleWatchTask({ taskId, isWatching: !isWatchingTask })
@@ -45,7 +49,7 @@ export default function TaskDetailMenu({
 
   const handleCopyLink = async () => {
     const baseUrl = window.location.origin
-    const taskUrl = `${baseUrl}/projects/${projectId}/milestones/${parentMilestoneId}/tasks/${taskId}`
+    const taskUrl = `${baseUrl}/projects/${projectIdentifier}/milestones/${parentMilestoneIdentifier}/tasks/${taskId}`
 
     try {
       await navigator.clipboard.writeText(taskUrl)
@@ -133,15 +137,17 @@ export default function TaskDetailMenu({
               <p>{t('task.copyLink.title')}</p>
             </Button>
 
-            <Button
-              size='sm'
-              className='w-full justify-start gap-2 rounded-none'
-              variant='ghost'
-              onClick={() => setIsDeleting(true)}
-            >
-              <Trash2Icon className='text-destructive' />
-              <p className='text-destructive'>{t('common.button.delete')}</p>
-            </Button>
+            {canDelete ? (
+              <Button
+                size='sm'
+                className='w-full justify-start gap-2 rounded-none'
+                variant='ghost'
+                onClick={() => setIsDeleting(true)}
+              >
+                <Trash2Icon className='text-destructive' />
+                <p className='text-destructive'>{t('common.button.delete')}</p>
+              </Button>
+            ) : null}
           </div>
         )}
       </PopoverContent>

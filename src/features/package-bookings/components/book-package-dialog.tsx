@@ -1,4 +1,4 @@
-import InfiniteSelect from '@/components/infinite-select'
+import SingleSelectField from '@/components/single-select-field'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -13,9 +13,9 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetMyProjectsInfinite } from '@/features/projects/hooks/use-get-my-projects-infinite'
+import { useGetProjectsForPackage } from '@/features/projects/hooks/use-get-projects-for-package'
 import { useGetVoucherByCode } from '@/features/vouchers/hooks/use-get-voucher-by-code'
-import { cn, formatCurrency } from '@/shared/utils'
+import { formatCurrency } from '@/shared/utils'
 import type { MentorPackage } from '@/types/mentor-package.type'
 import { DiscountType } from '@/types/voucher.type'
 import { useEffect, useMemo, useState } from 'react'
@@ -34,7 +34,6 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
   const { methods, bookPackage, isBookingPackage } = useBookPackage()
 
   const [open, setOpen] = useState(false)
-  const [projectSearch, setProjectSearch] = useState('')
 
   const voucherCode = methods.watch('voucherCode')
   const { voucher, isLoadingVoucher } = useGetVoucherByCode({ voucherCode: voucherCode ?? undefined })
@@ -84,21 +83,11 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
     bookPackage({ body: updatedBody })
   }
 
-  const {
-    projects: leaderProjects,
-    isLoading: isLoadingLeaderProjects,
-    isFetchingNextPage: isFetchingNextLeaderProjects,
-    hasNextPage: hasNextLeaderProjects,
-    fetchNextPage: fetchNextLeaderProjects
-  } = useGetMyProjectsInfinite({
-    status: ['leader'],
-    searchTerm: projectSearch,
-    enabled: open
-  })
+  const { projects: bookableProjects, isLoadingProjects: isLoadingBookableProjects } = useGetProjectsForPackage(open)
 
   const projectOptions = useMemo(
-    () => leaderProjects.map((project) => ({ value: project.id, label: project.name })),
-    [leaderProjects]
+    () => bookableProjects.value.items.map((project) => ({ value: project.id, label: project.name })),
+    [bookableProjects.value.items]
   )
 
   useEffect(() => {
@@ -193,31 +182,14 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
-            <Controller
+            <SingleSelectField
               control={methods.control}
               name='bookedByProjectId'
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='gap-1'>
-                  <FieldLabel htmlFor={field.name}>{t('meeting.form.projectLabel')}</FieldLabel>
-
-                  <InfiniteSelect
-                    value={field.value ?? ''}
-                    options={projectOptions}
-                    onChangeValue={(value) => {
-                      field.onChange(value || null)
-                    }}
-                    placeholder={t('meeting.form.projectPlaceholder')}
-                    searchPlaceholder={t('meeting.form.projectSearchPlaceholder')}
-                    onSearch={setProjectSearch}
-                    fetchNextPage={fetchNextLeaderProjects}
-                    hasNextPage={hasNextLeaderProjects}
-                    isFetchingNextPage={isFetchingNextLeaderProjects}
-                    isLoading={isLoadingLeaderProjects}
-                    aria-invalid={fieldState.invalid}
-                    className={cn('w-full', fieldState.invalid && 'border-destructive focus-visible:ring-destructive')}
-                  />
-                </Field>
-              )}
+              label='meeting.form.projectLabel'
+              options={projectOptions}
+              placeholder='meeting.form.projectPlaceholder'
+              searchPlaceholder='meeting.form.projectSearchPlaceholder'
+              disabled={isLoadingBookableProjects}
             />
 
             <Controller

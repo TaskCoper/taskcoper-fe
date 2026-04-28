@@ -1,3 +1,5 @@
+import type { SectionPermission } from './project-permission.type'
+
 export const MeetingStatus = {
   FREE: 'Free',
   BOOKED: 'Booked',
@@ -69,7 +71,7 @@ export interface MeetingBooking {
       firstName: string
       lastName: string
       avatarUrl: string | null
-      role: string
+      slug: string
     }>
   } | null
   reason: string | null
@@ -84,6 +86,7 @@ export interface MeetingBooking {
 
 export interface MeetingDetail extends MeetingBooking {
   parentId: string | null
+  calendarPermission: Extract<SectionPermission, { sectionKey: 'CALENDAR' }>
   subMeetings: Array<{
     id: string
     startTimeUtc: string

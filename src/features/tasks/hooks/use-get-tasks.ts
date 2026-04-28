@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export interface UseGetTasksParams {
   enabled?: boolean
-  parentMilestoneId?: string
+  parentMilestoneIdentifier?: string
   pageIndex?: number
   pageSize?: number
   sortBy?: string
@@ -20,10 +20,11 @@ export interface UseGetTasksParams {
   memberIds?: string[]
   priorities?: (string | null)[]
   isWatchingTask?: boolean
+  projectIdentifier?: string
 }
 
 export const useGetTasks = ({
-  parentMilestoneId,
+  parentMilestoneIdentifier,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   sortBy,
@@ -36,11 +37,12 @@ export const useGetTasks = ({
   memberIds,
   priorities,
   isWatchingTask,
+  projectIdentifier,
   enabled = true
 }: UseGetTasksParams) => {
   const { data: tasks = getDefaultPaginationResponse<TaskRow>(), isLoading: isLoadingTasks } = useQuery({
     queryKey: queryKeys.tasks.list({
-      parentMilestoneId,
+      parentMilestoneIdentifier,
       pageIndex,
       pageSize,
       sortBy,
@@ -52,11 +54,12 @@ export const useGetTasks = ({
       name,
       memberIds,
       priorities,
+      projectIdentifier,
       isWatchingTask
     }),
     queryFn: () =>
       taskService.getTasks({
-        parentMilestoneId,
+        parentMilestoneIdentifier,
         pageIndex,
         pageSize,
         sortBy,
@@ -68,9 +71,10 @@ export const useGetTasks = ({
         name,
         memberIds,
         priorities,
+        projectIdentifier,
         isWatchingTask
       }),
-    enabled: enabled && !!parentMilestoneId
+    enabled
   })
 
   return { tasks, isLoadingTasks }

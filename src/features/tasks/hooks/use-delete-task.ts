@@ -1,21 +1,26 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import taskService from '@/services/task.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface UseDeleteTaskProps {
-  projectId?: string
-  parentMilestoneId?: string
+  projectIdentifier?: string
+  parentMilestoneIdentifier?: string
   milestoneId?: string
   onDeleteSuccess?: () => void
 }
 
-export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDeleteSuccess }: UseDeleteTaskProps) => {
+export const useDeleteTask = ({
+  projectIdentifier,
+  parentMilestoneIdentifier,
+  milestoneId,
+  onDeleteSuccess
+}: UseDeleteTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { mutate: deleteTask, isPending: isDeletingTask } = useMutation({
     mutationFn: taskService.deleteTask,
@@ -29,17 +34,21 @@ export const useDeleteTask = ({ projectId, parentMilestoneId, milestoneId, onDel
       onDeleteSuccess?.()
     },
     onSettled: () => {
-      if (parentMilestoneId) {
-        if (projectId) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectId, parentMilestoneId) })
-          queryClient.invalidateQueries({ queryKey: queryKeys.projects.taskStatusStats(projectId, parentMilestoneId) })
+      if (parentMilestoneIdentifier) {
+        if (projectIdentifier) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+          })
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
+          })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
       }
 
-      if (projectId && user?.UserId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectId, user?.UserId) })
+      if (projectIdentifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
 
       if (milestoneId) {

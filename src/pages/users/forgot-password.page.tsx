@@ -13,7 +13,6 @@ import type {
   VerifyCodeFormValues
 } from '@/features/users/validations'
 import { useCountdown } from '@/hooks/use-countdown'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -25,8 +24,6 @@ export default function ForgotPasswordPage() {
   const { t } = useTranslation()
   const [stage, setStage] = useState<'email' | 'otp' | 'password'>('email')
   const [isVisible, setIsVisible] = useState(false)
-
-  const { signIn: signInAuth } = useAuthStore()
 
   const { methods: forgotPasswordMethods, forgotPassword, isForgotPasswordPending } = useForgotPassword()
   const { methods: verifyCodeMethods, verifyCode, isVerifyingCode } = useVerifyCode()
@@ -61,8 +58,7 @@ export default function ForgotPasswordPage() {
     verifyCode(
       { body },
       {
-        onSuccess: ({ accessToken, refreshToken }) => {
-          signInAuth(accessToken, refreshToken)
+        onSuccess: () => {
           resetPasswordMethods.reset({ newPassword: '' })
           setStage('password')
         }

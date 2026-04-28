@@ -12,7 +12,7 @@ import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { formatCurrency } from '@/shared/utils'
 import { DiscountType, DiscountTypeLabel } from '@/types/voucher.type'
 import { HashIcon, TagIcon, TicketPercentIcon, UsersRoundIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
@@ -90,7 +90,7 @@ export default function MentorVoucherPage() {
     }
   }, [voucher, methods])
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     if (!voucher) return
 
     const ok = await confirm({
@@ -111,37 +111,43 @@ export default function MentorVoucherPage() {
         onSuccess: () => navigate('/vouchers')
       }
     )
-  }
+  }, [confirm, voucher, deleteVoucher, navigate, t])
 
-  const onSubmit: SubmitHandler<UpdateVoucherFormValues> = (values) => {
-    updateVoucher({ body: values })
-  }
+  const onSubmit: SubmitHandler<UpdateVoucherFormValues> = useCallback(
+    (values) => {
+      updateVoucher({ body: values })
+    },
+    [updateVoucher]
+  )
 
-  const TABS = [
-    {
-      value: 'info',
-      label: t('voucher.page.infoTitle'),
-      content: (
-        <InfoTab
-          methods={methods}
-          onSubmit={onSubmit}
-          onDelete={handleDelete}
-          isDeleting={isDeletingVoucher}
-          isUpdating={isUpdatingVoucher}
-        />
-      )
-    },
-    {
-      value: 'targets',
-      label: t('voucher.page.targetsTitle'),
-      content: <TargetsTab voucher={voucher} />
-    },
-    {
-      value: 'redemptions',
-      label: t('voucher.page.redemptionsTitle'),
-      content: voucherId ? <RedemptionsTab voucherId={voucherId} /> : null
-    }
-  ]
+  const TABS = useMemo(
+    () => [
+      {
+        value: 'info',
+        label: t('voucher.page.infoTitle'),
+        content: (
+          <InfoTab
+            methods={methods}
+            onSubmit={onSubmit}
+            onDelete={handleDelete}
+            isDeleting={isDeletingVoucher}
+            isUpdating={isUpdatingVoucher}
+          />
+        )
+      },
+      {
+        value: 'targets',
+        label: t('voucher.page.targetsTitle'),
+        content: <TargetsTab voucher={voucher} />
+      },
+      {
+        value: 'redemptions',
+        label: t('voucher.page.redemptionsTitle'),
+        content: voucherId ? <RedemptionsTab voucherId={voucherId} /> : null
+      }
+    ],
+    [methods, onSubmit, handleDelete, isDeletingVoucher, isUpdatingVoucher, voucher, voucherId, t]
+  )
 
   if (isLoadingVoucher) {
     return (

@@ -8,11 +8,16 @@ import AttachmentMenu from './attachment-menu'
 interface LinkAttachmentProps {
   attachment: Attachment
   taskId: string
-  parentMilestoneId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
-export default function LinkAttachment({ attachment, taskId, parentMilestoneId, projectId }: LinkAttachmentProps) {
+export default function LinkAttachment({
+  attachment,
+  taskId,
+  parentMilestoneIdentifier,
+  projectIdentifier
+}: LinkAttachmentProps) {
   return (
     <Card className='flex-row items-center justify-between gap-3 pl-3 pr-1.5 py-1.5 rounded-md shadow-none'>
       <div className='flex items-center gap-2.5 min-w-0 overflow-hidden flex-1'>
@@ -25,8 +30,8 @@ export default function LinkAttachment({ attachment, taskId, parentMilestoneId, 
       <AttachmentMenu
         attachment={attachment}
         taskId={taskId}
-        parentMilestoneId={parentMilestoneId}
-        projectId={projectId}
+        parentMilestoneIdentifier={parentMilestoneIdentifier}
+        projectIdentifier={projectIdentifier}
       >
         <Button size='icon-sm' variant='secondary' className='size-6'>
           <MoreHorizontalIcon className='size-3' />

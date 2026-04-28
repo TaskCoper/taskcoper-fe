@@ -1,6 +1,8 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { cn } from '@/shared/utils'
 import type { Subtask } from '@/types/subtask.type'
 import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -12,15 +14,24 @@ import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
 interface SubtaskCardProps {
   subtask: Subtask
   taskId: string
-  projectId: string
-  parentMilestoneId: string
+  projectIdentifier: string
+  parentMilestoneIdentifier: string
 }
 
-export default function SubtaskCard({ subtask, taskId, projectId, parentMilestoneId }: SubtaskCardProps) {
+export default function SubtaskCard({
+  subtask,
+  taskId,
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: SubtaskCardProps) {
   const { t } = useTranslation()
   const { updateSubtask } = useUpdateSubtask({ taskId })
-  const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectId, parentMilestoneId })
-  const { deleteSubtask } = useDeleteSubtask({ taskId, projectId, parentMilestoneId })
+  const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectIdentifier, parentMilestoneIdentifier })
+  const { deleteSubtask } = useDeleteSubtask({ taskId, projectIdentifier, parentMilestoneIdentifier })
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const { isEditing, inputProps, triggerProps } = useInlineEdit({
     initialValue: subtask.name,
@@ -65,16 +76,21 @@ export default function SubtaskCard({ subtask, taskId, projectId, parentMileston
 
   return (
     <div className='flex items-center gap-2'>
-      <Checkbox checked={subtask.isCompleted} onCheckedChange={handleCheckboxChange} />
+      <Checkbox checked={subtask.isCompleted} onCheckedChange={handleCheckboxChange} disabled={!canUpdate} />
       <div className='flex items-center gap-2 w-full hover:bg-muted rounded-sm px-2 py-1 group/subtask-item'>
-        <p className='text-sm cursor-pointer w-full' {...triggerProps}>
+        <p
+          className={cn('text-sm cursor-pointer w-full', canUpdate ? 'cursor-text' : 'cursor-default')}
+          {...(canUpdate ? triggerProps : {})}
+        >
           {subtask.name}
         </p>
 
-        <XIcon
-          className='size-4 cursor-pointer hidden group-hover/subtask-item:block hover:text-destructive'
-          onClick={handleDelete}
-        />
+        {canDelete ? (
+          <XIcon
+            className='size-4 cursor-pointer hidden group-hover/subtask-item:block hover:text-destructive'
+            onClick={handleDelete}
+          />
+        ) : null}
       </div>
     </div>
   )

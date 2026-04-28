@@ -5,10 +5,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-export const useToggleEditor = ({ projectId }: { projectId: string }) => {
+export const useToggleEditor = ({ identifier }: { identifier: string }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const queryKey = ['members', projectId]
+  const queryKey = ['members', identifier]
 
   const { mutate: toggleEditor, isPending: isTogglingEditor } = useMutation({
     mutationFn: projectService.toggleEditor,

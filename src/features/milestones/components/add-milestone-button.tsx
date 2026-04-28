@@ -9,16 +9,16 @@ import type { AddMilestoneFormValues } from '../validations'
 import AddMilestoneForm from './add-milestone-form'
 
 export interface AddMilestoneButtonProps {
-  parentId: string
-  projectId: string
+  parentMilestoneIdentifier: string
+  projectIdentifier: string
 }
 
-export default function AddMilestoneButton({ parentId, projectId }: AddMilestoneButtonProps) {
+export default function AddMilestoneButton({ parentMilestoneIdentifier, projectIdentifier }: AddMilestoneButtonProps) {
   const { t } = useTranslation()
   const { methods, addMilestone, isAddingMilestone, isTriggered, setIsTriggered, recalculatePosition } =
     useAddMilestone({
-      parentId,
-      projectId
+      parentMilestoneIdentifier,
+      projectIdentifier
     })
 
   const onSubmit: SubmitHandler<AddMilestoneFormValues> = (body) => {

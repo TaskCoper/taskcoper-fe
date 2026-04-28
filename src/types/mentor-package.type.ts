@@ -11,7 +11,7 @@ export interface MentorPackage {
   price: number
   currency: Currency
   isActive: boolean
-  sortOrder: number
+  position: number
   createdOnUtc: string
   modifiedOnUtc: string | null
   coverImageUrl: string | null
@@ -36,6 +36,7 @@ export interface PurchasedMentorPackage extends MentorPackage {
   packageBookingId: string
   mentorUserId: string
   meetings: Meeting[]
+  projectOwnerId: string
   mentor: {
     email: string
     firstName: string

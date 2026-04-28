@@ -15,8 +15,7 @@ import { LinkPopover } from '@/components/tiptap-ui/link-popover'
 import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
 import { MarkButton } from '@/components/tiptap-ui/mark-button'
 import { FieldError } from '@/components/ui/field'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { queryKeys } from '@/lib/query-keys'
 import projectService from '@/services/project.service'
 import { DEFAULT_PAGE_INDEX, MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
@@ -39,7 +38,6 @@ import {
   useEditor
 } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
-import type { AxiosError } from 'axios'
 import { MoreHorizontalIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -62,8 +60,9 @@ interface RichTextEditorProps {
   onMentionIdsChange?: (mentionIds: string[]) => void
   invalid?: boolean
   error?: { message?: string }
-  projectId?: string
+  projectIdentifier?: string
   mentionedUsers?: MentionUser[]
+  className?: string
 }
 
 // Helper function to extract user IDs from Tiptap's JSON structure.
@@ -94,12 +93,13 @@ export default function RichTextEditor({
   placeholder = 'richTextEditor.placeholder',
   invalid = false,
   error,
-  projectId,
-  mentionedUsers = []
+  projectIdentifier,
+  mentionedUsers = [],
+  className
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
-  const { uploadFileAsync } = useUploadFile()
+  const { uploadFileWithToast } = useUploadFileWithToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const placeholderText = t(placeholder)
 
@@ -135,14 +135,14 @@ export default function RichTextEditor({
       const parsedQuery = query || undefined
       const result = await queryClient.fetchQuery({
         queryKey: queryKeys.projects.members.list({
-          projectId,
+          identifier: projectIdentifier,
           searchTerm: parsedQuery,
           pageIndex: 1,
           pageSize: 5
         }),
         queryFn: () =>
           projectService.getProjectMembers({
-            projectId,
+            identifier: projectIdentifier,
             searchTerm: parsedQuery,
             pageIndex: DEFAULT_PAGE_INDEX,
             pageSize: 5
@@ -182,37 +182,19 @@ export default function RichTextEditor({
 
   const handleUploadAndInsertFile = useCallback(
     async (editor: Editor, file: File, pos?: number) => {
-      const toastId = toast.loading(t('common.ui.uploading'), {
-        description: t('common.ui.pleaseWait')
-      })
-
-      try {
-        const url = await uploadFileAsync({
-          file,
-          onProgress: (progress) => {
-            toast.loading(t('common.ui.uploading'), {
-              id: toastId,
-              description: (
-                <div className='w-full min-w-72 space-y-1'>
-                  <Progress value={progress} className='w-full' />
-                  <p className='text-xs text-muted-foreground'>{progress}%</p>
-                </div>
-              )
-            })
-          }
-        })
-
-        if (url) {
-          toast.success(t('common.ui.uploadSuccess'), {
-            id: toastId,
-            description: null
-          })
-
+      await uploadFileWithToast({
+        file,
+        renderProgress: (progress) => (
+          <div className='w-72 space-y-1'>
+            <Progress value={progress} className='w-full' />
+            <p className='text-xs text-muted-foreground'>{progress}%</p>
+          </div>
+        ),
+        onUploaded: (url) => {
           const insertPos = pos ?? editor.state.selection.anchor
           const isImage = file.type.startsWith('image/')
 
           if (isImage) {
-            // Insert as image
             editor
               .chain()
               .insertContentAt(insertPos, {
@@ -221,34 +203,27 @@ export default function RichTextEditor({
               })
               .focus()
               .run()
-          } else {
-            // Insert as link with filename
-            editor
-              .chain()
-              .insertContentAt(insertPos, {
-                type: 'text',
-                text: file.name,
-                marks: [
-                  {
-                    type: 'link',
-                    attrs: { href: url, target: '_blank' }
-                  }
-                ]
-              })
-              .focus()
-              .run()
+            return
           }
-        } else {
-          toast.dismiss(toastId)
+
+          editor
+            .chain()
+            .insertContentAt(insertPos, {
+              type: 'text',
+              text: file.name,
+              marks: [
+                {
+                  type: 'link',
+                  attrs: { href: url, target: '_blank' }
+                }
+              ]
+            })
+            .focus()
+            .run()
         }
-      } catch (error) {
-        toast.error(t('error.somethingWentWrong'), {
-          id: toastId,
-          description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-        })
-      }
+      })
     },
-    [t, uploadFileAsync]
+    [uploadFileWithToast]
   )
 
   const extensions = useMemo(
@@ -359,43 +334,17 @@ export default function RichTextEditor({
         maxSize: MAX_UPLOAD_IMAGE_SIZE,
         limit: 1,
         upload: async (file) => {
-          const toastId = toast.loading(t('common.ui.uploading'), {
-            description: t('common.ui.pleaseWait')
+          const url = await uploadFileWithToast({
+            file,
+            renderProgress: (progress) => (
+              <div className='w-72 space-y-1'>
+                <Progress value={progress} className='w-full' />
+                <p className='text-xs text-muted-foreground'>{progress}%</p>
+              </div>
+            )
           })
 
-          try {
-            const url = await uploadFileAsync({
-              file,
-              onProgress: (progress) => {
-                toast.loading(t('common.ui.uploading'), {
-                  id: toastId,
-                  description: (
-                    <div className='w-full min-w-72 space-y-1'>
-                      <Progress value={progress} className='w-full' />
-                      <p className='text-xs text-muted-foreground'>{progress}%</p>
-                    </div>
-                  )
-                })
-              }
-            })
-
-            if (url) {
-              toast.success(t('common.ui.uploadSuccess'), {
-                id: toastId,
-                description: null
-              })
-              return url
-            }
-
-            toast.dismiss(toastId)
-            return ''
-          } catch (error) {
-            toast.error(t('error.somethingWentWrong'), {
-              id: toastId,
-              description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-            })
-            return ''
-          }
+          return url ?? ''
         },
         onError: (error) => {
           if (error instanceof Error) {
@@ -413,7 +362,7 @@ export default function RichTextEditor({
         emptyEditorClass: 'is-editor-empty'
       })
     ],
-    [getMentionItems, handleUploadAndInsertFile, placeholderText, t, uploadFileAsync]
+    [getMentionItems, handleUploadAndInsertFile, placeholderText, uploadFileWithToast]
   )
 
   const editor = useEditor(
@@ -421,7 +370,10 @@ export default function RichTextEditor({
       extensions: extensions,
       editorProps: {
         attributes: {
-          class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
+          class: cn(
+            'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto',
+            className
+          )
         }
       },
       content: finalContent,

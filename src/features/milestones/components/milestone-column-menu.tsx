@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -27,12 +28,16 @@ export default function MilestoneColumnMenu({
   open,
   setOpen
 }: MilestoneColumnMenuProps) {
-  const { projectId, milestoneId: parentMilestoneId } = useParams<{ projectId: string; milestoneId: string }>()
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
+
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
-    queryKey: ['milestones', projectId, parentMilestoneId],
-    parentMilestoneId
+    queryKey: ['milestones', identifier, milestoneIdentifier],
+    parentMilestoneIdentifier: milestoneIdentifier
   })
 
   const handleDeleteMilestone = async () => {
@@ -48,6 +53,8 @@ export default function MilestoneColumnMenu({
       deleteMilestone({ milestoneId: columnId })
     }
   }
+
+  if (!canDelete) return <div className='size-8' />
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

@@ -5,18 +5,18 @@ import type { ChildMilestone } from '@/types/milestone.type'
 import { useQuery } from '@tanstack/react-query'
 
 interface GetChildMilestonesParams {
-  parentMilestoneId?: string
+  parentMilestoneIdentifier?: string
   enabled?: boolean
 }
 
-export const useGetChildMilestones = ({ parentMilestoneId, enabled = true }: GetChildMilestonesParams) => {
+export const useGetChildMilestones = ({ parentMilestoneIdentifier, enabled = true }: GetChildMilestonesParams) => {
   const {
     data: childMilestones = getDefaultPaginationResponse<ChildMilestone>(),
     isLoading: isLoadingChildMilestones
   } = useQuery({
-    queryKey: queryKeys.milestones.childMilestones(parentMilestoneId),
-    queryFn: () => milestoneService.getChildMilestones({ parentMilestoneId }),
-    enabled: !!parentMilestoneId && enabled
+    queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier),
+    queryFn: () => milestoneService.getChildMilestones({ parentMilestoneIdentifier }),
+    enabled: !!parentMilestoneIdentifier && enabled
   })
 
   return { childMilestones, isLoadingChildMilestones }

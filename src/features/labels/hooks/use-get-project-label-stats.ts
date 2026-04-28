@@ -5,15 +5,18 @@ import type { ProjectLabelStats } from '@/types/label.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface UseGetProjectLabelStatsParams {
-  projectId: string
-  parentMilestoneId?: string
+  projectIdentifier: string
+  parentMilestoneIdentifier?: string
 }
 
-export const useGetProjectLabelStats = ({ projectId, parentMilestoneId }: UseGetProjectLabelStatsParams) => {
+export const useGetProjectLabelStats = ({
+  projectIdentifier,
+  parentMilestoneIdentifier
+}: UseGetProjectLabelStatsParams) => {
   const { data: labelStats = getDefaultPaginationResponse<ProjectLabelStats>(), isLoading: isLoadingLabelStats } =
     useQuery({
-      queryKey: queryKeys.projects.labelStats(projectId, parentMilestoneId),
-      queryFn: () => projectService.getProjectLabelStats({ projectId, parentMilestoneId })
+      queryKey: queryKeys.projects.labelStats(projectIdentifier, parentMilestoneIdentifier),
+      queryFn: () => projectService.getProjectLabelStats({ projectIdentifier, parentMilestoneIdentifier })
     })
 
   return { labelStats, isLoadingLabelStats }

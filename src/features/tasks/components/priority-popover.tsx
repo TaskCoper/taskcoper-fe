@@ -7,15 +7,20 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { getTaskPriorityIcon } from '../constants'
+import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useParams } from 'react-router'
 
 interface PriorityPopoverProps {
   children: React.ReactNode
   onSubmit: () => void
   onRemove: () => void
+  disabled?: boolean
 }
 
-export default function PriorityPopover({ children, onSubmit, onRemove }: PriorityPopoverProps) {
+export default function PriorityPopover({ children, onSubmit, onRemove, disabled = false }: PriorityPopoverProps) {
   const { t } = useTranslation()
+  const { identifier } = useParams<{ identifier: string }>()
+
   const [open, setOpen] = useState(false)
   const {
     watch,
@@ -24,6 +29,9 @@ export default function PriorityPopover({ children, onSubmit, onRemove }: Priori
     formState: { isDirty }
   } = useFormContext()
   const priority = watch('priority') as TaskPriority | null
+
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canDelete = check('TASKS', 'canDelete')
 
   const handleSave = () => {
     onSubmit()
@@ -45,7 +53,9 @@ export default function PriorityPopover({ children, onSubmit, onRemove }: Priori
 
   return (
     <Popover modal open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild disabled={disabled}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
         align='start'
         className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] w-80 overflow-y-auto'
@@ -93,9 +103,11 @@ export default function PriorityPopover({ children, onSubmit, onRemove }: Priori
           </Select>
 
           <div className='flex justify-end items-center gap-2'>
-            <Button variant='ghost' onClick={handleRemove}>
-              {t('common.button.remove')}
-            </Button>
+            {canDelete ? (
+              <Button variant='ghost' onClick={handleRemove}>
+                {t('common.button.remove')}
+              </Button>
+            ) : null}
             <Button onClick={handleSave} disabled={!isDirty}>
               {t('common.button.save')}
             </Button>

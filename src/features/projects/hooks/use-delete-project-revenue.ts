@@ -19,10 +19,10 @@ export const useDeleteProjectRevenue = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(variables.projectId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.projectId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(variables.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.projectIdentifier) })
     }
   })
 
