@@ -86,6 +86,14 @@ export interface MeetingBooking {
 
 export interface MeetingDetail extends MeetingBooking {
   parentId: string | null
+  user: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    avatarUrl: string | null
+    slug: string
+  }
   calendarPermission: Extract<SectionPermission, { sectionKey: 'CALENDAR' }>
   subMeetings: Array<{
     id: string

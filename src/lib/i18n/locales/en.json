@@ -177,7 +177,7 @@
     },
     "popover": {
       "title": "Schedules",
-      "showOverlay": "Show schedule overlay",
+      "showOverlay": "Schedule overlay",
       "description": "Display your active schedules on the calendar.",
       "manageSchedules": "Manage Schedules"
     },
@@ -1628,9 +1628,8 @@
     },
     "tabs": {
       "all": "All",
-      "info": "Info",
-      "projects": "Projects",
-      "files": "Photos & Videos"
+      "schedule": "Schedule",
+      "packages": "Packages"
     },
     "logoImageAlt": "{{name}} Logo",
     "profile": {

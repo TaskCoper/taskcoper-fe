@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Textarea } from '@/components/ui/textarea'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import MeetingDetailMenu from '@/features/meetings/components/meeting-detail-menu'
 import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
@@ -79,6 +80,16 @@ export default function MeetingDialogPage() {
   const [isRescheduling, setIsRescheduling] = useState(false)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
+  const canUpdateNote =
+    me?.role === 'Mentor' && meeting?.mentorUserId === me.id && meeting.status !== MeetingStatus.CANCELLED
+
+  const handleClose = () => {
+    setOpen(false)
+    setTimeout(() => {
+      navigate(-1)
+    }, 300)
+  }
+
   if (isLoadingMeeting) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -137,13 +148,6 @@ export default function MeetingDialogPage() {
         </DialogContent>
       </Dialog>
     )
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-    setTimeout(() => {
-      navigate(-1)
-    }, 300)
   }
 
   return (
@@ -267,18 +271,22 @@ export default function MeetingDialogPage() {
 
             <div className='flex items-start gap-4'>
               <TextAlignStartIcon className='size-4 mt-1.5' />
-              <div className='bg-muted w-full h-32 p-3 rounded-md'>
-                {meeting?.note ? (
-                  <p className='text-sm text-muted-foreground'>{meeting.note}</p>
-                ) : (
-                  <p className='text-sm text-muted-foreground'>
-                    {t('meeting.detail.noteWillBeHere', {
-                      firstName: meeting?.mentor?.firstName,
-                      lastName: meeting?.mentor?.lastName
-                    })}
-                  </p>
-                )}
-              </div>
+              {canUpdateNote ? (
+                <Textarea className='w-full h-32 p-3 rounded-md' />
+              ) : (
+                <div className='bg-muted w-full h-32 p-3 rounded-md'>
+                  {meeting?.note ? (
+                    <p className='text-sm text-muted-foreground'>{meeting.note}</p>
+                  ) : (
+                    <p className='text-sm text-muted-foreground'>
+                      {t('meeting.detail.noteWillBeHere', {
+                        firstName: meeting?.mentor?.firstName,
+                        lastName: meeting?.mentor?.lastName
+                      })}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             {meeting?.status === MeetingStatus.CANCELLED && meeting.reason && (
@@ -422,17 +430,19 @@ export default function MeetingDialogPage() {
                   </Link>
                 ))
               ) : (
-                <Link to={`/users/${me?.slug}`} className='flex items-center gap-2' key={me?.id}>
+                <Link to={`/users/${meeting?.user.slug}`} className='flex items-center gap-2'>
                   <Avatar>
-                    <AvatarImage src={me?.avatar ?? undefined} className='hover:brightness-90' />
-                    <AvatarFallback>{getAvatarFallback(`${me?.firstName} ${me?.lastName}`)}</AvatarFallback>
+                    <AvatarImage src={meeting?.user.avatarUrl ?? undefined} className='hover:brightness-90' />
+                    <AvatarFallback>
+                      {getAvatarFallback(`${meeting?.user.firstName} ${meeting?.user.lastName}`)}
+                    </AvatarFallback>
                   </Avatar>
 
                   <div className='-space-y-0.5'>
-                    <p className='text-sm font-medium'>
-                      {me?.firstName} {me?.lastName}
+                    <p className='text-sm font-medium hover:underline hover:text-primary'>
+                      {meeting?.user.firstName} {meeting?.user.lastName}
                     </p>
-                    <p className='text-xs text-muted-foreground'>{me?.email}</p>
+                    <p className='text-xs text-muted-foreground'>{meeting?.user.email}</p>
                   </div>
                 </Link>
               )}

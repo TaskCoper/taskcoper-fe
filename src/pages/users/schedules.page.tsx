@@ -70,7 +70,7 @@ const formatDuration = (startTime: string, endTime: string): string => {
   return `${hours}h ${minutes}m`
 }
 
-const ScheduleRow = ({ schedule }: { schedule: MeetingRule }) => {
+const ScheduleRow = ({ schedule, onEdit }: { schedule: MeetingRule; onEdit: (schedule: MeetingRule) => void }) => {
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
   const { deleteSchedule, isDeletingSchedule } = useDeleteSchedule()
@@ -219,11 +219,14 @@ const ScheduleRow = ({ schedule }: { schedule: MeetingRule }) => {
       </div>
 
       <div className='flex items-center gap-1 shrink-0'>
-        <UpdateScheduleDialog schedule={schedule}>
-          <Button variant='ghost' size='icon-sm' className='text-muted-foreground hover:text-foreground'>
-            <PencilIcon className='size-4' />
-          </Button>
-        </UpdateScheduleDialog>
+        <Button
+          variant='ghost'
+          size='icon-sm'
+          className='text-muted-foreground hover:text-foreground'
+          onClick={() => onEdit(schedule)}
+        >
+          <PencilIcon className='size-4' />
+        </Button>
 
         <Button
           variant='ghost'
@@ -243,9 +246,10 @@ interface DaySectionProps {
   dayOfWeek: number
   schedules: MeetingRule[]
   isToday: boolean
+  onEdit: (schedule: MeetingRule) => void
 }
 
-const DaySection = ({ dayOfWeek, schedules, isToday }: DaySectionProps) => {
+const DaySection = ({ dayOfWeek, schedules, isToday, onEdit }: DaySectionProps) => {
   const { t } = useTranslation()
 
   return (
@@ -260,7 +264,7 @@ const DaySection = ({ dayOfWeek, schedules, isToday }: DaySectionProps) => {
       {schedules.length > 0 ? (
         <div className='divide-y divide-border'>
           {schedules.map((schedule) => (
-            <ScheduleRow key={schedule.id} schedule={schedule} />
+            <ScheduleRow key={schedule.id} schedule={schedule} onEdit={onEdit} />
           ))}
         </div>
       ) : (
@@ -300,6 +304,7 @@ const TimelineEmpty = () => {
 export default function SchedulesPage() {
   const { t } = useTranslation()
   const [isActiveFilter, setIsActiveFilter] = useState<string>('all')
+  const [editingSchedule, setEditingSchedule] = useState<MeetingRule | null>(null)
 
   const parsedIsActive = isActiveFilter === 'all' ? undefined : isActiveFilter === 'true'
   const { schedules, isLoadingSchedules } = useGetMySchedules({ isActive: parsedIsActive })
@@ -375,11 +380,23 @@ export default function SchedulesPage() {
             <TimelineEmpty />
           ) : (
             DISPLAY_ORDER.map((dow) => (
-              <DaySection key={dow} dayOfWeek={dow} schedules={dayMap.get(dow) ?? []} isToday={dow === todayDow} />
+              <DaySection
+                key={dow}
+                dayOfWeek={dow}
+                schedules={dayMap.get(dow) ?? []}
+                isToday={dow === todayDow}
+                onEdit={setEditingSchedule}
+              />
             ))
           )}
         </div>
       </ScrollArea>
+
+      <UpdateScheduleDialog
+        schedule={editingSchedule}
+        open={!!editingSchedule}
+        onOpenChange={(open) => !open && setEditingSchedule(null)}
+      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-m
 import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
@@ -264,13 +265,13 @@ export const queryKeys = {
   mentorPackages: {
     all: ['mentor-packages'] as const,
     my: () => [...queryKeys.mentorPackages.all, 'my'] as const,
-    purchased: ({ mode }: GetPurchasedMentorPackagesParams) =>
-      [...queryKeys.mentorPackages.all, 'purchased', mode] as const,
+    purchased: ({ mode, isNeedFeedback }: GetPurchasedMentorPackagesParams) =>
+      [...queryKeys.mentorPackages.all, 'purchased', mode, isNeedFeedback] as const,
     projectPurchased: (projectIdentifier?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'project', projectIdentifier] as const,
     purchasedDetail: (packageId?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'detail', packageId] as const,
-    list: ({ mentorId }: { mentorId?: string }) => [...queryKeys.mentorPackages.all, mentorId] as const,
+    list: ({ mentorId, limit }: GetMentorPackagesParams) => [...queryKeys.mentorPackages.all, mentorId, limit] as const,
     listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>
       [...queryKeys.mentorPackages.all, 'infinite', params] as const,
     detail: (packageId?: string) => ['mentor-package', packageId] as const

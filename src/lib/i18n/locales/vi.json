@@ -177,7 +177,7 @@
     },
     "popover": {
       "title": "Lịch rảnh",
-      "showOverlay": "Hiển thị lớp phủ lịch",
+      "showOverlay": "Lớp phủ lịch",
       "description": "Hiển thị lịch rảnh của bạn trên lịch.",
       "manageSchedules": "Quản lý Lịch"
     },
@@ -1628,9 +1628,8 @@
     },
     "tabs": {
       "all": "Tất cả",
-      "info": "Giới thiệu",
-      "projects": "Dự án",
-      "files": "Ảnh & Video"
+      "schedule": "Lịch làm việc",
+      "packages": "Gói lịch hẹn"
     },
     "logoImageAlt": "{{name}} Logo",
     "profile": {

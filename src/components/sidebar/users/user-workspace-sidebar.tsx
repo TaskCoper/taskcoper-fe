@@ -1,7 +1,8 @@
 import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
-import { Sidebar, SidebarContent, SidebarRail } from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { cn } from '@/shared/utils'
+import type { Role } from '@/types/user.type'
 import {
   AudioWaveform,
   BookOpen,
@@ -28,8 +29,6 @@ type NavItem = {
   url: string
   icon: LucideIcon
 }
-
-type Role = 'Mentor' | 'User'
 
 type NavItemConfig = NavItem & {
   roles?: Role[]
@@ -220,6 +219,9 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
       <SidebarContent>
         <NavQuickActions items={data.quickActions} activeSegment={activeSegment} />
         {/* <NavMain items={data.navMain} /> */}
+        <div className='mt-auto px-2.5 pb-2'>
+          <SidebarTrigger />
+        </div>
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

@@ -16,13 +16,9 @@ export default function BecomeMentorWidget() {
 
   const userType = getUserType(me)
   const isMentor = me?.role?.toLowerCase() === 'mentor'
-  const isAtRoute =
-    pathname.startsWith('/applications') ||
-    pathname.startsWith('/commissions') ||
-    pathname.startsWith('/sign-in') ||
-    pathname.startsWith('/sign-up')
+  const isAtRoute = pathname.startsWith('/network') || pathname.startsWith('/projects')
 
-  if (!me || userType !== 'user' || isGettingMe || isMentor || isDismissed() || isAtRoute) {
+  if (!me || userType !== 'user' || isGettingMe || isMentor || isDismissed() || !isAtRoute) {
     return null
   }
 

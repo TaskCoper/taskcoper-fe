@@ -1,15 +1,8 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
 import type { MeetingRule } from '@/types/schedule.type'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useUpdateSchedule } from '../hooks/use-update-schedule'
@@ -17,12 +10,12 @@ import type { UpdateScheduleFormValues } from '../validations'
 import UpdateScheduleForm from './update-schedule-form'
 
 interface UpdateScheduleDialogProps {
-  children: React.ReactNode
-  schedule: MeetingRule
+  schedule: MeetingRule | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export default function UpdateScheduleDialog({ children, schedule }: UpdateScheduleDialogProps) {
-  const [open, setOpen] = useState(false)
+export default function UpdateScheduleDialog({ schedule, open, onOpenChange }: UpdateScheduleDialogProps) {
   const { t } = useTranslation()
   const { methods, updateSchedule, isUpdatingSchedule } = useUpdateSchedule()
 
@@ -33,11 +26,12 @@ export default function UpdateScheduleDialog({ children, schedule }: UpdateSched
   } = methods
 
   const onClose = () => {
-    setOpen(false)
+    onOpenChange(false)
     reset()
   }
 
   const onSubmit: SubmitHandler<UpdateScheduleFormValues> = (body) => {
+    if (!schedule) return
     const formattedBody = {
       ...body,
       startTimeUtc: body.startTimeUtc.split(':').length === 2 ? `${body.startTimeUtc}:00` : body.startTimeUtc,
@@ -55,7 +49,7 @@ export default function UpdateScheduleDialog({ children, schedule }: UpdateSched
   }
 
   useEffect(() => {
-    if (open) {
+    if (open && schedule) {
       reset({
         dayOfWeek: schedule.dayOfWeek,
         startTimeUtc: schedule.startTimeUtc,
@@ -74,10 +68,9 @@ export default function UpdateScheduleDialog({ children, schedule }: UpdateSched
         if (!open) {
           reset()
         }
-        setOpen(open)
+        onOpenChange(open)
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent position='top-center' className='min-w-xl' onInteractOutside={onClose}>
         <DialogHeader>
           <DialogTitle>{t('schedule.button.update')}</DialogTitle>

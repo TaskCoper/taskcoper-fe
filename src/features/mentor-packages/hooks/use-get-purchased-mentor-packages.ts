@@ -10,15 +10,22 @@ export interface GetPurchasedMentorPackagesParams {
   // 1: WithCalendarFullAccess => các gói mua cho project và có quyền đặt lịch
   // 2: WithCalendarReadOnly => các gói mua cho project nhưng không có quyền đặt lịch
   // 3: gói mua cho cá nhân
+  isNeedFeedback?: boolean
+  enabled?: boolean
 }
 
-export const useGetPurchasedMentorPackages = ({ mode }: GetPurchasedMentorPackagesParams = {}) => {
+export const useGetPurchasedMentorPackages = ({
+  mode,
+  isNeedFeedback,
+  enabled = true
+}: GetPurchasedMentorPackagesParams = {}) => {
   const {
     data: purchasedMentorPackages = getDefaultPaginationResponse<PurchasedMentorPackage>(),
     isLoading: isLoadingPurchasedMentorPackages
   } = useQuery({
-    queryKey: queryKeys.mentorPackages.purchased({ mode }),
-    queryFn: () => mentorPackageService.getPurchasedMentorPackages({ mode })
+    queryKey: queryKeys.mentorPackages.purchased({ mode, isNeedFeedback }),
+    queryFn: () => mentorPackageService.getPurchasedMentorPackages({ mode, isNeedFeedback }),
+    enabled
   })
 
   return { purchasedMentorPackages, isLoadingPurchasedMentorPackages }

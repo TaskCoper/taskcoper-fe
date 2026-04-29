@@ -8,25 +8,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import UpdateMentorShortBioDialog from '@/features/mentors/components/dialogs/update-mentor-short-bio-dialog'
 import AllTab from '@/features/users/components/tabs/all-tab'
+import MentorPackagesTab from '@/features/users/components/tabs/mentor-packages-tab'
+import ScheduleTab from '@/features/users/components/tabs/schedule-tab'
 import { useGetUser } from '@/features/users/hooks/use-get-user'
 import { useUpdateMe } from '@/features/users/hooks/use-update-me'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { queryKeys } from '@/lib/query-keys'
 import { MAX_AVATAR_SIZE, MAX_COVER_SIZE, UNDERLINE_TAB_CLASSNAME } from '@/shared/constants'
 import { cn } from '@/shared/utils'
+import { Role } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { BadgeCheckIcon, CameraIcon, GlobeIcon, ImageOffIcon, MailIcon, PhoneIcon, XIcon } from 'lucide-react'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
-type TabValue = 'all' | 'info' | 'projects' | 'files'
+type TabValue = 'all' | 'schedule' | 'projects' | 'packages'
 
 interface TabItem {
   id: number
   label: string
   value: TabValue
   content: React.ReactNode
+  roles: Role[]
 }
 
 export default function ProfilePage() {
@@ -224,35 +229,48 @@ export default function ProfilePage() {
   }, [user])
 
   const tabs: TabItem[] = useMemo(() => {
-    return [
+    const items: TabItem[] = [
       {
         id: 1,
         label: t('user.tabs.all'),
         value: 'all',
-        content: <AllTab userDetail={user} />
+        content: <AllTab userDetail={user} />,
+        roles: [Role.Mentor, Role.User, Role.Lecturer, Role.Admin]
+      },
+      {
+        id: 50,
+        label: t('user.tabs.schedule'),
+        value: 'schedule',
+        content: <ScheduleTab userDetail={user} />,
+        roles: [Role.Lecturer, Role.Admin]
+      },
+      {
+        id: 100,
+        label: t('user.tabs.schedule'),
+        value: 'schedule',
+        content: <ScheduleTab userDetail={user} />,
+        roles: [Role.Mentor]
+      },
+      {
+        id: 150,
+        label: t('user.tabs.packages'),
+        value: 'packages',
+        content: <MentorPackagesTab userDetail={user} />,
+        roles: [Role.Mentor]
       }
-      // {
-      //   id: 50,
-      //   label: t('user.tabs.info'),
-      //   value: 'info',
-      //   content: <div>Comming Soon</div>
-      // },
-      // {
-      //   id: 100,
-      //   label: t('user.tabs.projects'),
-      //   value: 'projects',
-      //   content: <div>Comming Soon</div>
-      // },
-      // {
-      //   id: 150,
-      //   label: t('user.tabs.files'),
-      //   value: 'files',
-      //   content: <div>Comming Soon</div>
-      // }
     ]
+
+    return items.filter((tab) => {
+      if (!user) return true
+      return tab.roles.includes(user.role)
+    })
   }, [t, user])
 
-  const [activeTab, setActiveTab] = useState<TabItem>(tabs[0])
+  const [activeTabValue, setActiveTabValue] = useQueryState('tab', parseAsString.withDefault('all'))
+
+  const activeTab = useMemo(() => {
+    return tabs.find((tab) => tab.value === activeTabValue) || tabs[0]
+  }, [tabs, activeTabValue])
 
   if (isGettingUser || isGettingMe) {
     return (
@@ -311,25 +329,6 @@ export default function ProfilePage() {
             </div>
 
             <div className='col-span-9 space-y-4'>
-              <div className='grid grid-cols-12 gap-2'>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className='shrink-0 col-span-4 rounded-lg border overflow-hidden bg-card'>
-                    <Skeleton className='w-full h-28 rounded-none' />
-                    <div className='p-2 space-y-3'>
-                      <div className='flex items-center justify-between gap-2'>
-                        <Skeleton className='h-4 w-24' />
-                        <Skeleton className='h-4 w-12' />
-                      </div>
-                      <div className='space-y-1.5'>
-                        <Skeleton className='h-3 w-full' />
-                        <Skeleton className='h-3 w-2/3' />
-                      </div>
-                      <Skeleton className='h-8 w-full mt-1' />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
               <Skeleton className='h-[400px] w-full rounded-lg' />
             </div>
           </div>
@@ -339,11 +338,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <Tabs
-      className='w-full h-full overflow-y-auto'
-      value={activeTab.value}
-      onValueChange={(v) => setActiveTab(tabs.find((tab) => tab.value === v) ?? tabs[0])}
-    >
+    <Tabs className='w-full h-full overflow-y-auto' value={activeTab.value} onValueChange={setActiveTabValue}>
       <div className='bg-muted/60'>
         <div className='h-60 sm:h-72 lg:h-96 max-w-330 mx-auto px-4'>
           {isViewingOwnProfile ? (

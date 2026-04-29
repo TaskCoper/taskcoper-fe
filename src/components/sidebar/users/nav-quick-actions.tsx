@@ -17,7 +17,7 @@ export function NavQuickActions({
   // const { isMobile } = useSidebar()
 
   return (
-    <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+    <SidebarGroup>
       {/* <SidebarGroupLabel>Home</SidebarGroupLabel> */}
       <SidebarMenu>
         {items.map((item) => (

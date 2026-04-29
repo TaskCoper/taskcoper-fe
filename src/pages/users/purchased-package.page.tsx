@@ -158,19 +158,21 @@ export default function PurchasedPackagePage() {
             </div>
 
             <div className='space-y-2'>
-              <div className='flex items-center justify-between gap-2'>
-                <div className='flex items-center gap-2 text-muted-foreground'>
-                  <FolderOpenIcon className='size-4' />
-                  <p className='text-xs font-medium'>{t('purchasedPackage.belongsToProject')}</p>
-                </div>
+              {purchasedMentorPackage?.project ? (
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-muted-foreground'>
+                    <FolderOpenIcon className='size-4' />
+                    <p className='text-xs font-medium'>{t('purchasedPackage.belongsToProject')}</p>
+                  </div>
 
-                <Link
-                  to={`/projects/${purchasedMentorPackage?.projectId}/info`}
-                  className='hover:text-primary hover:underline'
-                >
-                  <p className='text-xs font-semibold'>{purchasedMentorPackage?.project?.name}</p>
-                </Link>
-              </div>
+                  <Link
+                    to={`/projects/${purchasedMentorPackage?.projectId}/info`}
+                    className='hover:text-primary hover:underline'
+                  >
+                    <p className='text-xs font-semibold'>{purchasedMentorPackage?.project?.name}</p>
+                  </Link>
+                </div>
+              ) : null}
 
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex items-center gap-2 text-muted-foreground'>

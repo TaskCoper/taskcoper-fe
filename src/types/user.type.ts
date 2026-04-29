@@ -1,5 +1,23 @@
 import type { Domain } from './domain.type'
 
+export const Role = {
+  User: 'User',
+  Mentor: 'Mentor',
+  Lecturer: 'Lecturer',
+  Admin: 'Admin'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
+
+export const RoleLabel: Record<Role, string> = {
+  [Role.User]: 'User',
+  [Role.Mentor]: 'Mentor',
+  [Role.Lecturer]: 'Lecturer',
+  [Role.Admin]: 'Admin'
+} as const
+
+export type RoleLabel = (typeof RoleLabel)[keyof typeof RoleLabel]
+
 export interface User {
   id: string
   email: string
@@ -8,7 +26,7 @@ export interface User {
   phoneNumber: string | null
   avatar: string | null
   coverImageUrl: string | null
-  role: string
+  role: Role
   address: string | null
   city: string | null
   originalCity: string | null
@@ -44,7 +62,7 @@ export interface UserDetail {
   timeZone: string | null
   avatar: string | null
   coverImageUrl: string | null
-  role: string
+  role: Role
   address: string | null
   city: string | null
   originalCity: string | null
