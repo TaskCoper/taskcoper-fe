@@ -6,11 +6,13 @@ import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useGetPublicCommissions } from '@/features/commissions/hooks/use-get-public-commissions'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
 import { useAuthStore } from '@/lib/zustand/auth.store'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import { cn, formatCurrency, getAvatarFallback } from '@/shared/utils'
+import type { Commission } from '@/types/commission.type'
 import {
   BellIcon,
   CircleCheckBigIcon,
@@ -46,6 +48,28 @@ export default function CommissionsPage() {
   const { org } = useGetOrg({ orgId: user?.OrganizationId })
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
+  const { publicCommissions, isLoadingPublicCommissions } = useGetPublicCommissions()
+
+  const getRankDetail = (titleLevel: string) => {
+    const validRanks = ['Bronze', 'Silver', 'Gold', 'Platinum']
+    const rankKey = validRanks.includes(titleLevel) ? titleLevel : 'default'
+    return {
+      description: t(`commissionPage.ranks.${rankKey}.description`),
+      subprice: t('commissionPage.revenueShare'),
+      cta: t(`commissionPage.ranks.${rankKey}.cta`, { rank: titleLevel }),
+      featuresTitle: t('commissionPage.featuresTitle')
+    }
+  }
+
+  const getRateRange = (commissions: Commission[]) => {
+    if (!commissions || commissions.length === 0) return '0%'
+    const rates = commissions.map((c) => c.rate)
+    const min = Math.min(...rates) * 100
+    const max = Math.max(...rates) * 100
+    if (min === max) return `${min.toFixed(0)}%`
+    return `${min.toFixed(0)}% - ${max.toFixed(0)}%`
+  }
+
   return (
     <div className='min-h-screen flex flex-col bg-dot'>
       <div className='fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background to-background/70'>
@@ -72,6 +96,7 @@ export default function CommissionsPage() {
             <div className='hidden lg:flex items-center gap-2'>
               {navigations.map((navigation) => {
                 const isActive = location.pathname === navigation.url
+
                 return (
                   <Button
                     key={navigation.id}
@@ -184,114 +209,77 @@ export default function CommissionsPage() {
 
       <main className='flex-1 pt-14'>
         <div className='px-4 py-4 relative'>
-          <div className='flex flex-col justify-center items-center gap-4 my-16 max-w-7xl mx-auto'>
-            <p className='text-6xl font-extrabold'>Plans for every stage</p>
-            <p className='text-muted-foreground'>
-              Clear pricing that scales. Every plan supports unlimited applications.
-            </p>
+          <div className='flex flex-col justify-center items-center gap-4 my-16 max-w-7xl mx-auto text-center'>
+            <p className='text-5xl sm:text-6xl font-extrabold'>{t('commissionPage.title')}</p>
+            <p className='text-muted-foreground max-w-2xl'>{t('commissionPage.subtitle')}</p>
           </div>
 
           <div className='relative grid grid-cols-12 gap-4 max-w-7xl mx-auto'>
-            {[
-              {
-                id: 'starter',
-                name: 'Starter',
-                price: 'Free',
-                subprice: 'No credit card required',
-                description: 'Perfect for exploring the platform and publishing your first commissions.',
-                cta: 'Get started',
-                featuresTitle: 'Included in Starter:',
-                features: [
-                  'Publish up to 3 commissions',
-                  'Unlimited applications',
-                  'Basic analytics',
-                  'Email notifications',
-                  'Community support'
-                ]
-              },
-              {
-                id: 'creator',
-                name: 'Creator',
-                price: '$19',
-                subprice: 'per month',
-                description: 'For active mentors who want to grow and manage a steady pipeline.',
-                cta: 'Start Creator',
-                featuresTitle: 'Everything in Starter, plus:',
-                features: [
-                  'Unlimited commissions',
-                  'Priority listing boost',
-                  'Advanced analytics',
-                  'Custom FAQ section',
-                  'Faster payouts'
-                ]
-              },
-              {
-                id: 'pro',
-                name: 'Pro',
-                price: '$49',
-                subprice: 'per month',
-                description: 'Designed for teams and organizations running multiple programs.',
-                cta: 'Go Pro',
-                featuresTitle: 'Everything in Creator, plus:',
-                features: [
-                  'Team seats (up to 5)',
-                  'Shared inbox',
-                  'Role-based access',
-                  'SLA support',
-                  'Branded landing page'
-                ]
-              },
-              {
-                id: 'enterprise',
-                name: 'Enterprise',
-                price: 'Custom',
-                subprice: 'Talk to sales',
-                description: 'Security, compliance, and tailored workflows for large orgs.',
-                cta: 'Contact sales',
-                featuresTitle: 'Enterprise includes:',
-                features: [
-                  'SSO & SAML',
-                  'Custom contracts & invoicing',
-                  'Dedicated success manager',
-                  'Audit logs',
-                  'Custom integrations'
-                ]
-              }
-            ].map((plan) => (
-              <Card key={plan.id} className={cn('col-span-12 sm:col-span-6 lg:col-span-3 rounded-xl p-1 gap-0')}>
-                <Card
-                  className={cn('rounded-lg p-3 gap-0', 'bg-background/30 backdrop-blur-md border border-border/30')}
-                >
-                  <div className='space-y-3'>
-                    <p className='text-lg font-semibold'>{plan.name}</p>
-
-                    <div className='space-y-1'>
-                      <p className='text-3xl font-bold tracking-tight'>{plan.price}</p>
-                      <p className='text-xs text-muted-foreground'>{plan.subprice}</p>
-                    </div>
-
-                    <p className='text-sm text-foreground/80 leading-relaxed'>{plan.description}</p>
-
-                    <Button className='w-full' size='sm'>
-                      {plan.cta}
-                    </Button>
+            {isLoadingPublicCommissions
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className='col-span-12 sm:col-span-6 lg:col-span-3'>
+                    <Skeleton className='h-96 w-full rounded-xl' />
                   </div>
-                </Card>
+                ))
+              : publicCommissions.value.items.map((rank) => {
+                  const details = getRankDetail(rank.titleLevel)
+                  const priceRange = getRateRange(rank.commissions)
 
-                <div className='space-y-3 p-4'>
-                  <p className='text-sm font-medium'>{plan.featuresTitle}</p>
+                  return (
+                    <Card
+                      key={rank.titleLevel}
+                      className={cn('col-span-12 sm:col-span-6 lg:col-span-3 rounded-xl p-1 gap-0')}
+                    >
+                      <Card
+                        className={cn(
+                          'rounded-lg p-3 gap-0',
+                          'bg-background/30 backdrop-blur-md border border-border/30'
+                        )}
+                      >
+                        <div className='space-y-3'>
+                          <p className='text-lg font-semibold'>{rank.titleLevel}</p>
 
-                  <div className='space-y-2'>
-                    {plan.features.map((feature) => (
-                      <div key={feature} className='flex items-start gap-2'>
-                        <CircleCheckBigIcon className='size-3 shrink-0 mt-0.5 text-foreground/80' />
-                        <p className='text-xs text-foreground/80 leading-relaxed'>{feature}</p>
+                          <div className='space-y-1'>
+                            <p className='text-3xl font-bold tracking-tight'>{priceRange}</p>
+                            <p className='text-xs text-muted-foreground'>{details.subprice}</p>
+                          </div>
+
+                          <p className='text-sm text-foreground/80 leading-relaxed'>{details.description}</p>
+
+                          <Link to='/applications/submit'>
+                            <Button className='w-full' size='sm'>
+                              {details.cta}
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card>
+
+                      <div className='space-y-3 p-4'>
+                        <p className='text-sm font-medium'>{details.featuresTitle}</p>
+
+                        <div className='space-y-2'>
+                          {rank.commissions.map((c) => (
+                            <div key={c.commissionId} className='flex items-start gap-2'>
+                              <CircleCheckBigIcon className='size-3 shrink-0 mt-0.5 text-foreground/80' />
+                              <div className='text-xs text-foreground/80 leading-relaxed'>
+                                <p>
+                                  {c.minAmount === 0
+                                    ? t('commissionPage.upTo')
+                                    : `${formatCurrency(c.minAmount, 'Vnd')} - `}
+                                  {c.maxAmount ? formatCurrency(c.maxAmount, 'Vnd') : t('commissionPage.unlimited')}
+                                </p>
+                                <p className='font-semibold text-primary mt-0.5'>
+                                  {t('commissionPage.earn')}
+                                  {(c.rate * 100).toFixed(0)}%
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-            ))}
+                    </Card>
+                  )
+                })}
           </div>
         </div>
       </main>

@@ -28,7 +28,7 @@ export default function BecomeMentorWidget() {
 
   return (
     <div className='fixed bottom-4 left-4 right-4 z-50 mx-auto w-auto sm:left-auto sm:right-4 sm:mx-0 sm:w-80 animate-in fade-in slide-in-from-bottom-4 duration-500'>
-      <div className='relative overflow-hidden border-2 border-white p-4 sm:p-3 shadow-2xl bg-linear-to-br from-primary/90 via-teal-600/80 to-emerald-600/80 backdrop-blur-md flex flex-col gap-3 sm:gap-4'>
+      <div className='relative overflow-hidden border-2 border-white p-4 sm:p-3 shadow-2xl bg-linear-to-br from-primary/90 via-teal-600/80 to-emerald-600/80 backdrop-blur-md flex flex-col gap-3 sm:gap-4 rounded-xl'>
         <div className='absolute inset-0 bg-linear-to-tr from-white/5 to-transparent pointer-events-none' />
 
         <div className='relative flex items-start gap-3'>

@@ -2453,12 +2453,7 @@
     "bronze": "Bronze",
     "silver": "Silver",
     "gold": "Gold",
-    "platinum": "Platinum",
-    "diamond": "Diamond",
-    "master": "Master",
-    "grandMaster": "Grand Master",
-    "legendary": "Legendary",
-    "mythic": "Mythic"
+    "platinum": "Platinum"
   },
   "purchaseHistory": {
     "title": "Purchased Packages",
@@ -2541,6 +2536,37 @@
         "title": "Update README",
         "description": "Update your detailed mentor profile description.",
         "label": "Description"
+      }
+    }
+  },
+  "commissionPage": {
+    "title": "Mentor Ranks & Rewards",
+    "subtitle": "Level up your mentorship journey. Higher ranks unlock better revenue shares as your earnings grow on the platform.",
+    "revenueShare": "revenue share",
+    "featuresTitle": "Revenue Share:",
+    "upTo": "Up to ",
+    "unlimited": "Unlimited",
+    "earn": "Earn ",
+    "ranks": {
+      "Bronze": {
+        "description": "Perfect for exploring the platform and starting your mentorship journey.",
+        "cta": "Become a Bronze Mentor"
+      },
+      "Silver": {
+        "description": "For active mentors who want to grow and manage a steady pipeline.",
+        "cta": "Aim for Silver"
+      },
+      "Gold": {
+        "description": "Designed for highly experienced mentors running multiple programs.",
+        "cta": "Go for Gold"
+      },
+      "Platinum": {
+        "description": "Security, compliance, and tailored workflows for top-tier mentors.",
+        "cta": "Reach Platinum"
+      },
+      "default": {
+        "description": "Unlock exclusive benefits and higher revenue share as you level up.",
+        "cta": "Reach {{rank}}"
       }
     }
   }
