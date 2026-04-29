@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import { getUserType } from '@/shared/utils'
@@ -17,7 +16,11 @@ export default function BecomeMentorWidget() {
 
   const userType = getUserType(me)
   const isMentor = me?.role?.toLowerCase() === 'mentor'
-  const isAtRoute = pathname.startsWith('/applications')
+  const isAtRoute =
+    pathname.startsWith('/applications') ||
+    pathname.startsWith('/commissions') ||
+    pathname.startsWith('/sign-in') ||
+    pathname.startsWith('/sign-up')
 
   if (!me || userType !== 'user' || isGettingMe || isMentor || isDismissed() || isAtRoute) {
     return null
@@ -25,7 +28,7 @@ export default function BecomeMentorWidget() {
 
   return (
     <div className='fixed bottom-4 left-4 right-4 z-50 mx-auto w-auto sm:left-auto sm:right-4 sm:mx-0 sm:w-80 animate-in fade-in slide-in-from-bottom-4 duration-500'>
-      <Card className='relative overflow-hidden border-2 border-white p-4 sm:p-3 shadow-2xl bg-linear-to-br from-primary/90 via-teal-600/80 to-emerald-600/80 backdrop-blur-md flex flex-col gap-3 sm:gap-4'>
+      <div className='relative overflow-hidden border-2 border-white p-4 sm:p-3 shadow-2xl bg-linear-to-br from-primary/90 via-teal-600/80 to-emerald-600/80 backdrop-blur-md flex flex-col gap-3 sm:gap-4 rounded-xl'>
         <div className='absolute inset-0 bg-linear-to-tr from-white/5 to-transparent pointer-events-none' />
 
         <div className='relative flex items-start gap-3'>
@@ -54,11 +57,11 @@ export default function BecomeMentorWidget() {
         <Button
           size='default'
           className='w-full bg-white text-teal-700 hover:bg-slate-50 font-bold shadow-lg shadow-black/10 transition-all active:scale-[0.98] border-0 h-10 sm:h-9'
-          onClick={() => navigate('/applications/submit')}
+          onClick={() => navigate('/commissions')}
         >
           {t('mentorApplication.widget.applyNow')}
         </Button>
-      </Card>
+      </div>
     </div>
   )
 }

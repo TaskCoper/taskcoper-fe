@@ -39,6 +39,12 @@ class CommissionService {
     return data
   }
 
+  getPublicCommissions = async () => {
+    const { data } = await api.get<BasePaginationResponse<CommissionRow>>(`/v1/${this.baseUrl}/public`)
+
+    return data
+  }
+
   updateCommission = async ({ body }: { body: UpdateCommissionFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
       ...body,

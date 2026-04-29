@@ -6,17 +6,7 @@ import { type CommissionRow } from '@/types/commission.type'
 import { MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
-import {
-  AwardIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  CrownIcon,
-  FlameIcon,
-  GemIcon,
-  ShieldIcon,
-  SparklesIcon,
-  ZapIcon
-} from 'lucide-react'
+import { AwardIcon, ChevronDownIcon, ChevronRightIcon, GemIcon, ShieldIcon } from 'lucide-react'
 
 export const getColumns = (): ColumnDef<CommissionRow>[] => {
   return [
@@ -65,31 +55,31 @@ export const getColumns = (): ColumnDef<CommissionRow>[] => {
                 icon: <GemIcon className='size-3' />,
                 className: 'bg-teal-100 text-teal-700 border-teal-200'
               }
-            case MentorTitle.DIAMOND:
-              return {
-                icon: <GemIcon className='size-3' />,
-                className: 'bg-sky-100 text-sky-700 border-sky-200'
-              }
-            case MentorTitle.MASTER:
-              return {
-                icon: <ZapIcon className='size-3' />,
-                className: 'bg-purple-100 text-purple-700 border-purple-200'
-              }
-            case MentorTitle.GRANDMASTER:
-              return {
-                icon: <CrownIcon className='size-3' />,
-                className: 'bg-pink-100 text-pink-700 border-pink-200'
-              }
-            case MentorTitle.LEGENDARY:
-              return {
-                icon: <FlameIcon className='size-3' />,
-                className: 'bg-red-100 text-red-700 border-red-200'
-              }
-            case MentorTitle.MYTHIC:
-              return {
-                icon: <SparklesIcon className='size-3' />,
-                className: 'bg-indigo-100 text-indigo-700 border-indigo-200'
-              }
+            // case MentorTitle.DIAMOND:
+            //   return {
+            //     icon: <GemIcon className='size-3' />,
+            //     className: 'bg-sky-100 text-sky-700 border-sky-200'
+            //   }
+            // case MentorTitle.MASTER:
+            //   return {
+            //     icon: <ZapIcon className='size-3' />,
+            //     className: 'bg-purple-100 text-purple-700 border-purple-200'
+            //   }
+            // case MentorTitle.GRANDMASTER:
+            //   return {
+            //     icon: <CrownIcon className='size-3' />,
+            //     className: 'bg-pink-100 text-pink-700 border-pink-200'
+            //   }
+            // case MentorTitle.LEGENDARY:
+            //   return {
+            //     icon: <FlameIcon className='size-3' />,
+            //     className: 'bg-red-100 text-red-700 border-red-200'
+            //   }
+            // case MentorTitle.MYTHIC:
+            //   return {
+            //     icon: <SparklesIcon className='size-3' />,
+            //     className: 'bg-indigo-100 text-indigo-700 border-indigo-200'
+            //   }
             default:
               return { icon: null, className: '' }
           }

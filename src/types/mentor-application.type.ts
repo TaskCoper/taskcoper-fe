@@ -22,12 +22,12 @@ export const MentorTitle = {
   BRONZE: 'Bronze',
   SILVER: 'Silver',
   GOLD: 'Gold',
-  PLATINUM: 'Platinum',
-  DIAMOND: 'Diamond',
-  MASTER: 'Master',
-  GRANDMASTER: 'GrandMaster',
-  LEGENDARY: 'Legendary',
-  MYTHIC: 'Mythic'
+  PLATINUM: 'Platinum'
+  // DIAMOND: 'Diamond',
+  // MASTER: 'Master',
+  // GRANDMASTER: 'GrandMaster',
+  // LEGENDARY: 'Legendary',
+  // MYTHIC: 'Mythic'
 } as const
 
 export type MentorTitle = (typeof MentorTitle)[keyof typeof MentorTitle]
@@ -36,12 +36,12 @@ export const MentorTitleLabel = {
   [MentorTitle.BRONZE]: 'mentorTitle.bronze',
   [MentorTitle.SILVER]: 'mentorTitle.silver',
   [MentorTitle.GOLD]: 'mentorTitle.gold',
-  [MentorTitle.PLATINUM]: 'mentorTitle.platinum',
-  [MentorTitle.DIAMOND]: 'mentorTitle.diamond',
-  [MentorTitle.MASTER]: 'mentorTitle.master',
-  [MentorTitle.GRANDMASTER]: 'mentorTitle.grandMaster',
-  [MentorTitle.LEGENDARY]: 'mentorTitle.legendary',
-  [MentorTitle.MYTHIC]: 'mentorTitle.mythic'
+  [MentorTitle.PLATINUM]: 'mentorTitle.platinum'
+  // [MentorTitle.DIAMOND]: 'mentorTitle.diamond',
+  // [MentorTitle.MASTER]: 'mentorTitle.master',
+  // [MentorTitle.GRANDMASTER]: 'mentorTitle.grandMaster',
+  // [MentorTitle.LEGENDARY]: 'mentorTitle.legendary',
+  // [MentorTitle.MYTHIC]: 'mentorTitle.mythic'
 } as const
 
 export type MentorTitleLabel = (typeof MentorTitleLabel)[keyof typeof MentorTitleLabel]

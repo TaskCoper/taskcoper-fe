@@ -2453,12 +2453,7 @@
     "bronze": "Đồng",
     "silver": "Bạc",
     "gold": "Vàng",
-    "platinum": "Bạch kim",
-    "diamond": "Kim cương",
-    "master": "Cao thủ",
-    "grandMaster": "Đại cao thủ",
-    "legendary": "Huyền thoại",
-    "mythic": "Thần thoại"
+    "platinum": "Bạch kim"
   },
   "purchaseHistory": {
     "title": "Gói Mentor Đã Mua",
@@ -2541,6 +2536,37 @@
         "title": "Cập nhật README",
         "description": "Cập nhật thông tin chi tiết cho hồ sơ chuyên gia của bạn.",
         "label": "Mô tả"
+      }
+    }
+  },
+  "commissionPage": {
+    "title": "Cấp Bậc & Phần Thưởng Mentor",
+    "subtitle": "Thăng tiến trên hành trình mentor của bạn. Các cấp bậc cao hơn mở khóa tỷ lệ chia sẻ doanh thu tốt hơn khi thu nhập của bạn tăng lên.",
+    "revenueShare": "chia sẻ doanh thu",
+    "featuresTitle": "Chia Sẻ Doanh Thu:",
+    "upTo": "Lên đến ",
+    "unlimited": "Không giới hạn",
+    "earn": "Nhận ",
+    "ranks": {
+      "Bronze": {
+        "description": "Hoàn hảo để khám phá nền tảng và bắt đầu hành trình mentor của bạn.",
+        "cta": "Trở thành Mentor Đồng"
+      },
+      "Silver": {
+        "description": "Dành cho mentor năng nổ muốn xây dựng và quản lý tệp khách hàng ổn định.",
+        "cta": "Hướng tới Bạc"
+      },
+      "Gold": {
+        "description": "Được thiết kế cho các mentor giàu kinh nghiệm điều hành nhiều chương trình.",
+        "cta": "Vươn tới Vàng"
+      },
+      "Platinum": {
+        "description": "Bảo mật, tuân thủ và quy trình làm việc được tinh chỉnh cho các mentor hàng đầu.",
+        "cta": "Đạt mức Bạch Kim"
+      },
+      "default": {
+        "description": "Mở khóa các lợi ích độc quyền và tỷ lệ chia sẻ doanh thu cao hơn khi bạn thăng cấp.",
+        "cta": "Đạt mức {{rank}}"
       }
     }
   }
