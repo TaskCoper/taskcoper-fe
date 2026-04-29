@@ -743,7 +743,7 @@
       },
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
-      "myCalendar": "Lịch của tôi",
+      "myCalendar": "Lịch",
       "applicationHistory": "Lịch sử gửi đơn",
       "performance": "Hiệu suất",
       "noPendingTasks": "Tuyệt vời! Bạn không có công việc nào đang chờ"
@@ -2456,8 +2456,8 @@
     "platinum": "Bạch kim"
   },
   "purchaseHistory": {
-    "title": "Gói Mentor Đã Mua",
-    "description": "Quản lý các gói mentor và buổi hẹn của bạn",
+    "title": "Gói đã mua",
+    "description": "Quản lý các gói đã mua của bạn.",
     "meetingsCount": "{{booked}}/{{total}} buổi hẹn",
     "price": "Giá",
     "duration": "Thời lượng",

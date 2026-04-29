@@ -743,7 +743,7 @@
       },
       "settings": "Settings",
       "myProjects": "My Projects",
-      "myCalendar": "My Calendar",
+      "myCalendar": "Calendar",
       "applicationHistory": "Application History",
       "performance": "Performance",
       "noPendingTasks": "Yay! You have no pending tasks"
@@ -2457,7 +2457,7 @@
   },
   "purchaseHistory": {
     "title": "Purchased Packages",
-    "description": "Manage your purchased packages and sessions",
+    "description": "Manage your purchased packages.",
     "meetingsCount": "{{booked}}/{{total}} sessions",
     "price": "Price",
     "duration": "Duration",

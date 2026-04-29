@@ -2,9 +2,9 @@
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import ProjectDetailLayout from '@/layouts/project-detail.layout'
 import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.layout'
-import ProjectsLayout from '@/layouts/projects.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
+import UserWorkspaceLayout from '@/layouts/user-workspace.layout'
 import { lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
@@ -91,7 +91,7 @@ export const userRoutes: RouteObject[] = [
                 element: <SettingsPage />
               },
               {
-                element: <ProjectsLayout />,
+                element: <UserWorkspaceLayout />,
                 children: [
                   {
                     path: 'projects',

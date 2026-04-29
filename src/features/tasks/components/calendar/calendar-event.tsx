@@ -56,7 +56,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
       <div
         className={cn(
           'flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-xs truncate cursor-pointer',
-          'hover:bg-accent/80 hover:scale-101 transition-colors',
+          'hover:bg-accent/80 hover:scale-[1.01] transition-colors',
           className
         )}
         title={`${title}\n${timeString}\nw/ ${displayName}`}
@@ -79,7 +79,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
     <div
       className={cn(
         'absolute rounded-md overflow-hidden cursor-pointer group transition-all',
-        'border-l-4 hover:scale-[1.02] hover:z-10',
+        'border-l-4 hover:scale-[1.01] hover:z-10',
         theme.block,
         isCompact ? 'flex items-center px-1.5 gap-1.5' : 'flex flex-col px-2 py-1.5',
         className

@@ -1,4 +1,4 @@
-import NavUser from '@/components/sidebar/users/nav-user'
+import NavUser from '@/components/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
