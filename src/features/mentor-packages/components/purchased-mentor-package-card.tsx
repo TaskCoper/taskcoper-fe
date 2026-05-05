@@ -2,7 +2,7 @@ import { Progress } from '@/components/ui/progress'
 import { MeetingStatus } from '@/types/meeting.type'
 import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
 import { format } from 'date-fns'
-import { ClockIcon, FolderIcon } from 'lucide-react'
+import { AlertCircleIcon, ClockIcon, FolderIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface PurchasedMentorPackageCardProps {
@@ -23,12 +23,17 @@ export default function PurchasedMentorPackageCard({
 
   return (
     <div className='space-y-3'>
-      <div className='h-36 w-full'>
+      <div className='h-36 w-full relative'>
         <img
           src={mentorPackage.coverImageUrl ?? ''}
           alt={mentorPackage.name}
           className='w-full h-full object-cover transition duration-300 hover:brightness-80'
         />
+        {mentorPackage.isNeedFeedback ? (
+          <div className='absolute top-1.5 right-1.5 bg-orange-500 text-white text-xs font-bold p-1 rounded-sm'>
+            <AlertCircleIcon className='size-5' />
+          </div>
+        ) : null}
       </div>
 
       <div>

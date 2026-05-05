@@ -40,6 +40,7 @@ const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page')
 
 const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
 const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
+const PackageFeedbackPage = lazy(() => import('@/pages/users/package-feedback.page'))
 
 const MentorVouchersPage = lazy(() => import('@/pages/users/mentor-vouchers.page'))
 const MentorVoucherPage = lazy(() => import('@/pages/users/mentor-voucher.page'))
@@ -79,9 +80,14 @@ export const userRoutes: RouteObject[] = [
             path: 'payments/checkout',
             element: <CheckoutPage />
           },
+
           {
             element: <UserDefaultLayout />,
             children: [
+              {
+                path: 'purchases/:packageId/feedback',
+                element: <PackageFeedbackPage />
+              },
               {
                 path: 'users/:userIdentifier',
                 element: <ProfilePage />
@@ -114,15 +120,21 @@ export const userRoutes: RouteObject[] = [
                     element: <PurchaseHistoryPage />
                   },
                   {
-                    path: 'purchases/packages/:packageId',
-                    element: <PurchasedPackagePage />
+                    path: 'purchases/:packageId',
+                    element: <PurchasedPackagePage />,
+                    children: [
+                      {
+                        path: 'meetings/:meetingId',
+                        element: <MeetingDialogPage />
+                      }
+                    ]
                   },
                   {
                     path: 'calendar',
                     element: <CalendarPage />,
                     children: [
                       {
-                        path: 'meetings/:meetingId',
+                        path: ':meetingId',
                         element: <MeetingDialogPage />
                       }
                     ]
@@ -223,7 +235,7 @@ export const userRoutes: RouteObject[] = [
                         element: <ProjectCalendarPage />,
                         children: [
                           {
-                            path: 'meetings/:meetingId',
+                            path: ':meetingId',
                             element: <MeetingDialogPage />
                           }
                         ]

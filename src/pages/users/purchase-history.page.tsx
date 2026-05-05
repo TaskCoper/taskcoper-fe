@@ -41,7 +41,7 @@ export default function PurchaseHistoryPage() {
             <div className='grid grid-cols-12 gap-6'>
               {purchasedMentorPackages.value.items.map((pkg) => (
                 <div key={pkg.packageBookingId} className={responsiveColSpan}>
-                  <Link to={`packages/${pkg.packageBookingId}`}>
+                  <Link to={`${pkg.packageBookingId}`}>
                     <PurchasedMentorPackageCard mentorPackage={pkg} />
                   </Link>
                 </div>

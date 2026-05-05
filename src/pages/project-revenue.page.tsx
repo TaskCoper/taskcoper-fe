@@ -15,7 +15,7 @@ export default function ProjectRevenuePage() {
     <div className='p-6 space-y-6'>
       <div className='flex justify-between items-center gap-4'>
         <div>
-          <p className='text-2xl font-bold tracking-tight'>{t('project.sidebar.revenuePage.title')}</p>
+          <p className='text-2xl font-bold'>{t('project.sidebar.revenuePage.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('project.sidebar.revenuePage.description')}</p>
         </div>
 

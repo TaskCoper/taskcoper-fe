@@ -230,11 +230,10 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='voucher.redemption.column.redeemedAt' />,
       cell: ({ row }) => {
         const formatStr = i18next.t('voucher.column.dateFormat')
-        const finalFormatStr = formatStr === 'voucher.column.dateFormat' ? 'dd/MM/yyyy HH:mm' : formatStr
 
         return (
           <div>
-            {format(new Date(row.original.createdOnUtc), finalFormatStr, {
+            {format(new Date(row.original.createdOnUtc), formatStr, {
               locale: vi
             })}
           </div>

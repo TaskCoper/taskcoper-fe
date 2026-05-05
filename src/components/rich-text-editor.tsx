@@ -581,7 +581,7 @@ export default function RichTextEditor({
           </div>
         </EditorContext.Provider>
 
-        <div className='min-h-4'>{invalid && error && <FieldError className='text-xs' errors={[error]} />}</div>
+        {invalid && error && <div className='min-h-4'>{<FieldError className='text-xs' errors={[error]} />}</div>}
       </div>
     )
   }

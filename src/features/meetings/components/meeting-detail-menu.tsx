@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { MeetingStatus } from '@/types/meeting.type'
 import type { SectionPermission } from '@/types/project-permission.type'
@@ -10,7 +9,6 @@ import { differenceInHours } from 'date-fns'
 import { CalendarClockIcon, ChevronLeftIcon, InfoIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
 import { useCancelMeeting } from '../hooks/use-cancel-meeting'
 
 interface MeetingDetailMenuProps {
@@ -44,9 +42,6 @@ export default function MeetingDetailMenu({
   const [reason, setReason] = useState('')
 
   const { cancelMeeting, isCancellingMeeting } = useCancelMeeting({ mentorId, packageId })
-  const { identifier } = useParams<{ identifier: string }>()
-
-  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
 
   const handleCancelMeeting = () => {
     if (!reason.trim()) return
@@ -76,21 +71,21 @@ export default function MeetingDetailMenu({
 
   const canAction = status === MeetingStatus.BOOKED && !isWithinHours
 
-  const canReschedule = identifier
-    ? canAction && check('CALENDAR', 'canUpdate', 'canRescheduleMeeting')
-    : canAction &&
+  const canReschedule = calendarPermission
+    ? canAction &&
       calendarPermission?.canUpdate &&
       (typeof calendarPermission.extensions === 'string'
         ? JSON.parse(calendarPermission.extensions).canUpdate.canRescheduleMeeting
         : calendarPermission.extensions?.canUpdate.canRescheduleMeeting)
+    : canAction
 
-  const canCancel = identifier
-    ? canAction && check('CALENDAR', 'canDelete', 'canCancelMeeting')
-    : canAction &&
+  const canCancel = calendarPermission
+    ? canAction &&
       calendarPermission?.canDelete &&
       (typeof calendarPermission.extensions === 'string'
         ? JSON.parse(calendarPermission.extensions).canDelete.canCancelMeeting
         : calendarPermission.extensions?.canDelete.canCancelMeeting)
+    : canAction
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>

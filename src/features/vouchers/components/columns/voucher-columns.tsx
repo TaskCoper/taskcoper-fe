@@ -53,7 +53,7 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       meta: { label: 'voucher.column.name' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='voucher.column.name' />,
       cell: ({ row }) => (
-        <p className='max-w-[200px] truncate' title={row.original.name}>
+        <p className='max-w-50 truncate' title={row.original.name}>
           {row.original.name}
         </p>
       ),
@@ -171,7 +171,9 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       cell: ({ row }) => {
         const { scope, targets } = row.original
         if (scope === Scope.AllTargets) {
-          return <p className='text-center font-medium text-muted-foreground'>All</p>
+          return (
+            <p className='text-center font-medium text-muted-foreground'>{i18next.t('voucher.scope.allTargets')}</p>
+          )
         }
 
         return (
@@ -196,7 +198,7 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
                 </Link>
               ))
             ) : (
-              <p className='text-center text-xs text-muted-foreground'>None</p>
+              <p className='text-center text-xs text-muted-foreground'>{i18next.t('voucher.column.none')}</p>
             )}
           </div>
         )
@@ -244,9 +246,10 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       ),
       cell: ({ row }) => {
         const locale = i18next.language === 'vi' ? vi : enUS
+        const dateFormat = i18next.t('voucher.column.dateFormat')
         return (
           <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.startsAtUtc), 'dd/MM/yyyy HH:mm', { locale })}
+            {format(new Date(row.original.startsAtUtc), dateFormat, { locale })}
           </p>
         )
       },
@@ -262,9 +265,10 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       ),
       cell: ({ row }) => {
         const locale = i18next.language === 'vi' ? vi : enUS
+        const dateFormat = i18next.t('voucher.column.dateFormat')
         return (
           <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.endsAtUtc), 'dd/MM/yyyy HH:mm', { locale })}
+            {format(new Date(row.original.endsAtUtc), dateFormat, { locale })}
           </p>
         )
       },
@@ -280,9 +284,10 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       ),
       cell: ({ row }) => {
         const locale = i18next.language === 'vi' ? vi : enUS
+        const dateFormat = i18next.t('voucher.column.dateFormat')
         return (
           <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.createdOnUtc), 'dd/MM/yyyy HH:mm', { locale })}
+            {format(new Date(row.original.createdOnUtc), dateFormat, { locale })}
           </p>
         )
       },
@@ -308,14 +313,14 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
                 onClick={async () => {
                   try {
                     await navigator.clipboard.writeText(code)
-                    toast.success('Copied code to clipboard')
+                    toast.success(i18next.t('voucher.toast.copySuccess'))
                   } catch {
-                    toast.error('Failed to copy code')
+                    toast.error(i18next.t('voucher.toast.copyFailed'))
                   }
                 }}
               >
                 <CopyIcon />
-                Copy Code
+                {i18next.t('voucher.action.copyCode')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete({ voucherId: row.original.id, voucherCode: row.original.code })}
@@ -323,7 +328,7 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
                 className='focus:text-destructive'
               >
                 <Trash2Icon className='focus:text-destructive' />
-                Delete
+                {i18next.t('voucher.action.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -187,7 +187,7 @@ export default function MeetingDialogPage() {
               <span>
                 {t('meeting.detail.session', { sequence: meeting.packageSequence })} -{' '}
                 <Link
-                  to={`/purchases/packages/${meeting.packageBookingId}`}
+                  to={`/purchases/${meeting.packageBookingId}`}
                   className='hover:text-white/80 transition-colors underline-offset-4'
                 >
                   {meeting.packageName}
@@ -366,7 +366,7 @@ export default function MeetingDialogPage() {
                       </div>
 
                       <Link
-                        to={`/purchases/packages/${meeting?.packageBookingId}`}
+                        to={`/purchases/${meeting?.packageBookingId}`}
                         className='hover:text-primary hover:underline w-[60%] text-right'
                       >
                         <p className='text-xs font-semibold truncate'>{meeting?.packageName}</p>

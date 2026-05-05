@@ -179,7 +179,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
       cell: ({ row }) => (
         <div className='flex items-center gap-2'>
           <Wallet className='size-4 text-muted-foreground/80' />
-          <p className='text-sm'>{row.original.gatewayName || '—'}</p>
+          <p className='text-sm'>{row.original.gatewayName || i18next.t('common.ui.emptyValue')}</p>
         </div>
       ),
       enableSorting: false,
@@ -192,7 +192,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='transactions.column.createdDate' />,
       cell: ({ row }) => (
         <p className='text-muted-foreground'>
-          {format(new Date(row.original.createdOnUtc), 'dd/MM/yyyy HH:mm', {
+          {format(new Date(row.original.createdOnUtc), i18next.t('transactions.column.dateFormat'), {
             locale: i18next.language === 'vi' ? vi : enUS
           })}
         </p>

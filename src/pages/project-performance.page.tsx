@@ -361,7 +361,7 @@ export default function ProjectPerformancePage() {
     <div className='overflow-auto'>
       <div className='max-w-7xl h-full mx-auto p-6 space-y-6 pb-20'>
         <div>
-          <p className='text-2xl font-bold tracking-tight'>{t('projectPerformance.title')}</p>
+          <p className='text-2xl font-bold'>{t('projectPerformance.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
         </div>
 

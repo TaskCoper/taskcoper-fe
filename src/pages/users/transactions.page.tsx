@@ -7,7 +7,7 @@ export default function TransactionsPage() {
     <div className='mx-auto p-6 space-y-6'>
       <div className='flex justify-between items-center gap-4'>
         <div>
-          <p className='text-2xl font-bold tracking-tight'>{t('transactions.title')}</p>
+          <p className='text-2xl font-bold'>{t('transactions.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('transactions.description')}</p>
         </div>
       </div>

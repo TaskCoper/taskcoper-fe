@@ -40,7 +40,7 @@ function StatusCard({ status }: { status: Status }) {
       <div className={cn('flex size-24 items-center justify-center rounded-full', iconBg)}>{icon}</div>
 
       <div className='flex flex-col gap-2'>
-        <h2 className='text-2xl font-bold tracking-tight'>{title}</h2>
+        <h2 className='text-2xl font-bold'>{title}</h2>
         <p className='max-w-xs text-sm text-muted-foreground'>{description}</p>
       </div>
 

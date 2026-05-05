@@ -212,7 +212,7 @@ export default function ProjectMemberPage() {
           </Avatar>
 
           <div className='-space-y-1'>
-            <p className='text-2xl font-bold tracking-tight'>
+            <p className='text-2xl font-bold'>
               {user?.firstName} {user?.lastName}
             </p>
             <p className='text-muted-foreground'>{user?.email}</p>

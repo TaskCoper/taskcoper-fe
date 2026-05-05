@@ -46,7 +46,7 @@ export default function ProjectSettingsPage() {
       >
         <div className='bg-muted/50 px-6 pt-6 space-y-6 border-b'>
           <div>
-            <h1 className='text-2xl font-bold tracking-tight'>{project?.name}</h1>
+            <h1 className='text-2xl font-bold'>{project?.name}</h1>
             <p className='text-sm text-muted-foreground'>{t('project.settings.description')}</p>
           </div>
 

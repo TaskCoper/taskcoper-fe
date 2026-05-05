@@ -190,7 +190,7 @@ export default function BookMeetingFromCalendarDialog({
                   })}
                 </p>
 
-                <Link to={`meetings/${upcomingMeeting.meetingId}`}>
+                <Link to={`${upcomingMeeting.meetingId}`}>
                   <Button size='sm' className='mt-4'>
                     <EyeIcon />
                     {t('purchasedPackage.viewMeeting')}

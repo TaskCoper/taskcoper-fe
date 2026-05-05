@@ -71,7 +71,7 @@ export default function UpdateProjectRoleForm() {
           ) : (
             <button
               type='button'
-              className='w-full rounded-sm text-left text-2xl font-bold tracking-tight hover:bg-muted cursor-text flex items-center gap-2'
+              className='w-full rounded-sm text-left text-2xl font-bold hover:bg-muted cursor-text flex items-center gap-2'
               {...nameTriggerProps}
             >
               <KeySquareIcon className='text-primary' />

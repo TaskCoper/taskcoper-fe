@@ -117,6 +117,7 @@
       "day": "Ngày",
       "today": "Hôm nay",
       "files": "tệp",
+      "emptyValue": "—",
       "openMenu": "Mở menu",
       "comingSoon": "Sắp ra mắt",
       "more": "+{{count}} nữa",
@@ -334,7 +335,15 @@
       "usageLimitPerUser": "Lượt dùng/người",
       "isStackable": "Có thể áp dụng cùng voucher khác",
       "createdOnUtc": "Ngày tạo",
-      "dateFormat": "dd/MM/yyyy HH:mm"
+      "dateFormat": "HH:mm dd/MM/yyyy"
+    },
+    "action": {
+      "copyCode": "Sao chép mã",
+      "delete": "Xóa"
+    },
+    "toast": {
+      "copySuccess": "Đã sao chép mã vào clipboard",
+      "copyFailed": "Không thể sao chép mã"
     },
     "field": {
       "name": "Tên Voucher",
@@ -475,7 +484,7 @@
     "createdBy": "Được tạo bởi",
     "purchasedOn": "Đã mua vào",
     "bookSchedule": "Đặt lịch",
-    "meetingSession": "Meeting buổi {{sequence}}",
+    "meetingSession": "Buổi {{sequence}}",
     "bookMeetingSession": "Đặt lịch hẹn cho buổi {{sequence}} ({{slots}} slot)",
     "confirmBooking": "Xác nhận đặt",
     "note": "Lưu ý:",
@@ -483,11 +492,17 @@
     "completedProgress": "Hoàn thành {{progress}}%",
     "meetButton": "Meet",
     "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm",
+    "purchasedOnDateFormat": "dd/MM/yyyy",
     "purchasedPackages": "Gói đã mua",
     "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
     "hasUpcomingMeeting": "Bạn đã có một lịch hẹn sắp tới",
     "upcomingMeetingNote": "Hoàn thành buổi gặp dự kiến vào {{date}} trước khi đặt buổi tiếp theo.",
-    "viewMeeting": "Xem lịch hẹn"
+    "viewMeeting": "Xem lịch hẹn",
+    "statusTooltip": "Trạng thái: {{status}}",
+    "feedbackTitle": "Đánh giá",
+    "feedbackDescription": "Tới lúc để lại đánh giá của bạn về gói này rồi đấy.",
+    "feedbackButton": "Đánh giá",
+    "noNoteAvailable": "Không có ghi chú"
   },
   "project": {
     "title": "Dự án của tôi",
@@ -2402,7 +2417,8 @@
       "paidDate": "Ngày thanh toán",
       "actions": "Hành động",
       "copyId": "Sao chép ID",
-      "viewDetails": "Xem chi tiết"
+      "viewDetails": "Xem chi tiết",
+      "dateFormat": "HH:mm dd/MM/yyyy"
     },
     "status": {
       "pending": "Đang chờ",
@@ -2566,6 +2582,79 @@
       "default": {
         "description": "Mở khóa các lợi ích độc quyền và tỷ lệ chia sẻ doanh thu cao hơn khi bạn thăng cấp.",
         "cta": "Đạt mức {{rank}}"
+      }
+    }
+  },
+  "packageFeedback": {
+    "title": "Đánh giá",
+    "description": "Chia sẻ trải nghiệm của bạn để giúp mentor cải thiện các buổi gặp sau.",
+    "noteLabel": "Ghi chú thêm",
+    "notePlaceholder": "Chia sẻ thêm bối cảnh hoặc nhận xét...",
+    "submitButton": "Gửi đánh giá",
+    "validation": {
+      "ratingRequired": "Vui lòng chọn mức đánh giá.",
+      "noteMax": "Ghi chú tối đa 10.000 ký tự."
+    },
+    "list": {
+      "title": "Các gói cần đánh giá",
+      "description": "Đánh giá các gói bạn đã mua.",
+      "columns": {
+        "index": "STT",
+        "packageName": "Tên gói",
+        "mentor": "Người hướng dẫn",
+        "project": "Dự án",
+        "purchasedAt": "Ngày mua",
+        "action": "Hành động"
+      },
+      "notAvailable": "Không có",
+      "dateFormat": "HH:mm dd/MM/yyyy",
+      "giveFeedback": "Đánh giá"
+    },
+    "questions": {
+      "punctuality": {
+        "title": "Chuyên gia có đúng giờ và quản lý thời gian hiệu quả không?",
+        "options": {
+          "4": "Khởi đầu đúng giờ và kiểm soát thời gian hoàn hảo.",
+          "3": "Khá đúng giờ, có trễ chút nhưng có báo trước.",
+          "2": "Trễ giờ đáng kể hoặc kết thúc quá gấp gáp.",
+          "1": "Trễ rất nhiều, vắng mặt hoặc thiếu tôn trọng thời gian."
+        }
+      },
+      "preparation": {
+        "title": "Chuyên gia có nghiên cứu trước về dự án của bạn không?",
+        "options": {
+          "4": "Nghiên cứu rất kỹ dự án và nắm bắt bối cảnh ngay lập tức.",
+          "3": "Có xem lướt qua tài liệu và nắm được thông tin cơ bản.",
+          "2": "Chưa xem trước, phải giải thích lại toàn bộ từ đầu.",
+          "1": "Hoàn toàn không chuẩn bị hoặc nhầm lẫn thông tin dự án."
+        }
+      },
+      "quality": {
+        "title": "Lời khuyên của chuyên gia có mang lại giá trị thực tế không?",
+        "options": {
+          "4": "Rất sâu sắc, giải quyết đúng trọng tâm vấn đề cốt lõi.",
+          "3": "Khá hữu ích, đưa ra được định hướng tốt cho dự án.",
+          "2": "Góp ý chung chung, thiên về lý thuyết sách vở.",
+          "1": "Không liên quan, kiến thức lạc hậu hoặc sai lệch."
+        }
+      },
+      "communication": {
+        "title": "Chuyên gia có thái độ cởi mở và biết lắng nghe không?",
+        "options": {
+          "4": "Giao tiếp rất rõ ràng, chân thành và tích cực lắng nghe.",
+          "3": "Giao tiếp chuyên nghiệp, lịch sự và dễ trao đổi.",
+          "2": "Nói quá nhiều về bản thân hoặc dùng từ ngữ khó hiểu.",
+          "1": "Thiếu tôn trọng, áp đặt tư duy hoặc rất khó giao tiếp."
+        }
+      },
+      "actionability": {
+        "title": "Bạn có biết mình cần làm gì tiếp theo sau buổi gặp không?",
+        "options": {
+          "4": "Đưa ra được lộ trình các bước hành động cực kỳ rõ ràng.",
+          "3": "Có gợi ý được một vài bước đi thực tế tiếp theo để thử nghiệm.",
+          "2": "Lời khuyên khó áp dụng ngay lập tức vào tình hình hiện tại.",
+          "1": "Hoàn toàn không đúc kết được bất kỳ hướng đi hay giải pháp nào."
+        }
       }
     }
   }

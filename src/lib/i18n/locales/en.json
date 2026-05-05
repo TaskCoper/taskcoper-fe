@@ -117,6 +117,7 @@
       "day": "Day",
       "today": "Today",
       "files": "files",
+      "emptyValue": "—",
       "openMenu": "Open menu",
       "comingSoon": "Coming Soon",
       "more": "+{{count}} more",
@@ -334,7 +335,15 @@
       "usageLimitPerUser": "Limit per User",
       "isStackable": "Can be used with other vouchers",
       "createdOnUtc": "Created On",
-      "dateFormat": "dd/MM/yyyy HH:mm"
+      "dateFormat": "HH:mm dd/MM/yyyy"
+    },
+    "action": {
+      "copyCode": "Copy code",
+      "delete": "Delete"
+    },
+    "toast": {
+      "copySuccess": "Copied code to clipboard",
+      "copyFailed": "Failed to copy code"
     },
     "field": {
       "name": "Voucher Name",
@@ -475,7 +484,7 @@
     "createdBy": "Created by",
     "purchasedOn": "Purchased on",
     "bookSchedule": "Book schedule",
-    "meetingSession": "Meeting session {{sequence}}",
+    "meetingSession": "Session {{sequence}}",
     "bookMeetingSession": "Book schedule for session {{sequence}} ({{slots}} slots)",
     "confirmBooking": "Confirm Booking",
     "note": "Note:",
@@ -483,11 +492,17 @@
     "completedProgress": "Completed {{progress}}%",
     "meetButton": "Meet",
     "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm",
+    "purchasedOnDateFormat": "dd/MM/yyyy",
     "purchasedPackages": "Purchased packages",
     "selectPackageToBook": "Select your purchased package to book.",
     "hasUpcomingMeeting": "You have an upcoming meeting",
     "upcomingMeetingNote": "Complete the scheduled meeting on {{date}} before booking the next one.",
-    "viewMeeting": "View meeting"
+    "viewMeeting": "View meeting",
+    "statusTooltip": "Status: {{status}}",
+    "feedbackTitle": "Feedback",
+    "feedbackDescription": "It is time to leave your feedback about this package.",
+    "feedbackButton": "Give feedback",
+    "noNoteAvailable": "No note available"
   },
   "project": {
     "title": "My Projects",
@@ -2402,7 +2417,8 @@
       "paidDate": "Paid Date",
       "actions": "Actions",
       "copyId": "Copy ID",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "dateFormat": "HH:mm dd/MM/yyyy"
     },
     "status": {
       "pending": "Pending",
@@ -2566,6 +2582,79 @@
       "default": {
         "description": "Unlock exclusive benefits and higher revenue share as you level up.",
         "cta": "Reach {{rank}}"
+      }
+    }
+  },
+  "packageFeedback": {
+    "title": "Feedback",
+    "description": "Share your experience to help mentors improve future sessions.",
+    "noteLabel": "Additional note",
+    "notePlaceholder": "Share any extra context or feedback...",
+    "submitButton": "Submit feedback",
+    "validation": {
+      "ratingRequired": "Please select a rating.",
+      "noteMax": "Note must be at most 10,000 characters."
+    },
+    "list": {
+      "title": "Packages needing feedback",
+      "description": "Leave feedback for the packages you purchased.",
+      "columns": {
+        "index": "No",
+        "packageName": "Package name",
+        "mentor": "Mentor",
+        "project": "Project",
+        "purchasedAt": "Purchased on",
+        "action": "Action"
+      },
+      "notAvailable": "N/A",
+      "dateFormat": "HH:mm dd/MM/yyyy",
+      "giveFeedback": "Give feedback"
+    },
+    "questions": {
+      "punctuality": {
+        "title": "Did the mentor show up on time and manage the schedule effectively?",
+        "options": {
+          "4": "Started exactly on time and managed the schedule perfectly.",
+          "3": "Mostly on time, minor delays but communicated well.",
+          "2": "Noticeably late or rushed the meeting.",
+          "1": "Very late, no-show, or highly disrespectful of time."
+        }
+      },
+      "preparation": {
+        "title": "Did the mentor review your project details before the meeting?",
+        "options": {
+          "4": "Thoroughly reviewed materials and understood the context immediately.",
+          "3": "Skimmed the materials, had a basic understanding of the startup.",
+          "2": "Unprepared, had to explain everything from scratch.",
+          "1": "Completely unprepared or confused the project with another."
+        }
+      },
+      "quality": {
+        "title": "Was the feedback valuable for your current stage?",
+        "options": {
+          "4": "Deeply insightful, solved core problems directly.",
+          "3": "Helpful and provided a good general direction.",
+          "2": "Somewhat generic, lacking specific depth for the industry.",
+          "1": "Irrelevant, outdated, or fundamentally incorrect advice."
+        }
+      },
+      "communication": {
+        "title": "Was the mentor actively listening and engaging?",
+        "options": {
+          "4": "Exceptionally clear, engaged, and actively listened.",
+          "3": "Professional, clear, and easy to converse with.",
+          "2": "Dominated the conversation or used confusing jargon.",
+          "1": "Condescending, dismissive, or hard to communicate with."
+        }
+      },
+      "actionability": {
+        "title": "Did you walk away knowing exactly what to do next?",
+        "options": {
+          "4": "Provided a clear, step-by-step action plan.",
+          "3": "Suggested a few practical next steps to try.",
+          "2": "Mostly theoretical advice, hard to apply immediately.",
+          "1": "No clear takeaways or next steps were established."
+        }
       }
     }
   }
