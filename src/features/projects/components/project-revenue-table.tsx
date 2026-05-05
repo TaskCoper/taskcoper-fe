@@ -141,14 +141,14 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
         {canWrite ? (
           <>
-            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashIn'>
+            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='Revenue'>
               <Button size='sm' className='bg-emerald-600 border-2 border-emerald-400 hover:bg-emerald-700'>
                 <TrendingUpIcon />
                 {t('project.addProjectRevenue.trigger.cashIn')}
               </Button>
             </AddProjectRevenueDialog>
 
-            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='CashOut'>
+            <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='Expense'>
               <Button size='sm' className='bg-rose-600 border-2 border-rose-400 hover:bg-rose-700'>
                 <TrendingDownIcon />
                 {t('project.addProjectRevenue.trigger.cashOut')}

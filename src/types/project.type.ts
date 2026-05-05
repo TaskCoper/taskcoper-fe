@@ -202,15 +202,15 @@ export interface ProjectPriorityStats {
 }
 
 export const RevenueType = {
-  CashIn: 'CashIn',
-  CashOut: 'CashOut'
+  Revenue: 'Revenue',
+  Expense: 'Expense'
 } as const
 
 export type RevenueType = (typeof RevenueType)[keyof typeof RevenueType]
 
 export const RevenueTypeLabel = {
-  [RevenueType.CashIn]: 'project.addProjectRevenue.type.cashIn',
-  [RevenueType.CashOut]: 'project.addProjectRevenue.type.cashOut'
+  [RevenueType.Revenue]: 'project.addProjectRevenue.type.cashIn',
+  [RevenueType.Expense]: 'project.addProjectRevenue.type.cashOut'
 }
 
 export type RevenueTypeLabel = (typeof RevenueTypeLabel)[keyof typeof RevenueTypeLabel]

@@ -63,7 +63,7 @@ export const getColumns = ({
         icon: SearchIcon
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='projectRevenue.column.name' />,
-      cell: ({ row }) => <p className='w-full truncate max-w-[300px] font-medium'>{row.original.name}</p>,
+      cell: ({ row }) => <p className='w-full truncate max-w-75 font-medium'>{row.original.name}</p>,
       enableSorting: false,
       enableHiding: false,
       enableColumnFilter: true,
@@ -81,7 +81,7 @@ export const getColumns = ({
       ),
       cell: ({ row }) => {
         const type = row.original.type
-        const isCashIn = type === RevenueType.CashIn
+        const isCashIn = type === RevenueType.Revenue
 
         return (
           <div className='flex justify-center'>
@@ -115,7 +115,7 @@ export const getColumns = ({
       ),
       cell: ({ row }) => {
         const amount = row.original.amount
-        const isCashIn = row.original.type === RevenueType.CashIn
+        const isCashIn = row.original.type === RevenueType.Revenue
         const formatted = new Intl.NumberFormat(i18next.language === 'vi' ? 'vi-VN' : 'en-US', {
           style: 'currency',
           currency: 'VND'

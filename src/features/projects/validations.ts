@@ -155,7 +155,7 @@ export const addProjectRevenueSchema = (t: TFunction) => {
     .object({
       name: z.string().trim().min(1, t('project.addProjectRevenue.validation.name.minLength')),
       amount: z.number().min(1, t('project.addProjectRevenue.validation.amount.min')),
-      type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+      type: z.enum([RevenueType.Revenue, RevenueType.Expense]),
       note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
       labelIds: z.array(z.uuid()),
       projectIdentifier: z.string().min(1)
@@ -170,7 +170,7 @@ export const updateProjectRevenueSchema = (t: TFunction) => {
       projectIdentifier: z.string().min(1),
       name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
       amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
-      type: z.enum([RevenueType.CashIn, RevenueType.CashOut]),
+      type: z.enum([RevenueType.Revenue, RevenueType.Expense]),
       note: z.string().trim().max(255, t('project.updateProjectRevenue.validation.note.maxLength')),
       labelIds: z.array(z.uuid())
     })

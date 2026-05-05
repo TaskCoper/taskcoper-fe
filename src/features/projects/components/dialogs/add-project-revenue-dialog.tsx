@@ -71,18 +71,20 @@ export default function AddProjectRevenueDialog({ projectIdentifier, type, child
           <DialogTitle>
             <Trans
               i18nKey={
-                type === 'CashIn' ? 'project.addProjectRevenue.title.cashIn' : 'project.addProjectRevenue.title.cashOut'
+                type === 'Revenue'
+                  ? 'project.addProjectRevenue.title.cashIn'
+                  : 'project.addProjectRevenue.title.cashOut'
               }
               components={{
                 highlight: (
-                  <span className={type === 'CashIn' ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'} />
+                  <span className={type === 'Revenue' ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'} />
                 )
               }}
             />
           </DialogTitle>
           <DialogDescription>
             {t(
-              type === 'CashIn'
+              type === 'Revenue'
                 ? 'project.addProjectRevenue.description.cashIn'
                 : 'project.addProjectRevenue.description.cashOut'
             )}
