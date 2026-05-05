@@ -1,15 +1,18 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { FieldLabel } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import CalendarViewContainer from '@/features/meetings/components/calendar/calendar-view-container'
 import { useGetProjectMeetings } from '@/features/meetings/hooks/use-get-project-meetings'
+import { getStatusCheckboxClassName } from '@/features/meetings/utils'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetProjectPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-project-purchased-mentor-packages'
 import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import CalendarViewContainer from '@/features/tasks/components/calendar/calendar-view-container'
-import type { MeetingBooking } from '@/types/meeting.type'
+import { cn } from '@/shared/utils'
+import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useState } from 'react'
@@ -57,6 +60,8 @@ function ProjectCalendarPageSkeleton() {
   )
 }
 
+const STATUS_OPTIONS = Object.values(MeetingStatus) as MeetingStatus[]
+
 export default function ProjectCalendarPage() {
   const { identifier } = useParams<{ identifier: string }>()
   const { t } = useTranslation()
@@ -69,13 +74,19 @@ export default function ProjectCalendarPage() {
     'pkgs',
     parseAsArrayOf(parseAsString).withDefault([])
   )
+  const [statusFilters, setStatusFilters] = useQueryState('status', parseAsArrayOf(parseAsString).withDefault([]))
+
+  const activeStatusFilters = (statusFilters ?? []).filter((status): status is MeetingStatus =>
+    STATUS_OPTIONS.includes(status as MeetingStatus)
+  )
 
   const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const canBookMeeting = check('CALENDAR', 'canWrite', 'canBookMeeting')
 
   const { projectMeetings, isLoadingProjectMeetings } = useGetProjectMeetings({
     projectIdentifier: identifier,
-    ...dateRange
+    ...dateRange,
+    status: activeStatusFilters.length > 0 ? activeStatusFilters : undefined
   })
 
   const { projectMentorPackages, isLoadingProjectMentorPackages } = useGetProjectPurchasedMentorPackages({
@@ -89,10 +100,16 @@ export default function ProjectCalendarPage() {
     [navigate, location.search]
   )
 
+  const handleStatusToggle = (status: MeetingStatus, checked: boolean) => {
+    const next = checked ? [...activeStatusFilters, status] : activeStatusFilters.filter((item) => item !== status)
+    const ordered = STATUS_OPTIONS.filter((item) => next.includes(item))
+    setStatusFilters(ordered.length === 0 ? null : ordered)
+  }
+
   const hasPackages = projectMentorPackages.value.totalCount > 0
 
   const sidebarContent = (
-    <div>
+    <div className='mt-2'>
       {hasPackages && canBookMeeting && (
         <div className='px-3'>
           <BookMeetingFromCalendarDialog
@@ -110,10 +127,29 @@ export default function ProjectCalendarPage() {
 
       <Separator className='mt-4' />
 
-      {hasPackages ? (
-        <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
+      <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
+        <div className='space-y-3 px-3'>
+          <p className='text-sm font-medium'>Trạng thái</p>
+
+          {Object.values(MeetingStatus).map((status) => (
+            <div key={status} className='flex items-center gap-2'>
+              <Checkbox
+                id={`status-${status}`}
+                checked={activeStatusFilters.includes(status)}
+                onCheckedChange={(checked) => handleStatusToggle(status, checked === true)}
+                className={cn(getStatusCheckboxClassName(status), 'border-2')}
+              />
+              <FieldLabel className='cursor-pointer font-normal' htmlFor={`status-${status}`}>
+                {t(`meeting.status.${status.toLowerCase()}`)}
+              </FieldLabel>
+            </div>
+          ))}
+        </div>
+
+        {hasPackages ? (
           <Accordion
             type='multiple'
+            className='space-y-2'
             defaultValue={
               projectMentorPackages.value.totalCount > 0 || selectedPackageBookingIds?.length === 0 ? ['item-1'] : []
             }
@@ -151,8 +187,8 @@ export default function ProjectCalendarPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   )
 

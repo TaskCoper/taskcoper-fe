@@ -1,4 +1,4 @@
-import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
+import CalendarEvent from '@/features/meetings/components/calendar/calendar-event'
 import { cn } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, endOfMonth, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
@@ -10,7 +10,6 @@ interface MonthViewProps {
   onMeetingClick?: (meeting: MeetingBooking) => void
 }
 
-const WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MAX_VISIBLE_TASKS = 3
 
 function getMonthGrid(date: Date) {
@@ -36,6 +35,15 @@ function getMonthGrid(date: Date) {
 
 export default function MonthView({ date, meetings, onMeetingClick }: MonthViewProps) {
   const { t } = useTranslation()
+  const weekdayNames = [
+    t('dayOfWeek.sunday'),
+    t('dayOfWeek.monday'),
+    t('dayOfWeek.tuesday'),
+    t('dayOfWeek.wednesday'),
+    t('dayOfWeek.thursday'),
+    t('dayOfWeek.friday'),
+    t('dayOfWeek.saturday')
+  ]
   const days = getMonthGrid(date)
   const weeks = Math.ceil(days.length / 7)
 
@@ -49,7 +57,7 @@ export default function MonthView({ date, meetings, onMeetingClick }: MonthViewP
   return (
     <div className='flex-1 flex flex-col max-h-[calc(100vh-6.75rem)]'>
       <div className='grid grid-cols-7 border-b sticky top-0 bg-background z-10'>
-        {WEEKDAY_NAMES.map((name) => (
+        {weekdayNames.map((name) => (
           <div
             key={name}
             className='py-2 text-center text-xs font-medium text-muted-foreground uppercase border-l first:border-l-0'
@@ -82,7 +90,7 @@ export default function MonthView({ date, meetings, onMeetingClick }: MonthViewP
                 </span>
               </div>
 
-              <div className='mt-0.5 space-y-0.5'>
+              <div className='mt-1 space-y-1'>
                 {visibleMeetings.map((meeting) => (
                   <CalendarEvent key={meeting.id} meeting={meeting} variant='chip' onClick={onMeetingClick} />
                 ))}

@@ -325,12 +325,12 @@ export const queryKeys = {
     mentor: ({ mentorId, activeFrom, activeTo }: GetMentorMeetingsParams) =>
       [...queryKeys.meetings.allMentor(mentorId), activeFrom, activeTo] as const,
     allMy: ['meetings', 'my'] as const,
-    my: ({ activeFrom, activeTo, packageBookingIds, mode }: GetMyMeetingsParams) =>
-      [...queryKeys.meetings.allMy, activeFrom, activeTo, packageBookingIds, mode] as const,
+    my: ({ activeFrom, activeTo, packageBookingIds, mode, status }: GetMyMeetingsParams) =>
+      [...queryKeys.meetings.allMy, activeFrom, activeTo, packageBookingIds, mode, status] as const,
     detail: (meetingId?: string) => ['meeting', meetingId] as const,
     allProject: (projectIdentifier?: string) => ['meetings', 'project', projectIdentifier] as const,
-    project: ({ projectIdentifier, activeFrom, activeTo }: GetProjectMeetingsParams) =>
-      [...queryKeys.meetings.allProject(projectIdentifier), activeFrom, activeTo] as const
+    project: ({ projectIdentifier, activeFrom, activeTo, status }: GetProjectMeetingsParams) =>
+      [...queryKeys.meetings.allProject(projectIdentifier), activeFrom, activeTo, status] as const
   },
   // Transactions
   transactions: {

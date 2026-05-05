@@ -7,14 +7,15 @@ export interface GetMyMeetingsParams {
   activeTo: string
   packageBookingIds: string[]
   mode?: number[]
+  status?: string[]
   // 0: mentor
   // 1: mentee
 }
 
-export const useGetMyMeetings = ({ activeFrom, activeTo, packageBookingIds, mode }: GetMyMeetingsParams) => {
+export const useGetMyMeetings = ({ activeFrom, activeTo, packageBookingIds, mode, status }: GetMyMeetingsParams) => {
   const { data: myMeetings = [], isLoading: isLoadingMyMeetings } = useQuery({
-    queryKey: queryKeys.meetings.my({ activeFrom, activeTo, packageBookingIds, mode }),
-    queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo, packageBookingIds, mode }),
+    queryKey: queryKeys.meetings.my({ activeFrom, activeTo, packageBookingIds, mode, status }),
+    queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo, packageBookingIds, mode, status }),
     placeholderData: keepPreviousData,
     enabled: !!activeFrom && !!activeTo
   })

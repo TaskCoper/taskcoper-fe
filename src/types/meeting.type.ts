@@ -1,23 +1,23 @@
 import type { SectionPermission } from './project-permission.type'
 
 export const MeetingStatus = {
-  FREE: 'Free',
+  // FREE: 'Free',
   BOOKED: 'Booked',
   COMPLETED: 'Completed',
-  RESCHEDULE: 'Reschedule',
-  CANCELLED: 'Cancelled',
-  SUSPENDED: 'Suspended'
+  // RESCHEDULE: 'Reschedule',
+  CANCELLED: 'Cancelled'
+  // SUSPENDED: 'Suspended'
 } as const
 
 export type MeetingStatus = (typeof MeetingStatus)[keyof typeof MeetingStatus]
 
 export const MeetingStatusLabel = {
-  [MeetingStatus.FREE]: 'meeting.status.free',
+  // [MeetingStatus.FREE]: 'meeting.status.free',
   [MeetingStatus.BOOKED]: 'meeting.status.booked',
   [MeetingStatus.COMPLETED]: 'meeting.status.completed',
-  [MeetingStatus.RESCHEDULE]: 'meeting.status.reschedule',
-  [MeetingStatus.CANCELLED]: 'meeting.status.cancelled',
-  [MeetingStatus.SUSPENDED]: 'meeting.status.suspended'
+  // [MeetingStatus.RESCHEDULE]: 'meeting.status.reschedule',
+  [MeetingStatus.CANCELLED]: 'meeting.status.cancelled'
+  // [MeetingStatus.SUSPENDED]: 'meeting.status.suspended'
 }
 
 export type MeetingStatusLabel = (typeof MeetingStatusLabel)[keyof typeof MeetingStatusLabel]

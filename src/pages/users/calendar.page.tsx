@@ -1,16 +1,19 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { FieldLabel } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import CalendarViewContainer from '@/features/meetings/components/calendar/calendar-view-container'
 import { useGetMyMeetings } from '@/features/meetings/hooks/use-get-my-meetings'
+import { getStatusCheckboxClassName } from '@/features/meetings/utils'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
-import CalendarViewContainer from '@/features/tasks/components/calendar/calendar-view-container'
-import type { MeetingBooking } from '@/types/meeting.type'
+import { cn } from '@/shared/utils'
+import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useState } from 'react'
@@ -67,6 +70,8 @@ function CalendarPageSkeleton() {
   )
 }
 
+const STATUS_OPTIONS = Object.values(MeetingStatus) as MeetingStatus[]
+
 export default function CalendarPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -78,16 +83,22 @@ export default function CalendarPage() {
     parseAsArrayOf(parseAsString).withDefault([])
   )
   const [mode, setMode] = useQueryState('mode', parseAsArrayOf(parseAsInteger).withDefault([]))
+  const [statusFilters, setStatusFilters] = useQueryState('status', parseAsArrayOf(parseAsString).withDefault([]))
 
   const [showSchedulesOverlay, setShowSchedulesOverlay] = useQueryState('overlay', parseAsBoolean.withDefault(false))
 
   const { t } = useTranslation()
   const { me: user, isGettingMe } = useGetMe()
 
+  const activeStatusFilters = (statusFilters ?? []).filter((status): status is MeetingStatus =>
+    STATUS_OPTIONS.includes(status as MeetingStatus)
+  )
+
   const { myMeetings, isLoadingMyMeetings } = useGetMyMeetings({
     ...dateRange,
     packageBookingIds: selectedPackageBookingIds ?? [],
-    mode: (mode ?? []).length > 0 && user?.role === 'Mentor' ? mode : []
+    mode: (mode ?? []).length > 0 && user?.role === 'Mentor' ? mode : [],
+    status: activeStatusFilters.length > 0 ? activeStatusFilters : undefined
   })
 
   const { purchasedMentorPackages: projectPackages, isLoadingPurchasedMentorPackages: isLoadingProjectPackages } =
@@ -105,6 +116,12 @@ export default function CalendarPage() {
     },
     [navigate, location.search]
   )
+
+  const handleStatusToggle = (status: MeetingStatus, checked: boolean) => {
+    const next = checked ? [...activeStatusFilters, status] : activeStatusFilters.filter((item) => item !== status)
+    const ordered = STATUS_OPTIONS.filter((item) => next.includes(item))
+    setStatusFilters(ordered.length === 0 ? null : ordered)
+  }
 
   const hasPackages =
     personalPackages.value.totalCount > 0 ||
@@ -152,6 +169,24 @@ export default function CalendarPage() {
           </div>
         )}
 
+        <div className='space-y-3 px-3'>
+          <p className='text-sm font-medium'>Trạng thái</p>
+
+          {Object.values(MeetingStatus).map((status) => (
+            <div key={status} className='flex items-center gap-2'>
+              <Checkbox
+                id={`status-${status}`}
+                checked={activeStatusFilters.includes(status)}
+                onCheckedChange={(checked) => handleStatusToggle(status, checked === true)}
+                className={cn(getStatusCheckboxClassName(status), 'border-2')}
+              />
+              <FieldLabel className='cursor-pointer font-normal' htmlFor={`status-${status}`}>
+                {t(`meeting.status.${status.toLowerCase()}`)}
+              </FieldLabel>
+            </div>
+          ))}
+        </div>
+
         {user?.role === 'Mentor' ? (
           <div className='space-y-3 px-3'>
             <p className='text-sm font-medium'>{t('schedule.filter.title')}</p>
@@ -170,13 +205,13 @@ export default function CalendarPage() {
                 </Label>
               </div>
               <div className='flex items-center gap-2'>
-                <RadioGroupItem value='0' id='mode-me' className='border-orange-600 text-orange-600 border-2' />
+                <RadioGroupItem value='0' id='mode-me' />
                 <Label htmlFor='mode-me' className='cursor-pointer font-normal'>
                   {t('schedule.filter.mine')}
                 </Label>
               </div>
               <div className='flex items-center gap-2'>
-                <RadioGroupItem value='1' id='mode-mentor' className='border-blue-600 text-blue-600 border-2' />
+                <RadioGroupItem value='1' id='mode-mentor' />
                 <Label htmlFor='mode-mentor' className='cursor-pointer font-normal'>
                   {t('schedule.filter.mentor')}
                 </Label>
@@ -185,14 +220,14 @@ export default function CalendarPage() {
           </div>
         ) : null}
 
-        <Accordion type='multiple' defaultValue={['item-1', 'item-2', 'item-3']} className='space-y-2'>
+        <Accordion type='multiple' className='space-y-2'>
           {personalPackages.value.totalCount > 0 ? (
             <AccordionItem value='item-1' className='border-none'>
               <AccordionTrigger className='hover:no-underline hover:bg-muted px-3 py-1.5 rounded-md'>
                 {t('schedule.filter.packageGroups.personal.title')}
               </AccordionTrigger>
               <AccordionContent>
-                <div className='space-y-4 px-3'>
+                <div className='space-y-4 px-3 py-2'>
                   <p className='text-xs text-muted-foreground'>
                     {t('schedule.filter.packageGroups.personal.description')}
                   </p>

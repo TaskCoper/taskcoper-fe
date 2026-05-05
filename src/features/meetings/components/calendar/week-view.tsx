@@ -1,5 +1,5 @@
-import CalendarEvent from '@/features/tasks/components/calendar/calendar-event'
-import { layoutDayEvents } from '@/features/tasks/components/calendar/calendar-layout'
+import CalendarEvent from '@/features/meetings/components/calendar/calendar-event'
+import { layoutDayEvents } from '@/features/meetings/components/calendar/calendar-layout'
 import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
@@ -33,6 +33,16 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
   const now = new Date()
   const { t } = useTranslation()
 
+  const weekdayNames = [
+    t('dayOfWeek.sunday'),
+    t('dayOfWeek.monday'),
+    t('dayOfWeek.tuesday'),
+    t('dayOfWeek.wednesday'),
+    t('dayOfWeek.thursday'),
+    t('dayOfWeek.friday'),
+    t('dayOfWeek.saturday')
+  ]
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = 7 * HOUR_HEIGHT
@@ -53,7 +63,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
           return (
             <div key={day.toISOString()} className='flex-1 text-center py-2 border-l'>
               <p className={cn('text-xs uppercase', today ? 'text-primary font-semibold' : 'text-muted-foreground')}>
-                {format(day, 'EEE')}
+                {weekdayNames[day.getDay()]}
               </p>
               <div
                 className={cn(
@@ -169,7 +179,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
                       top: ev.top + 1,
                       height: ev.height - 2,
                       left: `calc(${leftPercent}% + 2px)`,
-                      width: `calc(${widthPercent}% - 14px)`
+                      width: `calc(${widthPercent}% - 12px)`
                     }}
                   />
                 )
@@ -177,11 +187,11 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
 
               {currentTimeTop !== null && (
                 <div
-                  className='absolute left-0 right-0 z-20 flex items-center pointer-events-none'
+                  className='absolute left-0 right-0 flex items-center pointer-events-none'
                   style={{ top: currentTimeTop }}
                 >
-                  <div className='size-2.5 rounded-full bg-destructive -ml-[5px]' />
-                  <div className='flex-1 h-[2px] bg-destructive' />
+                  <div className='size-2.5 rounded-full bg-destructive -ml-1.25' />
+                  <div className='flex-1 h-0.5 bg-destructive' />
                 </div>
               )}
             </div>

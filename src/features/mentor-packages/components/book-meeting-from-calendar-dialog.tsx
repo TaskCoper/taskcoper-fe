@@ -50,9 +50,7 @@ export default function BookMeetingFromCalendarDialog({
   const [selectedPackage, setSelectedPackage] = useState<PurchasedMentorPackage | null>(null)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
-  const upcomingMeeting = selectedPackage?.meetings?.find(
-    (m) => !m.parentId && (m.status === MeetingStatus.BOOKED || m.status === MeetingStatus.RESCHEDULE)
-  )
+  const upcomingMeeting = selectedPackage?.meetings?.find((m) => !m.parentId && m.status === MeetingStatus.BOOKED)
 
   // Load full package detail once user picks a package (enabled only if no upcoming meeting)
   const { purchasedMentorPackage, isLoadingPurchasedMentorPackage } = useGetPurchasedMentorPackage({

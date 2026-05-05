@@ -34,7 +34,8 @@ export const createMentorPackageSchema = (t: TFunction) =>
         .positive(t('mentorPackage.validation.durationPositive')),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
-      currency: z.enum(['Vnd', 'Usd'])
+      currency: z.enum(['Vnd', 'Usd']),
+      position: z.number()
     })
     .strict()
 

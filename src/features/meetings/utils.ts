@@ -72,39 +72,56 @@ export const getMeetingStatusTheme = (status?: string) => {
     case MeetingStatus.COMPLETED:
       return {
         dot: 'bg-emerald-500',
-        block: 'border-emerald-500 bg-emerald-600 hover:bg-emerald-700 text-white',
-        avatar: 'bg-emerald-600 text-white',
+        leftBorder: 'border-l-emerald-500',
+        block: 'border-emerald-400 bg-emerald-600 hover:bg-emerald-700 text-white',
+        avatar: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400',
         badge: 'bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:border-emerald-500/20 dark:text-emerald-400'
       }
-    case MeetingStatus.RESCHEDULE:
-      return {
-        dot: 'bg-amber-500',
-        block: 'border-amber-500 bg-amber-600 hover:bg-amber-700 text-white',
-        avatar: 'bg-amber-600 text-white',
-        badge: 'bg-amber-500/10 text-amber-700 border-amber-200 dark:border-amber-500/20 dark:text-amber-400'
-      }
+    // case MeetingStatus.RESCHEDULE:
+    //   return {
+    //     dot: 'bg-amber-500',
+    //     leftBorder: 'border-l-amber-500',
+    //     block: 'border-amber-400 bg-amber-600 hover:bg-amber-700 text-white',
+    //     avatar: 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400',
+    //     badge: 'bg-amber-500/10 text-amber-700 border-amber-200 dark:border-amber-500/20 dark:text-amber-400'
+    //   }
     case MeetingStatus.CANCELLED:
-    case MeetingStatus.SUSPENDED:
+      // case MeetingStatus.SUSPENDED:
       return {
         dot: 'bg-rose-500',
-        block: 'border-rose-500 bg-rose-600 hover:bg-rose-700 text-white',
-        avatar: 'bg-rose-600 text-white',
+        leftBorder: 'border-l-rose-500',
+        block: 'border-rose-400 bg-rose-600 hover:bg-rose-700 text-white',
+        avatar: 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400',
         badge: 'bg-rose-500/10 text-rose-700 border-rose-200 dark:border-rose-500/20 dark:text-rose-400'
       }
-    case MeetingStatus.FREE:
-      return {
-        dot: 'bg-slate-400',
-        block: 'border-slate-400 bg-slate-600 hover:bg-slate-700 text-white',
-        avatar: 'bg-slate-600 text-white',
-        badge: 'bg-slate-500/10 text-slate-700 border-slate-200 dark:border-slate-500/20 dark:text-slate-400'
-      }
+    // case MeetingStatus.FREE:
+    //   return {
+    //     dot: 'bg-slate-400',
+    //     leftBorder: 'border-l-slate-400',
+    //     block: 'border-slate-400 bg-slate-600 hover:bg-slate-700 text-white',
+    //     avatar: 'bg-slate-100 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400',
+    //     badge: 'bg-slate-500/10 text-slate-700 border-slate-200 dark:border-slate-500/20 dark:text-slate-400'
+    //   }
     case MeetingStatus.BOOKED:
     default:
       return {
         dot: 'bg-blue-500',
-        block: 'border-blue-500 bg-blue-600 hover:bg-blue-700 text-white',
-        avatar: 'bg-blue-600 text-white',
+        leftBorder: 'border-l-blue-500',
+        block: 'border-blue-400 bg-blue-600 hover:bg-blue-700 text-white',
+        avatar: 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
         badge: 'bg-blue-500/10 text-blue-700 border-blue-200 dark:border-blue-500/20 dark:text-blue-400'
       }
+  }
+}
+
+export const getStatusCheckboxClassName = (status: MeetingStatus) => {
+  switch (status) {
+    case MeetingStatus.COMPLETED:
+      return 'data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 data-[state=checked]:text-white border-emerald-600'
+    case MeetingStatus.CANCELLED:
+      return 'data-[state=checked]:bg-rose-600 data-[state=checked]:border-rose-600 data-[state=checked]:text-white border-rose-600'
+    case MeetingStatus.BOOKED:
+    default:
+      return 'data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 data-[state=checked]:text-white border-blue-600'
   }
 }

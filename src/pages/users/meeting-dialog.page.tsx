@@ -19,7 +19,6 @@ import {
   CheckCircle2Icon,
   CircleXIcon,
   FolderOpenIcon,
-  HistoryIcon,
   InfoIcon,
   MoreHorizontalIcon,
   PackageIcon,
@@ -58,10 +57,10 @@ const getStatusIcon = (status: MeetingStatus) => {
       return <CheckCircle2Icon className='size-3.5' />
     case MeetingStatus.BOOKED:
       return <CalendarIcon className='size-3.5' />
-    case MeetingStatus.RESCHEDULE:
-      return <HistoryIcon className='size-3.5' />
+    // case MeetingStatus.RESCHEDULE:
+    //   return <HistoryIcon className='size-3.5' />
     case MeetingStatus.CANCELLED:
-    case MeetingStatus.SUSPENDED:
+      // case MeetingStatus.SUSPENDED:
       return <XCircleIcon className='size-3.5' />
     default:
       return <InfoIcon className='size-3.5' />

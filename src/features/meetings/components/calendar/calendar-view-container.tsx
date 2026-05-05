@@ -1,10 +1,12 @@
+import CalendarHeader, { type CalendarViewMode } from '@/features/meetings/components/calendar/calendar-header'
+import DayView from '@/features/meetings/components/calendar/day-view'
+import MiniCalendarSidebar from '@/features/meetings/components/calendar/mini-calendar-sidebar'
+import MonthView from '@/features/meetings/components/calendar/month-view'
+import WeekView from '@/features/meetings/components/calendar/week-view'
+import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
-import CalendarHeader, { type CalendarViewMode } from '@/features/tasks/components/calendar/calendar-header'
-import DayView from '@/features/tasks/components/calendar/day-view'
-import MiniCalendarSidebar from '@/features/tasks/components/calendar/mini-calendar-sidebar'
-import MonthView from '@/features/tasks/components/calendar/month-view'
-import WeekView from '@/features/tasks/components/calendar/week-view'
-import type { MeetingBooking } from '@/types/meeting.type'
+import { cn } from '@/shared/utils'
+import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import {
   addDays,
   addMonths,
@@ -20,6 +22,7 @@ import {
 } from 'date-fns'
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
 interface CalendarViewContainerProps {
@@ -49,8 +52,10 @@ export default function CalendarViewContainer({
 
   const [internalShowSchedulesOverlay] = useState(false)
   const showSchedulesOverlay = showSchedulesOverlayProp ?? internalShowSchedulesOverlay
+  const { t } = useTranslation()
 
   const { schedules } = useGetMySchedules({ isActive: true })
+  const statusLegend = [MeetingStatus.BOOKED, MeetingStatus.COMPLETED, MeetingStatus.CANCELLED]
 
   // Compute dynamic date range based on view mode
   const { activeFrom, activeTo } = useMemo(() => {
@@ -133,25 +138,44 @@ export default function CalendarViewContainer({
             onToday={handleToday}
           />
 
-          {viewMode === 'day' && (
-            <DayView
-              date={currentDate}
-              meetings={meetings}
-              onMeetingClick={onMeetingClick}
-              schedules={schedules?.value?.items}
-              showSchedulesOverlay={showSchedulesOverlay}
-            />
-          )}
-          {viewMode === 'week' && (
-            <WeekView
-              date={currentDate}
-              meetings={meetings}
-              onMeetingClick={onMeetingClick}
-              schedules={schedules?.value?.items}
-              showSchedulesOverlay={showSchedulesOverlay}
-            />
-          )}
-          {viewMode === 'month' && <MonthView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />}
+          <div className='flex min-h-0 flex-1 flex-col'>
+            {viewMode === 'day' && (
+              <DayView
+                date={currentDate}
+                meetings={meetings}
+                onMeetingClick={onMeetingClick}
+                schedules={schedules?.value?.items}
+                showSchedulesOverlay={showSchedulesOverlay}
+              />
+            )}
+            {viewMode === 'week' && (
+              <WeekView
+                date={currentDate}
+                meetings={meetings}
+                onMeetingClick={onMeetingClick}
+                schedules={schedules?.value?.items}
+                showSchedulesOverlay={showSchedulesOverlay}
+              />
+            )}
+            {viewMode === 'month' && (
+              <MonthView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />
+            )}
+
+            <div className='shrink-0 p-4 shadow-sm'>
+              <div className='flex justify-center items-center gap-6 font-medium text-muted-foreground'>
+                {statusLegend.map((status) => {
+                  const theme = getMeetingStatusTheme(status)
+
+                  return (
+                    <div key={status} className='flex items-center gap-1.5'>
+                      <p className={cn('size-2 rounded-full', theme.dot)} />
+                      <p className='text-[13px]'>{t(`meeting.status.${status.toLowerCase()}`)}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
