@@ -126,11 +126,11 @@ export default function CalendarPage() {
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
-      if (canViewMeetingDetails(meeting.calendarPermission)) {
+      if (meeting.mentorUserId === user?.id || canViewMeetingDetails(meeting.calendarPermission)) {
         navigate(`${meeting.id}${location.search}`)
       }
     },
-    [navigate, location.search]
+    [navigate, location.search, user?.id]
   )
 
   const handleStatusToggle = (status: MeetingStatus, checked: boolean) => {
