@@ -161,7 +161,7 @@ export default function CalendarViewContainer({
               <MonthView date={currentDate} meetings={meetings} onMeetingClick={onMeetingClick} />
             )}
 
-            <div className='shrink-0 p-4 shadow-sm'>
+            <div className='shrink-0 p-3'>
               <div className='flex justify-center items-center gap-6 font-medium text-muted-foreground'>
                 {statusLegend.map((status) => {
                   const theme = getMeetingStatusTheme(status)

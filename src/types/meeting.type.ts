@@ -31,6 +31,7 @@ export interface Meeting {
   parentId: string | null
   startTimeUtc: string
   endTimeUtc: string
+  createdOnUtc: string
 }
 
 export interface MeetingBookingMentor {
@@ -53,6 +54,7 @@ export interface MeetingBooking {
   packageSequence: number
   projectId: string | null
   mentor: MeetingBookingMentor
+  calendarPermission: Extract<SectionPermission, { sectionKey: 'CALENDAR' }>
   cancelledBy: {
     id: string
     email: string

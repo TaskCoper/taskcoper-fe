@@ -1,5 +1,7 @@
 import type { SubmitPackageFeedbackFormValues } from '@/features/feedbacks/validations'
-import { api, type BaseResponse } from '@/lib/axios'
+import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { getDefaultPaginationResponse } from '@/shared/utils'
+import type { Feedback } from '@/types/feedback.type'
 
 class FeedbackService {
   private readonly baseUrl = 'feedbacks'
@@ -14,6 +16,15 @@ class FeedbackService {
     const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
+  }
+
+  getPurchasedPackageFeedbacks = async ({ packageBookingId }: { packageBookingId?: string }) => {
+    if (!packageBookingId) return getDefaultPaginationResponse<Feedback>()
+    const { data } = await api.get<BasePaginationResponse<Feedback>>(
+      `/v1/${this.baseUrl}/mentor-package-bookings/${packageBookingId}`
+    )
+
+    return data
   }
 }
 

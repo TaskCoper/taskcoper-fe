@@ -201,6 +201,11 @@ export const storageSectionExtensionsSchema = z
 
 export const calendarSectionExtensionsSchema = z
   .object({
+    canRead: z
+      .object({
+        canViewMeetingDetails: z.boolean()
+      })
+      .strict(),
     canWrite: z
       .object({
         canPurchasePackage: z.boolean(),

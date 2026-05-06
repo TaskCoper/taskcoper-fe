@@ -7,8 +7,9 @@ import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useBookMeeting } from '@/features/meetings/hooks/use-book-meeting'
+import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
-import { useRescheduleMeeting } from '@/features/meetings/hooks/use-reschedule-meeting'
+import { useUpdateMeeting } from '@/features/meetings/hooks/use-update-meeting'
 import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
@@ -54,10 +55,12 @@ export function MentorScheduleContent({
     projectIdentifier
   })
 
-  const { rescheduleMeeting, isReschedulingMeeting } = useRescheduleMeeting({
+  const { updateMeeting, isUpdatingMeeting } = useUpdateMeeting({
     packageId: packageBookingId ?? undefined,
     mentorId: mentorUserId
   })
+
+  const { meeting } = useGetMeeting({ meetingId, enabled: open })
 
   const { t } = useTranslation()
 
@@ -179,13 +182,15 @@ export function MentorScheduleContent({
         (a, b) => new Date(a.startTimeUtc).getTime() - new Date(b.startTimeUtc).getTime()
       )
 
-      rescheduleMeeting(
+      updateMeeting(
         {
           body: {
             meetingId,
             startTimeUtc: sortedSlots[0].startTimeUtc,
             endTimeUtc: sortedSlots[sortedSlots.length - 1].endTimeUtc,
-            reason
+            reason,
+            meetingLink: meeting?.meetingLink ?? null,
+            note: meeting?.note ?? null
           }
         },
         {
@@ -209,7 +214,7 @@ export function MentorScheduleContent({
     )
   }
 
-  const isPending = isBookingMeeting || isReschedulingMeeting
+  const isPending = isBookingMeeting || isUpdatingMeeting
   const isSelectionFull = selectedTimeSlots.length === limitSlots
   const isSelectionStarted = selectedTimeSlots.length > 0
 

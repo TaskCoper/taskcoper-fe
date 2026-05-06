@@ -285,6 +285,7 @@
       "meetingDateTimeAt": "at",
       "cancel": "Cancel",
       "reschedule": "Reschedule",
+      "completeMeeting": "Complete",
       "cancelTitle": "Cancel meeting",
       "cancelDescription": "Are you sure you want to cancel this meeting? This action cannot be undone.",
       "cancelReasonLabel": "Reason",
@@ -502,7 +503,12 @@
     "feedbackTitle": "Feedback",
     "feedbackDescription": "It is time to leave your feedback about this package.",
     "feedbackButton": "Give feedback",
-    "noNoteAvailable": "No note available"
+    "noNoteAvailable": "No note available",
+    "noFeedback": "No feedback yet",
+    "history": {
+      "title": "History",
+      "description": "Your most recent sessions"
+    }
   },
   "project": {
     "title": "My Projects",
@@ -1036,7 +1042,8 @@
               "readCalendar": "Read calendar"
             },
             "extensions": {
-              "viewProjectCalendar": "View project calendar"
+              "viewProjectCalendar": "View project calendar",
+              "viewMeetingDetails": "View meeting details"
             }
           },
           "canWrite": {
@@ -2591,6 +2598,10 @@
     "noteLabel": "Additional note",
     "notePlaceholder": "Share any extra context or feedback...",
     "submitButton": "Submit feedback",
+    "confirm": {
+      "title": "Submit feedback?",
+      "description": "Please review your feedback before submitting. This action cannot be undone."
+    },
     "validation": {
       "ratingRequired": "Please select a rating.",
       "noteMax": "Note must be at most 10,000 characters."

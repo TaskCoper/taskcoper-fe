@@ -29,17 +29,19 @@ export const cancelMeetingSchema = () => {
     .strict()
 }
 
-export const rescheduleMeetingSchema = () => {
+export const updateMeetingSchema = () => {
   return z
     .object({
       meetingId: z.uuid(),
       startTimeUtc: z.iso.datetime({ offset: true }),
       endTimeUtc: z.iso.datetime({ offset: true }),
-      reason: z.string().min(1).max(255)
+      reason: z.string().max(255).nullable(),
+      note: z.string().max(2000).nullable(),
+      meetingLink: z.url().nullable()
     })
     .strict()
 }
 
 export type BookMeetingFormValues = z.infer<ReturnType<typeof bookMeetingSchema>>
 export type CancelMeetingFormValues = z.infer<ReturnType<typeof cancelMeetingSchema>>
-export type RescheduleMeetingFormValues = z.infer<ReturnType<typeof rescheduleMeetingSchema>>
+export type UpdateMeetingFormValues = z.infer<ReturnType<typeof updateMeetingSchema>>

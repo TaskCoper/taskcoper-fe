@@ -248,6 +248,13 @@ export const SECTION_PERMISSION_CONFIG = defineSectionPermissionConfig([
               name: 'project.updateProjectRole.permissionsConfig.calendar.canRead.extensions.viewProjectCalendar',
               affectedByParent: true,
               variant: 'switch'
+            },
+            {
+              id: 1225,
+              name: 'project.updateProjectRole.permissionsConfig.calendar.canRead.extensions.viewMeetingDetails',
+              affectedByParent: false,
+              type: 'canViewMeetingDetails',
+              variant: 'switch'
             }
           ]
         }

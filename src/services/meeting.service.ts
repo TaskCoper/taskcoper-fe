@@ -4,7 +4,7 @@ import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get
 import type {
   BookMeetingFormValues,
   CancelMeetingFormValues,
-  RescheduleMeetingFormValues
+  UpdateMeetingFormValues
 } from '@/features/meetings/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { MeetingBooking, MeetingDetail } from '@/types/meeting.type'
@@ -80,8 +80,16 @@ class MeetingService {
     return data.value
   }
 
-  rescheduleMeeting = async ({ body }: { body: RescheduleMeetingFormValues }) => {
+  updateMeeting = async ({ body }: { body: UpdateMeetingFormValues }) => {
     const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+
+    return data.value
+  }
+
+  completeMeeting = async ({ meetingId }: { meetingId: string }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/complete`, {
+      meetingId
+    })
 
     return data.value
   }

@@ -1,32 +1,42 @@
+import RichTextEditor from '@/components/rich-text-editor'
+import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Textarea } from '@/components/ui/textarea'
+import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import MeetingDetailMenu from '@/features/meetings/components/meeting-detail-menu'
+import { useCompleteMeeting } from '@/features/meetings/hooks/use-complete-meeting'
 import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
+import { useUpdateMeeting } from '@/features/meetings/hooks/use-update-meeting'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
+import type { UpdateMeetingFormValues } from '@/features/meetings/validations'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
+import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { MeetingStatus, MeetingStatusLabel } from '@/types/meeting.type'
+import { MeetingStatus, MeetingStatusLabel, type MeetingDetail } from '@/types/meeting.type'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { format } from 'date-fns'
 import {
   ArrowDown01Icon,
   CalendarIcon,
+  CheckCheckIcon,
   CheckCircle2Icon,
   CircleXIcon,
   FolderOpenIcon,
   InfoIcon,
   MoreHorizontalIcon,
   PackageIcon,
+  PencilIcon,
   TextAlignStartIcon,
   VideoIcon,
   XCircleIcon
 } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 import type { SelectedTimeSlot } from './purchased-package.page'
@@ -67,20 +77,172 @@ const getStatusIcon = (status: MeetingStatus) => {
   }
 }
 
+const normalizeMeetingLink = (value: string) => {
+  const trimmedValue = value.trim()
+  return trimmedValue.length > 0 ? trimmedValue : null
+}
+
+interface MeetingNoteAndLinkProps {
+  meeting: MeetingDetail
+  canUpdateNote: boolean
+}
+
+function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps) {
+  const { t } = useTranslation()
+  const { updateMeeting } = useUpdateMeeting({
+    packageId: meeting.packageBookingId ?? undefined,
+    mentorId: meeting.mentorUserId,
+    showSuccessToast: false
+  })
+  const [noteValue, setNoteValue] = useState(meeting.note ?? '')
+  const [savedNote, setSavedNote] = useState(meeting.note ?? '')
+  const [meetingLinkValue, setMeetingLinkValue] = useState(meeting.meetingLink ?? '')
+
+  const submitMeetingUpdate = useCallback(
+    (nextNote: string, nextLink: string) => {
+      if (!canUpdateNote) return
+
+      const normalizedNote = nextNote ?? ''
+      const normalizedLink = normalizeMeetingLink(nextLink)
+      const currentNote = meeting.note ?? ''
+      const currentLink = meeting.meetingLink ?? null
+
+      if (normalizedNote === currentNote && normalizedLink === currentLink) return
+
+      const payload: UpdateMeetingFormValues = {
+        meetingId: meeting.id,
+        startTimeUtc: meeting.startTimeUtc,
+        endTimeUtc: meeting.endTimeUtc,
+        reason: meeting.reason ?? '',
+        note: normalizedNote,
+        meetingLink: normalizedLink
+      }
+
+      updateMeeting({ body: payload })
+    },
+    [canUpdateNote, meeting, updateMeeting]
+  )
+
+  const debouncedUpdateMeetingLink = useDebouncedCallback((nextLink: string) => {
+    submitMeetingUpdate(savedNote, nextLink)
+  }, 3000)
+
+  const {
+    isEditing: isEditingLink,
+    inputProps: meetingLinkInputProps,
+    triggerProps: meetingLinkTriggerProps
+  } = useInlineEdit({
+    initialValue: meetingLinkValue,
+    allowEmpty: true,
+    onSave: (nextValue) => {
+      setMeetingLinkValue(nextValue)
+      debouncedUpdateMeetingLink(nextValue)
+    }
+  })
+
+  const handleNoteChange = (nextNote: string) => {
+    setNoteValue(nextNote)
+  }
+
+  const isNoteDirty = noteValue !== savedNote
+
+  const handleNoteSave = () => {
+    if (!isNoteDirty) return
+    submitMeetingUpdate(noteValue, meetingLinkValue)
+    setSavedNote(noteValue)
+  }
+
+  const handleNoteCancel = () => {
+    setNoteValue(savedNote)
+  }
+
+  return (
+    <>
+      <div className='flex items-center gap-4'>
+        <VideoIcon className='size-4' />
+        <div className='flex-1 -space-y-1'>
+          <div className='flex items-center justify-between gap-2'>
+            {meetingLinkValue ? (
+              <Link to={meetingLinkValue} target='_blank' className='hover:underline text-primary hover:text-primary'>
+                <p className='text-sm font-medium'>{t('meeting.detail.joinViaGoogleMeet')}</p>
+              </Link>
+            ) : (
+              <p className='hover:underline text-primary hover:text-primary text-sm font-medium'>
+                {t('meeting.detail.joinViaGoogleMeet')}
+              </p>
+            )}
+
+            {canUpdateNote ? (
+              <Button variant='ghost' size='icon-sm' className='size-7' type='button' {...meetingLinkTriggerProps}>
+                <PencilIcon className='size-3.5' />
+              </Button>
+            ) : null}
+          </div>
+
+          {isEditingLink && canUpdateNote ? (
+            <Input className='h-8 text-xs' type='text' {...meetingLinkInputProps} />
+          ) : meetingLinkValue ? (
+            <p className='text-xs text-foreground/80'>
+              {meetingLinkValue.replace('https://', '')} {t('meeting.detail.maxGuests')}
+            </p>
+          ) : (
+            <p className='text-xs'>{t('meeting.detail.noLinkYet')}</p>
+          )}
+        </div>
+      </div>
+
+      <div className='flex items-start gap-4'>
+        <TextAlignStartIcon className='size-4 mt-1.5' />
+        {canUpdateNote ? (
+          <div className='flex-1'>
+            <RichTextEditor
+              content={noteValue}
+              onChange={handleNoteChange}
+              compact
+              className='min-h-32 max-h-72 text-sm'
+            />
+            <div className='flex items-center gap-2 mt-2'>
+              <Button type='button' onClick={handleNoteSave} disabled={!isNoteDirty}>
+                {t('common.button.save')}
+              </Button>
+              <Button type='button' variant='ghost' onClick={handleNoteCancel} disabled={!isNoteDirty}>
+                {t('common.button.cancel')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className='bg-muted w-full min-h-32 p-3 rounded-md'>
+            {meeting.note ? (
+              <SanitizedHtml html={meeting.note} />
+            ) : (
+              <p className='text-sm text-muted-foreground'>
+                {t('meeting.detail.noteWillBeHere', {
+                  firstName: meeting.mentor?.firstName,
+                  lastName: meeting.mentor?.lastName
+                })}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
 export default function MeetingDialogPage() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(true)
 
   const { meetingId } = useParams<{ meetingId: string }>()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
+  const { completeMeeting, isCompletingMeeting } = useCompleteMeeting()
   const { me } = useGetMe()
 
   const { t } = useTranslation()
   const [isRescheduling, setIsRescheduling] = useState(false)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
-  const canUpdateNote =
-    me?.role === 'Mentor' && meeting?.mentorUserId === me.id && meeting.status !== MeetingStatus.CANCELLED
+  const canUpdateNote = meeting?.mentorUserId === me?.id && meeting?.status !== MeetingStatus.CANCELLED
 
   const handleClose = () => {
     setOpen(false)
@@ -88,6 +250,12 @@ export default function MeetingDialogPage() {
       navigate(-1)
     }, 300)
   }
+
+  const canCompleteMeeting =
+    meeting?.status === MeetingStatus.BOOKED &&
+    meeting?.mentorUserId === me?.id &&
+    meeting.endTimeUtc &&
+    new Date(meeting.endTimeUtc) <= new Date()
 
   if (isLoadingMeeting) {
     return (
@@ -175,7 +343,7 @@ export default function MeetingDialogPage() {
           <DialogTitle className='text-xl w-[95%]'>
             {meeting?.projectId && meeting?.project ? (
               <>
-                <Link to={`/projects/${meeting.projectId}`} className='hover:text-white/80 transition-colors'>
+                <Link to={`/projects/${meeting.projectId}`} className='hover:text-primary transition-colors'>
                   [{meeting.project.name}]
                 </Link>
                 <span className='mx-1'> - </span>
@@ -187,7 +355,7 @@ export default function MeetingDialogPage() {
                 {t('meeting.detail.session', { sequence: meeting.packageSequence })} -{' '}
                 <Link
                   to={`/purchases/${meeting.packageBookingId}`}
-                  className='hover:text-white/80 transition-colors underline-offset-4'
+                  className='hover:text-primary transition-colors underline-offset-4'
                 >
                   {meeting.packageName}
                 </Link>
@@ -197,7 +365,7 @@ export default function MeetingDialogPage() {
                 {t('meeting.detail.meetingWith')}{' '}
                 <Link
                   to={`/users/${meeting?.mentorUserId}`}
-                  className='hover:text-white/80 transition-colors underline-offset-4'
+                  className='hover:text-primary transition-colors underline-offset-4'
                 >
                   {meeting?.mentor.firstName} {meeting?.mentor.lastName}
                 </Link>
@@ -240,53 +408,7 @@ export default function MeetingDialogPage() {
 
         <div className='p-6 grid grid-cols-12 gap-8'>
           <div className='col-span-8 space-y-6'>
-            <div className='flex items-center gap-4'>
-              <VideoIcon className='size-4' />
-              <div className='-space-y-1'>
-                {meeting?.meetingLink ? (
-                  <>
-                    <Link
-                      to={meeting?.meetingLink || ''}
-                      target='_blank'
-                      className='hover:underline text-primary hover:text-primary'
-                    >
-                      <p className='text-sm font-medium'>{t('meeting.detail.joinViaGoogleMeet')}</p>
-                    </Link>
-
-                    <p className='text-xs text-foreground/80'>
-                      {meeting.meetingLink.replace('https://', '')} {t('meeting.detail.maxGuests')}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className='hover:underline text-primary hover:text-primary text-sm font-medium'>
-                      {t('meeting.detail.joinViaGoogleMeet')}
-                    </p>
-                    <p className='text-xs'>{t('meeting.detail.noLinkYet')}</p>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className='flex items-start gap-4'>
-              <TextAlignStartIcon className='size-4 mt-1.5' />
-              {canUpdateNote ? (
-                <Textarea className='w-full h-32 p-3 rounded-md' />
-              ) : (
-                <div className='bg-muted w-full h-32 p-3 rounded-md'>
-                  {meeting?.note ? (
-                    <p className='text-sm text-muted-foreground'>{meeting.note}</p>
-                  ) : (
-                    <p className='text-sm text-muted-foreground'>
-                      {t('meeting.detail.noteWillBeHere', {
-                        firstName: meeting?.mentor?.firstName,
-                        lastName: meeting?.mentor?.lastName
-                      })}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+            {meeting ? <MeetingNoteAndLink key={meeting.id} meeting={meeting} canUpdateNote={canUpdateNote} /> : null}
 
             {meeting?.status === MeetingStatus.CANCELLED && meeting.reason && (
               <div className='flex items-start gap-4'>
@@ -446,6 +568,22 @@ export default function MeetingDialogPage() {
                 </Link>
               )}
             </div>
+
+            {canCompleteMeeting ? (
+              <Button
+                className='bg-emerald-500 hover:bg-emerald-500 w-full'
+                size='sm'
+                disabled={isCompletingMeeting}
+                onClick={() => {
+                  if (meeting?.id) {
+                    completeMeeting({ meetingId: meeting.id })
+                  }
+                }}
+              >
+                {isCompletingMeeting ? <Spinner /> : <CheckCheckIcon />}
+                {t('meeting.detail.completeMeeting')}
+              </Button>
+            ) : null}
           </div>
         </div>
       </DialogContent>

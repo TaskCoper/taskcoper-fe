@@ -285,6 +285,7 @@
       "meetingDateTimeAt": "vào",
       "cancel": "Hủy lịch",
       "reschedule": "Dời lịch",
+      "completeMeeting": "Hoàn thành",
       "cancelTitle": "Hủy lịch hẹn",
       "cancelDescription": "Bạn có chắc chắn muốn hủy lịch hẹn này? Thao tác này không thể hoàn tác.",
       "cancelReasonLabel": "Lý do",
@@ -502,7 +503,12 @@
     "feedbackTitle": "Đánh giá",
     "feedbackDescription": "Tới lúc để lại đánh giá của bạn về gói này rồi đấy.",
     "feedbackButton": "Đánh giá",
-    "noNoteAvailable": "Không có ghi chú"
+    "noNoteAvailable": "Không có ghi chú",
+    "noFeedback": "Chưa có đánh giá",
+    "history": {
+      "title": "Lịch sử",
+      "description": "Các buổi gặp gần nhất của bạn"
+    }
   },
   "project": {
     "title": "Dự án của tôi",
@@ -1036,7 +1042,8 @@
               "readCalendar": "Xem lịch"
             },
             "extensions": {
-              "viewProjectCalendar": "Xem lịch dự án"
+              "viewProjectCalendar": "Xem lịch dự án",
+              "viewMeetingDetails": "Xem chi tiết buổi hẹn"
             }
           },
           "canWrite": {
@@ -2591,6 +2598,10 @@
     "noteLabel": "Ghi chú thêm",
     "notePlaceholder": "Chia sẻ thêm bối cảnh hoặc nhận xét...",
     "submitButton": "Gửi đánh giá",
+    "confirm": {
+      "title": "Gửi đánh giá?",
+      "description": "Vui lòng kiểm tra lại nội dung trước khi gửi. Hành động này không thể hoàn tác."
+    },
     "validation": {
       "ratingRequired": "Vui lòng chọn mức đánh giá.",
       "noteMax": "Ghi chú tối đa 10.000 ký tự."

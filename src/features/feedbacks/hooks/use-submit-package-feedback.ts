@@ -1,6 +1,7 @@
+import { queryKeys } from '@/lib/query-keys'
 import feedbackService from '@/services/feedback.service'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -24,9 +25,10 @@ const defaultValues: SubmitPackageFeedbackFormValues = {
   comment: ''
 }
 
-export const useSubmitPackageFeedback = () => {
-  const { t } = useTranslation()
+export const useSubmitPackageFeedback = ({ packageId }: { packageId?: string }) => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const methods = useForm<SubmitPackageFeedbackFormValues>({
     defaultValues,
@@ -44,6 +46,11 @@ export const useSubmitPackageFeedback = () => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
       })
+    },
+    onSettled: () => {
+      if (packageId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
     }
   })
 

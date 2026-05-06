@@ -49,6 +49,9 @@ const normalizeExtensions = (
 
   if (sectionKey === SectionKey.CALENDAR) {
     return {
+      canRead: {
+        canViewMeetingDetails: parsed?.canRead?.canViewMeetingDetails === true
+      },
       canWrite: {
         canPurchasePackage: parsed?.canWrite?.canPurchasePackage === true,
         canBookMeeting: parsed?.canWrite?.canBookMeeting === true

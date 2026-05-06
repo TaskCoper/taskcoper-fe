@@ -72,6 +72,20 @@ function CalendarPageSkeleton() {
 
 const STATUS_OPTIONS = Object.values(MeetingStatus) as MeetingStatus[]
 
+const getCalendarPermissionExtensions = (calendarPermission?: MeetingBooking['calendarPermission']) => {
+  if (!calendarPermission?.extensions) return null
+
+  return typeof calendarPermission.extensions === 'string'
+    ? JSON.parse(calendarPermission.extensions)
+    : calendarPermission.extensions
+}
+
+const canViewMeetingDetails = (calendarPermission?: MeetingBooking['calendarPermission']) => {
+  if (!calendarPermission?.canRead) return false
+
+  return !!getCalendarPermissionExtensions(calendarPermission)?.canRead?.canViewMeetingDetails
+}
+
 export default function CalendarPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -112,7 +126,9 @@ export default function CalendarPage() {
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
-      navigate(`${meeting.id}${location.search}`)
+      if (canViewMeetingDetails(meeting.calendarPermission)) {
+        navigate(`${meeting.id}${location.search}`)
+      }
     },
     [navigate, location.search]
   )
@@ -178,8 +194,9 @@ export default function CalendarPage() {
                 id={`status-${status}`}
                 checked={activeStatusFilters.includes(status)}
                 onCheckedChange={(checked) => handleStatusToggle(status, checked === true)}
-                className={cn(getStatusCheckboxClassName(status), 'border-2')}
+                className={cn(getStatusCheckboxClassName(status), 'border-2 rounded-sm')}
               />
+
               <FieldLabel className='cursor-pointer font-normal' htmlFor={`status-${status}`}>
                 {t(`meeting.status.${status.toLowerCase()}`)}
               </FieldLabel>

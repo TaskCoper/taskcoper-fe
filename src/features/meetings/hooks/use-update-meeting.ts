@@ -1,25 +1,27 @@
 import { queryKeys } from '@/lib/query-keys'
 import meetingService from '@/services/meeting.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-interface UseRescheduleMeetingOptions {
+interface UseUpdateMeetingOptions {
   packageId?: string
   mentorId: string
+  showSuccessToast?: boolean
 }
 
-export const useRescheduleMeeting = ({ packageId, mentorId }: UseRescheduleMeetingOptions) => {
+export const useUpdateMeeting = ({ packageId, mentorId, showSuccessToast = true }: UseUpdateMeetingOptions) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
-  const { mutate: rescheduleMeeting, isPending: isReschedulingMeeting } = useMutation({
-    mutationFn: meetingService.rescheduleMeeting,
+  const { mutate: updateMeeting, isPending: isUpdatingMeeting } = useMutation({
+    mutationFn: meetingService.updateMeeting,
     onSuccess: (message) => {
-      toast.success(message)
+      if (showSuccessToast) {
+        toast.success(message)
+      }
     },
-    onError: (error: AxiosError<{ detail: string }>) => {
+    onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
       })
@@ -35,5 +37,5 @@ export const useRescheduleMeeting = ({ packageId, mentorId }: UseRescheduleMeeti
     }
   })
 
-  return { rescheduleMeeting, isReschedulingMeeting }
+  return { updateMeeting, isUpdatingMeeting }
 }

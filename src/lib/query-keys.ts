@@ -399,5 +399,8 @@ export const queryKeys = {
     byCode: (voucherCode?: string) => [...queryKeys.vouchers.single, 'code', voucherCode] as const,
     redemptions: ({ voucherId, pageIndex, pageSize, sortBy, searchTerm }: GetVoucherRedemptionsParams) =>
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
+  },
+  feedbacks: {
+    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const
   }
 } as const

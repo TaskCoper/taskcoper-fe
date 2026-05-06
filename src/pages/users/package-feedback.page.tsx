@@ -9,6 +9,7 @@ import { useSubmitPackageFeedback } from '@/features/feedbacks/hooks/use-submit-
 import { calculatePackageFeedbackRating } from '@/features/feedbacks/utils'
 import type { SubmitPackageFeedbackFormValues } from '@/features/feedbacks/validations'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { SendIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, FormProvider, useWatch, type SubmitHandler } from 'react-hook-form'
@@ -21,10 +22,23 @@ export default function PackageFeedbackPage() {
   const { t } = useTranslation()
 
   const { purchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
-  const { methods, submitFeedback, isSubmittingFeedback } = useSubmitPackageFeedback()
+  const { methods, submitFeedback, isSubmittingFeedback } = useSubmitPackageFeedback({ packageId })
+  const { confirm } = useConfirmStore()
   const metadata = useWatch({ control: methods.control, name: 'metadata' })
 
-  const onSubmit: SubmitHandler<SubmitPackageFeedbackFormValues> = (body) => {
+  const onSubmit: SubmitHandler<SubmitPackageFeedbackFormValues> = async (body) => {
+    const ok = await confirm({
+      title: t('packageFeedback.confirm.title'),
+      description: t('packageFeedback.confirm.description'),
+      confirmText: t('packageFeedback.submitButton'),
+      cancelText: t('common.button.cancel'),
+      variant: 'default'
+    })
+
+    if (!ok) {
+      return
+    }
+
     const ratings = Object.fromEntries(packageFeedbackQuestionIds.map((id) => [id, Number(body['metadata'][id])]))
 
     submitFeedback({

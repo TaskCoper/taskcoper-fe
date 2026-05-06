@@ -1,8 +1,13 @@
+import RatingField, { type RatingValue } from '@/components/rating-field'
+import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { packageFeedbackQuestions } from '@/features/feedbacks/constants'
+import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
@@ -10,13 +15,14 @@ import { cn, getAvatarFallback } from '@/shared/utils'
 import { MeetingStatus } from '@/types/meeting.type'
 import { format } from 'date-fns'
 import {
+  BoxIcon,
   CalendarDaysIcon,
   CalendarPlusIcon,
   CircleStarIcon,
   FileTextIcon,
   FolderOpenIcon,
   GraduationCapIcon,
-  MoreHorizontalIcon
+  StarIcon
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -55,13 +61,129 @@ const formatRange = (startISO: string, endISO: string) => {
   return `${datePart}, ${startTime} → ${endDatePart}, ${endTime} (${gmt})`
 }
 
+const PurchasedPackageSkeleton = () => (
+  <div className='absolute inset-0 overflow-y-auto'>
+    <div className='max-w-7xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
+      <div className='col-span-8 space-y-4'>
+        <Skeleton className='w-full h-60 rounded-xl' />
+
+        <div className='space-y-2'>
+          <Skeleton className='h-7 w-2/3' />
+          <Skeleton className='h-4 w-full' />
+          <Skeleton className='h-4 w-5/6' />
+        </div>
+
+        <div className='space-y-4'>
+          {[1, 2].map((item) => (
+            <div key={item} className='p-4 border border-muted rounded-xl space-y-3'>
+              <div className='flex items-start justify-between'>
+                <div className='flex items-center gap-2'>
+                  <Skeleton className='size-9 rounded-full' />
+                  <div className='space-y-1'>
+                    <Skeleton className='h-4 w-32' />
+                    <Skeleton className='h-3 w-24' />
+                  </div>
+                </div>
+                <Skeleton className='h-6 w-16 rounded-md' />
+              </div>
+
+              <div className='space-y-2'>
+                <Skeleton className='h-4 w-full' />
+                <Skeleton className='h-4 w-5/6' />
+                <Skeleton className='h-4 w-2/3' />
+              </div>
+
+              <div className='grid grid-cols-2 gap-x-6 gap-y-2.5 pt-2'>
+                {[1, 2, 3, 4].map((metric) => (
+                  <div key={metric} className='flex items-center justify-between'>
+                    <Skeleton className='h-3 w-20' />
+                    <Skeleton className='h-4 w-16' />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className='col-span-4 space-y-8'>
+        <Skeleton className='h-24 w-full rounded-lg' />
+
+        <div className='space-y-2'>
+          <Skeleton className='h-4 w-40' />
+          <Skeleton className='h-3 w-56' />
+          <Skeleton className='h-2 w-full rounded-full' />
+        </div>
+
+        <div className='space-y-4'>
+          <div className='space-y-1'>
+            <Skeleton className='h-4 w-32' />
+            <Skeleton className='h-3 w-52' />
+          </div>
+
+          <div className='space-y-2'>
+            {[1, 2, 3].map((row) => (
+              <div key={row} className='flex items-center justify-between'>
+                <div className='flex items-center gap-2'>
+                  <Skeleton className='size-4 rounded-full' />
+                  <Skeleton className='h-3 w-28' />
+                </div>
+                <Skeleton className='h-3 w-20' />
+              </div>
+            ))}
+          </div>
+
+          <Skeleton className='h-10 w-full rounded-md' />
+        </div>
+
+        <div className='space-y-2.5'>
+          <Skeleton className='h-4 w-24' />
+          <div className='flex items-center gap-2'>
+            <Skeleton className='size-9 rounded-full' />
+            <div className='space-y-1'>
+              <Skeleton className='h-4 w-28' />
+              <Skeleton className='h-3 w-36' />
+            </div>
+          </div>
+        </div>
+
+        <div className='space-y-2.5'>
+          <Skeleton className='h-4 w-28' />
+          <Skeleton className='h-3 w-40' />
+        </div>
+
+        <div className='space-y-2.5'>
+          <div className='space-y-1'>
+            <Skeleton className='h-4 w-24' />
+            <Skeleton className='h-3 w-56' />
+          </div>
+
+          <div className='space-y-2'>
+            {[1, 2, 3].map((item) => (
+              <Skeleton key={item} className='h-16 w-full rounded-md' />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
 export default function PurchasedPackagePage() {
   const { packageId } = useParams<{ packageId: string }>()
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
 
-  const { purchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
+  const { purchasedMentorPackage, isLoadingPurchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
+  const { feedbacks } = useGetPurchasedPackageFeedbacks({
+    packageBookingId: purchasedMentorPackage?.packageBookingId,
+    enabled: purchasedMentorPackage?.isNeedFeedback
+  })
+
+  if (isLoadingPurchasedMentorPackage) {
+    return <PurchasedPackageSkeleton />
+  }
 
   const currentSequence = Math.max(
     0,
@@ -94,7 +216,7 @@ export default function PurchasedPackagePage() {
   }
 
   return (
-    <>
+    <div className='absolute inset-0 overflow-y-auto'>
       <div className='max-w-7xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
         <div className='col-span-8 space-y-4'>
           <img
@@ -108,70 +230,82 @@ export default function PurchasedPackagePage() {
             <p className='text-muted-foreground text-sm'>{purchasedMentorPackage?.description}</p>
           </div>
 
-          <div className='space-y-2'>
-            {purchasedMentorPackage?.meetings
-              .filter((x) => !x.parentId)
-              .sort((a, b) => b.packageBookingSequence - a.packageBookingSequence)
-              .map((meeting) => (
-                <Card key={meeting.meetingId} className='p-1 shadow-none rounded-md h-24 flex-row gap-2 relative'>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        className={cn(
-                          'h-full w-1.5 rounded-full cursor-default',
-                          getMeetingStatusTheme(meeting.status).dot
-                        )}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent side='top' className='text-xs'>
-                      {t('purchasedPackage.statusTooltip', {
-                        status: t(`meeting.status.${meeting.status.toLowerCase()}`)
-                      })}
-                    </TooltipContent>
-                  </Tooltip>
-                  <div className='flex flex-col justify-between py-1'>
-                    <p className='text-xs text-muted-foreground'>
-                      {formatRange(meeting.startTimeUtc, meeting.endTimeUtc)}
-                    </p>
+          {(feedbacks?.value?.items?.length ?? 0) > 0 ? (
+            <div className='space-y-4'>
+              {feedbacks?.value.items.map((feedback) => {
+                let metaDataObj: Record<string, number> = {}
+                try {
+                  if (feedback.metaData) {
+                    metaDataObj = JSON.parse(feedback.metaData)
+                  }
+                } catch {
+                  // Ignore parse error
+                }
 
-                    <div>
-                      <Link
-                        to={`meetings/${meeting.meetingId}`}
-                        className='hover:underline hover:text-primary leading-none'
-                      >
-                        <p className='font-semibold'>
-                          {t('purchasedPackage.meetingSession', { sequence: meeting.packageBookingSequence })}
+                const metaEntries = packageFeedbackQuestions
+                  .filter((question) => metaDataObj[question.id] !== undefined)
+                  .map((question) => ({
+                    question,
+                    value: metaDataObj[question.id]
+                  }))
+
+                return (
+                  <Card key={feedback.id} className='p-4 gap-4 shadow-none border-muted'>
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-center gap-2'>
+                        <Avatar>
+                          <AvatarImage src={feedback.author.avatarUrl ?? undefined} />
+                          <AvatarFallback>
+                            {getAvatarFallback(`${feedback.author.firstName} ${feedback.author.lastName}`)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className='-space-y-1'>
+                          <p className='font-semibold text-sm'>
+                            {feedback.author.firstName} {feedback.author.lastName}
+                          </p>
+                          <p className='text-xs text-muted-foreground'>
+                            {feedback.createdOnUtc ? format(new Date(feedback.createdOnUtc), 'PPP') : ''}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className='flex items-center gap-1.5 bg-orange-50 px-1.5 py-1 rounded-md border border-orange-100'>
+                        <StarIcon className='size-4 text-orange-600' />
+                        <p className='font-semibold text-orange-600 text-sm'>
+                          {Number(feedback.rating).toFixed(1)}/5.0
                         </p>
-                      </Link>
-
-                      {meeting.meetingLink ? (
-                        <Link
-                          to={meeting.meetingLink}
-                          target='_blank'
-                          className='text-xs text-foreground/80 hover:underline'
-                        >
-                          <p>{meeting.meetingLink.replace('https://', '')}</p>
-                        </Link>
-                      ) : (
-                        <p className='text-xs text-muted-foreground'>{t('meeting.detail.noLinkYet')}</p>
-                      )}
+                      </div>
                     </div>
-                    <div className='flex items-center gap-1'>
-                      <FileTextIcon className='size-3.5 text-muted-foreground' />
-                      {meeting.note ? (
-                        <p className='text-xs text-muted-foreground w-96 truncate'>{meeting.note}</p>
-                      ) : (
-                        <p className='text-xs text-muted-foreground'>{t('purchasedPackage.noNoteAvailable')}</p>
-                      )}
-                    </div>
-                  </div>
 
-                  <Button className='absolute top-1 right-1 size-7' size='icon-sm' variant='ghost'>
-                    <MoreHorizontalIcon />
-                  </Button>
-                </Card>
-              ))}
-          </div>
+                    <SanitizedHtml html={feedback.comment} />
+
+                    {metaEntries.length > 0 && (
+                      <div className='space-y-2 border-t pt-4'>
+                        {metaEntries.map(({ question, value }) => (
+                          <div key={question.id} className='flex items-center justify-between'>
+                            <p className='text-xs text-muted-foreground font-medium'>{t(question.titleKey)}</p>
+
+                            <RatingField
+                              value={value as RatingValue}
+                              setValue={() => {}}
+                              size={12}
+                              max={4}
+                              className='pointer-events-none'
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Card>
+                )
+              })}
+            </div>
+          ) : (
+            <div className='flex flex-col justify-center items-center gap-2 p-8 bg-muted rounded-md'>
+              <BoxIcon className='size-6 text-muted-foreground' />
+              <p className='text-xs text-muted-foreground'>{t('purchasedPackage.noFeedback')}</p>
+            </div>
+          )}
         </div>
 
         <div className='col-span-4 space-y-8'>
@@ -291,6 +425,74 @@ export default function PurchasedPackagePage() {
           <div className='space-y-2.5'>
             <p className='font-semibold'>{t('meeting.detail.participants')}</p>
           </div>
+
+          <div className='space-y-2.5'>
+            <div>
+              <p className='font-semibold'>{t('purchasedPackage.history.title')}</p>
+              <p className='text-xs text-muted-foreground'>{t('purchasedPackage.history.description')}</p>
+            </div>
+
+            <div className='space-y-2'>
+              {purchasedMentorPackage?.meetings
+                .filter((x) => !x.parentId)
+                .sort(
+                  (a, b) =>
+                    b.packageBookingSequence - a.packageBookingSequence ||
+                    new Date(b.createdOnUtc).getTime() - new Date(a.createdOnUtc).getTime()
+                )
+                .map((meeting) => (
+                  <Card key={meeting.meetingId} className='p-1 shadow-none rounded-md h-18 flex-row gap-2 relative'>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={cn(
+                            'h-full w-1.5 rounded-full cursor-default',
+                            getMeetingStatusTheme(meeting.status).dot
+                          )}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent side='top' className='text-xs'>
+                        {t('purchasedPackage.statusTooltip', {
+                          status: t(`meeting.status.${meeting.status.toLowerCase()}`)
+                        })}
+                      </TooltipContent>
+                    </Tooltip>
+                    <div className='flex flex-col justify-between py-1'>
+                      <p className='text-xs text-muted-foreground'>
+                        {formatRange(meeting.startTimeUtc, meeting.endTimeUtc)}
+                      </p>
+
+                      <div>
+                        <Link
+                          to={`meetings/${meeting.meetingId}`}
+                          className='hover:underline hover:text-primary leading-none'
+                        >
+                          <p className='font-semibold'>
+                            {t('purchasedPackage.meetingSession', { sequence: meeting.packageBookingSequence })}
+                          </p>
+                        </Link>
+
+                        {meeting.meetingLink ? (
+                          <Link
+                            to={meeting.meetingLink}
+                            target='_blank'
+                            className='text-xs text-foreground/80 hover:underline'
+                          >
+                            <p>{meeting.meetingLink.replace('https://', '')}</p>
+                          </Link>
+                        ) : (
+                          <p className='text-xs text-muted-foreground'>{t('meeting.detail.noLinkYet')}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {meeting.note ? (
+                      <FileTextIcon className='size-4 text-muted-foreground absolute top-2 right-2' />
+                    ) : null}
+                  </Card>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -310,6 +512,6 @@ export default function PurchasedPackagePage() {
       ) : null}
 
       <Outlet />
-    </>
+    </div>
   )
 }

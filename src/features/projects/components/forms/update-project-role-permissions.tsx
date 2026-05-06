@@ -4,8 +4,8 @@ import { Switch } from '@/components/ui/switch'
 import { ActionKey, ActionKeyLabel, SectionKeyLabel } from '@/types/project-permission.type'
 import type { UseFormSetValue } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { ACTIONS, SECTION_ICONS, SECTION_PERMISSION_CONFIG_MAP } from '../../project-role-permissions.config'
 import type { UpdateProjectRoleFormValues } from '../../validations'
-import { ACTIONS, SECTION_ICONS, SECTION_PERMISSION_CONFIG_MAP } from './update-project-role-permissions.config'
 
 const UPDATE_FIELD_OPTIONS = {
   shouldDirty: true,

@@ -233,13 +233,13 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
 
         <div className='flex flex-col gap-1.5'>
           <p className='flex items-center gap-2 text-sm text-muted-foreground'>
-            <CalendarIcon className='size-3 text-muted-foreground' />
+            <CalendarIcon className='size-3' />
             {t('mentorApplication.dialog.submitted', { date: submittedDate })}
           </p>
 
           {reviewedDate && (
             <span className='flex items-center gap-2 text-sm text-muted-foreground'>
-              <CheckCircle2Icon className='size-4' />
+              <CheckCircle2Icon className='size-3' />
               {t('mentorApplication.dialog.reviewed', { date: reviewedDate })}
             </span>
           )}
@@ -279,7 +279,7 @@ const ApplicationDetailView = ({ application, t, i18n }: { application: Applicat
                     className='group flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:border-muted-foreground/30 shadow-sm'
                   >
                     <FileTextIcon className='size-4 text-blue-500 shrink-0' />
-                    <span className='max-w-[200px] truncate'>{fileNames[i]}</span>
+                    <span className='max-w-50 truncate'>{fileNames[i]}</span>
                     <ExternalLinkIcon className='size-3.5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity shrink-0' />
                   </a>
                 ))}

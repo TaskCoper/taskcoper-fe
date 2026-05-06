@@ -82,6 +82,7 @@ export default function ProjectCalendarPage() {
 
   const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const canBookMeeting = check('CALENDAR', 'canWrite', 'canBookMeeting')
+  const canViewMeetingDetails = check('CALENDAR', 'canRead', 'canViewMeetingDetails')
 
   const { projectMeetings, isLoadingProjectMeetings } = useGetProjectMeetings({
     projectIdentifier: identifier,
@@ -95,9 +96,11 @@ export default function ProjectCalendarPage() {
 
   const handleMeetingClick = useCallback(
     (meeting: MeetingBooking) => {
-      navigate(`${meeting.id}${location.search}`)
+      if (canViewMeetingDetails) {
+        navigate(`${meeting.id}${location.search}`)
+      }
     },
-    [navigate, location.search]
+    [navigate, location.search, canViewMeetingDetails]
   )
 
   const handleStatusToggle = (status: MeetingStatus, checked: boolean) => {

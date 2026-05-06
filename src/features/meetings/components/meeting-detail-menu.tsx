@@ -135,7 +135,7 @@ export default function MeetingDetailMenu({
             <div className='relative group'>
               <Button
                 size='sm'
-                className='w-full justify-start gap-2'
+                className='w-full justify-start gap-2 rounded-none'
                 variant='ghost'
                 disabled={!canReschedule}
                 onClick={() => {
@@ -163,7 +163,7 @@ export default function MeetingDetailMenu({
             <div className='relative group'>
               <Button
                 size='sm'
-                className='w-full justify-start gap-2'
+                className='w-full justify-start gap-2 rounded-none'
                 variant='ghost'
                 disabled={!canCancel}
                 onClick={() => setIsCancelling(true)}

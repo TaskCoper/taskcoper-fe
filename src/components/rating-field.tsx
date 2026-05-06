@@ -8,12 +8,13 @@ interface RatingFieldProps {
   setValue: (value: RatingValue | undefined) => void
   className?: string
   size?: number
+  max?: number
 }
 
-export default function RatingField({ value, setValue, className, size = 24 }: RatingFieldProps) {
+export default function RatingField({ value, setValue, className, size = 24, max = 5 }: RatingFieldProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      {[1, 2, 3, 4, 5].map((star) => {
+      {Array.from({ length: max }, (_, i) => i + 1).map((star) => {
         const fullSelected = value !== undefined && value >= star
         const halfSelected = value !== undefined && value === star - 0.5
 
