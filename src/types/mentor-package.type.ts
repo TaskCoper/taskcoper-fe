@@ -53,3 +53,31 @@ export interface PurchasedMentorPackage extends MentorPackage {
   } | null
   rules: PurchasedMentorPackageRule[]
 }
+
+export interface MentorPackageStatistics {
+  mentorPackageId: string
+  packageName: string
+  currency: Currency
+  startTime: string | null
+  endTime: string | null
+  summary: {
+    totalPaidBookings: number
+    bookingsWithoutVoucher: number
+    bookingsWithVoucher: number
+    grossRevenueAtListPrice: number
+    netRevenueAfterVoucher: number
+    mentorPayoutAfterCommission: number
+    totalPlatformCommission: number
+  }
+  monthlyBreakdown: Array<{
+    year: number
+    month: number
+    totalPaidBookings: number
+    bookingsWithoutVoucher: number
+    bookingsWithVoucher: number
+    grossRevenueAtListPrice: number
+    netRevenueAfterVoucher: number
+    mentorPayoutAfterCommission: number
+    totalPlatformCommission: number
+  }>
+}

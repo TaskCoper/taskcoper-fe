@@ -1,3 +1,4 @@
+import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type {
@@ -6,7 +7,12 @@ import type {
 } from '@/features/mentor-packages/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { MentorPackage, MentorPackageDetail, PurchasedMentorPackage } from '@/types/mentor-package.type'
+import type {
+  MentorPackage,
+  MentorPackageDetail,
+  MentorPackageStatistics,
+  PurchasedMentorPackage
+} from '@/types/mentor-package.type'
 
 class MentorPackageService {
   private readonly baseUrl = 'mentor-packages'
@@ -79,6 +85,16 @@ class MentorPackageService {
 
   deleteMentorPackage = async ({ mentorPackageId }: { mentorPackageId: string }) => {
     const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${mentorPackageId}`)
+
+    return data.value
+  }
+
+  getMentorPackageStatistics = async ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) => {
+    if (!mentorPackageId) return null
+    const { data } = await api.get<BaseResponse<MentorPackageStatistics>>(
+      `/v1/${this.baseUrl}/${mentorPackageId}/statistics`,
+      { params: { startTime, endTime } }
+    )
 
     return data.value
   }

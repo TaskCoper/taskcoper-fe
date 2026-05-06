@@ -60,7 +60,7 @@ export default function StatCard({
         <div className={`size-7.5 shadow-xs rounded-lg flex items-center justify-center ${iconGradient}`}>{icon}</div>
 
         <div className='-space-y-0.5'>
-          <p className='text-sm text-muted-foreground'>{title}</p>
+          <p className='text-sm text-muted-foreground truncate'>{title}</p>
           <p className='text-xl font-bold font-mono'>{value}</p>
         </div>
       </Card>

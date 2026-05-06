@@ -2,11 +2,13 @@ import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-pr
 import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
 import type { GetCommissionsParams } from '@/features/commissions/hooks/use-get-commissions'
+import type { GetFeedbacksParams } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
 import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
@@ -274,7 +276,9 @@ export const queryKeys = {
     list: ({ mentorId, limit }: GetMentorPackagesParams) => [...queryKeys.mentorPackages.all, mentorId, limit] as const,
     listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>
       [...queryKeys.mentorPackages.all, 'infinite', params] as const,
-    detail: (packageId?: string) => ['mentor-package', packageId] as const
+    detail: (packageId?: string) => ['mentor-package', packageId] as const,
+    statistics: ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) =>
+      [...queryKeys.mentorPackages.all, 'statistics', mentorPackageId, startTime, endTime] as const
   },
   // Schedules
   schedules: {
@@ -401,6 +405,7 @@ export const queryKeys = {
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   },
   feedbacks: {
-    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const
+    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const,
+    list: ({ targetId, targetType }: GetFeedbacksParams) => ['feedbacks', targetId, targetType] as const
   }
 } as const

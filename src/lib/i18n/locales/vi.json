@@ -2328,7 +2328,8 @@
       "infoTitle": "Thông tin",
       "infoDescription": "Nhập thông tin cơ bản của gói, bao gồm tên, mô tả, số buổi và giá để người dùng dễ hiểu và lựa chọn.",
       "durationTitle": "Thời lượng mỗi buổi",
-      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi."
+      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi.",
+      "feedbackTitle": "Đánh giá"
     },
     "form": {
       "name": "Tên gói",
@@ -2377,6 +2378,18 @@
       "title": "Thông tin gói",
       "description": "Cập nhật thông tin gói"
     }
+  },
+  "mentorPackageStatistics": {
+    "title": "Thống kê",
+    "description": "Xem doanh thu và lượt đặt gói theo năm.",
+    "totalBookings": "Tổng lượt đặt",
+    "bookingsWithVoucher": "Đặt có voucher",
+    "bookingsWithoutVoucher": "Đặt không voucher",
+    "grossRevenue": "Doanh thu gộp",
+    "netRevenue": "Doanh thu ròng",
+    "mentorPayout": "Thanh toán cho mentor",
+    "revenueOverview": "Tổng quan doanh thu",
+    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}"
   },
   "packageBooking": {
     "bookPackage": {

@@ -2328,7 +2328,8 @@
       "infoTitle": "Information",
       "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
       "durationTitle": "Session Duration",
-      "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session."
+      "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session.",
+      "feedbackTitle": "Feedback"
     },
     "form": {
       "name": "Package name",
@@ -2377,6 +2378,18 @@
       "title": "Package information",
       "description": "Update package information"
     }
+  },
+  "mentorPackageStatistics": {
+    "title": "Statistics",
+    "description": "View bookings and revenue breakdown by year.",
+    "totalBookings": "Total Bookings",
+    "bookingsWithVoucher": "With Voucher",
+    "bookingsWithoutVoucher": "Without Voucher",
+    "grossRevenue": "Gross Revenue",
+    "netRevenue": "Net Revenue",
+    "mentorPayout": "Mentor Payout",
+    "revenueOverview": "Revenue Overview",
+    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}"
   },
   "packageBooking": {
     "bookPackage": {
