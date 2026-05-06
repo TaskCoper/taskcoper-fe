@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { packageFeedbackQuestions } from '@/features/feedbacks/constants'
@@ -178,7 +179,7 @@ export default function PurchasedPackagePage() {
   const { purchasedMentorPackage, isLoadingPurchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
   const { feedbacks } = useGetPurchasedPackageFeedbacks({
     packageBookingId: purchasedMentorPackage?.packageBookingId,
-    enabled: purchasedMentorPackage?.isNeedFeedback
+    enabled: purchasedMentorPackage?.isFeedbackSubmitted
   })
 
   if (isLoadingPurchasedMentorPackage) {
@@ -250,8 +251,8 @@ export default function PurchasedPackagePage() {
                   }))
 
                 return (
-                  <Card key={feedback.id} className='p-4 gap-4 shadow-none border-muted'>
-                    <div className='flex items-start justify-between'>
+                  <Card key={feedback.id} className='p-0 gap-0 shadow-none'>
+                    <div className='flex items-start justify-between p-4'>
                       <div className='flex items-center gap-2'>
                         <Avatar>
                           <AvatarImage src={feedback.author.avatarUrl ?? undefined} />
@@ -277,18 +278,18 @@ export default function PurchasedPackagePage() {
                       </div>
                     </div>
 
-                    <SanitizedHtml html={feedback.comment} />
+                    <Separator />
 
                     {metaEntries.length > 0 && (
-                      <div className='space-y-2 border-t pt-4'>
+                      <div className='space-y-2 p-4 bg-muted/50'>
                         {metaEntries.map(({ question, value }) => (
                           <div key={question.id} className='flex items-center justify-between'>
-                            <p className='text-xs text-muted-foreground font-medium'>{t(question.titleKey)}</p>
+                            <p className='text-sm text-foreground/80 font-medium'>{t(question.titleKey)}</p>
 
                             <RatingField
                               value={value as RatingValue}
                               setValue={() => {}}
-                              size={12}
+                              size={14}
                               max={4}
                               className='pointer-events-none'
                             />
@@ -296,6 +297,10 @@ export default function PurchasedPackagePage() {
                         ))}
                       </div>
                     )}
+
+                    <Separator />
+
+                    <SanitizedHtml html={feedback.comment} className='p-4' />
                   </Card>
                 )
               })}

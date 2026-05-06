@@ -16,6 +16,7 @@ export interface MentorPackage {
   modifiedOnUtc: string | null
   coverImageUrl: string | null
   isNeedFeedback: boolean
+  isFeedbackSubmitted: boolean
 }
 
 export interface MentorPackageRule {

@@ -49,7 +49,7 @@ export default function RatingField({ value, setValue, className, size = 24, max
               <StarIcon
                 size={size}
                 className={cn(
-                  'absolute inset-0 fill-amber-400 text-amber-400 stroke-[1.5] transition-colors',
+                  'absolute inset-0 fill-orange-400 text-orange-400 stroke-[1.5] transition-colors',
                   halfSelected && '[clip-path:inset(0_50%_0_0)]'
                 )}
               />
