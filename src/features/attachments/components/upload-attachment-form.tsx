@@ -12,8 +12,8 @@ import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { type UploadAttachmentFormValues } from '../../../shared/validations'
 import { useUploadAttachment } from '../hooks/use-upload-attachment'
-import { type UploadAttachmentFormValues } from '../validations'
 
 interface UploadAttachmentFormProps {
   taskId: string

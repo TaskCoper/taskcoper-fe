@@ -10,7 +10,7 @@ import { useGetProjectMeetings } from '@/features/meetings/hooks/use-get-project
 import { getStatusCheckboxClassName } from '@/features/meetings/utils'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetProjectPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-project-purchased-mentor-packages'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { CalendarPlusIcon } from 'lucide-react'

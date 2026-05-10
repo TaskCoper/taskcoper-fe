@@ -14,16 +14,6 @@ export interface TaskLabel {
   color: string
 }
 
-export interface ProjectLabelStats {
-  id: string
-  projectId: string
-  name: string
-  color: string
-  taskCount: number
-  createdOnUtc: string
-  modifiedOnUtc: string | null
-}
-
 export interface RevenueLabel {
   id: string
   name: string

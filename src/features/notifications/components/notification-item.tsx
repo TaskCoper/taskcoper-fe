@@ -4,8 +4,8 @@ import { type Notification, NotificationMarkedType, NotificationTypeLabel } from
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
+import { useRespondToInvitation } from '../../projects/members/hooks/use-respond-to-invitation'
 import { useReadNotification } from '../hooks/use-read-notification'
-import { useRespondToInvitation } from '../hooks/use-respond-to-invitation'
 
 interface NotificationItemProps {
   notification: Notification

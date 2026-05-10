@@ -1,30 +1,7 @@
+import type { TaskPreview } from '@/features/projects/core/types'
 import type { TaskLabel } from './label.type'
 import type { Milestone } from './milestone.type'
 import type { MentionUser } from './user.type'
-
-export interface TaskPreview {
-  id: string
-  name: string
-  milestoneId: string
-  slug: string
-  position: number
-  startDate: string | null
-  endDate: string | null
-  priority: TaskPriority | null
-  parentMilestoneName: string
-  parentMilestoneSlug: string
-  members: TaskMember[]
-  totalSubtasks: number
-  hasDescription: boolean
-  completedSubtasks: number
-  totalComments: number
-  totalResources: number
-  progressPercentage: number
-  taskLabels: TaskLabel[]
-  isCompleted: boolean
-  estimatedPoints: number | null
-  backgroundImage: string | null
-}
 
 export type TaskCardType = 'TaskCard'
 
@@ -88,11 +65,6 @@ export interface MilestoneTask {
   id: string
   name: string
   position: number
-}
-
-export interface TaskStatusStats {
-  isCompleted: boolean
-  totalTasks: number
 }
 
 export const TaskPriority = {

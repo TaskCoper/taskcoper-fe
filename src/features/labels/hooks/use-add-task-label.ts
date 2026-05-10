@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { useGetProjectLabels } from './use-get-project-labels'
+import { useGetProjectLabels } from '../../projects/labels/hooks/use-get-project-labels'
 
 interface UseAddTaskLabelProps {
   taskIdentifier: string

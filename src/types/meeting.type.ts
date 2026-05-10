@@ -1,4 +1,4 @@
-import type { SectionPermission } from './project-permission.type'
+import type { SectionPermission } from '@/features/projects/roles/types'
 
 export const MeetingStatus = {
   // FREE: 'Free',

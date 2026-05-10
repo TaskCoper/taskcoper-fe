@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { useGetChildMilestones } from '@/features/milestones/hooks/use-get-child-milestones'
 import { useGetMilestoneTasks } from '@/features/milestones/hooks/use-get-milestone-tasks'
-import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
+import { useGetParentMilestones } from '@/features/projects/core/hooks/use-get-parent-milestones'
 import { INITIAL_POSITION, POSITION_GAP } from '@/shared/constants'
 import { XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'

@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'

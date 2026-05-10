@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import CreateProjectDialog from '@/features/projects/components/dialogs/create-project-dialog'
-import ProjectPreviewCard from '@/features/projects/components/project-preview-card'
-import { useGetMyProjects } from '@/features/projects/hooks/use-get-my-projects'
+import ProjectPreviewCard from '@/features/projects/core/components/project-preview-card'
+import CreateProjectDialog from '@/features/projects/core/components/dialogs/create-project-dialog'
+import { useGetMyProjects } from '@/features/projects/core/hooks/use-get-my-projects'
 import { PlusIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 

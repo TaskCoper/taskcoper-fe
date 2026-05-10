@@ -3,6 +3,7 @@ import { TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUpdateMilestone } from '@/features/milestones/hooks/use-update-milestone'
 import { updateMilestoneSchema } from '@/features/milestones/validations'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
@@ -13,7 +14,6 @@ import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 
 interface SortableMilestoneTabProps {
   milestone: ParentMilestone

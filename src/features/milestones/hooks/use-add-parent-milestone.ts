@@ -1,4 +1,4 @@
-import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
+import { useGetParentMilestones } from '@/features/projects/core/hooks/use-get-parent-milestones'
 import { queryKeys } from '@/lib/query-keys'
 import milestoneService from '@/services/milestone.service'
 import { calculateNewItemPosition } from '@/shared/utils'

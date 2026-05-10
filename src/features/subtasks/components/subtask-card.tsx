@@ -1,6 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn } from '@/shared/utils'
 import type { Subtask } from '@/types/subtask.type'

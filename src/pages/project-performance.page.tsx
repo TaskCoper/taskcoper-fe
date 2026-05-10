@@ -13,8 +13,8 @@ import {
   type ChartDateFilterParams,
   type ProjectTaskStatisticsParams
 } from '@/features/charts/validations'
-import StatCard from '@/features/projects/components/stat-card'
-import { useGetProject } from '@/features/projects/hooks/use-get-project'
+import StatCard from '@/features/projects/core/components/stat-card'
+import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import type { ProjectHeatmap } from '@/types/efficiency.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'

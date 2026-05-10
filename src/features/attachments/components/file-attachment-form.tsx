@@ -2,7 +2,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateAttachmentFormValues } from '../validations'
+import type { UpdateAttachmentFormValues } from '../../../shared/validations'
 
 export default function FileAttachmentForm() {
   const { t } = useTranslation()

@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateAttachmentSchema, type UpdateAttachmentFormValues } from '../validations'
+import { updateAttachmentSchema, type UpdateAttachmentFormValues } from '../../../shared/validations'
 
 export const useUpdateAttachment = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetMyProjectsInfinite } from '@/features/projects/hooks/use-get-my-projects-infinite'
+import { useGetMyProjectsInfinite } from '@/features/projects/core/hooks/use-get-my-projects-infinite'
 import type { ScheduleSlot } from '@/types/schedule.type'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'

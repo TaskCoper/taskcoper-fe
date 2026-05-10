@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { TaskPriority, TaskPriorityLabel } from '@/types/task.type'
 import { XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { getTaskPriorityIcon } from '../constants'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
 import { useParams } from 'react-router'
+import { getTaskPriorityIcon } from '../constants'
 
 interface PriorityPopoverProps {
   children: React.ReactNode

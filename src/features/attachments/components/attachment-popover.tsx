@@ -5,8 +5,8 @@ import { XIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type { UploadAttachmentFormValues } from '../../../shared/validations'
 import { useUploadAttachment } from '../hooks/use-upload-attachment'
-import type { UploadAttachmentFormValues } from '../validations'
 import UploadAttachmentForm from './upload-attachment-form'
 
 interface AttachmentPopoverProps {

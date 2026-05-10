@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronLeftIcon, CopyIcon, EyeIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'

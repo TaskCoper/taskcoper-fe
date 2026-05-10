@@ -1,13 +1,4 @@
-import type { TaskPreview } from './task.type'
-
 export interface Milestone {
-  id: string
-  name: string
-  position: number
-  slug: string
-}
-
-export interface ParentMilestone {
   id: string
   name: string
   position: number
@@ -32,12 +23,6 @@ export type MilestoneTabType = 'MilestoneTab'
 export interface MilestoneTabDragData {
   type: MilestoneTabType
   milestone: Milestone
-}
-
-export interface MilestoneWithTasks {
-  parentId: string
-  milestones: Milestone[]
-  tasks: TaskPreview[]
 }
 
 export interface MilestoneStats {

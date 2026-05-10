@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import TaskCard from '@/features/tasks/components/task-card'
 import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigned-tasks'
 import { cn } from '@/shared/utils'

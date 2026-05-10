@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { uploadAttachmentSchema, type UploadAttachmentFormValues } from '../validations'
+import { uploadAttachmentSchema, type UploadAttachmentFormValues } from '../../../shared/validations'
 import { useGetAttachments } from './use-get-attachments'
 
 interface UseUploadAttachmentProps {

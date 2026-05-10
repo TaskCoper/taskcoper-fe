@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import StatCard from '@/features/projects/components/stat-card'
+import StatCard from '@/features/projects/core/components/stat-card'
 import InfoTab from '@/features/vouchers/components/tabs/info-tab'
 import RedemptionsTab from '@/features/vouchers/components/tabs/redemptions-tab'
 import TargetsTab from '@/features/vouchers/components/tabs/targets-tab'

@@ -1,5 +1,5 @@
 import { queryKeys } from '@/lib/query-keys'
-import projectService from '@/services/project.service'
+
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { TaskPreview } from '@/types/task.type'
 import { useQuery } from '@tanstack/react-query'
