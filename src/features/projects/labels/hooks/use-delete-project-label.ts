@@ -1,12 +1,12 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import type { Label } from '@/types/label.type'
-import type { TaskDetail } from '@/types/task.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import type { TaskDetail } from '../../tasks/core/types'
 import projectLabelService from '../services'
+import type { Label } from '../types'
 
 interface UseDeleteProjectLabelProps {
   taskId: string

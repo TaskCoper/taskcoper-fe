@@ -3,11 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import type { ProjectRoleItem } from '@/types/project.type'
 import { XIcon } from 'lucide-react'
 import { Controller, useFormContext, type FieldArrayWithId, type UseFieldArrayRemove } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { InviteMembersFormValues } from '../../core/validations'
+import type { ProjectRoleItem } from '../../roles/types'
+import type { InviteMembersFormValues } from '../validations'
 
 interface InviteMembersFormProps {
   fields: FieldArrayWithId<InviteMembersFormValues, 'inviteMembers'>[]

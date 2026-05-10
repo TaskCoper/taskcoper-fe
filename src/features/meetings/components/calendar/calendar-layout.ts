@@ -1,4 +1,4 @@
-import { CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT } from '@/features/tasks/constants'
+import { CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT } from '@/features/projects/tasks/core/constants'
 import type { MeetingBooking } from '@/types/meeting.type'
 
 export interface LayoutedEvent {

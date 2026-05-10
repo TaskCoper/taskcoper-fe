@@ -1,9 +1,9 @@
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ProjectResource } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 import projectResourceService from '../services'
+import type { ProjectResource } from '../types'
 
 export interface GetProjectResourcesParams {
   projectIdentifier?: string

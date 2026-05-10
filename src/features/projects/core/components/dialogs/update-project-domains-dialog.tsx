@@ -9,7 +9,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetDomains } from '@/hooks/use-get-domains'
+import { useGetDomains } from '@/features/domains/hooks/use-get-domains'
 import { useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'

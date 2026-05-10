@@ -2,6 +2,7 @@ import { queryKeys } from '@/lib/query-keys'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import projectRoleService from '../services'
+import type { ActionKey, SectionExtensionsMap, SectionKey } from '../types'
 
 export const useGetMyProjectPermissions = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { data: permissions, isLoading: isLoadingPermissions } = useQuery({

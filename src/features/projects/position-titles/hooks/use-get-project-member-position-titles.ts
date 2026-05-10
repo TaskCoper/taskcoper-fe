@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ProjectMemberPositionTitle } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 import projectPositionTitleService from '../services'
+import type { ProjectMemberPositionTitle } from '../types'
 
 export const useGetProjectMemberPositionTitles = ({
   projectIdentifier,

@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { addProjectRevenueSchema, type AddProjectRevenueFormValues } from '../../core/validations'
 import projectRevenueService from '../services'
+import { addProjectRevenueSchema, type AddProjectRevenueFormValues } from '../validations'
 
 export const useAddProjectRevenue = () => {
   const queryClient = useQueryClient()

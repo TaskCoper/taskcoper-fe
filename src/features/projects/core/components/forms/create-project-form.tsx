@@ -1,7 +1,7 @@
 import MultiSelectField from '@/components/multi-select-field'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useGetDomains } from '@/hooks/use-get-domains'
+import { useGetDomains } from '@/features/domains/hooks/use-get-domains'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { CreateProjectFormValues } from '../../validations'

@@ -1,13 +1,13 @@
+import type { RevenueLabel } from '@/features/projects/revenue/types'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import type { RevenueLabel } from '@/types/label.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateProjectRevenueLabelSchema, type UpdateProjectRevenueLabelFormValues } from '../../../labels/validations'
 import projectRevenueService from '../services'
+import { updateProjectRevenueLabelSchema, type UpdateProjectRevenueLabelFormValues } from '../validations'
 
 export const useUpdateProjectRevenueLabel = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()

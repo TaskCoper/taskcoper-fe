@@ -11,8 +11,8 @@ import { Spinner } from '@/components/ui/spinner'
 import { useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { AddProjectRoleFormValues } from '../../core/validations'
 import { useAddProjectRole } from '../hooks/use-add-project-role'
+import type { AddProjectRoleFormValues } from '../validations'
 import AddProjectRoleForm from './add-project-role-form'
 
 interface AddProjectRoleDialogProps {

@@ -1,9 +1,9 @@
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ParentMilestone } from '@/types/milestone.type'
 import { useQuery } from '@tanstack/react-query'
 import projectService from '../services'
+import type { ParentMilestone } from '../types'
 
 export const useGetParentMilestones = ({ identifier, enabled = true }: { identifier?: string; enabled?: boolean }) => {
   const { check, permissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })

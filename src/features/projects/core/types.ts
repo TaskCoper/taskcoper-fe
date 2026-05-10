@@ -1,6 +1,7 @@
-import type { TaskLabel } from '@/types/label.type'
+import type { TaskPriority } from '@/features/projects/tasks/core/types'
+import type { TaskLabel } from '@/features/projects/tasks/labels/types'
+import type { TaskMember } from '@/features/projects/tasks/members/types'
 import type { Milestone } from '@/types/milestone.type'
-import type { TaskMember, TaskPriority } from '@/types/task.type'
 import type { ProjectPositionTitle } from '../position-titles/types'
 import type { ProjectRoleName } from '../roles/types'
 

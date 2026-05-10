@@ -1,4 +1,4 @@
-import type { TaskPriority } from '@/types/task.type'
+import type { TaskPriority } from '@/features/projects/tasks/core/types'
 import type { RevenueType } from '../revenue/types'
 
 export interface ProjectLabelStats {
@@ -65,4 +65,12 @@ export interface RevenueLabelStats {
 export interface RevenueTypeStats {
   name: RevenueType
   transactionCount: number
+}
+
+export interface MilestoneStats {
+  id: string
+  name: string
+  position: number
+  taskCount: number
+  completedTaskCount: number
 }

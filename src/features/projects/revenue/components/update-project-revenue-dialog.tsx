@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import type { Revenue } from '@/types/project.type'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateProjectRevenueFormValues } from '../../core/validations'
 import { useUpdateProjectRevenue } from '../hooks/use-update-project-revenue'
+import type { Revenue } from '../types'
+import type { UpdateProjectRevenueFormValues } from '../validations'
 import UpdateProjectRevenueForm from './update-project-revenue-form'
 
 interface UpdateProjectRevenueDialogProps {

@@ -1,5 +1,5 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Label } from '@/types/label.type'
+import type { Label } from './types'
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from './validations'
 
 class ProjectLabelService {

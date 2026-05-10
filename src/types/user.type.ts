@@ -1,4 +1,4 @@
-import type { Domain } from './domain.type'
+import type { Domain } from '@/features/domains/types'
 
 export const Role = {
   User: 'User',

@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { RevenueLabel } from '@/types/label.type'
+import type { RevenueLabel } from '@/features/projects/revenue/types'
 import { useQuery } from '@tanstack/react-query'
 import projectRevenueService from '../services'
 

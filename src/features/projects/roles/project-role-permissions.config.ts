@@ -9,6 +9,7 @@ import {
   SettingsIcon,
   WalletIcon
 } from 'lucide-react'
+import { ActionKey, SectionKey, type SectionExtensionType } from './types'
 
 export const ACTIONS = Object.values(ActionKey)
 

@@ -1,6 +1,6 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import type { RevenueLabel } from '@/types/label.type'
+import type { RevenueLabel } from '@/features/projects/revenue/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'

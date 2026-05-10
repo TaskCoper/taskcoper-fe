@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ProjectRoleItem } from '@/types/project.type'
 import { useQuery } from '@tanstack/react-query'
 import projectRoleService from '../services'
+import type { ProjectRoleItem } from '../types'
 
 export const useGetProjectRoles = ({ identifier }: { identifier?: string }) => {
   const { data: projectRoles = getDefaultPaginationResponse<ProjectRoleItem>(), isLoading: isLoadingProjectRoles } =

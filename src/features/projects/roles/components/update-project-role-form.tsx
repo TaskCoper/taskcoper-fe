@@ -5,7 +5,7 @@ import { KeySquareIcon } from 'lucide-react'
 import { useId } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { UpdateProjectRoleFormValues } from '../../core/validations'
+import type { UpdateProjectRoleFormValues } from '../validations'
 import ProjectPermissionsAccordion from './update-project-role-permissions'
 
 const UPDATE_FIELD_OPTIONS = {

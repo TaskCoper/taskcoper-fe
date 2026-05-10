@@ -10,13 +10,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import type { ProjectMember } from '@/features/projects/core/types'
 import { getAvatarFallback } from '@/shared/utils'
-import type { ProjectMember, ProjectRoleItem } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import ProjectPositionTitleCombobox from '../../position-titles/components/project-position-title-combobox'
+import type { ProjectRoleItem } from '../../roles/types'
 
 interface GetColumnsProps {
   currentUserId?: string

@@ -7,7 +7,6 @@ import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
-import { RevenueType, RevenueTypeLabel, type Revenue } from '@/types/project.type'
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
@@ -16,7 +15,8 @@ import { useGetProjectRevenueTypeStats } from '../../analytics/hooks/use-get-pro
 import AddProjectRevenueDialog from '../../resources/components/add-project-revenue-dialog'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteProjectRevenue } from '../hooks/use-delete-project-revenue'
-import { useGetProjectRevenues } from '../hooks/use-get-project-revenue'
+import { useGetProjectRevenue } from '../hooks/use-get-project-revenue'
+import { RevenueType, RevenueTypeLabel, type Revenue } from '../types'
 import { getColumns } from './project-revenue-columns'
 import UpdateProjectRevenueDialog from './update-project-revenue-dialog'
 
@@ -76,7 +76,7 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
   const type = typeFilter ?? undefined
   const labels = labelFilter && labelFilter.length > 0 ? labelFilter : undefined
 
-  const { projectRevenues, isLoadingProjectRevenues } = useGetProjectRevenues({
+  const { projectRevenues, isLoadingProjectRevenues } = useGetProjectRevenue({
     projectIdentifier,
     pageIndex: page,
     pageSize: limit,

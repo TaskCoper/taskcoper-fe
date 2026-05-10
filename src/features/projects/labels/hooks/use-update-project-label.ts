@@ -1,15 +1,15 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import type { Label } from '@/types/label.type'
-import type { TaskDetail } from '@/types/task.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateProjectLabelSchema, type UpdateProjectLabelFormValues } from '../../../labels/validations'
+import type { TaskDetail } from '../../tasks/core/types'
 import projectLabelService from '../services'
+import type { Label } from '../types'
+import { updateProjectLabelSchema, type UpdateProjectLabelFormValues } from '../validations'
 
 interface UpdateProjectLabelProps {
   projectIdentifier: string

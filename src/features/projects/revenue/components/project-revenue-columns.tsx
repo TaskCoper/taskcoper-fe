@@ -10,12 +10,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
-import { RevenueType, RevenueTypeLabel, type Revenue } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon, TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
+import { RevenueType, RevenueTypeLabel, type Revenue } from '../types'
 
 interface GetColumnsProps {
   onDeleteRevenue?: (id: string, revenueName: string) => void

@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateProjectRoleSchema, type UpdateProjectRoleFormValues } from '../../core/validations'
 import projectRoleService from '../services'
+import { updateProjectRoleSchema, type UpdateProjectRoleFormValues } from '../validations'
 
 export const useUpdateProjectRole = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { t } = useTranslation()

@@ -33,3 +33,9 @@ export interface Revenue {
     color: string
   }[]
 }
+
+export interface RevenueLabel {
+  id: string
+  name: string
+  color: string
+}

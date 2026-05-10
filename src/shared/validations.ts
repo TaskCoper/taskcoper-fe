@@ -34,9 +34,9 @@ const linkFieldsSchema = z
   })
   .strict()
 
-const fileAttachmentSchema = (t: TFunction) => baseSchema(t).extend(fileFieldsSchema(t).shape).strict()
+export const fileAttachmentSchema = (t: TFunction) => baseSchema(t).extend(fileFieldsSchema(t).shape).strict()
 
-const linkAttachmentSchema = (t: TFunction) => baseSchema(t).extend(linkFieldsSchema.shape).strict()
+export const linkAttachmentSchema = (t: TFunction) => baseSchema(t).extend(linkFieldsSchema.shape).strict()
 
 const updateBaseSchema = (t: TFunction) =>
   z
@@ -47,7 +47,7 @@ const updateBaseSchema = (t: TFunction) =>
     })
     .strict()
 
-const updateFileAttachmentSchema = (t: TFunction) =>
+export const updateFileAttachmentSchema = (t: TFunction) =>
   updateBaseSchema(t)
     .extend({
       name: z.string().min(1, { message: t('task.attachment.validation.name.minLength') }),
@@ -56,7 +56,7 @@ const updateFileAttachmentSchema = (t: TFunction) =>
     .extend(fileFieldsSchema(t).shape)
     .strict()
 
-const updateLinkAttachmentSchema = (t: TFunction) =>
+export const updateLinkAttachmentSchema = (t: TFunction) =>
   updateBaseSchema(t)
     .extend({
       name: z.string(),
@@ -64,12 +64,3 @@ const updateLinkAttachmentSchema = (t: TFunction) =>
     })
     .extend(linkFieldsSchema.shape)
     .strict()
-
-export const updateAttachmentSchema = (t: TFunction) =>
-  z.discriminatedUnion('isUpload', [updateFileAttachmentSchema(t), updateLinkAttachmentSchema(t)])
-
-export const uploadAttachmentSchema = (t: TFunction) =>
-  z.discriminatedUnion('isUpload', [fileAttachmentSchema(t), linkAttachmentSchema(t)])
-
-export type UploadAttachmentFormValues = z.infer<ReturnType<typeof uploadAttachmentSchema>>
-export type UpdateAttachmentFormValues = z.infer<ReturnType<typeof updateAttachmentSchema>>

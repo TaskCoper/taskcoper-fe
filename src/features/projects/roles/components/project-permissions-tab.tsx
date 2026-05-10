@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { cn } from '@/shared/utils'
-import type { ProjectRoleItem } from '@/types/project.type'
 import {
   CalendarDaysIcon,
   CheckIcon,
@@ -23,6 +22,8 @@ import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useGetProjectRoles } from '../hooks/use-get-project-roles'
+import type { ProjectRoleItem } from '../types'
+import { ActionKey, ActionKeyLabel, SectionKey, SectionKeyLabel } from '../types'
 import AddProjectRoleDialog from './add-project-role-dialog'
 
 interface ProjectPermissionsTabProps {

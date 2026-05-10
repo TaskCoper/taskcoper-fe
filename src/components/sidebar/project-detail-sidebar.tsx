@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useGetMyAssignedTasks } from '@/features/projects/core/hooks/use-get-my-assigned-tasks'
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
-import TaskCard from '@/features/tasks/components/task-card'
-import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigned-tasks'
+import TaskCard from '@/features/projects/tasks/core/components/task-card'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,

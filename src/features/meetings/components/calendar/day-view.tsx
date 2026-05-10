@@ -3,7 +3,7 @@ import { layoutDayEvents } from '@/features/meetings/components/calendar/calenda
 import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
-} from '@/features/tasks/constants'
+} from '@/features/projects/tasks/core/constants'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
 import type { MeetingBooking } from '@/types/meeting.type'
 import type { MeetingRule } from '@/types/schedule.type'

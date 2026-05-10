@@ -1,13 +1,13 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import type { Revenue } from '@/types/project.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateProjectRevenueSchema, type UpdateProjectRevenueFormValues } from '../../core/validations'
 import projectRevenueService from '../services'
+import type { Revenue } from '../types'
+import { updateProjectRevenueSchema, type UpdateProjectRevenueFormValues } from '../validations'
 
 export const useUpdateProjectRevenue = () => {
   const queryClient = useQueryClient()

@@ -13,11 +13,11 @@ import {
 import FileIcon from '@/features/projects/resources/components/file-icon'
 import { PdfPreview } from '@/features/projects/resources/components/project-storage-preview-doc'
 import { formatDate, getAvatarFallback } from '@/shared/utils'
-import type { ProjectResource } from '@/types/project.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
+import type { ProjectResource } from '../types'
 import { formatBytes, formatMimeType } from '../utils'
 
 export const getColumns = ({
@@ -127,7 +127,7 @@ export const getColumns = ({
 
         return (
           <Link to={`${task.parentMilestoneId}/tasks/${task.id}`} className='text-sm hover:underline'>
-            <p className='w-full truncate max-w-[500px] xl:max-w-none'>{task.name}</p>
+            <p className='w-full truncate max-w-125 xl:max-w-none'>{task.name}</p>
           </Link>
         )
       },

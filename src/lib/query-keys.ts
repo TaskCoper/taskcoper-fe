@@ -1,6 +1,3 @@
-import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
-import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
-import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
 import type { GetCommissionsParams } from '@/features/commissions/hooks/use-get-commissions'
 import type { GetFeedbacksParams } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
@@ -15,14 +12,17 @@ import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-package
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { GetProjectLabelStatsParams } from '@/features/projects/analytics/hooks/use-get-project-label-stats'
 import type { GetProjectPriorityStatsParams } from '@/features/projects/analytics/hooks/use-get-project-priority-stats'
+import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/use-get-project-heatmap'
+import type { GetProjectTaskStatsParams } from '@/features/projects/charts/hooks/use-get-project-task-stats'
+import type { GetProjectTopContributorsParams } from '@/features/projects/charts/hooks/use-get-project-top-contributors'
 import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
 import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
 import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
 import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
 import type { GetProjectRoleParams } from '@/features/projects/roles/hooks/use-get-project-role'
+import type { GetTasksParams } from '@/features/projects/tasks/core/hooks/use-get-tasks'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
-import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 import type { GetVoucherRedemptionsParams } from '@/features/vouchers/hooks/use-get-voucher-redemptions'
@@ -147,7 +147,7 @@ export const queryKeys = {
       priorities,
       projectIdentifier,
       isWatchingTask
-    }: UseGetTasksParams) =>
+    }: GetTasksParams) =>
       [
         ...queryKeys.tasks.listParent(parentMilestoneIdentifier),
         pageIndex,

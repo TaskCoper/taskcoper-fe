@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { inviteMembersSchema, type InviteMembersFormValues } from '../../core/validations'
 import projectMemberService from '../services'
+import { inviteMembersSchema, type InviteMembersFormValues } from '../validations'
 
 export const useInviteMembers = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const { t } = useTranslation()

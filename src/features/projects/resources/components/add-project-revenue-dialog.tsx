@@ -8,13 +8,13 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import type { RevenueType } from '@/types/project.type'
 import { useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
-import type { AddProjectRevenueFormValues } from '../../core/validations'
 import AddProjectRevenueForm from '../../revenue/components/add-project-revenue-form'
 import { useAddProjectRevenue } from '../../revenue/hooks/use-add-project-revenue'
+import type { RevenueType } from '../../revenue/types'
+import type { AddProjectRevenueFormValues } from '../../revenue/validations'
 
 interface AddProjectRevenueDialogProps {
   projectIdentifier: string

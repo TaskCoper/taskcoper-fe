@@ -2,16 +2,15 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { useDeleteAttachment } from '@/features/attachments/hooks/use-delete-attachment'
-import { useDeleteProjectAttachment } from '@/features/projects/resources/hooks/use-delete-project-resource'
-import { useUploadProjectAttachment } from '@/features/projects/resources/hooks/use-upload-project-resource'
+import { useDeleteProjectResource } from '@/features/projects/resources/hooks/use-delete-project-resource'
+import { useUploadProjectResource } from '@/features/projects/resources/hooks/use-upload-project-resource'
+import { useDeleteTaskAttachment } from '@/features/projects/tasks/attachments/hooks/use-delete-task-attachment'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { ErrorResponse } from '@/lib/axios'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
-import type { ProjectResource } from '@/types/project.type'
 import type { AxiosError } from 'axios'
 import { UploadIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
@@ -21,6 +20,7 @@ import { useGetProjectMimeTypeStats } from '../../analytics/hooks/use-get-projec
 import { useGetProjectResourceMemberStats } from '../../analytics/hooks/use-get-project-resource-member-stats'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useGetProjectResources } from '../hooks/use-get-project-resources'
+import type { ProjectResource } from '../types'
 import { formatMimeType } from '../utils'
 import { getColumns } from './project-resource-columns'
 
@@ -40,10 +40,10 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { uploadFileWithToast } = useUploadFileWithToast()
-  const { uploadProjectAttachmentAsync } = useUploadProjectAttachment({ projectIdentifier })
+  const { uploadProjectResourceAsync } = useUploadProjectResource({ projectIdentifier })
 
-  const { deleteAttachment } = useDeleteAttachment({ projectIdentifier })
-  const { deleteProjectAttachment } = useDeleteProjectAttachment({ projectIdentifier })
+  const { deleteTaskAttachment } = useDeleteTaskAttachment({ projectIdentifier })
+  const { deleteProjectResource } = useDeleteProjectResource({ projectIdentifier })
 
   const onDeleteResource = useCallback(
     async (resourceId: string, taskId: string) => {
@@ -55,10 +55,10 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteAttachment({ id: resourceId, taskId })
+        deleteTaskAttachment({ id: resourceId, taskId })
       }
     },
-    [confirm, deleteAttachment, t]
+    [confirm, deleteTaskAttachment, t]
   )
 
   const onDeleteProjectResource = useCallback(
@@ -71,10 +71,10 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteProjectAttachment({ projectIdentifier, resourceId })
+        deleteProjectResource({ projectIdentifier, resourceId })
       }
     },
-    [confirm, deleteProjectAttachment, projectIdentifier, t]
+    [confirm, deleteProjectResource, projectIdentifier, t]
   )
 
   const handleUploadFiles = useCallback(
@@ -98,7 +98,7 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
             </div>
           ),
           onUploaded: async (url) => {
-            await uploadProjectAttachmentAsync({
+            await uploadProjectResourceAsync({
               body: {
                 projectIdentifier,
                 name: file.name,
@@ -114,7 +114,7 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
         })
       }
     },
-    [projectIdentifier, uploadFileWithToast, uploadProjectAttachmentAsync]
+    [projectIdentifier, uploadFileWithToast, uploadProjectResourceAsync]
   )
 
   const columns = useMemo(

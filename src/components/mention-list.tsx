@@ -1,5 +1,5 @@
+import type { ProjectMember } from '@/features/projects/core/types'
 import { getAvatarFallback } from '@/shared/utils'
-import type { ProjectMember } from '@/types/project.type'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 

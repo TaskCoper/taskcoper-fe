@@ -19,6 +19,8 @@ import { Fragment, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useGetProjectRoleTemplates } from '../hooks/use-get-project-role-templates'
+import { ActionKeyLabel, SectionKey, SectionKeyLabel } from '../types'
+import type { AddProjectRoleFormValues } from '../validations'
 
 type AddProjectRolePermission = AddProjectRoleFormValues['permissions'][number]
 type AddProjectRolePermissionExtensions = AddProjectRolePermission['extensions']

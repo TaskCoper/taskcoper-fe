@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { addProjectRoleSchema, type AddProjectRoleFormValues } from '../../core/validations'
 import projectRoleService from '../services'
+import { addProjectRoleSchema, type AddProjectRoleFormValues } from '../validations'
 
 export const useAddProjectRole = () => {
   const queryClient = useQueryClient()
