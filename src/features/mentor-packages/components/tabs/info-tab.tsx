@@ -33,7 +33,7 @@ export default function InfoTab({
   const { t } = useTranslation()
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 pb-8 max-w-7xl mx-auto'>
       <div>
         <p className='text-xl font-bold'>{t('mentorPackage.page.infoTitle')}</p>
         <p className='text-sm text-muted-foreground'>{t('mentorPackage.page.infoDescription')}</p>
@@ -115,7 +115,6 @@ function InfoTabForm({
       <div className='flex justify-end items-center gap-2'>
         <Button
           type='button'
-          size='sm'
           variant='outline'
           className='w-full sm:w-auto text-destructive border-destructive/40 hover:text-destructive'
           onClick={onDelete}
@@ -125,7 +124,7 @@ function InfoTabForm({
           {t('common.button.delete')}
         </Button>
 
-        <Button type='submit' size='sm' className='w-full sm:w-auto' disabled={!isDirty || isUpdating || isUploading}>
+        <Button type='submit' className='w-full sm:w-auto' disabled={!isDirty || isUpdating || isUploading}>
           {isUpdating || isUploading ? <Spinner /> : null}
           {t('common.button.save')}
         </Button>

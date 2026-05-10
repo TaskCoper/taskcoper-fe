@@ -41,7 +41,9 @@
       "isActive": "Active",
       "startDate": "Start date",
       "endDate": "End date",
-      "date": "Date"
+      "date": "Date",
+      "createdOnUtc": "Created at",
+      "modifiedOnUtc": "Modified at"
     },
     "validation": {
       "email": {
@@ -2329,7 +2331,8 @@
       "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
       "durationTitle": "Session Duration",
       "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session.",
-      "feedbackTitle": "Feedback"
+      "feedbackTitle": "Feedback",
+      "manage": "Manage package"
     },
     "form": {
       "name": "Package name",
@@ -2347,17 +2350,27 @@
       "coverImage": "Cover image",
       "coverImageHint": "Click the image area to choose a cover, then press Save to upload.",
       "isActive": "Active",
-      "isActiveDescription": "If disabled, this package will not be visible/available."
+      "isActiveDescription": "If disabled, this package will not be visible/available.",
+      "isPin": "Pin Package",
+      "isPinDescription": "Pin this package to the top of the list for mentees to see easily.",
+      "activationDeadlineDays": "First Booking Deadline (days)",
+      "activationDeadlineDaysPlaceholder": "e.g. 10",
+      "activationDeadlineDaysDescription": "User needs to use the package within these days from the purchase date.",
+      "usageDeadlineDays": "Usage Period (days)",
+      "usageDeadlineDaysPlaceholder": "e.g. 30",
+      "usageDeadlineDaysDescription": "After the first session, the user must complete all sessions within these days."
     },
     "list": {
-      "newPackage": "New package"
+      "newPackage": "New package",
+      "isPinned": "Pinned",
+      "notPinned": "Not pinned"
     },
     "card": {
       "sessionsCount_one": "{{count}} session",
       "sessionsCount_other": "{{count}} sessions",
       "viewPackage": "View package",
       "bookFor": "Book for {{price}}",
-      "sessionsAndDuration": "{{sessions}} sessions · {{minutes}} mins/session",
+      "sessions": "{{sessions}} sessions",
       "sortOrder": "Sort order"
     },
     "sidebar": {
@@ -2370,7 +2383,6 @@
     "validation": {
       "nameRequired": "Name required",
       "descriptionMax": "Max 255 chars",
-      "durationPositive": "Must be > 0",
       "sessionsPositive": "Must be > 0",
       "pricePositive": "Must be > 0"
     },
@@ -2628,6 +2640,9 @@
         "mentor": "Mentor",
         "project": "Project",
         "purchasedAt": "Purchased on",
+        "author": "Author",
+        "authorPlaceholder": "Type author name to search...",
+        "rating": "Rating",
         "action": "Action"
       },
       "notAvailable": "N/A",
@@ -2637,6 +2652,7 @@
     "questions": {
       "punctuality": {
         "title": "Did the mentor show up on time and manage the schedule effectively?",
+        "label": "Punctuality",
         "options": {
           "4": "Started exactly on time and managed the schedule perfectly.",
           "3": "Mostly on time, minor delays but communicated well.",
@@ -2646,6 +2662,7 @@
       },
       "preparation": {
         "title": "Did the mentor review your project details before the meeting?",
+        "label": "Preparation",
         "options": {
           "4": "Thoroughly reviewed materials and understood the context immediately.",
           "3": "Skimmed the materials, had a basic understanding of the startup.",
@@ -2655,6 +2672,7 @@
       },
       "quality": {
         "title": "Was the feedback valuable for your current stage?",
+        "label": "Quality",
         "options": {
           "4": "Deeply insightful, solved core problems directly.",
           "3": "Helpful and provided a good general direction.",
@@ -2664,6 +2682,7 @@
       },
       "communication": {
         "title": "Was the mentor actively listening and engaging?",
+        "label": "Communication",
         "options": {
           "4": "Exceptionally clear, engaged, and actively listened.",
           "3": "Professional, clear, and easy to converse with.",
@@ -2673,6 +2692,7 @@
       },
       "actionability": {
         "title": "Did you walk away knowing exactly what to do next?",
+        "label": "Actionability",
         "options": {
           "4": "Provided a clear, step-by-step action plan.",
           "3": "Suggested a few practical next steps to try.",

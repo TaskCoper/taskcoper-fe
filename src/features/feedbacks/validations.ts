@@ -29,3 +29,4 @@ export const submitPackageFeedbackSchema = (t: TFunction) => {
 }
 
 export type SubmitPackageFeedbackFormValues = z.infer<ReturnType<typeof submitPackageFeedbackSchema>>
+export type FeedbackMetadata = z.infer<ReturnType<typeof feedbackMetadataSchema>>

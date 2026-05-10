@@ -1,5 +1,6 @@
 import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
+import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type {
   CreateMentorPackageFormValues,
@@ -10,6 +11,7 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type {
   MentorPackage,
   MentorPackageDetail,
+  MentorPackagePinStatistic,
   MentorPackageStatistics,
   PurchasedMentorPackage
 } from '@/types/mentor-package.type'
@@ -23,24 +25,18 @@ class MentorPackageService {
     return data.value
   }
 
-  getMyMentorPackages = async ({
-    pageIndex,
-    pageSize
-  }: {
-    pageIndex?: number
-    pageSize?: number
-  } = {}) => {
+  getMyMentorPackages = async ({ searchTerm, pageIndex, pageSize, sortBy, isPin }: GetMyMentorPackagesParams) => {
     const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`, {
-      params: { pageIndex, pageSize }
+      params: { searchTerm, pageIndex, pageSize, sortBy, isPin }
     })
 
     return data
   }
 
-  getMentorPackages = async ({ mentorId, limit }: GetMentorPackagesParams) => {
+  getMentorPackages = async ({ mentorId, isPin }: GetMentorPackagesParams) => {
     if (!mentorId) return getDefaultPaginationResponse<MentorPackage>()
     const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/mentor/${mentorId}`, {
-      params: { limit }
+      params: { isPin }
     })
 
     return data
@@ -97,6 +93,14 @@ class MentorPackageService {
     )
 
     return data.value
+  }
+
+  getMentorPackagePinStatistics = async () => {
+    const { data } = await api.get<BasePaginationResponse<MentorPackagePinStatistic>>(
+      `/v1/${this.baseUrl}/pin/statistic`
+    )
+
+    return data
   }
 }
 

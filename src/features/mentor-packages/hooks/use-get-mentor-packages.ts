@@ -7,14 +7,14 @@ import { useQuery } from '@tanstack/react-query'
 export interface GetMentorPackagesParams {
   mentorId?: string
   enabled?: boolean
-  limit?: number
+  isPin?: boolean
 }
 
-export const useGetMentorPackages = ({ mentorId, enabled = true, limit }: GetMentorPackagesParams) => {
+export const useGetMentorPackages = ({ mentorId, enabled = true, isPin = true }: GetMentorPackagesParams) => {
   const { data: mentorPackages = getDefaultPaginationResponse<MentorPackage>(), isLoading: isLoadingMentorPackages } =
     useQuery({
-      queryKey: queryKeys.mentorPackages.list({ mentorId, limit }),
-      queryFn: () => mentorPackageService.getMentorPackages({ mentorId, limit }),
+      queryKey: queryKeys.mentorPackages.list({ mentorId, isPin }),
+      queryFn: () => mentorPackageService.getMentorPackages({ mentorId, isPin }),
       enabled: !!mentorId && enabled
     })
 

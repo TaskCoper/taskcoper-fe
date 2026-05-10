@@ -105,6 +105,52 @@ export default function CreateMentorPackageForm() {
         />
       </div>
 
+      <div className='flex items-center gap-4'>
+        <Controller
+          name='activationDeadlineDays'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.activationDeadlineDays')}</FieldLabel>
+              <Input
+                {...field}
+                type='text'
+                inputMode='numeric'
+                id={field.name}
+                value={field.value ?? ''}
+                placeholder={t('mentorPackage.form.activationDeadlineDaysPlaceholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
+
+        <Controller
+          name='usageDeadlineDays'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.usageDeadlineDays')}</FieldLabel>
+              <Input
+                {...field}
+                type='text'
+                inputMode='numeric'
+                id={field.name}
+                value={field.value ?? ''}
+                placeholder={t('mentorPackage.form.usageDeadlineDaysPlaceholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
+      </div>
+
       {/* <Controller
         name='currency'
         control={control}

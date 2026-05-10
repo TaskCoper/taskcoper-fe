@@ -15,13 +15,14 @@ export const useUpdateMentorPackage = () => {
     defaultValues: {
       name: '',
       description: '',
-      durationInMinutes: 0,
       totalSessions: '0',
       price: '0',
       currency: 'Vnd',
       isActive: true,
-      position: 0,
-      coverImageUrl: null
+      coverImageUrl: null,
+      isPin: false,
+      activationDeadlineDays: 10,
+      usageDeadlineDays: 30
     },
     resolver: zodResolver(updateMentorPackageSchema(t))
   })
@@ -37,7 +38,7 @@ export const useUpdateMentorPackage = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.my() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy })
       queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId) })
     }
   })

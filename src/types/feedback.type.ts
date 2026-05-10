@@ -17,6 +17,8 @@ export interface Feedback {
     firstName: string
     lastName: string
     avatarUrl: string | null
+    slug: string
+    email: string
   }
   metaData: string
 }

@@ -1,17 +1,30 @@
 import { queryKeys } from '@/lib/query-keys'
 import feedbackService from '@/services/feedback.service'
-import type { FeedbackTargetType } from '@/types/feedback.type'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
+import { getDefaultPaginationResponse } from '@/shared/utils'
+import type { Feedback } from '@/types/feedback.type'
 import { useQuery } from '@tanstack/react-query'
 
 export interface GetFeedbacksParams {
-  targetType: FeedbackTargetType
+  targetType: string
   targetId?: string
+  pageIndex?: number
+  pageSize?: number
+  sortBy?: string
+  searchTerm?: string
 }
 
-export const useGetFeedbacks = ({ targetId, targetType }: GetFeedbacksParams) => {
-  const { data: feedbacks, isLoading: isLoadingFeedbacks } = useQuery({
-    queryKey: queryKeys.feedbacks.list({ targetId, targetType }),
-    queryFn: () => feedbackService.getFeedbacks({ targetId, targetType }),
+export const useGetFeedbacks = ({
+  pageIndex = DEFAULT_PAGE_INDEX,
+  pageSize = DEFAULT_PAGE_SIZE,
+  targetId,
+  targetType,
+  sortBy,
+  searchTerm
+}: GetFeedbacksParams) => {
+  const { data: feedbacks = getDefaultPaginationResponse<Feedback>(), isLoading: isLoadingFeedbacks } = useQuery({
+    queryKey: queryKeys.feedbacks.list({ targetId, targetType, pageIndex, pageSize, sortBy, searchTerm }),
+    queryFn: () => feedbackService.getFeedbacks({ targetId, targetType, pageIndex, pageSize, sortBy, searchTerm }),
     enabled: !!targetId
   })
 

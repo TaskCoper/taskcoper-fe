@@ -17,6 +17,10 @@ export interface MentorPackage {
   coverImageUrl: string | null
   isNeedFeedback: boolean
   isFeedbackSubmitted: boolean
+  isPin: boolean
+  pinOnUtc: string | null
+  activationDeadlineDays: number
+  usageDeadlineDays: number
 }
 
 export interface MentorPackageRule {
@@ -80,4 +84,9 @@ export interface MentorPackageStatistics {
     mentorPayoutAfterCommission: number
     totalPlatformCommission: number
   }>
+}
+
+export interface MentorPackagePinStatistic {
+  isPin: boolean
+  count: number
 }

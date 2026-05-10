@@ -28,10 +28,18 @@ class FeedbackService {
     return data
   }
 
-  getFeedbacks = async ({ targetType, targetId }: GetFeedbacksParams) => {
+  getFeedbacks = async ({ targetType, targetId, pageIndex, pageSize, sortBy, searchTerm }: GetFeedbacksParams) => {
     if (!targetId) return getDefaultPaginationResponse<Feedback>()
     const { data } = await api.get<BasePaginationResponse<Feedback>>(
-      `/v1/${this.baseUrl}/targets/${targetType}/${targetId}`
+      `/v1/${this.baseUrl}/targets/${targetType}/${targetId}`,
+      {
+        params: {
+          pageIndex,
+          pageSize,
+          sortBy,
+          searchTerm
+        }
+      }
     )
 
     return data

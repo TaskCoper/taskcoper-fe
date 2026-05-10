@@ -29,13 +29,11 @@ export const createMentorPackageSchema = (t: TFunction) =>
     .object({
       name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
       description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
-      durationInMinutes: z
-        .number({ error: t('mentorPackage.validation.durationPositive') })
-        .positive(t('mentorPackage.validation.durationPositive')),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
       currency: z.enum(['Vnd', 'Usd']),
-      position: z.number()
+      activationDeadlineDays: z.int().positive(),
+      usageDeadlineDays: z.int().positive()
     })
     .strict()
 
@@ -44,16 +42,15 @@ export const updateMentorPackageSchema = (t: TFunction) =>
     .object({
       mentorPackageId: z.uuid(),
       name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-      description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
-      durationInMinutes: z
-        .number({ error: t('mentorPackage.validation.durationPositive') })
-        .positive(t('mentorPackage.validation.durationPositive')),
+      description: z.string().min(1).max(10_000, t('mentorPackage.validation.descriptionMax')),
       coverImageUrl: z.url().nullable(),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
       currency: z.enum(['Vnd', 'Usd']),
       isActive: z.boolean(),
-      position: z.number().int()
+      isPin: z.boolean(),
+      activationDeadlineDays: z.int().positive(),
+      usageDeadlineDays: z.int().positive()
     })
     .strict()
 

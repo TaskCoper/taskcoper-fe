@@ -1,3 +1,11 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -20,54 +28,68 @@ import { useNavigate, useParams, useSearchParams } from 'react-router'
 const MentorPackageSkeleton = () => (
   <div className='absolute inset-0 flex flex-col overflow-hidden'>
     <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+      <div className='flex items-center gap-2 h-4'>
+        <Skeleton className='h-4 w-24' />
+        <div className='h-3 w-px bg-muted-foreground/20 rotate-12 mx-0.5' />
+        <Skeleton className='h-4 w-32' />
+      </div>
+
       <div className='flex items-center gap-2'>
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='h-8 w-48' />
+        <Skeleton className='size-6 rounded-md' />
+        <Skeleton className='h-8 w-64' />
       </div>
 
       <div className='flex gap-2 border-b'>
-        {[1, 2].map((i) => (
-          <Skeleton key={i} className='h-10 w-40' />
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className='w-40 px-4 pb-3 pt-2'>
+            <Skeleton className='h-5 w-full' />
+          </div>
         ))}
       </div>
     </div>
 
-    <div className='px-6 pt-6 space-y-6'>
-      <div className='space-y-2'>
-        <Skeleton className='h-7 w-48' />
-        <Skeleton className='h-4 w-96' />
-      </div>
+    <div className='px-6 pt-6 space-y-6 overflow-auto'>
+      <div className='max-w-7xl mx-auto w-full space-y-6 pb-10'>
+        <div className='space-y-2'>
+          <Skeleton className='h-7 w-48' />
+          <Skeleton className='h-4 w-96' />
+        </div>
 
-      <div className='h-48 w-full rounded-xl'>
-        <Skeleton className='h-full w-full' />
-      </div>
-
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-        {[1, 2].map((i) => (
-          <div key={i} className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
+        <div className='space-y-4'>
+          <div className='space-y-2'>
+            <Skeleton className='h-4 w-32' />
+            <Skeleton className='h-48 w-full rounded-xl' />
+            <Skeleton className='h-3 w-64' />
           </div>
-        ))}
-      </div>
 
-      <div className='space-y-2'>
-        <Skeleton className='h-4 w-20' />
-        <Skeleton className='h-24 w-full' />
-      </div>
-
-      <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-        {[1, 2, 3].map((i) => (
-          <div key={i} className='space-y-2'>
-            <Skeleton className='h-4 w-20' />
-            <Skeleton className='h-10 w-full' />
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            {[1, 2].map((i) => (
+              <div key={i} className='space-y-2'>
+                <Skeleton className='h-4 w-20' />
+                <Skeleton className='h-10 w-full' />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className='flex justify-end gap-2'>
-        <Skeleton className='h-9 w-24' />
-        <Skeleton className='h-9 w-24' />
+          <div className='space-y-2'>
+            <Skeleton className='h-4 w-20' />
+            <Skeleton className='h-24 w-full' />
+          </div>
+
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className='space-y-2'>
+                <Skeleton className='h-4 w-20' />
+                <Skeleton className='h-10 w-full' />
+              </div>
+            ))}
+          </div>
+
+          <div className='flex justify-end gap-2'>
+            <Skeleton className='h-9 w-24' />
+            <Skeleton className='h-9 w-24' />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -96,13 +118,14 @@ export default function MentorPackagePage() {
         mentorPackageId: mentorPackage.id,
         name: mentorPackage.name,
         description: mentorPackage.description,
-        durationInMinutes: mentorPackage.durationInMinutes,
         totalSessions: mentorPackage.totalSessions.toString(),
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         coverImageUrl: mentorPackage.coverImageUrl,
         isActive: mentorPackage.isActive,
-        position: mentorPackage.position
+        isPin: mentorPackage.isPin,
+        activationDeadlineDays: mentorPackage.activationDeadlineDays,
+        usageDeadlineDays: mentorPackage.usageDeadlineDays
       })
     }
   }, [mentorPackage, methods])
@@ -261,6 +284,10 @@ export default function MentorPackagePage() {
     ]
   )
 
+  const handleBack = useCallback(() => {
+    navigate('/packages')
+  }, [navigate])
+
   if (isLoadingMentorPackage) {
     return (
       <div className='absolute inset-0 overflow-auto'>
@@ -277,6 +304,20 @@ export default function MentorPackagePage() {
         className='flex flex-1 flex-col min-h-0'
       >
         <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink onClick={handleBack} className='cursor-pointer'>
+                  {t('mentorPackage.page.title')}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className='truncate max-w-75'>{t('mentorPackage.page.manage')}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
           <div className='flex items-center gap-2'>
             <PackageIcon className='size-6 text-primary' />
             <p className='text-2xl font-bold'>{mentorPackage?.name}</p>

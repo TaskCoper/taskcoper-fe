@@ -21,7 +21,7 @@ export default function PackageRulesTab({ mentorPackageId, rules }: PackageRules
   const { t } = useTranslation()
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 max-w-4xl mx-auto'>
       <div>
         <p className='text-xl font-bold'>{t('mentorPackage.page.durationTitle')}</p>
         <p className='text-sm text-muted-foreground'>{t('mentorPackage.page.durationDescription')}</p>

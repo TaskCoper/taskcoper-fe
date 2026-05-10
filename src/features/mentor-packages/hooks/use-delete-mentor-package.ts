@@ -19,7 +19,7 @@ export const useDeleteMentorPackage = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.my() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy })
     }
   })
 

@@ -36,12 +36,13 @@ export default function MentorPackageDialog({ mentorPackage, children }: MentorP
         mentorPackageId: mentorPackage.id,
         name: mentorPackage.name,
         description: mentorPackage.description,
-        durationInMinutes: mentorPackage.durationInMinutes,
         totalSessions: mentorPackage.totalSessions.toString(),
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         isActive: mentorPackage.isActive,
-        position: mentorPackage.position
+        isPin: mentorPackage.isPin,
+        activationDeadlineDays: mentorPackage.activationDeadlineDays,
+        usageDeadlineDays: mentorPackage.usageDeadlineDays
       })
     }
   }, [open, mentorPackage, methods])
