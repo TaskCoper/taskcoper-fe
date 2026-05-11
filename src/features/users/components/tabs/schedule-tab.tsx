@@ -1,5 +1,5 @@
 import MentorSchedule from '@/features/schedules/components/mentor-schedule'
-import type { UserDetail } from '@/types/user.type'
+import type { UserDetail } from '@/features/users/types'
 
 interface ScheduleTabProps {
   userDetail?: UserDetail | null

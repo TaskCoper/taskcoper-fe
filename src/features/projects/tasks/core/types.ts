@@ -1,6 +1,6 @@
 import type { TaskLabel } from '@/features/projects/tasks/labels/types'
+import type { MentionUser } from '@/features/users/types'
 import type { Milestone } from '@/types/milestone.type'
-import type { MentionUser } from '@/types/user.type'
 import type { TaskMember } from '../members/types'
 
 export const TaskPriority = {

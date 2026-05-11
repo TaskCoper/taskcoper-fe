@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn, formatDate, getAvatarFallback } from '@/shared/utils'
-import type { User } from '@/types/user.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import {
@@ -28,6 +27,7 @@ import {
   SettingsIcon
 } from 'lucide-react'
 import { Link } from 'react-router'
+import type { User } from '../../types'
 
 const roleConfig: Record<
   string,
@@ -168,7 +168,7 @@ export const getColumns = (): ColumnDef<User>[] => {
               <AvatarFallback className='text-xs'>{getAvatarFallback(organizationName)}</AvatarFallback>
             </Avatar>
 
-            <p className='truncate max-w-[120px]'>{organizationName}</p>
+            <p className='truncate max-w-30'>{organizationName}</p>
           </div>
         )
       },
@@ -225,7 +225,7 @@ export const getColumns = (): ColumnDef<User>[] => {
         return (
           <div className='flex items-center gap-1.5 text-sm'>
             <MapPinIcon className='size-3.5 text-muted-foreground' />
-            <p className='truncate max-w-[120px]'>{[city, state].filter(Boolean).join(', ')}</p>
+            <p className='truncate max-w-30'>{[city, state].filter(Boolean).join(', ')}</p>
           </div>
         )
       },

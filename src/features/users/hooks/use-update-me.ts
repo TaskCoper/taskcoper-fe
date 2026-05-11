@@ -1,10 +1,10 @@
 import { queryKeys } from '@/lib/query-keys'
-import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import userService from '../services'
 import { type UpdateMeFormValues, updateMeSchema } from '../validations'
 
 export const useUpdateMe = () => {

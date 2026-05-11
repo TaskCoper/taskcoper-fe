@@ -1,4 +1,4 @@
-import userService from '@/services/user.service'
+import userService from '@/features/users/services'
 import { clearAllUserPreferences } from '@/shared/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'

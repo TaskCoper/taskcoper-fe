@@ -8,8 +8,8 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import UpdateMentorDescriptionDialog from '@/features/mentors/components/dialogs/update-mentor-description-dialog'
 import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
+import type { UserDetail } from '@/features/users/types'
 import { cn, formatCurrency } from '@/shared/utils'
-import type { UserDetail } from '@/types/user.type'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, EditIcon, GraduationCapIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -82,7 +82,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
                   key={index}
                   className={cn(
                     'shrink-0 rounded-lg p-0 gap-0 shadow-none border',
-                    mentorPackages.value.items.length > 3 ? 'w-[280px] lg:w-[31%] snap-start' : 'col-span-4'
+                    mentorPackages.value.items.length > 3 ? 'w-70 lg:w-[31%] snap-start' : 'col-span-4'
                   )}
                 >
                   <Skeleton className='w-full h-28 rounded-t-lg rounded-b-none' />
@@ -108,7 +108,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
                       key={pkg.id}
                       className={cn(
                         'shrink-0 rounded-lg p-0 gap-0 shadow-none',
-                        mentorPackages.value.items.length > 3 ? 'w-[280px] lg:w-[30%] snap-start' : 'col-span-4'
+                        mentorPackages.value.items.length > 3 ? 'w-70 lg:w-[30%] snap-start' : 'col-span-4'
                       )}
                     >
                       <img

@@ -6,7 +6,7 @@ import '@/components/tiptap-node/image-upload-node/image-upload-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 
-import type { MentionUser } from '@/types/user.type'
+import type { MentionUser } from '@/features/users/types'
 import DOMPurify from 'dompurify'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'

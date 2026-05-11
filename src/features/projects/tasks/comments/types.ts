@@ -1,4 +1,4 @@
-import type { MentionUser } from '@/types/user.type'
+import type { MentionUser } from '@/features/users/types'
 
 export interface Comment {
   commentId: string

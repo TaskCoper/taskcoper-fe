@@ -1,4 +1,4 @@
-import userService from '@/services/user.service'
+import userService from '@/features/users/services'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 

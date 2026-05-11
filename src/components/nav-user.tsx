@@ -16,8 +16,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
+import type { User } from '@/features/users/types'
 import { getAvatarFallback } from '@/shared/utils'
-import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'

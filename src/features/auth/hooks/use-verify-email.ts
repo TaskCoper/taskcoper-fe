@@ -1,5 +1,5 @@
+import userService from '@/features/users/services'
 import { queryKeys } from '@/lib/query-keys'
-import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'

@@ -1,14 +1,14 @@
-import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '@/features/auth/validations'
-import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '../auth/validations'
+import type { GetUsersParams } from './hooks/use-get-users'
+import type { User, UserDetail } from './types'
 import type {
   ChangePasswordFormValues,
   ForgotPasswordFormValues,
   ResetPasswordFormValues,
   UpdateMeFormValues,
   VerifyCodeFormValues
-} from '@/features/users/validations'
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { User, UserDetail } from '@/types/user.type'
+} from './validations'
 
 class UserService {
   private readonly baseUrl = 'users'

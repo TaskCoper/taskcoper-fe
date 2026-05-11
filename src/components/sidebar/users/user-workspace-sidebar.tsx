@@ -1,8 +1,8 @@
 import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
 import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import type { Role } from '@/features/users/types'
 import { cn } from '@/shared/utils'
-import type { Role } from '@/types/user.type'
 import {
   AudioWaveform,
   BookOpen,

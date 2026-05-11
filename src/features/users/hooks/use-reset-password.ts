@@ -1,10 +1,10 @@
-import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
+import userService from '../services'
 import { type ResetPasswordFormValues, resetPasswordSchema } from '../validations'
 
 export const useResetPassword = () => {

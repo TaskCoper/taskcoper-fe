@@ -1,9 +1,9 @@
-import userService from '@/services/user.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import userService from '../services'
 import { changePasswordSchema, type ChangePasswordFormValues } from '../validations'
 
 export const useChangePassword = () => {

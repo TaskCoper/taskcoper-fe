@@ -12,7 +12,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { Spinner } from '@/components/ui/spinner'
 import { useUpdateMentorProfile } from '@/features/mentors/hooks/use-update-mentor-profile'
 import type { UpdateMentorProfileFormValues } from '@/features/mentors/validations'
-import type { UserDetail } from '@/types/user.type'
+import type { UserDetail } from '@/features/users/types'
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
