@@ -1,8 +1,8 @@
-import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
-import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
-import type { CreateSchedulesFormValues, UpdateScheduleFormValues } from '@/features/schedules/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { MeetingRule, ScheduleSlot } from '@/types/schedule.type'
+import type { GetMySchedulesParams } from './hooks/use-get-my-schedules'
+import type { GetScheduleParams } from './hooks/use-get-schedule'
+import type { MeetingRule, ScheduleSlot } from './types'
+import type { CreateSchedulesFormValues, UpdateScheduleFormValues } from './validations'
 
 class ScheduleService {
   private readonly baseUrl = 'meeting-rules'

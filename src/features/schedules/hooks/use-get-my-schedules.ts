@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import scheduleService from '@/services/schedule.service'
 import { useQuery } from '@tanstack/react-query'
+import scheduleService from '../services'
 
 export interface GetMySchedulesParams {
   isActive?: boolean

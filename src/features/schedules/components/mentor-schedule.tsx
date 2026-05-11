@@ -153,7 +153,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
               </Button>
 
               <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
-                <SelectTrigger size='sm' className='w-[140px] text-sm font-medium bg-background'>
+                <SelectTrigger size='sm' className='w-35 text-sm font-medium bg-background'>
                   <SelectValue>{currentWeekLabel}</SelectValue>
                 </SelectTrigger>
                 <SelectContent
@@ -175,7 +175,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
             </div>
 
             <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
-              <SelectTrigger size='sm' className='w-[90px] text-sm bg-background'>
+              <SelectTrigger size='sm' className='w-22.5 text-sm bg-background'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent side='bottom' sideOffset={8}>
@@ -225,7 +225,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
                   </p>
                 </div>
 
-                <div className='space-y-2 min-h-[80px]'>
+                <div className='space-y-2 min-h-20'>
                   {day.slots.map((slot) => {
                     const isBooked = bookedSchedule[index].slots.some(
                       (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc

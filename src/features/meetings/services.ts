@@ -1,5 +1,5 @@
+import type { ScheduleSlot } from '@/features/schedules/types'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { ScheduleSlot } from '@/types/schedule.type'
 import type { GetMentorMeetingsParams } from './hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from './hooks/use-get-my-meetings'
 import type { GetProjectMeetingsParams } from './hooks/use-get-project-meetings'
