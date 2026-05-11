@@ -1,7 +1,7 @@
+import type { SystemProject } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { SystemProject } from '@/features/projects/core/types'
 import { useQuery } from '@tanstack/react-query'
 import projectService from '../services'
 

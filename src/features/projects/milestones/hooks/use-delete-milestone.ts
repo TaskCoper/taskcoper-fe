@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import milestoneService from '../services'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import milestoneService from '../services'
 
 export interface DeleteMilestoneParams {
   queryKey: unknown[]

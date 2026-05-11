@@ -1,6 +1,6 @@
+import type { Project } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { Project } from '@/features/projects/core/types'
 import { useQuery } from '@tanstack/react-query'
 import projectService from '../services'
 

@@ -1,6 +1,5 @@
 import { useGetParentMilestones } from '@/features/projects/core/hooks/use-get-parent-milestones'
 import { queryKeys } from '@/lib/query-keys'
-import milestoneService from '../services'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -8,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import milestoneService from '../services'
 import { addParentMilestoneSchema, type AddParentMilestoneFormValues } from '../validations'
 
 export const useAddParentMilestone = ({ identifier }: { identifier: string }) => {

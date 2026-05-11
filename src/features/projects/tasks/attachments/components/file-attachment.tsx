@@ -3,8 +3,8 @@ import { Card } from '@/components/ui/card'
 import { format } from 'date-fns'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import AttachmentMenu from './attachment-menu'
 import type { Attachment } from '../types'
+import AttachmentMenu from './attachment-menu'
 
 interface FileAttachmentProps {
   attachment: Attachment

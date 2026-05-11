@@ -1,6 +1,6 @@
+import type { RevenueLabel } from '@/features/projects/revenue/types'
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { RevenueLabel } from '@/features/projects/revenue/types'
 import type { GetProjectRevenueParams } from './hooks/use-get-project-revenue'
 import type { Revenue } from './types'
 import type {
