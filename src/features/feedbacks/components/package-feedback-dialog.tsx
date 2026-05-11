@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import type { Feedback } from '@/types/feedback.type'
+import type { Feedback } from '@/features/feedbacks/types'
 import { useTranslation } from 'react-i18next'
 import PackageFeedbackCard from './package-feedback-card'
 

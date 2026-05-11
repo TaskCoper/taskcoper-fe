@@ -1,8 +1,8 @@
-import type { GetFeedbacksParams } from '@/features/feedbacks/hooks/use-get-feedbacks'
-import type { SubmitPackageFeedbackFormValues } from '@/features/feedbacks/validations'
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { Feedback } from '@/types/feedback.type'
+import type { GetFeedbacksParams } from './hooks/use-get-feedbacks'
+import type { Feedback } from './types'
+import type { SubmitPackageFeedbackFormValues } from './validations'
 
 class FeedbackService {
   private readonly baseUrl = 'feedbacks'

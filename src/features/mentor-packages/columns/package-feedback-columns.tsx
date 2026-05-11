@@ -11,9 +11,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { packageFeedbackQuestions } from '@/features/feedbacks/constants'
+import type { Feedback } from '@/features/feedbacks/types'
 import type { FeedbackMetadata } from '@/features/feedbacks/validations'
 import { getAvatarFallback, safeParseJson } from '@/shared/utils'
-import type { Feedback } from '@/types/feedback.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import i18next from 'i18next'

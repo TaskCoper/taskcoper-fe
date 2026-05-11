@@ -1,11 +1,11 @@
 import { queryKeys } from '@/lib/query-keys'
-import feedbackService from '@/services/feedback.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
+import feedbackService from '../services'
 import { calculatePackageFeedbackRating } from '../utils'
 import { submitPackageFeedbackSchema, type SubmitPackageFeedbackFormValues } from '../validations'
 
