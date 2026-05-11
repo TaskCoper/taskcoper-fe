@@ -1,6 +1,6 @@
-import type { GetMyNotificationsParams } from '@/features/notifications/hooks/use-get-my-notifications'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import { NotificationMarkedType, type Notification } from '@/types/notification.type'
+import type { GetMyNotificationsParams } from './hooks/use-get-my-notifications'
+import { NotificationMarkedType, type Notification } from './types'
 
 class NotificationService {
   private readonly baseUrl = 'notifications'

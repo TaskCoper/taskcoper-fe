@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { NotificationMarkedType } from '@/types/notification.type'
+import { NotificationMarkedType } from '@/features/notifications/types'
 import { ChevronDown, MessageCircleQuestionMarkIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useGetMyNotifications } from '../hooks/use-get-my-notifications'
@@ -32,7 +32,7 @@ export default function NotificationsPopover({ children, open, onOpenChange }: N
         sideOffset={8}
         align='end'
         side='bottom'
-        className='w-[400px] p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+        className='w-100 p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
       >
         <div className='px-3 py-2 flex items-center justify-between'>
           <p className='text-lg font-semibold'>{t('notification.popover.title')}</p>
@@ -55,7 +55,7 @@ export default function NotificationsPopover({ children, open, onOpenChange }: N
 
         <Separator />
 
-        <div className='max-h-[400px] overflow-y-auto flex flex-col'>
+        <div className='max-h-100 overflow-y-auto flex flex-col'>
           {isLoading ? (
             <div className='flex flex-col gap-2 p-3'>
               <Skeleton className='h-12 w-full' />

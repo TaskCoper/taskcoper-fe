@@ -1,7 +1,7 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import notificationService from '@/services/notification.service'
 import { useQuery } from '@tanstack/react-query'
+import notificationService from '../services'
 
 interface UseGetUnreadCountOptions {
   enabled?: boolean
