@@ -1,10 +1,10 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorService from '@/services/mentor.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import mentorService from '../services'
 import { updateMentorProfileSchema, type UpdateMentorProfileFormValues } from '../validations'
 
 export const useUpdateMentorProfile = () => {
