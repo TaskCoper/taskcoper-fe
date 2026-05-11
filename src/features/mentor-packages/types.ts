@@ -1,5 +1,5 @@
-import type { Currency } from '../../types/transaction.type'
 import type { Meeting } from '../meetings/types'
+import type { Currency } from '../transactions/types'
 
 export interface MentorPackage {
   id: string

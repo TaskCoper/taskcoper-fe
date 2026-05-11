@@ -1,4 +1,4 @@
-import type { Currency } from './transaction.type'
+import type { Currency } from '../features/transactions/types'
 
 export const DiscountType = {
   Percentage: 'Percentage',

@@ -2,8 +2,8 @@ import { DataTableColumnHeader } from '@/components/data-table/data-table-column
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { type Currency } from '@/features/transactions/types'
 import { formatCurrency, getAvatarFallback } from '@/shared/utils'
-import { type Currency } from '@/types/transaction.type'
 import {
   TargetTypeLabel,
   VoucherRedemptionStatus,

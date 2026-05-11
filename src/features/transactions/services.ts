@@ -1,11 +1,6 @@
-import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type {
-  Transaction,
-  TransactionRow,
-  TransactionStatusStats,
-  TransactionTypeStats
-} from '@/types/transaction.type'
+import type { GetMyTransactionsParams } from './hooks/use-get-my-transactions'
+import type { Transaction, TransactionRow, TransactionStatusStats, TransactionTypeStats } from './types'
 
 class TransactionService {
   private readonly baseUrl = 'transactions'

@@ -1,8 +1,8 @@
+import type { TransactionTypeStats } from '@/features/transactions/types'
 import { queryKeys } from '@/lib/query-keys'
-import transactionService from '@/services/transaction.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { TransactionTypeStats } from '@/types/transaction.type'
 import { useQuery } from '@tanstack/react-query'
+import transactionService from '../services'
 
 export const useGetMyTransactionTypeStats = () => {
   const {

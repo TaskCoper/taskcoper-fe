@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import transactionService from '@/services/transaction.service'
 import { useQuery } from '@tanstack/react-query'
+import transactionService from '../services'
 
 export const useGetTransactionStatus = ({ transactionId }: { transactionId?: string }) => {
   const { data: transactionStatus, isLoading: isLoadingTransactionStatus } = useQuery({
