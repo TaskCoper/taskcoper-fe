@@ -1,5 +1,5 @@
 import { Progress } from '@/components/ui/progress'
-import { MeetingStatus } from '@/types/meeting.type'
+import { MeetingStatus } from '@/features/meetings/types'
 import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
 import { format } from 'date-fns'
 import { AlertCircleIcon, ClockIcon, FolderIcon } from 'lucide-react'

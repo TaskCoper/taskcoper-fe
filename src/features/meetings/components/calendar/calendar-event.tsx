@@ -6,10 +6,10 @@ import {
   CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME
 } from '@/features/projects/tasks/core/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import { format } from 'date-fns'
 import { MicIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { MeetingStatus, type MeetingBooking } from '../../types'
 
 interface CalendarEventProps {
   meeting: MeetingBooking & { status?: string }

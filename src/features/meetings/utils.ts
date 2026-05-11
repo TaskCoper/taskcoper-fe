@@ -1,4 +1,4 @@
-import { MeetingStatus } from '@/types/meeting.type'
+import { MeetingStatus } from '@/features/meetings/types'
 import type { ScheduleSlot } from '@/types/schedule.type'
 import { addDays } from 'date-fns'
 

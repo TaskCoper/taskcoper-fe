@@ -1,5 +1,5 @@
+import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
-import meetingService from '@/services/meeting.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ScheduleSlot } from '@/types/schedule.type'
 import { useQuery } from '@tanstack/react-query'

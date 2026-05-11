@@ -1,6 +1,6 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
-import meetingService from '@/services/meeting.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'

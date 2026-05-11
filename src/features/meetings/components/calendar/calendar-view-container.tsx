@@ -3,10 +3,10 @@ import DayView from '@/features/meetings/components/calendar/day-view'
 import MiniCalendarSidebar from '@/features/meetings/components/calendar/mini-calendar-sidebar'
 import MonthView from '@/features/meetings/components/calendar/month-view'
 import WeekView from '@/features/meetings/components/calendar/week-view'
+import { MeetingStatus, type MeetingBooking } from '@/features/meetings/types'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import { cn } from '@/shared/utils'
-import { MeetingStatus, type MeetingBooking } from '@/types/meeting.type'
 import {
   addDays,
   addMonths,

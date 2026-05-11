@@ -5,11 +5,11 @@ import {
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
 } from '@/features/projects/tasks/core/constants'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
-import type { MeetingBooking } from '@/types/meeting.type'
 import type { MeetingRule } from '@/types/schedule.type'
 import { addDays, format, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay, startOfWeek } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { MeetingBooking } from '../../types'
 
 interface WeekViewProps {
   date: Date

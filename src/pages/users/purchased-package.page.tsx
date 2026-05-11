@@ -6,11 +6,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import PackageFeedbackCard from '@/features/feedbacks/components/package-feedback-card'
 import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
+import { MeetingStatus } from '@/features/meetings/types'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { MeetingStatus } from '@/types/meeting.type'
 import { format } from 'date-fns'
 import {
   BoxIcon,

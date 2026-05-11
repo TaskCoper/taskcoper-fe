@@ -1,5 +1,5 @@
+import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
-import meetingService from '@/services/meeting.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'

@@ -1,5 +1,5 @@
+import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
-import meetingService from '@/services/meeting.service'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetMeeting = ({ meetingId, enabled = true }: { meetingId?: string; enabled?: boolean }) => {
