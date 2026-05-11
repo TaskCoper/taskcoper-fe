@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { TransactionStatus, type Currency, type TransactionRow } from '@/features/transactions/types'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -31,6 +30,7 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import { TransactionStatus, type Currency, type TransactionRow } from '../types'
 
 export const getColumns = (): ColumnDef<TransactionRow>[] => {
   return [

@@ -1,7 +1,7 @@
-import type { GetCommissionsParams } from '@/features/commissions/hooks/use-get-commissions'
-import type { CreateCommissionFormValues, UpdateCommissionFormValues } from '@/features/commissions/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetCommissionsParams } from './hooks/use-get-commissions'
 import type { CommissionRow } from './types'
+import type { CreateCommissionFormValues, UpdateCommissionFormValues } from './validations'
 
 class CommissionService {
   private readonly baseUrl = 'commissions'

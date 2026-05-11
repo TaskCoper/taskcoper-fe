@@ -3,12 +3,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { NotificationMarkedType } from '@/features/notifications/types'
 import { ChevronDown, MessageCircleQuestionMarkIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useGetMyNotifications } from '../hooks/use-get-my-notifications'
 import { useGetUnreadCount } from '../hooks/use-get-unread-count'
 import { useReadNotification } from '../hooks/use-read-notification'
+import { NotificationMarkedType } from '../types'
 import NotificationItem from './notification-item'
 
 interface NotificationsPopoverProps {

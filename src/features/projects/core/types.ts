@@ -1,4 +1,4 @@
-import type { Milestone } from '@/types/milestone.type'
+import type { Milestone } from '../milestones/types'
 import type { ProjectPositionTitle } from '../position-titles/types'
 import type { ProjectRoleName } from '../roles/types'
 import type { TaskPriority } from '../tasks/core/types'

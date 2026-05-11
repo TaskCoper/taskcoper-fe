@@ -2,7 +2,6 @@ import { customCollisionDetection } from '@/components/dnd/collision-detection'
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import { queryKeys } from '@/lib/query-keys'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
-import type { Milestone } from '@/types/milestone.type'
 import {
   DndContext,
   DragOverlay,
@@ -19,6 +18,7 @@ import { useParams } from 'react-router'
 import AddMilestoneButton from '../../milestones/components/add-milestone-button'
 import SortableMilestoneColumn from '../../milestones/components/sortable-milestone-column'
 import { useUpdateMilestone } from '../../milestones/hooks/use-update-milestone'
+import type { Milestone } from '../../milestones/types'
 import { updateMilestoneSchema } from '../../milestones/validations'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import SortableTaskCard from '../../tasks/core/components/sortable-task-card'

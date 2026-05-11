@@ -1,5 +1,5 @@
-import type { GetDomainsParams } from '@/features/domains/hooks/use-get-domains'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetDomainsParams } from './hooks/use-get-domains'
 import type { Domain, DomainStats } from './types'
 
 class DomainService {

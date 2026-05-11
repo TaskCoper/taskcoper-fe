@@ -1,10 +1,3 @@
-import CalendarHeader, { type CalendarViewMode } from '@/features/meetings/components/calendar/calendar-header'
-import DayView from '@/features/meetings/components/calendar/day-view'
-import MiniCalendarSidebar from '@/features/meetings/components/calendar/mini-calendar-sidebar'
-import MonthView from '@/features/meetings/components/calendar/month-view'
-import WeekView from '@/features/meetings/components/calendar/week-view'
-import { MeetingStatus, type MeetingBooking } from '@/features/meetings/types'
-import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import { cn } from '@/shared/utils'
 import {
@@ -24,6 +17,13 @@ import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
+import { MeetingStatus, type MeetingBooking } from '../../types'
+import { getMeetingStatusTheme } from '../../utils'
+import CalendarHeader, { type CalendarViewMode } from './calendar-header'
+import DayView from './day-view'
+import MiniCalendarSidebar from './mini-calendar-sidebar'
+import MonthView from './month-view'
+import WeekView from './week-view'
 
 interface CalendarViewContainerProps {
   meetings: MeetingBooking[]

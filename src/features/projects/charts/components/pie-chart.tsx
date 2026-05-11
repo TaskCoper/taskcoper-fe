@@ -44,15 +44,15 @@ export default function PieChartLabel({
         {data.length > 0 ? (
           <ChartContainer
             config={config}
-            className='[&_.recharts-pie-label-text]:fill-foreground mx-auto max-h-[220px] pb-0'
+            className='[&_.recharts-pie-label-text]:fill-foreground mx-auto max-h-55 pb-0'
           >
             <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel className='min-w-[160px]' />} />
+              <ChartTooltip content={<ChartTooltipContent hideLabel className='min-w-40' />} />
               <Pie data={data} dataKey={dataKey} label nameKey={nameKey} />
             </PieChart>
           </ChartContainer>
         ) : (
-          <div className='flex items-center justify-center h-[200px]'>
+          <div className='flex items-center justify-center h-50'>
             <p className='text-sm text-muted-foreground'>{t('common.ui.noDataAvailable')}</p>
           </div>
         )}

@@ -1,9 +1,9 @@
 import { Progress } from '@/components/ui/progress'
 import { MeetingStatus } from '@/features/meetings/types'
-import type { PurchasedMentorPackage } from '@/features/mentor-packages/types'
 import { format } from 'date-fns'
 import { AlertCircleIcon, ClockIcon, FolderIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import type { PurchasedMentorPackage } from '../types'
 
 interface PurchasedMentorPackageCardProps {
   mentorPackage: PurchasedMentorPackage

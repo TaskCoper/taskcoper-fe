@@ -1,20 +1,17 @@
-import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
-import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
-import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
-import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { getDefaultPaginationResponse } from '@/shared/utils'
+import type { GetMentorPackageStatisticsParams } from './hooks/use-get-mentor-package-statistics'
+import type { GetMentorPackagesParams } from './hooks/use-get-mentor-packages'
+import type { GetMyMentorPackagesParams } from './hooks/use-get-my-mentor-packages'
+import type { GetPurchasedMentorPackagesParams } from './hooks/use-get-purchased-mentor-packages'
 import type {
   MentorPackage,
   MentorPackageDetail,
   MentorPackagePinStatistic,
   MentorPackageStatistics,
   PurchasedMentorPackage
-} from '@/features/mentor-packages/types'
-import type {
-  CreateMentorPackageFormValues,
-  UpdateMentorPackageFormValues
-} from '@/features/mentor-packages/validations'
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import { getDefaultPaginationResponse } from '@/shared/utils'
+} from './types'
+import type { CreateMentorPackageFormValues, UpdateMentorPackageFormValues } from './validations'
 
 class MentorPackageService {
   private readonly baseUrl = 'mentor-packages'

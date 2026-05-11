@@ -12,7 +12,6 @@ import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-m
 import { useUpdateMeeting } from '@/features/meetings/hooks/use-update-meeting'
 import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import type { PurchasedMentorPackageRule } from '@/features/mentor-packages/types'
-import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
@@ -21,6 +20,7 @@ import { enUS, vi } from 'date-fns/locale'
 import { AlertCircleIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useGetSchedule } from '../hooks/use-get-schedule'
 
 export interface MentorScheduleContentProps {
   open: boolean

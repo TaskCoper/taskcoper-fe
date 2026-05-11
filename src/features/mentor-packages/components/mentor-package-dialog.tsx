@@ -7,14 +7,14 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useDeleteMentorPackage } from '@/features/mentor-packages/hooks/use-delete-mentor-package'
-import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
-import type { MentorPackage } from '@/features/mentor-packages/types'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useDeleteMentorPackage } from '../hooks/use-delete-mentor-package'
+import { useUpdateMentorPackage } from '../hooks/use-update-mentor-package'
+import type { MentorPackage } from '../types'
 import type { UpdateMentorPackageFormValues } from '../validations'
 import UpdateMentorPackageForm from './update-mentor-package-form'
 

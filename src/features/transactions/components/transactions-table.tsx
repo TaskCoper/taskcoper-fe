@@ -1,6 +1,5 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
-import type { TransactionRow } from '@/features/transactions/types'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
@@ -10,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useGetMyTransactionStatusStats } from '../hooks/use-get-my-transaction-status-stats'
 import { useGetMyTransactionTypeStats } from '../hooks/use-get-my-transaction-type-stats'
 import { useGetMyTransactions } from '../hooks/use-get-my-transactions'
+import type { TransactionRow } from '../types'
 import { getColumns } from './transaction-columns'
 
 export default function TransactionsTable() {

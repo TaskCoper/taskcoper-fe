@@ -1,9 +1,9 @@
-import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import meetingService from '../services'
 
 interface UseCancelMeetingOptions {
   mentorId: string

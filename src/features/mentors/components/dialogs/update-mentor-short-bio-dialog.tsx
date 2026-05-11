@@ -10,13 +10,13 @@ import {
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { Spinner } from '@/components/ui/spinner'
-import { useUpdateMentorProfile } from '@/features/mentors/hooks/use-update-mentor-profile'
-import type { UpdateMentorProfileFormValues } from '@/features/mentors/validations'
 import type { UserDetail } from '@/features/users/types'
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useUpdateMentorProfile } from '../../hooks/use-update-mentor-profile'
+import type { UpdateMentorProfileFormValues } from '../../validations'
 
 interface UpdateMentorShortBioDialogProps {
   children: React.ReactNode

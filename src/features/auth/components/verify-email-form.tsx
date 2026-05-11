@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Spinner } from '@/components/ui/spinner'
-import { useResendCode } from '@/features/auth/hooks/use-resend-code'
-import { useVerifyEmail } from '@/features/auth/hooks/use-verify-email'
-import { type VerifyEmailFormValues } from '@/features/auth/validations'
 import { useCountdown } from '@/hooks/use-countdown'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useResendCode } from '../hooks/use-resend-code'
+import { useVerifyEmail } from '../hooks/use-verify-email'
+import { type VerifyEmailFormValues } from '../validations'
 
 interface VerifyEmailFormProps {
   email: string

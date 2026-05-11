@@ -1,13 +1,13 @@
 import FileDropzone from '@/components/file-dropzone'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import UpdateMentorPackageForm from '@/features/mentor-packages/components/update-mentor-package-form'
-import type { UpdateMentorPackageFormValues } from '@/features/mentor-packages/validations'
 import { MAX_COVER_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { CameraIcon, ImageOffIcon } from 'lucide-react'
 import { FormProvider, useFormContext, useFormState, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type { UpdateMentorPackageFormValues } from '../../validations'
+import UpdateMentorPackageForm from '../update-mentor-package-form'
 
 interface InfoTabProps {
   methods: UseFormReturn<UpdateMentorPackageFormValues>

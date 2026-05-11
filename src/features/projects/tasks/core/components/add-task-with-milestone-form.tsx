@@ -1,7 +1,7 @@
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import type { ChildMilestone } from '@/types/milestone.type'
+import type { ChildMilestone } from '@/features/projects/milestones/types'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { AddTaskFormValues } from '../validations'

@@ -1,6 +1,6 @@
 import type { MentionUser } from '@/features/users/types'
-import type { Milestone } from '@/types/milestone.type'
 import type { TaskPreview } from '../../core/types'
+import type { Milestone } from '../../milestones/types'
 import type { TaskLabel } from '../labels/types'
 import type { TaskMember } from '../members/types'
 

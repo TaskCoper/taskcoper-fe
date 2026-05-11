@@ -1,9 +1,9 @@
-import type { Feedback } from '@/features/feedbacks/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import feedbackService from '../services'
+import type { Feedback } from '../types'
 
 export interface GetFeedbacksParams {
   targetType: string

@@ -4,7 +4,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
-import type { MilestoneTabDragData } from '@/types/milestone.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { XIcon } from 'lucide-react'
@@ -14,6 +13,7 @@ import type { ParentMilestone } from '../../core/types'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 import { useUpdateMilestone } from '../hooks/use-update-milestone'
+import type { MilestoneTabDragData } from '../types'
 import { updateMilestoneSchema } from '../validations'
 
 interface SortableMilestoneTabProps {

@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { MeetingStatus } from '@/features/meetings/types'
 import type { SectionPermission } from '@/features/projects/roles/types'
 import { cn } from '@/shared/utils'
 import { differenceInHours } from 'date-fns'
@@ -10,6 +9,7 @@ import { CalendarClockIcon, ChevronLeftIcon, InfoIcon, Trash2Icon, XIcon } from 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCancelMeeting } from '../hooks/use-cancel-meeting'
+import { MeetingStatus } from '../types'
 
 interface MeetingDetailMenuProps {
   meetingId: string

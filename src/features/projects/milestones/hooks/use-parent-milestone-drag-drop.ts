@@ -1,12 +1,12 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
-import type { Milestone } from '@/types/milestone.type'
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ParentMilestone } from '../../core/types'
+import type { Milestone } from '../types'
 import { updateMilestoneSchema } from '../validations'
 import { useUpdateMilestone } from './use-update-milestone'
 

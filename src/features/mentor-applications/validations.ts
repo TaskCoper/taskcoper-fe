@@ -1,6 +1,6 @@
-import { ApplicationStatus, MentorTitle } from '@/features/mentor-applications/types'
 import type { TFunction } from 'i18next'
 import z from 'zod'
+import { ApplicationStatus, MentorTitle } from './types'
 
 export const submitMentorApplicationSchema = (t: TFunction) =>
   z

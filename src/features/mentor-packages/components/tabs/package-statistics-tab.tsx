@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMentorPackageStatistics } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { formatCurrency } from '@/shared/utils'
 import { endOfYear, format, getYear, startOfYear } from 'date-fns'
@@ -18,6 +17,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import { useGetMentorPackageStatistics } from '../../hooks/use-get-mentor-package-statistics'
 
 const currentYear = getYear(new Date())
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)

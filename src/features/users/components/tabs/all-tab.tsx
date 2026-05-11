@@ -8,12 +8,12 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import UpdateMentorDescriptionDialog from '@/features/mentors/components/dialogs/update-mentor-description-dialog'
 import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
-import type { UserDetail } from '@/features/users/types'
 import { cn, formatCurrency } from '@/shared/utils'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, EditIcon, GraduationCapIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import type { UserDetail } from '../../types'
 
 const COLLAPSED_HEIGHT = 300
 

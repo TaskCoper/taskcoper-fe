@@ -1,7 +1,7 @@
-import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
-import type { UpdateMentorProfileFormValues } from '@/features/mentors/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetMentorsParams } from './hooks/use-get-mentors'
 import type { Mentor } from './types'
+import type { UpdateMentorProfileFormValues } from './validations'
 
 class MentorService {
   private readonly baseUrl = 'mentors'

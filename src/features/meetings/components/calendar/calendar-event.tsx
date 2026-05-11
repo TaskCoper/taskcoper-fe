@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import {
   CALENDAR_HOUR_HEIGHT,
   CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME
@@ -10,6 +9,7 @@ import { format } from 'date-fns'
 import { MicIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { MeetingStatus, type MeetingBooking } from '../../types'
+import { getMeetingStatusTheme } from '../../utils'
 
 interface CalendarEventProps {
   meeting: MeetingBooking & { status?: string }

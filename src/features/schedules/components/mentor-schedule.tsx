@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import { formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
-import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { addWeeks, endOfWeek, format, getISOWeek, getYear, startOfWeek, subWeeks } from 'date-fns'
@@ -12,6 +11,7 @@ import { enUS, vi } from 'date-fns/locale'
 import { CalendarDaysIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useGetSchedule } from '../hooks/use-get-schedule'
 
 interface MentorScheduleProps {
   userId: string

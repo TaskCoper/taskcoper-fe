@@ -1,9 +1,9 @@
-import type { User } from '@/features/users/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import userService from '../services'
+import type { User } from '../types'
 
 export interface GetUsersParams {
   searchTerm?: string

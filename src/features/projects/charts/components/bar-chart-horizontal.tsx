@@ -79,7 +79,7 @@ export default function BarChartHorizontal({
       </div>
       <CardContent className='flex-1 pb-0 pl-0'>
         {data.length > 0 ? (
-          <ChartContainer config={config} className='max-h-[220px] w-full'>
+          <ChartContainer config={config} className='max-h-55 w-full'>
             <BarChart
               accessibilityLayer
               data={data}
@@ -102,12 +102,12 @@ export default function BarChartHorizontal({
                 width={180}
                 tick={({ x, y, payload }) => <CustomYAxisTick x={x} y={y} payload={payload} data={data} />}
               />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel className='min-w-[160px]' />} />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel className='min-w-40' />} />
               <Bar dataKey={dataKey} fill={color} radius={5} />
             </BarChart>
           </ChartContainer>
         ) : (
-          <div className='flex items-center justify-center h-[180px]'>
+          <div className='flex items-center justify-center h-45'>
             <p className='text-sm text-muted-foreground'>{t('common.ui.noDataAvailable')}</p>
           </div>
         )}

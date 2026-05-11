@@ -1,11 +1,11 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import meetingService from '@/features/meetings/services'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import meetingService from '../services'
 import { bookMeetingSchema, type BookMeetingFormValues } from '../validations'
 
 interface UseBookMeetingOptions {

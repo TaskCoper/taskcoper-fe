@@ -1,5 +1,3 @@
-import CalendarEvent from '@/features/meetings/components/calendar/calendar-event'
-import { layoutDayEvents } from '@/features/meetings/components/calendar/calendar-layout'
 import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
@@ -10,6 +8,8 @@ import { addDays, format, isAfter, isBefore, isSameDay, isToday, setHours, start
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MeetingBooking } from '../../types'
+import CalendarEvent from './calendar-event'
+import { layoutDayEvents } from './calendar-layout'
 
 interface WeekViewProps {
   date: Date

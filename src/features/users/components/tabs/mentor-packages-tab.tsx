@@ -5,10 +5,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
-import type { UserDetail } from '@/features/users/types'
 import { formatCurrency } from '@/shared/utils'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import type { UserDetail } from '../../types'
 
 interface MentorPackagesTabProps {
   userDetail?: UserDetail | null

@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { CommissionTargetModelLabel, type Commission, type CommissionRow } from '@/features/commissions/types'
 import { formatCurrency, formatDate } from '@/shared/utils'
 import type { Row } from '@tanstack/react-table'
 import { CheckCircle2Icon, CheckIcon, CircleXIcon, EditIcon, Trash2Icon, XIcon } from 'lucide-react'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useUpdateCommission } from '../hooks/use-update-commission'
+import { CommissionTargetModelLabel, type Commission, type CommissionRow } from '../types'
 
 interface CommissionTableProps {
   row: Row<CommissionRow>

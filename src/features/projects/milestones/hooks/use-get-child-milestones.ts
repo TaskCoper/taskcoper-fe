@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ChildMilestone } from '@/types/milestone.type'
 import { useQuery } from '@tanstack/react-query'
 import milestoneService from '../services'
+import type { ChildMilestone } from '../types'
 
 interface GetChildMilestonesParams {
   parentMilestoneIdentifier?: string
