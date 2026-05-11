@@ -2,8 +2,8 @@ import { Card } from '@/components/ui/card'
 import type { ChildSubtaskDragData } from '@/features/projects/subtasks/types'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import type { Subtask } from '../shared-types'
 import SubtaskCard from './subtask-card'
-import type { Subtask } from '../../tasks/subtasks/types'
 
 interface SortableSubtaskCardProps {
   subtask: Subtask

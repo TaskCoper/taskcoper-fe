@@ -4,8 +4,8 @@ import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import type { Subtask } from '../../tasks/subtasks/types'
 import subtaskService from '../services'
+import type { Subtask } from '../shared-types'
 import { recalculateParentStatus } from '../utils'
 
 interface UseDeleteSubtaskProps {

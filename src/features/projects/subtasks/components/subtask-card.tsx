@@ -5,10 +5,10 @@ import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { Subtask } from '../../tasks/subtasks/types'
 import { useDeleteSubtask } from '../hooks/use-delete-subtask'
 import { useUpdateSubtask } from '../hooks/use-update-subtask'
 import { useUpdateSubtaskStatus } from '../hooks/use-update-subtask-status'
+import type { Subtask } from '../shared-types'
 import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
 
 interface SubtaskCardProps {
