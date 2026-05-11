@@ -1,4 +1,3 @@
-import type { RevenueLabel } from '@/features/projects/revenue/types'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import projectRevenueService from '../services'
+import type { RevenueLabel } from '../types'
 import type { AddProjectRevenueLabelFormValues } from '../validations'
 import { addProjectRevenueLabelSchema } from '../validations'
 

@@ -1,9 +1,9 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
-import RevenueLabelCombobox from '@/features/projects/resources/components/revenue-label-combobox'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import RevenueLabelCombobox from '../../resources/components/revenue-label-combobox'
 import type { AddProjectRevenueFormValues } from '../validations'
 
 export default function AddProjectRevenueForm() {

@@ -1,8 +1,8 @@
-import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/use-get-project-heatmap'
-import type { GetProjectOnTimeCompletersParams } from '@/features/projects/charts/hooks/use-get-project-on-time-completers'
-import type { GetProjectTaskStatsParams } from '@/features/projects/charts/hooks/use-get-project-task-stats'
-import type { GetProjectTopContributorsParams } from '@/features/projects/charts/hooks/use-get-project-top-contributors'
 import api, { type BaseResponse } from '@/lib/axios'
+import type { GetProjectHeatmapParams } from './hooks/use-get-project-heatmap'
+import type { GetProjectOnTimeCompletersParams } from './hooks/use-get-project-on-time-completers'
+import type { GetProjectTaskStatsParams } from './hooks/use-get-project-task-stats'
+import type { GetProjectTopContributorsParams } from './hooks/use-get-project-top-contributors'
 import type { ProjectHeatmap, ProjectTaskStats, ProjectTopContributor } from './types'
 
 class EfficiencyService {

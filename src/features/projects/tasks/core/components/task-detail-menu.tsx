@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronLeftIcon, CopyIcon, EyeIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteTask } from '../hooks/use-delete-task'
 import { useToggleWatchTask } from '../hooks/use-toggle-watch-task'
 

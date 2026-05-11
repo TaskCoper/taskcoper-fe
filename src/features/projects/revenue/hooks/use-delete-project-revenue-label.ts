@@ -1,10 +1,10 @@
-import type { RevenueLabel } from '@/features/projects/revenue/types'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import projectRevenueService from '../services'
+import type { RevenueLabel } from '../types'
 
 export const useDeleteProjectRevenueLabel = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const queryClient = useQueryClient()

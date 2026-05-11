@@ -96,7 +96,7 @@ export function PdfPreview({ url, name, mimeType, canDownload = true }: PdfPrevi
           canDownload ? 'hover:text-primary' : ''
         )}
       >
-        <span className={cn('truncate max-w-[160px]', canDownload ? 'group-hover:underline underline-offset-2' : '')}>
+        <span className={cn('truncate max-w-40', canDownload ? 'group-hover:underline underline-offset-2' : '')}>
           {name}
         </span>
 
@@ -107,7 +107,7 @@ export function PdfPreview({ url, name, mimeType, canDownload = true }: PdfPrevi
 
       {show && (
         <div
-          className='fixed z-9999 w-[340px] rounded-xl border border-border/40 bg-white shadow-2xl overflow-hidden'
+          className='fixed z-9999 w-85 rounded-xl border border-border/40 bg-white shadow-2xl overflow-hidden'
           style={{
             top: position.y,
             left: position.x,
@@ -125,7 +125,7 @@ export function PdfPreview({ url, name, mimeType, canDownload = true }: PdfPrevi
             </div>
           </div>
 
-          <div className='relative h-[210px] bg-white overflow-hidden'>{renderPreview()}</div>
+          <div className='relative h-52.5 bg-white overflow-hidden'>{renderPreview()}</div>
 
           <div className='px-3 py-1 border-t bg-muted/20 text-[9px] text-muted-foreground flex justify-between'>
             <span>{t('project.priviewDocument.preview')}</span>

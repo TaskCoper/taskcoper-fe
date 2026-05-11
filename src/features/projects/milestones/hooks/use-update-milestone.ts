@@ -1,10 +1,10 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import type { MilestoneWithTasks, ParentMilestone } from '@/features/projects/core/types'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import type { MilestoneWithTasks, ParentMilestone } from '../../core/types'
 import milestoneService from '../services'
 
 type CacheData = BasePaginationResponse<ParentMilestone> | MilestoneWithTasks

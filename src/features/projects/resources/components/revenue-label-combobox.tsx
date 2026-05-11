@@ -4,8 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import type { RevenueLabel } from '@/features/projects/revenue/types'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { cn, getColorTextClass } from '@/shared/utils'
 import { ChevronDownIcon, ChevronLeftIcon, PencilIcon, XIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -18,7 +16,9 @@ import { useAddProjectRevenueLabel } from '../../revenue/hooks/use-add-project-r
 import { useDeleteProjectRevenueLabel } from '../../revenue/hooks/use-delete-project-revenue-label'
 import { useGetProjectRevenueLabels } from '../../revenue/hooks/use-get-project-revenue-labels'
 import { useUpdateProjectRevenueLabel } from '../../revenue/hooks/use-update-project-revenue-label'
+import type { RevenueLabel } from '../../revenue/types'
 import type { AddProjectRevenueLabelFormValues, UpdateProjectRevenueLabelFormValues } from '../../revenue/validations'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 
 interface RevenueLabelComboboxProps {
   projectIdentifier: string

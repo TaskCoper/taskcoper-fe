@@ -2,13 +2,13 @@ import FileDropzone from '@/components/file-dropzone'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { MAX_BACKGROUND_SIZE } from '@/shared/constants'
 import { ImageOffIcon, XIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
 
 interface BackgroundImagePopoverProps {
   children: React.ReactNode

@@ -1,7 +1,7 @@
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import projectService from '../services'
 import type { ParentMilestone } from '../types'
 

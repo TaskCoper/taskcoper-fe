@@ -6,11 +6,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 
 interface MilestoneColumnMenuProps {

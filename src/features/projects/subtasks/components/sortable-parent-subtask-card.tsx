@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card'
-import type { ParentSubtaskDragData, SubtaskWithChildren } from '@/features/projects/subtasks/types'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import type { ParentSubtaskDragData, SubtaskWithChildren } from '../types'
 import ParentSubtaskCard from './parent-subtask-card'
 
 interface SortableParentSubtaskCardProps {

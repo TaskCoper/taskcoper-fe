@@ -1,7 +1,7 @@
-import type { GetMilestonesParams } from '@/features/projects/core/hooks/use-get-milestones'
-import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetMilestonesParams } from './hooks/use-get-milestones'
 import type { GetMyProjectsParams } from './hooks/use-get-my-projects'
+import type { GetProjectsParams } from './hooks/use-get-projects'
 import type { MilestoneWithTasks, ParentMilestone, Project, ProjectPreview, SystemProject, TaskPreview } from './types'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from './validations'
 

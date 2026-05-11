@@ -6,10 +6,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import type { ParentMilestone } from '@/features/projects/core/types'
 import { cn } from '@/shared/utils'
 import { CheckIcon } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router'
+import type { ParentMilestone } from '../../core/types'
 
 interface ParentMilestonesMenuProps {
   children: React.ReactNode

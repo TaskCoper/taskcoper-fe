@@ -1,8 +1,8 @@
-import type { ProjectMember } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
+import type { ProjectMember } from '../../core/types'
 import projectMemberService from '../services'
 
 export interface GetProjectMembersParams {

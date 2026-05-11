@@ -1,5 +1,5 @@
-import type { UpdateSubtaskFormValues, UpdateSubtaskStatusFormValues } from '@/features/projects/subtasks/validations'
 import api, { type BaseResponse } from '@/lib/axios'
+import type { UpdateSubtaskFormValues, UpdateSubtaskStatusFormValues } from './validations'
 
 class SubtaskService {
   private readonly baseUrl = 'subtasks'

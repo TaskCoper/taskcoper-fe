@@ -1,5 +1,5 @@
-import type { TaskPriority } from '@/features/projects/tasks/core/types'
 import type { RevenueType } from '../revenue/types'
+import type { TaskPriority } from '../tasks/core/types'
 
 export interface ProjectLabelStats {
   id: string

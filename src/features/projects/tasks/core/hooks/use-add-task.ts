@@ -1,4 +1,3 @@
-import { useGetMilestones } from '@/features/projects/core/hooks/use-get-milestones'
 import { queryKeys } from '@/lib/query-keys'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useGetMilestones } from '../../../core/hooks/use-get-milestones'
 import taskService from '../services'
 import { addTaskSchema, type AddTaskFormValues } from '../validations'
 

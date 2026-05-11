@@ -1,5 +1,5 @@
-import type { SubtaskWithChildren } from '@/features/projects/subtasks/types'
 import type { Subtask } from './shared-types'
+import type { SubtaskWithChildren } from './types'
 
 /**
  * Recalculates a parent subtask's isCompleted status based on its children.

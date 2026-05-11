@@ -10,8 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import FileIcon from '@/features/projects/resources/components/file-icon'
-import { PdfPreview } from '@/features/projects/resources/components/project-storage-preview-doc'
 import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
@@ -19,6 +17,8 @@ import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import type { ProjectResource } from '../types'
 import { formatBytes, formatMimeType } from '../utils'
+import FileIcon from './file-icon'
+import { PdfPreview } from './project-storage-preview-doc'
 
 export const getColumns = ({
   onDeleteResource,

@@ -1,7 +1,7 @@
-import type { TaskPreview } from '@/features/projects/core/types'
-import type { TaskLabel } from '@/features/projects/tasks/labels/types'
 import type { MentionUser } from '@/features/users/types'
 import type { Milestone } from '@/types/milestone.type'
+import type { TaskPreview } from '../../core/types'
+import type { TaskLabel } from '../labels/types'
 import type { TaskMember } from '../members/types'
 
 export type TaskCardType = 'TaskCard'

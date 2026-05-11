@@ -1,10 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import type { ParentMilestone } from '@/features/projects/core/types'
-import { useUpdateMilestone } from '@/features/projects/milestones/hooks/use-update-milestone'
-import { updateMilestoneSchema } from '@/features/projects/milestones/validations'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
@@ -14,7 +10,11 @@ import { CSS } from '@dnd-kit/utilities'
 import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import type { ParentMilestone } from '../../core/types'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
+import { useUpdateMilestone } from '../hooks/use-update-milestone'
+import { updateMilestoneSchema } from '../validations'
 
 interface SortableMilestoneTabProps {
   milestone: ParentMilestone

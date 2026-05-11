@@ -1,4 +1,3 @@
-import type { ParentMilestone } from '@/features/projects/core/types'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { calculateReorderPosition, hasDraggableData } from '@/shared/utils'
 import type { Milestone } from '@/types/milestone.type'
@@ -7,6 +6,7 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { ParentMilestone } from '../../core/types'
 import { updateMilestoneSchema } from '../validations'
 import { useUpdateMilestone } from './use-update-milestone'
 

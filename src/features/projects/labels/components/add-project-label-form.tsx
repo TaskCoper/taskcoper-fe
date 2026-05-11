@@ -2,12 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { sortedTaskLabelColors } from '@/features/projects/labels/constants'
 import { cn, getColorTextClass } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { sortedTaskLabelColors } from '../constants'
 import type { AddProjectLabelFormValues } from '../validations'
 
 export default function AddProjectLabelForm() {

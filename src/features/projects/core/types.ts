@@ -1,9 +1,9 @@
-import type { TaskPriority } from '@/features/projects/tasks/core/types'
-import type { TaskLabel } from '@/features/projects/tasks/labels/types'
-import type { TaskMember } from '@/features/projects/tasks/members/types'
 import type { Milestone } from '@/types/milestone.type'
 import type { ProjectPositionTitle } from '../position-titles/types'
 import type { ProjectRoleName } from '../roles/types'
+import type { TaskPriority } from '../tasks/core/types'
+import type { TaskLabel } from '../tasks/labels/types'
+import type { TaskMember } from '../tasks/members/types'
 
 export interface SystemProjectMember {
   userId: string

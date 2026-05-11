@@ -1,6 +1,6 @@
-import type { GetProjectLabelStatsParams } from '@/features/projects/analytics/hooks/use-get-project-label-stats'
-import type { GetProjectPriorityStatsParams } from '@/features/projects/analytics/hooks/use-get-project-priority-stats'
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetProjectLabelStatsParams } from './hooks/use-get-project-label-stats'
+import type { GetProjectPriorityStatsParams } from './hooks/use-get-project-priority-stats'
 import type {
   ProjectLabelStats,
   ProjectMemberStats,

@@ -12,10 +12,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import StatusCell from '@/features/projects/tasks/core/components/status-cell'
-import { getTaskPriorityIcon } from '@/features/projects/tasks/core/constants'
-import type { TaskRow } from '@/features/projects/tasks/core/types'
-import type { TaskMember } from '@/features/projects/tasks/members/types'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -32,6 +28,10 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import StatusCell from '../../tasks/core/components/status-cell'
+import { getTaskPriorityIcon } from '../../tasks/core/constants'
+import type { TaskRow } from '../../tasks/core/types'
+import type { TaskMember } from '../../tasks/members/types'
 
 export const getColumns = ({
   projectIdentifier,

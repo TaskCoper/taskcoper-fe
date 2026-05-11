@@ -1,8 +1,8 @@
-import type { Project } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import projectService from '../services'
+import type { Project } from '../types'
 
 export const useGetProjectsForPackage = (enabled: boolean = true) => {
   const {

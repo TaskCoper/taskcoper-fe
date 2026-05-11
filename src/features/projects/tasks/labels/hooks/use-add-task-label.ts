@@ -1,14 +1,14 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { useGetProjectLabels } from '@/features/projects/labels/hooks/use-get-project-labels'
-import type { TaskLabel } from '@/features/projects/tasks/labels/types'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useGetProjectLabels } from '../../../labels/hooks/use-get-project-labels'
 import type { TaskDetail } from '../../core/types'
 import taskLabelService from '../services'
+import type { TaskLabel } from '../types'
 import { addTaskLabelSchema, type AddTaskLabelFormValues } from '../validations'
 
 interface AddTaskLabelParams {

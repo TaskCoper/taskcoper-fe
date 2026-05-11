@@ -1,6 +1,6 @@
-import efficiencyService from '@/features/projects/charts/services'
 import { queryKeys } from '@/lib/query-keys'
 import { useQuery } from '@tanstack/react-query'
+import efficiencyService from '../services'
 
 export interface GetProjectOnTimeCompletersParams {
   projectId?: string

@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
 import { getTaskPriorityIcon } from '../constants'
 import { TaskPriority, TaskPriorityLabel } from '../types'
 

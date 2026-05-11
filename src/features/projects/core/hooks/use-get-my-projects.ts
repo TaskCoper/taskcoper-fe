@@ -1,10 +1,10 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import type { ProjectPreview } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import projectService from '../services'
+import type { ProjectPreview } from '../types'
 
 export interface GetMyProjectsParams {
   userId?: string

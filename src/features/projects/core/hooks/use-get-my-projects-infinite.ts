@@ -1,9 +1,9 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import type { ProjectPreview } from '@/features/projects/core/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import projectService from '../services'
+import type { ProjectPreview } from '../types'
 import type { GetMyProjectsParams } from './use-get-my-projects'
 
 type GetMyProjectsInfiniteParams = Omit<GetMyProjectsParams, 'pageIndex'>

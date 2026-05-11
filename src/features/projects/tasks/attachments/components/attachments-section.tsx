@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { PaperclipIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
 import type { Attachment } from '../types'
 import AttachmentPopover from './attachment-popover'
 import FileAttachment from './file-attachment'

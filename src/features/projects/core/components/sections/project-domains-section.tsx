@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
-import type { ProjectDomain } from '@/features/projects/core/types'
 import { SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import type { ProjectDomain } from '../../types'
 import UpdateProjectDomainsDialog from '../dialogs/update-project-domains-dialog'
 
 interface ProjectDomainsSectionProps {
