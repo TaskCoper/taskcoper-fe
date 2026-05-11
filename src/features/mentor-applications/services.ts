@@ -1,7 +1,7 @@
-import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
-import type { ReviewMentorApplicationFormValues } from '@/features/mentor-applications/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Application, SubmitMentorApplicationBody } from '@/types/mentor-application.type'
+import type { GetMyMentorApplicationsParams } from './hooks/use-get-my-mentor-applications'
+import type { Application, SubmitMentorApplicationBody } from './types'
+import type { ReviewMentorApplicationFormValues } from './validations'
 
 class MentorApplication {
   private readonly baseUrl = 'mentor-applications'

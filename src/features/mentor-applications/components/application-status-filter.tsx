@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ApplicationStatus } from '@/types/mentor-application.type'
+import { ApplicationStatus } from '@/features/mentor-applications/types'
 import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 

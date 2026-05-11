@@ -1,4 +1,4 @@
-import type { MentorTitle } from '../../types/mentor-application.type'
+import type { MentorTitle } from '../mentor-applications/types'
 
 export const CommissionTargetModel = {
   MentorPackage: 'MentorPackage'

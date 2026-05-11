@@ -1,5 +1,5 @@
+import { MentorTitle } from '@/features/mentor-applications/types'
 import { queryKeys } from '@/lib/query-keys'
-import { MentorTitle } from '@/types/mentor-application.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type Resolver } from 'react-hook-form'
