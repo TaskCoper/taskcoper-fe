@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import UpdateVoucherForm from '@/features/vouchers/components/update-voucher-form'
 import { FormProvider, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type UpdateVoucherFormValues } from '../../validations'
+import UpdateVoucherForm from '../update-voucher-form'
 
 interface InfoTabProps {
   methods: UseFormReturn<UpdateVoucherFormValues>

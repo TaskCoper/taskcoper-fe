@@ -1,12 +1,12 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
-import { type VoucherRedemptionRow } from '@/features/vouchers/types'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { type ExtendedColumnSort } from '@/types/data-table.type'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { useGetVoucherRedemptions } from '../hooks/use-get-voucher-redemptions'
+import { type VoucherRedemptionRow } from '../types'
 import { getColumns } from './columns/redemption-columns'
 
 interface RedemptionsTableProps {

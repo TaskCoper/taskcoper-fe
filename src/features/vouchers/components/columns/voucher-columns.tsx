@@ -8,7 +8,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, type VoucherRow } from '@/features/vouchers/types'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -17,6 +16,7 @@ import i18next from 'i18next'
 import { CopyIcon, MoreHorizontalIcon, SearchIcon, TicketPercentIcon, Trash2Icon } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, type VoucherRow } from '../../types'
 
 interface VoucherColumnsProps {
   onDelete: ({ voucherId, voucherCode }: { voucherId: string; voucherCode: string }) => void

@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
-import AddVoucherTargetsDialog from '@/features/vouchers/components/add-voucher-targets-dialog'
-import { useDeleteVoucherTarget } from '@/features/vouchers/hooks/use-delete-voucher-target'
-import { useUpdateVoucherTargetStatus } from '@/features/vouchers/hooks/use-update-voucher-target-status'
-import { type VoucherRow, type VoucherTargetRow } from '@/features/vouchers/types'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { PackageIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useDeleteVoucherTarget } from '../../hooks/use-delete-voucher-target'
+import { useUpdateVoucherTargetStatus } from '../../hooks/use-update-voucher-target-status'
+import { type VoucherRow, type VoucherTargetRow } from '../../types'
+import AddVoucherTargetsDialog from '../add-voucher-targets-dialog'
 
 interface TargetsTabProps {
   voucher: VoucherRow | null | undefined

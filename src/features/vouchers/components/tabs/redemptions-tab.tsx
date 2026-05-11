@@ -1,5 +1,5 @@
-import RedemptionsTable from '@/features/vouchers/components/redemptions-table'
 import { useTranslation } from 'react-i18next'
+import RedemptionsTable from '../redemptions-table'
 
 interface RedemptionsTabProps {
   voucherId: string

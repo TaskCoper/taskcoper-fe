@@ -12,12 +12,12 @@ import {
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMyMentorPackagesInfinite } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages-infinite'
-import { TargetType } from '@/features/vouchers/types'
 import { PackageIcon, Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useAddVoucherTargets } from '../hooks/use-add-voucher-targets'
+import { TargetType } from '../types'
 import type { AddVoucherTargetsFormValues } from '../validations'
 
 export default function AddVoucherTargetsDialog({
