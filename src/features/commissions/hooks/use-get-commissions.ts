@@ -1,9 +1,9 @@
 import { queryKeys } from '@/lib/query-keys'
-import commissionService from '@/services/commission.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import { type CommissionRow } from '@/types/commission.type'
 import { useQuery } from '@tanstack/react-query'
+import commissionService from '../services'
+import { type CommissionRow } from '../types'
 
 export interface GetCommissionsParams {
   page?: number

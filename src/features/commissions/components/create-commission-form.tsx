@@ -2,7 +2,7 @@ import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { CommissionTargetModel, CommissionTargetModelLabel } from '@/types/commission.type'
+import { CommissionTargetModel, CommissionTargetModelLabel } from '@/features/commissions/types'
 import { MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'

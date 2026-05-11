@@ -1,12 +1,12 @@
 import { queryKeys } from '@/lib/query-keys'
-import commissionService from '@/services/commission.service'
-import { CommissionTargetModel } from '@/types/commission.type'
 import { MentorTitle } from '@/types/mentor-application.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import commissionService from '../services'
+import { CommissionTargetModel } from '../types'
 import { createCommissionSchema, type CreateCommissionFormValues } from '../validations'
 
 export const useCreateCommission = () => {

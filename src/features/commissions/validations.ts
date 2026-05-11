@@ -1,6 +1,6 @@
-import { CommissionTargetModel } from '@/types/commission.type'
 import { MentorTitle } from '@/types/mentor-application.type'
 import z from 'zod'
+import { CommissionTargetModel } from './types'
 
 export const createCommissionSchema = z
   .object({

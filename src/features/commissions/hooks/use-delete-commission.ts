@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import commissionService from '@/services/commission.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import commissionService from '../services'
 
 export const useDeleteCommission = () => {
   const queryClient = useQueryClient()

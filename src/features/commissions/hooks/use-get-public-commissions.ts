@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import commissionService from '@/services/commission.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import { type CommissionRow } from '@/types/commission.type'
 import { useQuery } from '@tanstack/react-query'
+import commissionService from '../services'
+import { type CommissionRow } from '../types'
 
 export const useGetPublicCommissions = () => {
   const {

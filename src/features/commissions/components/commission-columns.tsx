@@ -2,11 +2,11 @@ import { DataTableColumnHeader } from '@/components/data-table/data-table-column
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/utils'
-import { type CommissionRow } from '@/types/commission.type'
 import { MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { AwardIcon, ChevronDownIcon, ChevronRightIcon, GemIcon, ShieldIcon } from 'lucide-react'
+import { type CommissionRow } from '../types'
 
 export const getColumns = (): ColumnDef<CommissionRow>[] => {
   return [
