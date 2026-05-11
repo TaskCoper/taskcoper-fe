@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import feedbackService from '@/services/feedback.service'
 import { useQuery } from '@tanstack/react-query'
+import feedbackService from '../services'
 
 export const useGetPurchasedPackageFeedbacks = ({
   packageBookingId,

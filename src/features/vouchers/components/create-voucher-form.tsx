@@ -13,10 +13,10 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useGetMyMentorPackagesInfinite } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages-infinite'
 import { cn } from '@/shared/utils'
-import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, TargetType } from '@/types/voucher.type'
 import { WandSparklesIcon } from 'lucide-react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, TargetType } from '../types'
 import { type CreateVoucherFormValues } from '../validations'
 
 export default function CreateVoucherForm() {

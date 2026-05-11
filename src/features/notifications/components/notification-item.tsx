@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/utils'
-import { type Notification, NotificationMarkedType, NotificationTypeLabel } from '@/types/notification.type'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
+import { useRespondToInvitation } from '../../projects/members/hooks/use-respond-to-invitation'
 import { useReadNotification } from '../hooks/use-read-notification'
-import { useRespondToInvitation } from '../hooks/use-respond-to-invitation'
+import { NotificationMarkedType, NotificationTypeLabel, type Notification } from '../types'
 
 interface NotificationItemProps {
   notification: Notification

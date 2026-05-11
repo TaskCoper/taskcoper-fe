@@ -8,10 +8,9 @@ import {
   useGetMyMentorApplications,
   type GetMyMentorApplicationsParams
 } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { Application, ApplicationStatus } from '@/features/mentor-applications/types'
 import { STATUS_CONFIG } from '@/shared/constants'
 import { formatDate } from '@/shared/utils'
-import type { Application } from '@/types/mentor-application.type'
-import { ApplicationStatus } from '@/types/mentor-application.type'
 import { LinkIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'

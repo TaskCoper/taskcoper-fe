@@ -1,7 +1,7 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ApplicationStatus } from '@/types/mentor-application.type'
 import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { ApplicationStatus } from '../types'
 
 interface ApplicationStatusFilterProps {
   value?: ApplicationStatus

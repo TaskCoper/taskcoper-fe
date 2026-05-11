@@ -13,37 +13,37 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
-import AssigneePopover from '@/features/assignees/components/assignee-popover'
-import { useGetTaskMembers } from '@/features/assignees/hooks/use-get-task-members'
-import AttachmentPopover from '@/features/attachments/components/attachment-popover'
-import { useGetAttachments } from '@/features/attachments/hooks/use-get-attachments'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import CommentCard from '@/features/comments/components/comment-card'
-import { useAddComment } from '@/features/comments/hooks/use-add-comment'
-import { useGetComments } from '@/features/comments/hooks/use-get-comments'
-import type { AddTaskCommentFormValues } from '@/features/comments/validations'
-import LabelPopover from '@/features/labels/components/label-popover'
-import { useGetMyProjectPermissions } from '@/features/projects/hooks/use-get-my-project-permissions'
-import SortableParentSubtaskCard from '@/features/subtasks/components/sortable-parent-subtask-card'
-import SortableSubtaskCard from '@/features/subtasks/components/sortable-subtask-card'
-import SubtaskPopover from '@/features/subtasks/components/subtask-popover'
-import { useGetSubtasks } from '@/features/subtasks/hooks/use-get-subtasks'
-import { useSubtaskDnd } from '@/features/subtasks/hooks/use-subtask-dnd'
-import BackgroundImagePopover from '@/features/tasks/components/background-image-popover'
-import DatePopover from '@/features/tasks/components/date-popover'
-import MoveTaskPopoverV2 from '@/features/tasks/components/move-task-popover-v2'
-import PriorityPopover from '@/features/tasks/components/priority-popover'
-import AttachmentsSection from '@/features/tasks/components/sections/attachments-section'
-import TaskDetailMenu from '@/features/tasks/components/task-detail-menu'
-import TaskPointsPopover from '@/features/tasks/components/task-points-popover'
-import { getTaskPriorityIcon } from '@/features/tasks/constants'
-import { useGetTask } from '@/features/tasks/hooks/use-get-task'
-import { useToggleWatchTask } from '@/features/tasks/hooks/use-toggle-watch-task'
-import { useUpdateTask } from '@/features/tasks/hooks/use-update-task'
-import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/tasks/validations'
+import LabelPopover from '@/features/projects/labels/components/label-popover'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
+import SortableParentSubtaskCard from '@/features/projects/subtasks/components/sortable-parent-subtask-card'
+import SortableSubtaskCard from '@/features/projects/subtasks/components/sortable-subtask-card'
+import SubtaskPopover from '@/features/projects/subtasks/components/subtask-popover'
+import { useSubtaskDnd } from '@/features/projects/subtasks/hooks/use-subtask-dnd'
+import AttachmentPopover from '@/features/projects/tasks/attachments/components/attachment-popover'
+import AttachmentsSection from '@/features/projects/tasks/attachments/components/attachments-section'
+import { useGetTaskAttachments } from '@/features/projects/tasks/attachments/hooks/use-get-task-attachments'
+import CommentCard from '@/features/projects/tasks/comments/components/comment-card'
+import { useAddTaskComment } from '@/features/projects/tasks/comments/hooks/use-add-task-comment'
+import { useGetTaskComments } from '@/features/projects/tasks/comments/hooks/use-get-task-comments'
+import type { AddTaskCommentFormValues } from '@/features/projects/tasks/comments/validations'
+import BackgroundImagePopover from '@/features/projects/tasks/core/components/background-image-popover'
+import DatePopover from '@/features/projects/tasks/core/components/date-popover'
+import MoveTaskPopoverV2 from '@/features/projects/tasks/core/components/move-task-popover-v2'
+import PriorityPopover from '@/features/projects/tasks/core/components/priority-popover'
+import TaskDetailMenu from '@/features/projects/tasks/core/components/task-detail-menu'
+import TaskPointsPopover from '@/features/projects/tasks/core/components/task-points-popover'
+import { getTaskPriorityIcon } from '@/features/projects/tasks/core/constants'
+import { useGetTask } from '@/features/projects/tasks/core/hooks/use-get-task'
+import { useToggleWatchTask } from '@/features/projects/tasks/core/hooks/use-toggle-watch-task'
+import { useUpdateTask } from '@/features/projects/tasks/core/hooks/use-update-task'
+import { TaskPriorityLabel } from '@/features/projects/tasks/core/types'
+import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/projects/tasks/core/validations'
+import AssigneePopover from '@/features/projects/tasks/members/components/assignee-popover'
+import { useGetTaskMembers } from '@/features/projects/tasks/members/hooks/use-get-task-members'
+import { useGetTaskSubtasks } from '@/features/projects/tasks/subtasks/hooks/use-get-subtasks'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
-import { TaskPriorityLabel } from '@/types/task.type'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -104,10 +104,10 @@ export default function TaskDialogPage() {
   const sensors = useDndSensors()
 
   const { task, isLoadingTask } = useGetTask({ taskIdentifier })
-  const { comments, isLoadingComments } = useGetComments({ taskId: task?.taskId })
-  const { subtasks, isLoadingSubtasks } = useGetSubtasks({ taskId: task?.taskId })
+  const { comments, isLoadingComments } = useGetTaskComments({ taskId: task?.taskId })
+  const { subtasks, isLoadingSubtasks } = useGetTaskSubtasks({ taskId: task?.taskId })
   const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId: task?.taskId })
-  const { attachments, isLoadingAttachments } = useGetAttachments({ taskId: task?.taskId })
+  const { attachments, isLoadingAttachments } = useGetTaskAttachments({ taskId: task?.taskId })
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
@@ -124,9 +124,9 @@ export default function TaskDialogPage() {
 
   const {
     methods: addCommentMethods,
-    addComment,
-    isAddingComment
-  } = useAddComment({ taskId: task?.taskId, identifier, milestoneIdentifier })
+    addTaskComment,
+    isAddingTaskComment
+  } = useAddTaskComment({ taskId: task?.taskId, identifier, milestoneIdentifier })
   const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
 
   const {
@@ -257,7 +257,7 @@ export default function TaskDialogPage() {
   }
 
   const onSubmitAddComment: SubmitHandler<AddTaskCommentFormValues> = (body) => {
-    addComment({ body })
+    addTaskComment({ body })
   }
 
   // useEffect(() => {
@@ -943,9 +943,9 @@ export default function TaskDialogPage() {
                         handleSubmitComment(onSubmitAddComment)()
                         setIsEditComment(false)
                       }}
-                      disabled={isAddingComment}
+                      disabled={isAddingTaskComment}
                     >
-                      {isAddingComment ? <Spinner /> : null}
+                      {isAddingTaskComment ? <Spinner /> : null}
                       {t('common.button.save')}
                     </Button>
                     <Button
@@ -954,7 +954,7 @@ export default function TaskDialogPage() {
                         setIsEditComment(false)
                         resetComment()
                       }}
-                      disabled={isAddingComment}
+                      disabled={isAddingTaskComment}
                     >
                       {t('common.button.cancel')}
                     </Button>

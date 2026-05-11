@@ -7,14 +7,14 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useDeleteMentorPackage } from '@/features/mentor-packages/hooks/use-delete-mentor-package'
-import { useUpdateMentorPackage } from '@/features/mentor-packages/hooks/use-update-mentor-package'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import type { MentorPackage } from '@/types/mentor-package.type'
 import { Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useDeleteMentorPackage } from '../hooks/use-delete-mentor-package'
+import { useUpdateMentorPackage } from '../hooks/use-update-mentor-package'
+import type { MentorPackage } from '../types'
 import type { UpdateMentorPackageFormValues } from '../validations'
 import UpdateMentorPackageForm from './update-mentor-package-form'
 
@@ -36,12 +36,13 @@ export default function MentorPackageDialog({ mentorPackage, children }: MentorP
         mentorPackageId: mentorPackage.id,
         name: mentorPackage.name,
         description: mentorPackage.description,
-        durationInMinutes: mentorPackage.durationInMinutes,
         totalSessions: mentorPackage.totalSessions.toString(),
         price: mentorPackage.price.toString(),
         currency: mentorPackage.currency,
         isActive: mentorPackage.isActive,
-        position: mentorPackage.position
+        isPin: mentorPackage.isPin,
+        activationDeadlineDays: mentorPackage.activationDeadlineDays,
+        usageDeadlineDays: mentorPackage.usageDeadlineDays
       })
     }
   }, [open, mentorPackage, methods])

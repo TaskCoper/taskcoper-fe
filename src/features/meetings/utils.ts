@@ -1,6 +1,6 @@
-import { MeetingStatus } from '@/types/meeting.type'
-import type { ScheduleSlot } from '@/types/schedule.type'
+import type { ScheduleSlot } from '@/features/schedules/types'
 import { addDays } from 'date-fns'
+import { MeetingStatus } from './types'
 
 export interface DaySchedule {
   date: Date

@@ -1,6 +1,6 @@
-import { DiscountType, Scope, TargetType } from '@/types/voucher.type'
 import type { TFunction } from 'i18next'
 import z from 'zod'
+import { DiscountType, Scope, TargetType } from './types'
 
 export const createVoucherSchema = (t: TFunction) => {
   return z

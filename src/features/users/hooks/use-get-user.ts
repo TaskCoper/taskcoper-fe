@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import userService from '@/services/user.service'
 import { useQuery } from '@tanstack/react-query'
+import userService from '../services'
 
 export const useGetUser = ({ userIdentifier }: { userIdentifier?: string }) => {
   const { data: user, isLoading: isGettingUser } = useQuery({

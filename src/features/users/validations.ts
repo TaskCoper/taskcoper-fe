@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 import z from 'zod'
-import { UUID_REGEX } from '../projects/validations'
+import { UUID_REGEX } from '../projects/core/validations'
 
 const regex = /(?:\+84|0084|0)[235789][0-9]{1,2}[0-9]{7}(?:[^\d]+|$)/g
 

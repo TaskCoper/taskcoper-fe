@@ -1,10 +1,10 @@
 import { queryKeys } from '@/lib/query-keys'
-import scheduleService from '@/services/schedule.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import scheduleService from '../services'
 import { createSchedulesSchema, type CreateSchedulesFormValues } from '../validations'
 
 const defaultValues: CreateSchedulesFormValues = {

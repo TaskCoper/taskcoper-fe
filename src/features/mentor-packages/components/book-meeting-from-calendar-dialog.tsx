@@ -16,17 +16,17 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
+import { MeetingStatus } from '@/features/meetings/types'
 import { MentorScheduleContent } from '@/features/schedules/components/mentor-schedule-dialog'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
-import { MeetingStatus } from '@/types/meeting.type'
-import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
 import { format, getISOWeek, startOfWeek } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { CalendarDaysIcon, EyeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
+import { useGetPurchasedMentorPackage } from '../hooks/use-get-purchased-mentor-package'
+import type { PurchasedMentorPackage } from '../types'
 import PurchasedMentorPackageCard from './purchased-mentor-package-card'
 
 interface BookMeetingFromCalendarDialogProps {

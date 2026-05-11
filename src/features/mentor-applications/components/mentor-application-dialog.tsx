@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { STATUS_CONFIG } from '@/shared/constants'
-import type { Application } from '@/types/mentor-application.type'
 import { AlertCircleIcon, CalendarIcon, CheckCircle2Icon, ExternalLinkIcon, FileTextIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { Application } from '../types'
 
 interface MentorApplicationDialogProps {
   children: React.ReactNode
@@ -101,7 +101,7 @@ export default function MentorApplicationDialog({ application, children }: Mento
                     className='group flex items-center gap-1.5 rounded-lg border bg-muted/40 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted hover:border-muted-foreground/30'
                   >
                     <FileTextIcon className='size-3.5 text-red-500 shrink-0' />
-                    <span className='max-w-[160px] truncate'>{fileNames[i]}</span>
+                    <span className='max-w-40 truncate'>{fileNames[i]}</span>
                     <ExternalLinkIcon className='size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0' />
                   </a>
                 ))}

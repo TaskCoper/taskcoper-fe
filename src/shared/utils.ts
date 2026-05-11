@@ -1,16 +1,17 @@
-import { sortedTaskLabelColors } from '@/features/labels/constants'
+import { sortedTaskLabelColors } from '@/features/projects/labels/constants'
+import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/features/projects/milestones/types'
+import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/features/projects/subtasks/types'
+import type { TaskCardDragData } from '@/features/projects/tasks/core/types'
+import type { Currency } from '@/features/transactions/types'
+import type { User } from '@/features/users/types'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { RoleType } from '@/layouts/role-guard.layout'
 import type { BasePaginationResponse } from '@/lib/axios'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
-import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
-import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/types/subtask.type'
-import type { TaskCardDragData } from '@/types/task.type'
-import type { Currency } from '@/types/transaction.type'
-import type { User } from '@/types/user.type'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
+import i18next from 'i18next'
 import { twMerge } from 'tailwind-merge'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, INITIAL_POSITION, POSITION_GAP } from './constants'
 
@@ -158,7 +159,7 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   if (!date) return ''
 
   try {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(i18next.language || 'en-US', {
       month: opts.month ?? 'long',
       day: opts.day ?? 'numeric',
       year: opts.year ?? 'numeric',
@@ -211,4 +212,13 @@ export const getTimezoneOffsetString = () => {
 export const clearAllUserPreferences = () => {
   useMilestonePreferencesStore.getState().clearAll()
   useMentorWidgetStore.getState().clearAll()
+}
+
+export const safeParseJson = <T = Record<string, unknown>>(jsonString: string | null | undefined): Partial<T> => {
+  if (!jsonString) return {}
+  try {
+    return JSON.parse(jsonString) as Partial<T>
+  } catch {
+    return {}
+  }
 }

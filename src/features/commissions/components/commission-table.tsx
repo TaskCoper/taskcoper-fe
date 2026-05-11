@@ -3,13 +3,13 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency, formatDate } from '@/shared/utils'
-import { CommissionTargetModelLabel, type Commission, type CommissionRow } from '@/types/commission.type'
 import type { Row } from '@tanstack/react-table'
 import { CheckCircle2Icon, CheckIcon, CircleXIcon, EditIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useUpdateCommission } from '../hooks/use-update-commission'
+import { CommissionTargetModelLabel, type Commission, type CommissionRow } from '../types'
 
 interface CommissionTableProps {
   row: Row<CommissionRow>

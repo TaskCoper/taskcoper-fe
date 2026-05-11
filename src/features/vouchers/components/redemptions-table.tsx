@@ -3,10 +3,10 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { type ExtendedColumnSort } from '@/types/data-table.type'
-import { type VoucherRedemptionRow } from '@/types/voucher.type'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { useGetVoucherRedemptions } from '../hooks/use-get-voucher-redemptions'
+import { type VoucherRedemptionRow } from '../types'
 import { getColumns } from './columns/redemption-columns'
 
 interface RedemptionsTableProps {

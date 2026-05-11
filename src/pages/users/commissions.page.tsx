@@ -7,12 +7,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetPublicCommissions } from '@/features/commissions/hooks/use-get-public-commissions'
+import type { Commission } from '@/features/commissions/types'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
 import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, formatCurrency, getAvatarFallback } from '@/shared/utils'
-import type { Commission } from '@/types/commission.type'
 import {
   BellIcon,
   CircleCheckBigIcon,

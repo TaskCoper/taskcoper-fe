@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn, formatCurrency } from '@/shared/utils'
-import { TransactionStatus, type Currency, type TransactionRow } from '@/types/transaction.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
@@ -31,6 +30,7 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
+import { TransactionStatus, type Currency, type TransactionRow } from '../types'
 
 export const getColumns = (): ColumnDef<TransactionRow>[] => {
   return [
@@ -46,7 +46,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='transactions.column.description' />,
       cell: ({ row }) => (
         <Link to={`/payments/checkout?transactionId=${row.original.transactionId}`}>
-          <p className='max-w-[300px] truncate hover:underline'>{row.original.description || '—'}</p>
+          <p className='max-w-75 truncate hover:underline'>{row.original.description || '—'}</p>
         </Link>
       ),
       enableSorting: false,

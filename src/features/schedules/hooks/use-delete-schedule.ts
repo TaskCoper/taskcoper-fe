@@ -1,10 +1,10 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import { queryKeys } from '@/lib/query-keys'
-import scheduleService from '@/services/schedule.service'
-import type { MeetingRule } from '@/types/schedule.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import scheduleService from '../services'
+import type { MeetingRule } from '../types'
 
 export const useDeleteSchedule = () => {
   const queryClient = useQueryClient()

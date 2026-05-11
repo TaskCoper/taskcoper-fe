@@ -10,11 +10,11 @@ import { ApplicationStatusFilter } from '@/features/mentor-applications/componen
 import { useGetMentorApplications } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import { useReviewMentorApplication } from '@/features/mentor-applications/hooks/use-review-mentor-application'
+import type { Application } from '@/features/mentor-applications/types'
+import { ApplicationStatus, MentorTitle, MentorTitleLabel } from '@/features/mentor-applications/types'
 import type { ReviewMentorApplicationFormValues } from '@/features/mentor-applications/validations'
 import { STATUS_CONFIG } from '@/shared/constants'
 import { formatDate } from '@/shared/utils'
-import type { Application } from '@/types/mentor-application.type'
-import { ApplicationStatus, MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
 import { type i18n as Ii18n, type TFunction } from 'i18next'
 import {
   AlertCircleIcon,

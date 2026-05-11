@@ -10,13 +10,13 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
-import { useUpdateMentorProfile } from '@/features/mentors/hooks/use-update-mentor-profile'
-import type { UpdateMentorProfileFormValues } from '@/features/mentors/validations'
-import type { UserDetail } from '@/types/user.type'
+import type { UserDetail } from '@/features/users/types'
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { useUpdateMentorProfile } from '../../hooks/use-update-mentor-profile'
+import type { UpdateMentorProfileFormValues } from '../../validations'
 
 interface UpdateMentorDescriptionDialogProps {
   children: React.ReactNode

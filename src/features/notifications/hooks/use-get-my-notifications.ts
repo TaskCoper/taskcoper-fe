@@ -1,8 +1,8 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import notificationService from '@/services/notification.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import notificationService from '../services'
 
 export interface GetMyNotificationsParams {
   pageIndex?: number

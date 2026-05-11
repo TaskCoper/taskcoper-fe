@@ -1,19 +1,16 @@
-import RatingField, { type RatingValue } from '@/components/rating-field'
-import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { packageFeedbackQuestions } from '@/features/feedbacks/constants'
+import PackageFeedbackCard from '@/features/feedbacks/components/package-feedback-card'
 import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
+import { MeetingStatus } from '@/features/meetings/types'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { MeetingStatus } from '@/types/meeting.type'
 import { format } from 'date-fns'
 import {
   BoxIcon,
@@ -22,8 +19,7 @@ import {
   CircleStarIcon,
   FileTextIcon,
   FolderOpenIcon,
-  GraduationCapIcon,
-  StarIcon
+  GraduationCapIcon
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -233,77 +229,9 @@ export default function PurchasedPackagePage() {
 
           {(feedbacks?.value?.items?.length ?? 0) > 0 ? (
             <div className='space-y-4'>
-              {feedbacks?.value.items.map((feedback) => {
-                let metaDataObj: Record<string, number> = {}
-                try {
-                  if (feedback.metaData) {
-                    metaDataObj = JSON.parse(feedback.metaData)
-                  }
-                } catch {
-                  // Ignore parse error
-                }
-
-                const metaEntries = packageFeedbackQuestions
-                  .filter((question) => metaDataObj[question.id] !== undefined)
-                  .map((question) => ({
-                    question,
-                    value: metaDataObj[question.id]
-                  }))
-
-                return (
-                  <Card key={feedback.id} className='p-0 gap-0 shadow-none'>
-                    <div className='flex items-start justify-between p-4'>
-                      <div className='flex items-center gap-2'>
-                        <Avatar>
-                          <AvatarImage src={feedback.author.avatarUrl ?? undefined} />
-                          <AvatarFallback>
-                            {getAvatarFallback(`${feedback.author.firstName} ${feedback.author.lastName}`)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className='-space-y-1'>
-                          <p className='font-semibold text-sm'>
-                            {feedback.author.firstName} {feedback.author.lastName}
-                          </p>
-                          <p className='text-xs text-muted-foreground'>
-                            {feedback.createdOnUtc ? format(new Date(feedback.createdOnUtc), 'PPP') : ''}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className='flex items-center gap-1.5 bg-orange-50 px-1.5 py-1 rounded-md border border-orange-100'>
-                        <StarIcon className='size-4 text-orange-600' />
-                        <p className='font-semibold text-orange-600 text-sm'>
-                          {Number(feedback.rating).toFixed(1)}/5.0
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {metaEntries.length > 0 && (
-                      <div className='space-y-2 p-4 bg-muted/50'>
-                        {metaEntries.map(({ question, value }) => (
-                          <div key={question.id} className='flex items-center justify-between'>
-                            <p className='text-sm text-foreground/80 font-medium'>{t(question.titleKey)}</p>
-
-                            <RatingField
-                              value={value as RatingValue}
-                              setValue={() => {}}
-                              size={14}
-                              max={4}
-                              className='pointer-events-none'
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    <Separator />
-
-                    <SanitizedHtml html={feedback.comment} className='p-4' />
-                  </Card>
-                )
-              })}
+              {feedbacks?.value.items.map((feedback) => (
+                <PackageFeedbackCard key={feedback.id} feedback={feedback} />
+              ))}
             </div>
           ) : (
             <div className='flex flex-col justify-center items-center gap-2 p-8 bg-muted rounded-md'>

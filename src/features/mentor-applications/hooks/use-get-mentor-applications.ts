@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorApplicationService from '@/services/mentor-application.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { Application, ApplicationStatus } from '@/types/mentor-application.type'
 import { useQuery } from '@tanstack/react-query'
+import mentorApplicationService from '../services'
+import type { Application, ApplicationStatus } from '../types'
 
 export interface GetMentorApplicationsParams {
   status?: ApplicationStatus

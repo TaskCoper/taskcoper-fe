@@ -1,15 +1,15 @@
-import CalendarEvent from '@/features/meetings/components/calendar/calendar-event'
-import { layoutDayEvents } from '@/features/meetings/components/calendar/calendar-layout'
 import {
   CALENDAR_HOUR_HEIGHT as HOUR_HEIGHT,
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
-} from '@/features/tasks/constants'
+} from '@/features/projects/tasks/core/constants'
+import type { MeetingRule } from '@/features/schedules/types'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
-import type { MeetingBooking } from '@/types/meeting.type'
-import type { MeetingRule } from '@/types/schedule.type'
 import { format, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { MeetingBooking } from '../../types'
+import CalendarEvent from './calendar-event'
+import { layoutDayEvents } from './calendar-layout'
 
 interface DayViewProps {
   date: Date

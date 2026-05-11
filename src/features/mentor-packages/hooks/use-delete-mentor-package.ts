@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import mentorPackageService from '../services'
 
 export const useDeleteMentorPackage = () => {
   const queryClient = useQueryClient()
@@ -19,7 +19,7 @@ export const useDeleteMentorPackage = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.my() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy })
     }
   })
 

@@ -1,8 +1,8 @@
-import CalendarEvent from '@/features/meetings/components/calendar/calendar-event'
 import { cn } from '@/shared/utils'
-import type { MeetingBooking } from '@/types/meeting.type'
 import { addDays, endOfMonth, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
 import { useTranslation } from 'react-i18next'
+import type { MeetingBooking } from '../../types'
+import CalendarEvent from './calendar-event'
 
 interface MonthViewProps {
   date: Date

@@ -1,10 +1,10 @@
 import { queryKeys } from '@/lib/query-keys'
-import voucherService from '@/services/voucher.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import voucherService from '../services'
 import { addVoucherTargetsSchema, type AddVoucherTargetsFormValues } from '../validations'
 
 export const useAddVoucherTargets = () => {

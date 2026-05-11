@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import voucherService from '@/services/voucher.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { VoucherRedemptionRow } from '@/types/voucher.type'
 import { useQuery } from '@tanstack/react-query'
+import voucherService from '../services'
+import type { VoucherRedemptionRow } from '../types'
 
 export interface GetVoucherRedemptionsParams {
   voucherId?: string

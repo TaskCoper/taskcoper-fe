@@ -41,7 +41,9 @@
       "isActive": "Kích hoạt",
       "startDate": "Ngày bắt đầu",
       "endDate": "Ngày kết thúc",
-      "date": "Ngày"
+      "date": "Ngày",
+      "createdOnUtc": "Ngày tạo",
+      "modifiedOnUtc": "Ngày cập nhật"
     },
     "validation": {
       "email": {
@@ -2328,7 +2330,9 @@
       "infoTitle": "Thông tin",
       "infoDescription": "Nhập thông tin cơ bản của gói, bao gồm tên, mô tả, số buổi và giá để người dùng dễ hiểu và lựa chọn.",
       "durationTitle": "Thời lượng mỗi buổi",
-      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi."
+      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi.",
+      "feedbackTitle": "Đánh giá",
+      "manage": "Quản lý gói"
     },
     "form": {
       "name": "Tên gói",
@@ -2346,17 +2350,27 @@
       "coverImage": "Ảnh bìa",
       "coverImageHint": "Nhấn vào vùng ảnh để chọn ảnh bìa, sau đó bấm Lưu để tải lên.",
       "isActive": "Kích hoạt",
-      "isActiveDescription": "Nếu tắt, gói này sẽ không hiển thị/không thể được chọn."
+      "isActiveDescription": "Nếu tắt, gói này sẽ không hiển thị/không thể được chọn.",
+      "isPin": "Ghim gói",
+      "isPinDescription": "Ghim gói này lên đầu danh sách để mentee dễ thấy hơn.",
+      "activationDeadlineDays": "Hạn đặt lịch đầu tiên (ngày)",
+      "activationDeadlineDaysPlaceholder": "VD: 10",
+      "activationDeadlineDaysDescription": "Người dùng cần sử dụng gói trong số ngày này kể từ ngày mua.",
+      "usageDeadlineDays": "Thời hạn sử dụng (ngày)",
+      "usageDeadlineDaysPlaceholder": "VD: 30",
+      "usageDeadlineDaysDescription": "Sau buổi đầu tiên, người dùng phải hoàn thành tất cả các buổi trong số ngày này."
     },
     "list": {
-      "newPackage": "Gói mới"
+      "newPackage": "Gói mới",
+      "isPinned": "Đã ghim",
+      "notPinned": "Chưa ghim"
     },
     "card": {
       "sessionsCount_one": "{{count}} buổi",
       "sessionsCount_other": "{{count}} buổi",
       "viewPackage": "Xem gói",
       "bookFor": "Đặt lịch {{price}}",
-      "sessionsAndDuration": "{{sessions}} buổi · {{minutes}} phút/buổi",
+      "sessions": "{{sessions}} buổi",
       "sortOrder": "Thứ tự sắp xếp"
     },
     "sidebar": {
@@ -2369,7 +2383,6 @@
     "validation": {
       "nameRequired": "Yêu cầu nhập tên",
       "descriptionMax": "Tối đa 255 ký tự",
-      "durationPositive": "Phải > 0",
       "sessionsPositive": "Phải > 0",
       "pricePositive": "Phải > 0"
     },
@@ -2377,6 +2390,18 @@
       "title": "Thông tin gói",
       "description": "Cập nhật thông tin gói"
     }
+  },
+  "mentorPackageStatistics": {
+    "title": "Thống kê",
+    "description": "Xem doanh thu và lượt đặt gói theo năm.",
+    "totalBookings": "Tổng lượt đặt",
+    "bookingsWithVoucher": "Đặt có voucher",
+    "bookingsWithoutVoucher": "Đặt không voucher",
+    "grossRevenue": "Doanh thu gộp",
+    "netRevenue": "Doanh thu ròng",
+    "mentorPayout": "Thanh toán cho mentor",
+    "revenueOverview": "Tổng quan doanh thu",
+    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}"
   },
   "packageBooking": {
     "bookPackage": {
@@ -2615,6 +2640,9 @@
         "mentor": "Người hướng dẫn",
         "project": "Dự án",
         "purchasedAt": "Ngày mua",
+        "author": "Người viết",
+        "authorPlaceholder": "Nhập tên người viết để tìm kiếm...",
+        "rating": "Đánh giá",
         "action": "Hành động"
       },
       "notAvailable": "Không có",
@@ -2624,6 +2652,7 @@
     "questions": {
       "punctuality": {
         "title": "Chuyên gia có đúng giờ và quản lý thời gian hiệu quả không?",
+        "label": "Đúng giờ",
         "options": {
           "4": "Khởi đầu đúng giờ và kiểm soát thời gian hoàn hảo.",
           "3": "Khá đúng giờ, có trễ chút nhưng có báo trước.",
@@ -2633,6 +2662,7 @@
       },
       "preparation": {
         "title": "Chuyên gia có nghiên cứu trước về dự án của bạn không?",
+        "label": "Chuẩn bị",
         "options": {
           "4": "Nghiên cứu rất kỹ dự án và nắm bắt bối cảnh ngay lập tức.",
           "3": "Có xem lướt qua tài liệu và nắm được thông tin cơ bản.",
@@ -2642,6 +2672,7 @@
       },
       "quality": {
         "title": "Lời khuyên của chuyên gia có mang lại giá trị thực tế không?",
+        "label": "Chất lượng",
         "options": {
           "4": "Rất sâu sắc, giải quyết đúng trọng tâm vấn đề cốt lõi.",
           "3": "Khá hữu ích, đưa ra được định hướng tốt cho dự án.",
@@ -2651,6 +2682,7 @@
       },
       "communication": {
         "title": "Chuyên gia có thái độ cởi mở và biết lắng nghe không?",
+        "label": "Giao tiếp",
         "options": {
           "4": "Giao tiếp rất rõ ràng, chân thành và tích cực lắng nghe.",
           "3": "Giao tiếp chuyên nghiệp, lịch sự và dễ trao đổi.",
@@ -2660,6 +2692,7 @@
       },
       "actionability": {
         "title": "Bạn có biết mình cần làm gì tiếp theo sau buổi gặp không?",
+        "label": "Tính ứng dụng",
         "options": {
           "4": "Đưa ra được lộ trình các bước hành động cực kỳ rõ ràng.",
           "3": "Có gợi ý được một vài bước đi thực tế tiếp theo để thử nghiệm.",

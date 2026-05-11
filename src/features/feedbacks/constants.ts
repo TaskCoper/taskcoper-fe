@@ -2,6 +2,7 @@ export const packageFeedbackQuestions = [
   {
     id: 'punctuality' as const,
     titleKey: 'packageFeedback.questions.punctuality.title',
+    labelKey: 'packageFeedback.questions.punctuality.label',
     options: [
       { value: '4', labelKey: 'packageFeedback.questions.punctuality.options.4' },
       { value: '3', labelKey: 'packageFeedback.questions.punctuality.options.3' },
@@ -12,6 +13,7 @@ export const packageFeedbackQuestions = [
   {
     id: 'preparation' as const,
     titleKey: 'packageFeedback.questions.preparation.title',
+    labelKey: 'packageFeedback.questions.preparation.label',
     options: [
       { value: '4', labelKey: 'packageFeedback.questions.preparation.options.4' },
       { value: '3', labelKey: 'packageFeedback.questions.preparation.options.3' },
@@ -22,6 +24,7 @@ export const packageFeedbackQuestions = [
   {
     id: 'quality' as const,
     titleKey: 'packageFeedback.questions.quality.title',
+    labelKey: 'packageFeedback.questions.quality.label',
     options: [
       { value: '4', labelKey: 'packageFeedback.questions.quality.options.4' },
       { value: '3', labelKey: 'packageFeedback.questions.quality.options.3' },
@@ -32,6 +35,7 @@ export const packageFeedbackQuestions = [
   {
     id: 'communication' as const,
     titleKey: 'packageFeedback.questions.communication.title',
+    labelKey: 'packageFeedback.questions.communication.label',
     options: [
       { value: '4', labelKey: 'packageFeedback.questions.communication.options.4' },
       { value: '3', labelKey: 'packageFeedback.questions.communication.options.3' },
@@ -42,6 +46,7 @@ export const packageFeedbackQuestions = [
   {
     id: 'actionability' as const,
     titleKey: 'packageFeedback.questions.actionability.title',
+    labelKey: 'packageFeedback.questions.actionability.label',
     options: [
       { value: '4', labelKey: 'packageFeedback.questions.actionability.options.4' },
       { value: '3', labelKey: 'packageFeedback.questions.actionability.options.3' },

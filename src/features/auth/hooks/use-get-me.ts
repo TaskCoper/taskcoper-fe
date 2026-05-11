@@ -1,5 +1,5 @@
+import userService from '@/features/users/services'
 import { queryKeys } from '@/lib/query-keys'
-import userService from '@/services/user.service'
 import { useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 

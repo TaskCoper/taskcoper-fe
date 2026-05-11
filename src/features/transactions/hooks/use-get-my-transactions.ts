@@ -1,9 +1,9 @@
 import { queryKeys } from '@/lib/query-keys'
-import transactionService from '@/services/transaction.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { TransactionRow } from '@/types/transaction.type'
 import { useQuery } from '@tanstack/react-query'
+import transactionService from '../services'
+import type { TransactionRow } from '../types'
 
 export interface GetMyTransactionsParams {
   pageIndex?: number

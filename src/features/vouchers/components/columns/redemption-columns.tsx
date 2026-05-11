@@ -1,21 +1,21 @@
-import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { formatCurrency } from '@/shared/utils'
-import { type Currency } from '@/types/transaction.type'
-import {
-  TargetTypeLabel,
-  VoucherRedemptionStatus,
-  VoucherRedemptionStatusLabel,
-  type VoucherRedemptionRow
-} from '@/types/voucher.type'
+import { type Currency } from '@/features/transactions/types'
+import { formatCurrency, getAvatarFallback } from '@/shared/utils'
 import { type ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import { SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
+import {
+  TargetTypeLabel,
+  VoucherRedemptionStatus,
+  VoucherRedemptionStatusLabel,
+  type VoucherRedemptionRow
+} from '../../types'
 
 export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
   return [
@@ -35,13 +35,12 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
         const fullName = `${redeemedUserFirstName} ${redeemedUserLastName}`
 
         return (
-          <div className='flex items-center gap-2'>
-            <AvatarWithTooltip
-              avatar={redeemedUserImageUrl}
-              fullName={fullName}
-              email={redeemedUserEmail}
-              className='size-8 ring-primary ring-2 ring-offset-2'
-            />
+          <div className='flex items-center gap-3'>
+            <Avatar className='ring-2 ring-primary ring-offset-2'>
+              <AvatarImage src={redeemedUserImageUrl ?? undefined} />
+              <AvatarFallback>{getAvatarFallback(fullName)}</AvatarFallback>
+            </Avatar>
+
             <div>
               <Link to={`/users/${redeemedByUserId}`} className='font-medium hover:underline'>
                 {fullName}

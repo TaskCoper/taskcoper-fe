@@ -1,4 +1,4 @@
-import userService from '@/services/user.service'
+import userService from '@/features/users/services'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'

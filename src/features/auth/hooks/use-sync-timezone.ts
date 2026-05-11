@@ -1,6 +1,6 @@
+import userService from '@/features/users/services'
+import type { User } from '@/features/users/types'
 import { queryKeys } from '@/lib/query-keys'
-import userService from '@/services/user.service'
-import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 

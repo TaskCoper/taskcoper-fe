@@ -1,10 +1,10 @@
 import { queryKeys } from '@/lib/query-keys'
-import commissionService from '@/services/commission.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type Resolver } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import commissionService from '../services'
 import { updateCommissionSchema, type UpdateCommissionFormValues } from '../validations'
 
 export const useUpdateCommission = () => {

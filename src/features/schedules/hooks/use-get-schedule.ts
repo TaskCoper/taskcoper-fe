@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import scheduleService from '@/services/schedule.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { ScheduleSlot } from '@/types/schedule.type'
 import { useQuery } from '@tanstack/react-query'
+import scheduleService from '../services'
+import type { ScheduleSlot } from '../types'
 
 export interface GetScheduleParams {
   userId: string

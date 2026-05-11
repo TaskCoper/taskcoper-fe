@@ -97,7 +97,7 @@ export default function DataTableRadioFilter<TData, TValue>({
                   <CommandItem key={option.value} onSelect={() => onItemSelect(option)}>
                     <div
                       className={cn(
-                        'flex size-4 items-center justify-center rounded-full border border-primary',
+                        'flex size-4 items-center justify-center rounded-full border border-primary shrink-0',
                         isSelected ? 'bg-primary' : 'opacity-50'
                       )}
                     >

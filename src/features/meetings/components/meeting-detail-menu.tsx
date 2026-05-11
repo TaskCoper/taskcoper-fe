@@ -2,14 +2,14 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { SectionPermission } from '@/features/projects/roles/types'
 import { cn } from '@/shared/utils'
-import { MeetingStatus } from '@/types/meeting.type'
-import type { SectionPermission } from '@/types/project-permission.type'
 import { differenceInHours } from 'date-fns'
 import { CalendarClockIcon, ChevronLeftIcon, InfoIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCancelMeeting } from '../hooks/use-cancel-meeting'
+import { MeetingStatus } from '../types'
 
 interface MeetingDetailMenuProps {
   meetingId: string

@@ -1,23 +1,28 @@
-import type { GetProjectHeatmapParams } from '@/features/charts/hooks/use-get-project-heatmap'
-import type { GetProjectTaskStatsParams } from '@/features/charts/hooks/use-get-project-task-stats'
-import type { GetProjectTopContributorsParams } from '@/features/charts/hooks/use-get-project-top-contributors'
 import type { GetCommissionsParams } from '@/features/commissions/hooks/use-get-commissions'
+import type { GetFeedbacksParams } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import type { GetMentorMeetingsParams } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-meetings'
 import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
+import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
-import type { UseGetProjectMembersParams } from '@/features/projects/hooks/use-get-project-members'
-import type { UseGetProjectResourcesParams } from '@/features/projects/hooks/use-get-project-resources'
-import type { GetProjectRevenuesParams } from '@/features/projects/hooks/use-get-project-revenues'
-import type { GetProjectRoleParams } from '@/features/projects/hooks/use-get-project-role'
-import type { GetProjectsParams } from '@/features/projects/hooks/use-get-projects'
+import type { GetProjectLabelStatsParams } from '@/features/projects/analytics/hooks/use-get-project-label-stats'
+import type { GetProjectPriorityStatsParams } from '@/features/projects/analytics/hooks/use-get-project-priority-stats'
+import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/use-get-project-heatmap'
+import type { GetProjectTaskStatsParams } from '@/features/projects/charts/hooks/use-get-project-task-stats'
+import type { GetProjectTopContributorsParams } from '@/features/projects/charts/hooks/use-get-project-top-contributors'
+import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
+import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
+import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
+import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
+import type { GetProjectRoleParams } from '@/features/projects/roles/hooks/use-get-project-role'
+import type { GetTasksParams } from '@/features/projects/tasks/core/hooks/use-get-tasks'
 import type { GetMySchedulesParams } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { GetScheduleParams } from '@/features/schedules/hooks/use-get-schedule'
-import type { UseGetTasksParams } from '@/features/tasks/hooks/use-get-tasks'
 import type { GetMyTransactionsParams } from '@/features/transactions/hooks/use-get-my-transactions'
 import type { GetUsersParams } from '@/features/users/hooks/use-get-users'
 import type { GetVoucherRedemptionsParams } from '@/features/vouchers/hooks/use-get-voucher-redemptions'
@@ -69,7 +74,7 @@ export const queryKeys = {
     detail: (identifier?: string) => ['project', identifier] as const,
     members: {
       all: (identifier?: string) => ['members', identifier] as const,
-      list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: UseGetProjectMembersParams) =>
+      list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: GetProjectMembersParams) =>
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
       detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
         ['members', 'detail', projectIdentifier, userId] as const
@@ -77,9 +82,9 @@ export const queryKeys = {
     parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
     labels: (projectIdentifier?: string) => ['project-labels', projectIdentifier],
     labelStatsAll: (projectIdentifier: string) => ['project-label-stats', projectIdentifier],
-    labelStats: (projectIdentifier: string, parentMilestoneId?: string) => [
+    labelStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) => [
       ...queryKeys.projects.labelStatsAll(projectIdentifier),
-      parentMilestoneId
+      parentMilestoneIdentifier
     ],
     taskStatusStats: (projectIdentifier: string, parentMilestoneIdentifier?: string) => [
       'project-task-status-stats',
@@ -94,10 +99,10 @@ export const queryKeys = {
     resourceStats: (projectIdentifier?: string) => ['project-resource-stats', projectIdentifier] as const,
     mimeTypeStats: (projectIdentifier?: string) => ['project-mime-type-stats', projectIdentifier] as const,
     resourceMemberStats: (projectIdentifier?: string) => ['project-resource-member-stats', projectIdentifier] as const,
-    priorityStats: (identifier?: string, milestoneIdentifier?: string) => [
+    priorityStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectPriorityStatsParams) => [
       'project-priority-stats',
-      identifier,
-      milestoneIdentifier
+      projectIdentifier,
+      parentMilestoneIdentifier
     ],
     myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const,
     roles: {
@@ -142,7 +147,7 @@ export const queryKeys = {
       priorities,
       projectIdentifier,
       isWatchingTask
-    }: UseGetTasksParams) =>
+    }: GetTasksParams) =>
       [
         ...queryKeys.tasks.listParent(parentMilestoneIdentifier),
         pageIndex,
@@ -221,7 +226,7 @@ export const queryKeys = {
       to,
       mimeTypes,
       memberIds
-    }: UseGetProjectResourcesParams) =>
+    }: GetProjectResourcesParams) =>
       [
         'project-resources',
         projectIdentifier,
@@ -264,17 +269,22 @@ export const queryKeys = {
   // Mentor Packages
   mentorPackages: {
     all: ['mentor-packages'] as const,
-    my: () => [...queryKeys.mentorPackages.all, 'my'] as const,
+    allMy: ['mentor-packages', 'my'] as const,
+    my: ({ pageIndex, pageSize, sortBy, searchTerm, isPin }: GetMyMentorPackagesParams) =>
+      [...queryKeys.mentorPackages.allMy, pageIndex, pageSize, sortBy, searchTerm, isPin] as const,
     purchased: ({ mode, isNeedFeedback }: GetPurchasedMentorPackagesParams) =>
       [...queryKeys.mentorPackages.all, 'purchased', mode, isNeedFeedback] as const,
     projectPurchased: (projectIdentifier?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'project', projectIdentifier] as const,
     purchasedDetail: (packageId?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'detail', packageId] as const,
-    list: ({ mentorId, limit }: GetMentorPackagesParams) => [...queryKeys.mentorPackages.all, mentorId, limit] as const,
+    list: ({ mentorId, isPin }: GetMentorPackagesParams) => [...queryKeys.mentorPackages.all, mentorId, isPin] as const,
     listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>
       [...queryKeys.mentorPackages.all, 'infinite', params] as const,
-    detail: (packageId?: string) => ['mentor-package', packageId] as const
+    detail: (packageId?: string) => ['mentor-package', packageId] as const,
+    statistics: ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) =>
+      [...queryKeys.mentorPackages.all, 'statistics', mentorPackageId, startTime, endTime] as const,
+    pinStatistics: () => [...queryKeys.mentorPackages.all, 'pin', 'statistics'] as const
   },
   // Schedules
   schedules: {
@@ -297,7 +307,7 @@ export const queryKeys = {
       sortBy,
       startDate,
       endDate
-    }: GetProjectRevenuesParams) =>
+    }: GetProjectRevenueParams) =>
       [
         ...queryKeys.projectRevenues.all(projectIdentifier),
         pageIndex,
@@ -401,6 +411,8 @@ export const queryKeys = {
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   },
   feedbacks: {
-    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const
+    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const,
+    list: ({ targetId, targetType, pageIndex, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
+      ['feedbacks', targetId, targetType, pageIndex, pageSize, sortBy, searchTerm] as const
   }
 } as const

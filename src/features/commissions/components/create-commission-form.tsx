@@ -2,10 +2,10 @@ import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { CommissionTargetModel, CommissionTargetModelLabel } from '@/types/commission.type'
-import { MentorTitle, MentorTitleLabel } from '@/types/mentor-application.type'
+import { MentorTitle, MentorTitleLabel } from '@/features/mentor-applications/types'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { CommissionTargetModel, CommissionTargetModelLabel } from '../types'
 import type { CreateCommissionFormValues } from '../validations'
 
 export default function CreateCommissionForm() {

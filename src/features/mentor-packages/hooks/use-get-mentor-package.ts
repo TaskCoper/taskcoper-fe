@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { useQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
 
 export const useGetMentorPackage = ({ packageId }: { packageId?: string }) => {
   const { data: mentorPackage, isLoading: isLoadingMentorPackage } = useQuery({

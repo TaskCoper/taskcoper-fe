@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import meetingService from '@/services/meeting.service'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import meetingService from '../services'
 
 export interface GetProjectMeetingsParams {
   projectIdentifier?: string

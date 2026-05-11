@@ -15,13 +15,13 @@ import { LinkPopover } from '@/components/tiptap-ui/link-popover'
 import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
 import { MarkButton } from '@/components/tiptap-ui/mark-button'
 import { FieldError } from '@/components/ui/field'
+import type { ProjectMember } from '@/features/projects/core/types'
+import projectMemberService from '@/features/projects/members/services'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { queryKeys } from '@/lib/query-keys'
-import projectService from '@/services/project.service'
 import { DEFAULT_PAGE_INDEX, MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
-import type { ProjectMember } from '@/types/project.type'
-import type { MentionUser } from '@/types/user.type'
+import type { MentionUser } from '@/features/users/types'
 import { computePosition, flip, shift } from '@floating-ui/dom'
 import { useQueryClient } from '@tanstack/react-query'
 import FileHandler from '@tiptap/extension-file-handler'
@@ -141,7 +141,7 @@ export default function RichTextEditor({
           pageSize: 5
         }),
         queryFn: () =>
-          projectService.getProjectMembers({
+          projectMemberService.getProjectMembers({
             identifier: projectIdentifier,
             searchTerm: parsedQuery,
             pageIndex: DEFAULT_PAGE_INDEX,

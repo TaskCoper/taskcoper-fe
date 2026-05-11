@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import voucherService from '@/services/voucher.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import voucherService from '../services'
 
 export const useDeleteVoucherTarget = () => {
   const queryClient = useQueryClient()

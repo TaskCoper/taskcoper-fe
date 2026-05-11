@@ -1,4 +1,4 @@
-import { ApplicationStatus } from '@/types/mentor-application.type'
+import { ApplicationStatus } from '@/features/mentor-applications/types'
 import type { Locale } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'
 import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'

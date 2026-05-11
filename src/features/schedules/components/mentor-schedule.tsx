@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-meetings'
 import { formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
-import { useGetSchedule } from '@/features/schedules/hooks/use-get-schedule'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { addWeeks, endOfWeek, format, getISOWeek, getYear, startOfWeek, subWeeks } from 'date-fns'
@@ -12,6 +11,7 @@ import { enUS, vi } from 'date-fns/locale'
 import { CalendarDaysIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useGetSchedule } from '../hooks/use-get-schedule'
 
 interface MentorScheduleProps {
   userId: string
@@ -153,7 +153,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
               </Button>
 
               <Select value={currentWeekStart.toISOString()} onValueChange={handleWeekChange}>
-                <SelectTrigger size='sm' className='w-[140px] text-sm font-medium bg-background'>
+                <SelectTrigger size='sm' className='w-35 text-sm font-medium bg-background'>
                   <SelectValue>{currentWeekLabel}</SelectValue>
                 </SelectTrigger>
                 <SelectContent
@@ -175,7 +175,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
             </div>
 
             <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
-              <SelectTrigger size='sm' className='w-[90px] text-sm bg-background'>
+              <SelectTrigger size='sm' className='w-22.5 text-sm bg-background'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent side='bottom' sideOffset={8}>
@@ -225,7 +225,7 @@ export default function MentorSchedule({ userId }: MentorScheduleProps) {
                   </p>
                 </div>
 
-                <div className='space-y-2 min-h-[80px]'>
+                <div className='space-y-2 min-h-20'>
                   {day.slots.map((slot) => {
                     const isBooked = bookedSchedule[index].slots.some(
                       (b) => b.startTimeUtc === slot.startTimeUtc && b.endTimeUtc === slot.endTimeUtc

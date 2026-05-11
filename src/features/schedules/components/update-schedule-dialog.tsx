@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import type { MeetingRule } from '@/types/schedule.type'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useUpdateSchedule } from '../hooks/use-update-schedule'
+import type { MeetingRule } from '../types'
 import type { UpdateScheduleFormValues } from '../validations'
 import UpdateScheduleForm from './update-schedule-form'
 

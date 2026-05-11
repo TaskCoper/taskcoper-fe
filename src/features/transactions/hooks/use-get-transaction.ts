@@ -1,7 +1,7 @@
 import { queryKeys } from '@/lib/query-keys'
-import transactionService from '@/services/transaction.service'
-import type { Transaction } from '@/types/transaction.type'
 import { useQuery } from '@tanstack/react-query'
+import transactionService from '../services'
+import type { Transaction } from '../types'
 
 interface UseGetTransactionProps {
   transactionId?: string
