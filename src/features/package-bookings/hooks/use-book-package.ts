@@ -1,10 +1,10 @@
-import packageBookingService from '@/services/package-booking.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
+import packageBookingService from '../services'
 import { bookPackageSchema, type BookPackageFormValues } from '../validations'
 
 export const useBookPackage = () => {

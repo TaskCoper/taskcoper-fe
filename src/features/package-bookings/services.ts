@@ -1,5 +1,5 @@
-import type { BookPackageFormValues } from '@/features/package-bookings/validations'
 import { api, type BaseResponse } from '@/lib/axios'
+import type { BookPackageFormValues } from './validations'
 
 class PackageBookingService {
   private readonly baseUrl = 'package-bookings'
