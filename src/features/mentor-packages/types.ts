@@ -1,5 +1,5 @@
-import type { Meeting } from '../features/meetings/types'
-import type { Currency } from './transaction.type'
+import type { Currency } from '../../types/transaction.type'
+import type { Meeting } from '../meetings/types'
 
 export interface MentorPackage {
   id: string

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import type { MentorPackage } from '@/types/mentor-package.type'
+import type { MentorPackage } from '@/features/mentor-packages/types'
 import { StarIcon } from 'lucide-react'
 import { useUpdateMentorPackage } from '../hooks/use-update-mentor-package'
 

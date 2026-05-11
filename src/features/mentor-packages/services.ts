@@ -3,18 +3,18 @@ import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/u
 import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type {
-  CreateMentorPackageFormValues,
-  UpdateMentorPackageFormValues
-} from '@/features/mentor-packages/validations'
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import { getDefaultPaginationResponse } from '@/shared/utils'
-import type {
   MentorPackage,
   MentorPackageDetail,
   MentorPackagePinStatistic,
   MentorPackageStatistics,
   PurchasedMentorPackage
-} from '@/types/mentor-package.type'
+} from '@/features/mentor-packages/types'
+import type {
+  CreateMentorPackageFormValues,
+  UpdateMentorPackageFormValues
+} from '@/features/mentor-packages/validations'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { getDefaultPaginationResponse } from '@/shared/utils'
 
 class MentorPackageService {
   private readonly baseUrl = 'mentor-packages'

@@ -1,11 +1,11 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import mentorPackageService from '../services'
 import { createMentorPackageSchema, type CreateMentorPackageFormValues } from '../validations'
 
 export const useCreateMentorPackage = () => {

@@ -10,11 +10,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn, formatCurrency, formatDate } from '@/shared/utils'
-import type { MentorPackage } from '@/types/mentor-package.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CheckCircleIcon, MoreHorizontalIcon, SearchIcon, XCircleIcon } from 'lucide-react'
 import { Link } from 'react-router'
+import type { MentorPackage } from '../types'
 import PinCell from './pin-cell'
 
 export const getColumns = (): ColumnDef<MentorPackage>[] => {

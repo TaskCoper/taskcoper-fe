@@ -7,10 +7,10 @@ import AddMentorPackageRuleDialog from '@/features/mentor-package-rules/componen
 import { useDeleteMentorPackageRule } from '@/features/mentor-package-rules/hooks/use-delete-mentor-package-rule'
 import { useUpdateMentorPackageRule } from '@/features/mentor-package-rules/hooks/use-update-mentor-package-rule'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import type { MentorPackageRule } from '@/types/mentor-package.type'
 import { CheckIcon, ClockIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { MentorPackageRule } from '../../types'
 
 interface PackageRulesTabProps {
   mentorPackageId: string | undefined

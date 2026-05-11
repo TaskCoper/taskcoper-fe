@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
-import type { MentorPackage } from '@/types/mentor-package.type'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
+import type { MentorPackage } from '../types'
 
 export const useGetMyMentorPackagesInfinite = ({
   pageSize = DEFAULT_PAGE_SIZE,

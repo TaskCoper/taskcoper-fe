@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { useQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
 
 export interface GetMentorPackageStatisticsParams {
   mentorPackageId?: string

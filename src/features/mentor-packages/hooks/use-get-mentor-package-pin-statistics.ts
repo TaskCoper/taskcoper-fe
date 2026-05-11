@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { MentorPackagePinStatistic } from '@/types/mentor-package.type'
 import { useQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
+import type { MentorPackagePinStatistic } from '../types'
 
 export const useGetMentorPackagePinStatistics = () => {
   const {

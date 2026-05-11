@@ -1,8 +1,8 @@
+import type { PurchasedMentorPackage } from '@/features/mentor-packages/types'
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { PurchasedMentorPackage } from '@/types/mentor-package.type'
 import { useQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
 
 export interface GetPurchasedMentorPackagesParams {
   mode?: number[]

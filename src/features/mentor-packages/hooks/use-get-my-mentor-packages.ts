@@ -1,9 +1,9 @@
+import type { MentorPackage } from '@/features/mentor-packages/types'
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageService from '@/services/mentor-package.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { MentorPackage } from '@/types/mentor-package.type'
 import { useQuery } from '@tanstack/react-query'
+import mentorPackageService from '../services'
 
 export interface GetMyMentorPackagesParams {
   pageIndex?: number
