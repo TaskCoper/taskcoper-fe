@@ -1,8 +1,5 @@
-import type {
-  AddMentorPackageRuleFormValues,
-  UpdateMentorPackageRuleFormValues
-} from '@/features/mentor-package-rules/validations'
 import api, { type BaseResponse } from '@/lib/axios'
+import type { AddMentorPackageRuleFormValues, UpdateMentorPackageRuleFormValues } from './validations'
 
 class MentorPackageRuleService {
   private readonly baseUrl = 'mentor-package-rules'

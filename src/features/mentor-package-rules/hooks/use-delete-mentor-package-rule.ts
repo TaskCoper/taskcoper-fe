@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import mentorPackageRuleService from '@/services/mentor-package-rule.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import mentorPackageRuleService from '../services'
 
 export const useDeleteMentorPackageRule = ({ mentorPackageId }: { mentorPackageId: string }) => {
   const { t } = useTranslation()
