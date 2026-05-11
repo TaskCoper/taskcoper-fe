@@ -1,11 +1,6 @@
-import type { GetVoucherRedemptionsParams } from '@/features/vouchers/hooks/use-get-voucher-redemptions'
-import type { GetVouchersParams } from '@/features/vouchers/hooks/use-get-vouchers'
-import type {
-  AddVoucherTargetsFormValues,
-  CreateVoucherFormValues,
-  UpdateVoucherFormValues
-} from '@/features/vouchers/validations'
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { GetVoucherRedemptionsParams } from './hooks/use-get-voucher-redemptions'
+import type { GetVouchersParams } from './hooks/use-get-vouchers'
 import type {
   VoucherRedemptionRow,
   VoucherRow,
@@ -13,7 +8,8 @@ import type {
   VoucherStatusStats,
   VoucherTargetStats,
   VoucherTypeStats
-} from '@/types/voucher.type'
+} from './types'
+import type { AddVoucherTargetsFormValues, CreateVoucherFormValues, UpdateVoucherFormValues } from './validations'
 
 class VoucherService {
   private readonly baseUrl = 'vouchers'

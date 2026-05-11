@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import milestoneService from '../services'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { MilestoneTask } from '@/types/task.type'
 import { useQuery } from '@tanstack/react-query'
+import type { MilestoneTask } from '../../tasks/core/types'
+import milestoneService from '../services'
 
 interface GetMilestoneTasksParams {
   milestoneId?: string

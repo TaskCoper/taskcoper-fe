@@ -5,7 +5,7 @@ import AddVoucherTargetsDialog from '@/features/vouchers/components/add-voucher-
 import { useDeleteVoucherTarget } from '@/features/vouchers/hooks/use-delete-voucher-target'
 import { useUpdateVoucherTargetStatus } from '@/features/vouchers/hooks/use-update-voucher-target-status'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { type VoucherRow, type VoucherTargetRow } from '@/types/voucher.type'
+import { type VoucherRow, type VoucherTargetRow } from '@/features/vouchers/types'
 import { PackageIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 

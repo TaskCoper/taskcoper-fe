@@ -1,4 +1,4 @@
-import { DiscountType, Scope, TargetType } from '@/types/voucher.type'
+import { DiscountType, Scope, TargetType } from '@/features/vouchers/types'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 

@@ -1,7 +1,7 @@
 import type { TaskPreview } from '@/features/projects/core/types'
-import type { TaskCardDragData } from '@/types/task.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import type { TaskCardDragData } from '../types'
 import TaskCard from './task-card'
 
 interface SortableTaskCardProps {

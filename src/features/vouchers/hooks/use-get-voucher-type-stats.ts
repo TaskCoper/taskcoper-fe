@@ -1,6 +1,6 @@
 import { queryKeys } from '@/lib/query-keys'
-import voucherService from '@/services/voucher.service'
 import { useQuery } from '@tanstack/react-query'
+import voucherService from '../services'
 
 export const useGetVoucherTypeStats = () => {
   const { data: voucherTypeStats = [], isLoading: isLoadingVoucherTypeStats } = useQuery({

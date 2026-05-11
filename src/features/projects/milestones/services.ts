@@ -1,8 +1,8 @@
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { MilestoneTask } from '@/types/task.type'
+import type { MilestoneStats } from '../analytics/types'
+import type { MilestoneTask } from '../tasks/core/types'
 import type { ChildMilestone } from './types'
 import type { AddMilestoneFormValues, AddParentMilestoneFormValues, UpdateMilestoneFormValues } from './validations'
-import type { MilestoneStats } from '../analytics/types'
 
 class MilestoneService {
   private readonly baseUrl = 'milestones'

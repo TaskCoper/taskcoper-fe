@@ -1,8 +1,8 @@
+import type { VoucherRow } from '@/features/vouchers/types'
 import { queryKeys } from '@/lib/query-keys'
-import voucherService from '@/services/voucher.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
-import type { VoucherRow } from '@/types/voucher.type'
 import { useQuery } from '@tanstack/react-query'
+import voucherService from '../services'
 
 export interface GetVouchersParams {
   pageIndex?: number

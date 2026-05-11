@@ -1,7 +1,21 @@
+import type { TaskPreview } from '@/features/projects/core/types'
 import type { TaskLabel } from '@/features/projects/tasks/labels/types'
 import type { MentionUser } from '@/features/users/types'
 import type { Milestone } from '@/types/milestone.type'
 import type { TaskMember } from '../members/types'
+
+export type TaskCardType = 'TaskCard'
+
+export interface TaskCardDragData {
+  type: TaskCardType
+  task: TaskPreview
+}
+
+export interface MilestoneTask {
+  id: string
+  name: string
+  position: number
+}
 
 export const TaskPriority = {
   HIGHEST: 'HIGHEST',

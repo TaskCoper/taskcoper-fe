@@ -12,7 +12,7 @@ import {
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMyMentorPackagesInfinite } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages-infinite'
-import { TargetType } from '@/types/voucher.type'
+import { TargetType } from '@/features/vouchers/types'
 import { PackageIcon, Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'

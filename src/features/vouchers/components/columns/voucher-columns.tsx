@@ -8,8 +8,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, type VoucherRow } from '@/features/vouchers/types'
 import { cn, formatCurrency } from '@/shared/utils'
-import { DiscountType, DiscountTypeLabel, Scope, ScopeLabel, type VoucherRow } from '@/types/voucher.type'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { enUS, vi } from 'date-fns/locale'

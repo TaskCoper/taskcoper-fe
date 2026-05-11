@@ -3,13 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { type Currency } from '@/features/transactions/types'
-import { formatCurrency, getAvatarFallback } from '@/shared/utils'
 import {
   TargetTypeLabel,
   VoucherRedemptionStatus,
   VoucherRedemptionStatusLabel,
   type VoucherRedemptionRow
-} from '@/types/voucher.type'
+} from '@/features/vouchers/types'
+import { formatCurrency, getAvatarFallback } from '@/shared/utils'
 import { type ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
