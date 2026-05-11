@@ -12,11 +12,10 @@ export interface GetDomainsParams {
   enabled?: boolean
 }
 
-// TODO: use useInfiniteQuery
 export const useGetDomains = ({
   searchTerm,
   pageIndex = DEFAULT_PAGE_INDEX,
-  pageSize = 50,
+  pageSize,
   enabled = true
 }: GetDomainsParams) => {
   const { data: domains = getDefaultPaginationResponse<Domain>(), isLoading: isLoadingDomains } = useQuery({

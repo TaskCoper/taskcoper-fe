@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetDomains } from '@/features/domains/hooks/use-get-domains'
+import { useGetDomainsInfinite } from '@/features/domains/hooks/use-get-domains-infinite'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
@@ -62,17 +62,19 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
     [debouncedSetDomainSearchTerm]
   )
 
-  const { domains, isLoadingDomains } = useGetDomains({
+  const {
+    domains,
+    isLoading: isLoadingDomains,
+    isFetchingNextPage: isFetchingNextDomains,
+    hasNextPage: hasNextDomainsPage,
+    fetchNextPage: fetchNextDomainsPage
+  } = useGetDomainsInfinite({
     searchTerm: domainSearchTerm || undefined
   })
 
   const domainItems: ComboboxDomainItem[] = useMemo(
-    () =>
-      domains.value.items.map((domain) => ({
-        id: domain.id,
-        name: domain.name
-      })),
-    [domains.value.items]
+    () => domains.map((domain) => ({ id: domain.id, name: domain.name })),
+    [domains]
   )
 
   const { uploadFileWithToast } = useUploadFileWithToast()
@@ -279,6 +281,11 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
                   debouncedAutoSubmit()
                 }}
                 displayError={false}
+                isFetchingNextPage={isFetchingNextDomains}
+                hasNextPage={Boolean(hasNextDomainsPage)}
+                fetchNextPage={() => {
+                  void fetchNextDomainsPage()
+                }}
               />
 
               <UpdateProjectDomainsForm fields={fields} remove={remove} onRemoveDomain={debouncedAutoSubmit} />

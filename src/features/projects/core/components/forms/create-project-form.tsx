@@ -1,7 +1,8 @@
-import MultiSelectField from '@/components/multi-select-field'
+import InfiniteMultiSelect from '@/components/infinite-multi-select'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useGetDomains } from '@/features/domains/hooks/use-get-domains'
+import { useGetDomainsInfinite } from '@/features/domains/hooks/use-get-domains-infinite'
+import { useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { CreateProjectFormValues } from '../../validations'
@@ -9,8 +10,17 @@ import type { CreateProjectFormValues } from '../../validations'
 export default function CreateProjectForm() {
   const { t } = useTranslation()
   const { control } = useFormContext<CreateProjectFormValues>()
+  const [domainSearchTerm, setDomainSearchTerm] = useState('')
 
-  const { domains, isLoadingDomains } = useGetDomains({})
+  const {
+    domains,
+    isLoading: isLoadingDomains,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage
+  } = useGetDomainsInfinite({
+    searchTerm: domainSearchTerm || undefined
+  })
 
   return (
     <div className='flex flex-col gap-2 w-full'>
@@ -41,19 +51,42 @@ export default function CreateProjectForm() {
         )}
       />
 
-      <MultiSelectField
-        control={control}
+      <Controller
         name='domainIds'
-        label='project.createProject.field.domain.label'
-        options={domains.value.items.map((domain) => ({
-          label: domain.name,
-          value: String(domain.id)
-        }))}
-        disabled={isLoadingDomains || domains.value.items.length === 0}
-        placeholder='project.createProject.field.domain.placeholder'
-        searchPlaceholder='project.createProject.field.domain.searchPlaceholder'
-        isRequired
-        modal
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              {t('project.createProject.field.domain.label')}
+              <span className='text-destructive font-semibold'>*</span>
+            </FieldLabel>
+
+            <InfiniteMultiSelect
+              id={field.name}
+              values={Array.isArray(field.value) ? field.value : []}
+              onChangeValues={field.onChange}
+              options={domains.map((domain) => ({
+                label: domain.name,
+                value: domain.id
+              }))}
+              placeholder={t('project.createProject.field.domain.placeholder')}
+              searchPlaceholder={t('project.createProject.field.domain.searchPlaceholder')}
+              onSearch={setDomainSearchTerm}
+              isLoading={isLoadingDomains}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={Boolean(hasNextPage)}
+              fetchNextPage={() => {
+                void fetchNextPage()
+              }}
+              aria-invalid={fieldState.invalid}
+              className={fieldState.invalid ? 'border-destructive focus-visible:ring-destructive' : undefined}
+            />
+
+            <div className='min-h-4'>
+              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+            </div>
+          </Field>
+        )}
       />
 
       {/* <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>

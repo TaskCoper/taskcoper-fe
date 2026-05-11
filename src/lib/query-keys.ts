@@ -198,6 +198,8 @@ export const queryKeys = {
     all: () => ['domains'] as const,
     list: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
       ['domains', searchTerm, pageIndex, pageSize] as const,
+    listInfinite: (searchTerm?: string, pageSize?: number) =>
+      [...queryKeys.domains.all(), 'infinite', searchTerm, pageSize] as const,
     stats: () => ['domain-stats'] as const
   },
   // Attachments

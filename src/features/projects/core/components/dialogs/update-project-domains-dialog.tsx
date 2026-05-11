@@ -9,7 +9,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetDomains } from '@/features/domains/hooks/use-get-domains'
+import { useGetDomainsInfinite } from '@/features/domains/hooks/use-get-domains-infinite'
 import { useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +39,13 @@ export default function UpdateProjectDomainsDialog({ children, isPending }: Upda
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchQuery] = useDebounce(searchTerm, 500)
 
-  const { domains, isLoadingDomains } = useGetDomains({
+  const {
+    domains,
+    isLoading: isLoadingDomains,
+    isFetchingNextPage: isFetchingNextDomains,
+    hasNextPage: hasNextDomainsPage,
+    fetchNextPage: fetchNextDomainsPage
+  } = useGetDomainsInfinite({
     searchTerm: debouncedSearchQuery || undefined,
     enabled: open
   })
@@ -49,7 +55,7 @@ export default function UpdateProjectDomainsDialog({ children, isPending }: Upda
     name: 'domainIds'
   })
 
-  const domainItems: ComboboxDomainItem[] = domains.value.items.map((d) => ({
+  const domainItems: ComboboxDomainItem[] = domains.map((d) => ({
     id: d.id,
     name: d.name
   }))
@@ -95,6 +101,11 @@ export default function UpdateProjectDomainsDialog({ children, isPending }: Upda
             })}
             renderOption={(domain) => <p>{domain.name}</p>}
             onChange={(val) => replace(val)}
+            isFetchingNextPage={isFetchingNextDomains}
+            hasNextPage={Boolean(hasNextDomainsPage)}
+            fetchNextPage={() => {
+              void fetchNextDomainsPage()
+            }}
           />
 
           <UpdateProjectDomainsForm fields={fields} remove={remove} />
