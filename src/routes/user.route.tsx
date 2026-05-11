@@ -35,6 +35,7 @@ const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
 const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
 const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
+const MentorPackagesDashboardPage = lazy(() => import('@/pages/users/mentor-packages-dashboard.page'))
 const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
 
@@ -172,6 +173,7 @@ export const userRoutes: RouteObject[] = [
                     children: [
                       { path: 'packages', element: <MentorPackagesPage /> },
                       { path: 'packages/:packageId', element: <MentorPackagePage /> },
+                      { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
                       { path: 'vouchers', element: <MentorVouchersPage /> },
                       { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> }
                     ]

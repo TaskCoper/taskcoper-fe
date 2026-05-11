@@ -1,13 +1,17 @@
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
+import type { GetMentorPackageBookingsParams } from './hooks/use-get-mentor-package-bookings'
 import type { GetMentorPackageStatisticsParams } from './hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from './hooks/use-get-mentor-packages'
+import type { GetMentorPackagesStatisticsParams } from './hooks/use-get-mentor-packages-statistics'
 import type { GetMyMentorPackagesParams } from './hooks/use-get-my-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from './hooks/use-get-purchased-mentor-packages'
 import type {
   MentorPackage,
+  MentorPackageBooking,
   MentorPackageDetail,
   MentorPackagePinStatistic,
+  MentorPackagesStatistics,
   MentorPackageStatistics,
   PurchasedMentorPackage
 } from './types'
@@ -98,6 +102,30 @@ class MentorPackageService {
     )
 
     return data
+  }
+
+  getMentorPackageBookings = async ({
+    mentorPackageId,
+    status,
+    pageIndex,
+    pageSize,
+    sortBy
+  }: GetMentorPackageBookingsParams) => {
+    if (!mentorPackageId) return getDefaultPaginationResponse<MentorPackageBooking>()
+    const { data } = await api.get<BasePaginationResponse<MentorPackageBooking>>(
+      `/v1/${this.baseUrl}/${mentorPackageId}/bookings`,
+      { params: { status, pageIndex, pageSize, sortBy } }
+    )
+
+    return data
+  }
+
+  getMentorPackagesStatistics = async ({ startTime, endTime }: GetMentorPackagesStatisticsParams) => {
+    const { data } = await api.get<BaseResponse<MentorPackagesStatistics>>(`/v1/${this.baseUrl}/me/statistics`, {
+      params: { startTime, endTime }
+    })
+
+    return data.value
   }
 }
 

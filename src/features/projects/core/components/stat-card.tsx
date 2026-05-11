@@ -61,7 +61,7 @@ export default function StatCard({
 
         <div className='-space-y-0.5'>
           <p className='text-sm text-muted-foreground truncate'>{title}</p>
-          <p className='text-xl font-bold font-mono'>{value}</p>
+          <p className='text-xl font-bold font-mono truncate'>{value}</p>
         </div>
       </Card>
 

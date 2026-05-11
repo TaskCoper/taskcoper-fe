@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import InfoTab from '@/features/mentor-packages/components/tabs/info-tab'
+import PackageBookingsTab from '@/features/mentor-packages/components/tabs/package-bookings-tab'
 import PackageFeedbacksTab from '@/features/mentor-packages/components/tabs/package-feedbacks-tab'
 import PackageRulesTab from '@/features/mentor-packages/components/tabs/package-rules-tab'
 import PackageStatisticsTab from '@/features/mentor-packages/components/tabs/package-statistics-tab'
@@ -263,6 +264,11 @@ export default function MentorPackagePage() {
         value: 'feedbacks',
         label: t('mentorPackage.page.feedbackTitle'),
         content: <PackageFeedbacksTab />
+      },
+      {
+        value: 'usages',
+        label: t('mentorPackage.page.bookingsTitle'),
+        content: <PackageBookingsTab />
       },
       {
         value: 'statistics',

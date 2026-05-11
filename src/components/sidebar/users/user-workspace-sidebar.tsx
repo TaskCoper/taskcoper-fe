@@ -4,18 +4,11 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { Role } from '@/features/users/types'
 import { cn } from '@/shared/utils'
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
   CalendarDaysIcon,
-  Command,
   FileClockIcon,
   FolderOpenIcon,
-  GalleryVerticalEnd,
   HistoryIcon,
-  Settings2,
   ShoppingBagIcon,
-  SquareTerminal,
   TicketPercentIcon,
   VideoIcon,
   type LucideIcon
@@ -23,6 +16,7 @@ import {
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { NavMain } from './nav-main'
 
 type NavItem = {
   titleKey: string
@@ -51,12 +45,6 @@ const NAV_CONFIG: NavItemConfig[] = [
     icon: ShoppingBagIcon
   },
   {
-    titleKey: 'mentorPackage.sidebar.meetingSessionPackages',
-    url: '/packages',
-    icon: VideoIcon,
-    roles: ['Mentor']
-  },
-  {
     titleKey: 'voucher.sidebar.vouchers',
     url: '/vouchers',
     icon: TicketPercentIcon,
@@ -82,111 +70,22 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
 
   const data = React.useMemo(() => {
     return {
-      user: {
-        name: 'shadcn',
-        email: 'm@example.com',
-        avatar: '/avatars/shadcn.jpg'
-      },
-      teams: [
-        {
-          name: 'Acme Inc',
-          logo: GalleryVerticalEnd,
-          plan: 'Enterprise'
-        },
-        {
-          name: 'Acme Corp.',
-          logo: AudioWaveform,
-          plan: 'Startup'
-        },
-        {
-          name: 'Evil Corp.',
-          logo: Command,
-          plan: 'Free'
-        }
-      ],
       navMain: [
         {
-          title: 'Playground',
-          url: '#',
-          icon: SquareTerminal,
-          isActive: true,
+          title: t('mentorPackage.page.title'),
+          url: '/packages/dashboard',
+          icon: VideoIcon,
           items: [
             {
-              title: 'History',
-              url: '#'
+              title: t('mentorPackage.sidebar.overview'),
+              url: '/packages/dashboard',
+              activePatterns: ['/packages/dashboard']
             },
             {
-              title: 'Starred',
-              url: '#'
-            },
-            {
-              title: 'Settings',
-              url: '#'
-            }
-          ]
-        },
-        {
-          title: 'Models',
-          url: '#',
-          icon: Bot,
-          items: [
-            {
-              title: 'Genesis',
-              url: '#'
-            },
-            {
-              title: 'Explorer',
-              url: '#'
-            },
-            {
-              title: 'Quantum',
-              url: '#'
-            }
-          ]
-        },
-        {
-          title: 'Documentation',
-          url: '#',
-          icon: BookOpen,
-          items: [
-            {
-              title: 'Introduction',
-              url: '#'
-            },
-            {
-              title: 'Get Started',
-              url: '#'
-            },
-            {
-              title: 'Tutorials',
-              url: '#'
-            },
-            {
-              title: 'Changelog',
-              url: '#'
-            }
-          ]
-        },
-        {
-          title: 'Settings',
-          url: '#',
-          icon: Settings2,
-          items: [
-            {
-              title: 'General',
-              url: '#'
-            },
-            {
-              title: 'Team',
-              url: '#'
-            },
-            {
-              title: 'Billing',
-              url: '#'
-            },
-            {
-              title: 'Limits',
-              url: '#'
+              title: t('mentorPackage.sidebar.packageList'),
+              url: '/packages',
+              activePatterns: ['/packages', '/packages/:packageId'],
+              activeExcludePatterns: ['/packages/dashboard']
             }
           ]
         }
@@ -206,6 +105,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
     const quickActionItems = data.quickActions
     const sortedNav = [...quickActionItems].sort((a, b) => b.url.length - a.url.length)
     const activeItem = sortedNav.find((item) => location.pathname.startsWith(item.url))
+
     return activeItem?.url
   }, [location.pathname, data.quickActions])
 
@@ -218,7 +118,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
       </SidebarHeader> */}
       <SidebarContent>
         <NavQuickActions items={data.quickActions} activeSegment={activeSegment} />
-        {/* <NavMain items={data.navMain} /> */}
+        <NavMain items={data.navMain} />
         <div className='mt-auto px-2.5 pb-2'>
           <SidebarTrigger />
         </div>

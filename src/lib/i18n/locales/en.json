@@ -121,6 +121,7 @@
       "files": "files",
       "emptyValue": "—",
       "openMenu": "Open menu",
+      "toggle": "Toggle",
       "comingSoon": "Coming Soon",
       "more": "+{{count}} more",
       "infiniteSelect": {
@@ -746,6 +747,7 @@
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "My Tasks",
+      "quickActions": "Quick Actions",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
@@ -2323,8 +2325,9 @@
       "description": "Create a new mentor package to offer your services."
     },
     "page": {
-      "title": "Meeting Session Packages",
+      "title": "Meeting Packages",
       "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
+      "bookingsTitle": "Bookings",
       "emptyTitle": "No packages yet",
       "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
       "infoTitle": "Information",
@@ -2374,7 +2377,10 @@
       "sortOrder": "Sort order"
     },
     "sidebar": {
-      "meetingSessionPackages": "Meeting Session Packages"
+      "meetingSessionPackages": "Meeting Session Packages",
+      "menu": "Menu",
+      "overview": "Overview",
+      "packageList": "Package List"
     },
     "delete": {
       "title": "Delete package",
@@ -2389,6 +2395,16 @@
     "dialog": {
       "title": "Package information",
       "description": "Update package information"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Booking Information",
+      "bookedBy": "Booked by",
+      "feedbackSubmitted": "Feedback submitted",
+      "activationDeadline": "Activation deadline",
+      "activatedOn": "Activated on",
+      "usageDeadline": "Usage deadline",
+      "deadlinesTitle": "Deadlines",
+      "deadlinesDescription": "Keep these dates in mind to activate and use your package on time."
     }
   },
   "mentorPackageStatistics": {
@@ -2401,7 +2417,13 @@
     "netRevenue": "Net Revenue",
     "mentorPayout": "Mentor Payout",
     "revenueOverview": "Revenue Overview",
-    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}"
+    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}",
+    "topPackagesByBookings": "Top Packages by Bookings",
+    "topPackagesByBookingsDescription": "Most purchased packages in selected period",
+    "topPackagesByBookingsTooltip": "Paid bookings",
+    "packageRevenueShare": "Revenue Share by Package",
+    "packageRevenueShareDescription": "Net revenue distribution (%) across top packages",
+    "packageRevenueShareTooltip": "Net revenue share (%)"
   },
   "packageBooking": {
     "bookPackage": {

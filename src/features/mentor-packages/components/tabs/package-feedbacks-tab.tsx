@@ -10,7 +10,7 @@ import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
-import { getColumns } from '../../columns/package-feedback-columns'
+import { getColumns } from '../columns/package-feedback-columns'
 
 export default function PackageFeedbacksTab() {
   const { packageId } = useParams<{ packageId: string }>()

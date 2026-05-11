@@ -5,8 +5,10 @@ import type { GetMyMeetingsParams } from '@/features/meetings/hooks/use-get-my-m
 import type { GetProjectMeetingsParams } from '@/features/meetings/hooks/use-get-project-meetings'
 import type { GetMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-mentor-applications'
 import type { GetMyMentorApplicationsParams } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
+import type { GetMentorPackageBookingsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-bookings'
 import type { GetMentorPackageStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-package-statistics'
 import type { GetMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
+import type { GetMentorPackagesStatisticsParams } from '@/features/mentor-packages/hooks/use-get-mentor-packages-statistics'
 import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
@@ -286,7 +288,12 @@ export const queryKeys = {
     detail: (packageId?: string) => ['mentor-package', packageId] as const,
     statistics: ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) =>
       [...queryKeys.mentorPackages.all, 'statistics', mentorPackageId, startTime, endTime] as const,
-    pinStatistics: () => [...queryKeys.mentorPackages.all, 'pin', 'statistics'] as const
+    pinStatistics: () => [...queryKeys.mentorPackages.all, 'pin', 'statistics'] as const,
+    allBookings: (mentorPackageId?: string) => [...queryKeys.mentorPackages.all, 'bookings', mentorPackageId] as const,
+    bookings: ({ mentorPackageId, pageIndex, pageSize, sortBy, status }: GetMentorPackageBookingsParams) =>
+      [...queryKeys.mentorPackages.allBookings(mentorPackageId), pageIndex, pageSize, sortBy, status] as const,
+    allStatistics: ({ startTime, endTime }: GetMentorPackagesStatisticsParams) =>
+      [...queryKeys.mentorPackages.all, 'statistics', startTime, endTime] as const
   },
   // Schedules
   schedules: {

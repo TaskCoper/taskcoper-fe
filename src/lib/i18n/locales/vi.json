@@ -121,6 +121,7 @@
       "files": "tệp",
       "emptyValue": "—",
       "openMenu": "Mở menu",
+      "toggle": "Bật/tắt",
       "comingSoon": "Sắp ra mắt",
       "more": "+{{count}} nữa",
       "infiniteSelect": {
@@ -746,6 +747,7 @@
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc của tôi",
+      "quickActions": "Thao tác nhanh",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
@@ -2323,8 +2325,9 @@
       "description": "Tạo một gói hướng dẫn mới để cung cấp dịch vụ của bạn."
     },
     "page": {
-      "title": "Gói buổi gặp",
+      "title": "Gói hẹn",
       "description": "Tạo và quản lý các gói buổi gặp với mức giá linh hoạt cho mentee.",
+      "bookingsTitle": "Lượt mua",
       "emptyTitle": "Chưa có gói nào",
       "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee.",
       "infoTitle": "Thông tin",
@@ -2374,7 +2377,10 @@
       "sortOrder": "Thứ tự sắp xếp"
     },
     "sidebar": {
-      "meetingSessionPackages": "Gói buổi gặp"
+      "meetingSessionPackages": "Gói buổi gặp",
+      "menu": "Menu",
+      "overview": "Tổng quan",
+      "packageList": "Danh sách gói"
     },
     "delete": {
       "title": "Xóa gói?",
@@ -2389,6 +2395,16 @@
     "dialog": {
       "title": "Thông tin gói",
       "description": "Cập nhật thông tin gói"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Thông tin lượt mua",
+      "bookedBy": "Người mua",
+      "feedbackSubmitted": "Đã gửi đánh giá",
+      "activationDeadline": "Hạn kích hoạt",
+      "activatedOn": "Ngày kích hoạt",
+      "usageDeadline": "Hạn sử dụng",
+      "deadlinesTitle": "Thời hạn",
+      "deadlinesDescription": "Theo dõi các mốc thời gian để kích hoạt và sử dụng gói đúng hạn."
     }
   },
   "mentorPackageStatistics": {
@@ -2401,7 +2417,13 @@
     "netRevenue": "Doanh thu ròng",
     "mentorPayout": "Thanh toán cho mentor",
     "revenueOverview": "Tổng quan doanh thu",
-    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}"
+    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}",
+    "topPackagesByBookings": "Top gói theo lượt mua",
+    "topPackagesByBookingsDescription": "Các gói được mua nhiều nhất trong khoảng thời gian đã chọn",
+    "topPackagesByBookingsTooltip": "Lượt mua",
+    "packageRevenueShare": "Tỷ trọng doanh thu theo gói",
+    "packageRevenueShareDescription": "Phân bổ doanh thu ròng (%) của các gói hàng đầu",
+    "packageRevenueShareTooltip": "Tỷ trọng doanh thu ròng (%)"
   },
   "packageBooking": {
     "bookPackage": {

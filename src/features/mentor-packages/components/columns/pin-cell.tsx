@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { StarIcon } from 'lucide-react'
-import { useUpdateMentorPackage } from '../hooks/use-update-mentor-package'
-import type { MentorPackage } from '../types'
+import { useUpdateMentorPackage } from '../../hooks/use-update-mentor-package'
+import type { MentorPackage } from '../../types'
 
 export default function PinCell({ row }: { row: { original: MentorPackage } }) {
   const mentorPackage = row.original

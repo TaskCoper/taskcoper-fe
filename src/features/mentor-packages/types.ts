@@ -1,4 +1,5 @@
 import type { Meeting } from '../meetings/types'
+import type { PackageBookingStatus } from '../package-bookings/types'
 import type { Currency } from '../transactions/types'
 
 export interface MentorPackage {
@@ -86,7 +87,84 @@ export interface MentorPackageStatistics {
   }>
 }
 
+export interface MentorPackagesStatistics {
+  mentorId: string
+  startTime: string | null
+  endTime: string | null
+  summary: {
+    totalPaidBookings: number
+    bookingsWithoutVoucher: number
+    bookingsWithVoucher: number
+    grossRevenueAtListPrice: number
+    netRevenueAfterVoucher: number
+    mentorPayoutAfterCommission: number
+    totalPlatformCommission: number
+  }
+  monthlyBreakdown: Array<{
+    year: number
+    month: number
+    totalPaidBookings: number
+    bookingsWithoutVoucher: number
+    bookingsWithVoucher: number
+    grossRevenueAtListPrice: number
+    netRevenueAfterVoucher: number
+    mentorPayoutAfterCommission: number
+    totalPlatformCommission: number
+  }>
+  packageBreakdown: Array<{
+    mentorPackageId: string
+    packageName: string
+    currency: Currency
+    totalPaidBookings: number
+    bookingsWithoutVoucher: number
+    bookingsWithVoucher: number
+    grossRevenueAtListPrice: number
+    netRevenueAfterVoucher: number
+    mentorPayoutAfterCommission: number
+    totalPlatformCommission: number
+  }>
+}
+
 export interface MentorPackagePinStatistic {
   isPin: boolean
   count: number
+}
+
+export interface MentorPackageBooking {
+  packageBookingId: string
+  mentorPackageId: string
+  packageName: string
+  packageCoverImageUrl: string | null
+  packageDescription: string
+  status: PackageBookingStatus
+  priceAtBooking: number
+  currencyAtBooking: Currency
+  totalSessions: number
+  completedSessions: number
+  activationDeadlineUtc: string | null
+  activatedOnUtc: string | null
+  usageDeadlineUtc: string | null
+  bookedByUser: {
+    userId: string
+    email: string
+    firstName: string
+    lastName: string
+    slug: string
+    avatarUrl: string | null
+  }
+  bookedByProjectId: null
+  bookedByProject: {
+    name: string
+    avatarUrl: string | null
+    coverUrl: string | null
+    slug: string
+  } | null
+  isFeedbackFromUserSubmitted: boolean
+  createdOnUtc: string
+  modifiedOnUtc: string
+  rules: Array<{
+    packageSequence: number
+    totalTimeSlots: number
+  }>
+  meetings: Array<Meeting>
 }

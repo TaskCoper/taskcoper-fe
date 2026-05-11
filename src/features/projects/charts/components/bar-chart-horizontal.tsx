@@ -31,14 +31,14 @@ const CustomYAxisTick = (props: {
   return (
     <g transform={`translate(${x},${y})`}>
       <foreignObject x={-190} y={-20} width={180} height={40}>
-        <div className='flex items-start gap-3'>
+        <div className='flex items-center gap-3'>
           <Avatar className='size-7 shrink-0'>
             {item?.avatar && <AvatarImage src={item.avatar as string} alt={payload.value as string} />}
             <AvatarFallback className='text-xs'>{fallback}</AvatarFallback>
           </Avatar>
 
           <div className='flex flex-col min-w-0'>
-            <p className='text-sm font-medium leading-none truncate' title={payload.value as string}>
+            <p className='text-sm font-medium truncate' title={payload.value as string}>
               {payload.value}
             </p>
             {item?.email && (
@@ -116,7 +116,7 @@ export default function BarChartHorizontal({
       {(trendValue !== undefined || trendText) && (
         <div className='flex flex-col items-start gap-1 mt-auto'>
           {trendValue !== undefined && (
-            <div className='flex gap-2 leading-none font-medium text-sm'>
+            <div className='flex gap-2 font-medium text-sm'>
               {trendText}
               <TrendingUp className='size-4' />
             </div>
