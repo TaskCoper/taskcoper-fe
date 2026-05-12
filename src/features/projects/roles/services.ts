@@ -38,7 +38,7 @@ class ProjectRoleService {
       ...body,
       permissions: body.permissions.map((per) => ({
         ...per,
-        extensions: JSON.stringify(per.extensions)
+        extensions: per.extensions ? JSON.stringify(per.extensions) : null
       }))
     })
 
@@ -52,7 +52,7 @@ class ProjectRoleService {
         ...body,
         permissions: body.permissions.map((per) => ({
           ...per,
-          extensions: JSON.stringify(per.extensions)
+          extensions: per.extensions ? JSON.stringify(per.extensions) : null
         }))
       }
     )
