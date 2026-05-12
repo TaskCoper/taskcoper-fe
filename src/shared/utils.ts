@@ -3,7 +3,7 @@ import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/features/p
 import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/features/projects/subtasks/types'
 import type { TaskCardDragData } from '@/features/projects/tasks/core/types'
 import type { Currency } from '@/features/transactions/types'
-import type { User } from '@/features/users/types'
+import type { Me } from '@/features/users/types'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
 import type { RoleType } from '@/layouts/role-guard.layout'
 import type { BasePaginationResponse } from '@/lib/axios'
@@ -170,7 +170,7 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   }
 }
 
-export const getUserType = (user: User | null | undefined): RoleType | null => {
+export const getUserType = (user: Me | null | undefined): RoleType | null => {
   if (!user) return null
   if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
   if (user.role === 'Admin' && user.organizationId) return 'orgAdmin'

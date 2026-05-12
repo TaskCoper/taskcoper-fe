@@ -14,12 +14,12 @@ export default function AuthRedirectPage() {
     )
   }
 
-  if (!isAuthenticated || !me) {
-    return <Navigate to='/sign-in' replace />
-  }
-
   if (isVerificationRequired) {
     return <Navigate to='/verify-email' replace />
+  }
+
+  if (!isAuthenticated || !me) {
+    return <Navigate to='/sign-in' replace />
   }
 
   return <Navigate to={getRoleHomePath(getUserType(me))} replace />

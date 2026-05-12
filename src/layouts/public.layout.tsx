@@ -41,7 +41,9 @@ export default function PublicLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
-  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
+    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+  })
 
   return (
     <div className='h-dvh min-h-screen flex flex-col bg-dot'>
@@ -90,6 +92,13 @@ export default function PublicLayout() {
               <Skeleton className='w-20 h-8 rounded-md' />
               <Skeleton className='size-8 rounded-full' />
             </div>
+          ) : isVerificationRequired ? (
+            <Link to='/verify-email'>
+              <Button size='sm' className='verify-email-cta'>
+                <BellRingIcon />
+                {t('header.verifyYourEmail')}
+              </Button>
+            </Link>
           ) : me ? (
             <div className='flex items-center gap-2 sm:gap-4'>
               <div className='flex items-center gap-1 sm:gap-3'>
@@ -163,13 +172,6 @@ export default function PublicLayout() {
                 </SheetContent>
               </Sheet>
             </div>
-          ) : isVerificationRequired ? (
-            <Link to='/verify-email'>
-              <Button size='sm' className='verify-email-cta'>
-                <BellRingIcon />
-                {t('header.verifyYourEmail')}
-              </Button>
-            </Link>
           ) : (
             <div className='flex items-center gap-2 sm:gap-3'>
               <Link to='/sign-in'>

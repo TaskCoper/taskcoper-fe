@@ -15,6 +15,7 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   const location = useLocation()
 
   const isOnVerifyPage = location.pathname === '/verify-email'
+  const shouldRedirectToVerify = isVerificationRequired && !isOnVerifyPage
 
   if (isGettingMe) {
     return (
@@ -24,12 +25,16 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
     )
   }
 
-  if (isAuthenticated && isVerificationRequired && !isOnVerifyPage) {
+  if (shouldRedirectToVerify) {
     return <Navigate to='/verify-email' state={{ from: location }} replace />
   }
 
   if (requiresAuth) {
-    if (!isAuthenticated || (!me && !isOnVerifyPage)) {
+    if (isVerificationRequired && isOnVerifyPage) {
+      return <Outlet />
+    }
+
+    if (!isAuthenticated || !me) {
       return <Navigate to='/sign-in' replace />
     }
 

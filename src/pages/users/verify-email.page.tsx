@@ -11,7 +11,7 @@ import { Navigate, useNavigate } from 'react-router'
 
 export default function VerifyEmailPage() {
   const { t } = useTranslation()
-  const { me: user, isVerificationRequired } = useGetMe()
+  const { me: user, isVerificationRequired } = useGetMe({ enabled: false })
   const { signOut } = useSignOut()
   const queryClient = useQueryClient()
   const navigate = useNavigate()

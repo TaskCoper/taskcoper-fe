@@ -28,12 +28,6 @@ export default function ReactQueryProvider({ children }: { children: React.React
                 }
               }
 
-              if (error.response?.status === 403) {
-                if (error.response.data.messageCode === 'EmailNotVerified') {
-                  return false
-                }
-              }
-
               return true
             },
             refetchOnWindowFocus: false,

@@ -64,9 +64,11 @@ export default function UserDefaultLayout() {
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
-  const { me, isGettingMe } = useGetMe()
+  const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
-  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
+    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+  })
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>

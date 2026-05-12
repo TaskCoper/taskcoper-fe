@@ -17,7 +17,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import ProfileDetailDialog from '@/features/users/components/profile-detail-dialog'
-import type { User } from '@/features/users/types'
+import type { Me } from '@/features/users/types'
 import { getAvatarFallback } from '@/shared/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { ChevronsUpDown, GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
@@ -25,7 +25,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface NavAdminProps {
-  user?: User | null
+  user?: Me | null
 }
 
 export function NavAdmin({ user }: NavAdminProps) {
