@@ -71,6 +71,7 @@ export interface UserDetail {
   projectCreatedCount: number
   organizationId: string | null
   createdOnUtc: string
+  isGrantGoogleCalendarAccess: boolean
   mentor: {
     shortBio: string
     description: string

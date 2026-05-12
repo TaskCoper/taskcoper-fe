@@ -1,19 +1,23 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProvinces } from '@/hooks/use-get-provinces'
 import { useGetWards } from '@/hooks/use-get-wards'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
+import { useGetUser } from '../hooks/use-get-user'
 import { useUpdateMe } from '../hooks/use-update-me'
 import type { UpdateMeFormValues } from '../validations'
 import UpdateMeForm from './update-me-form'
 
 export default function ProfileSection() {
   const { t } = useTranslation()
-  const { me, isGettingMe } = useGetMe()
+
+  const { userIdentifier } = useParams<{ userIdentifier: string }>()
+  const { user: me, isGettingUser: isGettingMe } = useGetUser({ userIdentifier })
+
   const { methods, updateMe, isUpdatingMe } = useUpdateMe()
 
   const {

@@ -7,6 +7,7 @@ export const useGetMe = () => {
   const {
     data: me,
     isLoading: isGettingMe,
+    error,
     isError
   } = useQuery({
     queryKey: queryKeys.auth.me(),
@@ -29,6 +30,7 @@ export const useGetMe = () => {
     me,
     isGettingMe,
     isAuthenticated: !!me && !isError,
-    isVerificationRequired: !!me && !me.isEmailVerified
+    isVerificationRequired:
+      isError && error.response?.status === 403 && error.response.data.messageCode === 'EmailNotVerified'
   }
 }

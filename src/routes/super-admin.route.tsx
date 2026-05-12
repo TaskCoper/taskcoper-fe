@@ -2,7 +2,6 @@
 import AdminDefaultLayout from '@/layouts/admin-default.layout'
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
-import DashboardPage from '@/pages/super-admins/dashboard.page'
 import { lazy } from 'react'
 import type { RouteObject } from 'react-router'
 
@@ -10,6 +9,7 @@ const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projec
 const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.page'))
 const SystemMentorApplicationsPage = lazy(() => import('@/pages/super-admins/system-mentor-applications.page'))
 const CommissionsPage = lazy(() => import('@/pages/super-admins/commissions.page'))
+const DashboardPage = lazy(() => import('@/pages/super-admins/dashboard.page'))
 
 export const adminRoutes: RouteObject[] = [
   {

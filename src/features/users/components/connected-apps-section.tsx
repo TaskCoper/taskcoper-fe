@@ -1,13 +1,17 @@
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { CalendarDaysIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 import { useGetGoogleAuthUrl } from '../hooks/use-get-google-auth-url'
+import { useGetUser } from '../hooks/use-get-user'
 
 export default function ConnectedAppsSection() {
   const { t } = useTranslation()
-  const { me } = useGetMe()
+
+  const { userIdentifier } = useParams<{ userIdentifier: string }>()
+  const { user: me } = useGetUser({ userIdentifier })
+
   const { getGoogleAuthUrl, isGettingGoogleAuthUrl } = useGetGoogleAuthUrl()
 
   const handleConnectGoogleCalendar = async () => {
