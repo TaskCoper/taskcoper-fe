@@ -4,14 +4,12 @@ import { Spinner } from '@/components/ui/spinner'
 import { MAX_COVER_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { CameraIcon, ImageOffIcon } from 'lucide-react'
-import { FormProvider, useFormContext, useFormState, type UseFormReturn } from 'react-hook-form'
+import { useFormContext, useFormState, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { UpdateMentorPackageFormValues } from '../../validations'
 import UpdateMentorPackageForm from '../update-mentor-package-form'
 
 interface InfoTabProps {
-  methods: UseFormReturn<UpdateMentorPackageFormValues>
-  coverImageUrl: string | null | undefined
   onSubmit: (values: UpdateMentorPackageFormValues) => void
   onDelete: () => void
   onCoverImageChange: (file: File | null) => void
@@ -21,8 +19,6 @@ interface InfoTabProps {
 }
 
 export default function InfoTab({
-  methods,
-  coverImageUrl,
   onSubmit,
   onDelete,
   onCoverImageChange,
@@ -39,35 +35,23 @@ export default function InfoTab({
         <p className='text-sm text-muted-foreground'>{t('mentorPackage.page.infoDescription')}</p>
       </div>
 
-      <FormProvider {...methods}>
-        <InfoTabForm
-          coverImageUrl={coverImageUrl}
-          onSubmit={onSubmit}
-          onDelete={onDelete}
-          onCoverImageChange={onCoverImageChange}
-          isDeleting={isDeleting}
-          isUpdating={isUpdating}
-          isUploading={isUploading}
-        />
-      </FormProvider>
+      <InfoTabForm
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+        onCoverImageChange={onCoverImageChange}
+        isDeleting={isDeleting}
+        isUpdating={isUpdating}
+        isUploading={isUploading}
+      />
     </div>
   )
 }
 
-type InfoTabFormProps = Omit<InfoTabProps, 'methods'>
-
-function InfoTabForm({
-  coverImageUrl,
-  onSubmit,
-  onDelete,
-  onCoverImageChange,
-  isDeleting,
-  isUpdating,
-  isUploading
-}: InfoTabFormProps) {
+function InfoTabForm({ onSubmit, onDelete, onCoverImageChange, isDeleting, isUpdating, isUploading }: InfoTabProps) {
   const { t } = useTranslation()
-  const { handleSubmit } = useFormContext<UpdateMentorPackageFormValues>()
+  const { handleSubmit, control } = useFormContext<UpdateMentorPackageFormValues>()
   const { isDirty } = useFormState()
+  const coverImageUrl = useWatch({ control, name: 'coverImageUrl' })
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>

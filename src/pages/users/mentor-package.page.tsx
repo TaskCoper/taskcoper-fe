@@ -22,7 +22,7 @@ import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { PackageIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { type SubmitHandler } from 'react-hook-form'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 
@@ -111,7 +111,6 @@ export default function MentorPackagePage() {
   const currentTab = searchParams.get('tab') || 'info'
 
   const { mentorPackage, isLoadingMentorPackage } = useGetMentorPackage({ packageId })
-  const coverImageUrl = methods.watch('coverImageUrl')
 
   useEffect(() => {
     if (mentorPackage) {
@@ -244,8 +243,6 @@ export default function MentorPackagePage() {
         label: t('mentorPackage.page.infoTitle'),
         content: (
           <InfoTab
-            methods={methods}
-            coverImageUrl={coverImageUrl}
             onSubmit={onSubmit}
             onDelete={handleDelete}
             onCoverImageChange={handleCoverImageChange}
@@ -278,8 +275,6 @@ export default function MentorPackagePage() {
     ],
     [
       t,
-      methods,
-      coverImageUrl,
       onSubmit,
       handleDelete,
       handleCoverImageChange,
@@ -303,51 +298,53 @@ export default function MentorPackagePage() {
   }
 
   return (
-    <div className='absolute inset-0 flex flex-col overflow-hidden'>
-      <Tabs
-        value={currentTab}
-        onValueChange={(value) => setSearchParams({ tab: value })}
-        className='flex flex-1 flex-col min-h-0'
-      >
-        <div className='bg-muted/50 px-6 pt-6 space-y-4'>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink onClick={handleBack} className='cursor-pointer'>
-                  {t('mentorPackage.page.title')}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className='truncate max-w-75'>{t('mentorPackage.page.manage')}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+    <FormProvider {...methods}>
+      <div className='absolute inset-0 flex flex-col overflow-hidden'>
+        <Tabs
+          value={currentTab}
+          onValueChange={(value) => setSearchParams({ tab: value })}
+          className='flex flex-1 flex-col min-h-0'
+        >
+          <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink onClick={handleBack} className='cursor-pointer'>
+                    {t('mentorPackage.page.title')}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className='truncate max-w-75'>{t('mentorPackage.page.manage')}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
 
-          <div className='flex items-center gap-2'>
-            <PackageIcon className='size-6 text-primary' />
-            <p className='text-2xl font-bold'>{mentorPackage?.name}</p>
+            <div className='flex items-center gap-2'>
+              <PackageIcon className='size-6 text-primary' />
+              <p className='text-2xl font-bold'>{mentorPackage?.name}</p>
+            </div>
+
+            <TabsList className='w-full justify-start rounded-none border-b p-0 bg-transparent gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden'>
+              {TABS.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  className='w-40 flex-none shrink-0 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
+                  value={tab.value}
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
           </div>
 
-          <TabsList className='w-full justify-start rounded-none border-b p-0 bg-transparent gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden'>
-            {TABS.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                className='w-40 flex-none shrink-0 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
-                value={tab.value}
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-
-        {TABS.map((tab) => (
-          <TabsContent key={tab.value} className='px-6 pt-3 overflow-auto' value={tab.value}>
-            {tab.content}
-          </TabsContent>
-        ))}
-      </Tabs>
-    </div>
+          {TABS.map((tab) => (
+            <TabsContent key={tab.value} className='px-6 pt-3 overflow-auto' value={tab.value}>
+              {tab.content}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+    </FormProvider>
   )
 }

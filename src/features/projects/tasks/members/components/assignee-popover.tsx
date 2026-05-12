@@ -42,10 +42,12 @@ export default function AssigneePopover({
 
   const { check } = useGetMyProjectPermissions({ projectIdentifier })
   const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const { members, isLoadingMembers } = useGetProjectMembers({
     identifier: projectIdentifier,
-    searchTerm: debouncedSearchTerm ? debouncedSearchTerm : undefined
+    searchTerm: debouncedSearchTerm ? debouncedSearchTerm : undefined,
+    enabled: open && (canUpdate || canDelete)
   })
   const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId })
 

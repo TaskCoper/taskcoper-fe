@@ -13,7 +13,7 @@ import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { formatCurrency } from '@/shared/utils'
 import { HashIcon, TagIcon, TicketPercentIcon, UsersRoundIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo } from 'react'
-import { type SubmitHandler } from 'react-hook-form'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 
@@ -127,7 +127,6 @@ export default function MentorVoucherPage() {
         label: t('voucher.page.infoTitle'),
         content: (
           <InfoTab
-            methods={methods}
             onSubmit={onSubmit}
             onDelete={handleDelete}
             isDeleting={isDeletingVoucher}
@@ -146,7 +145,7 @@ export default function MentorVoucherPage() {
         content: voucherId ? <RedemptionsTab voucherId={voucherId} /> : null
       }
     ],
-    [methods, onSubmit, handleDelete, isDeletingVoucher, isUpdatingVoucher, voucher, voucherId, t]
+    [onSubmit, handleDelete, isDeletingVoucher, isUpdatingVoucher, voucher, voucherId, t]
   )
 
   if (isLoadingVoucher) {
@@ -158,75 +157,77 @@ export default function MentorVoucherPage() {
   }
 
   return (
-    <div className='absolute inset-0 flex flex-col overflow-hidden'>
-      <Tabs
-        value={currentTab}
-        onValueChange={(value) => setSearchParams({ tab: value })}
-        className='flex flex-1 flex-col min-h-0'
-      >
-        <div className='bg-muted/50 px-6 pt-6 space-y-4'>
-          <div className='flex items-center gap-2'>
-            <div className='-space-y-0.5'>
-              <div className='flex items-center gap-2'>
-                <TicketPercentIcon className='size-6 text-primary' />
-                <p className='text-2xl font-bold'>{voucher?.name}</p>
+    <FormProvider {...methods}>
+      <div className='absolute inset-0 flex flex-col overflow-hidden'>
+        <Tabs
+          value={currentTab}
+          onValueChange={(value) => setSearchParams({ tab: value })}
+          className='flex flex-1 flex-col min-h-0'
+        >
+          <div className='bg-muted/50 px-6 pt-6 space-y-4'>
+            <div className='flex items-center gap-2'>
+              <div className='-space-y-0.5'>
+                <div className='flex items-center gap-2'>
+                  <TicketPercentIcon className='size-6 text-primary' />
+                  <p className='text-2xl font-bold'>{voucher?.name}</p>
+                </div>
+                <p className='text-sm text-muted-foreground'>{voucher?.description}</p>
               </div>
-              <p className='text-sm text-muted-foreground'>{voucher?.description}</p>
             </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+              <StatCard
+                title={t('voucher.field.code')}
+                value={voucher?.code ?? '-'}
+                icon={<HashIcon className='size-4 text-white' />}
+                color='slate'
+              />
+              <StatCard
+                title={t('voucher.field.discountType')}
+                value={voucher ? t(DiscountTypeLabel[voucher.discountType]) : '-'}
+                icon={<TagIcon className='size-4 text-white' />}
+                color='purple'
+              />
+              <StatCard
+                title={t('voucher.field.discountValue')}
+                value={
+                  voucher
+                    ? voucher.discountType === DiscountType.Percentage
+                      ? `${voucher.discountValue}%`
+                      : formatCurrency(voucher.discountValue)
+                    : '-'
+                }
+                icon={<TicketPercentIcon className='size-4 text-white' />}
+                color='blue'
+              />
+              <StatCard
+                title={t('voucher.column.usage')}
+                value={`${voucher?.usedCount ?? 0}/${voucher?.totalUsageLimit ?? 0}`}
+                icon={<UsersRoundIcon className='size-4 text-white' />}
+                color='green'
+              />
+            </div>
+
+            <TabsList className='w-full justify-start rounded-none border-b p-0 bg-transparent gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden'>
+              {TABS.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  className='w-40 flex-none shrink-0 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
+                  value={tab.value}
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <StatCard
-              title={t('voucher.field.code')}
-              value={voucher?.code ?? '-'}
-              icon={<HashIcon className='size-4 text-white' />}
-              color='slate'
-            />
-            <StatCard
-              title={t('voucher.field.discountType')}
-              value={voucher ? t(DiscountTypeLabel[voucher.discountType]) : '-'}
-              icon={<TagIcon className='size-4 text-white' />}
-              color='purple'
-            />
-            <StatCard
-              title={t('voucher.field.discountValue')}
-              value={
-                voucher
-                  ? voucher.discountType === DiscountType.Percentage
-                    ? `${voucher.discountValue}%`
-                    : formatCurrency(voucher.discountValue)
-                  : '-'
-              }
-              icon={<TicketPercentIcon className='size-4 text-white' />}
-              color='blue'
-            />
-            <StatCard
-              title={t('voucher.column.usage')}
-              value={`${voucher?.usedCount ?? 0}/${voucher?.totalUsageLimit ?? 0}`}
-              icon={<UsersRoundIcon className='size-4 text-white' />}
-              color='green'
-            />
-          </div>
-
-          <TabsList className='w-full justify-start rounded-none border-b p-0 bg-transparent gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden'>
-            {TABS.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                className='w-40 flex-none shrink-0 relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:font-semibold'
-                value={tab.value}
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-
-        {TABS.map((tab) => (
-          <TabsContent key={tab.value} className='px-6 pt-3 pb-20' value={tab.value}>
-            {tab.content}
-          </TabsContent>
-        ))}
-      </Tabs>
-    </div>
+          {TABS.map((tab) => (
+            <TabsContent key={tab.value} className='px-6 pt-3 pb-20' value={tab.value}>
+              {tab.content}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+    </FormProvider>
   )
 }
