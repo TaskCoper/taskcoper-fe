@@ -1,10 +1,11 @@
 import SingleSelectField from '@/components/single-select-field'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
+import { useGetUser } from '../hooks/use-get-user'
 import { useUpdateMe } from '../hooks/use-update-me'
 import type { UpdateMeFormValues } from '../validations'
 
@@ -51,7 +52,10 @@ const getTimeZoneOffsetString = (timeZone: string) => {
 
 export default function LocationSection() {
   const { t } = useTranslation()
-  const { me } = useGetMe()
+
+  const { userIdentifier } = useParams<{ userIdentifier: string }>()
+  const { user: me } = useGetUser({ userIdentifier })
+
   const { methods, updateMe, isUpdatingMe } = useUpdateMe()
 
   const {

@@ -18,6 +18,18 @@ export const RoleLabel: Record<Role, string> = {
 
 export type RoleLabel = (typeof RoleLabel)[keyof typeof RoleLabel]
 
+export interface Me {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  role: Role
+  avatar: string | null
+  organizationId: string | null
+  slug: string
+  isEmailVerified: boolean
+}
+
 export interface User {
   id: string
   email: string
@@ -71,6 +83,7 @@ export interface UserDetail {
   projectCreatedCount: number
   organizationId: string | null
   createdOnUtc: string
+  isGrantGoogleCalendarAccess: boolean
   mentor: {
     shortBio: string
     description: string

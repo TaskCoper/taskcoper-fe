@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
-import { getColumns } from '@/features/mentor-packages/columns/mentor-package-columns'
+import { getColumns } from '@/features/mentor-packages/components/columns/mentor-package-columns'
 import CreateMentorPackageDialog from '@/features/mentor-packages/components/create-mentor-package-dialog'
 import { useGetMentorPackagePinStatistics } from '@/features/mentor-packages/hooks/use-get-mentor-package-pin-statistics'
 import { useGetMyMentorPackages } from '@/features/mentor-packages/hooks/use-get-my-mentor-packages'

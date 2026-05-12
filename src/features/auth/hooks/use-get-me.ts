@@ -3,7 +3,11 @@ import { queryKeys } from '@/lib/query-keys'
 import { useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-export const useGetMe = () => {
+interface UseGetMeOptions {
+  enabled?: boolean
+}
+
+export const useGetMe = ({ enabled = true }: UseGetMeOptions = {}) => {
   const {
     data: me,
     isLoading: isGettingMe,
@@ -22,13 +26,14 @@ export const useGetMe = () => {
       }
     },
     retry: false,
-    throwOnError: false
+    throwOnError: false,
+    enabled
   })
 
   return {
     me,
     isGettingMe,
     isAuthenticated: !!me && !isError,
-    isVerificationRequired: !!me && !me.isEmailVerified
+    isVerificationRequired: !!me && me.isEmailVerified === false
   }
 }

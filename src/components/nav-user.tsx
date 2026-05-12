@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
-import type { User } from '@/features/users/types'
+import type { Me } from '@/features/users/types'
 import { getAvatarFallback } from '@/shared/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 
 interface NavUserProps {
-  user?: User | null
+  user?: Me | null
 }
 
 export default function NavUser({ user }: NavUserProps) {

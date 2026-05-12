@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { ChevronDown, MessageCircleQuestionMarkIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useGetMyNotifications } from '../hooks/use-get-my-notifications'
@@ -20,7 +21,9 @@ interface NotificationsPopoverProps {
 export default function NotificationsPopover({ children, open, onOpenChange }: NotificationsPopoverProps) {
   const { t } = useTranslation()
 
-  const { unreadCount } = useGetUnreadCount()
+  const { isVerificationRequired } = useGetMe()
+  const { unreadCount } = useGetUnreadCount({ enabled: open && !isVerificationRequired })
+
   const { notifications, totalCount, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useGetMyNotifications({ enabled: open })
   const { readNotification, isReadingNotification } = useReadNotification()

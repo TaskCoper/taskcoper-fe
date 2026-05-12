@@ -17,7 +17,18 @@ export default function ReactQueryProvider({ children }: { children: React.React
         defaultOptions: {
           queries: {
             throwOnError: (error) => {
-              return error.response?.status !== 401
+              if (error.response?.status === 401) {
+                if (
+                  // If access token is expired => axios interceptors
+                  // If access token is invalid => layout will handle it
+                  error.response.data.messageCode === 'ExpiredAccessToken' ||
+                  error.response.data.messageCode === 'InvalidAccessToken'
+                ) {
+                  return false
+                }
+              }
+
+              return true
             },
             refetchOnWindowFocus: false,
             retry: (failureCount, error) => {

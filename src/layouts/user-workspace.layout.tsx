@@ -6,9 +6,9 @@ import { Outlet } from 'react-router'
 
 export default function UserWorkspaceLayout() {
   return (
-    <SidebarProvider className='h-full min-h-0'>
+    <SidebarProvider defaultOpen={false} className='h-full min-h-0'>
       <UserWorkspaceSidebar />
-      <SidebarInset className='flex flex-col h-full overflow-hidden'>
+      <SidebarInset>
         {/* <header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>
           <div className='flex items-center gap-2 px-4'>
             <SidebarTrigger className='-ml-1'/>

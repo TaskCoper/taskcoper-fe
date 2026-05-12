@@ -1,4 +1,5 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -14,7 +15,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CheckCircleIcon, MoreHorizontalIcon, SearchIcon, XCircleIcon } from 'lucide-react'
 import { Link } from 'react-router'
-import type { MentorPackage } from '../types'
+import type { MentorPackage } from '../../types'
 import PinCell from './pin-cell'
 
 export const getColumns = (): ColumnDef<MentorPackage>[] => {
@@ -52,7 +53,7 @@ export const getColumns = (): ColumnDef<MentorPackage>[] => {
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='common.field.name' />,
       cell: ({ row }) => (
-        <Link to={`${row.original.id}`} className='hover:underline font-medium truncate'>
+        <Link to={`${row.original.id}`} className='font-medium hover:underline hover:text-primary truncate block'>
           {row.original.name}
         </Link>
       ),
@@ -132,24 +133,27 @@ export const getColumns = (): ColumnDef<MentorPackage>[] => {
       ),
       cell: ({ row }) => (
         <div className='flex justify-center'>
-          <div
+          <Badge
+            variant='outline'
             className={cn(
-              'flex justify-center items-center gap-1 border px-1 py-0.5 w-fit rounded-sm',
-              row.original.isActive ? 'border-emerald-400 bg-emerald-50' : 'border-rose-400 bg-rose-50'
+              'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium',
+              row.original.isActive
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                : 'bg-rose-50 text-rose-700 border-rose-200/50'
             )}
           >
             {row.original.isActive ? (
               <>
-                <CheckCircleIcon className='size-3.5 text-emerald-600' />
-                <p className='text-emerald-600 font-medium text-xs'>{i18next.t('common.status.active')}</p>
+                <CheckCircleIcon className='size-3.5' />
+                <p className='text-xs'>{i18next.t('common.status.active')}</p>
               </>
             ) : (
               <>
-                <XCircleIcon className='size-3.5 text-rose-600' />
-                <p className='text-rose-600 font-medium text-xs'>{i18next.t('common.status.inactive')}</p>
+                <XCircleIcon className='size-3.5' />
+                <p className='text-xs'>{i18next.t('common.status.inactive')}</p>
               </>
             )}
-          </div>
+          </Badge>
         </div>
       ),
       enableSorting: false,
@@ -243,7 +247,7 @@ export const getColumns = (): ColumnDef<MentorPackage>[] => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='size-8 p-0'>
-                <span className='sr-only'>{i18next.t('systemProjects.actions.openMenu')}</span>
+                <span className='sr-only'>{i18next.t('common.ui.openMenu')}</span>
                 <MoreHorizontalIcon className='size-4' />
               </Button>
             </DropdownMenuTrigger>

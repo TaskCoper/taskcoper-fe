@@ -1,4 +1,5 @@
 import type { SectionPermission } from '@/features/projects/roles/types'
+import type { PurchasedMentorPackageRule } from '../mentor-packages/types'
 
 export const MeetingStatus = {
   // FREE: 'Free',
@@ -77,10 +78,7 @@ export interface MeetingBooking {
     }>
   } | null
   reason: string | null
-  packageRules: Array<{
-    packageSequence: number
-    totalTimeSlots: number
-  }>
+  packageRules: Array<PurchasedMentorPackageRule>
   note: string
   meetingLink: string | null
   isCancelledByMentor: boolean

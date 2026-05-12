@@ -329,7 +329,7 @@ export default function ProfilePage() {
             </div>
 
             <div className='col-span-9 space-y-4'>
-              <Skeleton className='h-[400px] w-full rounded-lg' />
+              <Skeleton className='h-100 w-full rounded-lg' />
             </div>
           </div>
         </div>

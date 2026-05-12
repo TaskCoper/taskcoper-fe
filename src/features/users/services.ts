@@ -1,7 +1,7 @@
 import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '../auth/validations'
 import type { GetUsersParams } from './hooks/use-get-users'
-import type { User, UserDetail } from './types'
+import type { Me, User, UserDetail } from './types'
 import type {
   ChangePasswordFormValues,
   ForgotPasswordFormValues,
@@ -51,7 +51,7 @@ class UserService {
   }
 
   getMe = async () => {
-    const { data } = await api.get<BaseResponse<User>>(`/v1/${this.baseUrl}/me`)
+    const { data } = await api.get<BaseResponse<Me>>(`/v1/${this.baseUrl}/me`)
 
     return data.value
   }

@@ -5,7 +5,8 @@
     "expertNetwork": "Kết nối chuyên gia",
     "startupCommunity": "Cộng đồng khởi nghiệp",
     "news": "Tin tức",
-    "manageProjects": "Quản lý"
+    "manageProjects": "Quản lý",
+    "verifyYourEmail": "Xác minh tài khoản"
   },
   "role": {
     "owner": "Chủ dự án",
@@ -121,6 +122,7 @@
       "files": "tệp",
       "emptyValue": "—",
       "openMenu": "Mở menu",
+      "toggle": "Bật/tắt",
       "comingSoon": "Sắp ra mắt",
       "more": "+{{count}} nữa",
       "infiniteSelect": {
@@ -746,6 +748,7 @@
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc của tôi",
+      "quickActions": "Thao tác nhanh",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
@@ -1234,7 +1237,117 @@
     "reset": "Đặt lại",
     "viewProfile": "Xem hồ sơ",
     "noBio": "Chưa có giới thiệu",
-    "noMentorsFound": "Không tìm thấy cố vấn"
+    "noMentorsFound": "Không tìm thấy cố vấn",
+    "hero": {
+      "controls": {
+        "previousSlide": "Slide trước",
+        "nextSlide": "Slide tiếp theo",
+        "goToSlide": "Đi đến slide {{index}}"
+      },
+      "metrics": {
+        "liveMetric": "Chỉ số trực tiếp",
+        "activeFlow": "Luồng hoạt động",
+        "mentorSpotlight": "Mentor nổi bật",
+        "updatedToday": "Cập nhật hôm nay"
+      },
+      "visual": {
+        "avatarAlt": "Mentor",
+        "avatarFallback": "MT"
+      },
+      "slides": {
+        "connection": {
+          "eyebrow": "Sứ mệnh của TaskCoper",
+          "titleSegments": {
+            "connect": "Kết nối ",
+            "mentor": "Mentor",
+            "with": " với ",
+            "mentee": "Mentee",
+            "growth": " để phát triển nhanh hơn"
+          },
+          "body": "Mỗi buổi mentoring là một bước rút ngắn khoảng cách từ ý tưởng đến hành động thực tế.",
+          "cta": "Tìm chuyên gia phù hợp",
+          "stats": {
+            "verifiedExperts": {
+              "value": "500+",
+              "label": "Chuyên gia kiểm định"
+            },
+            "completedSessions": {
+              "value": "12k+",
+              "label": "Buổi hoàn thành"
+            },
+            "averageRating": {
+              "value": "4.9★",
+              "label": "Đánh giá trung bình"
+            }
+          }
+        },
+        "mentee": {
+          "eyebrow": "Vì người học",
+          "titleSegments": {
+            "learnFrom": "Học từ những ",
+            "experienced": "người đã đi qua",
+            "rightPath": " đúng con đường bạn đang đi"
+          },
+          "body": "Nhận phản hồi thực chiến theo ngữ cảnh của bạn, thay vì phải tự thử sai trong thời gian dài.",
+          "cta": "Khám phá lĩnh vực",
+          "stats": {
+            "specialties": {
+              "value": "40+",
+              "label": "Lĩnh vực chuyên môn"
+            },
+            "bookingResponse": {
+              "value": "< 24h",
+              "label": "Phản hồi đặt lịch"
+            },
+            "returningMentees": {
+              "value": "92%",
+              "label": "Mentee quay lại"
+            }
+          }
+        },
+        "mentor": {
+          "eyebrow": "Vì chuyên gia",
+          "titleSegments": {
+            "shareExperience": "Chia sẻ kinh nghiệm. ",
+            "createImpact": "Tạo tác động.",
+            "getRecognized": " Được ghi nhận."
+          },
+          "body": "Tạo gói mentoring riêng, quản lý lịch hẹn, và phát triển cộng đồng mentee ngay trên một nền tảng.",
+          "cta": "Trở thành chuyên gia",
+          "stats": {
+            "packageSetup": {
+              "value": "6 phút",
+              "label": "Tạo gói lịch hẹn"
+            },
+            "hiddenFees": {
+              "value": "0%",
+              "label": "Phí ẩn"
+            },
+            "integrations": {
+              "value": "Tích hợp",
+              "label": "Calendar & Meet"
+            }
+          }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Kết nối chủ động",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Học nhanh có lộ trình",
+          "spotlight": "12W",
+          "subtitle": "Kế hoạch từng tuần"
+        },
+        "mentor": {
+          "badge": "Tăng trưởng bền vững",
+          "spotlight": "4.9★",
+          "subtitle": "Được mentee đánh giá cao"
+        }
+      }
+    }
   },
   "task": {
     "addTask": {
@@ -2323,8 +2436,9 @@
       "description": "Tạo một gói hướng dẫn mới để cung cấp dịch vụ của bạn."
     },
     "page": {
-      "title": "Gói buổi gặp",
+      "title": "Gói hẹn",
       "description": "Tạo và quản lý các gói buổi gặp với mức giá linh hoạt cho mentee.",
+      "bookingsTitle": "Lượt mua",
       "emptyTitle": "Chưa có gói nào",
       "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee.",
       "infoTitle": "Thông tin",
@@ -2374,7 +2488,10 @@
       "sortOrder": "Thứ tự sắp xếp"
     },
     "sidebar": {
-      "meetingSessionPackages": "Gói buổi gặp"
+      "meetingSessionPackages": "Gói buổi gặp",
+      "menu": "Menu",
+      "overview": "Tổng quan",
+      "packageList": "Danh sách gói"
     },
     "delete": {
       "title": "Xóa gói?",
@@ -2389,6 +2506,16 @@
     "dialog": {
       "title": "Thông tin gói",
       "description": "Cập nhật thông tin gói"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Thông tin lượt mua",
+      "bookedBy": "Người mua",
+      "feedbackSubmitted": "Đã gửi đánh giá",
+      "activationDeadline": "Hạn kích hoạt",
+      "activatedOn": "Ngày kích hoạt",
+      "usageDeadline": "Hạn sử dụng",
+      "deadlinesTitle": "Thời hạn",
+      "deadlinesDescription": "Theo dõi các mốc thời gian để kích hoạt và sử dụng gói đúng hạn."
     }
   },
   "mentorPackageStatistics": {
@@ -2401,7 +2528,13 @@
     "netRevenue": "Doanh thu ròng",
     "mentorPayout": "Thanh toán cho mentor",
     "revenueOverview": "Tổng quan doanh thu",
-    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}"
+    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}",
+    "topPackagesByBookings": "Top gói theo lượt mua",
+    "topPackagesByBookingsDescription": "Các gói được mua nhiều nhất trong khoảng thời gian đã chọn",
+    "topPackagesByBookingsTooltip": "Lượt mua",
+    "packageRevenueShare": "Tỷ trọng doanh thu theo gói",
+    "packageRevenueShareDescription": "Phân bổ doanh thu ròng (%) của các gói hàng đầu",
+    "packageRevenueShareTooltip": "Tỷ trọng doanh thu ròng (%)"
   },
   "packageBooking": {
     "bookPackage": {

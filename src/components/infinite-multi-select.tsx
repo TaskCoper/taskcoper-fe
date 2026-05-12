@@ -14,6 +14,7 @@ export default function InfiniteMultiSelect({
   values = [],
   onChangeValues,
   placeholder,
+  searchPlaceholder,
   onSearch,
   fetchNextPage,
   hasNextPage,
@@ -26,6 +27,7 @@ export default function InfiniteMultiSelect({
   values: string[]
   onChangeValues?: (values: string[]) => void
   placeholder?: string
+  searchPlaceholder?: string
   onSearch?: (term: string) => void
   fetchNextPage: () => void
   hasNextPage: boolean
@@ -89,9 +91,13 @@ export default function InfiniteMultiSelect({
 
       <PopoverContent className='p-0 w-(--radix-popover-trigger-width)'>
         <Command shouldFilter={false}>
-          <CommandInput value={search} onValueChange={handleSearch} placeholder={selectPlaceholder} />
+          <CommandInput
+            value={search}
+            onValueChange={handleSearch}
+            placeholder={searchPlaceholder ?? selectPlaceholder}
+          />
 
-          <CommandList className='max-h-[200px] overflow-y-auto overflow-x-hidden'>
+          <CommandList className='max-h-50 overflow-y-auto overflow-x-hidden'>
             {isLoading && options.length === 0 && (
               <div className='py-6 text-center text-sm text-muted-foreground'>
                 {t('common.ui.infiniteSelect.loading')}

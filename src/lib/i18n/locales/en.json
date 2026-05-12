@@ -5,7 +5,8 @@
     "expertNetwork": "Expert Network",
     "startupCommunity": "Startup Community",
     "news": "News",
-    "manageProjects": "Manage"
+    "manageProjects": "Manage",
+    "verifyYourEmail": "Verify Your Account"
   },
   "role": {
     "owner": "Owner",
@@ -121,6 +122,7 @@
       "files": "files",
       "emptyValue": "—",
       "openMenu": "Open menu",
+      "toggle": "Toggle",
       "comingSoon": "Coming Soon",
       "more": "+{{count}} more",
       "infiniteSelect": {
@@ -746,6 +748,7 @@
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "My Tasks",
+      "quickActions": "Quick Actions",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
@@ -1234,7 +1237,117 @@
     "reset": "Reset",
     "viewProfile": "View profile",
     "noBio": "No introduction yet",
-    "noMentorsFound": "No mentors found"
+    "noMentorsFound": "No mentors found",
+    "hero": {
+      "controls": {
+        "previousSlide": "Previous slide",
+        "nextSlide": "Next slide",
+        "goToSlide": "Go to slide {{index}}"
+      },
+      "metrics": {
+        "liveMetric": "Live metric",
+        "activeFlow": "Active flow",
+        "mentorSpotlight": "Mentor spotlight",
+        "updatedToday": "Updated today"
+      },
+      "visual": {
+        "avatarAlt": "Mentor",
+        "avatarFallback": "MT"
+      },
+      "slides": {
+        "connection": {
+          "eyebrow": "TaskCoper's mission",
+          "titleSegments": {
+            "connect": "Connect ",
+            "mentor": "Mentor",
+            "with": " with ",
+            "mentee": "Mentee",
+            "growth": " for faster growth"
+          },
+          "body": "Each mentoring session shortens the path from ideas to real-world execution.",
+          "cta": "Find the right expert",
+          "stats": {
+            "verifiedExperts": {
+              "value": "500+",
+              "label": "Verified experts"
+            },
+            "completedSessions": {
+              "value": "12k+",
+              "label": "Sessions completed"
+            },
+            "averageRating": {
+              "value": "4.9★",
+              "label": "Average rating"
+            }
+          }
+        },
+        "mentee": {
+          "eyebrow": "For learners",
+          "titleSegments": {
+            "learnFrom": "Learn from those ",
+            "experienced": "who have been there",
+            "rightPath": " on the path you're taking now"
+          },
+          "body": "Get practical feedback tailored to your context instead of long trial-and-error cycles.",
+          "cta": "Explore domains",
+          "stats": {
+            "specialties": {
+              "value": "40+",
+              "label": "Specialty domains"
+            },
+            "bookingResponse": {
+              "value": "< 24h",
+              "label": "Booking response"
+            },
+            "returningMentees": {
+              "value": "92%",
+              "label": "Returning mentees"
+            }
+          }
+        },
+        "mentor": {
+          "eyebrow": "For experts",
+          "titleSegments": {
+            "shareExperience": "Share experience. ",
+            "createImpact": "Create impact.",
+            "getRecognized": " Be recognized."
+          },
+          "body": "Create your own mentoring package, manage bookings, and grow your mentee community on one platform.",
+          "cta": "Become an expert",
+          "stats": {
+            "packageSetup": {
+              "value": "6 min",
+              "label": "To create a package"
+            },
+            "hiddenFees": {
+              "value": "0%",
+              "label": "Hidden fees"
+            },
+            "integrations": {
+              "value": "Integrated",
+              "label": "Calendar & Meet"
+            }
+          }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Proactive connection",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Faster structured learning",
+          "spotlight": "12W",
+          "subtitle": "Weekly plan"
+        },
+        "mentor": {
+          "badge": "Sustainable growth",
+          "spotlight": "4.9★",
+          "subtitle": "Highly rated by mentees"
+        }
+      }
+    }
   },
   "task": {
     "addTask": {
@@ -2323,8 +2436,9 @@
       "description": "Create a new mentor package to offer your services."
     },
     "page": {
-      "title": "Meeting Session Packages",
+      "title": "Meeting Packages",
       "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
+      "bookingsTitle": "Bookings",
       "emptyTitle": "No packages yet",
       "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
       "infoTitle": "Information",
@@ -2374,7 +2488,10 @@
       "sortOrder": "Sort order"
     },
     "sidebar": {
-      "meetingSessionPackages": "Meeting Session Packages"
+      "meetingSessionPackages": "Meeting Session Packages",
+      "menu": "Menu",
+      "overview": "Overview",
+      "packageList": "Package List"
     },
     "delete": {
       "title": "Delete package",
@@ -2389,6 +2506,16 @@
     "dialog": {
       "title": "Package information",
       "description": "Update package information"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Booking Information",
+      "bookedBy": "Booked by",
+      "feedbackSubmitted": "Feedback submitted",
+      "activationDeadline": "Activation deadline",
+      "activatedOn": "Activated on",
+      "usageDeadline": "Usage deadline",
+      "deadlinesTitle": "Deadlines",
+      "deadlinesDescription": "Keep these dates in mind to activate and use your package on time."
     }
   },
   "mentorPackageStatistics": {
@@ -2401,7 +2528,13 @@
     "netRevenue": "Net Revenue",
     "mentorPayout": "Mentor Payout",
     "revenueOverview": "Revenue Overview",
-    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}"
+    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}",
+    "topPackagesByBookings": "Top Packages by Bookings",
+    "topPackagesByBookingsDescription": "Most purchased packages in selected period",
+    "topPackagesByBookingsTooltip": "Paid bookings",
+    "packageRevenueShare": "Revenue Share by Package",
+    "packageRevenueShareDescription": "Net revenue distribution (%) across top packages",
+    "packageRevenueShareTooltip": "Net revenue share (%)"
   },
   "packageBooking": {
     "bookPackage": {
