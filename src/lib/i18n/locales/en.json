@@ -975,6 +975,10 @@
         "title": "Discard unsaved changes?",
         "description": "You have unsaved changes on this role. Leaving now will discard them."
       },
+      "locked": {
+        "title": "System default role is locked",
+        "description": "This role is managed by the system and cannot be edited or deleted."
+      },
       "extensions": {
         "taskUpdateTitle": "Task update extensions",
         "moveTask": "Move task",

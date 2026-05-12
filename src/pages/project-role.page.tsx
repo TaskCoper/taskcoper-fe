@@ -9,6 +9,7 @@ import { useUpdateProjectRole } from '@/features/projects/roles/hooks/use-update
 import { type ProjectRoleDetail, type ProjectRoleItem, SectionKey } from '@/features/projects/roles/types'
 import type { UpdateProjectRoleFormValues } from '@/features/projects/roles/validations'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { AlertCircleIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -135,7 +136,9 @@ export default function ProjectRolePage() {
   const { role, isLoadingProjectRole } = useGetProjectRole({ projectIdentifier, roleId })
   const { methods, updateProjectRole, isUpdatingProjectRole } = useUpdateProjectRole({ projectIdentifier })
   const { deleteProjectRole } = useDeleteProjectRole()
+
   const isDirty = methods.formState.isDirty
+  const isLockedSystemDefaultRole = role?.isSystem === true
   const isGuardEnabled = isDirty && !isUpdatingProjectRole
   const blocker = useBlocker(isGuardEnabled)
 
@@ -200,6 +203,10 @@ export default function ProjectRolePage() {
   }
 
   const onSubmit: SubmitHandler<UpdateProjectRoleFormValues> = (body) => {
+    if (isLockedSystemDefaultRole) {
+      return
+    }
+
     updateProjectRole(
       { body },
       {
@@ -211,7 +218,7 @@ export default function ProjectRolePage() {
   }
 
   const onDelete = async () => {
-    if (!projectIdentifier || !roleId) return
+    if (!projectIdentifier || !roleId || isLockedSystemDefaultRole) return
 
     const ok = await confirm({
       title: t('project.deleteProjectRole.confirmation.title'),
@@ -246,46 +253,65 @@ export default function ProjectRolePage() {
     <div className='mx-auto w-full space-y-8 px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
-          <UpdateProjectRoleForm />
+          <UpdateProjectRoleForm disabled={isLockedSystemDefaultRole} />
 
-          <Card className='sticky bottom-20 z-20 rounded-md py-2 pl-4 pr-2'>
-            <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-              <p className='text-xs font-medium'>{saveStateText}</p>
+          {isLockedSystemDefaultRole ? null : (
+            <Card className='sticky bottom-20 z-20 rounded-md py-2 pl-4 pr-2'>
+              <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                <p className='text-xs font-medium'>{saveStateText}</p>
 
-              <div className='flex items-center justify-end gap-2'>
-                <Button variant='ghost' type='button' onClick={navigateToPermissions} disabled={isUpdatingProjectRole}>
-                  {t('common.button.cancel')}
-                </Button>
+                <div className='flex items-center justify-end gap-2'>
+                  <Button
+                    variant='ghost'
+                    type='button'
+                    onClick={navigateToPermissions}
+                    disabled={isUpdatingProjectRole}
+                  >
+                    {t('common.button.cancel')}
+                  </Button>
 
-                <Button disabled={!projectIdentifier || !isDirty || isUpdatingProjectRole}>
-                  {isUpdatingProjectRole ? <Spinner /> : null}
-                  {t('common.button.save')}
-                </Button>
+                  <Button disabled={!projectIdentifier || !isDirty || isUpdatingProjectRole}>
+                    {isUpdatingProjectRole ? <Spinner /> : null}
+                    {t('common.button.save')}
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          )}
         </form>
       </FormProvider>
 
-      <div className='space-y-2'>
-        <p className='text-xl font-medium'>{t('project.deleteProjectRole.dangerZone.title')}</p>
-
-        <div className='rounded-md border border-destructive p-3 text-destructive-foreground'>
-          <div className='flex items-center justify-between gap-2'>
+      {isLockedSystemDefaultRole ? (
+        <div className='rounded-md border border-amber-500 bg-amber-50 p-3 border-dashed'>
+          <div className='flex items-start gap-2'>
+            <AlertCircleIcon className='mt-0.5 size-4 shrink-0 text-amber-900' />
             <div>
-              <p className='text-sm font-medium'>{t('project.deleteProjectRole.dangerZone.deleteTitle')}</p>
-              <p className='text-xs text-muted-foreground'>
-                {t('project.deleteProjectRole.dangerZone.deleteDescription')}
-              </p>
+              <p className='text-sm font-semibold text-amber-900'>{t('project.updateProjectRole.locked.title')}</p>
+              <p className='text-xs text-amber-700'>{t('project.updateProjectRole.locked.description')}</p>
             </div>
-            <div className='flex-1' />
-
-            <Button type='button' variant='destructive' onClick={onDelete}>
-              {t('common.button.delete')}
-            </Button>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className='space-y-2'>
+          <p className='text-xl font-medium'>{t('project.deleteProjectRole.dangerZone.title')}</p>
+
+          <div className='rounded-md border border-destructive p-3 text-destructive-foreground'>
+            <div className='flex items-center justify-between gap-2'>
+              <div>
+                <p className='text-sm font-medium'>{t('project.deleteProjectRole.dangerZone.deleteTitle')}</p>
+                <p className='text-xs text-muted-foreground'>
+                  {t('project.deleteProjectRole.dangerZone.deleteDescription')}
+                </p>
+              </div>
+              <div className='flex-1' />
+
+              <Button type='button' variant='destructive' onClick={onDelete} disabled={isLockedSystemDefaultRole}>
+                {t('common.button.delete')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

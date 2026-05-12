@@ -116,5 +116,7 @@ export interface ProjectRoleDetail {
   id: string
   name: ProjectRoleName
   description: string
+  isDefault: boolean
+  isSystem: boolean
   permissions: SectionPermission[]
 }

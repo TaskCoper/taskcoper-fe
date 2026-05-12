@@ -975,6 +975,10 @@
         "title": "Bỏ thay đổi chưa lưu?",
         "description": "Bạn có thay đổi chưa lưu cho vai trò này. Nếu rời đi bây giờ, các thay đổi sẽ bị mất."
       },
+      "locked": {
+        "title": "Vai trò mặc định của hệ thống đã bị khóa",
+        "description": "Vai trò này do hệ thống quản lý và không thể chỉnh sửa hoặc xóa."
+      },
       "extensions": {
         "taskUpdateTitle": "Mở rộng cập nhật công việc",
         "moveTask": "Di chuyển công việc",

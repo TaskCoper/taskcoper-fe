@@ -14,7 +14,11 @@ const UPDATE_FIELD_OPTIONS = {
   shouldTouch: true
 } as const
 
-export default function UpdateProjectRoleForm() {
+type UpdateProjectRoleFormProps = {
+  disabled?: boolean
+}
+
+export default function UpdateProjectRoleForm({ disabled = false }: UpdateProjectRoleFormProps) {
   const uniqueId = useId()
   const nameFieldId = `${uniqueId}-role-name`
   const descriptionFieldId = `${uniqueId}-role-description`
@@ -67,16 +71,26 @@ export default function UpdateProjectRoleForm() {
               placeholder={t('project.updateProjectRole.field.name.placeholder')}
               autoComplete='off'
               spellCheck={false}
+              disabled={disabled}
             />
           ) : (
-            <button
-              type='button'
-              className='w-full rounded-sm text-left text-2xl font-bold hover:bg-muted cursor-text flex items-center gap-2'
-              {...nameTriggerProps}
-            >
-              <KeySquareIcon className='text-primary' />
-              {roleName || t('project.updateProjectRole.field.name.placeholder')}
-            </button>
+            <>
+              {disabled ? (
+                <div className='w-full rounded-sm text-left text-2xl font-bold cursor-not-allowed text-muted-foreground flex items-center gap-2'>
+                  <KeySquareIcon className='text-muted-foreground' />
+                  {roleName || t('project.updateProjectRole.field.name.placeholder')}
+                </div>
+              ) : (
+                <button
+                  type='button'
+                  className='w-full rounded-sm text-left text-2xl font-bold hover:bg-muted cursor-text flex items-center gap-2'
+                  {...nameTriggerProps}
+                >
+                  <KeySquareIcon className='text-primary' />
+                  {roleName || t('project.updateProjectRole.field.name.placeholder')}
+                </button>
+              )}
+            </>
           )}
 
           {nameError ? <p className='text-xs text-destructive'>{String(nameError)}</p> : null}
@@ -93,15 +107,24 @@ export default function UpdateProjectRoleForm() {
               aria-invalid={!!descriptionError}
               placeholder={t('project.updateProjectRole.field.description.placeholder')}
               spellCheck={false}
+              disabled={disabled}
             />
           ) : (
-            <button
-              type='button'
-              className='w-full rounded-sm text-left text-sm hover:bg-muted cursor-text text-muted-foreground'
-              {...descriptionTriggerProps}
-            >
-              {roleDescription ? roleDescription : t('project.updateProjectRole.field.description.placeholder')}
-            </button>
+            <>
+              {disabled ? (
+                <div className='w-full rounded-sm text-left text-sm text-muted-foreground cursor-not-allowed'>
+                  {roleDescription ? roleDescription : t('project.updateProjectRole.field.description.placeholder')}
+                </div>
+              ) : (
+                <button
+                  type='button'
+                  className='w-full rounded-sm text-left text-sm hover:bg-muted cursor-text text-muted-foreground'
+                  {...descriptionTriggerProps}
+                >
+                  {roleDescription ? roleDescription : t('project.updateProjectRole.field.description.placeholder')}
+                </button>
+              )}
+            </>
           )}
 
           {isEditingDescription ? (
@@ -112,7 +135,7 @@ export default function UpdateProjectRoleForm() {
         </div>
       </div>
 
-      <ProjectPermissionsAccordion permissions={permissions} setValue={setValue} />
+      <ProjectPermissionsAccordion permissions={permissions} setValue={setValue} disabled={disabled} />
     </div>
   )
 }

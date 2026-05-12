@@ -25,6 +25,7 @@ type ProjectPermissionItem = UpdateProjectRoleFormValues['permissions'][number]
 type ProjectPermissionsAccordionProps = {
   permissions: ProjectPermissionItem[]
   setValue: UseFormSetValue<UpdateProjectRoleFormValues>
+  disabled?: boolean
 }
 
 const getExtensionValue = (permission: ProjectPermissionItem, action: ActionKey, extensionType?: string) => {
@@ -46,7 +47,8 @@ const PermissionExtensions = ({
   allExtensions,
   parentChecked,
   permissionIndex,
-  setValue
+  setValue,
+  disabled = false
 }: {
   permission: ProjectPermissionItem
   action: ActionKey
@@ -54,6 +56,7 @@ const PermissionExtensions = ({
   parentChecked: boolean
   permissionIndex: number
   setValue: ProjectPermissionsAccordionProps['setValue']
+  disabled?: boolean
 }) => {
   const { t } = useTranslation()
 
@@ -67,7 +70,7 @@ const PermissionExtensions = ({
         const isChecked = extension.affectedByParent
           ? parentChecked
           : getExtensionValue(permission, action, extension.type)
-        const isDisabled = extension.affectedByParent || !parentChecked || !extension.type
+        const isDisabled = disabled || extension.affectedByParent || !parentChecked || !extension.type
 
         return (
           <label
@@ -120,12 +123,14 @@ const PermissionActionRow = ({
   permission,
   action,
   permissionIndex,
-  setValue
+  setValue,
+  disabled = false
 }: {
   permission: ProjectPermissionItem
   action: ActionKey
   permissionIndex: number
   setValue: ProjectPermissionsAccordionProps['setValue']
+  disabled?: boolean
 }) => {
   const { t } = useTranslation()
   const rule = SECTION_PERMISSION_CONFIG_MAP.get(permission.sectionKey)?.[action]
@@ -157,6 +162,7 @@ const PermissionActionRow = ({
 
         <Switch
           checked={parentChecked}
+          disabled={disabled}
           onCheckedChange={(checked) => handleActionToggle(checked === true, allExtensions)}
           onClick={(event) => event.stopPropagation()}
         />
@@ -170,13 +176,18 @@ const PermissionActionRow = ({
           parentChecked={parentChecked}
           permissionIndex={permissionIndex}
           setValue={setValue}
+          disabled={disabled}
         />
       </AccordionContent>
     </AccordionItem>
   )
 }
 
-export default function ProjectPermissionsAccordion({ permissions, setValue }: ProjectPermissionsAccordionProps) {
+export default function ProjectPermissionsAccordion({
+  permissions,
+  setValue,
+  disabled = false
+}: ProjectPermissionsAccordionProps) {
   const { t } = useTranslation()
 
   return (
@@ -203,6 +214,7 @@ export default function ProjectPermissionsAccordion({ permissions, setValue }: P
                       action={action}
                       permissionIndex={idx}
                       setValue={setValue}
+                      disabled={disabled}
                     />
                   ))}
                 </Accordion>
