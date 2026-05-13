@@ -27,6 +27,7 @@ const ProjectRolePage = lazy(() => import('@/pages/project-role.page'))
 // const SettingsPage = lazy(() => import('@/pages/users/settings.page'))
 const SettingsPage = lazy(() => import('@/pages/users/settingsv2.page'))
 const NetworkPage = lazy(() => import('@/pages/users/network.page'))
+const NewsPage = lazy(() => import('@/pages/users/news.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 
 const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
@@ -355,9 +356,7 @@ export const userRoutes: RouteObject[] = [
                 path: 'news',
                 element: (
                   <PageWrapper titleKey='pageTitle.news'>
-                    <div className='w-full h-full flex justify-center items-center'>
-                      <p className='text-2xl font-bold'>News Comming Soon</p>
-                    </div>
+                    <NewsPage />
                   </PageWrapper>
                 )
               }
