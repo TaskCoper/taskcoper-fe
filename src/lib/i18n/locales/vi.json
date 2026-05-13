@@ -2085,6 +2085,30 @@
       "system": "Hệ thống"
     }
   },
+  "news": {
+    "eyebrow": "Chuyên trang · Khởi nghiệp",
+    "heroTitle": "Bài đọc dành cho founder Việt",
+    "heroSubtitle": "Tuyển chọn từ VnExpress, CafeBiz và TheLEADER — đọc trong năm phút, dùng được cả năm.",
+    "liveUpdated": "Cập nhật hàng tuần",
+    "topStory": "Nổi bật",
+    "trendingNow": "Cùng đọc",
+    "latest": "Bài mới",
+    "seeAll": "Xem kho lưu trữ",
+    "readMore": "Đọc bài",
+    "minRead": "{{count}} phút",
+    "previousFeatured": "Bài nổi bật trước",
+    "nextFeatured": "Bài nổi bật tiếp theo",
+    "allCategories": "Tất cả",
+    "empty": "Chưa có bài viết nào ở chuyên mục này.",
+    "newsletter": {
+      "eyebrow": "Bản tin tuần",
+      "title": "Một email vào sáng Chủ nhật.",
+      "description": "Bài đọc ngắn gọn cho founder và operator đang xây dựng ở Việt Nam.",
+      "placeholder": "email@cua.ban",
+      "cta": "Đăng ký",
+      "privacy": "Không spam. Hủy đăng ký bất cứ lúc nào."
+    }
+  },
   "home": {
     "header": {
       "signIn": "Đăng nhập",

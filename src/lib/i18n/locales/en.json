@@ -2085,6 +2085,30 @@
       "system": "System"
     }
   },
+  "news": {
+    "eyebrow": "The Edition · Startup",
+    "heroTitle": "Reading for Vietnamese founders",
+    "heroSubtitle": "Curated reporting from VnExpress, CafeBiz, and TheLEADER — read in five minutes, applied for a year.",
+    "liveUpdated": "Updated weekly",
+    "topStory": "Featured",
+    "trendingNow": "Also reading",
+    "latest": "Latest stories",
+    "seeAll": "Browse archive",
+    "readMore": "Read",
+    "minRead": "{{count}} min",
+    "previousFeatured": "Previous featured story",
+    "nextFeatured": "Next featured story",
+    "allCategories": "All",
+    "empty": "No articles in this category yet.",
+    "newsletter": {
+      "eyebrow": "The Weekly Brief",
+      "title": "Sunday mornings, in your inbox.",
+      "description": "A short, focused read for founders and operators building in Vietnam.",
+      "placeholder": "your@email.com",
+      "cta": "Subscribe",
+      "privacy": "No spam. Unsubscribe any time."
+    }
+  },
   "home": {
     "header": {
       "signIn": "Sign In",
