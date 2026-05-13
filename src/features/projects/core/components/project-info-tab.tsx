@@ -4,15 +4,20 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetDomainsInfinite } from '@/features/domains/hooks/use-get-domains-infinite'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { CameraIcon, ImageOffIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, type Path, type SubmitHandler, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
+import { useDeleteProject } from '../hooks/use-delete-project'
 import { useGetProject } from '../hooks/use-get-project'
 import { useUpdateProject } from '../hooks/use-update-project'
 import type { DomainItem, UpdateProjectFormValues } from '../validations'
@@ -31,8 +36,15 @@ interface ComboboxDomainItem {
 }
 
 export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProps) {
+  const navigate = useNavigate()
+
   const { t } = useTranslation()
+  const { confirm } = useConfirmStore()
+
+  const { me: user } = useGetMe()
   const { project, isLoadingProject } = useGetProject({ identifier: projectIdentifier })
+  const { permissions } = useGetMyProjectPermissions({ projectIdentifier })
+  const { deleteProject, isDeletingProject } = useDeleteProject()
   const { methods, updateProject, isUpdatingProject } = useUpdateProject({ projectIdentifier })
   const {
     handleSubmit,
@@ -78,6 +90,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
   )
 
   const { uploadFileWithToast } = useUploadFileWithToast()
+  const isCurrentUserOwner = user?.id === permissions?.ownerId
 
   const onSubmit: SubmitHandler<UpdateProjectFormValues> = (body) => {
     updateProject({
@@ -133,6 +146,29 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
 
     setValue(name, url, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
     onSubmit(getValues())
+  }
+
+  const handleDeleteProject = async () => {
+    if (!project?.id) return
+
+    const ok = await confirm({
+      title: t('project.deleteProject.confirmation.title'),
+      description: t('project.deleteProject.confirmation.description', { projectName: project.name }),
+      confirmText: t('project.deleteProject.confirmation.confirmText'),
+      cancelText: t('common.button.cancel'),
+      variant: 'destructive'
+    })
+
+    if (!ok) return
+
+    deleteProject(
+      { projectId: project.id },
+      {
+        onSuccess: () => {
+          navigate('/projects')
+        }
+      }
+    )
   }
 
   if (isLoadingProject) {
@@ -299,6 +335,25 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
             </div>
             <UpdateProjectTimelineForm onDateChange={debouncedAutoSubmit} />
           </Card>
+
+          {isCurrentUserOwner ? (
+            <Card className='p-3 gap-4 rounded-lg shadow-none border-destructive/20'>
+              <div>
+                <p className='font-semibold text-destructive'>{t('project.deleteProject.dangerZone.title')}</p>
+                <p className='text-xs text-muted-foreground'>{t('project.deleteProject.dangerZone.description')}</p>
+              </div>
+
+              <Button
+                type='button'
+                variant='destructive'
+                onClick={handleDeleteProject}
+                disabled={isDeletingProject}
+                className='w-fit'
+              >
+                {t('project.deleteProject.dangerZone.deleteButton')}
+              </Button>
+            </Card>
+          ) : null}
         </div>
       </form>
     </FormProvider>

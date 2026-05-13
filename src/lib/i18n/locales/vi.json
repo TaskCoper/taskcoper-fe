@@ -652,6 +652,13 @@
         "confirmText": "Gỡ bỏ",
         "cancelText": "Hủy"
       },
+      "ownerTransfer": {
+        "title": "Chuyển quyền sở hữu",
+        "description": "Vui lòng chọn chủ sở hữu mới trước khi rời dự án này.",
+        "selectOwnerPlaceholder": "Chọn chủ sở hữu mới",
+        "searchOwnerPlaceholder": "Tìm chủ sở hữu mới...",
+        "confirmText": "Chuyển quyền và rời dự án"
+      },
       "column": {
         "no": "STT",
         "member": "Thành viên",
@@ -1204,6 +1211,18 @@
         "title": "Khu vực nguy hiểm",
         "deleteTitle": "Xóa vai trò này",
         "deleteDescription": "Sau khi xóa vai trò, bạn không thể hoàn tác. Vui lòng chắc chắn trước khi tiếp tục."
+      }
+    },
+    "deleteProject": {
+      "confirmation": {
+        "title": "Xóa dự án",
+        "description": "Bạn có chắc chắn muốn xóa \"{{projectName}}\" không?",
+        "confirmText": "Xóa"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "description": "Hành động này sẽ xóa vĩnh viễn dự án và toàn bộ dữ liệu liên quan.",
+        "deleteButton": "Xóa dự án"
       }
     }
   },

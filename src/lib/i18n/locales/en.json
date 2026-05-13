@@ -652,6 +652,13 @@
         "confirmText": "Remove",
         "cancelText": "Cancel"
       },
+      "ownerTransfer": {
+        "title": "Transfer ownership",
+        "description": "Select a new owner before leaving this project.",
+        "selectOwnerPlaceholder": "Select new owner",
+        "searchOwnerPlaceholder": "Search new owner...",
+        "confirmText": "Transfer and leave"
+      },
       "column": {
         "no": "No",
         "member": "Member",
@@ -1204,6 +1211,18 @@
         "title": "Danger Zone",
         "deleteTitle": "Delete this role",
         "deleteDescription": "Once you delete a role, there is no going back. Please be certain."
+      }
+    },
+    "deleteProject": {
+      "confirmation": {
+        "title": "Delete project",
+        "description": "Are you sure you want to delete \"{{projectName}}\"?",
+        "confirmText": "Delete"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "This action will permanently remove this project and its related data.",
+        "deleteButton": "Delete project"
       }
     }
   },

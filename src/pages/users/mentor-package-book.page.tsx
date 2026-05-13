@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetFeedbacks } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import PackageFeedbacksDialog from '@/features/mentor-packages/components/package-feedbacks-dialog'
@@ -34,6 +35,115 @@ import { Link, useParams } from 'react-router'
 
 const gridGapClass = 'gap-18'
 
+const MentorPackageBookSkeleton = () => (
+  <div className='relative pb-8 h-full overflow-y-auto'>
+    <div className='relative'>
+      <div className='bg-primary relative overflow-visible'>
+        <div className={`mx-auto max-w-6xl grid grid-cols-3 ${gridGapClass}`}>
+          <div className='col-span-2 relative'>
+            <div className='px-8 pt-8 pb-16 space-y-6'>
+              <div className='flex items-center gap-2'>
+                <Skeleton className='h-4 w-28 bg-background/20' />
+                <Skeleton className='h-4 w-2 bg-background/20' />
+                <Skeleton className='h-4 w-44 bg-background/20' />
+              </div>
+              <Skeleton className='h-10 w-3/4 bg-background/20' />
+              <Skeleton className='h-4 w-full bg-background/20' />
+              <Skeleton className='h-4 w-11/12 bg-background/20' />
+              <div className='flex items-center gap-6'>
+                <Skeleton className='h-4 w-44 bg-background/20' />
+                <Skeleton className='h-4 w-28 bg-background/20' />
+              </div>
+            </div>
+
+            <Card className='absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-full rounded-lg py-3 px-6 flex-row justify-between items-center'>
+              <div className='flex items-center gap-4'>
+                <Skeleton className='size-10 rounded-full' />
+                <div className='space-y-2'>
+                  <Skeleton className='h-4 w-36' />
+                  <Skeleton className='h-3 w-44' />
+                </div>
+              </div>
+              <Skeleton className='h-14 w-px' />
+              <div className='space-y-2 flex flex-col items-center'>
+                <Skeleton className='h-6 w-12' />
+                <Skeleton className='h-3 w-20' />
+                <Skeleton className='h-3 w-24' />
+              </div>
+              <Skeleton className='h-10 w-px' />
+              <div className='space-y-2 flex flex-col items-center'>
+                <Skeleton className='h-4 w-4' />
+                <Skeleton className='h-6 w-10' />
+                <Skeleton className='h-3 w-16' />
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      <div className='absolute inset-y-0 inset-x-0 pointer-events-none z-20'>
+        <div className={`mx-auto h-full max-w-6xl grid grid-cols-3 grid-rows-[1fr] ${gridGapClass}`}>
+          <div className='col-span-2' />
+          <div className='col-span-1'>
+            <div className='sticky top-6 pointer-events-auto'>
+              <Card className='rounded-xl p-1 gap-2 shadow-xl'>
+                <Skeleton className='w-full h-40 rounded-md' />
+                <div className='p-4'>
+                  <Skeleton className='h-9 w-40' />
+                </div>
+                <div className='space-y-3 px-2 pb-2'>
+                  <Skeleton className='h-4 w-full' />
+                  <Skeleton className='h-4 w-full' />
+                  <Skeleton className='h-4 w-full' />
+                  <Skeleton className='h-14 w-full rounded-md' />
+                  <Skeleton className='h-10 w-full rounded-md' />
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={`mx-auto max-w-6xl grid grid-cols-3 items-start ${gridGapClass}`}>
+        <div className='col-span-2 pt-18 space-y-14'>
+          <div className='space-y-3'>
+            <Skeleton className='h-7 w-52' />
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-11/12' />
+            <Skeleton className='h-4 w-10/12' />
+          </div>
+
+          <div className='space-y-3'>
+            <Skeleton className='h-7 w-48' />
+            <Skeleton className='h-14 w-full rounded-md' />
+            <Skeleton className='h-14 w-full rounded-md' />
+          </div>
+
+          <div className='space-y-4'>
+            <Skeleton className='h-7 w-72' />
+            <div className='grid grid-cols-2 gap-x-8 gap-y-6'>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className='border-t py-4 space-y-3'>
+                  <div className='flex items-center gap-2'>
+                    <Skeleton className='size-9 rounded-full' />
+                    <div className='space-y-2'>
+                      <Skeleton className='h-4 w-32' />
+                      <Skeleton className='h-3 w-24' />
+                    </div>
+                  </div>
+                  <Skeleton className='h-3 w-full' />
+                  <Skeleton className='h-3 w-11/12' />
+                </div>
+              ))}
+            </div>
+            <Skeleton className='h-10 w-full rounded-md' />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
 export default function MentorPackageBookPage() {
   const { t } = useTranslation()
   const { me } = useGetMe()
@@ -42,11 +152,11 @@ export default function MentorPackageBookPage() {
   const [isLinkCopied, setIsLinkCopied] = useState(false)
   const [isShareCopied, setIsShareCopied] = useState(false)
 
-  const { mentorPackage } = useGetMentorPackage({
+  const { mentorPackage, isLoadingMentorPackage } = useGetMentorPackage({
     packageId
   })
 
-  const { feedbacks } = useGetFeedbacks({
+  const { feedbacks, isLoadingFeedbacks } = useGetFeedbacks({
     targetType: 'MentorPackage',
     targetId: packageId,
     pageSize: 4
@@ -101,6 +211,10 @@ export default function MentorPackageBookPage() {
   const notAvailableText = t('mentorPackage.bookPage.notAvailable')
   const updatedOnDisplay = mentorPackage?.modifiedOnUtc ? formatDate(mentorPackage.modifiedOnUtc) : notAvailableText
   const averageFeedbackRatingDisplay = mentorPackage?.averageFeedbackRating?.toFixed(1) ?? notAvailableText
+
+  if (isLoadingMentorPackage || isLoadingFeedbacks) {
+    return <MentorPackageBookSkeleton />
+  }
 
   return (
     <div className='relative pb-8 h-full overflow-y-auto'>
@@ -210,12 +324,12 @@ export default function MentorPackageBookPage() {
                   <div className='p-4'>
                     <p className='text-3xl font-bold text-primary'>
                       {formatCurrency(mentorPackage?.price ?? 0)}{' '}
-                      <span className='text-base font-normal line-through text-foreground/50'>
+                      {/* <span className='text-base font-normal line-through text-foreground/50'>
                         {formatCurrency(2449000)}
                       </span>{' '}
                       <span className='text-sm font-normal text-foreground/60'>
                         {t('mentorPackage.bookPage.discountPercent', { percent: 84 })}
-                      </span>
+                      </span> */}
                     </p>
                   </div>
 
@@ -235,7 +349,7 @@ export default function MentorPackageBookPage() {
                       <p className='text-xs font-semibold'>{mentorPackage?.usageDeadlineDays}</p>
                     </div>
 
-                    <div className='flex justify-center items-center gap-3 py-3 bg-muted/30 border border-dashed rounded-md'>
+                    <div className='flex justify-center items-center gap-3 py-3 bg-muted/30 border border-dashed rounded-md mt-4'>
                       <Button type='button' variant='outline' className='rounded-full' size='icon'>
                         <HeartIcon />
                       </Button>
@@ -355,6 +469,12 @@ export default function MentorPackageBookPage() {
                   </div>
                 ))}
               </div>
+
+              <PackageFeedbacksDialog>
+                <Button variant='outline' className='w-full'>
+                  {t('home.cards.teamChat.viewAll')}
+                </Button>
+              </PackageFeedbacksDialog>
             </div>
           </div>
         </div>

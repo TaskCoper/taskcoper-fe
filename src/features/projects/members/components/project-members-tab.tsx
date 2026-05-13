@@ -7,14 +7,19 @@ import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { UserRoundPlusIcon } from 'lucide-react'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import type { ProjectMember } from '../../core/types'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useGetProjectRoles } from '../../roles/hooks/use-get-project-roles'
 import { useDeleteProjectMember } from '../hooks/use-delete-project-member'
 import { useGetProjectMembers } from '../hooks/use-get-project-members'
+import { useLeaveProject } from '../hooks/use-leave-project'
+import { useOwnerTransferCandidates } from '../hooks/use-owner-transfer-candidates'
 import { useUpdateMemberRoles } from '../hooks/use-update-member-roles'
 import InviteMembersDialog from './invite-members-dialog'
+import OwnerTransferDialog from './owner-transfer-dialog'
 import { getColumns } from './project-member-columns'
 
 interface ProjectMembersTabProps {
@@ -22,13 +27,35 @@ interface ProjectMembersTabProps {
 }
 
 export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersTabProps) {
+  const navigate = useNavigate()
+
   const { t } = useTranslation()
-  const { me: user } = useGetMe()
   const { confirm } = useConfirmStore()
+
+  const { me: user } = useGetMe()
+  const { permissions } = useGetMyProjectPermissions({ projectIdentifier })
 
   const { projectRoles, isLoadingProjectRoles } = useGetProjectRoles({ identifier: projectIdentifier })
   const { updateMemberRoles, isUpdatingMemberRoles } = useUpdateMemberRoles({ identifier: projectIdentifier! })
   const { deleteProjectMember, isDeletingProjectMember } = useDeleteProjectMember({ identifier: projectIdentifier! })
+  const { leaveProject, isLeavingProject } = useLeaveProject({ identifier: projectIdentifier! })
+
+  const [isOwnerLeaveDialogOpen, setIsOwnerLeaveDialogOpen] = useState(false)
+  const {
+    selectedNewOwnerUserId,
+    setSelectedNewOwnerUserId,
+    ownerCandidateOptions,
+    isLoadingOwnerCandidates,
+    hasNextOwnerCandidatesPage,
+    isFetchingNextOwnerCandidates,
+    handleOwnerCandidateSearch,
+    fetchNextOwnerCandidates,
+    resetOwnerTransferState
+  } = useOwnerTransferCandidates({
+    projectIdentifier,
+    currentUserId: user?.id,
+    enabled: isOwnerLeaveDialogOpen
+  })
 
   const onDeleteMember = useCallback(
     async (userId: string, fullName: string, isSelf: boolean) => {
@@ -45,10 +72,47 @@ export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersT
       })
 
       if (confirmed) {
+        const currentUserIsOwner = user?.id === permissions?.ownerId
+
+        if (isSelf && currentUserIsOwner) {
+          resetOwnerTransferState()
+          setIsOwnerLeaveDialogOpen(true)
+          return
+        }
+
         deleteProjectMember({ userId, identifier: projectIdentifier! })
       }
     },
-    [confirm, deleteProjectMember, projectIdentifier, t]
+    [confirm, deleteProjectMember, permissions?.ownerId, projectIdentifier, resetOwnerTransferState, t, user?.id]
+  )
+
+  const handleOwnerLeaveProject = useCallback(() => {
+    if (!projectIdentifier || !selectedNewOwnerUserId) return
+
+    leaveProject(
+      {
+        projectIdentifier,
+        newOwnerUserId: selectedNewOwnerUserId
+      },
+      {
+        onSuccess: () => {
+          setIsOwnerLeaveDialogOpen(false)
+          resetOwnerTransferState()
+          navigate('/projects')
+        }
+      }
+    )
+  }, [leaveProject, navigate, projectIdentifier, resetOwnerTransferState, selectedNewOwnerUserId])
+
+  const handleOwnerLeaveDialogOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        resetOwnerTransferState()
+      }
+
+      setIsOwnerLeaveDialogOpen(isOpen)
+    },
+    [resetOwnerTransferState]
   )
 
   const columns = useMemo(
@@ -125,6 +189,21 @@ export default function ProjectMembersTab({ projectIdentifier }: ProjectMembersT
           ) : null}
         </DataTableToolbar>
       </DataTable>
+
+      <OwnerTransferDialog
+        open={isOwnerLeaveDialogOpen}
+        onOpenChange={handleOwnerLeaveDialogOpenChange}
+        selectedNewOwnerUserId={selectedNewOwnerUserId}
+        onSelectedNewOwnerUserIdChange={setSelectedNewOwnerUserId}
+        ownerCandidateOptions={ownerCandidateOptions}
+        onOwnerCandidateSearch={handleOwnerCandidateSearch}
+        fetchNextOwnerCandidates={fetchNextOwnerCandidates}
+        hasNextOwnerCandidatesPage={hasNextOwnerCandidatesPage}
+        isFetchingNextOwnerCandidates={isFetchingNextOwnerCandidates}
+        isLoadingOwnerCandidates={isLoadingOwnerCandidates}
+        isSubmitting={isLeavingProject}
+        onConfirm={handleOwnerLeaveProject}
+      />
     </div>
   )
 }

@@ -124,6 +124,20 @@ class ProjectMemberService {
 
     return data.value
   }
+
+  leaveProject = async ({
+    projectIdentifier,
+    newOwnerUserId
+  }: {
+    projectIdentifier: string
+    newOwnerUserId: string | null
+  }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/members/leave`, {
+      newOwnerUserId
+    })
+
+    return data.value
+  }
 }
 
 const projectMemberService = new ProjectMemberService()
