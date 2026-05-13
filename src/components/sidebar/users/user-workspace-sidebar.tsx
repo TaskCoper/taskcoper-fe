@@ -28,6 +28,21 @@ type NavItemConfig = NavItem & {
   roles?: Role[]
 }
 
+type NavMainSubItemConfig = {
+  titleKey: string
+  url: string
+  activePatterns?: string[]
+  activeExcludePatterns?: string[]
+}
+
+type NavMainItemConfig = {
+  titleKey: string
+  url: string
+  icon: LucideIcon
+  items: NavMainSubItemConfig[]
+  roles?: Role[]
+}
+
 const NAV_CONFIG: NavItemConfig[] = [
   {
     titleKey: 'project.sidebar.myProjects',
@@ -63,6 +78,28 @@ const NAV_CONFIG: NavItemConfig[] = [
   }
 ]
 
+const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
+  {
+    titleKey: 'mentorPackage.page.title',
+    url: '/packages',
+    icon: VideoIcon,
+    roles: ['Mentor'],
+    items: [
+      {
+        titleKey: 'mentorPackage.sidebar.overview',
+        url: '/packages/dashboard',
+        activePatterns: ['/packages/dashboard']
+      },
+      {
+        titleKey: 'mentorPackage.sidebar.packageList',
+        url: '/packages',
+        activePatterns: ['/packages', '/packages/:packageId'],
+        activeExcludePatterns: ['/packages/dashboard']
+      }
+    ]
+  }
+]
+
 export function UserWorkspaceSidebar({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation()
   const { me: user } = useGetMe()
@@ -70,26 +107,20 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
 
   const data = React.useMemo(() => {
     return {
-      navMain: [
-        {
-          title: t('mentorPackage.page.title'),
-          url: '/packages/dashboard',
-          icon: VideoIcon,
-          items: [
-            {
-              title: t('mentorPackage.sidebar.overview'),
-              url: '/packages/dashboard',
-              activePatterns: ['/packages/dashboard']
-            },
-            {
-              title: t('mentorPackage.sidebar.packageList'),
-              url: '/packages',
-              activePatterns: ['/packages', '/packages/:packageId'],
-              activeExcludePatterns: ['/packages/dashboard']
-            }
-          ]
-        }
-      ],
+      navMain: NAV_MAIN_CONFIG.filter((item) => {
+        if (!item.roles) return true
+        return item.roles.includes(user?.role as Role)
+      }).map((item) => ({
+        title: t(item.titleKey),
+        url: item.url,
+        icon: item.icon,
+        items: item.items.map((subItem) => ({
+          title: t(subItem.titleKey),
+          url: subItem.url,
+          activePatterns: subItem.activePatterns,
+          activeExcludePatterns: subItem.activeExcludePatterns
+        }))
+      })),
       quickActions: NAV_CONFIG.filter((item) => {
         if (!item.roles) return true
         return item.roles.includes(user?.role as Role)
@@ -116,7 +147,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
       {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader> */}
-      <SidebarContent>
+      <SidebarContent className='gap-1'>
         <NavQuickActions items={data.quickActions} activeSegment={activeSegment} />
         <NavMain items={data.navMain} />
         <div className='mt-auto px-2.5 pb-2'>

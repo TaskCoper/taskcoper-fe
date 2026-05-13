@@ -2474,6 +2474,7 @@
       "durationTitle": "Session Duration",
       "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session.",
       "feedbackTitle": "Feedback",
+      "feedbackDescription": "{{totalCount}} feedback entries for this package",
       "manage": "Manage package"
     },
     "form": {
@@ -2544,6 +2545,17 @@
       "usageDeadline": "Usage deadline",
       "deadlinesTitle": "Deadlines",
       "deadlinesDescription": "Keep these dates in mind to activate and use your package on time."
+    },
+    "bookPage": {
+      "notAvailable": "N/A",
+      "updatedOn": "Last updated {{date}}",
+      "ratingsCount_one": "{{count}} rating",
+      "ratingsCount_other": "{{count}} ratings",
+      "buyers": "buyers",
+      "discountPercent": "Save {{percent}}%",
+      "activationDays": "Activation days",
+      "usageDays": "Usage days",
+      "courseRating": "{{rating}} course rating"
     }
   },
   "mentorPackageStatistics": {

@@ -2474,6 +2474,7 @@
       "durationTitle": "Thời lượng mỗi buổi",
       "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi.",
       "feedbackTitle": "Đánh giá",
+      "feedbackDescription": "{{totalCount}} đánh giá cho gói này",
       "manage": "Quản lý gói"
     },
     "form": {
@@ -2544,6 +2545,17 @@
       "usageDeadline": "Hạn sử dụng",
       "deadlinesTitle": "Thời hạn",
       "deadlinesDescription": "Theo dõi các mốc thời gian để kích hoạt và sử dụng gói đúng hạn."
+    },
+    "bookPage": {
+      "notAvailable": "Không có",
+      "updatedOn": "Cập nhật gần nhất {{date}}",
+      "ratingsCount_one": "{{count}} đánh giá",
+      "ratingsCount_other": "{{count}} đánh giá",
+      "buyers": "người mua",
+      "discountPercent": "Giảm {{percent}}%",
+      "activationDays": "Ngày kích hoạt",
+      "usageDays": "Ngày sử dụng",
+      "courseRating": "{{rating}} xếp hạng khóa học"
     }
   },
   "mentorPackageStatistics": {

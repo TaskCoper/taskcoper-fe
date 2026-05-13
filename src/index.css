@@ -251,6 +251,28 @@
   }
 }
 
+@keyframes mentor-package-card-glow {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes mentor-package-card-slash {
+  0% {
+    transform: rotate(12deg) translateX(-145%);
+  }
+  58%,
+  100% {
+    transform: rotate(12deg) translateX(145%);
+  }
+}
+
 @keyframes network-hero-shine {
   0% {
     transform: translateX(-130%);
@@ -327,6 +349,9 @@
 @media (prefers-reduced-motion: reduce) {
   .verify-email-cta,
   .verify-email-cta::before,
+  .mentor-package-sticky-card-fx,
+  .mentor-package-sticky-card-fx::before,
+  .mentor-package-sticky-card-fx::after,
   .network-hero-fx,
   .network-hero-fx::before,
   .network-hero-fx::after,

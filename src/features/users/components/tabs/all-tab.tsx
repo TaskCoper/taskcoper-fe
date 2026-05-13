@@ -7,8 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
 import UpdateMentorDescriptionDialog from '@/features/mentors/components/dialogs/update-mentor-description-dialog'
-import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
-import { cn, formatCurrency } from '@/shared/utils'
+import { cn, formatCurrency, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, EditIcon, GraduationCapIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +26,8 @@ export default function AllTab({ userDetail }: AllTabProps) {
 
   const { mentorPackages, isLoadingMentorPackages } = useGetMentorPackages({
     mentorId: userDetail?.id,
-    enabled: userDetail?.role === 'Mentor'
+    enabled: userDetail?.role === 'Mentor',
+    isPin: true
   })
 
   const isViewingOwnProfile = user?.id === userDetail?.id
@@ -117,18 +117,22 @@ export default function AllTab({ userDetail }: AllTabProps) {
                         className='w-full h-28 object-cover rounded-t-lg'
                       />
 
-                      <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
-                        <p className='font-semibold text-primary truncate'>{pkg.name}</p>
-                        <div className='flex-1' />
-                        <Badge className='rounded-sm' variant='secondary'>
-                          <p className='font-semibold text-[10.5px]'>
-                            {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
-                          </p>
-                        </Badge>
-                      </div>
+                      <div className='flex-1'>
+                        <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
+                          <p className='font-semibold text-primary truncate'>{pkg.name}</p>
+                          <div className='flex-1' />
+                          <Badge className='rounded-sm' variant='secondary'>
+                            <p className='font-semibold text-[10.5px]'>
+                              {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
+                            </p>
+                          </Badge>
+                        </div>
 
-                      <div className='px-2 pb-2'>
-                        <p className='text-xs text-muted-foreground line-clamp-2'>{pkg.description}</p>
+                        <div className='px-2 pb-2'>
+                          <p className='text-xs text-muted-foreground line-clamp-3'>
+                            {getFirstParagraphTextFromHtml(pkg.description)}
+                          </p>
+                        </div>
                       </div>
 
                       <div className='px-2 pb-2'>
@@ -139,11 +143,11 @@ export default function AllTab({ userDetail }: AllTabProps) {
                             </Button>
                           </Link>
                         ) : (
-                          <BookPackageDialog mentorPackage={pkg}>
+                          <Link to={`/packages/${pkg.id}/book`}>
                             <Button className='w-full' size='sm'>
                               {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
                             </Button>
-                          </BookPackageDialog>
+                          </Link>
                         )}
                       </div>
                     </Card>

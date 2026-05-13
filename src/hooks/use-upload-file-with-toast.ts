@@ -65,6 +65,8 @@ export const useUploadFileWithToast = (options?: Parameters<typeof useUploadFile
             id: toastId,
             description: successDescription
           })
+        } else {
+          toast.dismiss(toastId)
         }
 
         return url

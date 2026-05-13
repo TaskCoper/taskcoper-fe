@@ -206,7 +206,9 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
               <div className='space-y-3'>
                 <div>
                   <p className='font-semibold'>{t('mentorPackage.bookingDialog.deadlinesTitle')}</p>
-                  <p className='text-xs text-muted-foreground'>{t('mentorPackage.bookingDialog.deadlinesDescription')}</p>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('mentorPackage.bookingDialog.deadlinesDescription')}
+                  </p>
                 </div>
 
                 <div className='space-y-2'>

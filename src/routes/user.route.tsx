@@ -39,6 +39,7 @@ const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 const MentorPackagesDashboardPage = lazy(() => import('@/pages/users/mentor-packages-dashboard.page'))
 const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
 const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
+const MentorPackageBookPage = lazy(() => import('@/pages/users/mentor-package-book.page'))
 
 const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
 const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
@@ -181,6 +182,7 @@ export const userRoutes: RouteObject[] = [
                   }
                 ]
               },
+              { path: 'packages/:packageId/book', element: <MentorPackageBookPage /> },
               {
                 path: 'projects/:identifier',
                 element: <ProjectDetailLayout />,

@@ -195,7 +195,9 @@ export default function PurchasedPackagePage() {
   )
 
   const progress =
-    ((purchasedMentorPackage?.meetings?.filter((meeting) => meeting.status === MeetingStatus.COMPLETED).length || 0) /
+    ((purchasedMentorPackage?.meetings?.filter(
+      (meeting) => meeting.status === MeetingStatus.COMPLETED && !meeting.parentId
+    ).length || 0) /
       Math.max(1, purchasedMentorPackage?.totalSessions ?? 1)) *
     100
 

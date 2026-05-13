@@ -4,8 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMentorPackages } from '@/features/mentor-packages/hooks/use-get-mentor-packages'
-import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
-import { formatCurrency } from '@/shared/utils'
+import { cn, formatCurrency, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { UserDetail } from '../../types'
@@ -19,7 +18,6 @@ export default function MentorPackagesTab({ userDetail }: MentorPackagesTabProps
   const { me: user } = useGetMe()
 
   const isViewingOwnProfile = user?.id === userDetail?.id
-  const isHidden = isViewingOwnProfile
 
   const { mentorPackages, isLoadingMentorPackages } = useGetMentorPackages({
     mentorId: userDetail?.id
@@ -45,40 +43,44 @@ export default function MentorPackagesTab({ userDetail }: MentorPackagesTabProps
             </Card>
           ))
         : mentorPackages.value.items.map((pkg) => (
-            <Card key={pkg.id} className='shrink-0 col-span-3 rounded-lg p-0 gap-0 shadow-none'>
+            <Card key={pkg.id} className={cn('shrink-0 rounded-lg p-0 gap-0 shadow-none col-span-3')}>
               <img
                 src={pkg.coverImageUrl ?? undefined}
                 alt={pkg.name}
                 className='w-full h-28 object-cover rounded-t-lg'
               />
 
-              <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
-                <p className='font-semibold text-primary truncate'>{pkg.name}</p>
-                <div className='flex-1' />
-                <Badge className='rounded-sm' variant='secondary'>
-                  <p className='font-semibold text-[10.5px]'>
-                    {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
+              <div className='flex-1'>
+                <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
+                  <p className='font-semibold text-primary truncate'>{pkg.name}</p>
+                  <div className='flex-1' />
+                  <Badge className='rounded-sm' variant='secondary'>
+                    <p className='font-semibold text-[10.5px]'>
+                      {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
+                    </p>
+                  </Badge>
+                </div>
+
+                <div className='px-2 pb-2'>
+                  <p className='text-xs text-muted-foreground line-clamp-3'>
+                    {getFirstParagraphTextFromHtml(pkg.description)}
                   </p>
-                </Badge>
+                </div>
               </div>
 
               <div className='px-2 pb-2'>
-                <p className='text-xs text-muted-foreground line-clamp-2'>{pkg.description}</p>
-              </div>
-
-              <div className='px-2 pb-2'>
-                {isHidden ? (
+                {isViewingOwnProfile ? (
                   <Link to={`/packages/${pkg.id}`}>
                     <Button className='w-full' size='sm'>
                       {t('mentorPackage.card.viewPackage')}
                     </Button>
                   </Link>
                 ) : (
-                  <BookPackageDialog mentorPackage={pkg}>
+                  <Link to={`/packages/${pkg.id}/book`}>
                     <Button className='w-full' size='sm'>
                       {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
                     </Button>
-                  </BookPackageDialog>
+                  </Link>
                 )}
               </div>
             </Card>

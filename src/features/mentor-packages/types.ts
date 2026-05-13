@@ -31,6 +31,18 @@ export interface MentorPackageRule {
 }
 
 export interface MentorPackageDetail extends MentorPackage {
+  creator: {
+    mentorId: string
+    userId: string
+    email: string
+    firstName: string
+    lastName: string
+    slug: string
+    avatarUrl: string | null
+  }
+  averageFeedbackRating: number
+  totalBuyers: number
+  totalFeedbacks: number
   rules: MentorPackageRule[]
 }
 

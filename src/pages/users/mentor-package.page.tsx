@@ -124,8 +124,8 @@ export default function MentorPackagePage() {
         coverImageUrl: mentorPackage.coverImageUrl,
         isActive: mentorPackage.isActive,
         isPin: mentorPackage.isPin,
-        activationDeadlineDays: mentorPackage.activationDeadlineDays,
-        usageDeadlineDays: mentorPackage.usageDeadlineDays
+        activationDeadlineDays: Number(mentorPackage.activationDeadlineDays),
+        usageDeadlineDays: Number(mentorPackage.usageDeadlineDays)
       })
     }
   }, [mentorPackage, methods])
@@ -218,7 +218,9 @@ export default function MentorPackagePage() {
         {
           body: {
             ...values,
-            coverImageUrl
+            coverImageUrl,
+            activationDeadlineDays: Number(values.activationDeadlineDays),
+            usageDeadlineDays: Number(values.usageDeadlineDays)
           }
         },
         {
