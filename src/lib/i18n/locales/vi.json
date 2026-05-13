@@ -703,6 +703,15 @@
     "inviteMembers": {
       "title": "Thêm thành viên",
       "description": "Thêm thành viên mới vào dự án của bạn để hợp tác và chia sẻ công việc.",
+      "pendingInvites": {
+        "title": "Lời mời đang chờ",
+        "description": "Các lời mời này đang chờ người nhận chấp nhận."
+      },
+      "revokeInvitation": {
+        "title": "Thu hồi lời mời",
+        "description": "Bạn có chắc chắn muốn thu hồi lời mời của {{fullName}} không? Người này sẽ không thể chấp nhận lời mời nữa.",
+        "confirmText": "Thu hồi"
+      },
       "invitedUsers": "Thành viên đã mời",
       "comboboxPlaceholder": "Nhấn để mời",
       "search": "Nhập email để tìm kiếm...",
@@ -933,6 +942,7 @@
       "tabs": {
         "info": "Thông tin Dự án",
         "members": "Thành viên",
+        "invites": "Lời mời",
         "permissions": "Vai trò & Quyền"
       }
     },

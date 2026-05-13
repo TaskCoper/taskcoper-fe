@@ -18,6 +18,7 @@ import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/u
 import type { GetProjectTaskStatsParams } from '@/features/projects/charts/hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from '@/features/projects/charts/hooks/use-get-project-top-contributors'
 import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
+import type { GetProjectMemberRequestsParams } from '@/features/projects/members/hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
 import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
 import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
@@ -79,7 +80,22 @@ export const queryKeys = {
       list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: GetProjectMembersParams) =>
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
       detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
-        ['members', 'detail', projectIdentifier, userId] as const
+        ['members', 'detail', projectIdentifier, userId] as const,
+      allRequests: (projectIdentifier?: string) => ['member-requests', projectIdentifier] as const,
+      requests: ({
+        projectIdentifier,
+        isInviteUser,
+        pageIndex,
+        pageSize,
+        searchTerm
+      }: GetProjectMemberRequestsParams) =>
+        [
+          ...queryKeys.projects.members.allRequests(projectIdentifier),
+          isInviteUser,
+          pageIndex,
+          pageSize,
+          searchTerm
+        ] as const
     },
     parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
     labels: (projectIdentifier?: string) => ['project-labels', projectIdentifier],

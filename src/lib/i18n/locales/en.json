@@ -703,6 +703,15 @@
     "inviteMembers": {
       "title": "New members",
       "description": "Add new members to your project to collaborate and share tasks.",
+      "pendingInvites": {
+        "title": "Pending invites",
+        "description": "These invitations are waiting for recipients to accept."
+      },
+      "revokeInvitation": {
+        "title": "Revoke invitation",
+        "description": "Are you sure you want to revoke the invitation for {{fullName}}? They will no longer be able to accept it.",
+        "confirmText": "Revoke"
+      },
       "invitedUsers": "Invited users",
       "comboboxPlaceholder": "Click to invite",
       "search": "Type email to search...",
@@ -933,6 +942,7 @@
       "tabs": {
         "info": "Project Information",
         "members": "Members",
+        "invites": "Invites",
         "permissions": "Roles & Permissions"
       }
     },

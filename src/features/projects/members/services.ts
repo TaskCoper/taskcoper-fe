@@ -1,8 +1,9 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '../core/types'
+import type { GetProjectMemberRequestsParams } from './hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from './hooks/use-get-project-members'
-import type { InviteMembersPayload, ProjectMemberDetail } from './types'
+import type { InviteMembersPayload, ProjectMemberDetail, ProjectMemberRequest } from './types'
 
 class ProjectMemberService {
   private readonly baseUrl = 'projects'
@@ -17,6 +18,29 @@ class ProjectMemberService {
         excludeIds
       }
     })
+
+    return data
+  }
+
+  getProjectMemberRequests = async ({
+    searchTerm,
+    pageIndex,
+    pageSize,
+    isInviteUser,
+    projectIdentifier
+  }: GetProjectMemberRequestsParams) => {
+    if (!projectIdentifier) return getDefaultPaginationResponse<ProjectMemberRequest>()
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberRequest>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/pending`,
+      {
+        params: {
+          searchTerm,
+          pageIndex,
+          pageSize,
+          isInviteUser
+        }
+      }
+    )
 
     return data
   }
@@ -83,6 +107,20 @@ class ProjectMemberService {
         userId
       }
     })
+
+    return data.value
+  }
+
+  revokeInvitation = async ({
+    projectIdentifier,
+    projectManagementId
+  }: {
+    projectIdentifier: string
+    projectManagementId: string
+  }) => {
+    const { data } = await api.delete<BaseResponse<string>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/invites/${projectManagementId}`
+    )
 
     return data.value
   }

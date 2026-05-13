@@ -1,5 +1,6 @@
+import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +10,7 @@ import { inviteMembersSchema, type InviteMembersFormValues } from '../validation
 
 export const useInviteMembers = ({ projectIdentifier }: { projectIdentifier: string }) => {
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
   const methods = useForm<InviteMembersFormValues>({
@@ -42,6 +44,11 @@ export const useInviteMembers = ({ projectIdentifier }: { projectIdentifier: str
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
+      })
+    },
+    onSettled: (_, _error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.members.allRequests(variables.body.projectIdentifier)
       })
     }
   })
