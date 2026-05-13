@@ -46,12 +46,18 @@ export function NavMain({
     return patterns.some((pattern) => Boolean(matchPath({ path: pattern, end: true }, pathname)))
   }
 
+  if (!items.length) {
+    return null
+  }
+
   return (
-    <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-      <SidebarGroupLabel>{t('mentorPackage.sidebar.menu')}</SidebarGroupLabel>
+    <SidebarGroup className='group-data-[collapsible=icon]:pt-0'>
+      <SidebarGroupLabel className='group-data-[collapsible=icon]:hidden'>
+        {t('mentorPackage.sidebar.menu')}
+      </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const dedicatedUrl = item.items?.[0]?.url ?? item.url
+          const dedicatedUrl = item.url
           const hasActiveSubItem = item.items?.some((subItem) => isSubItemActive(subItem))
 
           return (
@@ -63,7 +69,14 @@ export function NavMain({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton asChild tooltip={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.title}
+                    className={cn(
+                      hasActiveSubItem &&
+                        'group-data-[collapsible=icon]:bg-primary/10 group-data-[collapsible=icon]:text-primary'
+                    )}
+                  >
                     <Link to={dedicatedUrl} className='w-full min-w-0'>
                       {item.icon && <item.icon />}
                       <span className='truncate whitespace-nowrap'>{item.title}</span>

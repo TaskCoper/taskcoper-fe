@@ -17,7 +17,8 @@ export default function PurchasedMentorPackageCard({
   const { t } = useTranslation()
 
   const progress =
-    ((mentorPackage?.meetings?.filter((meeting) => meeting.status === MeetingStatus.COMPLETED).length || 0) /
+    ((mentorPackage?.meetings?.filter((meeting) => meeting.status === MeetingStatus.COMPLETED && !meeting.parentId)
+      .length || 0) /
       Math.max(1, mentorPackage?.totalSessions ?? 1)) *
     100
 

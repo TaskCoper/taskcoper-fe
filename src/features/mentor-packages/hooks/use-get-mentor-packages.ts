@@ -10,7 +10,7 @@ export interface GetMentorPackagesParams {
   isPin?: boolean
 }
 
-export const useGetMentorPackages = ({ mentorId, enabled = true, isPin = true }: GetMentorPackagesParams) => {
+export const useGetMentorPackages = ({ mentorId, enabled = true, isPin }: GetMentorPackagesParams) => {
   const { data: mentorPackages = getDefaultPaginationResponse<MentorPackage>(), isLoading: isLoadingMentorPackages } =
     useQuery({
       queryKey: queryKeys.mentorPackages.list({ mentorId, isPin }),

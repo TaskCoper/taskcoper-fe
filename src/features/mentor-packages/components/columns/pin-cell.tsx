@@ -20,8 +20,8 @@ export default function PinCell({ row }: { row: { original: MentorPackage } }) {
         coverImageUrl: mentorPackage.coverImageUrl,
         isActive: mentorPackage.isActive,
         isPin: !mentorPackage.isPin,
-        activationDeadlineDays: mentorPackage.activationDeadlineDays,
-        usageDeadlineDays: mentorPackage.usageDeadlineDays
+        activationDeadlineDays: Number(mentorPackage.activationDeadlineDays),
+        usageDeadlineDays: Number(mentorPackage.usageDeadlineDays)
       }
     })
   }

@@ -1,13 +1,6 @@
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem
-} from '@/components/ui/sidebar'
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { cn } from '@/shared/utils'
 import { type LucideIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 export function NavQuickActions({
@@ -21,16 +14,17 @@ export function NavQuickActions({
   }[]
   activeSegment?: string
 }) {
-  const { t } = useTranslation()
-
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>{t('project.sidebar.quickActions')}</SidebarGroupLabel>
+    <SidebarGroup className='group-data-[collapsible=icon]:pb-0'>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem
             key={item.name}
-            className={cn(activeSegment === item.url && 'bg-primary/10 text-primary rounded-md')}
+            className={cn(
+              activeSegment === item.url
+                ? 'bg-primary/10 text-primary rounded-md group-data-[collapsible=icon]:bg-primary/10'
+                : ''
+            )}
           >
             <SidebarMenuButton asChild>
               <Link to={item.url}>

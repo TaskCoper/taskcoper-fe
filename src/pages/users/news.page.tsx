@@ -75,7 +75,7 @@ export default function NewsPage() {
         {/* Newsletter — full-width split: editorial image left, signup right */}
         <section className='overflow-hidden rounded-xl border border-border bg-card'>
           <div className='grid lg:grid-cols-2'>
-            <div className='relative aspect-[16/9] w-full overflow-hidden bg-muted lg:aspect-auto lg:min-h-[300px]'>
+            <div className='relative aspect-video w-full overflow-hidden bg-muted lg:aspect-auto lg:min-h-75'>
               <NewsArticleImage
                 src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1600&h=1200&fit=crop'
                 alt={t('news.newsletter.title')}

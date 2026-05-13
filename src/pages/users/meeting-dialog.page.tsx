@@ -84,10 +84,10 @@ const normalizeMeetingLink = (value: string) => {
 
 interface MeetingNoteAndLinkProps {
   meeting: MeetingDetail
-  canUpdateNote: boolean
+  canUpdateMeeting: boolean
 }
 
-function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps) {
+function MeetingNoteAndLink({ meeting, canUpdateMeeting }: MeetingNoteAndLinkProps) {
   const { t } = useTranslation()
   const { updateMeeting } = useUpdateMeeting({
     packageId: meeting.packageBookingId ?? undefined,
@@ -100,7 +100,7 @@ function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps)
 
   const submitMeetingUpdate = useCallback(
     (nextNote: string, nextLink: string) => {
-      if (!canUpdateNote) return
+      if (!canUpdateMeeting) return
 
       const normalizedNote = nextNote ?? ''
       const normalizedLink = normalizeMeetingLink(nextLink)
@@ -120,7 +120,7 @@ function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps)
 
       updateMeeting({ body: payload })
     },
-    [canUpdateNote, meeting, updateMeeting]
+    [canUpdateMeeting, meeting, updateMeeting]
   )
 
   const debouncedUpdateMeetingLink = useDebouncedCallback((nextLink: string) => {
@@ -172,14 +172,14 @@ function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps)
               </p>
             )}
 
-            {canUpdateNote ? (
+            {canUpdateMeeting ? (
               <Button variant='ghost' size='icon-sm' className='size-7' type='button' {...meetingLinkTriggerProps}>
                 <PencilIcon className='size-3.5' />
               </Button>
             ) : null}
           </div>
 
-          {isEditingLink && canUpdateNote ? (
+          {isEditingLink && canUpdateMeeting ? (
             <Input className='h-8 text-xs' type='text' {...meetingLinkInputProps} />
           ) : meetingLinkValue ? (
             <p className='text-xs text-foreground/80'>
@@ -193,7 +193,7 @@ function MeetingNoteAndLink({ meeting, canUpdateNote }: MeetingNoteAndLinkProps)
 
       <div className='flex items-start gap-4'>
         <TextAlignStartIcon className='size-4 mt-1.5' />
-        {canUpdateNote ? (
+        {canUpdateMeeting ? (
           <div className='flex-1'>
             <RichTextEditor
               content={noteValue}
@@ -242,7 +242,10 @@ export default function MeetingDialogPage() {
   const [isRescheduling, setIsRescheduling] = useState(false)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
-  const canUpdateNote = meeting?.mentorUserId === me?.id && meeting?.status !== MeetingStatus.CANCELLED
+  const canUpdateMeeting =
+    meeting?.mentorUserId === me?.id &&
+    meeting?.status !== MeetingStatus.CANCELLED &&
+    meeting?.status !== MeetingStatus.COMPLETED
 
   const handleClose = () => {
     setOpen(false)
@@ -408,7 +411,9 @@ export default function MeetingDialogPage() {
 
         <div className='p-6 grid grid-cols-12 gap-8'>
           <div className='col-span-8 space-y-6'>
-            {meeting ? <MeetingNoteAndLink key={meeting.id} meeting={meeting} canUpdateNote={canUpdateNote} /> : null}
+            {meeting ? (
+              <MeetingNoteAndLink key={meeting.id} meeting={meeting} canUpdateMeeting={canUpdateMeeting} />
+            ) : null}
 
             {meeting?.status === MeetingStatus.CANCELLED && meeting.reason && (
               <div className='flex items-start gap-4'>

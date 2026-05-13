@@ -421,6 +421,8 @@ export const queryKeys = {
   },
   feedbacks: {
     byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const,
+    listInfinite: ({ targetId, targetType, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
+      ['feedbacks', 'infinite', targetId, targetType, pageSize, sortBy, searchTerm] as const,
     list: ({ targetId, targetType, pageIndex, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
       ['feedbacks', targetId, targetType, pageIndex, pageSize, sortBy, searchTerm] as const
   }

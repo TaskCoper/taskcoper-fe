@@ -17,7 +17,8 @@ import type { MentorPackage } from '@/features/mentor-packages/types'
 import { useGetProjectsForPackage } from '@/features/projects/core/hooks/use-get-projects-for-package'
 import { useGetVoucherByCode } from '@/features/vouchers/hooks/use-get-voucher-by-code'
 import { DiscountType } from '@/features/vouchers/types'
-import { formatCurrency } from '@/shared/utils'
+import { formatCurrency, getFirstParagraphTextFromHtml } from '@/shared/utils'
+import { CalendarDaysIcon, Clock3Icon, Layers3Icon, TicketPercentIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -110,132 +111,159 @@ export default function BookPackageDialog({ children, mentorPackage }: BookPacka
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-xl' onInteractOutside={onClose} showCloseButton={false}>
-        <DialogHeader>
-          <DialogTitle>{t('packageBooking.bookPackage.title')}</DialogTitle>
-          <DialogDescription>{t('packageBooking.bookPackage.description')}</DialogDescription>
+      <DialogContent
+        position='top-center'
+        className='min-w-xl overflow-hidden p-0 sm:min-w-4xl border-none gap-0'
+        onInteractOutside={onClose}
+        showCloseButton={false}
+      >
+        <DialogHeader className='bg-primary p-6 text-left'>
+          <DialogTitle className='text-xl text-background'>{t('packageBooking.bookPackage.title')}</DialogTitle>
+          <DialogDescription className='text-background/90'>
+            {getFirstParagraphTextFromHtml(mentorPackage.description) || t('packageBooking.bookPackage.description')}
+          </DialogDescription>
         </DialogHeader>
 
-        <Card className='gap-2 p-4'>
-          <div>
-            <div className='flex items-start justify-between gap-4'>
-              <div className='min-w-0'>
-                <p className='font-mono text-xs text-muted-foreground tracking-wide'>
+        <div className='grid gap-4 p-4 lg:grid-cols-5'>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4 lg:col-span-2'>
+              <SingleSelectField
+                control={methods.control}
+                name='bookedByProjectId'
+                label='meeting.form.projectLabel'
+                options={projectOptions}
+                placeholder='meeting.form.projectPlaceholder'
+                searchPlaceholder='meeting.form.projectSearchPlaceholder'
+                disabled={isLoadingBookableProjects}
+              />
+
+              <Controller
+                name='voucherCode'
+                control={methods.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className='gap-1'>
+                    <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                      {t('packageBooking.bookPackage.voucherCode')}
+                      <span className='font-semibold text-destructive'>*</span>
+                    </FieldLabel>
+
+                    <Input
+                      {...field}
+                      id={field.name}
+                      value={field.value ?? ''}
+                      aria-invalid={fieldState.invalid}
+                      placeholder={t('packageBooking.bookPackage.voucherCodePlaceholder')}
+                      autoComplete='off'
+                      spellCheck={false}
+                    />
+
+                    <div className='min-h-4'>
+                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                      {!fieldState.invalid && voucherError && (
+                        <p className='text-xs font-medium text-destructive'>{voucherError}</p>
+                      )}
+                      {!fieldState.invalid && !voucherError && isVoucherLow && (
+                        <p className='text-xs font-medium tracking-tight text-primary'>
+                          {t('packageBooking.bookPackage.voucherLowUsage')}
+                        </p>
+                      )}
+                    </div>
+                  </Field>
+                )}
+              />
+
+              <Button
+                className='w-full'
+                disabled={isBookingPackage || (!!voucherCode && (!!voucherError || isLoadingVoucher))}
+              >
+                {isBookingPackage ? <Spinner /> : null}
+                {t('packageBooking.bookPackage.proceed')}
+              </Button>
+            </form>
+          </FormProvider>
+
+          <Card className='gap-3 rounded-xl p-1 shadow-sm lg:col-span-3'>
+            {mentorPackage.coverImageUrl ? (
+              <img
+                src={mentorPackage.coverImageUrl}
+                alt={mentorPackage.name}
+                className='h-40 w-full rounded-md object-cover'
+              />
+            ) : (
+              <div className='h-40 rounded-md border border-dashed border-border bg-linear-to-br from-primary/20 via-primary/10 to-background' />
+            )}
+
+            <div className='space-y-4 px-3 pb-3'>
+              <div className='space-y-1.5'>
+                <p className='text-xs font-mono tracking-wide text-muted-foreground'>
                   {t('packageBooking.bookPackage.receipt')}
                 </p>
-                <p className='mt-2 font-semibold leading-snug line-clamp-1'>{mentorPackage.name}</p>
-              </div>
-
-              <div className='shrink-0 text-right'>
-                <p className='font-mono text-xs text-muted-foreground'>{t('mentorPackage.form.price')}</p>
-                <p className='text-lg text-primary font-extrabold'>
-                  {formatCurrency(mentorPackage.price, mentorPackage.currency)}
+                <p className='line-clamp-2 text-base font-semibold leading-snug'>{mentorPackage.name}</p>
+                <p className='line-clamp-2 text-xs text-muted-foreground'>
+                  {getFirstParagraphTextFromHtml(mentorPackage.description)}
                 </p>
               </div>
-            </div>
 
-            <p className='text-xs text-muted-foreground mt-0.5 line-clamp-2'>{mentorPackage.description}</p>
-          </div>
-
-          <div className='my-3 border-t border-dashed border-border' />
-
-          <div className='space-y-2 font-mono text-xs'>
-            <div className='flex items-center justify-between gap-3'>
-              <p className='text-muted-foreground'>{t('packageBooking.bookPackage.sessions')}</p>
-              <p className='font-semibold'>{mentorPackage.totalSessions}</p>
-            </div>
-            <div className='flex items-center justify-between gap-3'>
-              <p className='text-muted-foreground'>{t('packageBooking.bookPackage.durationPerSession')}</p>
-              <p className='font-semibold'>
-                {mentorPackage.durationInMinutes} {t('packageBooking.bookPackage.min')}
-              </p>
-            </div>
-          </div>
-
-          <div className='my-3 border-t border-dashed border-border' />
-
-          <div className='space-y-1.5'>
-            {isLoadingVoucher ? (
-              <div className='flex items-center justify-between gap-3 font-mono'>
-                <Skeleton className='h-3 w-16' />
-                <Skeleton className='h-3 w-20' />
-              </div>
-            ) : discountAmount > 0 ? (
-              <div className='flex items-center justify-between gap-3 font-mono'>
-                <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.discount')}</p>
-                <p className='text-sm text-destructive font-semibold'>
-                  -{formatCurrency(discountAmount, mentorPackage.currency)}
-                </p>
-              </div>
-            ) : null}
-
-            <div className='flex items-center justify-between gap-3 font-mono'>
-              <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.total')}</p>
-              {isLoadingVoucher ? (
-                <Skeleton className='h-4 w-24' />
-              ) : (
-                <p className='text-sm font-extrabold'>{formatCurrency(totalAmount, mentorPackage.currency)}</p>
-              )}
-            </div>
-          </div>
-        </Card>
-
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
-            <SingleSelectField
-              control={methods.control}
-              name='bookedByProjectId'
-              label='meeting.form.projectLabel'
-              options={projectOptions}
-              placeholder='meeting.form.projectPlaceholder'
-              searchPlaceholder='meeting.form.projectSearchPlaceholder'
-              disabled={isLoadingBookableProjects}
-            />
-
-            <Controller
-              name='voucherCode'
-              control={methods.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='gap-1'>
-                  <FieldLabel htmlFor={field.name} className='gap-0.5'>
-                    {t('packageBooking.bookPackage.voucherCode')}
-                    <span className='text-destructive font-semibold'>*</span>
-                  </FieldLabel>
-
-                  <Input
-                    {...field}
-                    id={field.name}
-                    value={field.value ?? ''}
-                    aria-invalid={fieldState.invalid}
-                    placeholder={t('packageBooking.bookPackage.voucherCodePlaceholder')}
-                    autoComplete='off'
-                    spellCheck={false}
-                  />
-
-                  <div className='min-h-4'>
-                    {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-                    {!fieldState.invalid && voucherError && (
-                      <p className='text-xs text-destructive font-medium'>{voucherError}</p>
-                    )}
-                    {!fieldState.invalid && !voucherError && isVoucherLow && (
-                      <p className='text-xs text-primary font-medium tracking-tight'>
-                        {t('packageBooking.bookPackage.voucherLowUsage')}
-                      </p>
-                    )}
+              <div className='space-y-2 rounded-md border bg-muted/35 p-3'>
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <Layers3Icon className='size-3.5' />
+                    <p>{t('packageBooking.bookPackage.sessions')}</p>
                   </div>
-                </Field>
-              )}
-            />
+                  <p className='text-xs font-semibold'>{mentorPackage.totalSessions}</p>
+                </div>
 
-            <Button
-              className='w-full'
-              disabled={isBookingPackage || (!!voucherCode && (!!voucherError || isLoadingVoucher))}
-            >
-              {isBookingPackage ? <Spinner /> : null}
-              {t('packageBooking.bookPackage.proceed')}
-            </Button>
-          </form>
-        </FormProvider>
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <Clock3Icon className='size-3.5' />
+                    <p>{t('packageBooking.bookPackage.durationPerSession')}</p>
+                  </div>
+                  <p className='text-xs font-semibold'>
+                    {mentorPackage.durationInMinutes} {t('packageBooking.bookPackage.min')}
+                  </p>
+                </div>
+
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <CalendarDaysIcon className='size-3.5' />
+                    <p>{t('mentorPackage.form.price')}</p>
+                  </div>
+                  <p className='text-sm font-bold text-primary'>
+                    {formatCurrency(mentorPackage.price, mentorPackage.currency)}
+                  </p>
+                </div>
+              </div>
+
+              <div className='space-y-1.5 rounded-md border border-dashed p-3'>
+                {isLoadingVoucher ? (
+                  <div className='flex items-center justify-between gap-3 font-mono'>
+                    <Skeleton className='h-3 w-16' />
+                    <Skeleton className='h-3 w-20' />
+                  </div>
+                ) : discountAmount > 0 ? (
+                  <div className='flex items-center justify-between gap-3 font-mono'>
+                    <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+                      <TicketPercentIcon className='size-3.5' />
+                      <p>{t('packageBooking.bookPackage.discount')}</p>
+                    </div>
+                    <p className='text-sm font-semibold text-destructive'>
+                      -{formatCurrency(discountAmount, mentorPackage.currency)}
+                    </p>
+                  </div>
+                ) : null}
+
+                <div className='flex items-center justify-between gap-3 font-mono'>
+                  <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.total')}</p>
+                  {isLoadingVoucher ? (
+                    <Skeleton className='h-4 w-24' />
+                  ) : (
+                    <p className='text-sm font-extrabold'>{formatCurrency(totalAmount, mentorPackage.currency)}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </DialogContent>
     </Dialog>
   )
