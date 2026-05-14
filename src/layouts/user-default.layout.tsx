@@ -1,26 +1,17 @@
-import NavUser from '@/components/sidebar/users/nav-user'
+import NavUser from '@/components/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import {
-  BellIcon,
-  FolderClosedIcon,
-  GlobeIcon,
-  HomeIcon,
-  MenuIcon,
-  MessageCircleIcon,
-  NewspaperIcon,
-  UsersRoundIcon
-} from 'lucide-react'
-import { createElement, useState } from 'react'
+import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon, UsersRoundIcon } from 'lucide-react'
+import { createElement, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
@@ -32,24 +23,24 @@ const navigations = [
     icon: HomeIcon,
     url: '/'
   },
-  {
-    id: 200,
-    label: 'header.featuredProjects',
-    icon: FolderClosedIcon,
-    url: '/featured-projects'
-  },
+  // {
+  //   id: 200,
+  //   label: 'header.featuredProjects',
+  //   icon: FolderClosedIcon,
+  //   url: '/featured-projects'
+  // },
   {
     id: 300,
     label: 'header.expertNetwork',
     icon: UsersRoundIcon,
     url: '/network'
   },
-  {
-    id: 400,
-    label: 'header.startupCommunity',
-    icon: GlobeIcon,
-    url: '/community'
-  },
+  // {
+  //   id: 400,
+  //   label: 'header.startupCommunity',
+  //   icon: GlobeIcon,
+  //   url: '/community'
+  // },
   {
     id: 500,
     label: 'header.news',
@@ -64,10 +55,11 @@ export default function UserDefaultLayout() {
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
-  const { user } = useAuthStore()
-  const { me, isGettingMe } = useGetMe()
-  const { org } = useGetOrg({ orgId: user?.OrganizationId })
-  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount()
+  const { me, isVerificationRequired, isGettingMe } = useGetMe()
+  const { org } = useGetOrg({ orgId: me?.organizationId })
+  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
+    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+  })
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
@@ -184,8 +176,16 @@ export default function UserDefaultLayout() {
         </div>
       </header>
 
-      <main className='flex-1 h-full w-full relative'>
-        <Outlet />
+      <main className='flex-1 min-h-0 w-full relative overflow-hidden'>
+        <Suspense
+          fallback={
+            <div className='flex h-full w-full items-center justify-center'>
+              <Spinner className='text-muted-foreground' />
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   )

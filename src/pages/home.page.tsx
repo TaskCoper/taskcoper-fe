@@ -1,40 +1,21 @@
-import PageWrapper from '@/components/page-wrapper'
-import NavUser from '@/components/sidebar/users/nav-user'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import NotificationsPopover from '@/features/notifications/components/notifications-popover'
-import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
-import { useGetOrg } from '@/hooks/use-get-org'
-import { useAuthStore } from '@/lib/zustand/auth.store'
-import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   ArrowRight,
-  BellIcon,
   CalendarCheck,
   CheckCircle2,
-  FolderClosedIcon,
-  GlobeIcon,
-  HomeIcon,
-  MenuIcon,
-  MessageCircleIcon,
   MessageSquareIcon,
-  NewspaperIcon,
   Sparkles,
   TrendingUp,
   UsersRoundIcon,
   Zap
 } from 'lucide-react'
-import { createElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation } from 'react-router'
-import logo from '/images/taskcoper.png'
+import { Link } from 'react-router'
 
 const cardBaseClass =
   'w-64 xl:w-72 p-3 cursor-pointer bg-white/95 border-border/60 shadow-xl shadow-slate-200/50 transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:scale-105'
@@ -80,14 +61,6 @@ const customStyles = `
   }
 `
 
-const navigations = [
-  { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
-  { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
-  { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
-  { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
-  { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
-]
-
 const stats = [
   { value: '10K+', label: 'home.stats.projects' },
   { value: '50K+', label: 'home.stats.tasksDone' },
@@ -97,168 +70,18 @@ const stats = [
 
 export default function HomePage() {
   const { t } = useTranslation()
-  const location = useLocation()
-  const [open, setOpen] = useState(false)
-  const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
-
-  const { me, isGettingMe } = useGetMe()
-  const { user } = useAuthStore()
-  const { org } = useGetOrg({ orgId: user?.OrganizationId })
-  const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({ enabled: !!me })
 
   return (
-    <PageWrapper titleKey='home.title'>
+    <>
       <style>{customStyles}</style>
-      <div className='bg-dot h-screen overflow-hidden flex flex-col'>
-        {/* Header */}
-        <header className='fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background to-background/70'>
-          <div className='px-4 h-14 flex items-center justify-between'>
-            <div className='flex items-center gap-3'>
-              <Link to='/' className='shrink-0'>
-                <img src={logo} alt='TaskCoper' className='h-7' />
-              </Link>
-
-              {org ? (
-                <div className='flex items-center gap-4 mr-4'>
-                  <Separator orientation='vertical' className='h-5! bg-foreground/30' />
-                  <div className='flex items-center gap-2'>
-                    <Avatar className='size-6'>
-                      <AvatarImage src={org.logo} />
-                      <AvatarFallback>{getAvatarFallback(org.name)}</AvatarFallback>
-                    </Avatar>
-
-                    <p className='text-sm font-medium'>{org.name}</p>
-                  </div>
-                </div>
-              ) : null}
-
-              {isGettingMe ? (
-                <div className='hidden md:flex items-center gap-2'>
-                  <Skeleton className='w-20 h-8 rounded-md' />
-                  <Skeleton className='w-20 h-8 rounded-md' />
-                </div>
-              ) : me ? (
-                <div className='hidden lg:flex items-center gap-2'>
-                  {navigations.map((navigation) => {
-                    const isActive = location.pathname === navigation.url
-                    return (
-                      <Button
-                        key={navigation.id}
-                        asChild
-                        size='sm'
-                        variant='ghost'
-                        className={cn(isActive && 'bg-primary/10 text-primary')}
-                      >
-                        <Link to={navigation.url}>{t(navigation.label)}</Link>
-                      </Button>
-                    )
-                  })}
-                </div>
-              ) : null}
-            </div>
-
-            {isGettingMe ? (
-              <div className='hidden md:flex items-center gap-2'>
-                <Skeleton className='w-20 h-8 rounded-md' />
-                <Skeleton className='size-8 rounded-full' />
-              </div>
-            ) : me ? (
-              <div className='flex items-center gap-2 sm:gap-4'>
-                <div className='flex items-center gap-1 sm:gap-3'>
-                  <Button size='sm' asChild className='hidden lg:flex'>
-                    <Link to='/projects'>{t('header.manageProjects')}</Link>
-                  </Button>
-
-                  <Button size='icon-sm' variant='ghost' className='relative'>
-                    <MessageCircleIcon className='size-4 sm:size-5' />
-                  </Button>
-
-                  <NotificationsPopover open={openNotificationsPopover} onOpenChange={setOpenNotificationsPopover}>
-                    <Button
-                      size='icon-sm'
-                      variant='ghost'
-                      className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
-                    >
-                      <BellIcon className='size-4 sm:size-5' />
-                      {isLoadingUnreadCount ? null : unreadCount > 0 ? (
-                        <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>
-                          <p className='text-xs text-white'>{unreadCount}</p>
-                        </div>
-                      ) : null}
-                    </Button>
-                  </NotificationsPopover>
-                </div>
-
-                <NavUser user={me} />
-
-                <Sheet open={open} onOpenChange={setOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant='ghost' size='icon' className='lg:hidden -mr-2'>
-                      <MenuIcon className='size-5' />
-                      <span className='sr-only'>Toggle menu</span>
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side='right' className='gap-0'>
-                    <SheetHeader>
-                      <SheetTitle className='text-left'>Menu</SheetTitle>
-                    </SheetHeader>
-
-                    <div className='flex flex-col gap-4'>
-                      <div className='flex flex-col gap-2 px-2'>
-                        {navigations.map((navigation) => {
-                          const isActive = location.pathname === navigation.url
-                          return (
-                            <Button
-                              key={navigation.id}
-                              asChild
-                              variant='ghost'
-                              className={cn('justify-start px-2', isActive && 'bg-primary/10 text-primary')}
-                              onClick={() => setOpen(false)}
-                            >
-                              <Link to={navigation.url} className='flex items-center gap-3'>
-                                {createElement(navigation.icon, { className: 'size-4' })}
-                                {t(navigation.label)}
-                              </Link>
-                            </Button>
-                          )
-                        })}
-                      </div>
-
-                      <Separator />
-
-                      <div className='px-2'>
-                        <Button asChild onClick={() => setOpen(false)} className='w-full'>
-                          <Link to='/projects'>{t('header.manageProjects')}</Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
-            ) : (
-              <div className='flex items-center gap-2 sm:gap-3'>
-                <Link to='/sign-in'>
-                  <Button variant='ghost' size='sm' className='text-slate-700 text-xs sm:text-sm'>
-                    {t('home.header.signIn')}
-                  </Button>
-                </Link>
-                <Link to='/sign-up'>
-                  <Button size='sm' className='shadow-lg shadow-primary/20 text-xs sm:text-sm'>
-                    {t('home.header.getStarted')}
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </header>
-
+      <div className='h-full overflow-hidden flex flex-col'>
         {/* Hero Section */}
         <section className='flex-1 flex items-center justify-center pt-14 sm:pt-16 pb-4 relative'>
           {/* CONSTRAINT CONTAINER: Keeps cards close to text on large screens */}
-          <div className='w-full max-w-[1600px] mx-auto h-full relative flex items-center justify-center'>
+          <div className='w-full max-w-400 mx-auto h-full relative flex items-center justify-center'>
             {/* Decorative Orbs */}
             <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
+              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 sm:w-225 h-150 bg-linear-to-br from-primary/8 via-teal-500/5 to-emerald-400/8 rounded-full blur-3xl' />
             </div>
 
             {/* --- LEFT SIDE CARDS (Hidden on screens smaller than 2xl) --- */}
@@ -617,16 +440,10 @@ export default function HomePage() {
                 <span className='text-primary text-xs font-semibold'>{t('home.hero.badge')}</span>
               </div>
 
-              <div className='mb-5 sm:mb-6 space-y-2 animate-[fadeIn_0.6s_ease-out] tracking-tight'>
-                <h1 className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900'>
-                  {t('home.hero.brandName')}
-                </h1>
+              <div className='mb-5 sm:mb-6 space-y-2 animate-[fadeIn_0.6s_ease-out] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight'>
+                <h1 className='text-slate-900'>{t('home.hero.title')}</h1>
 
-                <p className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900'>
-                  {t('home.hero.title')}
-                </p>
-
-                <p className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent'>
+                <p className='bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent'>
                   {t('home.hero.titleHighlight')}
                 </p>
               </div>
@@ -689,6 +506,6 @@ export default function HomePage() {
           <p>© {new Date().getFullYear()} TaskCoper</p>
         </footer>
       </div>
-    </PageWrapper>
+    </>
   )
 }

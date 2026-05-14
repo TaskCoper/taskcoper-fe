@@ -5,16 +5,21 @@
     "expertNetwork": "Kết nối chuyên gia",
     "startupCommunity": "Cộng đồng khởi nghiệp",
     "news": "Tin tức",
-    "manageProjects": "Quản lý"
+    "manageProjects": "Quản lý",
+    "verifyYourEmail": "Xác minh tài khoản"
   },
   "role": {
     "owner": "Chủ dự án",
     "editor": "Người chỉnh sửa",
     "viewer": "Người xem"
   },
+  "validation": {
+    "mustBeNumber": "Phải là số hợp lệ"
+  },
   "common": {
     "button": {
       "add": "Thêm",
+      "create": "Tạo",
       "edit": "Chỉnh sửa",
       "save": "Lưu",
       "cancel": "Hủy",
@@ -23,9 +28,12 @@
       "accept": "Chấp nhận",
       "decline": "Từ chối",
       "remove": "Gỡ bỏ",
+      "leave": "Rời khỏi",
       "delete": "Xóa",
       "insert": "Chèn",
-      "download": "Tải xuống"
+      "download": "Tải xuống",
+      "back": "Quay lại",
+      "upload": "Tải ảnh"
     },
     "field": {
       "label": "Nhãn",
@@ -34,22 +42,31 @@
       "name": "Tên",
       "email": "Email",
       "password": "Mật khẩu",
+      "isActive": "Kích hoạt",
       "startDate": "Ngày bắt đầu",
       "endDate": "Ngày kết thúc",
-      "date": "Ngày"
+      "date": "Ngày",
+      "createdOnUtc": "Ngày tạo",
+      "modifiedOnUtc": "Ngày cập nhật"
     },
     "validation": {
       "email": {
         "invalid": "Email không hợp lệ"
       },
+      "timeZone": {
+        "invalid": "Múi giờ không hợp lệ"
+      },
       "required": "Trường này là bắt buộc",
       "maxLength": {
         "20": "Tối đa 20 ký tự",
+        "25": "Tối đa 25 ký tự",
         "255": "Tối đa 255 ký tự",
+        "2000": "Tối đa 2000 ký tự",
         "10000": "Tối đa 10000 ký tự"
       },
       "minLength": {
         "1": "Trường này là bắt buộc",
+        "5": "Phải có ít nhất 5 ký tự",
         "6": "Phải có 6 ký tự",
         "8": "Phải có ít nhất 8 ký tự"
       },
@@ -58,15 +75,30 @@
       },
       "number": {
         "positive": "Phải là số dương",
-        "invalid": "Phải là số hợp lệ"
+        "invalid": "Phải là số hợp lệ",
+        "integer": "Phải là số nguyên",
+        "nonNegative": "Phải lớn hơn hoặc bằng 0",
+        "max100": "Phải nhỏ hơn hoặc bằng 100"
+      },
+      "uuid": {
+        "invalid": "Định danh không hợp lệ"
+      },
+      "enum": {
+        "invalid": "Lựa chọn không hợp lệ"
       },
       "date": {
         "invalid": "Định dạng ngày không hợp lệ",
         "required": "Ngày là bắt buộc",
         "mustBeGreater": "Ngày kết thúc phải lớn hơn ngày bắt đầu"
+      },
+      "schedule": {
+        "dayRequired": "Ít nhất một ngày phải được chọn",
+        "startTimeRequired": "Thời gian bắt đầu là bắt buộc",
+        "endTimeRequired": "Thời gian kết thúc là bắt buộc"
       }
     },
     "ui": {
+      "count": "Số lượng",
       "selected": "đã chọn",
       "characters": "ký tự",
       "search": "Tìm kiếm...",
@@ -97,8 +129,29 @@
       "noDataAvailable": "Không có dữ liệu",
       "filter": "Lọc",
       "month": "Tháng",
-      "week": "Tuần"
-    }
+      "week": "Tuần",
+      "day": "Ngày",
+      "today": "Hôm nay",
+      "files": "tệp",
+      "emptyValue": "—",
+      "openMenu": "Mở menu",
+      "toggle": "Bật/tắt",
+      "comingSoon": "Sắp ra mắt",
+      "more": "+{{count}} nữa",
+      "infiniteSelect": {
+        "placeholder": "Tìm kiếm...",
+        "selectedCount": "Đã chọn {{count}}",
+        "loading": "Đang tải...",
+        "noResults": "Không tìm thấy kết quả"
+      }
+    },
+    "status": {
+      "all": "Tất cả",
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động",
+      "disabled": "Đã vô hiệu hóa"
+    },
+    "off": "Tắt"
   },
   "network": {
     "filter": {
@@ -111,6 +164,367 @@
       "noDomainsFound": "Không tìm thấy lĩnh vực.",
       "removeAriaLabel": "Xóa {{name}}",
       "overflowMore": "+{{count}} khác"
+    }
+  },
+  "dayOfWeek": {
+    "monday": "T2",
+    "tuesday": "T3",
+    "wednesday": "T4",
+    "thursday": "T5",
+    "friday": "T6",
+    "saturday": "T7",
+    "sunday": "CN",
+    "placeholder": "Chọn ngày"
+  },
+  "schedule": {
+    "createAvailability": {
+      "title": "Tạo lịch rảnh của bạn",
+      "description": "Thêm các khoảng thời gian bạn rảnh để gặp sinh viên. Sau khi lưu, sinh viên có thể bắt đầu đặt lịch hẹn."
+    },
+    "field": {
+      "availableDays": "Các ngày rảnh",
+      "startTime": "Thời gian bắt đầu",
+      "endTime": "Thời gian kết thúc",
+      "isActive": "Trạng thái hoạt động",
+      "isActiveDescription": "Nếu bạn không bật, lịch sẽ không được áp dụng"
+    },
+    "button": {
+      "create": "Tạo lịch",
+      "viewSchedules": "Cấu hình lịch rảnh",
+      "update": "Cập nhật lịch"
+    },
+    "popover": {
+      "title": "Lịch rảnh",
+      "showOverlay": "Lớp phủ lịch",
+      "description": "Hiển thị lịch rảnh của bạn trên lịch.",
+      "manageSchedules": "Quản lý Lịch"
+    },
+    "filter": {
+      "title": "Hiển thị lịch",
+      "all": "Tất cả",
+      "mine": "Của tôi",
+      "mentor": "Của mentor",
+      "purchasedPackages": "Các gói đã mua",
+      "packageGroups": {
+        "personal": {
+          "title": "Cá nhân",
+          "description": "Các gói lịch hẹn cho cá nhân"
+        },
+        "project": {
+          "title": "Dự án",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi có quyền đặt lịch"
+        },
+        "member": {
+          "title": "Thành viên",
+          "description": "Các gói lịch hẹn thuộc về dự án mà tôi là thành viên"
+        }
+      }
+    },
+    "update": {
+      "description": "Cập nhật thông tin lịch của bạn."
+    },
+    "delete": {
+      "title": "Xóa lịch?",
+      "description": "Lịch này sẽ bị xóa. Hành động này không thể hoàn tác."
+    },
+    "tab": {
+      "calendar": "Lịch",
+      "timeline": "Dòng thời gian"
+    },
+    "timeline": {
+      "empty": "Chưa có lịch nào",
+      "emptyDescription": "Tạo lịch rảnh của bạn để sinh viên có thể đặt lịch hẹn với bạn.",
+      "totalSlots": "khoảng thời gian",
+      "noSlots": "Không có lịch",
+      "monday": "Thứ Hai",
+      "tuesday": "Thứ Ba",
+      "wednesday": "Thứ Tư",
+      "thursday": "Thứ Năm",
+      "friday": "Thứ Sáu",
+      "saturday": "Thứ Bảy",
+      "sunday": "Chủ Nhật",
+      "recurring": "định kỳ",
+      "temporary": "tạm thời",
+      "onwards": "trở đi",
+      "today": "Hôm nay",
+      "activeFrom": "từ",
+      "activeTo": "đến",
+      "legend": {
+        "permanent": "Không thời hạn",
+        "fromOnly": "Từ ngày",
+        "toOnly": "Đến ngày",
+        "range": "Hoạt động trong khoảng ngày"
+      }
+    }
+  },
+  "meeting": {
+    "dialog": {
+      "title": "Đặt lịch hẹn",
+      "description": "Chọn ngày và giờ để đặt lịch hẹn"
+    },
+    "button": {
+      "book": "Đặt lịch"
+    },
+    "form": {
+      "bookForProject": "Đặt lịch cho dự án",
+      "bookForProjectDescription": "Bạn đang đặt lịch thay mặt dự án.",
+      "bookForSelfDescription": "Bạn đang đặt lịch cho chính mình.",
+      "projectLabel": "Dự án",
+      "projectPlaceholder": "Chọn dự án",
+      "projectSearchPlaceholder": "Tìm dự án"
+    },
+    "mentorSchedule": {
+      "title": "Lịch hẹn",
+      "weekLabel": "Tuần {{week}} - {{month}}",
+      "available": "Trống",
+      "booked": "Đã đặt",
+      "selected": "Đã chọn",
+      "empty": "Chưa có lịch hẹn",
+      "emptyDescription": "Mentor này chưa thiết lập bất kỳ lịch rảnh nào."
+    },
+    "detail": {
+      "session": "Buổi {{sequence}}",
+      "mentoringSession": "Phiên Hướng dẫn",
+      "meetingWith": "Gặp gỡ",
+      "to": "đến",
+      "joinViaGoogleMeet": "Tham gia bằng Google Meet",
+      "maxGuests": "Tối đa 100 kết nối khách",
+      "noLinkYet": "Chưa có link",
+      "noteWillBeHere": "Ghi chú của {{firstName}} {{lastName}} sẽ ở đây.",
+      "information": "Thông tin",
+      "status": "Trạng thái",
+      "belongsToProject": "Thuộc về dự án",
+      "belongsToPackage": "Thuộc gói",
+      "sessionSequence": "Thứ tự buổi",
+      "mentor": "Người hướng dẫn",
+      "participants": "Người tham gia",
+      "dateFormat": "dd 'thg' MM, yyyy",
+      "meetingDateTimeAt": "vào",
+      "cancel": "Hủy lịch",
+      "reschedule": "Dời lịch",
+      "completeMeeting": "Hoàn thành",
+      "cancelTitle": "Hủy lịch hẹn",
+      "cancelDescription": "Bạn có chắc chắn muốn hủy lịch hẹn này? Thao tác này không thể hoàn tác.",
+      "cancelReasonLabel": "Lý do",
+      "cancelReasonPlaceholder": "Nhập lý do hủy lịch...",
+      "rescheduleReasonPlaceholder": "Nhập lý do dời lịch...",
+      "confirmCancel": "Xác nhận hủy",
+      "history": "Lịch sử",
+      "cancelledBy": "Người hủy",
+      "disabledActionTooltip": "Bạn chỉ có thể dời lịch hoặc hủy lịch hẹn trước thời gian bắt đầu ít nhất 32 giờ."
+    },
+    "status": {
+      "free": "Trống",
+      "booked": "Đã đặt",
+      "completed": "Hoàn thành",
+      "reschedule": "Chờ xếp lại",
+      "cancelled": "Đã hủy",
+      "suspended": "Tạm ngưng"
+    }
+  },
+  "voucher": {
+    "button": {
+      "addVoucher": "Thêm Voucher"
+    },
+    "sidebar": {
+      "vouchers": "Voucher"
+    },
+    "dialog": {
+      "title": "Thêm Voucher",
+      "description": "Thêm một voucher mới"
+    },
+    "column": {
+      "code": "Mã",
+      "codePlaceholder": "Nhập mã để tìm kiếm...",
+      "name": "Tên",
+      "discount": "Giảm giá",
+      "discountType": "Loại",
+      "usage": "Đã dùng / Tổng",
+      "status": "Trạng thái",
+      "startsAt": "Bắt đầu",
+      "endsAt": "Kết thúc",
+      "actions": "Hành động",
+      "active": "Đang hoạt động",
+      "inactive": "Chưa hoạt động",
+      "expired": "Đã hết hạn",
+      "none": "Không",
+      "targets": "Đối tượng",
+      "scope": "Phạm vi",
+      "usageLimitPerUser": "Lượt dùng/người",
+      "isStackable": "Có thể áp dụng cùng voucher khác",
+      "createdOnUtc": "Ngày tạo",
+      "dateFormat": "HH:mm dd/MM/yyyy"
+    },
+    "action": {
+      "copyCode": "Sao chép mã",
+      "delete": "Xóa"
+    },
+    "toast": {
+      "copySuccess": "Đã sao chép mã vào clipboard",
+      "copyFailed": "Không thể sao chép mã"
+    },
+    "field": {
+      "name": "Tên Voucher",
+      "namePlaceholder": "Nhập tên voucher",
+      "code": "Mã Voucher",
+      "codePlaceholder": "EXAMPLE2026",
+      "startsAt": "Bắt đầu lúc",
+      "startsAtPlaceholder": "Chọn ngày bắt đầu",
+      "endsAt": "Kết thúc lúc",
+      "endsAtPlaceholder": "Chọn ngày kết thúc",
+      "discountType": "Loại giảm giá",
+      "discountValue": "Giá trị giảm giá",
+      "discountValuePlaceholder": "Nhập giá trị...",
+      "totalUsageLimit": "Số lượng",
+      "totalUsageLimitPlaceholder": "Nhập tổng số lượt...",
+      "usageLimitPerUser": "Lượt dùng mỗi người",
+      "usageLimitPerUserPlaceholder": "Nhập số lượt/người...",
+      "isStackable": "Có thể áp dụng cùng voucher khác",
+      "isStackableDescription": "Bật để áp dụng cùng với các voucher khác.",
+      "scope": "Phạm vi áp dụng",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả voucher",
+      "targets": "Chọn đối tượng áp dụng",
+      "targetsPlaceholder": "Chọn đối tượng áp dụng...",
+      "isActive": "Trạng thái",
+      "isActiveDescription": "Cho biết voucher này có thể được sử dụng hay không."
+    },
+    "discountType": {
+      "percent": "Phần trăm",
+      "fixedAmount": "Số tiền cố định"
+    },
+    "scope": {
+      "allTargets": "Tất cả đối tượng",
+      "specificTargets": "Đối tượng cụ thể"
+    },
+    "targetType": {
+      "allTargets": "Tất cả đối tượng",
+      "mentorPackage": "Gói Mentor",
+      "subscriptionPlan": "Gói Đăng ký"
+    },
+    "validation": {
+      "discountPercentMax": "Tỷ lệ giảm giá không được vượt quá 100%",
+      "targetsRequired": "Vui lòng chọn ít nhất một gói đối tượng cụ thể"
+    },
+    "page": {
+      "title": "Danh sách Voucher",
+      "description": "Quản lý các voucher bạn đã tạo.",
+      "infoTitle": "Thông tin Voucher",
+      "infoDescription": "Cập nhật thông tin chung và giới hạn sử dụng cho voucher này.",
+      "targetsTitle": "Đối tượng áp dụng",
+      "targetsDescription": "Quản lý các gói mentor mà voucher này có thể áp dụng.",
+      "redemptionsTitle": "Lượt đổi Voucher",
+      "redemptionsDescription": "Xem và quản lý tất cả các lượt đổi cho voucher này."
+    },
+    "target": {
+      "create": "Thêm đối tượng",
+      "createDescription": "Chọn các gói mentor để thêm làm đối tượng cho voucher này.",
+      "selectedTargets": "Đối tượng đã chọn",
+      "item": {
+        "create": "Thêm đối tượng"
+      },
+      "delete": {
+        "title": "Gỡ bỏ đối tượng",
+        "description": "Bạn có chắc chắn muốn gỡ bỏ \"{{targetName}}\" khỏi voucher này?"
+      }
+    },
+    "delete": {
+      "title": "Xóa voucher",
+      "description": "Bạn có chắc chắn muốn xóa voucher \"{{voucherCode}}\"? Hành động này không thể hoàn tác."
+    },
+    "redemption": {
+      "column": {
+        "user": "Người dùng",
+        "appliedTo": "Áp dụng cho",
+        "amountBeforeDiscount": "Giá gốc",
+        "discountAmount": "Giảm giá",
+        "amountAfterDiscount": "Giá sau giảm",
+        "status": "Trạng thái",
+        "appliedToType": "Loại đối tượng",
+        "redeemedAt": "Ngày áp dụng"
+      }
+    },
+    "redemptionStatus": {
+      "reserved": "Đã giữ",
+      "applied": "Đã áp dụng",
+      "released": "Đã giải phóng",
+      "canceled": "Đã hủy"
+    }
+  },
+  "commission": {
+    "button": {
+      "addConfig": "Thêm cấu hình"
+    },
+    "dialog": {
+      "title": "Cấu hình hoa hồng",
+      "description": "Thêm cấu hình hoa hồng mới"
+    },
+    "field": {
+      "targetModel": "Đối tượng áp dụng",
+      "titleLevel": "Cấp bậc",
+      "rate": "Tỉ lệ (%)",
+      "minAmount": "Số tiền tối thiểu",
+      "maxAmount": "Số tiền tối đa",
+      "isActiveDescription": "Bật để áp dụng cấu hình hoa hồng này."
+    }
+  },
+  "adminSidebar": {
+    "main": {
+      "groupLabel": "Tổng quan",
+      "dashboard": "Dashboard"
+    },
+    "system": {
+      "groupLabel": "Quản trị hệ thống",
+      "toggle": "Bật/tắt",
+      "projects": {
+        "title": "Dự án",
+        "list": "Danh sách dự án",
+        "settings": "Cài đặt"
+      },
+      "users": {
+        "title": "Người dùng",
+        "list": "Danh sách người dùng",
+        "roles": "Vai trò",
+        "permissions": "Quyền hạn"
+      },
+      "commissions": {
+        "title": "Hoa hồng",
+        "config": "Cấu hình"
+      }
+    }
+  },
+  "purchasedPackage": {
+    "progress": "Tiến độ",
+    "overallProgress": "Tiến độ tổng thể của gói mentor",
+    "information": "Thông tin",
+    "packageInformation": "Thông tin gói mentor",
+    "belongsToProject": "Thuộc về dự án",
+    "createdBy": "Được tạo bởi",
+    "purchasedOn": "Đã mua vào",
+    "bookSchedule": "Đặt lịch",
+    "meetingSession": "Buổi {{sequence}}",
+    "bookMeetingSession": "Đặt lịch hẹn cho buổi {{sequence}} ({{slots}} slot)",
+    "confirmBooking": "Xác nhận đặt",
+    "note": "Lưu ý:",
+    "bookingNote": "Bạn chỉ có thể chọn các khoảng thời gian liên tiếp nhau. Vui lòng chọn {{slots}} khoảng thời gian liên tiếp để đặt lịch.",
+    "completedProgress": "Hoàn thành {{progress}}%",
+    "meetButton": "Meet",
+    "meetingDateFormat": "dd/MM/yyyy 'vào' HH:mm",
+    "purchasedOnDateFormat": "dd/MM/yyyy",
+    "purchasedPackages": "Gói đã mua",
+    "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
+    "hasUpcomingMeeting": "Bạn đã có một lịch hẹn sắp tới",
+    "upcomingMeetingNote": "Hoàn thành buổi gặp dự kiến vào {{date}} trước khi đặt buổi tiếp theo.",
+    "viewMeeting": "Xem lịch hẹn",
+    "statusTooltip": "Trạng thái: {{status}}",
+    "feedbackTitle": "Đánh giá",
+    "feedbackDescription": "Tới lúc để lại đánh giá của bạn về gói này rồi đấy.",
+    "feedbackButton": "Đánh giá",
+    "noNoteAvailable": "Không có ghi chú",
+    "noFeedback": "Chưa có đánh giá",
+    "history": {
+      "title": "Lịch sử",
+      "description": "Các buổi gặp gần nhất của bạn"
     }
   },
   "project": {
@@ -241,28 +655,83 @@
       }
     },
     "updateProjectMembers": {
-      "title": "Thành viên dự án",
-      "description": "Chỉnh sửa thành viên dự án",
+      "title": "Thành viên",
+      "description": "Quản lý thành viên của dự án",
       "confirm": {
         "title": "Gỡ bỏ thành viên",
         "description": "Bạn có chắc chắn muốn gỡ bỏ {{fullName}} khỏi dự án?",
+        "leaveTitle": "Rời khỏi dự án",
+        "leaveDescription": "Bạn có chắc chắn muốn rời khỏi dự án này không?",
         "confirmText": "Gỡ bỏ",
         "cancelText": "Hủy"
       },
+      "ownerTransfer": {
+        "title": "Chuyển quyền sở hữu",
+        "description": "Vui lòng chọn chủ sở hữu mới trước khi rời dự án này.",
+        "selectOwnerPlaceholder": "Chọn chủ sở hữu mới",
+        "searchOwnerPlaceholder": "Tìm chủ sở hữu mới...",
+        "confirmText": "Chuyển quyền và rời dự án"
+      },
       "column": {
+        "no": "STT",
         "member": "Thành viên",
+        "memberPlaceholder": "Nhập tên hoặc email để tìm kiếm...",
+        "phoneNumber": "Số điện thoại",
+        "noPhoneNumber": "Chưa có số điện thoại",
+        "positionTitles": "Chức danh",
+        "noPositionTitles": "Không có chức danh",
         "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò",
         "permission": "Quyền",
         "canEdit": "Người chỉnh sửa"
       },
+      "positionTitle": {
+        "title": "Chức danh",
+        "searchPlaceholder": "Nhập để tìm chức danh...",
+        "createTitle": "Tạo chức danh",
+        "editTitle": "Chỉnh sửa chức danh",
+        "deleteTitle": "Xóa chức danh",
+        "deleteConfirmation": "Bạn có chắc chắn muốn xóa chức danh này không?"
+      },
       "role": {
-        "mentor": "Người hướng dẫn",
-        "student": "Sinh viên"
+        "owner": "Chủ sở hữu",
+        "admin": "Quản trị viên",
+        "editor": "Biên tập viên",
+        "viewer": "Người xem",
+        "systemTooltip": "Vai trò hệ thống",
+        "defaultTooltip": "Vai trò mặc định cho thành viên mới"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "Chưa có múi giờ",
+      "noPhoneNumber": "Chưa có số điện thoại",
+      "noAddress": "Chưa có địa chỉ",
+      "noStatus": "Chưa có trạng thái",
+      "noRoles": "Chưa có vai trò",
+      "noDomains": "Chưa có lĩnh vực",
+      "positionTitles": "Chức danh",
+      "domains": "Lĩnh vực"
+    },
+    "memberStatus": {
+      "free": "Rảnh",
+      "busy": "Bận"
+    },
+    "memberTaskTable": {
+      "title": "Bảng công việc",
+      "description": "Danh sách công việc của thành viên"
     },
     "inviteMembers": {
       "title": "Thêm thành viên",
       "description": "Thêm thành viên mới vào dự án của bạn để hợp tác và chia sẻ công việc.",
+      "pendingInvites": {
+        "title": "Lời mời đang chờ",
+        "description": "Các lời mời này đang chờ người nhận chấp nhận."
+      },
+      "revokeInvitation": {
+        "title": "Thu hồi lời mời",
+        "description": "Bạn có chắc chắn muốn thu hồi lời mời của {{fullName}} không? Người này sẽ không thể chấp nhận lời mời nữa.",
+        "confirmText": "Thu hồi"
+      },
       "invitedUsers": "Thành viên đã mời",
       "comboboxPlaceholder": "Nhấn để mời",
       "search": "Nhập email để tìm kiếm...",
@@ -308,10 +777,12 @@
     "sidebar": {
       "aboutProject": "Thông tin dự án",
       "tasks": "Công việc của tôi",
+      "quickActions": "Thao tác nhanh",
       "calendar": "Lịch",
       "chat": "Tin nhắn",
       "note": "Ghi chú",
       "storage": "Lưu trữ",
+      "revenue": "Doanh thu",
       "storagePage": {
         "title": "Kho lưu trữ",
         "description": "Tất cả tệp được tải lên trong công việc của dự án này.",
@@ -321,9 +792,14 @@
         "download": "Tải xuống",
         "task": "Công việc"
       },
+      "revenuePage": {
+        "title": "Doanh thu dự án",
+        "description": "Quản lý các khoản thu và chi của dự án."
+      },
       "settings": "Cài đặt",
       "myProjects": "Dự án của tôi",
-      "myCalendar": "Lịch của tôi",
+      "myCalendar": "Lịch",
+      "applicationHistory": "Lịch sử gửi đơn",
       "performance": "Hiệu suất",
       "noPendingTasks": "Tuyệt vời! Bạn không có công việc nào đang chờ"
     },
@@ -380,6 +856,39 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "Vai trò mới",
+      "description": "Thêm vai trò mới vào dự án để phân quyền cho các thành viên trong nhóm.",
+      "field": {
+        "template": {
+          "label": "Mẫu vai trò",
+          "placeholder": "Chọn mẫu vai trò"
+        },
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc",
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "description": {
+          "maxLength": "Tối đa 255 ký tự"
+        },
+        "permissions": {
+          "minLength": "Vui lòng chọn mẫu vai trò"
+        },
+        "projectIdentifier": {
+          "minLength": "Vui lòng chọn dự án"
+        }
+      }
+    },
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
@@ -390,6 +899,371 @@
       "file_type_pdf": "PDF",
       "file_type_image": "Ảnh",
       "unsupported": "Không hỗ trợ xem trước"
+    },
+    "addProjectRevenue": {
+      "title": {
+        "cashIn": "Thêm <highlight>khoản thu</highlight> mới",
+        "cashOut": "Thêm <highlight>khoản chi</highlight> mới"
+      },
+      "description": {
+        "cashIn": "Thêm một khoản thu mới cho dự án của bạn.",
+        "cashOut": "Thêm một khoản chi mới cho dự án của bạn."
+      },
+      "trigger": {
+        "cashIn": "Thêm khoản thu",
+        "cashOut": "Thêm khoản chi"
+      },
+      "name": {
+        "label": "Tên",
+        "placeholder": "Nhập tên giao dịch"
+      },
+      "amount": {
+        "label": "Số tiền",
+        "placeholder": "Nhập số tiền"
+      },
+      "note": {
+        "label": "Ghi chú",
+        "placeholder": "Nhập ghi chú cho giao dịch này"
+      },
+      "type": {
+        "cashIn": "Khoản thu",
+        "cashOut": "Khoản chi"
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên giao dịch là bắt buộc"
+        },
+        "amount": {
+          "min": "Số tiền phải lớn hơn 0"
+        },
+        "note": {
+          "maxLength": "Tối đa 255 ký tự"
+        }
+      }
+    },
+    "updateProjectRevenue": {
+      "title": "Chỉnh sửa giao dịch",
+      "description": "Cập nhật thông tin chi tiết của giao dịch này.",
+      "validation": {
+        "name": {
+          "minLength": "Tên giao dịch là bắt buộc"
+        },
+        "amount": {
+          "min": "Số tiền phải lớn hơn 0"
+        },
+        "note": {
+          "maxLength": "Tối đa 255 ký tự"
+        }
+      }
+    },
+    "settings": {
+      "title": "Cài đặt dự án",
+      "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
+      "tabs": {
+        "info": "Thông tin Dự án",
+        "members": "Thành viên",
+        "invites": "Lời mời",
+        "permissions": "Vai trò & Quyền"
+      }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Xem",
+        "canWrite": "Thêm mới",
+        "canUpdate": "Cập nhật",
+        "canDelete": "Xóa"
+      },
+      "noRolesDefined": "Chưa có vai trò nào",
+      "addRole": "Thêm vai trò",
+      "memberCount": "({{count}} thành viên)"
+    },
+    "updateProjectRole": {
+      "field": {
+        "name": {
+          "label": "Tên vai trò",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả vai trò"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Tên vai trò là bắt buộc"
+        },
+        "description": {
+          "maxLength": "Mô tả không được vượt quá 255 ký tự"
+        }
+      },
+      "status": {
+        "saving": "Đang lưu thay đổi...",
+        "unsavedChanges": "Bạn có thay đổi chưa lưu.",
+        "noChanges": "Chưa có thay đổi. Cập nhật quyền để bật lưu."
+      },
+      "unsavedChanges": {
+        "title": "Bỏ thay đổi chưa lưu?",
+        "description": "Bạn có thay đổi chưa lưu cho vai trò này. Nếu rời đi bây giờ, các thay đổi sẽ bị mất."
+      },
+      "locked": {
+        "title": "Vai trò mặc định của hệ thống đã bị khóa",
+        "description": "Vai trò này do hệ thống quản lý và không thể chỉnh sửa hoặc xóa."
+      },
+      "extensions": {
+        "taskUpdateTitle": "Mở rộng cập nhật công việc",
+        "moveTask": "Di chuyển công việc",
+        "moveMilestone": "Di chuyển cột mốc",
+        "toggleTaskStatus": "Bật tắt trạng thái công việc",
+        "storageReadTitle": "Mở rộng quyền xem lưu trữ",
+        "downloadFiles": "Tải xuống tệp",
+        "empty": "Chưa có quyền chi tiết được cấu hình."
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Xem công việc"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "Xem công việc ở dạng Kanban hoặc Bảng"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Thêm mới công việc"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Tạo cột mốc cha, cột mốc và công việc",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Thêm tệp đính kèm, công việc con và bình luận cho công việc",
+              "assignMembersToTasks": "Giao thành viên vào công việc",
+              "createOrAssignLabelsToTasks": "Tạo hoặc gán nhãn cho công việc"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Xóa công việc"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Xóa cột mốc cha, cột mốc và công việc",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Xóa tệp đính kèm, công việc con và bình luận trên công việc",
+              "unassignMembersFromTasks": "Gỡ thành viên khỏi công việc",
+              "unassignLabelsFromTasks": "Gỡ nhãn khỏi công việc",
+              "deleteLabelsFromProject": "Xóa nhãn khỏi dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Cập nhật công việc"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Cập nhật tên, mô tả, độ ưu tiên, điểm công việc, ảnh nền và hạn chót của công việc",
+              "watchOrUnwatchTask": "Theo dõi hoặc bỏ theo dõi công việc",
+              "updateMilestoneName": "Cập nhật tên cột mốc",
+              "moveMilestone": "Di chuyển cột mốc",
+              "moveTaskBetweenMilestones": "Di chuyển công việc giữa các cột mốc",
+              "toggleTaskStatus": "Bật hoặc tắt trạng thái công việc"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Xem hiệu suất công việc"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "Xem các chỉ số hiệu suất công việc"
+            }
+          }
+        },
+        "calendar": {
+          "canRead": {
+            "permission": {
+              "readCalendar": "Xem lịch"
+            },
+            "extensions": {
+              "viewProjectCalendar": "Xem lịch dự án",
+              "viewMeetingDetails": "Xem chi tiết buổi hẹn"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeCalendar": "Thêm mới lịch"
+            },
+            "extensions": {
+              "purchaseMeetingPackage": "Mua gói lịch hẹn",
+              "bookMeeting": "Đặt lịch hẹn"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateCalendar": "Cập nhật lịch"
+            },
+            "extensions": {
+              "rescheduleMeeting": "Đổi lịch hẹn"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteCalendar": "Xóa lịch"
+            },
+            "extensions": {
+              "cancelMeeting": "Hủy lịch hẹn"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Xem kho lưu trữ dự án"
+            },
+            "extensions": {
+              "viewProjectStorage": "Xem kho lưu trữ dự án",
+              "downloadFiles": "Tải xuống tệp"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Thêm mới kho lưu trữ dự án"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Tải tệp lên kho lưu trữ dự án"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Xóa kho lưu trữ dự án"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Xóa tệp khỏi kho lưu trữ dự án"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Xem doanh thu dự án"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "Xem các chỉ số doanh thu"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Thêm mới doanh thu dự án"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Thêm khoản thu hoặc khoản chi",
+              "addRevenueLabels": "Thêm nhãn doanh thu"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Cập nhật doanh thu dự án"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Cập nhật khoản thu hoặc khoản chi",
+              "assignRevenueLabels": "Gán nhãn doanh thu"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Xóa doanh thu dự án"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Xóa khoản thu hoặc khoản chi",
+              "unassignRevenueLabels": "Gỡ nhãn doanh thu",
+              "deleteRevenueLabelsFromProject": "Xóa nhãn doanh thu khỏi dự án"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Xem cài đặt dự án"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "Xem thông tin dự án, thành viên và vai trò"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Thêm mới cài đặt dự án"
+            },
+            "extensions": {
+              "inviteMembers": "Mời thành viên",
+              "createProjectRoles": "Tạo vai trò dự án"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Cập nhật cài đặt dự án"
+            },
+            "extensions": {
+              "updateProjectRoles": "Cập nhật vai trò dự án",
+              "assignOrUnassignMemberRoles": "Gán hoặc gỡ vai trò thành viên"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Xóa cài đặt dự án"
+            },
+            "extensions": {
+              "removeMembers": "Xóa thành viên",
+              "deleteProjectRoles": "Xóa vai trò dự án"
+            }
+          }
+        }
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Xóa vai trò",
+        "description": "Bạn có chắc chắn muốn xóa vai trò này không?"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "deleteTitle": "Xóa vai trò này",
+        "deleteDescription": "Sau khi xóa vai trò, bạn không thể hoàn tác. Vui lòng chắc chắn trước khi tiếp tục."
+      }
+    },
+    "deleteProject": {
+      "confirmation": {
+        "title": "Xóa dự án",
+        "description": "Bạn có chắc chắn muốn xóa \"{{projectName}}\" không?",
+        "confirmText": "Xóa"
+      },
+      "dangerZone": {
+        "title": "Khu vực nguy hiểm",
+        "description": "Hành động này sẽ xóa vĩnh viễn dự án và toàn bộ dữ liệu liên quan.",
+        "deleteButton": "Xóa dự án"
+      }
+    }
+  },
+  "projectRevenue": {
+    "stats": {
+      "totalRevenue": "Tổng thu",
+      "totalExpense": "Tổng chi",
+      "netRevenue": "Chênh lệch"
+    },
+    "column": {
+      "selectAll": "Chọn tất cả",
+      "selectRow": "Chọn dòng",
+      "name": "Tên",
+      "namePlaceholder": "Nhập tên để tìm kiếm...",
+      "amount": "Số tiền",
+      "type": "Loại",
+      "labels": "Nhãn",
+      "balanceAfter": "Số dư",
+      "createdDate": "Ngày tạo",
+      "createdBy": "Người tạo",
+      "none": "Không có",
+      "noLabels": "Không có nhãn"
+    },
+    "actions": {
+      "openMenu": "Mở menu",
+      "actions": "Thao tác",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa"
     }
   },
   "expertNetwork": {
@@ -409,7 +1283,117 @@
     "reset": "Đặt lại",
     "viewProfile": "Xem hồ sơ",
     "noBio": "Chưa có giới thiệu",
-    "noMentorsFound": "Không tìm thấy cố vấn"
+    "noMentorsFound": "Không tìm thấy cố vấn",
+    "hero": {
+      "controls": {
+        "previousSlide": "Slide trước",
+        "nextSlide": "Slide tiếp theo",
+        "goToSlide": "Đi đến slide {{index}}"
+      },
+      "metrics": {
+        "liveMetric": "Chỉ số trực tiếp",
+        "activeFlow": "Luồng hoạt động",
+        "mentorSpotlight": "Mentor nổi bật",
+        "updatedToday": "Cập nhật hôm nay"
+      },
+      "visual": {
+        "avatarAlt": "Mentor",
+        "avatarFallback": "MT"
+      },
+      "slides": {
+        "connection": {
+          "eyebrow": "Sứ mệnh của TaskCoper",
+          "titleSegments": {
+            "connect": "Kết nối ",
+            "mentor": "Mentor",
+            "with": " với ",
+            "mentee": "Mentee",
+            "growth": " để phát triển nhanh hơn"
+          },
+          "body": "Mỗi buổi mentoring là một bước rút ngắn khoảng cách từ ý tưởng đến hành động thực tế.",
+          "cta": "Tìm chuyên gia phù hợp",
+          "stats": {
+            "verifiedExperts": {
+              "value": "500+",
+              "label": "Chuyên gia kiểm định"
+            },
+            "completedSessions": {
+              "value": "12k+",
+              "label": "Buổi hoàn thành"
+            },
+            "averageRating": {
+              "value": "4.9★",
+              "label": "Đánh giá trung bình"
+            }
+          }
+        },
+        "mentee": {
+          "eyebrow": "Vì người học",
+          "titleSegments": {
+            "learnFrom": "Học từ những ",
+            "experienced": "người đã đi qua",
+            "rightPath": " đúng con đường bạn đang đi"
+          },
+          "body": "Nhận phản hồi thực chiến theo ngữ cảnh của bạn, thay vì phải tự thử sai trong thời gian dài.",
+          "cta": "Khám phá lĩnh vực",
+          "stats": {
+            "specialties": {
+              "value": "40+",
+              "label": "Lĩnh vực chuyên môn"
+            },
+            "bookingResponse": {
+              "value": "< 24h",
+              "label": "Phản hồi đặt lịch"
+            },
+            "returningMentees": {
+              "value": "92%",
+              "label": "Mentee quay lại"
+            }
+          }
+        },
+        "mentor": {
+          "eyebrow": "Vì chuyên gia",
+          "titleSegments": {
+            "shareExperience": "Chia sẻ kinh nghiệm. ",
+            "createImpact": "Tạo tác động.",
+            "getRecognized": " Được ghi nhận."
+          },
+          "body": "Tạo gói mentoring riêng, quản lý lịch hẹn, và phát triển cộng đồng mentee ngay trên một nền tảng.",
+          "cta": "Trở thành chuyên gia",
+          "stats": {
+            "packageSetup": {
+              "value": "6 phút",
+              "label": "Tạo gói lịch hẹn"
+            },
+            "hiddenFees": {
+              "value": "0%",
+              "label": "Phí ẩn"
+            },
+            "integrations": {
+              "value": "Tích hợp",
+              "label": "Calendar & Meet"
+            }
+          }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Kết nối chủ động",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Học nhanh có lộ trình",
+          "spotlight": "12W",
+          "subtitle": "Kế hoạch từng tuần"
+        },
+        "mentor": {
+          "badge": "Tăng trưởng bền vững",
+          "spotlight": "4.9★",
+          "subtitle": "Được mentee đánh giá cao"
+        }
+      }
+    }
   },
   "task": {
     "addTask": {
@@ -424,6 +1408,9 @@
     },
     "moveTask": {
       "title": "Di chuyển thẻ",
+      "tabLabel": "Tab",
+      "milestoneLabel": "Milestone",
+      "positionLabel": "Vị trí",
       "selectMilestone": "Chọn danh sách",
       "selectPosition": "Chọn vị trí",
       "move": "Di chuyển"
@@ -738,6 +1725,7 @@
   },
   "account": {
     "account": "Tài khoản",
+    "settings": "Cài đặt",
     "language": "Ngôn ngữ",
     "logout": "Đăng xuất"
   },
@@ -769,6 +1757,9 @@
           "label": "Phường/Xã",
           "placeholder": "Chọn phường/xã",
           "searchPlaceholder": "Tìm phường/xã..."
+        },
+        "domain": {
+          "label": "Lĩnh vực"
         }
       },
       "validation": {
@@ -793,16 +1784,65 @@
       }
     },
     "profileDialog": {
-      "profileAndDisplay": "Hồ sơ và hiển thị",
-      "password": "Mật khẩu"
+      "settings": "Cài đặt tài khoản",
+      "profileAndDisplay": "Hồ sơ & hiển thị",
+      "password": "Mật khẩu",
+      "location": "Vị trí",
+      "connectedApps": "Ứng dụng đã kết nối",
+      "googleCalendar": "Google Calendar",
+      "connectWithCalendar": "Kết nối với Lịch",
+      "googleCallback": {
+        "loading": {
+          "title": "Đang kết nối Google Calendar",
+          "description": "Vui lòng đợi trong khi chúng tôi xác minh tài khoản của bạn..."
+        },
+        "success": {
+          "title": "Kết nối thành công!",
+          "description": "Google Calendar của bạn đã được liên kết. Đang chuyển hướng quay lại..."
+        },
+        "error": {
+          "title": "Kết nối thất bại",
+          "description": "Có lỗi xảy ra trong quá trình kết nối Google Calendar. Vui lòng thử lại."
+        },
+        "verifyingOauthToken": "Đang xác minh token OAuth của Google",
+        "connectedBadge": "Đã kết nối",
+        "goBack": "Quay lại"
+      }
     },
     "tabs": {
       "all": "Tất cả",
-      "info": "Giới thiệu",
-      "projects": "Dự án",
-      "files": "Ảnh & Video"
+      "schedule": "Lịch làm việc",
+      "packages": "Gói lịch hẹn"
     },
-    "logoImageAlt": "{{name}} Logo"
+    "logoImageAlt": "{{name}} Logo",
+    "profile": {
+      "addCoverImage": "Thêm ảnh bìa",
+      "chooseCoverImage": "Chọn ảnh bìa",
+      "deleteCoverImage": "Xóa ảnh bìa",
+      "chooseAvatar": "Chọn ảnh đại diện",
+      "deleteAvatar": "Xóa ảnh đại diện",
+      "verifiedByTaskCoper": "Kiểm định bởi TaskCoper",
+      "noEmail": "Chưa có email",
+      "noPhoneNumber": "Chưa có số điện thoại"
+    },
+    "settings": {
+      "searchSettings": "Tìm kiếm cài đặt",
+      "accountCenterTitle": "Trung tâm tài khoản",
+      "accountCenterDesc": "Quản lý phần cài đặt tài khoản của bạn",
+      "otherSettingsTitle": "Cài đặt khác",
+      "otherSettingsDesc": "Quản lý các cài đặt khác liên quan đến tài khoản của bạn"
+    },
+    "location": {
+      "description": "Chọn múi giờ được sử dụng cho lịch và các cuộc họp của bạn.",
+      "field": {
+        "timeZone": {
+          "label": "Múi giờ",
+          "placeholder": "Chọn múi giờ",
+          "searchPlaceholder": "Tìm múi giờ...",
+          "emptyMessage": "Không tìm thấy múi giờ."
+        }
+      }
+    }
   },
   "auth": {
     "signIn": {
@@ -825,6 +1865,9 @@
       "validation": {
         "email": {
           "invalid": "Email không hợp lệ"
+        },
+        "code": {
+          "minLength": "Mã xác nhận phải có 6 ký tự"
         },
         "password": {
           "minLength": "Mật khẩu phải có ít nhất 8 ký tự"
@@ -982,6 +2025,98 @@
       }
     }
   },
+  "mentorApplication": {
+    "widget": {
+      "title": "Trở thành Mentor",
+      "description": "Chia sẻ chuyên môn và dẫn dắt người khác đến thành công.",
+      "applyNow": "Ứng tuyển ngay",
+      "dismiss": "Đóng"
+    },
+    "page": {
+      "title": "Nộp đơn ứng tuyển Mentor",
+      "description": "Hỗ trợ thế hệ sáng lập tiếp theo bằng cách chia sẻ chuyên môn chiến lược của bạn. Giúp các đội ngũ giai đoạn đầu điều hướng hành trình từ product-market fit đến mở rộng quy mô, đồng thời cung cấp những góc nhìn quan trọng biến ý tưởng táo bạo thành công ty thành công."
+    },
+    "form": {
+      "shortBio": "Tiểu sử ngắn",
+      "shortBioPlaceholder": "Giới thiệu ngắn gọn về bản thân (1–2 câu). Nêu bật chuyên môn chính, kinh nghiệm hoặc những gì bạn có thể giúp mentee đạt được.",
+      "detailedIntroduction": "Giới thiệu chi tiết",
+      "detailedIntroductionPlaceholder": "Kể thêm về bản thân cho mentee. Bạn có thể bao gồm:\n•   Nền tảng và kinh nghiệm chuyên môn\n•   Lĩnh vực chuyên môn bạn có thể mentor\n•   Phong cách mentoring và điều mentee có thể mong đợi\n•   Dự án, thành tựu hoặc công ty đáng chú ý bạn đã làm việc",
+      "portfolioFiles": "Tệp Portfolio",
+      "dropzoneEmpty": "Kéo thả tệp vào đây hoặc nhấp để chọn",
+      "dropzoneActive": "Thả tệp của bạn vào đây",
+      "dropzoneHint": "Hỗ trợ PDF và DOCX — tối đa 10 tệp",
+      "dropzoneAddMore": "Thả hoặc nhấp để thêm tệp",
+      "dropzoneAddMoreActive": "Thả để thêm tệp",
+      "statusUploading": "Đang tải lên…",
+      "statusUploaded": "Đã tải lên",
+      "statusFailed": "Thất bại",
+      "removeFile": "Xóa {{name}}"
+    },
+    "submit": {
+      "button": "Nộp đơn",
+      "buttonUploading": "Đang tải lên…",
+      "uploadingParallel": "Đang tải lên {{total}} tệp song song…",
+      "allUploadsFailed": "Tất cả tải lên thất bại",
+      "allUploadsFailedDescription": "Vui lòng xóa các tệp thất bại và thử lại.",
+      "partialUpload": "{{count}} / {{total}} tệp đã tải lên",
+      "partialUploadFailed": "Thất bại: {{names}}"
+    },
+    "validation": {
+      "shortBioRequired": "Tiểu sử ngắn là bắt buộc",
+      "shortBioMax": "Tiểu sử ngắn tối đa 255 ký tự",
+      "descriptionRequired": "Mô tả là bắt buộc",
+      "descriptionMax": "Mô tả tối đa 10.000 ký tự",
+      "portfolioFilesMin": "Cần ít nhất một tệp portfolio",
+      "portfolioFilesMax": "Bạn chỉ có thể tải lên tối đa 10 tệp",
+      "adminNoteRequiredForRejection": "Vui lòng nhập ghi chú khi từ chối đơn ứng tuyển",
+      "titleLevelRequiredForApproval": "Vui lòng chọn cấp bậc khi duyêt đơn ứng tuyển"
+    },
+    "status": {
+      "approved": "Đã duyệt",
+      "rejected": "Đã từ chối",
+      "pending": "Mới",
+      "pendingReview": "Chờ duyệt",
+      "pendingLock": "Chấp nhận để xem chi tiết",
+      "inReview": "Đang xem xét",
+      "inOffers": "Đang phỏng vấn"
+    },
+    "button": {
+      "approve": "Duyệt",
+      "markInReview": "Xem",
+      "moveToOffers": "Phỏng vấn",
+      "reject": "Từ chối"
+    },
+    "list": {
+      "title": "Đơn ứng tuyển Mentor",
+      "adminDescription": "Xem xét các đơn đăng ký mentor đã nộp của hệ thống.",
+      "description": "Xem các đơn ứng tuyển mentor đã gửi và theo dõi trạng thái xét duyệt.",
+      "allStatuses": "Tất cả",
+      "sortLatest": "Mới nhất",
+      "sortOldest": "Cũ nhất",
+      "newApplication": "Gửi đơn mới",
+      "fileCount_one": "{{count}} tệp",
+      "fileCount_other": "{{count}} tệp",
+      "noApplications": "Không tìm thấy đơn ứng tuyển nào.",
+      "selectApplicationToView": "Chọn một đơn ứng tuyển để xem chi tiết"
+    },
+    "sidebar": {
+      "title": "Đơn ứng tuyển",
+      "list": "Danh sách đơn ứng tuyển"
+    },
+    "dialog": {
+      "title": "Chi tiết đơn ứng tuyển",
+      "submitted": "Đã gửi {{date}}",
+      "reviewed": "Đã xét duyệt {{date}}",
+      "shortBio": "Tiểu sử ngắn",
+      "portfolioFiles": "Tệp Portfolio ({{count}})",
+      "detailedIntroduction": "Giới thiệu chi tiết",
+      "reviewerNote": "Ghi chú của người xét duyệt",
+      "reviewerNoteTitle": "Ghi chú của người xét duyệt",
+      "reviewerNotePlaceholder": "Nhập lý do nếu từ chối...",
+      "titleLevel": "Cấp Bậc Cố Vấn",
+      "titleLevelPlaceholder": "Chọn cấp bậc..."
+    }
+  },
   "notification": {
     "popover": {
       "title": "Thông báo",
@@ -993,6 +2128,30 @@
       "chat": "Tin nhắn",
       "project": "Dự án",
       "system": "Hệ thống"
+    }
+  },
+  "news": {
+    "eyebrow": "Chuyên trang · Khởi nghiệp",
+    "heroTitle": "Bài đọc dành cho founder Việt",
+    "heroSubtitle": "Tuyển chọn từ VnExpress, CafeBiz và TheLEADER — đọc trong năm phút, dùng được cả năm.",
+    "liveUpdated": "Cập nhật hàng tuần",
+    "topStory": "Nổi bật",
+    "trendingNow": "Cùng đọc",
+    "latest": "Bài mới",
+    "seeAll": "Xem kho lưu trữ",
+    "readMore": "Đọc bài",
+    "minRead": "{{count}} phút",
+    "previousFeatured": "Bài nổi bật trước",
+    "nextFeatured": "Bài nổi bật tiếp theo",
+    "allCategories": "Tất cả",
+    "empty": "Chưa có bài viết nào ở chuyên mục này.",
+    "newsletter": {
+      "eyebrow": "Bản tin tuần",
+      "title": "Một email vào sáng Chủ nhật.",
+      "description": "Bài đọc ngắn gọn cho founder và operator đang xây dựng ở Việt Nam.",
+      "placeholder": "email@cua.ban",
+      "cta": "Đăng ký",
+      "privacy": "Không spam. Hủy đăng ký bất cứ lúc nào."
     }
   },
   "home": {
@@ -1316,6 +2475,172 @@
       "file": "Tệp"
     }
   },
+  "mentorPackageRule": {
+    "add": {
+      "title": "Thêm quy tắc gói",
+      "description": "Thêm một quy tắc mới cho gói hướng dẫn này."
+    },
+    "form": {
+      "no": "Số thứ tự",
+      "noPlaceholder": "Nhập số thứ tự",
+      "totalTimeSlots": "Tổng số slot thời gian",
+      "totalTimeSlotsPlaceholder": "Nhập tổng số slot thời gian"
+    },
+    "item": {
+      "session": "Buổi",
+      "hours": "giờ",
+      "sessionTakesHours": "Buổi này kéo dài {{hours}} giờ.",
+      "edit": "Chỉnh sửa",
+      "create": "Tạo quy tắc mới"
+    },
+    "delete": {
+      "title": "Xóa quy tắc?",
+      "description": "Bạn có chắc chắn muốn xóa buổi thứ {{no}} không?"
+    },
+    "validation": {
+      "noRequired": "Yêu cầu nhập số thứ tự",
+      "noPositive": "Số thứ tự phải > 0",
+      "totalTimeSlotsRequired": "Yêu cầu nhập tổng số slot",
+      "totalTimeSlotsPositive": "Tổng số slot phải > 0"
+    }
+  },
+  "mentorPackage": {
+    "create": {
+      "title": "Gói hướng dẫn mới",
+      "description": "Tạo một gói hướng dẫn mới để cung cấp dịch vụ của bạn."
+    },
+    "page": {
+      "title": "Gói hẹn",
+      "description": "Tạo và quản lý các gói buổi gặp với mức giá linh hoạt cho mentee.",
+      "bookingsTitle": "Lượt mua",
+      "emptyTitle": "Chưa có gói nào",
+      "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee.",
+      "infoTitle": "Thông tin",
+      "infoDescription": "Nhập thông tin cơ bản của gói, bao gồm tên, mô tả, số buổi và giá để người dùng dễ hiểu và lựa chọn.",
+      "durationTitle": "Quy tắc thời lượng từng buổi",
+      "durationDescription": "Mỗi slot tương ứng 1 giờ. Mở từng buổi bên dưới để xem tổng thời lượng.",
+      "feedbackTitle": "Đánh giá",
+      "feedbackDescription": "{{totalCount}} đánh giá cho gói này",
+      "manage": "Quản lý gói"
+    },
+    "form": {
+      "name": "Tên gói",
+      "namePlaceholder": "Nhập tên gói",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả gói hướng dẫn",
+      "durationInMinutes": "Thời lượng (phút)",
+      "durationPlaceholder": "VD: 60",
+      "totalSessions": "Tổng số buổi",
+      "totalSessionsPlaceholder": "VD: 10",
+      "price": "Giá",
+      "pricePlaceholder": "Nhập giá",
+      "currency": "Tiền tệ",
+      "currencyPlaceholder": "Chọn tiền tệ",
+      "coverImage": "Ảnh bìa",
+      "coverImageHint": "Nhấn vào vùng ảnh để chọn ảnh bìa, sau đó bấm Lưu để tải lên.",
+      "isActive": "Kích hoạt",
+      "isActiveDescription": "Nếu tắt, gói này sẽ không hiển thị/không thể được chọn.",
+      "isPin": "Ghim gói",
+      "isPinDescription": "Ghim gói này lên đầu danh sách để mentee dễ thấy hơn.",
+      "activationDeadlineDays": "Hạn đặt lịch đầu tiên (ngày)",
+      "activationDeadlineDaysPlaceholder": "VD: 10",
+      "activationDeadlineDaysDescription": "Người dùng cần sử dụng gói trong số ngày này kể từ ngày mua.",
+      "usageDeadlineDays": "Thời hạn sử dụng (ngày)",
+      "usageDeadlineDaysPlaceholder": "VD: 30",
+      "usageDeadlineDaysDescription": "Sau buổi đầu tiên, người dùng phải hoàn thành tất cả các buổi trong số ngày này."
+    },
+    "list": {
+      "newPackage": "Gói mới",
+      "isPinned": "Đã ghim",
+      "notPinned": "Chưa ghim"
+    },
+    "card": {
+      "sessionsCount_one": "{{count}} buổi",
+      "sessionsCount_other": "{{count}} buổi",
+      "viewPackage": "Xem gói",
+      "bookFor": "Đặt lịch {{price}}",
+      "sessions": "{{sessions}} buổi",
+      "sortOrder": "Thứ tự sắp xếp"
+    },
+    "sidebar": {
+      "meetingSessionPackages": "Gói buổi gặp",
+      "menu": "Menu",
+      "overview": "Tổng quan",
+      "packageList": "Danh sách gói"
+    },
+    "delete": {
+      "title": "Xóa gói?",
+      "description": "Bạn có chắc chắn muốn xóa \"{{packageName}}\" không?"
+    },
+    "validation": {
+      "nameRequired": "Yêu cầu nhập tên",
+      "descriptionMax": "Tối đa 255 ký tự",
+      "sessionsPositive": "Phải > 0",
+      "pricePositive": "Phải > 0"
+    },
+    "dialog": {
+      "title": "Thông tin gói",
+      "description": "Cập nhật thông tin gói"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Thông tin lượt mua",
+      "bookedBy": "Người mua",
+      "feedbackSubmitted": "Đã gửi đánh giá",
+      "activationDeadline": "Hạn kích hoạt",
+      "activatedOn": "Ngày kích hoạt",
+      "usageDeadline": "Hạn sử dụng",
+      "deadlinesTitle": "Thời hạn",
+      "deadlinesDescription": "Theo dõi các mốc thời gian để kích hoạt và sử dụng gói đúng hạn."
+    },
+    "bookPage": {
+      "notAvailable": "Không có",
+      "updatedOn": "Cập nhật gần nhất {{date}}",
+      "ratingsCount_one": "{{count}} đánh giá",
+      "ratingsCount_other": "{{count}} đánh giá",
+      "buyers": "người mua",
+      "discountPercent": "Giảm {{percent}}%",
+      "activationDays": "Ngày kích hoạt",
+      "usageDays": "Ngày sử dụng",
+      "courseRating": "{{rating}} xếp hạng khóa học"
+    }
+  },
+  "mentorPackageStatistics": {
+    "title": "Thống kê",
+    "description": "Xem doanh thu và lượt đặt gói theo năm.",
+    "totalBookings": "Tổng lượt đặt",
+    "bookingsWithVoucher": "Đặt có voucher",
+    "bookingsWithoutVoucher": "Đặt không voucher",
+    "grossRevenue": "Doanh thu gộp",
+    "netRevenue": "Doanh thu ròng",
+    "mentorPayout": "Thanh toán cho mentor",
+    "revenueOverview": "Tổng quan doanh thu",
+    "revenueOverviewDescription": "Doanh thu theo tháng trong năm {{year}}",
+    "topPackagesByBookings": "Top gói theo lượt mua",
+    "topPackagesByBookingsDescription": "Các gói được mua nhiều nhất trong khoảng thời gian đã chọn",
+    "topPackagesByBookingsTooltip": "Lượt mua",
+    "packageRevenueShare": "Tỷ trọng doanh thu theo gói",
+    "packageRevenueShareDescription": "Phân bổ doanh thu ròng (%) của các gói hàng đầu",
+    "packageRevenueShareTooltip": "Tỷ trọng doanh thu ròng (%)"
+  },
+  "packageBooking": {
+    "bookPackage": {
+      "title": "Đặt lịch",
+      "description": "Xác nhận gói bạn chọn và chọn dự án để đặt lịch.",
+      "receipt": "TASKCOPER • BIÊN LAI",
+      "sessions": "Số buổi",
+      "durationPerSession": "Thời lượng / buổi",
+      "min": "phút",
+      "total": "TỔNG",
+      "proceed": "Quất liền!",
+      "voucherCode": "Mã giảm giá",
+      "voucherCodePlaceholder": "Nhập mã giảm giá của bạn...",
+      "discount": "Giảm giá",
+      "voucherNotFound": "Không tìm thấy mã giảm giá",
+      "voucherNotStarted": "Mã giảm giá chưa được bắt đầu",
+      "voucherExpired": "Mã giảm giá đã hết hạn",
+      "voucherLowUsage": "Số lượt sử dụng mã giảm giá sắp hết! Nhanh tay lên!"
+    }
+  },
   "pageTitle": {
     "network": "Kết nối chuyên gia",
     "projects": "Dự án",
@@ -1343,7 +2668,8 @@
       "paidDate": "Ngày thanh toán",
       "actions": "Hành động",
       "copyId": "Sao chép ID",
-      "viewDetails": "Xem chi tiết"
+      "viewDetails": "Xem chi tiết",
+      "dateFormat": "HH:mm dd/MM/yyyy"
     },
     "status": {
       "pending": "Đang chờ",
@@ -1393,61 +2719,204 @@
     "bronze": "Đồng",
     "silver": "Bạc",
     "gold": "Vàng",
-    "platinum": "Bạch kim",
-    "diamond": "Kim cương",
-    "master": "Cao thủ",
-    "grandMaster": "Đại cao thủ",
-    "legendary": "Huyền thoại",
-    "mythic": "Thần thoại"
+    "platinum": "Bạch kim"
   },
-  "legal": {
-    "terms": {
-      "title": "Điều khoản Dịch vụ",
-      "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
-      "intro": "Chào mừng bạn đến với TaskCoper. Bằng việc sử dụng nền tảng của chúng tôi, bạn đồng ý tuân thủ các điều khoản sau.",
-      "sections": {
-        "accounts": {
-          "title": "1. Tài khoản Người dùng",
-          "content": "Bạn có trách nhiệm bảo mật tài khoản và mọi hoạt động diễn ra dưới tài khoản của mình. Việc cung cấp thông tin chính xác là bắt buộc."
-        },
-        "management": {
-          "title": "2. Quản lý Dự án & Công việc",
-          "content": "TaskCoper cung cấp công cụ để quản lý dự án, thẻ công việc (task), và cộng tác nhóm. Người dùng chịu trách nhiệm về nội dung và dữ liệu họ tải lên."
-        },
-        "mentoring": {
-          "title": "3. Dịch vụ Hướng dẫn (Mentoring)",
-          "content": "Nền tảng kết nối Chuyên gia (Mentor) và Người dùng (Mentee). Mọi thỏa thuận về buổi gặp và lộ trình hướng dẫn phải tuân thủ quy tắc ứng xử chuyên nghiệp của chúng tôi."
-        },
-        "payments": {
-          "title": "4. Thanh toán & Hoàn tiền",
-          "content": "Các gói dịch vụ (Mentor Packages) và giao dịch trên nền tảng được xử lý bảo mật. Việc hoàn tiền sẽ được xem xét dựa trên chính sách cụ thể của từng gói."
-        },
-        "ip": {
-          "title": "5. Sở hữu Trí tuệ",
-          "content": "Tất cả các tính năng và thiết kế của TaskCoper đều thuộc sở hữu của chúng tôi. Nội dung dự án của bạn vẫn thuộc về bạn."
+  "purchaseHistory": {
+    "title": "Gói đã mua",
+    "description": "Quản lý các gói đã mua của bạn.",
+    "meetingsCount": "{{booked}}/{{total}} buổi hẹn",
+    "price": "Giá",
+    "duration": "Thời lượng",
+    "viewDetails": "Xem chi tiết",
+    "bookSession": "Đặt lịch",
+    "detail": {
+      "about": "Giới thiệu",
+      "progress": "Tiến độ",
+      "mentor": "Cố vấn",
+      "details": "Chi tiết gói",
+      "meetings": "Các buổi hẹn",
+      "noMeetings": "Chưa có buổi hẹn nào được đặt"
+    },
+    "legal": {
+      "terms": {
+        "title": "Điều khoản Dịch vụ",
+        "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
+        "intro": "Chào mừng bạn đến với TaskCoper. Bằng việc sử dụng nền tảng của chúng tôi, bạn đồng ý tuân thủ các điều khoản sau.",
+        "sections": {
+          "accounts": {
+            "title": "1. Tài khoản Người dùng",
+            "content": "Bạn có trách nhiệm bảo mật tài khoản và mọi hoạt động diễn ra dưới tài khoản của mình. Việc cung cấp thông tin chính xác là bắt buộc."
+          },
+          "management": {
+            "title": "2. Quản lý Dự án & Công việc",
+            "content": "TaskCoper cung cấp công cụ để quản lý dự án, thẻ công việc (task), và cộng tác nhóm. Người dùng chịu trách nhiệm về nội dung và dữ liệu họ tải lên."
+          },
+          "mentoring": {
+            "title": "3. Dịch vụ Hướng dẫn (Mentoring)",
+            "content": "Nền tảng kết nối Chuyên gia (Mentor) và Người dùng (Mentee). Mọi thỏa thuận về buổi gặp và lộ trình hướng dẫn phải tuân thủ quy tắc ứng xử chuyên nghiệp của chúng tôi."
+          },
+          "payments": {
+            "title": "4. Thanh toán & Hoàn tiền",
+            "content": "Các gói dịch vụ (Mentor Packages) và giao dịch trên nền tảng được xử lý bảo mật. Việc hoàn tiền sẽ được xem xét dựa trên chính sách cụ thể của từng gói."
+          },
+          "ip": {
+            "title": "5. Sở hữu Trí tuệ",
+            "content": "Tất cả các tính năng và thiết kế của TaskCoper đều thuộc sở hữu của chúng tôi. Nội dung dự án của bạn vẫn thuộc về bạn."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Chính sách Bảo mật",
+        "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
+        "intro": "Chúng tôi tôn trọng quyền riêng tư của bạn và cam kết bảo vệ dữ liệu cá nhân của bạn.",
+        "sections": {
+          "collection": {
+            "title": "1. Thu thập Thông tin",
+            "content": "Chúng tôi thu thập thông tin hồ sơ (tên, email, ảnh đại diện) và dữ liệu hoạt động (dự án, nhiệm vụ, lịch sử buổi gặp) để cải thiện dịch vụ."
+          },
+          "usage": {
+            "title": "2. Sử dụng Thông tin",
+            "content": "Thông tin của bạn được sử dụng để vận hành nền tảng, hỗ trợ AI cố vấn, và tạo điều kiện kết nối giữa Mentor và Mentee."
+          },
+          "security": {
+            "title": "3. Bảo mật Dữ liệu",
+            "content": "Chúng tôi áp dụng các biện pháp bảo mật tiêu chuẩn để ngăn chặn việc truy cập trái phép hoặc rò rỉ dữ liệu của người dùng."
+          },
+          "rights": {
+            "title": "4. Quyền của Người dùng",
+            "content": "Bạn có quyền truy cập, chỉnh sửa hoặc yêu cầu xóa dữ liệu cá nhân của mình bất kỳ lúc nào thông qua cài đặt tài khoản."
+          }
         }
       }
+    }
+  },
+  "mentor": {
+    "updateProfile": {
+      "shortBio": {
+        "title": "Cập nhật giới thiệu ngắn",
+        "description": "Mô tả ngắn gọn về chuyên môn và kinh nghiệm của bạn.",
+        "label": "Giới thiệu ngắn",
+        "placeholder": "Nhập giới thiệu ngắn của bạn"
+      },
+      "description": {
+        "title": "Cập nhật README",
+        "description": "Cập nhật thông tin chi tiết cho hồ sơ chuyên gia của bạn.",
+        "label": "Mô tả"
+      }
+    }
+  },
+  "commissionPage": {
+    "title": "Cấp Bậc & Phần Thưởng Mentor",
+    "subtitle": "Thăng tiến trên hành trình mentor của bạn. Các cấp bậc cao hơn mở khóa tỷ lệ chia sẻ doanh thu tốt hơn khi thu nhập của bạn tăng lên.",
+    "revenueShare": "chia sẻ doanh thu",
+    "featuresTitle": "Chia Sẻ Doanh Thu:",
+    "upTo": "Lên đến ",
+    "unlimited": "Không giới hạn",
+    "earn": "Nhận ",
+    "ranks": {
+      "Bronze": {
+        "description": "Hoàn hảo để khám phá nền tảng và bắt đầu hành trình mentor của bạn.",
+        "cta": "Trở thành Mentor Đồng"
+      },
+      "Silver": {
+        "description": "Dành cho mentor năng nổ muốn xây dựng và quản lý tệp khách hàng ổn định.",
+        "cta": "Hướng tới Bạc"
+      },
+      "Gold": {
+        "description": "Được thiết kế cho các mentor giàu kinh nghiệm điều hành nhiều chương trình.",
+        "cta": "Vươn tới Vàng"
+      },
+      "Platinum": {
+        "description": "Bảo mật, tuân thủ và quy trình làm việc được tinh chỉnh cho các mentor hàng đầu.",
+        "cta": "Đạt mức Bạch Kim"
+      },
+      "default": {
+        "description": "Mở khóa các lợi ích độc quyền và tỷ lệ chia sẻ doanh thu cao hơn khi bạn thăng cấp.",
+        "cta": "Đạt mức {{rank}}"
+      }
+    }
+  },
+  "packageFeedback": {
+    "title": "Đánh giá",
+    "description": "Chia sẻ trải nghiệm của bạn để giúp mentor cải thiện các buổi gặp sau.",
+    "noteLabel": "Ghi chú thêm",
+    "notePlaceholder": "Chia sẻ thêm bối cảnh hoặc nhận xét...",
+    "submitButton": "Gửi đánh giá",
+    "confirm": {
+      "title": "Gửi đánh giá?",
+      "description": "Vui lòng kiểm tra lại nội dung trước khi gửi. Hành động này không thể hoàn tác."
     },
-    "privacy": {
-      "title": "Chính sách Bảo mật",
-      "lastUpdated": "Cập nhật lần cuối: 26/03/2026",
-      "intro": "Chúng tôi tôn trọng quyền riêng tư của bạn và cam kết bảo vệ dữ liệu cá nhân của bạn.",
-      "sections": {
-        "collection": {
-          "title": "1. Thu thập Thông tin",
-          "content": "Chúng tôi thu thập thông tin hồ sơ (tên, email, ảnh đại diện) và dữ liệu hoạt động (dự án, nhiệm vụ, lịch sử buổi gặp) để cải thiện dịch vụ."
-        },
-        "usage": {
-          "title": "2. Sử dụng Thông tin",
-          "content": "Thông tin của bạn được sử dụng để vận hành nền tảng, hỗ trợ AI cố vấn, và tạo điều kiện kết nối giữa Mentor và Mentee."
-        },
-        "security": {
-          "title": "3. Bảo mật Dữ liệu",
-          "content": "Chúng tôi áp dụng các biện pháp bảo mật tiêu chuẩn để ngăn chặn việc truy cập trái phép hoặc rò rỉ dữ liệu của người dùng."
-        },
-        "rights": {
-          "title": "4. Quyền của Người dùng",
-          "content": "Bạn có quyền truy cập, chỉnh sửa hoặc yêu cầu xóa dữ liệu cá nhân của mình bất kỳ lúc nào thông qua cài đặt tài khoản."
+    "validation": {
+      "ratingRequired": "Vui lòng chọn mức đánh giá.",
+      "noteMax": "Ghi chú tối đa 10.000 ký tự."
+    },
+    "list": {
+      "title": "Các gói cần đánh giá",
+      "description": "Đánh giá các gói bạn đã mua.",
+      "columns": {
+        "index": "STT",
+        "packageName": "Tên gói",
+        "mentor": "Người hướng dẫn",
+        "project": "Dự án",
+        "purchasedAt": "Ngày mua",
+        "author": "Người viết",
+        "authorPlaceholder": "Nhập tên người viết để tìm kiếm...",
+        "rating": "Đánh giá",
+        "action": "Hành động"
+      },
+      "notAvailable": "Không có",
+      "dateFormat": "HH:mm dd/MM/yyyy",
+      "giveFeedback": "Đánh giá"
+    },
+    "questions": {
+      "punctuality": {
+        "title": "Chuyên gia có đúng giờ và quản lý thời gian hiệu quả không?",
+        "label": "Đúng giờ",
+        "options": {
+          "4": "Khởi đầu đúng giờ và kiểm soát thời gian hoàn hảo.",
+          "3": "Khá đúng giờ, có trễ chút nhưng có báo trước.",
+          "2": "Trễ giờ đáng kể hoặc kết thúc quá gấp gáp.",
+          "1": "Trễ rất nhiều, vắng mặt hoặc thiếu tôn trọng thời gian."
+        }
+      },
+      "preparation": {
+        "title": "Chuyên gia có nghiên cứu trước về dự án của bạn không?",
+        "label": "Chuẩn bị",
+        "options": {
+          "4": "Nghiên cứu rất kỹ dự án và nắm bắt bối cảnh ngay lập tức.",
+          "3": "Có xem lướt qua tài liệu và nắm được thông tin cơ bản.",
+          "2": "Chưa xem trước, phải giải thích lại toàn bộ từ đầu.",
+          "1": "Hoàn toàn không chuẩn bị hoặc nhầm lẫn thông tin dự án."
+        }
+      },
+      "quality": {
+        "title": "Lời khuyên của chuyên gia có mang lại giá trị thực tế không?",
+        "label": "Chất lượng",
+        "options": {
+          "4": "Rất sâu sắc, giải quyết đúng trọng tâm vấn đề cốt lõi.",
+          "3": "Khá hữu ích, đưa ra được định hướng tốt cho dự án.",
+          "2": "Góp ý chung chung, thiên về lý thuyết sách vở.",
+          "1": "Không liên quan, kiến thức lạc hậu hoặc sai lệch."
+        }
+      },
+      "communication": {
+        "title": "Chuyên gia có thái độ cởi mở và biết lắng nghe không?",
+        "label": "Giao tiếp",
+        "options": {
+          "4": "Giao tiếp rất rõ ràng, chân thành và tích cực lắng nghe.",
+          "3": "Giao tiếp chuyên nghiệp, lịch sự và dễ trao đổi.",
+          "2": "Nói quá nhiều về bản thân hoặc dùng từ ngữ khó hiểu.",
+          "1": "Thiếu tôn trọng, áp đặt tư duy hoặc rất khó giao tiếp."
+        }
+      },
+      "actionability": {
+        "title": "Bạn có biết mình cần làm gì tiếp theo sau buổi gặp không?",
+        "label": "Tính ứng dụng",
+        "options": {
+          "4": "Đưa ra được lộ trình các bước hành động cực kỳ rõ ràng.",
+          "3": "Có gợi ý được một vài bước đi thực tế tiếp theo để thử nghiệm.",
+          "2": "Lời khuyên khó áp dụng ngay lập tức vào tình hình hiện tại.",
+          "1": "Hoàn toàn không đúc kết được bất kỳ hướng đi hay giải pháp nào."
         }
       }
     }

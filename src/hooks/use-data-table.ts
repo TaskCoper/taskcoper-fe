@@ -4,7 +4,9 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import type { ExtendedColumnSort, QueryKeys } from '@/types/data-table.type'
 import {
   type ColumnFiltersState,
+  type ExpandedState,
   getCoreRowModel,
+  getExpandedRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
@@ -100,6 +102,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(initialState?.rowSelection ?? {})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialState?.columnVisibility ?? {})
+  const [expanded, setExpanded] = React.useState<ExpandedState>(initialState?.expanded ?? {})
 
   const [page, setPage] = useQueryState(
     pageKey,
@@ -322,7 +325,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters
+      columnFilters,
+      expanded
     },
     defaultColumn: {
       ...tableProps.defaultColumn,
@@ -334,10 +338,12 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onSortingChange,
     onColumnFiltersChange,
     onColumnVisibilityChange: setColumnVisibility,
+    onExpandedChange: setExpanded,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),

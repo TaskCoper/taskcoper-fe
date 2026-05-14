@@ -1,27 +1,24 @@
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProvinces } from '@/hooks/use-get-provinces'
 import { useGetWards } from '@/hooks/use-get-wards'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
+import { useParams } from 'react-router'
+import { useGetUser } from '../hooks/use-get-user'
 import { useUpdateMe } from '../hooks/use-update-me'
 import type { UpdateMeFormValues } from '../validations'
 import UpdateMeForm from './update-me-form'
 
 export default function ProfileSection() {
   const { t } = useTranslation()
-  const { me, isGettingMe } = useGetMe()
-  const { methods, updateMe, isUpdatingMe } = useUpdateMe()
-  const { uploadFileAsync, isUploading } = useUploadFile()
 
-  const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null)
-  const [pendingAvatarPreview, setPendingAvatarPreview] = useState<string | null>(null)
+  const { userIdentifier } = useParams<{ userIdentifier: string }>()
+  const { user: me, isGettingUser: isGettingMe } = useGetUser({ userIdentifier })
+
+  const { methods, updateMe, isUpdatingMe } = useUpdateMe()
 
   const {
     reset,
@@ -35,31 +32,6 @@ export default function ProfileSection() {
   const cityCodeForm = watch('cityCode')
   const { wards, isLoadingWards } = useGetWards(cityCodeForm ?? -1)
 
-  const handleAvatarChange = useCallback(
-    (file: File | null) => {
-      if (file) {
-        setPendingAvatarFile(file)
-        setPendingAvatarPreview(URL.createObjectURL(file))
-      } else {
-        if (pendingAvatarPreview) {
-          URL.revokeObjectURL(pendingAvatarPreview)
-        }
-        setPendingAvatarFile(null)
-        setPendingAvatarPreview(null)
-      }
-    },
-    [pendingAvatarPreview]
-  )
-
-  // clean up object url on unmount
-  useEffect(() => {
-    return () => {
-      if (pendingAvatarPreview) {
-        URL.revokeObjectURL(pendingAvatarPreview)
-      }
-    }
-  }, [pendingAvatarPreview])
-
   useEffect(() => {
     if (me) {
       document.title = `${me?.firstName} ${me?.lastName} | TaskCoper`
@@ -67,51 +39,13 @@ export default function ProfileSection() {
   }, [me])
 
   const onSubmit: SubmitHandler<UpdateMeFormValues> = async (body) => {
-    let avatarUrl = body.avatar
-
-    // upload pending avatar if exists
-    if (pendingAvatarFile) {
-      const toastId = toast.loading(t('common.ui.uploading'), {
-        description: t('common.ui.pleaseWait')
-      })
-
-      try {
-        const url = await uploadFileAsync({
-          file: pendingAvatarFile,
-          onProgress: (progress) => {
-            toast.loading(t('common.ui.uploading'), {
-              id: toastId,
-              description: (
-                <div className='w-full min-w-72 space-y-1'>
-                  <Progress value={progress} className='w-full' />
-                  <p className='text-xs text-muted-foreground'>{progress}%</p>
-                </div>
-              )
-            })
-          }
-        })
-
-        if (url) {
-          toast.success(t('common.ui.uploadSuccess'), {
-            id: toastId,
-            description: null
-          })
-          avatarUrl = url
-        }
-      } catch {
-        toast.error(t('error.somethingWentWrong'), { id: toastId })
-        return
-      }
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { cityCode, wardCode, ...rest } = body
     updateMe(
-      { body: { ...rest, avatar: avatarUrl } },
+      { body: { ...rest } },
       {
         onSuccess: () => {
-          reset({ ...body, avatar: avatarUrl }, { keepValues: true })
-          handleAvatarChange(null)
+          reset({ ...body }, { keepValues: true })
         }
       }
     )
@@ -129,10 +63,13 @@ export default function ProfileSection() {
         address: me.address,
         avatar: me.avatar,
         city: me.city,
+        coverImageUrl: me.coverImageUrl,
         cityCode,
         wardCode: -1,
+        domainIds: me.domains.map((domain) => domain.id),
         phoneNumber: me.phoneNumber,
-        state: me.state
+        state: me.state,
+        timeZone: me.timeZone
       })
 
       if (cityCode !== -1) {
@@ -159,20 +96,18 @@ export default function ProfileSection() {
       </div>
     )
 
-  const isFormDirty = isDirty || pendingAvatarFile !== null
-  const isSubmitting = isUpdatingMe || isUploading
+  const isFormDirty = isDirty
+  const isSubmitting = isUpdatingMe
 
   return (
     <div>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className='px-24 pb-6'>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <UpdateMeForm
             provinces={provinces}
             wards={wards}
             isLoadingProvinces={isLoadingProvinces}
             isLoadingWards={isLoadingWards}
-            onAvatarChange={handleAvatarChange}
-            pendingAvatarPreview={pendingAvatarPreview}
           />
 
           <div className='flex items-center justify-end gap-2'>
@@ -181,7 +116,6 @@ export default function ProfileSection() {
               variant='outline'
               onClick={() => {
                 reset()
-                handleAvatarChange(null)
               }}
               disabled={!isFormDirty || isSubmitting}
             >

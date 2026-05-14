@@ -1,8 +1,8 @@
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { queryKeys } from '@/lib/query-keys'
-import { useAuthStore } from '@/lib/zustand/auth.store'
-import notificationService from '@/services/notification.service'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import notificationService from '../services'
 
 export interface GetMyNotificationsParams {
   pageIndex?: number
@@ -14,10 +14,10 @@ export const useGetMyNotifications = ({
   pageSize = DEFAULT_PAGE_SIZE,
   enabled = true
 }: GetMyNotificationsParams = {}) => {
-  const { user } = useAuthStore()
+  const { me: user } = useGetMe()
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
-    queryKey: queryKeys.notifications.list(user?.UserId, pageSize),
+    queryKey: queryKeys.notifications.list(user?.id, pageSize),
     queryFn: ({ pageParam = DEFAULT_PAGE_INDEX }) =>
       notificationService.getMyNotifications({ pageIndex: pageParam, pageSize }),
     getNextPageParam: (lastPage) => {

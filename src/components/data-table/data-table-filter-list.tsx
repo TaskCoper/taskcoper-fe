@@ -553,7 +553,7 @@ function onFilterInputRender<TData>({
               className='w-full rounded font-normal'
             >
               <FacetedBadgeList
-                options={columnMeta?.options}
+                options={columnMeta?.options as { label: string; value: string }[]}
                 className='bg-primary text-white'
                 placeholder={columnMeta?.placeholder ?? `Select option${multiple ? 's' : ''}...`}
               />

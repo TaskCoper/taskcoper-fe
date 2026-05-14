@@ -1,0 +1,23 @@
+import type { ScheduleSlot } from '@/features/schedules/types'
+import { queryKeys } from '@/lib/query-keys'
+import { getDefaultPaginationResponse } from '@/shared/utils'
+import { useQuery } from '@tanstack/react-query'
+import meetingService from '../services'
+
+export interface GetMentorMeetingsParams {
+  mentorId: string
+  activeFrom: string
+  activeTo: string
+  enabled?: boolean
+}
+
+export const useGetMentorMeetings = ({ mentorId, activeFrom, activeTo, enabled = true }: GetMentorMeetingsParams) => {
+  const { data: mentorMeetings = getDefaultPaginationResponse<ScheduleSlot>(), isLoading: isLoadingMentorMeetings } =
+    useQuery({
+      queryKey: queryKeys.meetings.mentor({ mentorId, activeFrom, activeTo }),
+      queryFn: () => meetingService.getMentorMeetings({ mentorId, activeFrom, activeTo }),
+      enabled: enabled && !!mentorId && !!activeFrom && !!activeTo
+    })
+
+  return { mentorMeetings, isLoadingMentorMeetings }
+}

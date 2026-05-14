@@ -1,0 +1,24 @@
+import { queryKeys } from '@/lib/query-keys'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import meetingService from '../services'
+
+export interface GetMyMeetingsParams {
+  activeFrom: string
+  activeTo: string
+  packageBookingIds: string[]
+  mode?: number[]
+  status?: string[]
+  // 0: mentor
+  // 1: mentee
+}
+
+export const useGetMyMeetings = ({ activeFrom, activeTo, packageBookingIds, mode, status }: GetMyMeetingsParams) => {
+  const { data: myMeetings = [], isLoading: isLoadingMyMeetings } = useQuery({
+    queryKey: queryKeys.meetings.my({ activeFrom, activeTo, packageBookingIds, mode, status }),
+    queryFn: () => meetingService.getMyMeetings({ activeFrom, activeTo, packageBookingIds, mode, status }),
+    placeholderData: keepPreviousData,
+    enabled: !!activeFrom && !!activeTo
+  })
+
+  return { myMeetings, isLoadingMyMeetings }
+}

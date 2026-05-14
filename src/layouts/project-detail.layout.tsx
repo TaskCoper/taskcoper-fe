@@ -9,59 +9,73 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList } from '@/components/ui/tabs'
-import AddParentMilestonePopover from '@/features/milestones/components/add-parent-milestone-popover'
-import ParentMilestonesMenu from '@/features/milestones/components/parent-milestones-menu'
-import { SortableMilestoneTab } from '@/features/milestones/components/sortable-milestone-tab'
-import { useGetParentMilestones } from '@/features/milestones/hooks/use-get-parent-milestones'
-import { useParentMilestoneDragDrop } from '@/features/milestones/hooks/use-parent-milestone-drag-drop'
-import UpdateProjectMembersDialog from '@/features/projects/components/dialogs/update-project-members-dialog'
-import { useGetProjectMembers } from '@/features/projects/hooks/use-get-project-members'
-import { useProjectRouting } from '@/features/projects/hooks/use-project-routing'
+import { useGetParentMilestones } from '@/features/projects/core/hooks/use-get-parent-milestones'
+import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
+import AddParentMilestonePopover from '@/features/projects/milestones/components/add-parent-milestone-popover'
+import ParentMilestonesMenu from '@/features/projects/milestones/components/parent-milestones-menu'
+import { SortableMilestoneTab } from '@/features/projects/milestones/components/sortable-milestone-tab'
+import { useParentMilestoneDragDrop } from '@/features/projects/milestones/hooks/use-parent-milestone-drag-drop'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useProjectRouting } from '@/hooks/use-project-routing'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { MenuIcon, PlusIcon } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
+import { Outlet, useMatches, useNavigate, useParams } from 'react-router'
 
 const secondSidebarRoutes = ['milestones']
 
 export default function ProjectDetailLayout() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
 
-  const { user } = useAuthStore()
   const { removeLastActiveMilestone } = useMilestonePreferencesStore()
+
+  const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canDelete = check('TASKS', 'canDelete')
+  const canRead = check('TASKS', 'canRead')
 
   const isMobile = useIsMobile()
   const sensors = useDndSensors()
 
+  const matches = useMatches()
+
   // get the current route for later checks
   const activeSegment = useMemo(() => {
-    const parts = location.pathname.split('/')
-    const projectIndex = parts.findIndex((p: string) => p === 'projects')
-    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
-      return parts[projectIndex + 2]
+    const matchWithSidebar = [...matches]
+      .reverse()
+      .find((match) => match.handle && typeof match.handle === 'object' && 'sidebarItem' in match.handle)
+    if (
+      matchWithSidebar &&
+      matchWithSidebar.handle &&
+      typeof matchWithSidebar.handle === 'object' &&
+      'sidebarItem' in matchWithSidebar.handle
+    ) {
+      return matchWithSidebar.handle.sidebarItem as string
     }
-    return 'milestones'
-  }, [location.pathname])
+    return ''
+  }, [matches])
 
   // only show second sidebar on specific routes
   const hasSecondSidebar = secondSidebarRoutes.includes(activeSegment)
 
-  // only fetch parent milestones when user is at /milestones
-  const shouldFetchMilestones = activeSegment === 'milestones'
+  // only fetch parent milestones when user is at /milestones and has read permission
+  const shouldFetchMilestones =
+    (activeSegment === 'milestones' || activeSegment === '') && !isLoadingPermissions && canRead
   const { parentMilestones, isLoadingParentMilestones } = useGetParentMilestones({
-    projectId,
+    identifier,
     enabled: shouldFetchMilestones
   })
 
   // show member avatars next to the parent milestones tab
-  const { members, isLoadingMembers } = useGetProjectMembers({ projectId, enabled: shouldFetchMilestones })
+  // const { members, isLoadingMembers } = useGetProjectMembers({ identifier, enabled: shouldFetchMilestones })
+
+  const { project, isLoadingProject } = useGetProject({ identifier })
+
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -81,13 +95,14 @@ export default function ProjectDetailLayout() {
   const itemsId = useMemo(() => items.map((item) => item.id), [items])
 
   // check if the current user is the main/admin of this project
-  const isCurrentUserMain =
-    members?.value.items.find((member) => member.userId === user?.UserId && member.isMain) !== undefined
+  // const isCurrentUserMain =
+  //   project?.members?.find((member) => member.userId === user?.UserId && member.roles.some((role) => role.isSystem)) !==
+  //   undefined
 
-  const queryKey = ['parent-milestones', projectId]
+  const queryKey = ['parent-milestones', identifier]
 
   const { shouldDisplayTabs, activeTabValue, handleTabChange } = useProjectRouting({
-    projectId,
+    identifier,
     items,
     isLoading: isLoadingParentMilestones
   })
@@ -98,6 +113,16 @@ export default function ProjectDetailLayout() {
     queryKey
   })
 
+  // redirect to info page if user don't have read permission
+  useEffect(() => {
+    if (isLoadingPermissions) return
+
+    // if canRead is false, and user at root or milestones, redirect to info
+    if (!canRead && identifier && (activeSegment === '' || activeSegment === 'milestones')) {
+      navigate(`/projects/${identifier}/info`, { replace: true })
+    }
+  }, [isLoadingPermissions, canRead, identifier, activeSegment, navigate])
+
   // auto navigation when user delete parent milestone
   const createDeleteHandler = useCallback(
     (milestoneId: string) => () => {
@@ -106,10 +131,10 @@ export default function ProjectDetailLayout() {
 
       // if this is the last remaining tab, navigate to project info page
       if (items.length === 1) {
-        if (projectId) {
-          removeLastActiveMilestone(projectId)
+        if (identifier) {
+          removeLastActiveMilestone(identifier)
         }
-        navigate(`/projects/${projectId}/info`)
+        navigate(`/projects/${identifier}/info`)
         return
       }
 
@@ -118,10 +143,10 @@ export default function ProjectDetailLayout() {
       const targetMilestone = items[targetIndex]
 
       if (targetMilestone) {
-        handleTabChange(targetMilestone.id)
+        handleTabChange(targetMilestone.slug)
       }
     },
-    [items, handleTabChange, projectId, removeLastActiveMilestone, navigate]
+    [items, handleTabChange, identifier, removeLastActiveMilestone, navigate]
   )
 
   // callback received from ProjectDetailSidebar to notify us about task count
@@ -178,11 +203,11 @@ export default function ProjectDetailLayout() {
 
           {shouldDisplayTabs ? (
             <>
-              {projectId ? (
+              {identifier && canWrite ? (
                 <div className='shrink-0'>
-                  <AddParentMilestonePopover projectId={projectId}>
+                  <AddParentMilestonePopover identifier={identifier}>
                     <Button variant='ghost' size='icon' className='size-7'>
-                      <PlusIcon className='size-4' />
+                      <PlusIcon />
                     </Button>
                   </AddParentMilestonePopover>
                 </div>
@@ -201,7 +226,7 @@ export default function ProjectDetailLayout() {
               {isLoadingParentMilestones ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
-                <div className='flex-1 max-w-4/6 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+                <div className='flex-1 max-w-4/6 overflow-x-auto'>
                   <div className='flex items-center gap-2'>
                     <DndContext
                       collisionDetection={customCollisionDetection}
@@ -219,10 +244,10 @@ export default function ProjectDetailLayout() {
                               <SortableMilestoneTab
                                 key={milestone.id}
                                 milestone={milestone}
-                                isActive={activeTabValue === milestone.id}
+                                isActive={activeTabValue === milestone.slug}
                                 queryKey={queryKey}
                                 onDeleteSuccess={createDeleteHandler(milestone.id)}
-                                canDelete={items.length > 1}
+                                canDelete={items.length > 1 && canDelete}
                               />
                             ))}
                           </TabsList>
@@ -241,20 +266,17 @@ export default function ProjectDetailLayout() {
                 </div>
               )}
 
-              {isLoadingMembers ? (
-                <div className='flex items-center -space-x-2 *:ring-3 *:ring-background ml-auto'>
-                  <Skeleton className='size-8 rounded-full' />
-                  <Skeleton className='size-8 rounded-full' />
-                  <Skeleton className='size-8 rounded-full' />
-                  <Skeleton className='size-8 rounded-full' />
-                </div>
-              ) : projectId ? (
-                <UpdateProjectMembersDialog projectId={projectId} isCurrentUserMain={isCurrentUserMain}>
-                  <div
-                    role='button'
-                    className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 ml-auto cursor-pointer'
-                  >
-                    {members?.value.items.slice(0, 4).map((member, index) => (
+              <div className='ml-auto flex items-center gap-3'>
+                {isLoadingProject ? (
+                  <div className='flex items-center -space-x-2 *:ring-3 *:ring-background'>
+                    <Skeleton className='size-8 rounded-full' />
+                    <Skeleton className='size-8 rounded-full' />
+                    <Skeleton className='size-8 rounded-full' />
+                    <Skeleton className='size-8 rounded-full' />
+                  </div>
+                ) : identifier ? (
+                  <div className='flex items-center *:ring-2 *:ring-primary *:ring-offset-2 cursor-pointer'>
+                    {project?.members?.slice(0, 4).map((member, index) => (
                       <AvatarWithTooltip
                         key={member.userId}
                         avatar={member.avatar}
@@ -266,31 +288,41 @@ export default function ProjectDetailLayout() {
                       />
                     ))}
 
-                    {(members?.value.totalCount ?? 0) > 4 && (
+                    {(project?.members?.length ?? 0) > 4 && (
                       <Avatar className='z-10 text-sm font-medium text-muted-foreground size-6'>
                         <AvatarFallback>
-                          <p className='text-xs font-medium'>+{(members?.value.totalCount ?? 0) - 4}</p>
+                          <p className='text-xs font-medium'>+{(project?.members?.length ?? 0) - 4}</p>
                         </AvatarFallback>
                       </Avatar>
                     )}
                   </div>
-                </UpdateProjectMembersDialog>
-              ) : null}
+                ) : null}
+              </div>
             </>
           ) : null}
         </header>
 
-        <Suspense
-          fallback={
+        <div className='flex-1 overflow-auto'>
+          {isLoadingPermissions ? (
             <div className='flex h-full w-full items-center justify-center'>
               <Spinner className='text-muted-foreground' />
             </div>
-          }
-        >
-          <div className='flex-1 overflow-auto'>
-            <Outlet />
-          </div>
-        </Suspense>
+          ) : !canRead && (activeSegment === '' || activeSegment === 'milestones') ? (
+            <div className='flex h-full w-full items-center justify-center'>
+              <Spinner className='text-muted-foreground' />
+            </div>
+          ) : (
+            <Suspense
+              fallback={
+                <div className='flex h-full w-full items-center justify-center'>
+                  <Spinner className='text-muted-foreground' />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

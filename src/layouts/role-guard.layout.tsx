@@ -1,25 +1,26 @@
-import { useAuthStore } from '@/lib/zustand/auth.store'
-import { getUserType } from '@/shared/utils'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { getRoleHomePath, getUserType } from '@/shared/utils'
 import { Navigate, Outlet } from 'react-router'
 
+export type RoleType = 'user' | 'orgAdmin' | 'superAdmin'
+
 interface RoleGuardLayoutProps {
-  allowedRoles: ('user' | 'orgAdmin' | 'superAdmin')[]
+  allowedRoles: RoleType[]
+  allowedUserRoles?: string[]
 }
 
-export default function RoleGuardLayout({ allowedRoles }: RoleGuardLayoutProps) {
-  const { user } = useAuthStore()
-  const userType = getUserType(user)
+export default function RoleGuardLayout({ allowedRoles, allowedUserRoles }: RoleGuardLayoutProps) {
+  const { me, isGettingMe } = useGetMe()
+  const userType = getUserType(me)
+
+  if (isGettingMe) return null
 
   if (userType && !allowedRoles.includes(userType)) {
-    if (userType === 'superAdmin') {
-      return <Navigate to='/dashboard' replace />
-    }
+    return <Navigate to={getRoleHomePath(userType)} replace />
+  }
 
-    if (userType === 'orgAdmin') {
-      return <Navigate to='/manage' replace />
-    }
-
-    return <Navigate to='/projects' replace />
+  if (userType === 'user' && allowedUserRoles && me?.role && !allowedUserRoles.includes(me.role)) {
+    return <Navigate to={getRoleHomePath('user')} replace />
   }
 
   return <Outlet />

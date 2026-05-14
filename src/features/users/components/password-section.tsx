@@ -30,7 +30,7 @@ export default function PasswordSection() {
   }, [me])
 
   return (
-    <div className='px-24 pb-6'>
+    <div>
       <p className='text-lg font-semibold'>{t('user.password.title')}</p>
       <p className='text-sm text-muted-foreground'>{t('user.password.description')}</p>
 

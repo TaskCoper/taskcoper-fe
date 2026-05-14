@@ -16,7 +16,21 @@ export default function ReactQueryProvider({ children }: { children: React.React
       new QueryClient({
         defaultOptions: {
           queries: {
-            throwOnError: true,
+            throwOnError: (error) => {
+              if (error.response?.status === 401) {
+                if (
+                  // If access token is expired => axios interceptors
+                  // If access token is invalid => layout will handle it
+                  error.response.data.messageCode === 'ExpiredAccessToken' ||
+                  error.response.data.messageCode === 'InvalidAccessToken'
+                ) {
+                  return false
+                }
+              }
+
+              return true
+            },
+            refetchOnWindowFocus: false,
             retry: (failureCount, error) => {
               // Don't retry on 400/401/403/404/500
               if (
@@ -40,7 +54,7 @@ export default function ReactQueryProvider({ children }: { children: React.React
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} position='right' buttonPosition='bottom-right' />
     </QueryClientProvider>
   )
 }

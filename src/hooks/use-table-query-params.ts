@@ -14,6 +14,8 @@ interface UseTableQueryParamsOptions<TData = unknown> {
    * Column definitions to extract column IDs for sorting validation
    */
   columns: ColumnDef<TData>[]
+  page?: number
+  limit?: number
 }
 
 interface UseTableQueryParamsReturn {
@@ -56,8 +58,8 @@ export const useTableQueryParams = <TData = unknown>(
   const [sorting] = useQueryState(getParamName('sort'), getSortingStateParser(columnIds))
 
   // Transform to API-ready values
-  const page = pageFilter ?? DEFAULT_PAGE_INDEX
-  const limit = perPageFilter ?? DEFAULT_PAGE_SIZE
+  const page = pageFilter ?? options.page ?? DEFAULT_PAGE_INDEX
+  const limit = perPageFilter ?? options.limit ?? DEFAULT_PAGE_SIZE
   const sortBy = sorting?.[0]?.id
   const orderBy = (sorting?.[0]?.desc ?? true) ? 'desc' : 'asc'
 

@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetMilestones } from '@/features/milestones/hooks/use-get-milestones'
-import ProjectBoard from '@/features/projects/components/project-board'
-import ProjectTable from '@/features/projects/components/project-table'
-import { useGetProject } from '@/features/projects/hooks/use-get-project'
+import ProjectBoard from '@/features/projects/core/components/project-board'
+import ProjectTable from '@/features/projects/core/components/project-table'
+import { useGetMilestones } from '@/features/projects/core/hooks/use-get-milestones'
+import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { SquareKanbanIcon, TablePropertiesIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
 import { useEffect } from 'react'
@@ -14,14 +14,17 @@ import { Outlet, useParams } from 'react-router'
 export default function ProjectTasksPage() {
   const { t } = useTranslation()
   const [mode, setMode] = useQueryState('mode', parseAsStringEnum(['board', 'table']).withDefault('board'))
-  const { projectId, milestoneId } = useParams<{ projectId: string; milestoneId: string }>()
-  const { milestones, isLoadingMilestones } = useGetMilestones({
-    projectId,
-    parentMilestoneId: milestoneId,
-    enabled: mode === 'board'
-  })
+
+  const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
+
   const { project } = useGetProject({
-    projectId
+    identifier
+  })
+
+  const { milestones, isLoadingMilestones } = useGetMilestones({
+    projectIdentifier: project?.slug,
+    parentMilestoneIdentifier: milestoneIdentifier,
+    enabled: mode === 'board'
   })
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export default function ProjectTasksPage() {
   return (
     <>
       <div className='w-full h-full relative'>
-        {mode === 'board' && milestoneId && projectId ? (
+        {mode === 'board' && milestoneIdentifier && project?.id ? (
           <div className='w-full h-full bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
             {isLoadingMilestones ? (
               <div className='flex items-start gap-3 p-4'>
@@ -47,9 +50,9 @@ export default function ProjectTasksPage() {
           </div>
         ) : null}
 
-        {mode === 'table' && milestoneId && projectId ? (
+        {mode === 'table' && milestoneIdentifier && project?.slug ? (
           <div className='w-full h-full p-4'>
-            <ProjectTable projectId={projectId} parentMilestoneId={milestoneId} />
+            <ProjectTable projectIdentifier={project.slug} parentMilestoneIdentifier={milestoneIdentifier} />
           </div>
         ) : null}
 

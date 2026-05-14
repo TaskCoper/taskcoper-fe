@@ -10,12 +10,14 @@ import {
 } from '@/components/ui/drawer'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Spinner } from '@/components/ui/spinner'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown, SearchIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useInView } from 'react-intersection-observer'
 
 // TForm: whole form values
 // TValue: form item that use useFieldArray
@@ -42,6 +44,9 @@ interface MultiSelectComboboxFieldProps<TForm extends FieldValues, TValue, TData
   // Render the specific look of the item in the list
   renderOption: (item: TData) => React.ReactNode
   onChange?: (value: TValue[]) => void
+  isFetchingNextPage?: boolean
+  hasNextPage?: boolean
+  fetchNextPage?: () => void
 }
 
 export default function AsyncMultiSelectField<TForm extends FieldValues, TValue, TData>({
@@ -60,7 +65,10 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
   isRequired = false,
   placeholder = 'common.ui.selectPlaceholder',
   displayError = true,
-  onChange: customOnChange
+  onChange: customOnChange,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage
 }: MultiSelectComboboxFieldProps<TForm, TValue, TData>) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -118,7 +126,10 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
           setOpen,
           getId,
           getLabel,
-          renderOption
+          renderOption,
+          isFetchingNextPage,
+          hasNextPage,
+          fetchNextPage
         }
 
         return (
@@ -126,7 +137,11 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
             {label && (
               <FieldLabel htmlFor={name} className='gap-0.5'>
                 {t(label)}
-                {isRequired && <span className='text-destructive font-semibold'>*</span>}
+                {isRequired ? (
+                  <span className='text-destructive font-semibold'>*</span>
+                ) : (
+                  <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+                )}
               </FieldLabel>
             )}
 
@@ -153,7 +168,7 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
                 </PopoverTrigger>
                 <PopoverContent
                   sideOffset={8}
-                  className='p-0 max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
+                  className='p-0 overflow-y-auto'
                   style={{ width: 'var(--radix-popover-trigger-width)' }}
                   align='start'
                 >
@@ -216,6 +231,9 @@ interface ComboboxListProps<TData> {
   getId: (item: TData) => string
   getLabel: (item: TData) => string
   renderOption: (item: TData) => React.ReactNode
+  isFetchingNextPage?: boolean
+  hasNextPage?: boolean
+  fetchNextPage?: () => void
 }
 
 function ComboboxList<TData>({
@@ -228,9 +246,19 @@ function ComboboxList<TData>({
   setOpen,
   getId,
   getLabel,
-  renderOption
+  renderOption,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage
 }: ComboboxListProps<TData>) {
   const { t } = useTranslation()
+  const { ref: sentinelRef, inView } = useInView({ threshold: 0.1 })
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage?.()
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const handleSelect = (item: TData) => {
     onSelect(item)
@@ -271,6 +299,18 @@ function ComboboxList<TData>({
               )
             })}
           </CommandGroup>
+        )}
+
+        {hasNextPage && (
+          <div className='py-1 px-2'>
+            <div ref={sentinelRef} className='h-px w-full' />
+            {isFetchingNextPage && (
+              <div className='flex items-center justify-center py-2 gap-1.5 text-xs text-muted-foreground'>
+                <Spinner className='size-3.5' />
+                {t('common.ui.loading')}
+              </div>
+            )}
+          </div>
         )}
       </CommandList>
     </Command>

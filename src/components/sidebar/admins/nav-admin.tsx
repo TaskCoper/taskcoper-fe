@@ -17,15 +17,15 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import ProfileDetailDialog from '@/features/users/components/profile-detail-dialog'
+import type { Me } from '@/features/users/types'
 import { getAvatarFallback } from '@/shared/utils'
-import type { User } from '@/types/user.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { ChevronsUpDown, GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface NavAdminProps {
-  user?: User
+  user?: Me | null
 }
 
 export function NavAdmin({ user }: NavAdminProps) {

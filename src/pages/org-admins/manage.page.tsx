@@ -1,4 +1,4 @@
-import NavUser from '@/components/sidebar/users/nav-user'
+import NavUser from '@/components/nav-user'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 

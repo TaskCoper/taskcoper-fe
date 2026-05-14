@@ -14,20 +14,36 @@ import { ImageUploadButton } from '@/components/tiptap-ui/image-upload-button'
 import { LinkPopover } from '@/components/tiptap-ui/link-popover'
 import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
 import { MarkButton } from '@/components/tiptap-ui/mark-button'
-import { useUploadFile } from '@/hooks/use-upload-file'
-import type { ErrorResponse } from '@/lib/axios'
-import { MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
+import { FieldError } from '@/components/ui/field'
+import type { ProjectMember } from '@/features/projects/core/types'
+import projectMemberService from '@/features/projects/members/services'
+import type { MentionUser } from '@/features/users/types'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
+import { queryKeys } from '@/lib/query-keys'
+import { DEFAULT_PAGE_INDEX, MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
+import { cn } from '@/shared/utils'
+import { computePosition, flip, shift } from '@floating-ui/dom'
+import { useQueryClient } from '@tanstack/react-query'
 import FileHandler from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
+import Mention from '@tiptap/extension-mention'
 import { Placeholder } from '@tiptap/extensions'
-import type { Editor } from '@tiptap/react'
-import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
+import {
+  type Editor,
+  EditorContent,
+  EditorContext,
+  type JSONContent,
+  posToDOMRect,
+  ReactRenderer,
+  useEditor
+} from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
-import type { AxiosError } from 'axios'
 import { MoreHorizontalIcon, PaperclipIcon } from 'lucide-react'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useDebouncedCallback } from 'use-debounce'
+import MentionList, { type MentionListRef } from './mention-list'
 import { ImageUploadNode } from './tiptap-node/image-upload-node'
 import { Button } from './tiptap-ui-primitive/button'
 import { Card, CardBody } from './tiptap-ui-primitive/card'
@@ -39,7 +55,32 @@ interface RichTextEditorProps {
   isInitialFocus?: boolean
   compact?: boolean
   content: string
+  placeholder?: string
   onChange: (html: string) => void
+  onMentionIdsChange?: (mentionIds: string[]) => void
+  invalid?: boolean
+  error?: { message?: string }
+  projectIdentifier?: string
+  mentionedUsers?: MentionUser[]
+  className?: string
+}
+
+// Helper function to extract user IDs from Tiptap's JSON structure.
+// Keep duplicates to preserve repeated mentions in the payload.
+const extractMentionIds = (jsonNode: JSONContent): string[] => {
+  const ids: string[] = []
+
+  const traverse = (node: JSONContent) => {
+    if (node.type === 'mention' && node.attrs?.id) {
+      ids.push(node.attrs.id)
+    }
+    if (node.content && Array.isArray(node.content)) {
+      node.content.forEach(traverse)
+    }
+  }
+
+  traverse(jsonNode)
+  return ids
 }
 
 export default function RichTextEditor({
@@ -47,45 +88,113 @@ export default function RichTextEditor({
   isDisplay = true,
   isInitialFocus = false,
   compact = false,
-  onChange
+  onChange,
+  onMentionIdsChange,
+  placeholder = 'richTextEditor.placeholder',
+  invalid = false,
+  error,
+  projectIdentifier,
+  mentionedUsers = [],
+  className
 }: RichTextEditorProps) {
-  const { t } = useTranslation()
-  const { uploadFileAsync } = useUploadFile()
+  const queryClient = useQueryClient()
+  const { t, i18n } = useTranslation()
+  const { uploadFileWithToast } = useUploadFileWithToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const placeholderText = t(placeholder)
+
+  const finalContent = useMemo(() => {
+    if (!mentionedUsers.length || !content) return content
+
+    let shouldUpdate = false
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(content, 'text/html')
+    const mentions = doc.querySelectorAll('.mention')
+
+    mentions.forEach((mentionNode) => {
+      const userId = mentionNode.getAttribute('data-id')
+      const activeUser = mentionedUsers.find((u) => u.userId === userId)
+
+      if (activeUser) {
+        const newLabel = `${activeUser.firstName} ${activeUser.lastName}`
+        const newText = `@${newLabel}`
+
+        if (mentionNode.getAttribute('data-label') !== newLabel || mentionNode.textContent !== newText) {
+          mentionNode.setAttribute('data-label', newLabel)
+          mentionNode.textContent = newText
+          shouldUpdate = true
+        }
+      }
+    })
+
+    return shouldUpdate ? doc.body.innerHTML : content
+  }, [content, mentionedUsers])
+
+  const debouncedMembers = useDebouncedCallback(async (query: string, resolve: (items: ProjectMember[]) => void) => {
+    try {
+      const parsedQuery = query || undefined
+      const result = await queryClient.fetchQuery({
+        queryKey: queryKeys.projects.members.list({
+          identifier: projectIdentifier,
+          searchTerm: parsedQuery,
+          pageIndex: 1,
+          pageSize: 5
+        }),
+        queryFn: () =>
+          projectMemberService.getProjectMembers({
+            identifier: projectIdentifier,
+            searchTerm: parsedQuery,
+            pageIndex: DEFAULT_PAGE_INDEX,
+            pageSize: 5
+          })
+      })
+      resolve(result.value.items)
+    } catch {
+      resolve([])
+    }
+  }, 300)
+
+  const getMentionItems = useCallback(
+    ({ query }: { query: string }) => {
+      return new Promise<ProjectMember[]>((resolve) => {
+        debouncedMembers(query, resolve)
+      })
+    },
+    [debouncedMembers]
+  )
+
+  const updatePosition = (editor: Editor, element: HTMLElement) => {
+    const virtualElement = {
+      getBoundingClientRect: () => posToDOMRect(editor.view, editor.state.selection.from, editor.state.selection.to)
+    }
+
+    computePosition(virtualElement, element, {
+      placement: 'bottom-start',
+      strategy: 'absolute',
+      middleware: [shift(), flip()]
+    }).then(({ x, y, strategy }) => {
+      element.style.width = 'max-content'
+      element.style.position = strategy
+      element.style.left = `${x}px`
+      element.style.top = `${y}px`
+    })
+  }
 
   const handleUploadAndInsertFile = useCallback(
     async (editor: Editor, file: File, pos?: number) => {
-      const toastId = toast.loading(t('common.ui.uploading'), {
-        description: t('common.ui.pleaseWait')
-      })
-
-      try {
-        const url = await uploadFileAsync({
-          file,
-          onProgress: (progress) => {
-            toast.loading(t('common.ui.uploading'), {
-              id: toastId,
-              description: (
-                <div className='w-full min-w-72 space-y-1'>
-                  <Progress value={progress} className='w-full' />
-                  <p className='text-xs text-muted-foreground'>{progress}%</p>
-                </div>
-              )
-            })
-          }
-        })
-
-        if (url) {
-          toast.success(t('common.ui.uploadSuccess'), {
-            id: toastId,
-            description: null
-          })
-
+      await uploadFileWithToast({
+        file,
+        renderProgress: (progress) => (
+          <div className='w-72 space-y-1'>
+            <Progress value={progress} className='w-full' />
+            <p className='text-xs text-muted-foreground'>{progress}%</p>
+          </div>
+        ),
+        onUploaded: (url) => {
           const insertPos = pos ?? editor.state.selection.anchor
           const isImage = file.type.startsWith('image/')
 
           if (isImage) {
-            // Insert as image
             editor
               .chain()
               .insertContentAt(insertPos, {
@@ -94,40 +203,115 @@ export default function RichTextEditor({
               })
               .focus()
               .run()
-          } else {
-            // Insert as link with filename
-            editor
-              .chain()
-              .insertContentAt(insertPos, {
-                type: 'text',
-                text: file.name,
-                marks: [
-                  {
-                    type: 'link',
-                    attrs: { href: url, target: '_blank' }
-                  }
-                ]
-              })
-              .focus()
-              .run()
+            return
           }
-        } else {
-          toast.dismiss(toastId)
+
+          editor
+            .chain()
+            .insertContentAt(insertPos, {
+              type: 'text',
+              text: file.name,
+              marks: [
+                {
+                  type: 'link',
+                  attrs: { href: url, target: '_blank' }
+                }
+              ]
+            })
+            .focus()
+            .run()
         }
-      } catch (error) {
-        toast.error(t('error.somethingWentWrong'), {
-          id: toastId,
-          description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-        })
-      }
+      })
     },
-    [t, uploadFileAsync]
+    [uploadFileWithToast]
   )
 
-  const editor = useEditor({
-    extensions: [
+  const extensions = useMemo(
+    () => [
       StarterKit,
       Image,
+      Mention.extend({
+        parseHTML() {
+          return [
+            {
+              tag: 'span[data-type="user"]'
+            },
+            {
+              tag: `span[data-type="${this.name}"]`
+            }
+          ]
+        }
+      }).configure({
+        HTMLAttributes: {
+          class: 'mention',
+          'data-type': 'user',
+          contenteditable: 'false'
+        },
+        suggestion: {
+          items: getMentionItems,
+          render: () => {
+            let component: ReactRenderer | null = null
+
+            return {
+              onStart: (props) => {
+                if (component) {
+                  component.element.remove()
+                  component.destroy()
+                }
+
+                component = new ReactRenderer(MentionList, {
+                  props,
+                  editor: props.editor
+                })
+
+                if (!props.clientRect) {
+                  return
+                }
+
+                component.element.style.position = 'absolute'
+                component.element.style.zIndex = '9999'
+                component.element.style.pointerEvents = 'auto'
+
+                document.body.appendChild(component.element)
+
+                updatePosition(props.editor, component.element)
+              },
+
+              onUpdate(props) {
+                if (!component) return
+                // Restore display in case it was hidden by Escape
+                component.element.style.display = ''
+                component.updateProps(props)
+
+                if (!props.clientRect) {
+                  return
+                }
+
+                updatePosition(props.editor, component.element)
+              },
+
+              onKeyDown(props) {
+                if (props.event.key === 'Escape') {
+                  if (component) {
+                    component.element.style.display = 'none'
+                  }
+                  return true
+                }
+
+                return (component?.ref as MentionListRef)?.onKeyDown(props) || false
+              },
+
+              onExit() {
+                if (component) {
+                  component.element.remove()
+                  component.destroy()
+                  component = null
+                }
+              }
+            }
+          }
+        }
+      }),
       FileHandler.configure({
         allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
         onDrop: (currentEditor, files, pos) => {
@@ -150,43 +334,17 @@ export default function RichTextEditor({
         maxSize: MAX_UPLOAD_IMAGE_SIZE,
         limit: 1,
         upload: async (file) => {
-          const toastId = toast.loading(t('common.ui.uploading'), {
-            description: t('common.ui.pleaseWait')
+          const url = await uploadFileWithToast({
+            file,
+            renderProgress: (progress) => (
+              <div className='w-72 space-y-1'>
+                <Progress value={progress} className='w-full' />
+                <p className='text-xs text-muted-foreground'>{progress}%</p>
+              </div>
+            )
           })
 
-          try {
-            const url = await uploadFileAsync({
-              file,
-              onProgress: (progress) => {
-                toast.loading(t('common.ui.uploading'), {
-                  id: toastId,
-                  description: (
-                    <div className='w-full min-w-72 space-y-1'>
-                      <Progress value={progress} className='w-full' />
-                      <p className='text-xs text-muted-foreground'>{progress}%</p>
-                    </div>
-                  )
-                })
-              }
-            })
-
-            if (url) {
-              toast.success(t('common.ui.uploadSuccess'), {
-                id: toastId,
-                description: null
-              })
-              return url
-            }
-
-            toast.dismiss(toastId)
-            return ''
-          } catch (error) {
-            toast.error(t('error.somethingWentWrong'), {
-              id: toastId,
-              description: (error as AxiosError<ErrorResponse>).response?.data?.detail
-            })
-            return ''
-          }
+          return url ?? ''
         },
         onError: (error) => {
           if (error instanceof Error) {
@@ -197,29 +355,44 @@ export default function RichTextEditor({
       Placeholder.configure({
         placeholder: ({ editor }) => {
           if (editor.isEmpty) {
-            return t('richTextEditor.placeholder')
+            return placeholderText
           }
           return ''
         },
         emptyEditorClass: 'is-editor-empty'
       })
     ],
-    editorProps: {
-      attributes: {
-        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto'
-      }
+    [getMentionItems, handleUploadAndInsertFile, placeholderText, uploadFileWithToast]
+  )
+
+  const editor = useEditor(
+    {
+      extensions: extensions,
+      editorProps: {
+        attributes: {
+          class: cn(
+            'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto',
+            className
+          )
+        }
+      },
+      content: finalContent,
+      onUpdate: ({ editor }) => {
+        // Extract the current HTML string
+        const currentHtml = editor.isEmpty || editor.getHTML() === '<p></p>' ? '' : editor.getHTML()
+
+        // Extract unique user IDs from the underlying JSON structure
+        const mentionIds = extractMentionIds(editor.getJSON())
+
+        // Pass both back to the parent component
+        onChange(currentHtml)
+        onMentionIdsChange?.(mentionIds)
+      },
+      // Don't render immediately on the server to avoid SSR issues
+      immediatelyRender: false
     },
-    content,
-    onUpdate: ({ editor }) => {
-      if (editor.isEmpty || editor.getHTML() === '<p></p>') {
-        onChange('')
-      } else {
-        onChange(editor.getHTML())
-      }
-    },
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false
-  })
+    [i18n.language, placeholderText]
+  )
 
   useEffect(() => {
     if (isDisplay && isInitialFocus && editor) {
@@ -230,10 +403,10 @@ export default function RichTextEditor({
   }, [isDisplay, isInitialFocus, editor])
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content)
+    if (editor && finalContent !== editor.getHTML()) {
+      editor.commands.setContent(finalContent)
     }
-  }, [content, editor])
+  }, [finalContent, editor])
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!editor || !e.target.files) return
@@ -249,9 +422,14 @@ export default function RichTextEditor({
 
   if (isDisplay && editor) {
     return (
-      <div className='space-y-2'>
+      <div className='space-y-1'>
         <EditorContext.Provider value={{ editor }}>
-          <div className='rounded-md ring ring-foreground/60 focus-within:ring-2 focus-within:ring-primary bg-background'>
+          <div
+            className={cn(
+              'rounded-md border bg-background shadow-xs focus-within:ring-2',
+              invalid ? 'border-destructive focus-within:ring-destructive' : 'border-border focus-within:ring-primary'
+            )}
+          >
             <div className='p-2 flex gap-2 border-b items-center flex-wrap'>
               {compact ? (
                 // Compact toolbar for narrow spaces
@@ -337,7 +515,6 @@ export default function RichTextEditor({
                     levels={[1, 2, 3, 4, 5, 6]}
                     hideWhenUnavailable={true}
                     portal={false}
-                    onOpenChange={(isOpen) => console.log('Dropdown', isOpen ? 'opened' : 'closed')}
                   />
 
                   <div className='w-px h-6 bg-border' />
@@ -358,27 +535,16 @@ export default function RichTextEditor({
                     types={['bulletList', 'orderedList']}
                     hideWhenUnavailable={true}
                     portal={false}
-                    onOpenChange={(isOpen) => console.log('Dropdown opened:', isOpen)}
                   />
 
                   <div className='w-px h-6 bg-border' />
 
                   <div className='flex gap-0.5'>
                     {/* Links */}
-                    <LinkPopover
-                      editor={editor}
-                      hideWhenUnavailable={true}
-                      autoOpenOnLinkActive={true}
-                      onSetLink={() => console.log('Link set!')}
-                      onOpenChange={(isOpen) => console.log('Popover opened:', isOpen)}
-                    />
+                    <LinkPopover editor={editor} hideWhenUnavailable={true} autoOpenOnLinkActive={true} />
 
                     {/* Images */}
-                    <ImageUploadButton
-                      editor={editor}
-                      hideWhenUnavailable={true}
-                      onInserted={() => console.log('Image inserted!')}
-                    />
+                    <ImageUploadButton editor={editor} hideWhenUnavailable={true} />
 
                     {/* File Attachments */}
                     <Button
@@ -406,11 +572,7 @@ export default function RichTextEditor({
                     <BlockquoteButton editor={editor} />
 
                     {/* Code blocks */}
-                    <CodeBlockButton
-                      editor={editor}
-                      hideWhenUnavailable={true}
-                      onToggled={() => console.log('Code block toggled!')}
-                    />
+                    <CodeBlockButton editor={editor} hideWhenUnavailable={true} />
                   </div>
                 </>
               )}
@@ -418,6 +580,8 @@ export default function RichTextEditor({
             <EditorContent editor={editor} />
           </div>
         </EditorContext.Provider>
+
+        {invalid && error && <div className='min-h-4'>{<FieldError className='text-xs' errors={[error]} />}</div>}
       </div>
     )
   }

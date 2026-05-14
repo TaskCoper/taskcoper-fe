@@ -1,20 +1,18 @@
-import { useAuthStore } from '@/lib/zustand/auth.store'
-import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
-import userService from '@/services/user.service'
+import userService from '@/features/users/services'
+import { clearAllUserPreferences } from '@/shared/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 export const useSignOut = () => {
   const queryClient = useQueryClient()
-
-  const { signOut: signOutAuth } = useAuthStore()
-  const { clearAll: clearMilestonePreferences } = useMilestonePreferencesStore()
+  const navigate = useNavigate()
 
   const { mutate: signOut, isPending: isSigningOut } = useMutation({
     mutationFn: userService.signOut,
     onSuccess: () => {
-      signOutAuth()
-      clearMilestonePreferences()
+      clearAllUserPreferences()
+      navigate('/sign-in', { replace: true })
       queryClient.clear()
     },
     onError: (error) => {

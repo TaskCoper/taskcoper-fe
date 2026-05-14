@@ -2,37 +2,30 @@ import Heatmap, { type CalendarHeatmapData } from '@/components/heatmap'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
-import ChartDateFilterPopover from '@/features/charts/components/chart-date-filter-popover'
-import ProjectTaskStatsPopover from '@/features/charts/components/project-task-stats-popover'
-import { useGetProjectHeatmap } from '@/features/charts/hooks/use-get-project-heatmap'
-import { useGetProjectOnTimeCompleters } from '@/features/charts/hooks/use-get-project-on-time-completers'
-import { useGetProjectTaskStats } from '@/features/charts/hooks/use-get-project-task-stats'
-import { useGetProjectTopContributors } from '@/features/charts/hooks/use-get-project-top-contributors'
+import ChartDateFilterPopover from '@/features/projects/charts/components/chart-date-filter-popover'
+import ProjectTaskStatsPopover from '@/features/projects/charts/components/project-task-stats-popover'
+import { useGetProjectHeatmap } from '@/features/projects/charts/hooks/use-get-project-heatmap'
+import { useGetProjectOnTimeCompleters } from '@/features/projects/charts/hooks/use-get-project-on-time-completers'
+import { useGetProjectTaskStats } from '@/features/projects/charts/hooks/use-get-project-task-stats'
+import { useGetProjectTopContributors } from '@/features/projects/charts/hooks/use-get-project-top-contributors'
+import type { ProjectHeatmap } from '@/features/projects/charts/types'
 import {
   projectTaskStatisticsSchema,
   type ChartDateFilterParams,
   type ProjectTaskStatisticsParams
-} from '@/features/charts/validations'
-import StatCard from '@/features/projects/components/stat-card'
-import { useGetProject } from '@/features/projects/hooks/use-get-project'
-import type { ProjectHeatmap } from '@/types/efficiency.type'
+} from '@/features/projects/charts/validations'
+import StatCard from '@/features/projects/core/components/stat-card'
+import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
-import {
-  CircleCheckBigIcon,
-  LayersPlus,
-  ListTreeIcon,
-  MessageCircleIcon,
-  PaperclipIcon,
-  TrendingUp
-} from 'lucide-react'
+import { CircleCheckBigIcon, LayersPlus, ListTreeIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import BarChartHorizontal from '../features/charts/components/bar-chart-horizontal'
-import PieChartLabel from '../features/charts/components/pie-chart'
+import BarChartHorizontal from '../features/projects/charts/components/bar-chart-horizontal'
+import PieChartLabel from '../features/projects/charts/components/pie-chart'
 
 const pieChartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 
@@ -80,9 +73,13 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 export default function ProjectPerformancePage() {
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
+  const { identifier } = useParams<{ identifier: string }>()
 
   const [selectedYear, setSelectedYear] = useState(currentYear)
+
+  const { project } = useGetProject({
+    identifier
+  })
 
   const dateRange = useMemo(() => {
     const from = format(new Date(selectedYear, 0, 1), 'yyyy-MM-dd')
@@ -91,40 +88,42 @@ export default function ProjectPerformancePage() {
   }, [selectedYear])
 
   const { projectActivityStats } = useGetProjectHeatmap({
-    projectId,
+    projectId: project?.id,
     ...dateRange
   })
 
   const [topContributorsFilters, setTopContributorsFilters] = useState<ChartDateFilterParams>({
     from: startOfDay(startOfMonth(new Date())).toISOString(),
-    to: endOfDay(endOfMonth(new Date())).toISOString()
+    to: endOfDay(endOfMonth(new Date())).toISOString(),
+    isViewInMonth: false
   })
 
   const [onTimeCompletersFilters, setOnTimeCompletersFilters] = useState<ChartDateFilterParams>({
     from: startOfDay(startOfMonth(new Date())).toISOString(),
-    to: endOfDay(endOfMonth(new Date())).toISOString()
+    to: endOfDay(endOfMonth(new Date())).toISOString(),
+    isViewInMonth: false
   })
 
   const { projectTopContributors } = useGetProjectTopContributors({
-    projectId,
+    projectId: project?.id,
     from: topContributorsFilters.from,
     to: topContributorsFilters.to
   })
 
   const { projectOnTimeCompleters } = useGetProjectOnTimeCompleters({
-    projectId,
+    projectId: project?.id,
     from: onTimeCompletersFilters.from,
     to: onTimeCompletersFilters.to
   })
 
   const { projectActivityStats: currentProjectActivityStats } = useGetProjectHeatmap({
-    projectId,
+    projectId: project?.id,
     ...currentDateRange
   })
 
   // const { parentMilestones } = useGetParentMilestones({ projectId })
   const methods = useForm<ProjectTaskStatisticsParams>({
-    resolver: zodResolver(projectTaskStatisticsSchema),
+    resolver: zodResolver(projectTaskStatisticsSchema(t)),
     defaultValues: {
       from: startOfMonth(new Date()).toISOString(),
       to: endOfMonth(new Date()).toISOString(),
@@ -140,7 +139,7 @@ export default function ProjectPerformancePage() {
   const formIsViewInMonth = appliedFilters.isViewInMonth
 
   const { projectTaskStats } = useGetProjectTaskStats({
-    projectId,
+    projectId: project?.id,
     from: formFrom,
     to: formTo,
     isViewInMonth: formIsViewInMonth
@@ -322,7 +321,7 @@ export default function ProjectPerformancePage() {
   //         <div className='space-y-4'>
   //           <div className='flex flex-wrap gap-4'>
   //             {Array.from({ length: 5 }).map((_, i) => (
-  //               <Skeleton key={i} className='h-[116px] flex-1 min-w-[200px] rounded-xl' />
+  //               <Skeleton key={i} className='h-[116px] flex-1 min-w-50 rounded-xl' />
   //             ))}
   //           </div>
 
@@ -352,10 +351,6 @@ export default function ProjectPerformancePage() {
   //   )
   // }
 
-  const { project } = useGetProject({
-    projectId
-  })
-
   useEffect(() => {
     if (project) {
       document.title = `${project?.name} | TaskCoper`
@@ -366,14 +361,14 @@ export default function ProjectPerformancePage() {
     <div className='overflow-auto'>
       <div className='max-w-7xl h-full mx-auto p-6 space-y-6 pb-20'>
         <div>
-          <p className='text-2xl font-bold tracking-tight'>{t('projectPerformance.title')}</p>
+          <p className='text-2xl font-bold'>{t('projectPerformance.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
         </div>
 
         {/* Statistics cards */}
         <div className='space-y-4'>
           <div className='flex flex-wrap gap-4'>
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statTasks')}
                 value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
@@ -384,7 +379,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statSubtasks')}
                 value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
@@ -395,7 +390,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statCompleted')}
                 value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
@@ -406,7 +401,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statComments')}
                 value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
@@ -417,7 +412,7 @@ export default function ProjectPerformancePage() {
               />
             </div>
 
-            <div className='flex-1 min-w-[200px]'>
+            <div className='flex-1 min-w-50'>
               <StatCard
                 title={t('projectPerformance.statFiles')}
                 value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
@@ -468,7 +463,7 @@ export default function ProjectPerformancePage() {
                 </p>
               )}
 
-              <div className='flex flex-col items-start gap-1'>
+              {/* <div className='flex flex-col items-start gap-1'>
                 <div className='flex gap-2 leading-none font-medium text-sm'>
                   {(t as (key: string, options?: Record<string, string | number>) => string)(
                     'projectPerformance.trendingUp',
@@ -482,7 +477,7 @@ export default function ProjectPerformancePage() {
                     { months: 6 }
                   )}
                 </div>
-              </div>
+              </div> */}
             </Card>
           </div>
 
@@ -500,6 +495,7 @@ export default function ProjectPerformancePage() {
                   <ChartDateFilterPopover
                     from={onTimeCompletersFilters.from}
                     to={onTimeCompletersFilters.to}
+                    isViewInMonth={onTimeCompletersFilters.isViewInMonth}
                     onApplyFilters={setOnTimeCompletersFilters}
                   />
                 }
@@ -518,6 +514,7 @@ export default function ProjectPerformancePage() {
                   <ChartDateFilterPopover
                     from={topContributorsFilters.from}
                     to={topContributorsFilters.to}
+                    isViewInMonth={topContributorsFilters.isViewInMonth}
                     onApplyFilters={setTopContributorsFilters}
                   />
                 }

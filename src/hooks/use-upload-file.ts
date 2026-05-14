@@ -1,5 +1,4 @@
 import type { ErrorResponse } from '@/lib/axios'
-import { useAuthStore } from '@/lib/zustand/auth.store'
 import config from '@/shared/config'
 import { prepareFileUpload } from '@/shared/utils'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
@@ -17,12 +16,11 @@ export const useUploadFile = (
   options?: UseMutationOptions<string | undefined, AxiosError<ErrorResponse>, UploadFileVariables>
 ) => {
   const { t } = useTranslation()
-  const { accessToken } = useAuthStore()
   const { getPresignedUrlAsync } = useGetPresignedUrl()
 
   const mutation = useMutation({
     mutationFn: async ({ file, onProgress }: UploadFileVariables) => {
-      if (!file || !accessToken) throw new Error('Missing file or access token')
+      if (!file) throw new Error('Missing file')
 
       const { key, contentType } = prepareFileUpload(file)
       const { presignedUrl, uploadMethod } = await getPresignedUrlAsync({
@@ -32,8 +30,8 @@ export const useUploadFile = (
 
       const axiosConfig = {
         headers: {
-          'Content-Type': contentType,
-          'x-amz-meta-owner': accessToken
+          'Content-Type': contentType
+          // 'x-amz-meta-owner': me.id
         },
         onUploadProgress: (progressEvent: AxiosProgressEvent) => {
           if (onProgress && progressEvent.total) {

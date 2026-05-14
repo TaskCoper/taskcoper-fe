@@ -1,12 +1,17 @@
-import { sortedTaskLabelColors } from '@/features/labels/constants'
+import { sortedTaskLabelColors } from '@/features/projects/labels/constants'
+import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/features/projects/milestones/types'
+import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/features/projects/subtasks/types'
+import type { TaskCardDragData } from '@/features/projects/tasks/core/types'
+import type { Currency } from '@/features/transactions/types'
+import type { Me } from '@/features/users/types'
 import type { GetPresignedUrlParams } from '@/hooks/use-get-presigned-url'
+import type { RoleType } from '@/layouts/role-guard.layout'
 import type { BasePaginationResponse } from '@/lib/axios'
-import type { UserPayload } from '@/lib/zustand/auth.store'
-import type { MilestoneColumnDragData, MilestoneTabDragData } from '@/types/milestone.type'
-import type { ChildSubtaskDragData, ParentSubtaskDragData } from '@/types/subtask.type'
-import type { TaskCardDragData } from '@/types/task.type'
+import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
+import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
+import i18next from 'i18next'
 import { twMerge } from 'tailwind-merge'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, INITIAL_POSITION, POSITION_GAP } from './constants'
 
@@ -45,23 +50,25 @@ export function hasDraggableData<T extends Active | Over>(
   return false
 }
 
+const defaultPaginationResponse = {
+  value: {
+    items: [],
+    pageIndex: DEFAULT_PAGE_INDEX,
+    pageSize: DEFAULT_PAGE_SIZE,
+    totalCount: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
+  },
+  error: {
+    code: '',
+    message: ''
+  },
+  isSuccess: true,
+  isFailure: false
+}
+
 export function getDefaultPaginationResponse<T>(): BasePaginationResponse<T> {
-  return {
-    value: {
-      items: [],
-      pageIndex: DEFAULT_PAGE_INDEX,
-      pageSize: DEFAULT_PAGE_SIZE,
-      totalCount: 0,
-      hasNextPage: false,
-      hasPreviousPage: false
-    },
-    error: {
-      code: '',
-      message: ''
-    },
-    isSuccess: true,
-    isFailure: false
-  }
+  return defaultPaginationResponse as BasePaginationResponse<T>
 }
 
 /**
@@ -152,7 +159,7 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   if (!date) return ''
 
   try {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(i18next.language || 'en-US', {
       month: opts.month ?? 'long',
       day: opts.day ?? 'numeric',
       year: opts.year ?? 'numeric',
@@ -163,10 +170,92 @@ export const formatDate = (date: Date | string | number | undefined, opts: Intl.
   }
 }
 
-export const getUserType = (user: UserPayload | null) => {
+export const getUserType = (user: Me | null | undefined): RoleType | null => {
   if (!user) return null
-  if (user.Role === 'Admin' && !user.OrganizationId) return 'superAdmin'
-  if (user.Role === 'Admin' && user.OrganizationId) return 'orgAdmin'
+  if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
+  if (user.role === 'Admin' && user.organizationId) return 'orgAdmin'
 
   return 'user'
+}
+
+export const getRoleHomePath = (userType: RoleType | null): string => {
+  if (userType === 'superAdmin') return '/dashboard'
+  if (userType === 'orgAdmin') return '/manage'
+  return '/projects'
+}
+
+export const formatCurrency = (price: number, currency?: Currency) => {
+  const currencyCode = currency === 'Usd' ? 'USD' : 'VND'
+
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currencyCode,
+      maximumFractionDigits: 0
+    }).format(price)
+  } catch {
+    return `${price.toLocaleString()} ${currency}`
+  }
+}
+
+export const getTimezoneOffsetString = () => {
+  const date = new Date()
+  const offset = -date.getTimezoneOffset()
+  const sign = offset >= 0 ? '+' : '-'
+  const hours = Math.floor(Math.abs(offset) / 60)
+  const minutes = Math.abs(offset) % 60
+  const gmt = `GMT${sign}${String(hours).padStart(2, '0')}`
+
+  return minutes > 0 ? `${gmt}:${String(minutes).padStart(2, '0')}` : gmt
+}
+
+export const clearAllUserPreferences = () => {
+  useMilestonePreferencesStore.getState().clearAll()
+  useMentorWidgetStore.getState().clearAll()
+}
+
+export const safeParseJson = <T = Record<string, unknown>>(jsonString: string | null | undefined): Partial<T> => {
+  if (!jsonString) return {}
+  try {
+    return JSON.parse(jsonString) as Partial<T>
+  } catch {
+    return {}
+  }
+}
+
+export const getFirstParagraphTextFromHtml = (html: string | null | undefined): string => {
+  if (!html) return ''
+
+  try {
+    if (typeof DOMParser !== 'undefined') {
+      const document = new DOMParser().parseFromString(html, 'text/html')
+      const firstParagraph = document.querySelector('p')
+
+      return firstParagraph?.textContent?.replace(/\s+/g, ' ').trim() ?? ''
+    }
+  } catch {
+    // fall through to regex-based fallback
+  }
+
+  const firstParagraphMatch = html.match(/<p\b[^>]*>([\s\S]*?)<\/p>/i)
+  const fallbackContent = firstParagraphMatch?.[1] ?? ''
+
+  return fallbackContent
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+export const getPlainTextFromHtml = (value: string | null): string => {
+  if (!value) return ''
+
+  try {
+    if (typeof DOMParser !== 'undefined') {
+      return new DOMParser().parseFromString(value, 'text/html').body.textContent ?? ''
+    }
+  } catch {
+    // Fall back to regex-based stripping below.
+  }
+
+  return value.replace(/<[^>]*>/g, ' ')
 }

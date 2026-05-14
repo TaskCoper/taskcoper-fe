@@ -79,9 +79,7 @@ export default function DataTableRadioFilter<TData, TValue>({
           {selectedValue && selectedOption && (
             <>
               <Separator orientation='vertical' className='mx-0.5 data-[orientation=vertical]:h-4' />
-              <Badge variant='secondary' className='rounded-sm px-1 font-normal'>
-                {selectedOption.label}
-              </Badge>
+              <Badge className='rounded-sm px-1.5 font-normal'>{selectedOption.label}</Badge>
             </>
           )}
         </Button>
@@ -99,7 +97,7 @@ export default function DataTableRadioFilter<TData, TValue>({
                   <CommandItem key={option.value} onSelect={() => onItemSelect(option)}>
                     <div
                       className={cn(
-                        'flex size-4 items-center justify-center rounded-full border border-primary',
+                        'flex size-4 items-center justify-center rounded-full border border-primary shrink-0',
                         isSelected ? 'bg-primary' : 'opacity-50'
                       )}
                     >

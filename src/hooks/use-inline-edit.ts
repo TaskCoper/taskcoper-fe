@@ -6,9 +6,15 @@ interface UseInlineEditOptions {
   initialValue: string
   onSave: (value: string) => void
   clickType?: ClickType
+  allowEmpty?: boolean
 }
 
-export const useInlineEdit = ({ initialValue, onSave, clickType = 'single' }: UseInlineEditOptions) => {
+export const useInlineEdit = ({
+  initialValue,
+  onSave,
+  clickType = 'single',
+  allowEmpty = false
+}: UseInlineEditOptions) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState(initialValue)
 
@@ -24,13 +30,14 @@ export const useInlineEdit = ({ initialValue, onSave, clickType = 'single' }: Us
 
   const completeEditing = useCallback(() => {
     const trimmedValue = editValue.trim()
+    const nextValue = trimmedValue
 
-    if (trimmedValue && trimmedValue !== initialValue) {
-      onSave(trimmedValue)
+    if ((allowEmpty || trimmedValue) && nextValue !== initialValue) {
+      onSave(nextValue)
     }
 
     setIsEditing(false)
-  }, [editValue, initialValue, onSave])
+  }, [allowEmpty, editValue, initialValue, onSave])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {

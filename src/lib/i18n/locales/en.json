@@ -5,16 +5,21 @@
     "expertNetwork": "Expert Network",
     "startupCommunity": "Startup Community",
     "news": "News",
-    "manageProjects": "Manage"
+    "manageProjects": "Manage",
+    "verifyYourEmail": "Verify Your Account"
   },
   "role": {
     "owner": "Owner",
     "editor": "Editor",
     "viewer": "Viewer"
   },
+  "validation": {
+    "mustBeNumber": "Must be a valid number"
+  },
   "common": {
     "button": {
       "add": "Add",
+      "create": "Create",
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
@@ -23,9 +28,12 @@
       "accept": "Accept",
       "decline": "Decline",
       "remove": "Remove",
+      "leave": "Leave",
       "delete": "Delete",
       "insert": "Insert",
-      "download": "Download"
+      "download": "Download",
+      "back": "Back",
+      "upload": "Upload"
     },
     "field": {
       "label": "Label",
@@ -34,22 +42,31 @@
       "name": "Name",
       "email": "Email",
       "password": "Password",
+      "isActive": "Active",
       "startDate": "Start date",
       "endDate": "End date",
-      "date": "Date"
+      "date": "Date",
+      "createdOnUtc": "Created at",
+      "modifiedOnUtc": "Modified at"
     },
     "validation": {
       "email": {
         "invalid": "Invalid email address"
       },
+      "timeZone": {
+        "invalid": "Invalid time zone"
+      },
       "required": "This field is required",
       "maxLength": {
         "20": "Max 20 characters",
+        "25": "Max 25 characters",
         "255": "Max 255 characters",
+        "2000": "Max 2000 characters",
         "10000": "Max 10000 characters"
       },
       "minLength": {
         "1": "This field is required",
+        "5": "Must be at least 5 characters",
         "6": "Must be 6 characters",
         "8": "Must be at least 8 characters long"
       },
@@ -58,15 +75,30 @@
       },
       "number": {
         "positive": "Must be a positive number",
-        "invalid": "Must be a valid number"
+        "invalid": "Must be a valid number",
+        "integer": "Must be an integer",
+        "nonNegative": "Must be zero or greater",
+        "max100": "Must be less than or equal to 100"
+      },
+      "uuid": {
+        "invalid": "Invalid identifier"
+      },
+      "enum": {
+        "invalid": "Invalid option selected"
       },
       "date": {
         "invalid": "Invalid date format",
         "required": "Date is required",
         "mustBeGreater": "End date must be greater than start date"
+      },
+      "schedule": {
+        "dayRequired": "At least one day must be selected",
+        "startTimeRequired": "Start time is required",
+        "endTimeRequired": "End time is required"
       }
     },
     "ui": {
+      "count": "Count",
       "selected": "selected",
       "characters": "characters",
       "search": "Search...",
@@ -97,8 +129,29 @@
       "noDataAvailable": "No data available",
       "filter": "Filter",
       "month": "Month",
-      "week": "Week"
-    }
+      "week": "Week",
+      "day": "Day",
+      "today": "Today",
+      "files": "files",
+      "emptyValue": "—",
+      "openMenu": "Open menu",
+      "toggle": "Toggle",
+      "comingSoon": "Coming Soon",
+      "more": "+{{count}} more",
+      "infiniteSelect": {
+        "placeholder": "Search...",
+        "selectedCount": "{{count}} selected",
+        "loading": "Loading...",
+        "noResults": "No results found"
+      }
+    },
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive",
+      "disabled": "Disabled"
+    },
+    "off": "Off"
   },
   "network": {
     "filter": {
@@ -111,6 +164,367 @@
       "noDomainsFound": "No domains found.",
       "removeAriaLabel": "Remove {{name}}",
       "overflowMore": "+{{count}} more"
+    }
+  },
+  "dayOfWeek": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun",
+    "placeholder": "Select a day"
+  },
+  "schedule": {
+    "createAvailability": {
+      "title": "Create Your Availability",
+      "description": "Add the time slots when you're available to meet with students. Once saved, students can start booking sessions."
+    },
+    "field": {
+      "availableDays": "Available Days",
+      "startTime": "Start time",
+      "endTime": "End time",
+      "isActive": "Active status",
+      "isActiveDescription": "If disabled, the schedule will not be active"
+    },
+    "button": {
+      "create": "Create Schedule",
+      "viewSchedules": "Config Schedules",
+      "update": "Update Schedule"
+    },
+    "popover": {
+      "title": "Schedules",
+      "showOverlay": "Schedule overlay",
+      "description": "Display your active schedules on the calendar.",
+      "manageSchedules": "Manage Schedules"
+    },
+    "filter": {
+      "title": "Display schedule",
+      "all": "All",
+      "mine": "Mine",
+      "mentor": "Mentor's",
+      "purchasedPackages": "Purchased packages",
+      "packageGroups": {
+        "personal": {
+          "title": "Personal",
+          "description": "Personal meeting packages"
+        },
+        "project": {
+          "title": "Project",
+          "description": "Project-owned meeting packages that you are allowed to book"
+        },
+        "member": {
+          "title": "Member",
+          "description": "Project-owned meeting packages from projects where you are a member"
+        }
+      }
+    },
+    "update": {
+      "description": "Update your schedule information."
+    },
+    "delete": {
+      "title": "Delete schedule?",
+      "description": "This schedule will be removed. This action cannot be undone."
+    },
+    "tab": {
+      "calendar": "Calendar",
+      "timeline": "Timeline"
+    },
+    "timeline": {
+      "empty": "No schedule yet",
+      "emptyDescription": "Create your availability to let students book mentoring sessions with you.",
+      "totalSlots": "availability slots",
+      "noSlots": "No availability",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "recurring": "recurring",
+      "temporary": "temporary",
+      "onwards": "onwards",
+      "today": "Today",
+      "activeFrom": "from",
+      "activeTo": "to",
+      "legend": {
+        "permanent": "Permanent",
+        "fromOnly": "From date",
+        "toOnly": "To date",
+        "range": "Active between dates"
+      }
+    }
+  },
+  "meeting": {
+    "dialog": {
+      "title": "Book meeting",
+      "description": "Choose a date and time to book a meeting"
+    },
+    "button": {
+      "book": "Book meeting"
+    },
+    "form": {
+      "bookForProject": "Book for project",
+      "bookForProjectDescription": "You are booking on behalf of a project.",
+      "bookForSelfDescription": "You are booking for yourself.",
+      "projectLabel": "Project",
+      "projectPlaceholder": "Select project",
+      "projectSearchPlaceholder": "Search project"
+    },
+    "mentorSchedule": {
+      "title": "Meetings",
+      "weekLabel": "Week {{week}} - {{month}}",
+      "available": "Available",
+      "booked": "Booked",
+      "selected": "Selected",
+      "empty": "No schedule yet",
+      "emptyDescription": "This mentor has not set up any availability schedule."
+    },
+    "detail": {
+      "session": "Session {{sequence}}",
+      "mentoringSession": "Mentoring Session",
+      "meetingWith": "Meeting with",
+      "to": "to",
+      "joinViaGoogleMeet": "Join via Google Meet",
+      "maxGuests": "Max 100 guests",
+      "noLinkYet": "No link yet",
+      "noteWillBeHere": "{{firstName}} {{lastName}}'s note will be here.",
+      "information": "Information",
+      "status": "Status",
+      "belongsToProject": "Belongs to project",
+      "belongsToPackage": "Belongs to package",
+      "sessionSequence": "Session sequence",
+      "mentor": "Mentor",
+      "participants": "Participants",
+      "dateFormat": "dd MMM, yyyy",
+      "meetingDateTimeAt": "at",
+      "cancel": "Cancel",
+      "reschedule": "Reschedule",
+      "completeMeeting": "Complete",
+      "cancelTitle": "Cancel meeting",
+      "cancelDescription": "Are you sure you want to cancel this meeting? This action cannot be undone.",
+      "cancelReasonLabel": "Reason",
+      "cancelReasonPlaceholder": "Enter reason for cancellation...",
+      "rescheduleReasonPlaceholder": "Enter reason for rescheduling...",
+      "confirmCancel": "Confirm Cancel",
+      "history": "History",
+      "cancelledBy": "Cancelled by",
+      "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time."
+    },
+    "status": {
+      "free": "Free",
+      "booked": "Booked",
+      "completed": "Completed",
+      "reschedule": "Rescheduled",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended"
+    }
+  },
+  "voucher": {
+    "button": {
+      "addVoucher": "Add Voucher"
+    },
+    "sidebar": {
+      "vouchers": "Vouchers"
+    },
+    "dialog": {
+      "title": "Add Voucher",
+      "description": "Add a new voucher"
+    },
+    "column": {
+      "code": "Code",
+      "codePlaceholder": "Enter code to search...",
+      "name": "Name",
+      "discount": "Discount",
+      "discountType": "Type",
+      "usage": "Usage",
+      "status": "Status",
+      "startsAt": "Starts At",
+      "endsAt": "Ends At",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "none": "None",
+      "targets": "Targets",
+      "scope": "Scope",
+      "usageLimitPerUser": "Limit per User",
+      "isStackable": "Can be used with other vouchers",
+      "createdOnUtc": "Created On",
+      "dateFormat": "HH:mm dd/MM/yyyy"
+    },
+    "action": {
+      "copyCode": "Copy code",
+      "delete": "Delete"
+    },
+    "toast": {
+      "copySuccess": "Copied code to clipboard",
+      "copyFailed": "Failed to copy code"
+    },
+    "field": {
+      "name": "Voucher Name",
+      "namePlaceholder": "Enter voucher name",
+      "code": "Voucher Code",
+      "codePlaceholder": "EXAMPLE2026",
+      "startsAt": "Starts At",
+      "startsAtPlaceholder": "Select start date",
+      "endsAt": "Ends At",
+      "endsAtPlaceholder": "Select end date",
+      "discountType": "Discount Type",
+      "discountValue": "Discount Value",
+      "discountValuePlaceholder": "Enter discount value",
+      "totalUsageLimit": "Quantity",
+      "totalUsageLimitPlaceholder": "Enter total usage limit",
+      "usageLimitPerUser": "Usage Limit Per User",
+      "usageLimitPerUserPlaceholder": "Enter usage limit per user",
+      "isStackable": "Can be used with other vouchers",
+      "isStackableDescription": "Can be combined with other vouchers.",
+      "scope": "Voucher Scope",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter voucher description",
+      "targets": "Specific Targets Selection",
+      "targetsPlaceholder": "Select target packages...",
+      "isActive": "Status",
+      "isActiveDescription": "Indicates if this voucher can be used."
+    },
+    "discountType": {
+      "percent": "Percent",
+      "fixedAmount": "Fixed Amount"
+    },
+    "scope": {
+      "allTargets": "All Targets",
+      "specificTargets": "Specific Targets"
+    },
+    "targetType": {
+      "allTargets": "All Targets",
+      "mentorPackage": "Mentor Package",
+      "subscriptionPlan": "Subscription Plan"
+    },
+    "validation": {
+      "discountPercentMax": "Discount percentage cannot exceed 100%",
+      "targetsRequired": "Please select at least one specific target package"
+    },
+    "page": {
+      "title": "Voucher List",
+      "description": "Manage vouchers you have created.",
+      "infoTitle": "Voucher Information",
+      "infoDescription": "Update general information and usage limits for this voucher.",
+      "targetsTitle": "Applicable Targets",
+      "targetsDescription": "Manage the mentor packages that this voucher can be applied to.",
+      "redemptionsTitle": "Voucher Redemptions",
+      "redemptionsDescription": "View and manage all redemptions for this voucher."
+    },
+    "target": {
+      "create": "Add Targets",
+      "createDescription": "Select mentor packages to add as targets for this voucher.",
+      "selectedTargets": "Selected Targets",
+      "item": {
+        "create": "Add Target"
+      },
+      "delete": {
+        "title": "Remove target",
+        "description": "Are you sure you want to remove \"{{targetName}}\" from this voucher?"
+      }
+    },
+    "delete": {
+      "title": "Delete voucher",
+      "description": "Are you sure you want to delete voucher \"{{voucherCode}}\"? This action cannot be undone."
+    },
+    "redemption": {
+      "column": {
+        "user": "User",
+        "appliedTo": "Applied To",
+        "amountBeforeDiscount": "Original Price",
+        "discountAmount": "Discount",
+        "amountAfterDiscount": "Final Price",
+        "status": "Status",
+        "appliedToType": "Target Type",
+        "redeemedAt": "Redeemed At"
+      }
+    },
+    "redemptionStatus": {
+      "reserved": "Reserved",
+      "applied": "Applied",
+      "released": "Released",
+      "canceled": "Canceled"
+    }
+  },
+  "commission": {
+    "button": {
+      "addConfig": "Add configuration"
+    },
+    "dialog": {
+      "title": "Commission configuration",
+      "description": "Add a new commission configuration"
+    },
+    "field": {
+      "targetModel": "Target Model",
+      "titleLevel": "Title Level",
+      "rate": "Rate (%)",
+      "minAmount": "Min Amount",
+      "maxAmount": "Max Amount",
+      "isActiveDescription": "Enable this to apply the commission configuration."
+    }
+  },
+  "adminSidebar": {
+    "main": {
+      "groupLabel": "Overview",
+      "dashboard": "Dashboard"
+    },
+    "system": {
+      "groupLabel": "System administration",
+      "toggle": "Toggle",
+      "projects": {
+        "title": "Projects",
+        "list": "Project list",
+        "settings": "Settings"
+      },
+      "users": {
+        "title": "Users",
+        "list": "User list",
+        "roles": "Roles",
+        "permissions": "Permissions"
+      },
+      "commissions": {
+        "title": "Commissions",
+        "config": "Configuration"
+      }
+    }
+  },
+  "purchasedPackage": {
+    "progress": "Progress",
+    "overallProgress": "Overall progress of the mentor package",
+    "information": "Information",
+    "packageInformation": "Mentor package information",
+    "belongsToProject": "Belongs to project",
+    "createdBy": "Created by",
+    "purchasedOn": "Purchased on",
+    "bookSchedule": "Book schedule",
+    "meetingSession": "Session {{sequence}}",
+    "bookMeetingSession": "Book schedule for session {{sequence}} ({{slots}} slots)",
+    "confirmBooking": "Confirm Booking",
+    "note": "Note:",
+    "bookingNote": "You can only select consecutive time slots. Please select {{slots}} consecutive time slots to book a meeting.",
+    "completedProgress": "Completed {{progress}}%",
+    "meetButton": "Meet",
+    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm",
+    "purchasedOnDateFormat": "dd/MM/yyyy",
+    "purchasedPackages": "Purchased packages",
+    "selectPackageToBook": "Select your purchased package to book.",
+    "hasUpcomingMeeting": "You have an upcoming meeting",
+    "upcomingMeetingNote": "Complete the scheduled meeting on {{date}} before booking the next one.",
+    "viewMeeting": "View meeting",
+    "statusTooltip": "Status: {{status}}",
+    "feedbackTitle": "Feedback",
+    "feedbackDescription": "It is time to leave your feedback about this package.",
+    "feedbackButton": "Give feedback",
+    "noNoteAvailable": "No note available",
+    "noFeedback": "No feedback yet",
+    "history": {
+      "title": "History",
+      "description": "Your most recent sessions"
     }
   },
   "project": {
@@ -246,23 +660,78 @@
       "confirm": {
         "title": "Remove member",
         "description": "Are you sure you want to remove {{fullName}} from the project?",
+        "leaveTitle": "Leave project",
+        "leaveDescription": "Are you sure you want to leave this project?",
         "confirmText": "Remove",
         "cancelText": "Cancel"
       },
+      "ownerTransfer": {
+        "title": "Transfer ownership",
+        "description": "Select a new owner before leaving this project.",
+        "selectOwnerPlaceholder": "Select new owner",
+        "searchOwnerPlaceholder": "Search new owner...",
+        "confirmText": "Transfer and leave"
+      },
       "column": {
+        "no": "No",
         "member": "Member",
+        "memberPlaceholder": "Search by name or email...",
+        "phoneNumber": "Phone Number",
+        "noPhoneNumber": "No phone number",
+        "positionTitles": "Position titles",
+        "noPositionTitles": "No position titles",
         "role": "Role",
+        "rolePlaceholder": "Select role",
         "permission": "Permission",
         "canEdit": "Editor"
       },
+      "positionTitle": {
+        "title": "Position titles",
+        "searchPlaceholder": "Type to search position titles...",
+        "createTitle": "Create position title",
+        "editTitle": "Edit position title",
+        "deleteTitle": "Delete position title",
+        "deleteConfirmation": "Are you sure you want to delete this position title?"
+      },
       "role": {
-        "mentor": "Mentor",
-        "student": "Student"
+        "owner": "Owner",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "systemTooltip": "System defined role",
+        "defaultTooltip": "Default role for new members"
       }
+    },
+    "memberProfile": {
+      "noTimeZone": "No time zone",
+      "noPhoneNumber": "No phone number",
+      "noAddress": "No address",
+      "noStatus": "No status",
+      "noRoles": "No roles",
+      "noDomains": "No domains",
+      "positionTitles": "Position titles",
+      "domains": "Domains"
+    },
+    "memberStatus": {
+      "free": "Free",
+      "busy": "Busy"
+    },
+    "memberTaskTable": {
+      "title": "Task table",
+      "description": "Task list for this member"
     },
     "inviteMembers": {
       "title": "New members",
       "description": "Add new members to your project to collaborate and share tasks.",
+      "pendingInvites": {
+        "title": "Pending invites",
+        "description": "These invitations are waiting for recipients to accept."
+      },
+      "revokeInvitation": {
+        "title": "Revoke invitation",
+        "description": "Are you sure you want to revoke the invitation for {{fullName}}? They will no longer be able to accept it.",
+        "confirmText": "Revoke"
+      },
       "invitedUsers": "Invited users",
       "comboboxPlaceholder": "Click to invite",
       "search": "Type email to search...",
@@ -308,10 +777,12 @@
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "My Tasks",
+      "quickActions": "Quick Actions",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
       "storage": "Storage",
+      "revenue": "Revenue",
       "storagePage": {
         "title": "Project Storage",
         "description": "All files uploaded to tasks in this project.",
@@ -321,9 +792,14 @@
         "download": "Download",
         "task": "Task"
       },
+      "revenuePage": {
+        "title": "Project Revenue",
+        "description": "Manage project income and expenses."
+      },
       "settings": "Settings",
       "myProjects": "My Projects",
-      "myCalendar": "My Calendar",
+      "myCalendar": "Calendar",
+      "applicationHistory": "Application History",
       "performance": "Performance",
       "noPendingTasks": "Yay! You have no pending tasks"
     },
@@ -380,6 +856,39 @@
         }
       }
     },
+    "addProjectRole": {
+      "title": "New role",
+      "description": "Add a new role to the project to assign permissions to team members.",
+      "field": {
+        "template": {
+          "label": "Template",
+          "placeholder": "Select template"
+        },
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required",
+          "maxLength": "Max 255 characters"
+        },
+        "description": {
+          "maxLength": "Max 255 characters"
+        },
+        "permissions": {
+          "minLength": "Please choose a template"
+        },
+        "projectIdentifier": {
+          "minLength": "Project is required"
+        }
+      }
+    },
     "views": {
       "board": "Kanban View",
       "table": "Table View"
@@ -390,6 +899,371 @@
       "file_type_pdf": "PDF",
       "file_type_image": "IMG",
       "unsupported": "Preview not supported"
+    },
+    "addProjectRevenue": {
+      "title": {
+        "cashIn": "Add New <highlight>Income</highlight>",
+        "cashOut": "Add New <highlight>Expense</highlight>"
+      },
+      "description": {
+        "cashIn": "Add a new income to your project.",
+        "cashOut": "Add a new expense to your project."
+      },
+      "trigger": {
+        "cashIn": "Add Income",
+        "cashOut": "Add Expense"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter transaction name"
+      },
+      "amount": {
+        "label": "Amount",
+        "placeholder": "Enter amount"
+      },
+      "note": {
+        "label": "Note",
+        "placeholder": "Enter note for this transaction"
+      },
+      "type": {
+        "cashIn": "Income",
+        "cashOut": "Expense"
+      },
+      "validation": {
+        "name": {
+          "minLength": "Transaction name is required"
+        },
+        "amount": {
+          "min": "Amount must be greater than 0"
+        },
+        "note": {
+          "maxLength": "Max 255 characters"
+        }
+      }
+    },
+    "updateProjectRevenue": {
+      "title": "Edit Transaction",
+      "description": "Update the details of this transaction.",
+      "validation": {
+        "name": {
+          "minLength": "Transaction name is required"
+        },
+        "amount": {
+          "min": "Amount must be greater than 0"
+        },
+        "note": {
+          "maxLength": "Max 255 characters"
+        }
+      }
+    },
+    "settings": {
+      "title": "Project settings",
+      "description": "Manage general information and project permission configuration.",
+      "tabs": {
+        "info": "Project Information",
+        "members": "Members",
+        "invites": "Invites",
+        "permissions": "Roles & Permissions"
+      }
+    },
+    "permissions": {
+      "action": {
+        "canRead": "Read",
+        "canWrite": "Write",
+        "canUpdate": "Update",
+        "canDelete": "Delete"
+      },
+      "noRolesDefined": "No roles defined yet",
+      "addRole": "Add role",
+      "memberCount": "({{count}} members)"
+    },
+    "updateProjectRole": {
+      "field": {
+        "name": {
+          "label": "Role name",
+          "placeholder": "Enter role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter role description"
+        }
+      },
+      "validation": {
+        "name": {
+          "minLength": "Role name is required"
+        },
+        "description": {
+          "maxLength": "Description must not exceed 255 characters"
+        }
+      },
+      "status": {
+        "saving": "Saving changes...",
+        "unsavedChanges": "You have unsaved changes.",
+        "noChanges": "No changes yet. Update permissions to enable save."
+      },
+      "unsavedChanges": {
+        "title": "Discard unsaved changes?",
+        "description": "You have unsaved changes on this role. Leaving now will discard them."
+      },
+      "locked": {
+        "title": "System default role is locked",
+        "description": "This role is managed by the system and cannot be edited or deleted."
+      },
+      "extensions": {
+        "taskUpdateTitle": "Task update extensions",
+        "moveTask": "Move task",
+        "moveMilestone": "Move milestone",
+        "toggleTaskStatus": "Toggle task status",
+        "storageReadTitle": "Storage read extensions",
+        "downloadFiles": "Download files",
+        "empty": "No detailed permissions configured."
+      },
+      "permissionsConfig": {
+        "tasks": {
+          "canRead": {
+            "permission": {
+              "readTasks": "Read tasks"
+            },
+            "extensions": {
+              "viewTasksInKanbanOrTable": "View tasks in Kanban or Table"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeTasks": "Write tasks"
+            },
+            "extensions": {
+              "createParentMilestonesMilestonesAndTasks": "Create parent milestones, milestones, and tasks",
+              "addAttachmentsSubtasksAndCommentsOnTasks": "Add attachments, subtasks, and comments on tasks",
+              "assignMembersToTasks": "Assign members to tasks",
+              "createOrAssignLabelsToTasks": "Create or assign labels to tasks"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteTasks": "Delete tasks"
+            },
+            "extensions": {
+              "deleteParentMilestonesMilestonesAndTasks": "Delete parent milestones, milestones, and tasks",
+              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Delete attachments, subtasks, and comments on tasks",
+              "unassignMembersFromTasks": "Unassign members from tasks",
+              "unassignLabelsFromTasks": "Unassign labels from tasks",
+              "deleteLabelsFromProject": "Delete labels from project"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateTasks": "Update tasks"
+            },
+            "extensions": {
+              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Update task name, description, priority, task points, background image, and due date",
+              "watchOrUnwatchTask": "Watch or unwatch task",
+              "updateMilestoneName": "Update milestone name",
+              "moveMilestone": "Move milestone",
+              "moveTaskBetweenMilestones": "Move task between milestones",
+              "toggleTaskStatus": "Toggle task status"
+            }
+          }
+        },
+        "performance": {
+          "canRead": {
+            "permission": {
+              "readTaskPerformance": "Read task performance"
+            },
+            "extensions": {
+              "viewTaskPerformanceMetrics": "View task performance metrics"
+            }
+          }
+        },
+        "calendar": {
+          "canRead": {
+            "permission": {
+              "readCalendar": "Read calendar"
+            },
+            "extensions": {
+              "viewProjectCalendar": "View project calendar",
+              "viewMeetingDetails": "View meeting details"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeCalendar": "Write calendar"
+            },
+            "extensions": {
+              "purchaseMeetingPackage": "Purchase meeting package",
+              "bookMeeting": "Book meeting"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateCalendar": "Update calendar"
+            },
+            "extensions": {
+              "rescheduleMeeting": "Reschedule meeting"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteCalendar": "Delete calendar"
+            },
+            "extensions": {
+              "cancelMeeting": "Cancel meeting"
+            }
+          }
+        },
+        "storage": {
+          "canRead": {
+            "permission": {
+              "readProjectStorage": "Read project storage"
+            },
+            "extensions": {
+              "viewProjectStorage": "View project storage",
+              "downloadFiles": "Download files"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectStorage": "Write project storage"
+            },
+            "extensions": {
+              "uploadFilesToProjectStorage": "Upload files to project storage"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectStorage": "Delete project storage"
+            },
+            "extensions": {
+              "deleteFilesFromProjectStorage": "Delete files from project storage"
+            }
+          }
+        },
+        "revenue": {
+          "canRead": {
+            "permission": {
+              "readProjectRevenue": "Read project revenue"
+            },
+            "extensions": {
+              "viewRevenueMetrics": "View revenue metrics"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectRevenue": "Write project revenue"
+            },
+            "extensions": {
+              "addIncomeExpenseRecords": "Add income or expense records",
+              "addRevenueLabels": "Add revenue labels"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectRevenue": "Update project revenue"
+            },
+            "extensions": {
+              "updateIncomeExpenseRecords": "Update income or expense records",
+              "assignRevenueLabels": "Assign revenue labels"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectRevenue": "Delete project revenue"
+            },
+            "extensions": {
+              "deleteIncomeExpenseRecords": "Delete income or expense records",
+              "unassignRevenueLabels": "Unassign revenue labels",
+              "deleteRevenueLabelsFromProject": "Delete revenue labels from project"
+            }
+          }
+        },
+        "settings": {
+          "canRead": {
+            "permission": {
+              "readProjectSettings": "Read project settings"
+            },
+            "extensions": {
+              "viewProjectInfoMembersAndRoles": "View project info, members, and roles"
+            }
+          },
+          "canWrite": {
+            "permission": {
+              "writeProjectSettings": "Write project settings"
+            },
+            "extensions": {
+              "inviteMembers": "Invite members",
+              "createProjectRoles": "Create project roles"
+            }
+          },
+          "canUpdate": {
+            "permission": {
+              "updateProjectSettings": "Update project settings"
+            },
+            "extensions": {
+              "updateProjectRoles": "Update project roles",
+              "assignOrUnassignMemberRoles": "Assign or unassign member roles"
+            }
+          },
+          "canDelete": {
+            "permission": {
+              "deleteProjectSettings": "Delete project settings"
+            },
+            "extensions": {
+              "removeMembers": "Remove members",
+              "deleteProjectRoles": "Delete project roles"
+            }
+          }
+        }
+      }
+    },
+    "deleteProjectRole": {
+      "confirmation": {
+        "title": "Delete role",
+        "description": "Are you sure you want to delete this role?"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "deleteTitle": "Delete this role",
+        "deleteDescription": "Once you delete a role, there is no going back. Please be certain."
+      }
+    },
+    "deleteProject": {
+      "confirmation": {
+        "title": "Delete project",
+        "description": "Are you sure you want to delete \"{{projectName}}\"?",
+        "confirmText": "Delete"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "This action will permanently remove this project and its related data.",
+        "deleteButton": "Delete project"
+      }
+    }
+  },
+  "projectRevenue": {
+    "stats": {
+      "totalRevenue": "Total Income",
+      "totalExpense": "Total Expense",
+      "netRevenue": "Net Revenue"
+    },
+    "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "name": "Name",
+      "namePlaceholder": "Search by name...",
+      "amount": "Amount",
+      "type": "Type",
+      "labels": "Labels",
+      "balanceAfter": "Balance",
+      "createdDate": "Date",
+      "createdBy": "Created by",
+      "none": "None",
+      "noLabels": "No labels"
+    },
+    "actions": {
+      "openMenu": "Open menu",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "expertNetwork": {
@@ -409,7 +1283,117 @@
     "reset": "Reset",
     "viewProfile": "View profile",
     "noBio": "No introduction yet",
-    "noMentorsFound": "No mentors found"
+    "noMentorsFound": "No mentors found",
+    "hero": {
+      "controls": {
+        "previousSlide": "Previous slide",
+        "nextSlide": "Next slide",
+        "goToSlide": "Go to slide {{index}}"
+      },
+      "metrics": {
+        "liveMetric": "Live metric",
+        "activeFlow": "Active flow",
+        "mentorSpotlight": "Mentor spotlight",
+        "updatedToday": "Updated today"
+      },
+      "visual": {
+        "avatarAlt": "Mentor",
+        "avatarFallback": "MT"
+      },
+      "slides": {
+        "connection": {
+          "eyebrow": "TaskCoper's mission",
+          "titleSegments": {
+            "connect": "Connect ",
+            "mentor": "Mentor",
+            "with": " with ",
+            "mentee": "Mentee",
+            "growth": " for faster growth"
+          },
+          "body": "Each mentoring session shortens the path from ideas to real-world execution.",
+          "cta": "Find the right expert",
+          "stats": {
+            "verifiedExperts": {
+              "value": "500+",
+              "label": "Verified experts"
+            },
+            "completedSessions": {
+              "value": "12k+",
+              "label": "Sessions completed"
+            },
+            "averageRating": {
+              "value": "4.9★",
+              "label": "Average rating"
+            }
+          }
+        },
+        "mentee": {
+          "eyebrow": "For learners",
+          "titleSegments": {
+            "learnFrom": "Learn from those ",
+            "experienced": "who have been there",
+            "rightPath": " on the path you're taking now"
+          },
+          "body": "Get practical feedback tailored to your context instead of long trial-and-error cycles.",
+          "cta": "Explore domains",
+          "stats": {
+            "specialties": {
+              "value": "40+",
+              "label": "Specialty domains"
+            },
+            "bookingResponse": {
+              "value": "< 24h",
+              "label": "Booking response"
+            },
+            "returningMentees": {
+              "value": "92%",
+              "label": "Returning mentees"
+            }
+          }
+        },
+        "mentor": {
+          "eyebrow": "For experts",
+          "titleSegments": {
+            "shareExperience": "Share experience. ",
+            "createImpact": "Create impact.",
+            "getRecognized": " Be recognized."
+          },
+          "body": "Create your own mentoring package, manage bookings, and grow your mentee community on one platform.",
+          "cta": "Become an expert",
+          "stats": {
+            "packageSetup": {
+              "value": "6 min",
+              "label": "To create a package"
+            },
+            "hiddenFees": {
+              "value": "0%",
+              "label": "Hidden fees"
+            },
+            "integrations": {
+              "value": "Integrated",
+              "label": "Calendar & Meet"
+            }
+          }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Proactive connection",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Faster structured learning",
+          "spotlight": "12W",
+          "subtitle": "Weekly plan"
+        },
+        "mentor": {
+          "badge": "Sustainable growth",
+          "spotlight": "4.9★",
+          "subtitle": "Highly rated by mentees"
+        }
+      }
+    }
   },
   "task": {
     "addTask": {
@@ -424,6 +1408,9 @@
     },
     "moveTask": {
       "title": "Move task",
+      "tabLabel": "Tab",
+      "milestoneLabel": "Milestone",
+      "positionLabel": "Position",
       "selectMilestone": "Select milestone",
       "selectPosition": "Select position",
       "move": "Move"
@@ -738,6 +1725,7 @@
   },
   "account": {
     "account": "Account",
+    "settings": "Settings",
     "language": "Language",
     "logout": "Logout"
   },
@@ -769,6 +1757,9 @@
           "label": "Ward",
           "placeholder": "Select ward",
           "searchPlaceholder": "Search ward..."
+        },
+        "domain": {
+          "label": "Domains"
         }
       },
       "validation": {
@@ -793,16 +1784,65 @@
       }
     },
     "profileDialog": {
-      "profileAndDisplay": "Profile and display",
-      "password": "Password"
+      "settings": "Account Settings",
+      "profileAndDisplay": "Profile & Display",
+      "password": "Password",
+      "location": "Location",
+      "connectedApps": "Connected Apps",
+      "googleCalendar": "Google Calendar",
+      "connectWithCalendar": "Connect with Calendar",
+      "googleCallback": {
+        "loading": {
+          "title": "Connecting Google Calendar",
+          "description": "Please wait while we verify your account..."
+        },
+        "success": {
+          "title": "Successfully Connected!",
+          "description": "Your Google Calendar is now linked. Redirecting you back..."
+        },
+        "error": {
+          "title": "Connection Failed",
+          "description": "Something went wrong while connecting your Google Calendar. Please try again."
+        },
+        "verifyingOauthToken": "Verifying Google OAuth token",
+        "connectedBadge": "Connected",
+        "goBack": "Go Back"
+      }
     },
     "tabs": {
       "all": "All",
-      "info": "Info",
-      "projects": "Projects",
-      "files": "Photos & Videos"
+      "schedule": "Schedule",
+      "packages": "Packages"
     },
-    "logoImageAlt": "{{name}} Logo"
+    "logoImageAlt": "{{name}} Logo",
+    "profile": {
+      "addCoverImage": "Add cover image",
+      "chooseCoverImage": "Choose cover image",
+      "deleteCoverImage": "Delete cover image",
+      "chooseAvatar": "Choose avatar",
+      "deleteAvatar": "Delete avatar",
+      "verifiedByTaskCoper": "Verified by TaskCoper",
+      "noEmail": "No email",
+      "noPhoneNumber": "No phone number"
+    },
+    "settings": {
+      "searchSettings": "Search settings",
+      "accountCenterTitle": "Account Center",
+      "accountCenterDesc": "Manage your account settings",
+      "otherSettingsTitle": "Other settings",
+      "otherSettingsDesc": "Manage other settings related to your account"
+    },
+    "location": {
+      "description": "Select the time zone used for your schedule and meetings.",
+      "field": {
+        "timeZone": {
+          "label": "Time zone",
+          "placeholder": "Select a time zone",
+          "searchPlaceholder": "Search time zone...",
+          "emptyMessage": "No time zone found."
+        }
+      }
+    }
   },
   "auth": {
     "signIn": {
@@ -825,6 +1865,9 @@
       "validation": {
         "email": {
           "invalid": "Invalid email address"
+        },
+        "code": {
+          "minLength": "Code must be 6 characters"
         },
         "password": {
           "minLength": "Password must be at least 8 characters long"
@@ -982,6 +2025,98 @@
       }
     }
   },
+  "mentorApplication": {
+    "widget": {
+      "title": "Become a Mentor",
+      "description": "Share your expertise and guide others on their journey to success.",
+      "applyNow": "Apply Now",
+      "dismiss": "Dismiss"
+    },
+    "page": {
+      "title": "Submit Mentor Application",
+      "description": "Empower the next generation of founders by sharing your strategic expertise. Help early-stage teams navigate the journey from product-market fit to scaling, while providing the critical insights that transform bold ideas into successful companies."
+    },
+    "form": {
+      "shortBio": "Short Bio",
+      "shortBioPlaceholder": "Briefly introduce yourself (1–2 sentences). Highlight your main expertise, years of experience, or what you can help mentees achieve.",
+      "detailedIntroduction": "Detailed Introduction",
+      "detailedIntroductionPlaceholder": "Tell mentees more about yourself. You can include:\n•   Your background and professional experience\n•   Areas of expertise you can mentor in\n•   Your mentoring style and what mentees can expect\n•   Notable projects, achievements, or companies you've worked with",
+      "portfolioFiles": "Portfolio Files",
+      "dropzoneEmpty": "Drag & drop files here, or click to browse",
+      "dropzoneActive": "Drop your files here",
+      "dropzoneHint": "Supports PDF and DOCX — up to 10 files",
+      "dropzoneAddMore": "Drop or click to add more files",
+      "dropzoneAddMoreActive": "Drop to add more files",
+      "statusUploading": "Uploading…",
+      "statusUploaded": "Uploaded",
+      "statusFailed": "Failed",
+      "removeFile": "Remove {{name}}"
+    },
+    "submit": {
+      "button": "Submit Application",
+      "buttonUploading": "Uploading…",
+      "uploadingParallel": "Uploading {{total}} file(s) in parallel…",
+      "allUploadsFailed": "All uploads failed",
+      "allUploadsFailedDescription": "Please remove the failed files and try again.",
+      "partialUpload": "{{count}} of {{total}} files uploaded",
+      "partialUploadFailed": "Failed: {{names}}"
+    },
+    "validation": {
+      "shortBioRequired": "Short bio is required",
+      "shortBioMax": "Short bio must be at most 255 characters",
+      "descriptionRequired": "Description is required",
+      "descriptionMax": "Description must be at most 10,000 characters",
+      "portfolioFilesMin": "At least one portfolio file is required",
+      "portfolioFilesMax": "You can upload at most 10 files",
+      "adminNoteRequiredForRejection": "Please enter a note when rejecting an application",
+      "titleLevelRequiredForApproval": "Title level is required when approving"
+    },
+    "status": {
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "pending": "New",
+      "pendingReview": "Pending Review",
+      "pendingLock": "Accept to view details",
+      "inReview": "In Review",
+      "inOffers": "Interview"
+    },
+    "button": {
+      "approve": "Approve",
+      "markInReview": "Review",
+      "moveToOffers": "Interview",
+      "reject": "Reject"
+    },
+    "list": {
+      "title": "Your Mentor Applications",
+      "adminDescription": "Review submitted mentor applications of the system",
+      "description": "View your submitted mentor applications and monitor their review status.",
+      "allStatuses": "All Statuses",
+      "sortLatest": "Latest",
+      "sortOldest": "Oldest",
+      "newApplication": "New Application",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files",
+      "noApplications": "No applications found.",
+      "selectApplicationToView": "Select an application to view details"
+    },
+    "sidebar": {
+      "title": "Mentor Applications",
+      "list": "Application List"
+    },
+    "dialog": {
+      "title": "Application Details",
+      "submitted": "Submitted {{date}}",
+      "reviewed": "Reviewed {{date}}",
+      "shortBio": "Short Bio",
+      "portfolioFiles": "Portfolio Files ({{count}})",
+      "detailedIntroduction": "Detailed Introduction",
+      "reviewerNote": "Reviewer Note",
+      "reviewerNoteTitle": "Reviewer Note",
+      "reviewerNotePlaceholder": "Enter a reason if declining...",
+      "titleLevel": "Mentor Title Level",
+      "titleLevelPlaceholder": "Select title level..."
+    }
+  },
   "notification": {
     "popover": {
       "title": "Notifications",
@@ -993,6 +2128,30 @@
       "chat": "Chat",
       "project": "Project",
       "system": "System"
+    }
+  },
+  "news": {
+    "eyebrow": "The Edition · Startup",
+    "heroTitle": "Reading for Vietnamese founders",
+    "heroSubtitle": "Curated reporting from VnExpress, CafeBiz, and TheLEADER — read in five minutes, applied for a year.",
+    "liveUpdated": "Updated weekly",
+    "topStory": "Featured",
+    "trendingNow": "Also reading",
+    "latest": "Latest stories",
+    "seeAll": "Browse archive",
+    "readMore": "Read",
+    "minRead": "{{count}} min",
+    "previousFeatured": "Previous featured story",
+    "nextFeatured": "Next featured story",
+    "allCategories": "All",
+    "empty": "No articles in this category yet.",
+    "newsletter": {
+      "eyebrow": "The Weekly Brief",
+      "title": "Sunday mornings, in your inbox.",
+      "description": "A short, focused read for founders and operators building in Vietnam.",
+      "placeholder": "your@email.com",
+      "cta": "Subscribe",
+      "privacy": "No spam. Unsubscribe any time."
     }
   },
   "home": {
@@ -1316,6 +2475,172 @@
       "file": "File"
     }
   },
+  "mentorPackageRule": {
+    "add": {
+      "title": "Add package rule",
+      "description": "Add a new rule to this mentor package."
+    },
+    "form": {
+      "no": "Rule Number",
+      "noPlaceholder": "Enter rule number",
+      "totalTimeSlots": "Total Time Slots",
+      "totalTimeSlotsPlaceholder": "Enter total time slots"
+    },
+    "item": {
+      "session": "Session",
+      "hours": "hours",
+      "sessionTakesHours": "This session takes {{hours}} hour(s).",
+      "edit": "Edit",
+      "create": "Create new rule"
+    },
+    "delete": {
+      "title": "Delete rule?",
+      "description": "Are you sure you want to delete session {{no}}?"
+    },
+    "validation": {
+      "noRequired": "Number required",
+      "noPositive": "Must be > 0",
+      "totalTimeSlotsRequired": "Total slots required",
+      "totalTimeSlotsPositive": "Must be > 0"
+    }
+  },
+  "mentorPackage": {
+    "create": {
+      "title": "New mentor package",
+      "description": "Create a new mentor package to offer your services."
+    },
+    "page": {
+      "title": "Meeting Packages",
+      "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
+      "bookingsTitle": "Bookings",
+      "emptyTitle": "No packages yet",
+      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
+      "infoTitle": "Information",
+      "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
+      "durationTitle": "Session Duration Rules",
+      "durationDescription": "Each slot equals 1 hour. Expand a session below to see its total duration.",
+      "feedbackTitle": "Feedback",
+      "feedbackDescription": "{{totalCount}} feedback entries for this package",
+      "manage": "Manage package"
+    },
+    "form": {
+      "name": "Package name",
+      "namePlaceholder": "Enter package name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter package description",
+      "durationInMinutes": "Duration (minutes)",
+      "durationPlaceholder": "e.g. 60",
+      "totalSessions": "Total sessions",
+      "totalSessionsPlaceholder": "e.g. 10",
+      "price": "Price",
+      "pricePlaceholder": "Enter price",
+      "currency": "Currency",
+      "currencyPlaceholder": "Select currency",
+      "coverImage": "Cover image",
+      "coverImageHint": "Click the image area to choose a cover, then press Save to upload.",
+      "isActive": "Active",
+      "isActiveDescription": "If disabled, this package will not be visible/available.",
+      "isPin": "Pin Package",
+      "isPinDescription": "Pin this package to the top of the list for mentees to see easily.",
+      "activationDeadlineDays": "First Booking Deadline (days)",
+      "activationDeadlineDaysPlaceholder": "e.g. 10",
+      "activationDeadlineDaysDescription": "User needs to use the package within these days from the purchase date.",
+      "usageDeadlineDays": "Usage Period (days)",
+      "usageDeadlineDaysPlaceholder": "e.g. 30",
+      "usageDeadlineDaysDescription": "After the first session, the user must complete all sessions within these days."
+    },
+    "list": {
+      "newPackage": "New package",
+      "isPinned": "Pinned",
+      "notPinned": "Not pinned"
+    },
+    "card": {
+      "sessionsCount_one": "{{count}} session",
+      "sessionsCount_other": "{{count}} sessions",
+      "viewPackage": "View package",
+      "bookFor": "Book for {{price}}",
+      "sessions": "{{sessions}} sessions",
+      "sortOrder": "Sort order"
+    },
+    "sidebar": {
+      "meetingSessionPackages": "Meeting Session Packages",
+      "menu": "Menu",
+      "overview": "Overview",
+      "packageList": "Package List"
+    },
+    "delete": {
+      "title": "Delete package",
+      "description": "Are you sure you want to delete \"{{packageName}}\"?"
+    },
+    "validation": {
+      "nameRequired": "Name required",
+      "descriptionMax": "Max 255 chars",
+      "sessionsPositive": "Must be > 0",
+      "pricePositive": "Must be > 0"
+    },
+    "dialog": {
+      "title": "Package information",
+      "description": "Update package information"
+    },
+    "bookingDialog": {
+      "bookingInformation": "Booking Information",
+      "bookedBy": "Booked by",
+      "feedbackSubmitted": "Feedback submitted",
+      "activationDeadline": "Activation deadline",
+      "activatedOn": "Activated on",
+      "usageDeadline": "Usage deadline",
+      "deadlinesTitle": "Deadlines",
+      "deadlinesDescription": "Keep these dates in mind to activate and use your package on time."
+    },
+    "bookPage": {
+      "notAvailable": "N/A",
+      "updatedOn": "Last updated {{date}}",
+      "ratingsCount_one": "{{count}} rating",
+      "ratingsCount_other": "{{count}} ratings",
+      "buyers": "buyers",
+      "discountPercent": "Save {{percent}}%",
+      "activationDays": "Activation days",
+      "usageDays": "Usage days",
+      "courseRating": "{{rating}} course rating"
+    }
+  },
+  "mentorPackageStatistics": {
+    "title": "Statistics",
+    "description": "View bookings and revenue breakdown by year.",
+    "totalBookings": "Total Bookings",
+    "bookingsWithVoucher": "With Voucher",
+    "bookingsWithoutVoucher": "Without Voucher",
+    "grossRevenue": "Gross Revenue",
+    "netRevenue": "Net Revenue",
+    "mentorPayout": "Mentor Payout",
+    "revenueOverview": "Revenue Overview",
+    "revenueOverviewDescription": "Monthly revenue breakdown for {{year}}",
+    "topPackagesByBookings": "Top Packages by Bookings",
+    "topPackagesByBookingsDescription": "Most purchased packages in selected period",
+    "topPackagesByBookingsTooltip": "Paid bookings",
+    "packageRevenueShare": "Revenue Share by Package",
+    "packageRevenueShareDescription": "Net revenue distribution (%) across top packages",
+    "packageRevenueShareTooltip": "Net revenue share (%)"
+  },
+  "packageBooking": {
+    "bookPackage": {
+      "title": "Book package",
+      "description": "Confirm your package and select a project to book for.",
+      "receipt": "TASKCOPER • RECEIPT",
+      "sessions": "Sessions",
+      "durationPerSession": "Duration / session",
+      "min": "min",
+      "total": "TOTAL",
+      "proceed": "Book now",
+      "voucherCode": "Voucher code",
+      "voucherCodePlaceholder": "Enter your voucher code...",
+      "discount": "Discount",
+      "voucherNotFound": "Voucher not found",
+      "voucherNotStarted": "Voucher hasn't started yet",
+      "voucherExpired": "Voucher has expired",
+      "voucherLowUsage": "This voucher is running low on uses! Hurry up!"
+    }
+  },
   "pageTitle": {
     "network": "Network",
     "projects": "Projects",
@@ -1343,7 +2668,8 @@
       "paidDate": "Paid Date",
       "actions": "Actions",
       "copyId": "Copy ID",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "dateFormat": "HH:mm dd/MM/yyyy"
     },
     "status": {
       "pending": "Pending",
@@ -1393,61 +2719,204 @@
     "bronze": "Bronze",
     "silver": "Silver",
     "gold": "Gold",
-    "platinum": "Platinum",
-    "diamond": "Diamond",
-    "master": "Master",
-    "grandMaster": "Grand Master",
-    "legendary": "Legendary",
-    "mythic": "Mythic"
+    "platinum": "Platinum"
   },
-  "legal": {
-    "terms": {
-      "title": "Terms of Service",
-      "lastUpdated": "Last Updated: March 26, 2026",
-      "intro": "Welcome to TaskCoper. By using our platform, you agree to comply with the following terms.",
-      "sections": {
-        "accounts": {
-          "title": "1. User Accounts",
-          "content": "You are responsible for maintaining the security of your account and all activities that occur under it. Providing accurate information is mandatory."
-        },
-        "management": {
-          "title": "2. Project & Task Management",
-          "content": "TaskCoper provides tools for managing projects, task cards, and team collaboration. Users are responsible for the content and data they upload."
-        },
-        "mentoring": {
-          "title": "3. Mentoring Services",
-          "content": "The platform connects Experts (Mentors) and Users (Mentees). All agreements regarding meetings and mentoring roadmaps must comply with our professional conduct rules."
-        },
-        "payments": {
-          "title": "4. Payments & Refunds",
-          "content": "Mentor Packages and transactions on the platform are processed securely. Refunds will be considered based on the specific policy of each package."
-        },
-        "ip": {
-          "title": "5. Intellectual Property",
-          "content": "All features and designs of TaskCoper are owned by us. Your project content remains yours."
+  "purchaseHistory": {
+    "title": "Purchased Packages",
+    "description": "Manage your purchased packages.",
+    "meetingsCount": "{{booked}}/{{total}} sessions",
+    "price": "Price",
+    "duration": "Duration",
+    "viewDetails": "View Details",
+    "bookSession": "Book Session",
+    "detail": {
+      "about": "About",
+      "progress": "Progress",
+      "mentor": "Mentor",
+      "details": "Package Details",
+      "meetings": "Meetings",
+      "noMeetings": "No meetings scheduled yet"
+    },
+    "legal": {
+      "terms": {
+        "title": "Terms of Service",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "Welcome to TaskCoper. By using our platform, you agree to comply with the following terms.",
+        "sections": {
+          "accounts": {
+            "title": "1. User Accounts",
+            "content": "You are responsible for maintaining the security of your account and all activities that occur under it. Providing accurate information is mandatory."
+          },
+          "management": {
+            "title": "2. Project & Task Management",
+            "content": "TaskCoper provides tools for managing projects, task cards, and team collaboration. Users are responsible for the content and data they upload."
+          },
+          "mentoring": {
+            "title": "3. Mentoring Services",
+            "content": "The platform connects Experts (Mentors) and Users (Mentees). All agreements regarding meetings and mentoring roadmaps must comply with our professional conduct rules."
+          },
+          "payments": {
+            "title": "4. Payments & Refunds",
+            "content": "Mentor Packages and transactions on the platform are processed securely. Refunds will be considered based on the specific policy of each package."
+          },
+          "ip": {
+            "title": "5. Intellectual Property",
+            "content": "All features and designs of TaskCoper are owned by us. Your project content remains yours."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated: March 26, 2026",
+        "intro": "We respect your privacy and are committed to protecting your personal data.",
+        "sections": {
+          "collection": {
+            "title": "1. Data Collection",
+            "content": "We collect profile information (name, email, avatar) and activity data (projects, tasks, meeting history) to improve our services."
+          },
+          "usage": {
+            "title": "2. Data Usage",
+            "content": "Your information is used to operate the platform, support AI advisors, and facilitate connections between Mentors and Mentees."
+          },
+          "security": {
+            "title": "3. Data Security",
+            "content": "We apply standard security measures to prevent unauthorized access or leakage of user data."
+          },
+          "rights": {
+            "title": "4. User Rights",
+            "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
+          }
         }
       }
+    }
+  },
+  "mentor": {
+    "updateProfile": {
+      "shortBio": {
+        "title": "Update Short Bio",
+        "description": "Briefly describe your expertise and experience.",
+        "label": "Short Bio",
+        "placeholder": "Enter your short bio"
+      },
+      "description": {
+        "title": "Update README",
+        "description": "Update your detailed mentor profile description.",
+        "label": "Description"
+      }
+    }
+  },
+  "commissionPage": {
+    "title": "Mentor Ranks & Rewards",
+    "subtitle": "Level up your mentorship journey. Higher ranks unlock better revenue shares as your earnings grow on the platform.",
+    "revenueShare": "revenue share",
+    "featuresTitle": "Revenue Share:",
+    "upTo": "Up to ",
+    "unlimited": "Unlimited",
+    "earn": "Earn ",
+    "ranks": {
+      "Bronze": {
+        "description": "Perfect for exploring the platform and starting your mentorship journey.",
+        "cta": "Become a Bronze Mentor"
+      },
+      "Silver": {
+        "description": "For active mentors who want to grow and manage a steady pipeline.",
+        "cta": "Aim for Silver"
+      },
+      "Gold": {
+        "description": "Designed for highly experienced mentors running multiple programs.",
+        "cta": "Go for Gold"
+      },
+      "Platinum": {
+        "description": "Security, compliance, and tailored workflows for top-tier mentors.",
+        "cta": "Reach Platinum"
+      },
+      "default": {
+        "description": "Unlock exclusive benefits and higher revenue share as you level up.",
+        "cta": "Reach {{rank}}"
+      }
+    }
+  },
+  "packageFeedback": {
+    "title": "Feedback",
+    "description": "Share your experience to help mentors improve future sessions.",
+    "noteLabel": "Additional note",
+    "notePlaceholder": "Share any extra context or feedback...",
+    "submitButton": "Submit feedback",
+    "confirm": {
+      "title": "Submit feedback?",
+      "description": "Please review your feedback before submitting. This action cannot be undone."
     },
-    "privacy": {
-      "title": "Privacy Policy",
-      "lastUpdated": "Last Updated: March 26, 2026",
-      "intro": "We respect your privacy and are committed to protecting your personal data.",
-      "sections": {
-        "collection": {
-          "title": "1. Data Collection",
-          "content": "We collect profile information (name, email, avatar) and activity data (projects, tasks, meeting history) to improve our services."
-        },
-        "usage": {
-          "title": "2. Data Usage",
-          "content": "Your information is used to operate the platform, support AI advisors, and facilitate connections between Mentors and Mentees."
-        },
-        "security": {
-          "title": "3. Data Security",
-          "content": "We apply standard security measures to prevent unauthorized access or leakage of user data."
-        },
-        "rights": {
-          "title": "4. User Rights",
-          "content": "You have the right to access, edit, or request deletion of your personal data at any time through account settings."
+    "validation": {
+      "ratingRequired": "Please select a rating.",
+      "noteMax": "Note must be at most 10,000 characters."
+    },
+    "list": {
+      "title": "Packages needing feedback",
+      "description": "Leave feedback for the packages you purchased.",
+      "columns": {
+        "index": "No",
+        "packageName": "Package name",
+        "mentor": "Mentor",
+        "project": "Project",
+        "purchasedAt": "Purchased on",
+        "author": "Author",
+        "authorPlaceholder": "Type author name to search...",
+        "rating": "Rating",
+        "action": "Action"
+      },
+      "notAvailable": "N/A",
+      "dateFormat": "HH:mm dd/MM/yyyy",
+      "giveFeedback": "Give feedback"
+    },
+    "questions": {
+      "punctuality": {
+        "title": "Did the mentor show up on time and manage the schedule effectively?",
+        "label": "Punctuality",
+        "options": {
+          "4": "Started exactly on time and managed the schedule perfectly.",
+          "3": "Mostly on time, minor delays but communicated well.",
+          "2": "Noticeably late or rushed the meeting.",
+          "1": "Very late, no-show, or highly disrespectful of time."
+        }
+      },
+      "preparation": {
+        "title": "Did the mentor review your project details before the meeting?",
+        "label": "Preparation",
+        "options": {
+          "4": "Thoroughly reviewed materials and understood the context immediately.",
+          "3": "Skimmed the materials, had a basic understanding of the startup.",
+          "2": "Unprepared, had to explain everything from scratch.",
+          "1": "Completely unprepared or confused the project with another."
+        }
+      },
+      "quality": {
+        "title": "Was the feedback valuable for your current stage?",
+        "label": "Quality",
+        "options": {
+          "4": "Deeply insightful, solved core problems directly.",
+          "3": "Helpful and provided a good general direction.",
+          "2": "Somewhat generic, lacking specific depth for the industry.",
+          "1": "Irrelevant, outdated, or fundamentally incorrect advice."
+        }
+      },
+      "communication": {
+        "title": "Was the mentor actively listening and engaging?",
+        "label": "Communication",
+        "options": {
+          "4": "Exceptionally clear, engaged, and actively listened.",
+          "3": "Professional, clear, and easy to converse with.",
+          "2": "Dominated the conversation or used confusing jargon.",
+          "1": "Condescending, dismissive, or hard to communicate with."
+        }
+      },
+      "actionability": {
+        "title": "Did you walk away knowing exactly what to do next?",
+        "label": "Actionability",
+        "options": {
+          "4": "Provided a clear, step-by-step action plan.",
+          "3": "Suggested a few practical next steps to try.",
+          "2": "Mostly theoretical advice, hard to apply immediately.",
+          "1": "No clear takeaways or next steps were established."
         }
       }
     }

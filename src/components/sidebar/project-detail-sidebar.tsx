@@ -10,110 +10,227 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
-import TaskCard from '@/features/tasks/components/task-card'
-import { useGetMyAssignedTasks } from '@/features/tasks/hooks/use-get-my-assigned-tasks'
-import { useAuthStore } from '@/lib/zustand/auth.store'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useGetMyAssignedTasks } from '@/features/projects/core/hooks/use-get-my-assigned-tasks'
+import OwnerTransferDialog from '@/features/projects/members/components/owner-transfer-dialog'
+import { useLeaveProject } from '@/features/projects/members/hooks/use-leave-project'
+import { useOwnerTransferCandidates } from '@/features/projects/members/hooks/use-owner-transfer-candidates'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
+import TaskCard from '@/features/projects/tasks/core/components/task-card'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
 import {
-  CalendarClockIcon,
-  DatabaseIcon,
+  CalendarDaysIcon,
   GaugeIcon,
+  HardDriveIcon,
   InfoIcon,
   ListTodoIcon,
-  MessageCircleIcon,
-  NotebookPenIcon,
+  LogOutIcon,
   SettingsIcon,
-  SmileIcon
+  SmileIcon,
+  WalletIcon
 } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useParams } from 'react-router'
+import { Link, useLocation, useMatches, useNavigate, useParams } from 'react-router'
+import { Button } from '../ui/button'
 
 interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onTaskCountChange?: (count: number, isLoading: boolean) => void
 }
 
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
+  const navigate = useNavigate()
+
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
-  const { user } = useAuthStore()
+  const { identifier } = useParams<{ identifier: string }>()
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
+  const { confirm } = useConfirmStore()
+
+  const { me: user } = useGetMe()
+  const { permissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const location = useLocation()
 
-  const navMain = useMemo(
-    () => [
+  const isCurrentUserOwner = user?.id === permissions?.ownerId
+
+  const { leaveProject, isLeavingProject } = useLeaveProject({ identifier: identifier ?? '' })
+
+  const {
+    selectedNewOwnerUserId,
+    setSelectedNewOwnerUserId,
+    ownerCandidateOptions,
+    isLoadingOwnerCandidates,
+    hasNextOwnerCandidatesPage,
+    isFetchingNextOwnerCandidates,
+    handleOwnerCandidateSearch,
+    fetchNextOwnerCandidates,
+    resetOwnerTransferState
+  } = useOwnerTransferCandidates({
+    projectIdentifier: identifier,
+    currentUserId: user?.id,
+    enabled: isLeaveDialogOpen && isCurrentUserOwner
+  })
+
+  const handleLeaveButtonClick = useCallback(async () => {
+    if (!identifier) return
+
+    const confirmed = await confirm({
+      title: t('project.updateProjectMembers.confirm.leaveTitle'),
+      description: t('project.updateProjectMembers.confirm.leaveDescription'),
+      confirmText: t('common.button.leave'),
+      cancelText: t('common.button.cancel'),
+      variant: 'destructive'
+    })
+
+    if (!confirmed) return
+
+    if (isCurrentUserOwner) {
+      resetOwnerTransferState()
+      setIsLeaveDialogOpen(true)
+      return
+    }
+
+    leaveProject(
       {
-        title: t('project.sidebar.aboutProject'),
-        url: 'info',
-        icon: InfoIcon,
-        hasSecondSidebar: false
+        projectIdentifier: identifier,
+        newOwnerUserId: null
       },
       {
-        title: t('project.sidebar.tasks'),
-        url: 'milestones',
-        icon: ListTodoIcon,
-        hasSecondSidebar: true
-      },
-      {
-        title: t('project.sidebar.performance'),
-        url: 'performance',
-        icon: GaugeIcon,
-        hasSecondSidebar: false
-      },
-      {
-        title: t('project.sidebar.calendar'),
-        url: 'calendar',
-        icon: CalendarClockIcon,
-        hasSecondSidebar: false
-      },
-      {
-        title: t('project.sidebar.chat'),
-        url: 'chat',
-        icon: MessageCircleIcon,
-        hasSecondSidebar: false
-      },
-      {
-        title: t('project.sidebar.note'),
-        url: 'note',
-        icon: NotebookPenIcon,
-        hasSecondSidebar: false
-      },
-      {
-        title: t('project.sidebar.storage'),
-        url: 'storage',
-        icon: DatabaseIcon,
-        hasSecondSidebar: false
-      },
-      // {
-      //   title: 'Revenue',
-      //   url: 'revenue',
-      //   icon: BanknoteIcon,
-      //   hasSecondSidebar: false
-      // },
-      {
-        title: t('project.sidebar.settings'),
-        url: 'settings',
-        icon: SettingsIcon,
-        hasSecondSidebar: false
+        onSuccess: () => {
+          navigate('/projects')
+        }
       }
-    ],
+    )
+  }, [confirm, identifier, isCurrentUserOwner, leaveProject, navigate, resetOwnerTransferState, t])
+
+  const handleLeaveDialogOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        resetOwnerTransferState()
+      }
+
+      setIsLeaveDialogOpen(isOpen)
+    },
+    [resetOwnerTransferState]
+  )
+
+  const handleOwnerLeaveProject = useCallback(() => {
+    if (!identifier || !selectedNewOwnerUserId) return
+
+    leaveProject(
+      {
+        projectIdentifier: identifier,
+        newOwnerUserId: selectedNewOwnerUserId
+      },
+      {
+        onSuccess: () => {
+          setIsLeaveDialogOpen(false)
+          resetOwnerTransferState()
+          navigate('/projects')
+        }
+      }
+    )
+  }, [identifier, leaveProject, navigate, resetOwnerTransferState, selectedNewOwnerUserId])
+
+  const navMain = useMemo(
+    () =>
+      [
+        {
+          title: t('project.sidebar.aboutProject'),
+          url: 'info',
+          icon: InfoIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'OVERVIEW'
+        },
+        {
+          title: t('project.sidebar.tasks'),
+          url: 'milestones',
+          icon: ListTodoIcon,
+          hasSecondSidebar: true,
+          sectionKey: 'TASKS'
+        },
+        {
+          title: t('project.sidebar.performance'),
+          url: 'performance',
+          icon: GaugeIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'PERFORMANCE'
+        },
+        {
+          title: t('project.sidebar.calendar'),
+          url: 'calendar',
+          icon: CalendarDaysIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'CALENDAR'
+        },
+        // {
+        //   title: t('project.sidebar.chat'),
+        //   url: 'chat',
+        //   icon: MessageCircleIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'CHAT'
+        // },
+        // {
+        //   title: t('project.sidebar.note'),
+        //   url: 'note',
+        //   icon: NotebookPenIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'NOTE'
+        // },
+        {
+          title: t('project.sidebar.storage'),
+          url: 'storage',
+          icon: HardDriveIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'STORAGE'
+        },
+        {
+          title: t('project.sidebar.revenue'),
+          url: 'revenue',
+          icon: WalletIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'REVENUE'
+        },
+        {
+          title: t('project.sidebar.settings'),
+          url: 'settings',
+          icon: SettingsIcon,
+          hasSecondSidebar: false,
+          sectionKey: 'SETTINGS'
+        }
+      ] as const,
     [t]
   )
 
+  const { can, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+
+  const filteredNavMain = useMemo(() => {
+    return navMain.filter((item) => can(item.sectionKey, 'canRead'))
+  }, [navMain, can])
+
+  const matches = useMatches()
   const activeSegment = useMemo(() => {
-    const parts = location.pathname.split('/')
-    const projectIndex = parts.findIndex((p) => p === 'projects')
-    if (projectIndex !== -1 && parts.length > projectIndex + 2) {
-      return parts[projectIndex + 2]
+    const matchWithSidebar = [...matches]
+      .reverse()
+      .find((match) => match.handle && typeof match.handle === 'object' && 'sidebarItem' in match.handle)
+    if (
+      matchWithSidebar &&
+      matchWithSidebar.handle &&
+      typeof matchWithSidebar.handle === 'object' &&
+      'sidebarItem' in matchWithSidebar.handle
+    ) {
+      return matchWithSidebar.handle.sidebarItem as string
     }
     return 'milestones'
-  }, [location.pathname])
+  }, [matches])
 
-  const activeItem = navMain.find((item) => item.url === activeSegment) || navMain[1]
+  const activeItem = filteredNavMain.find((item) => item.url === activeSegment) || filteredNavMain[0] || navMain[1]
 
   const { assignedTasks, isLoadingAssignedTasks } = useGetMyAssignedTasks({
-    projectId,
-    userId: user?.UserId,
-    enabled: activeItem.hasSecondSidebar
+    projectIdentifier: identifier,
+    userId: user?.id,
+    enabled:
+      activeItem.hasSecondSidebar && location.pathname.split('/').includes('milestones') && can('TASKS', 'canRead')
   })
 
   useEffect(() => {
@@ -150,26 +267,49 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader> */}
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent className='px-1.5 md:px-0'>
-              <SidebarMenu>
-                {navMain.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <Link to={`/projects/${projectId}/${item.url}`}>
-                      <SidebarMenuButton
-                        tooltip={{
-                          children: item.title,
-                          hidden: false
-                        }}
-                        className={cn('px-2.5 md:px-2', activeSegment === item.url && 'bg-primary/10 text-primary')}
-                      >
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                ))}
+        <SidebarContent className='flex h-full flex-col'>
+          <SidebarGroup className='flex-1'>
+            <SidebarGroupContent className='flex h-full flex-col px-1.5 md:px-0'>
+              <SidebarMenu className='flex h-full flex-col'>
+                {isLoadingPermissions ? (
+                  <div className='flex flex-col gap-0.5 px-1.5 md:px-0'>
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <div key={i} className='flex items-center gap-3 px-2.5 py-2'>
+                        <Skeleton className='size-4 shrink-0 rounded' />
+                        <Skeleton className='h-4 w-24 md:hidden' />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  filteredNavMain.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <Link to={`/projects/${identifier}/${item.url}`}>
+                        <SidebarMenuButton
+                          tooltip={{
+                            children: item.title,
+                            hidden: false
+                          }}
+                          className={cn('px-2.5 md:px-2', activeSegment === item.url && 'bg-primary/10 text-primary')}
+                        >
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  ))
+                )}
+
+                {identifier ? (
+                  <Button
+                    className='mt-auto bg-destructive/10 text-destructive/90 hover:bg-destructive/15 hover:text-destructive'
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={handleLeaveButtonClick}
+                    disabled={isLeavingProject}
+                  >
+                    <LogOutIcon />
+                  </Button>
+                ) : null}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -177,12 +317,18 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
       </Sidebar>
 
       {activeItem.hasSecondSidebar ? (
-        <Sidebar collapsible='none' className='hidden w-[340px] md:flex shrink-0'>
+        <Sidebar collapsible='none' className='hidden w-85 md:flex shrink-0'>
           <SidebarHeader className='gap-3.5 border-b p-4'>
             <div className='flex w-full items-center justify-between'>
-              <div className='text-foreground text-base font-medium'>{activeItem?.title}</div>
+              <div className='text-foreground text-base font-medium'>
+                {isLoadingPermissions ? <Skeleton className='h-5 w-24' /> : activeItem?.title}
+              </div>
             </div>
-            <SidebarInput placeholder={t('common.ui.search')} />
+            {isLoadingPermissions ? (
+              <Skeleton className='h-9 w-full' />
+            ) : (
+              <SidebarInput placeholder={t('common.ui.search')} />
+            )}
           </SidebarHeader>
           <SidebarContent className='bg-muted'>
             <SidebarGroup className='p-0'>
@@ -200,7 +346,9 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
                       <p className='text-muted-foreground text-sm'>{t('project.sidebar.noPendingTasks')}</p>
                     </div>
                   ) : (
-                    assignedTasks?.value.items.map((task) => <TaskCard key={task.id} task={task} />)
+                    assignedTasks?.value.items.map((task) => (
+                      <TaskCard key={task.id} task={task} shouldDisplayParentMilestone />
+                    ))
                   )}
                 </div>
               </SidebarGroupContent>
@@ -208,6 +356,21 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
           </SidebarContent>
         </Sidebar>
       ) : null}
+
+      <OwnerTransferDialog
+        open={isLeaveDialogOpen}
+        onOpenChange={handleLeaveDialogOpenChange}
+        selectedNewOwnerUserId={selectedNewOwnerUserId}
+        onSelectedNewOwnerUserIdChange={setSelectedNewOwnerUserId}
+        ownerCandidateOptions={ownerCandidateOptions}
+        onOwnerCandidateSearch={handleOwnerCandidateSearch}
+        fetchNextOwnerCandidates={fetchNextOwnerCandidates}
+        hasNextOwnerCandidatesPage={hasNextOwnerCandidatesPage}
+        isFetchingNextOwnerCandidates={isFetchingNextOwnerCandidates}
+        isLoadingOwnerCandidates={isLoadingOwnerCandidates}
+        isSubmitting={isLeavingProject}
+        onConfirm={handleOwnerLeaveProject}
+      />
     </Sidebar>
   )
 }

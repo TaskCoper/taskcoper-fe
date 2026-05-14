@@ -1,0 +1,160 @@
+import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
+import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import type { Role } from '@/features/users/types'
+import { cn } from '@/shared/utils'
+import {
+  CalendarDaysIcon,
+  FileClockIcon,
+  FolderOpenIcon,
+  HistoryIcon,
+  ShoppingBagIcon,
+  TicketPercentIcon,
+  VideoIcon,
+  type LucideIcon
+} from 'lucide-react'
+import * as React from 'react'
+import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
+import { NavMain } from './nav-main'
+
+type NavItem = {
+  titleKey: string
+  url: string
+  icon: LucideIcon
+}
+
+type NavItemConfig = NavItem & {
+  roles?: Role[]
+}
+
+type NavMainSubItemConfig = {
+  titleKey: string
+  url: string
+  activePatterns?: string[]
+  activeExcludePatterns?: string[]
+}
+
+type NavMainItemConfig = {
+  titleKey: string
+  url: string
+  icon: LucideIcon
+  items: NavMainSubItemConfig[]
+  roles?: Role[]
+}
+
+const NAV_CONFIG: NavItemConfig[] = [
+  {
+    titleKey: 'project.sidebar.myProjects',
+    url: '/projects',
+    icon: FolderOpenIcon
+  },
+  {
+    titleKey: 'project.sidebar.myCalendar',
+    url: '/calendar',
+    icon: CalendarDaysIcon
+  },
+  {
+    titleKey: 'purchaseHistory.title',
+    url: '/purchases',
+    icon: ShoppingBagIcon
+  },
+  {
+    titleKey: 'voucher.sidebar.vouchers',
+    url: '/vouchers',
+    icon: TicketPercentIcon,
+    roles: ['Mentor']
+  },
+  {
+    titleKey: 'pageTitle.transactions',
+    url: '/transactions',
+    icon: HistoryIcon
+  },
+  {
+    titleKey: 'project.sidebar.applicationHistory',
+    url: '/applications',
+    icon: FileClockIcon,
+    roles: ['User']
+  }
+]
+
+const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
+  {
+    titleKey: 'mentorPackage.page.title',
+    url: '/packages',
+    icon: VideoIcon,
+    roles: ['Mentor'],
+    items: [
+      {
+        titleKey: 'mentorPackage.sidebar.overview',
+        url: '/packages/dashboard',
+        activePatterns: ['/packages/dashboard']
+      },
+      {
+        titleKey: 'mentorPackage.sidebar.packageList',
+        url: '/packages',
+        activePatterns: ['/packages', '/packages/:packageId'],
+        activeExcludePatterns: ['/packages/dashboard']
+      }
+    ]
+  }
+]
+
+export function UserWorkspaceSidebar({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
+  const location = useLocation()
+  const { me: user } = useGetMe()
+  const { t } = useTranslation()
+
+  const data = React.useMemo(() => {
+    return {
+      navMain: NAV_MAIN_CONFIG.filter((item) => {
+        if (!item.roles) return true
+        return item.roles.includes(user?.role as Role)
+      }).map((item) => ({
+        title: t(item.titleKey),
+        url: item.url,
+        icon: item.icon,
+        items: item.items.map((subItem) => ({
+          title: t(subItem.titleKey),
+          url: subItem.url,
+          activePatterns: subItem.activePatterns,
+          activeExcludePatterns: subItem.activeExcludePatterns
+        }))
+      })),
+      quickActions: NAV_CONFIG.filter((item) => {
+        if (!item.roles) return true
+        return item.roles.includes(user?.role as Role)
+      }).map((item) => ({
+        name: t(item.titleKey),
+        url: item.url,
+        icon: item.icon
+      }))
+    }
+  }, [t, user?.role])
+
+  const activeSegment = React.useMemo(() => {
+    const quickActionItems = data.quickActions
+    const sortedNav = [...quickActionItems].sort((a, b) => b.url.length - a.url.length)
+    const activeItem = sortedNav.find((item) => location.pathname.startsWith(item.url))
+
+    return activeItem?.url
+  }, [location.pathname, data.quickActions])
+
+  const sidebarClassName = cn('top-14 h-[calc(100svh-3.5rem)]', className)
+
+  return (
+    <Sidebar collapsible='icon' className={sidebarClassName} {...props}>
+      {/* <SidebarHeader>
+        <TeamSwitcher teams={data.teams} />
+      </SidebarHeader> */}
+      <SidebarContent className='gap-1'>
+        <NavQuickActions items={data.quickActions} activeSegment={activeSegment} />
+        <NavMain items={data.navMain} />
+        <div className='mt-auto px-2.5 pb-2'>
+          <SidebarTrigger />
+        </div>
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}

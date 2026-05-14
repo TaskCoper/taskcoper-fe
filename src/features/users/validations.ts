@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 import z from 'zod'
+import { UUID_REGEX } from '../projects/core/validations'
 
 const regex = /(?:\+84|0084|0)[235789][0-9]{1,2}[0-9]{7}(?:[^\d]+|$)/g
 
@@ -18,7 +19,7 @@ export const updateMeSchema = (t: TFunction) => {
         .max(20, t('auth.signUp.validation.lastName.maxLength')),
       email: z.email(t('common.validation.email.invalid')).trim(),
       avatar: z
-        .url()
+        .url({ message: t('common.validation.url.invalid') })
         .trim()
         .nullable()
         .transform((val) => (val === '' ? null : val)),
@@ -40,13 +41,20 @@ export const updateMeSchema = (t: TFunction) => {
         .trim()
         .nullable()
         .transform((val) => (val === '' ? null : val)),
-      cityCode: z.number().positive().or(z.literal(-1)),
+      cityCode: z.number().positive(t('common.validation.number.positive')).or(z.literal(-1)),
       state: z
         .string()
         .trim()
         .nullable()
         .transform((val) => (val === '' ? null : val)),
-      wardCode: z.number().positive().or(z.literal(-1))
+      wardCode: z.number().positive(t('common.validation.number.positive')).or(z.literal(-1)),
+      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid'))),
+      coverImageUrl: z.url({ message: t('common.validation.url.invalid') }).nullable(),
+      timeZone: z
+        .enum(Intl.supportedValuesOf('timeZone'), {
+          message: t('common.validation.timeZone.invalid')
+        })
+        .nullable()
     })
     .strict()
 }

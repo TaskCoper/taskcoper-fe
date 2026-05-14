@@ -1,8 +1,8 @@
 import { queryKeys } from '@/lib/query-keys'
-import notificationService from '@/services/notification.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import notificationService from '../services'
 
 export const useReadNotification = () => {
   const queryClient = useQueryClient()

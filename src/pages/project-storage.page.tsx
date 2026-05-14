@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import ProjectStorageTable from '@/features/projects/components/project-storage-table'
-import { useGetProject } from '@/features/projects/hooks/use-get-project'
-import { useGetProjectResourceStats } from '@/features/projects/hooks/use-get-project-resource-stats'
-import { formatBytes } from '@/features/projects/utils'
+import { useGetProjectResourceStats } from '@/features/projects/analytics/hooks/use-get-project-resource-stats'
+import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
+import ProjectStorageTable from '@/features/projects/resources/components/project-storage-table'
+import { formatBytes } from '@/features/projects/resources/utils'
 import { DatabaseIcon, FilesIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,12 +11,14 @@ import { Outlet, useParams } from 'react-router'
 
 export default function ProjectStoragePage() {
   const { t } = useTranslation()
-  const { projectId } = useParams<{ projectId: string }>()
-
-  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({ projectId })
+  const { identifier } = useParams<{ identifier: string }>()
 
   const { project } = useGetProject({
-    projectId
+    identifier
+  })
+
+  const { projectResourceStats, isLoadingProjectResourceStats } = useGetProjectResourceStats({
+    projectIdentifier: identifier
   })
 
   useEffect(() => {
@@ -28,9 +30,9 @@ export default function ProjectStoragePage() {
   return (
     <>
       <div className='mx-auto p-6 space-y-6'>
-        <div className='flex justify-between items-start gap-4'>
+        <div className='flex justify-between items-center gap-4'>
           <div>
-            <p className='text-2xl font-bold tracking-tight'>{t('project.sidebar.storagePage.title')}</p>
+            <p className='text-2xl font-bold'>{t('project.sidebar.storagePage.title')}</p>
             <p className='text-sm text-muted-foreground'>{t('project.sidebar.storagePage.description')}</p>
           </div>
 
@@ -61,7 +63,7 @@ export default function ProjectStoragePage() {
           </div>
         </div>
 
-        {projectId ? <ProjectStorageTable projectId={projectId} /> : null}
+        {identifier ? <ProjectStorageTable projectIdentifier={identifier} /> : null}
       </div>
 
       <Outlet />

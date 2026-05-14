@@ -1,7 +1,7 @@
 'use client'
 
-import * as React from 'react'
 import type { Editor } from '@tiptap/react'
+import * as React from 'react'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -11,11 +11,11 @@ import { HeadingIcon } from '@/components/tiptap-icons/heading-icon'
 
 // --- Tiptap UI ---
 import {
-  headingIcons,
-  type Level,
-  isHeadingActive,
   canToggle,
-  shouldShowButton
+  headingIcons,
+  isHeadingActive,
+  shouldShowButton,
+  type Level
 } from '@/components/tiptap-ui/heading-button'
 
 /**
