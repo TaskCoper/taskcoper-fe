@@ -22,7 +22,8 @@ export default function ReactQueryProvider({ children }: { children: React.React
                   // If access token is expired => axios interceptors
                   // If access token is invalid => layout will handle it
                   error.response.data.messageCode === 'ExpiredAccessToken' ||
-                  error.response.data.messageCode === 'InvalidAccessToken'
+                  error.response.data.messageCode === 'InvalidAccessToken' ||
+                  error.response.data.messageCode === 'MissingAccessToken'
                 ) {
                   return false
                 }

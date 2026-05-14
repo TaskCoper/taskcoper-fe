@@ -119,7 +119,8 @@ api.interceptors.response.use(
     const status = error.response?.status
     const messageCode = (error.response?.data as ErrorResponse)?.messageCode
 
-    const isExpiredAccessToken = status === 401 && messageCode === 'ExpiredAccessToken'
+    const isExpiredAccessToken =
+      status === 401 && (messageCode === 'ExpiredAccessToken' || messageCode === 'MissingAccessToken')
     const isRefreshRequest = originalRequest.url?.includes('/users/refresh_token')
 
     if (!originalRequest || !isExpiredAccessToken || isRefreshRequest) {
