@@ -118,6 +118,7 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
             'image/png': ['.png'],
             'image/jpeg': ['.jpg', '.jpeg'],
             'image/webp': ['.webp'],
+            'image/gif': ['.gif'],
             'image/svg+xml': ['.svg']
           }}
         >

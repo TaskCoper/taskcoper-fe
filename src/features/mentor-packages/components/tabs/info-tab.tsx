@@ -67,6 +67,7 @@ function InfoTabForm({ onSubmit, onDelete, onCoverImageChange, isDeleting, isUpd
             'image/png': ['.png'],
             'image/jpeg': ['.jpg', '.jpeg'],
             'image/webp': ['.webp'],
+            'image/gif': ['.gif'],
             'image/svg+xml': ['.svg']
           }}
           disabled={isUploading || isUpdating}

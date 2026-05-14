@@ -199,6 +199,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
                 'image/png': ['.png'],
                 'image/jpeg': ['.jpg', '.jpeg'],
                 'image/webp': ['.webp'],
+                'image/gif': ['.gif'],
                 'image/svg+xml': ['.svg']
               }}
             >
@@ -235,6 +236,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
                 'image/png': ['.png'],
                 'image/jpeg': ['.jpg', '.jpeg'],
                 'image/webp': ['.webp'],
+                'image/gif': ['.gif'],
                 'image/svg+xml': ['.svg']
               }}
             >

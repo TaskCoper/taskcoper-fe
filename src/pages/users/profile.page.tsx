@@ -385,6 +385,7 @@ export default function ProfilePage() {
                       'image/png': ['.png'],
                       'image/jpeg': ['.jpg', '.jpeg'],
                       'image/webp': ['.webp'],
+                      'image/gif': ['.gif'],
                       'image/svg+xml': ['.svg']
                     }}
                   >
@@ -477,6 +478,7 @@ export default function ProfilePage() {
                           'image/png': ['.png'],
                           'image/jpeg': ['.jpg', '.jpeg'],
                           'image/webp': ['.webp'],
+                          'image/gif': ['.gif'],
                           'image/svg+xml': ['.svg']
                         }}
                       >
