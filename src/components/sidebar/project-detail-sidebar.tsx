@@ -12,8 +12,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetMyAssignedTasks } from '@/features/projects/core/hooks/use-get-my-assigned-tasks'
+import OwnerTransferDialog from '@/features/projects/members/components/owner-transfer-dialog'
+import { useLeaveProject } from '@/features/projects/members/hooks/use-leave-project'
+import { useOwnerTransferCandidates } from '@/features/projects/members/hooks/use-owner-transfer-candidates'
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import TaskCard from '@/features/projects/tasks/core/components/task-card'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,
@@ -21,25 +25,114 @@ import {
   HardDriveIcon,
   InfoIcon,
   ListTodoIcon,
+  LogOutIcon,
   MessageCircleIcon,
   NotebookPenIcon,
   SettingsIcon,
   SmileIcon,
   WalletIcon
 } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useMatches, useParams } from 'react-router'
+import { Link, useLocation, useMatches, useNavigate, useParams } from 'react-router'
+import { Button } from '../ui/button'
 
 interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onTaskCountChange?: (count: number, isLoading: boolean) => void
 }
 
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
+  const navigate = useNavigate()
+
   const { t } = useTranslation()
   const { identifier } = useParams<{ identifier: string }>()
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
+  const { confirm } = useConfirmStore()
+
   const { me: user } = useGetMe()
+  const { permissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const location = useLocation()
+
+  const isCurrentUserOwner = user?.id === permissions?.ownerId
+
+  const { leaveProject, isLeavingProject } = useLeaveProject({ identifier: identifier ?? '' })
+
+  const {
+    selectedNewOwnerUserId,
+    setSelectedNewOwnerUserId,
+    ownerCandidateOptions,
+    isLoadingOwnerCandidates,
+    hasNextOwnerCandidatesPage,
+    isFetchingNextOwnerCandidates,
+    handleOwnerCandidateSearch,
+    fetchNextOwnerCandidates,
+    resetOwnerTransferState
+  } = useOwnerTransferCandidates({
+    projectIdentifier: identifier,
+    currentUserId: user?.id,
+    enabled: isLeaveDialogOpen && isCurrentUserOwner
+  })
+
+  const handleLeaveButtonClick = useCallback(async () => {
+    if (!identifier) return
+
+    const confirmed = await confirm({
+      title: t('project.updateProjectMembers.confirm.leaveTitle'),
+      description: t('project.updateProjectMembers.confirm.leaveDescription'),
+      confirmText: t('common.button.leave'),
+      cancelText: t('common.button.cancel'),
+      variant: 'destructive'
+    })
+
+    if (!confirmed) return
+
+    if (isCurrentUserOwner) {
+      resetOwnerTransferState()
+      setIsLeaveDialogOpen(true)
+      return
+    }
+
+    leaveProject(
+      {
+        projectIdentifier: identifier,
+        newOwnerUserId: null
+      },
+      {
+        onSuccess: () => {
+          navigate('/projects')
+        }
+      }
+    )
+  }, [confirm, identifier, isCurrentUserOwner, leaveProject, navigate, resetOwnerTransferState, t])
+
+  const handleLeaveDialogOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        resetOwnerTransferState()
+      }
+
+      setIsLeaveDialogOpen(isOpen)
+    },
+    [resetOwnerTransferState]
+  )
+
+  const handleOwnerLeaveProject = useCallback(() => {
+    if (!identifier || !selectedNewOwnerUserId) return
+
+    leaveProject(
+      {
+        projectIdentifier: identifier,
+        newOwnerUserId: selectedNewOwnerUserId
+      },
+      {
+        onSuccess: () => {
+          setIsLeaveDialogOpen(false)
+          resetOwnerTransferState()
+          navigate('/projects')
+        }
+      }
+    )
+  }, [identifier, leaveProject, navigate, resetOwnerTransferState, selectedNewOwnerUserId])
 
   const navMain = useMemo(
     () =>
@@ -176,10 +269,10 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader> */}
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent className='px-1.5 md:px-0'>
-              <SidebarMenu>
+        <SidebarContent className='flex h-full flex-col'>
+          <SidebarGroup className='flex-1'>
+            <SidebarGroupContent className='flex h-full flex-col px-1.5 md:px-0'>
+              <SidebarMenu className='flex h-full flex-col'>
                 {isLoadingPermissions ? (
                   <div className='flex flex-col gap-0.5 px-1.5 md:px-0'>
                     {Array.from({ length: 8 }).map((_, i) => (
@@ -207,6 +300,18 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
                     </SidebarMenuItem>
                   ))
                 )}
+
+                {identifier ? (
+                  <Button
+                    className='mt-auto bg-destructive/10 text-destructive/90 hover:bg-destructive/15 hover:text-destructive'
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={handleLeaveButtonClick}
+                    disabled={isLeavingProject}
+                  >
+                    <LogOutIcon />
+                  </Button>
+                ) : null}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -253,6 +358,21 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
           </SidebarContent>
         </Sidebar>
       ) : null}
+
+      <OwnerTransferDialog
+        open={isLeaveDialogOpen}
+        onOpenChange={handleLeaveDialogOpenChange}
+        selectedNewOwnerUserId={selectedNewOwnerUserId}
+        onSelectedNewOwnerUserIdChange={setSelectedNewOwnerUserId}
+        ownerCandidateOptions={ownerCandidateOptions}
+        onOwnerCandidateSearch={handleOwnerCandidateSearch}
+        fetchNextOwnerCandidates={fetchNextOwnerCandidates}
+        hasNextOwnerCandidatesPage={hasNextOwnerCandidatesPage}
+        isFetchingNextOwnerCandidates={isFetchingNextOwnerCandidates}
+        isLoadingOwnerCandidates={isLoadingOwnerCandidates}
+        isSubmitting={isLeavingProject}
+        onConfirm={handleOwnerLeaveProject}
+      />
     </Sidebar>
   )
 }

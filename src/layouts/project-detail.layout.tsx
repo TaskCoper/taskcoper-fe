@@ -9,12 +9,8 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList } from '@/components/ui/tabs'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetParentMilestones } from '@/features/projects/core/hooks/use-get-parent-milestones'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
-import OwnerTransferDialog from '@/features/projects/members/components/owner-transfer-dialog'
-import { useLeaveProject } from '@/features/projects/members/hooks/use-leave-project'
-import { useOwnerTransferCandidates } from '@/features/projects/members/hooks/use-owner-transfer-candidates'
 import AddParentMilestonePopover from '@/features/projects/milestones/components/add-parent-milestone-popover'
 import ParentMilestonesMenu from '@/features/projects/milestones/components/parent-milestones-menu'
 import { SortableMilestoneTab } from '@/features/projects/milestones/components/sortable-milestone-tab'
@@ -22,35 +18,26 @@ import { useParentMilestoneDragDrop } from '@/features/projects/milestones/hooks
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useProjectRouting } from '@/hooks/use-project-routing'
-import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { MenuIcon, PlusIcon } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Outlet, useMatches, useNavigate, useParams } from 'react-router'
 
 const secondSidebarRoutes = ['milestones']
 
 export default function ProjectDetailLayout() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const { identifier } = useParams<{ identifier: string }>()
-  const { me: user } = useGetMe()
 
   const { removeLastActiveMilestone } = useMilestonePreferencesStore()
-  const { confirm } = useConfirmStore()
-  const { leaveProject, isLeavingProject } = useLeaveProject({ identifier: identifier ?? '' })
 
-  const { permissions, check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
   const canWrite = check('TASKS', 'canWrite')
   const canDelete = check('TASKS', 'canDelete')
   const canRead = check('TASKS', 'canRead')
-  const isCurrentUserOwner = user?.id === permissions?.ownerId
-
-  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
 
   const isMobile = useIsMobile()
   const sensors = useDndSensors()
@@ -88,21 +75,6 @@ export default function ProjectDetailLayout() {
   // const { members, isLoadingMembers } = useGetProjectMembers({ identifier, enabled: shouldFetchMilestones })
 
   const { project, isLoadingProject } = useGetProject({ identifier })
-  const {
-    selectedNewOwnerUserId,
-    setSelectedNewOwnerUserId,
-    ownerCandidateOptions,
-    isLoadingOwnerCandidates,
-    hasNextOwnerCandidatesPage,
-    isFetchingNextOwnerCandidates,
-    handleOwnerCandidateSearch,
-    fetchNextOwnerCandidates,
-    resetOwnerTransferState
-  } = useOwnerTransferCandidates({
-    projectIdentifier: identifier,
-    currentUserId: user?.id,
-    enabled: isLeaveDialogOpen && isCurrentUserOwner
-  })
 
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -199,67 +171,6 @@ export default function ProjectDetailLayout() {
   useEffect(() => {
     hasAutoOpenedRef.current = false
   }, [activeSegment])
-
-  const handleLeaveButtonClick = useCallback(async () => {
-    if (!identifier) return
-
-    const confirmed = await confirm({
-      title: t('project.updateProjectMembers.confirm.leaveTitle'),
-      description: t('project.updateProjectMembers.confirm.leaveDescription'),
-      confirmText: t('common.button.leave'),
-      cancelText: t('common.button.cancel'),
-      variant: 'destructive'
-    })
-
-    if (!confirmed) return
-
-    if (isCurrentUserOwner) {
-      resetOwnerTransferState()
-      setIsLeaveDialogOpen(true)
-      return
-    }
-
-    leaveProject(
-      {
-        projectIdentifier: identifier,
-        newOwnerUserId: null
-      },
-      {
-        onSuccess: () => {
-          navigate('/projects')
-        }
-      }
-    )
-  }, [confirm, identifier, isCurrentUserOwner, leaveProject, navigate, resetOwnerTransferState, t])
-
-  const handleLeaveDialogOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) {
-        resetOwnerTransferState()
-      }
-
-      setIsLeaveDialogOpen(isOpen)
-    },
-    [resetOwnerTransferState]
-  )
-
-  const handleOwnerLeaveProject = useCallback(() => {
-    if (!identifier || !selectedNewOwnerUserId) return
-
-    leaveProject(
-      {
-        projectIdentifier: identifier,
-        newOwnerUserId: selectedNewOwnerUserId
-      },
-      {
-        onSuccess: () => {
-          setIsLeaveDialogOpen(false)
-          resetOwnerTransferState()
-          navigate('/projects')
-        }
-      }
-    )
-  }, [identifier, leaveProject, navigate, resetOwnerTransferState, selectedNewOwnerUserId])
 
   return (
     <SidebarProvider
@@ -386,31 +297,10 @@ export default function ProjectDetailLayout() {
                     )}
                   </div>
                 ) : null}
-
-                {identifier ? (
-                  <Button variant='destructive' size='sm' onClick={handleLeaveButtonClick} disabled={isLeavingProject}>
-                    {t('project.updateProjectMembers.confirm.leaveTitle')}
-                  </Button>
-                ) : null}
               </div>
             </>
           ) : null}
         </header>
-
-        <OwnerTransferDialog
-          open={isLeaveDialogOpen}
-          onOpenChange={handleLeaveDialogOpenChange}
-          selectedNewOwnerUserId={selectedNewOwnerUserId}
-          onSelectedNewOwnerUserIdChange={setSelectedNewOwnerUserId}
-          ownerCandidateOptions={ownerCandidateOptions}
-          onOwnerCandidateSearch={handleOwnerCandidateSearch}
-          fetchNextOwnerCandidates={fetchNextOwnerCandidates}
-          hasNextOwnerCandidatesPage={hasNextOwnerCandidatesPage}
-          isFetchingNextOwnerCandidates={isFetchingNextOwnerCandidates}
-          isLoadingOwnerCandidates={isLoadingOwnerCandidates}
-          isSubmitting={isLeavingProject}
-          onConfirm={handleOwnerLeaveProject}
-        />
 
         <div className='flex-1 overflow-auto'>
           {isLoadingPermissions ? (
