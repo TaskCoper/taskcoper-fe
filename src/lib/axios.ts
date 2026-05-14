@@ -93,7 +93,12 @@ const refreshAccessToken = async (): Promise<boolean> => {
     // If refresh token is invalid => redirect to sign in page
     if (error.response?.data?.messageCode === 'InvalidRefreshToken') {
       clearAllUserPreferences()
-      window.location.href = '/sign-in'
+      const isOnSignInPage = window.location.pathname === '/sign-in'
+
+      // Avoid hard-reload loops when a protected call is made from /sign-in.
+      if (!isOnSignInPage) {
+        window.location.replace('/sign-in')
+      }
     }
 
     return false
