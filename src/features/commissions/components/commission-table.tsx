@@ -63,15 +63,33 @@ function CommissionTableRowItem({
           <TableCell className='py-2 font-medium'>{CommissionTargetModelLabel[item.targetModel]}</TableCell>
           <TableCell className='py-2'>
             <div className='flex items-center gap-1'>
-              <Input type='number' {...register('rate')} className='h-8 w-20' />
+              <Input
+                type='number'
+                {...register('rate', {
+                  setValueAs: (value) => (value === '' ? undefined : Number(value))
+                })}
+                className='h-8 w-20'
+              />
               <span>%</span>
             </div>
           </TableCell>
           <TableCell className='py-2'>
-            <Input type='number' {...register('minAmount')} className='h-8 w-32' />
+            <Input
+              type='number'
+              {...register('minAmount', {
+                setValueAs: (value) => (value === '' ? undefined : Number(value))
+              })}
+              className='h-8 w-32'
+            />
           </TableCell>
           <TableCell className='py-2'>
-            <Input type='number' {...register('maxAmount')} className='h-8 w-32' />
+            <Input
+              type='number'
+              {...register('maxAmount', {
+                setValueAs: (value) => (value === '' ? undefined : Number(value))
+              })}
+              className='h-8 w-32'
+            />
           </TableCell>
           <TableCell className='pt-4 flex justify-center'>
             <Controller

@@ -97,7 +97,7 @@ export default function LabelPopover({
     isAddingTaskLabel
   } = useAddTaskLabel({ taskIdentifier: taskSlug, projectIdentifier, parentMilestoneIdentifier, enabled: open })
   const onAddTaskLabel = () => {
-    const result = addTaskLabelSchema.safeParse(addTaskLabelMethods.getValues())
+    const result = addTaskLabelSchema(t).safeParse(addTaskLabelMethods.getValues())
 
     if (result.success) {
       addTaskLabel({ body: result.data })

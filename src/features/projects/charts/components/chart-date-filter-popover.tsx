@@ -38,7 +38,7 @@ export default function ChartDateFilterPopover({
   const [isOpenPopover, setIsOpenPopover] = useState(false)
 
   const methods = useForm<ChartDateFilterParams>({
-    resolver: zodResolver(chartDateFilterSchema),
+    resolver: zodResolver(chartDateFilterSchema(t)),
     defaultValues: {
       from,
       to,

@@ -19,7 +19,7 @@ export const useBookPackage = () => {
       voucherCode: null,
       voucherIdempotencyKey: null
     },
-    resolver: zodResolver(bookPackageSchema)
+    resolver: zodResolver(bookPackageSchema(t))
   })
 
   const { mutate: bookPackage, isPending: isBookingPackage } = useMutation({

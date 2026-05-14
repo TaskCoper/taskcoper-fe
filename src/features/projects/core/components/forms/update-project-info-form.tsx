@@ -5,7 +5,11 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type UpdateProjectFormValues } from '../../validations'
 
-export default function UpdateProjectInfoForm() {
+interface UpdateProjectInfoFormProps {
+  onDescriptionChange?: () => void
+}
+
+export default function UpdateProjectInfoForm({ onDescriptionChange }: UpdateProjectInfoFormProps) {
   const { t } = useTranslation()
   const { control } = useFormContext<UpdateProjectFormValues>()
 
@@ -46,7 +50,15 @@ export default function UpdateProjectInfoForm() {
               {t('project.updateProjectInfo.field.description.label')}
             </FieldLabel>
 
-            <RichTextEditor content={field.value ?? ''} onChange={field.onChange} />
+            <RichTextEditor
+              content={field.value ?? ''}
+              onChange={(value) => {
+                field.onChange(value)
+                onDescriptionChange?.()
+              }}
+              invalid={fieldState.invalid}
+              error={fieldState.error}
+            />
           </Field>
         )}
       />

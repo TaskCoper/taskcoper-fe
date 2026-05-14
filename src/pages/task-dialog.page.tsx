@@ -244,6 +244,13 @@ export default function TaskDialogPage() {
     updateTask({ body })
   }
 
+  const handleSaveDescription = () => {
+    handleSubmitTask((body) => {
+      setIsEditDescription(false)
+      updateTask({ body })
+    })()
+  }
+
   const handleRemoveDate = () => {
     updateTask({
       body: { ...updateTaskMethods.getValues(), startDate: null, endDate: null, announceBeforeMinutes: null }
@@ -744,6 +751,8 @@ export default function TaskDialogPage() {
                               isInitialFocus={true}
                               content={field.value ?? ''}
                               onChange={field.onChange}
+                              invalid={fieldState.invalid}
+                              error={fieldState.error}
                               onMentionIdsChange={(ids) => {
                                 const currentMentionUsers = task?.mentionedUsers ?? []
                                 const mentionIdQueues = currentMentionUsers.reduce<Record<string, string[]>>(
@@ -772,13 +781,7 @@ export default function TaskDialogPage() {
                       />
 
                       <div className='flex items-center gap-2'>
-                        <Button
-                          onClick={() => {
-                            setIsEditDescription(false)
-                            handleSubmitTask(onSubmitUpdateTask)()
-                          }}
-                          disabled={isUpdatingTask}
-                        >
+                        <Button onClick={handleSaveDescription} disabled={isUpdatingTask}>
                           {isUpdatingTask ? <Spinner /> : null}
                           {t('common.button.save')}
                         </Button>

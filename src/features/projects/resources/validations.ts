@@ -5,7 +5,7 @@ import z from 'zod'
 export const uploadProjectAttachmentSchema = (t: TFunction) =>
   z
     .object({
-      projectIdentifier: z.string().min(1),
+      projectIdentifier: z.string().min(1, t('common.validation.required')),
       name: z.string(),
       url: z.string()
     })

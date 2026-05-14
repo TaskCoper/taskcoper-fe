@@ -1,3 +1,4 @@
+import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -42,8 +43,10 @@ export const updateProjectSchema = (t: TFunction) => {
       description: z
         .string()
         .trim()
-        .max(10_000, t('project.updateProject.validation.description.maxLength'))
         .nullable()
+        .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
+          message: t('project.updateProject.validation.description.maxLength')
+        })
         .transform((val) => (val === '' ? null : val)),
       startDate: z.iso
         .datetime({ offset: true, message: t('project.updateProject.validation.startDate.invalid') })

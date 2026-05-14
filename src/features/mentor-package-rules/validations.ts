@@ -4,14 +4,14 @@ import z from 'zod'
 export const addMentorPackageRuleSchema = (t: TFunction) =>
   z
     .object({
-      mentorPackageId: z.uuid(),
+      mentorPackageId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       no: z
         .number({ error: t('mentorPackageRule.validation.noRequired') })
-        .int()
+        .int({ message: t('common.validation.number.integer') })
         .positive(t('mentorPackageRule.validation.noPositive')),
       totalTimeSlots: z
         .number({ error: t('mentorPackageRule.validation.totalTimeSlotsRequired') })
-        .int()
+        .int({ message: t('common.validation.number.integer') })
         .positive(t('mentorPackageRule.validation.totalTimeSlotsPositive'))
     })
     .strict()
@@ -19,14 +19,14 @@ export const addMentorPackageRuleSchema = (t: TFunction) =>
 export const updateMentorPackageRuleSchema = (t: TFunction) =>
   z
     .object({
-      id: z.uuid(),
+      id: z.uuid({ message: t('common.validation.uuid.invalid') }),
       no: z
         .number({ error: t('mentorPackageRule.validation.noRequired') })
-        .int()
+        .int({ message: t('common.validation.number.integer') })
         .positive(t('mentorPackageRule.validation.noPositive')),
       totalTimeSlots: z
         .number({ error: t('mentorPackageRule.validation.totalTimeSlotsRequired') })
-        .int()
+        .int({ message: t('common.validation.number.integer') })
         .positive(t('mentorPackageRule.validation.totalTimeSlotsPositive'))
     })
     .strict()

@@ -2,7 +2,7 @@ import { MentorTitle } from '@/features/mentor-applications/types'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import commissionService from '../services'
@@ -14,7 +14,7 @@ export const useCreateCommission = () => {
   const { t } = useTranslation()
 
   const methods = useForm<CreateCommissionFormValues>({
-    resolver: zodResolver(createCommissionSchema) as unknown as Resolver<CreateCommissionFormValues>,
+    resolver: zodResolver(createCommissionSchema(t)),
     defaultValues: {
       targetModel: CommissionTargetModel.MentorPackage,
       titleLevel: MentorTitle.BRONZE,

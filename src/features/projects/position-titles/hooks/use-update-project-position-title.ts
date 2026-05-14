@@ -19,7 +19,7 @@ export const useUpdateProjectPositionTitle = ({ projectIdentifier }: { projectId
       description: '',
       color: ''
     },
-    resolver: zodResolver(updateProjectPositionTitleSchema)
+    resolver: zodResolver(updateProjectPositionTitleSchema(t))
   })
 
   const { mutate: updateProjectPositionTitle, isPending: isUpdatingProjectPositionTitle } = useMutation({

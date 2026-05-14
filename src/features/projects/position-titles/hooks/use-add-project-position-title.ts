@@ -12,7 +12,7 @@ export const useAddProjectPositionTitle = ({ projectIdentifier }: { projectIdent
   const { t } = useTranslation()
 
   const methods = useForm<AddProjectPositionTitleFormValues>({
-    resolver: zodResolver(addProjectPositionTitleSchema)
+    resolver: zodResolver(addProjectPositionTitleSchema(t))
   })
 
   const { mutate: addProjectPositionTitle, isPending: isAddingProjectPositionTitle } = useMutation({

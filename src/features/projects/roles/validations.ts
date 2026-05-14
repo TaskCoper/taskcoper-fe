@@ -53,15 +53,15 @@ export const calendarSectionExtensionsSchema = z
 export const updateProjectRoleSchema = (t: TFunction) => {
   return z
     .object({
-      projectIdentifier: z.string().min(1),
-      roleId: z.uuid(),
+      projectIdentifier: z.string().min(1, t('project.addProjectRole.validation.projectIdentifier.minLength')),
+      roleId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z.string().trim().min(1, t('project.updateProjectRole.validation.name.minLength')),
       description: z.string().trim().max(255, t('project.updateProjectRole.validation.description.maxLength')),
       isDefault: z.boolean(),
       permissions: z.array(
         z
           .object({
-            sectionKey: z.enum(SectionKey),
+            sectionKey: z.enum(SectionKey, { message: t('common.validation.enum.invalid') }),
             canRead: z.boolean(),
             canWrite: z.boolean(),
             canUpdate: z.boolean(),
@@ -91,7 +91,7 @@ export const addProjectRoleSchema = (t: TFunction) => {
         .array(
           z
             .object({
-              sectionKey: z.enum(SectionKey),
+              sectionKey: z.enum(SectionKey, { message: t('common.validation.enum.invalid') }),
               canRead: z.boolean(),
               canWrite: z.boolean(),
               canUpdate: z.boolean(),

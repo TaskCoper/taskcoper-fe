@@ -245,3 +245,17 @@ export const getFirstParagraphTextFromHtml = (html: string | null | undefined): 
     .replace(/\s+/g, ' ')
     .trim()
 }
+
+export const getPlainTextFromHtml = (value: string | null): string => {
+  if (!value) return ''
+
+  try {
+    if (typeof DOMParser !== 'undefined') {
+      return new DOMParser().parseFromString(value, 'text/html').body.textContent ?? ''
+    }
+  } catch {
+    // Fall back to regex-based stripping below.
+  }
+
+  return value.replace(/<[^>]*>/g, ' ')
+}

@@ -12,8 +12,6 @@ import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   BellIcon,
   BellRingIcon,
-  FolderClosedIcon,
-  GlobeIcon,
   HomeIcon,
   MenuIcon,
   MessageCircleIcon,
@@ -27,9 +25,9 @@ import logo from '/images/taskcoper.png'
 
 const navigations = [
   { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
-  { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
+  // { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
   { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
-  { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
+  // { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
   { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
 ]
 

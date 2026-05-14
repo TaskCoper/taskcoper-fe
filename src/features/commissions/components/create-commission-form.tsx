@@ -82,11 +82,15 @@ export default function CreateCommissionForm() {
               {...field}
               id={field.name}
               type='number'
+              value={field.value ?? ''}
               min={0}
               max={100}
               aria-invalid={fieldState.invalid}
               placeholder={t('commission.field.rate')}
-              onChange={(e) => field.onChange(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                field.onChange(val === '' ? undefined : Number(val))
+              }}
             />
           </Field>
         )}
@@ -107,10 +111,14 @@ export default function CreateCommissionForm() {
                 {...field}
                 id={field.name}
                 type='number'
+                value={field.value ?? ''}
                 min={0}
                 aria-invalid={fieldState.invalid}
                 placeholder={t('commission.field.minAmount')}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value
+                  field.onChange(val === '' ? undefined : Number(val))
+                }}
               />
             </Field>
           )}
@@ -130,10 +138,14 @@ export default function CreateCommissionForm() {
                 {...field}
                 id={field.name}
                 type='number'
+                value={field.value ?? ''}
                 min={0}
                 aria-invalid={fieldState.invalid}
                 placeholder={t('commission.field.maxAmount')}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value
+                  field.onChange(val === '' ? undefined : Number(val))
+                }}
               />
             </Field>
           )}

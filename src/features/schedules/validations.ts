@@ -8,8 +8,8 @@ export const createSchedulesSchema = (t: TFunction) => {
       startTime: z.string().min(1, t('common.validation.schedule.startTimeRequired')),
       endTime: z.string().min(1, t('common.validation.schedule.endTimeRequired')),
       isActive: z.boolean(),
-      activeFrom: z.iso.datetime({ offset: true }).nullable(),
-      activeTo: z.iso.datetime({ offset: true }).nullable()
+      activeFrom: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
+      activeTo: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable()
     })
     .strict()
 }
@@ -21,8 +21,8 @@ export const updateScheduleSchema = (t: TFunction) => {
       startTimeUtc: z.string().min(1, t('common.validation.schedule.startTimeRequired')),
       endTimeUtc: z.string().min(1, t('common.validation.schedule.endTimeRequired')),
       isActive: z.boolean(),
-      activeFrom: z.iso.datetime({ offset: true }).nullable(),
-      activeTo: z.iso.datetime({ offset: true }).nullable()
+      activeFrom: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
+      activeTo: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable()
     })
     .strict()
 }

@@ -1,3 +1,4 @@
+import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 import { ApplicationStatus, MentorTitle } from './types'
@@ -12,7 +13,9 @@ export const submitMentorApplicationSchema = (t: TFunction) =>
       description: z
         .string()
         .min(1, t('mentorApplication.validation.descriptionRequired'))
-        .max(10_000, t('mentorApplication.validation.descriptionMax')),
+        .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
+          message: t('mentorApplication.validation.descriptionMax')
+        }),
       portfolioFiles: z
         .array(z.instanceof(File))
         .min(1, t('mentorApplication.validation.portfolioFilesMin'))
@@ -24,9 +27,9 @@ export const reviewMentorApplicationSchema = (t: TFunction) =>
   z
     .object({
       applicationId: z.string(),
-      status: z.enum(ApplicationStatus),
+      status: z.enum(ApplicationStatus, { message: t('common.validation.enum.invalid') }),
       adminNote: z.string().nullable(),
-      titleLevel: z.enum(MentorTitle).nullable()
+      titleLevel: z.enum(MentorTitle, { message: t('common.validation.enum.invalid') }).nullable()
     })
     .strict()
     .refine(

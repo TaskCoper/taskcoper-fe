@@ -26,8 +26,6 @@ import {
   InfoIcon,
   ListTodoIcon,
   LogOutIcon,
-  MessageCircleIcon,
-  NotebookPenIcon,
   SettingsIcon,
   SmileIcon,
   WalletIcon
@@ -165,20 +163,20 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
           hasSecondSidebar: false,
           sectionKey: 'CALENDAR'
         },
-        {
-          title: t('project.sidebar.chat'),
-          url: 'chat',
-          icon: MessageCircleIcon,
-          hasSecondSidebar: false,
-          sectionKey: 'CHAT'
-        },
-        {
-          title: t('project.sidebar.note'),
-          url: 'note',
-          icon: NotebookPenIcon,
-          hasSecondSidebar: false,
-          sectionKey: 'NOTE'
-        },
+        // {
+        //   title: t('project.sidebar.chat'),
+        //   url: 'chat',
+        //   icon: MessageCircleIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'CHAT'
+        // },
+        // {
+        //   title: t('project.sidebar.note'),
+        //   url: 'note',
+        //   icon: NotebookPenIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'NOTE'
+        // },
         {
           title: t('project.sidebar.storage'),
           url: 'storage',

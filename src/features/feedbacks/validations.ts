@@ -1,3 +1,4 @@
+import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -20,10 +21,18 @@ const feedbackMetadataSchema = (t: TFunction) => {
 
 export const submitPackageFeedbackSchema = (t: TFunction) => {
   return z.object({
-    targetType: z.enum(['MentorPackageBooking']),
-    targetId: z.uuid(),
-    rating: z.number().min(1).max(5),
-    comment: z.string().max(10_000, t('packageFeedback.validation.noteMax')).nullable(),
+    targetType: z.enum(['MentorPackageBooking'], { message: t('common.validation.enum.invalid') }),
+    targetId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+    rating: z
+      .number()
+      .min(1, t('packageFeedback.validation.ratingRequired'))
+      .max(5, t('packageFeedback.validation.ratingRequired')),
+    comment: z
+      .string()
+      .nullable()
+      .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
+        message: t('packageFeedback.validation.noteMax')
+      }),
     metadata: feedbackMetadataSchema(t)
   })
 }

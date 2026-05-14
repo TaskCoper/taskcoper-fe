@@ -16,7 +16,7 @@ export const useCreateMentorPackage = () => {
   const methods = useForm<CreateMentorPackageFormValues>({
     defaultValues: {
       name: '',
-      description: '',
+      // description: '',
       totalSessions: undefined,
       price: undefined,
       currency: 'Vnd',
@@ -32,7 +32,7 @@ export const useCreateMentorPackage = () => {
       toast.success(message)
       methods.reset({
         name: '',
-        description: '',
+        // description: '',
         totalSessions: undefined,
         price: undefined,
         currency: 'Vnd'

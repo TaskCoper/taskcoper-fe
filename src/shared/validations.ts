@@ -20,7 +20,7 @@ export const fileFieldsSchema = (t: TFunction) =>
       mimeType: z.string().min(1, { message: t('task.attachment.validation.mimeType.minLength') }),
       bytes: z
         .number()
-        .int()
+        .int({ message: t('common.validation.number.integer') })
         .positive({ message: t('task.attachment.validation.bytes.positive') })
     })
     .strict()

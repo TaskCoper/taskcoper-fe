@@ -30,7 +30,7 @@ export const useAddTaskLabel = ({
   const { labels } = useGetProjectLabels({ projectIdentifier, enabled })
 
   const methods = useForm<AddTaskLabelFormValues>({
-    resolver: zodResolver(addTaskLabelSchema)
+    resolver: zodResolver(addTaskLabelSchema(t))
   })
 
   const { mutate: addTaskLabel, isPending: isAddingTaskLabel } = useMutation({

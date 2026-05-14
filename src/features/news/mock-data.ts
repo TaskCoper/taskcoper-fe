@@ -201,7 +201,8 @@ export const LATEST_ARTICLES: NewsArticle[] = [
     title: 'Startup tìm cách sinh tồn giữa mùa đông gọi vốn',
     excerpt:
       'Trong mùa đông gọi vốn, các startup cần xây dựng nội lực và quan hệ với nhà đầu tư. Chỉ 0,5–1% startup được rót vốn; founder phải hiểu nhu cầu thoái vốn và lợi nhuận của nhà đầu tư để thành công.',
-    coverUrl: 'https://i.ex-cdn.com/theleader.vn/files/news/2024/10/28/z5975432099048_5a114ca8cca9b5f526179c19f426531c-1514.jpg',
+    coverUrl:
+      'https://i.ex-cdn.com/theleader.vn/files/news/2024/10/28/z5975432099048_5a114ca8cca9b5f526179c19f426531c-1514.jpg',
     source: SOURCES.theleader,
     category: CATEGORIES.fundraising,
     readTimeMinutes: 7,
@@ -256,8 +257,7 @@ export const LATEST_ARTICLES: NewsArticle[] = [
     title: 'Nữ founder đi gọi vốn: làm việc 16 tiếng/ngày suốt 3–4 năm vẫn bị coi là do "may mắn"?',
     excerpt:
       'Nữ founder Annie Vũ chia sẻ những thách thức riêng phụ nữ gặp phải khi gọi vốn và phát triển startup — bao gồm việc nỗ lực bị quy về "may mắn" thay vì công lao thực sự.',
-    coverUrl:
-      'https://cafebiz.cafebizcdn.vn/thumb_w/640/162123310254002176/2024/5/21/ye-ye-1716315293815526726549.jpg',
+    coverUrl: 'https://cafebiz.cafebizcdn.vn/thumb_w/640/162123310254002176/2024/5/21/ye-ye-1716315293815526726549.jpg',
     source: SOURCES.cafebiz,
     category: CATEGORIES.story,
     readTimeMinutes: 5,

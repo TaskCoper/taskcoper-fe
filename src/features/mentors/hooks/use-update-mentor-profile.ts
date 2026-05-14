@@ -12,7 +12,7 @@ export const useUpdateMentorProfile = () => {
   const { t } = useTranslation()
 
   const methods = useForm<UpdateMentorProfileFormValues>({
-    resolver: zodResolver(updateMentorProfileSchema)
+    resolver: zodResolver(updateMentorProfileSchema(t))
   })
 
   const { mutate: updateMentorProfile, isPending: isUpdatingMentorProfile } = useMutation({

@@ -1,3 +1,4 @@
+import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
@@ -28,29 +29,42 @@ export const createMentorPackageSchema = (t: TFunction) =>
   z
     .object({
       name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-      description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
+      // description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
-      currency: z.enum(['Vnd', 'Usd']),
-      activationDeadlineDays: z.int().positive(),
-      usageDeadlineDays: z.int().positive()
+      currency: z.enum(['Vnd', 'Usd'], { message: t('common.validation.enum.invalid') }),
+      activationDeadlineDays: z
+        .int({ message: t('common.validation.number.integer') })
+        .positive(t('common.validation.number.positive')),
+      usageDeadlineDays: z
+        .int({ message: t('common.validation.number.integer') })
+        .positive(t('common.validation.number.positive'))
     })
     .strict()
 
 export const updateMentorPackageSchema = (t: TFunction) =>
   z
     .object({
-      mentorPackageId: z.uuid(),
+      mentorPackageId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-      description: z.string().min(1).max(10_000, t('mentorPackage.validation.descriptionMax')),
-      coverImageUrl: z.url().nullable(),
+      description: z
+        .string()
+        .min(1, t('common.validation.required'))
+        .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
+          message: t('mentorPackage.validation.descriptionMax')
+        }),
+      coverImageUrl: z.url({ message: t('common.validation.url.invalid') }).nullable(),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
-      currency: z.enum(['Vnd', 'Usd']),
+      currency: z.enum(['Vnd', 'Usd'], { message: t('common.validation.enum.invalid') }),
       isActive: z.boolean(),
       isPin: z.boolean(),
-      activationDeadlineDays: z.int().positive(),
-      usageDeadlineDays: z.int().positive()
+      activationDeadlineDays: z
+        .int({ message: t('common.validation.number.integer') })
+        .positive(t('common.validation.number.positive')),
+      usageDeadlineDays: z
+        .int({ message: t('common.validation.number.integer') })
+        .positive(t('common.validation.number.positive'))
     })
     .strict()
 

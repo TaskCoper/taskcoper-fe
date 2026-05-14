@@ -8,13 +8,13 @@ export const createVoucherSchema = (t: TFunction) => {
       code: z.string().min(5, t('common.validation.minLength.5')).max(25, t('common.validation.maxLength.25')),
       name: z.string().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255')),
       description: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
-      discountType: z.enum(DiscountType),
+      discountType: z.enum(DiscountType, { message: t('common.validation.enum.invalid') }),
       discountValue: z
         .number({ error: t('common.validation.number.positive') })
         .min(1, t('common.validation.number.positive')),
       startsAtUtc: z.iso.datetime({ error: t('common.validation.date.required') }),
       endsAtUtc: z.iso.datetime({ error: t('common.validation.date.required') }),
-      scope: z.enum(Scope),
+      scope: z.enum(Scope, { message: t('common.validation.enum.invalid') }),
       totalUsageLimit: z
         .number({ error: t('common.validation.number.positive') })
         .min(1, t('common.validation.number.positive')),
@@ -25,7 +25,7 @@ export const createVoucherSchema = (t: TFunction) => {
       targets: z.array(
         z
           .object({
-            targetType: z.enum(TargetType),
+            targetType: z.enum(TargetType, { message: t('common.validation.enum.invalid') }),
             targetId: z.string()
           })
           .strict()
@@ -65,7 +65,7 @@ export const createVoucherSchema = (t: TFunction) => {
 export const updateVoucherSchema = (t: TFunction) => {
   return z
     .object({
-      voucherId: z.uuid(),
+      voucherId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z.string().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255')),
       description: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
       startsAtUtc: z.iso.datetime({ offset: true, error: t('common.validation.date.required') }),
@@ -78,21 +78,22 @@ export const updateVoucherSchema = (t: TFunction) => {
     .strict()
 }
 
-export const addVoucherTargetsSchema = z
-  .object({
-    voucherId: z.uuid(),
-    targets: z.array(
-      z
-        .object({
-          targetType: z.enum(TargetType),
-          targetName: z.string(),
-          targetId: z.uuid()
-        })
-        .strict()
-    )
-  })
-  .strict()
+export const addVoucherTargetsSchema = (t: TFunction) =>
+  z
+    .object({
+      voucherId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+      targets: z.array(
+        z
+          .object({
+            targetType: z.enum(TargetType, { message: t('common.validation.enum.invalid') }),
+            targetName: z.string(),
+            targetId: z.uuid({ message: t('common.validation.uuid.invalid') })
+          })
+          .strict()
+      )
+    })
+    .strict()
 
 export type CreateVoucherFormValues = z.infer<ReturnType<typeof createVoucherSchema>>
 export type UpdateVoucherFormValues = z.infer<ReturnType<typeof updateVoucherSchema>>
-export type AddVoucherTargetsFormValues = z.infer<typeof addVoucherTargetsSchema>
+export type AddVoucherTargetsFormValues = z.infer<ReturnType<typeof addVoucherTargetsSchema>>

@@ -1,3 +1,4 @@
+import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 import { TaskPriority } from './types'
@@ -33,17 +34,21 @@ export const updateTaskSchema = (t: TFunction) => {
         .max(255, { message: t('task.validation.name.maxLength') }),
       description: z
         .string()
-        .trim()
-        .max(10_000, { message: t('common.validation.maxLength.10000') })
-        .nullable(),
+        .nullable()
+        .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
+          message: t('common.validation.maxLength.10000')
+        }),
       isCompleted: z.boolean(),
-      estimatedPoints: z.number().positive('common.validation.number.positive').nullable(),
-      backgroundImage: z.url().nullable(),
+      estimatedPoints: z
+        .number()
+        .positive({ message: t('common.validation.number.positive') })
+        .nullable(),
+      backgroundImage: z.url({ message: t('common.validation.url.invalid') }).nullable(),
       position: z.number({ message: t('task.validation.position.invalid') }),
       startDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       endDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       targetMilestoneId: z.uuid({ message: t('task.validation.targetMilestoneId.invalid') }),
-      priority: z.enum(TaskPriority).nullable(),
+      priority: z.enum(TaskPriority, { message: t('common.validation.enum.invalid') }).nullable(),
       announceBeforeMinutes: z
         .number()
         .positive({ message: t('common.validation.number.positive') })
@@ -51,8 +56,8 @@ export const updateTaskSchema = (t: TFunction) => {
       mentionUsers: z.array(
         z
           .object({
-            userId: z.uuid(),
-            mentionId: z.uuid().nullable()
+            userId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+            mentionId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable()
           })
           .strict()
       )

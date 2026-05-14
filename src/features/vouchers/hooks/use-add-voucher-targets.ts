@@ -12,7 +12,7 @@ export const useAddVoucherTargets = () => {
   const { t } = useTranslation()
 
   const methods = useForm<AddVoucherTargetsFormValues>({
-    resolver: zodResolver(addVoucherTargetsSchema)
+    resolver: zodResolver(addVoucherTargetsSchema(t))
   })
 
   const { mutate: addVoucherTargets, isPending: isAddingVoucherTargets } = useMutation({

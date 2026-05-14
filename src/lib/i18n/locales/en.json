@@ -13,6 +13,9 @@
     "editor": "Editor",
     "viewer": "Viewer"
   },
+  "validation": {
+    "mustBeNumber": "Must be a valid number"
+  },
   "common": {
     "button": {
       "add": "Add",
@@ -58,6 +61,7 @@
         "20": "Max 20 characters",
         "25": "Max 25 characters",
         "255": "Max 255 characters",
+        "2000": "Max 2000 characters",
         "10000": "Max 10000 characters"
       },
       "minLength": {
@@ -71,7 +75,16 @@
       },
       "number": {
         "positive": "Must be a positive number",
-        "invalid": "Must be a valid number"
+        "invalid": "Must be a valid number",
+        "integer": "Must be an integer",
+        "nonNegative": "Must be zero or greater",
+        "max100": "Must be less than or equal to 100"
+      },
+      "uuid": {
+        "invalid": "Invalid identifier"
+      },
+      "enum": {
+        "invalid": "Invalid option selected"
       },
       "date": {
         "invalid": "Invalid date format",
@@ -1852,6 +1865,9 @@
       "validation": {
         "email": {
           "invalid": "Invalid email address"
+        },
+        "code": {
+          "minLength": "Code must be 6 characters"
         },
         "password": {
           "minLength": "Password must be at least 8 characters long"

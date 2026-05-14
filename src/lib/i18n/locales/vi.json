@@ -13,6 +13,9 @@
     "editor": "Người chỉnh sửa",
     "viewer": "Người xem"
   },
+  "validation": {
+    "mustBeNumber": "Phải là số hợp lệ"
+  },
   "common": {
     "button": {
       "add": "Thêm",
@@ -58,6 +61,7 @@
         "20": "Tối đa 20 ký tự",
         "25": "Tối đa 25 ký tự",
         "255": "Tối đa 255 ký tự",
+        "2000": "Tối đa 2000 ký tự",
         "10000": "Tối đa 10000 ký tự"
       },
       "minLength": {
@@ -71,7 +75,16 @@
       },
       "number": {
         "positive": "Phải là số dương",
-        "invalid": "Phải là số hợp lệ"
+        "invalid": "Phải là số hợp lệ",
+        "integer": "Phải là số nguyên",
+        "nonNegative": "Phải lớn hơn hoặc bằng 0",
+        "max100": "Phải nhỏ hơn hoặc bằng 100"
+      },
+      "uuid": {
+        "invalid": "Định danh không hợp lệ"
+      },
+      "enum": {
+        "invalid": "Lựa chọn không hợp lệ"
       },
       "date": {
         "invalid": "Định dạng ngày không hợp lệ",
@@ -1852,6 +1865,9 @@
       "validation": {
         "email": {
           "invalid": "Email không hợp lệ"
+        },
+        "code": {
+          "minLength": "Mã xác nhận phải có 6 ký tự"
         },
         "password": {
           "minLength": "Mật khẩu phải có ít nhất 8 ký tự"

@@ -44,7 +44,7 @@ export default function ProjectMemberPage() {
   const hasAddress = Boolean(addressText)
 
   const methods = useForm<ProjectTaskStatisticsParams>({
-    resolver: zodResolver(projectTaskStatisticsSchema),
+    resolver: zodResolver(projectTaskStatisticsSchema(t)),
     defaultValues: {
       from: startOfMonth(new Date()).toISOString(),
       to: endOfMonth(new Date()).toISOString(),

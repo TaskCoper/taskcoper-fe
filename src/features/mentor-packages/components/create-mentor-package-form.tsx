@@ -1,6 +1,5 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { CreateMentorPackageFormValues } from '../validations'
@@ -109,16 +108,19 @@ export default function CreateMentorPackageForm() {
         <Controller
           name='activationDeadlineDays'
           control={control}
-          render={({ field, fieldState }) => (
+          render={({ field: { value, onChange, ...field }, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1'>
               <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.activationDeadlineDays')}</FieldLabel>
               <Input
                 {...field}
-                type='text'
-                inputMode='numeric'
+                type='number'
                 id={field.name}
-                value={field.value ?? ''}
+                value={value ?? ''}
                 placeholder={t('mentorPackage.form.activationDeadlineDaysPlaceholder')}
+                onChange={(e) => {
+                  const val = e.target.value
+                  onChange(val === '' ? undefined : Number(val))
+                }}
                 aria-invalid={fieldState.invalid}
               />
               <div className='min-h-4'>
@@ -131,16 +133,19 @@ export default function CreateMentorPackageForm() {
         <Controller
           name='usageDeadlineDays'
           control={control}
-          render={({ field, fieldState }) => (
+          render={({ field: { value, onChange, ...field }, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1'>
               <FieldLabel htmlFor={field.name}>{t('mentorPackage.form.usageDeadlineDays')}</FieldLabel>
               <Input
                 {...field}
-                type='text'
-                inputMode='numeric'
+                type='number'
                 id={field.name}
-                value={field.value ?? ''}
+                value={value ?? ''}
                 placeholder={t('mentorPackage.form.usageDeadlineDaysPlaceholder')}
+                onChange={(e) => {
+                  const val = e.target.value
+                  onChange(val === '' ? undefined : Number(val))
+                }}
                 aria-invalid={fieldState.invalid}
               />
               <div className='min-h-4'>
@@ -174,7 +179,7 @@ export default function CreateMentorPackageForm() {
         )}
       /> */}
 
-      <Controller
+      {/* <Controller
         name='description'
         control={control}
         render={({ field, fieldState }) => (
@@ -197,7 +202,7 @@ export default function CreateMentorPackageForm() {
             </InputGroup>
           </Field>
         )}
-      />
+      /> */}
     </div>
   )
 }

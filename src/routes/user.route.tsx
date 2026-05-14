@@ -257,34 +257,34 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
-                    handle: { sidebarItem: 'chat' },
-                    children: [
-                      {
-                        path: 'chat',
-                        element: (
-                          <div className='w-full h-full flex justify-center items-center'>
-                            <p className='text-2xl font-bold'>Chat Comming Soon</p>
-                          </div>
-                        )
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
-                    handle: { sidebarItem: 'note' },
-                    children: [
-                      {
-                        path: 'note',
-                        element: (
-                          <div className='w-full h-full flex justify-center items-center'>
-                            <p className='text-2xl font-bold'>Note Comming Soon</p>
-                          </div>
-                        )
-                      }
-                    ]
-                  },
+                  // {
+                  //   element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
+                  //   handle: { sidebarItem: 'chat' },
+                  //   children: [
+                  //     {
+                  //       path: 'chat',
+                  //       element: (
+                  //         <div className='w-full h-full flex justify-center items-center'>
+                  //           <p className='text-2xl font-bold'>Chat Comming Soon</p>
+                  //         </div>
+                  //       )
+                  //     }
+                  //   ]
+                  // },
+                  // {
+                  //   element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
+                  //   handle: { sidebarItem: 'note' },
+                  //   children: [
+                  //     {
+                  //       path: 'note',
+                  //       element: (
+                  //         <div className='w-full h-full flex justify-center items-center'>
+                  //           <p className='text-2xl font-bold'>Note Comming Soon</p>
+                  //         </div>
+                  //       )
+                  //     }
+                  //   ]
+                  // },
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
                     handle: { sidebarItem: 'storage' },
@@ -321,16 +321,16 @@ export const userRoutes: RouteObject[] = [
                   }
                 ]
               },
-              {
-                path: 'featured-projects',
-                element: (
-                  <PageWrapper titleKey='pageTitle.featuredProjects'>
-                    <div className='w-full h-full flex justify-center items-center'>
-                      <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
-                    </div>
-                  </PageWrapper>
-                )
-              },
+              // {
+              //   path: 'featured-projects',
+              //   element: (
+              //     <PageWrapper titleKey='pageTitle.featuredProjects'>
+              //       <div className='w-full h-full flex justify-center items-center'>
+              //         <p className='text-2xl font-bold'>Featured Projects Comming Soon</p>
+              //       </div>
+              //     </PageWrapper>
+              //   )
+              // },
               {
                 path: 'network',
                 element: (
@@ -344,16 +344,16 @@ export const userRoutes: RouteObject[] = [
                   // </PageWrapper>
                 )
               },
-              {
-                path: 'community',
-                element: (
-                  <PageWrapper titleKey='pageTitle.community'>
-                    <div className='w-full h-full flex justify-center items-center'>
-                      <p className='text-2xl font-bold'>Community Comming Soon</p>
-                    </div>
-                  </PageWrapper>
-                )
-              },
+              // {
+              //   path: 'community',
+              //   element: (
+              //     <PageWrapper titleKey='pageTitle.community'>
+              //       <div className='w-full h-full flex justify-center items-center'>
+              //         <p className='text-2xl font-bold'>Community Comming Soon</p>
+              //       </div>
+              //     </PageWrapper>
+              //   )
+              // },
               {
                 path: 'news',
                 element: (

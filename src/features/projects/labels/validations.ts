@@ -4,7 +4,7 @@ import z from 'zod'
 export const addProjectLabelSchema = (t: TFunction) => {
   return z
     .object({
-      projectIdentifier: z.string().min(1),
+      projectIdentifier: z.string().min(1, t('common.validation.required')),
       name: z
         .string()
         .max(255, { message: t('task.label.validation.name.maxLength') })

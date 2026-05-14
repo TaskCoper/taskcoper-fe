@@ -123,7 +123,7 @@ export default function ProjectPerformancePage() {
 
   // const { parentMilestones } = useGetParentMilestones({ projectId })
   const methods = useForm<ProjectTaskStatisticsParams>({
-    resolver: zodResolver(projectTaskStatisticsSchema),
+    resolver: zodResolver(projectTaskStatisticsSchema(t)),
     defaultValues: {
       from: startOfMonth(new Date()).toISOString(),
       to: endOfMonth(new Date()).toISOString(),

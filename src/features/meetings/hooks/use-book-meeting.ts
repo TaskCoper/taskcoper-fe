@@ -27,7 +27,7 @@ export const useBookMeeting = ({ packageId, projectIdentifier }: UseBookMeetingO
       packageBookingId: null,
       packageSessionNumber: null
     },
-    resolver: zodResolver(bookMeetingSchema())
+    resolver: zodResolver(bookMeetingSchema(t))
   })
 
   const { mutate: bookMeeting, isPending: isBookingMeeting } = useMutation({

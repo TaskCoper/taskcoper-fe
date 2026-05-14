@@ -266,7 +266,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
               <p className='font-semibold'>{t('project.updateProjectInfo.title')}</p>
               <p className='text-xs text-muted-foreground'>{t('project.updateProjectInfo.description')}</p>
             </div> */}
-            <UpdateProjectInfoForm />
+            <UpdateProjectInfoForm onDescriptionChange={debouncedAutoSubmit} />
           </div>
         </div>
 
