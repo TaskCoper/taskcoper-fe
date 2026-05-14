@@ -2473,6 +2473,7 @@
     "item": {
       "session": "Buổi",
       "hours": "giờ",
+      "sessionTakesHours": "Buổi này kéo dài {{hours}} giờ.",
       "edit": "Chỉnh sửa",
       "create": "Tạo quy tắc mới"
     },
@@ -2500,8 +2501,8 @@
       "emptyDescription": "Tạo gói buổi gặp đầu tiên để cung cấp lộ trình hỗ trợ nhiều buổi cho mentee.",
       "infoTitle": "Thông tin",
       "infoDescription": "Nhập thông tin cơ bản của gói, bao gồm tên, mô tả, số buổi và giá để người dùng dễ hiểu và lựa chọn.",
-      "durationTitle": "Thời lượng mỗi buổi",
-      "durationDescription": "Cấu hình thời lượng cho từng buổi trong gói. Bạn có thể đặt thời lượng giống nhau hoặc khác nhau cho mỗi buổi.",
+      "durationTitle": "Quy tắc thời lượng từng buổi",
+      "durationDescription": "Mỗi slot tương ứng 1 giờ. Mở từng buổi bên dưới để xem tổng thời lượng.",
       "feedbackTitle": "Đánh giá",
       "feedbackDescription": "{{totalCount}} đánh giá cho gói này",
       "manage": "Quản lý gói"

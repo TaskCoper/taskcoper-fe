@@ -1,3 +1,4 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -55,6 +56,24 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
           new Date(b.createdOnUtc).getTime() - new Date(a.createdOnUtc).getTime()
       ) ?? []
 
+  const durationRules =
+    booking && booking.totalSessions > 0
+      ? (() => {
+          const totalTimeSlotsBySequence = new Map(
+            booking.rules.map((item) => [item.packageSequence, item.totalTimeSlots])
+          )
+
+          return Array.from({ length: booking.totalSessions }, (_, index) => {
+            const packageSequence = index + 1
+
+            return {
+              packageSequence,
+              totalTimeSlots: totalTimeSlotsBySequence.get(packageSequence) ?? 1
+            }
+          })
+        })()
+      : []
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='min-w-6xl' position='top-center'>
@@ -92,23 +111,21 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                 </div>
 
                 <div className='space-y-2'>
-                  {booking.rules.length ? (
-                    booking.rules
-                      .slice()
-                      .sort((a, b) => a.packageSequence - b.packageSequence)
-                      .map((rule) => (
-                        <Card
-                          key={rule.packageSequence}
-                          className='flex-row items-center justify-between p-2 shadow-none rounded-md'
-                        >
-                          <p className='text-sm font-medium'>
-                            {t('mentorPackageRule.item.session')} {rule.packageSequence}
-                          </p>
-                          <p className='text-xs text-muted-foreground'>
-                            {rule.totalTimeSlots} {t('mentorPackageRule.form.totalTimeSlots')}
-                          </p>
-                        </Card>
-                      ))
+                  {durationRules.length ? (
+                    <Accordion type='single' collapsible className='w-full space-y-2'>
+                      {durationRules.map((rule) => (
+                        <AccordionItem key={rule.packageSequence} value={`session-${rule.packageSequence}`}>
+                          <AccordionTrigger className='px-2 py-2 hover:no-underline'>
+                            <p className='text-sm font-medium'>
+                              {t('mentorPackageRule.item.session')} {rule.packageSequence}
+                            </p>
+                          </AccordionTrigger>
+                          <AccordionContent className='px-2 pb-2'>
+                            <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
                   ) : (
                     <div className='rounded-md text-center bg-muted p-3 text-xs text-muted-foreground'>
                       {t('common.ui.noDataAvailable')}

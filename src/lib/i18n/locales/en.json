@@ -2473,6 +2473,7 @@
     "item": {
       "session": "Session",
       "hours": "hours",
+      "sessionTakesHours": "This session takes {{hours}} hour(s).",
       "edit": "Edit",
       "create": "Create new rule"
     },
@@ -2500,8 +2501,8 @@
       "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
       "infoTitle": "Information",
       "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
-      "durationTitle": "Session Duration",
-      "durationDescription": "Configure the duration for each session in the package. You can set the same or different duration for each session.",
+      "durationTitle": "Session Duration Rules",
+      "durationDescription": "Each slot equals 1 hour. Expand a session below to see its total duration.",
       "feedbackTitle": "Feedback",
       "feedbackDescription": "{{totalCount}} feedback entries for this package",
       "manage": "Manage package"

@@ -1,5 +1,6 @@
 import RatingField, { type RatingValue } from '@/components/rating-field'
 import SanitizedHtml from '@/components/sanitized-html'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Breadcrumb,
@@ -33,7 +34,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 
-const gridGapClass = 'gap-18'
+const gridGapClass = 'gap-10'
 
 const MentorPackageBookSkeleton = () => (
   <div className='relative pb-8 h-full overflow-y-auto'>
@@ -400,21 +401,28 @@ export default function MentorPackageBookPage() {
 
             {mentorPackage?.rules.length ? (
               <div className='space-y-2.5'>
-                <p className='text-xl font-bold'>{t('mentorPackage.page.durationTitle')}</p>
+                <div>
+                  <p className='text-xl font-bold'>{t('mentorPackage.page.durationTitle')}</p>
+                  <p className='text-xs text-muted-foreground'>{t('mentorPackage.page.durationDescription')}</p>
+                </div>
                 <div className='space-y-2'>
-                  {mentorPackage.rules
-                    .slice()
-                    .sort((a, b) => a.no - b.no)
-                    .map((rule) => (
-                      <Card key={rule.id} className='flex-row items-center justify-between p-2 shadow-none rounded-md'>
-                        <p className='text-sm font-medium'>
-                          {t('mentorPackageRule.item.session')} {rule.no}
-                        </p>
-                        <p className='text-xs text-muted-foreground'>
-                          {rule.totalTimeSlots} {t('mentorPackageRule.form.totalTimeSlots')}
-                        </p>
-                      </Card>
-                    ))}
+                  <Accordion type='single' collapsible className='w-full space-y-2'>
+                    {mentorPackage.rules
+                      .slice()
+                      .sort((a, b) => a.no - b.no)
+                      .map((rule) => (
+                        <AccordionItem key={rule.id} value={`session-${rule.no}`}>
+                          <AccordionTrigger className='px-2 py-2 hover:no-underline'>
+                            <p className='text-sm font-medium'>
+                              {t('mentorPackageRule.item.session')} {rule.no}
+                            </p>
+                          </AccordionTrigger>
+                          <AccordionContent className='px-2 pb-2'>
+                            <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                  </Accordion>
                 </div>
               </div>
             ) : null}
