@@ -39,6 +39,7 @@ export default function TaskDetailMenu({
 
   const { check } = useGetMyProjectPermissions({ projectIdentifier })
   const canDelete = check('TASKS', 'canDelete')
+  const canUpdate = check('TASKS', 'canUpdate')
 
   const { toggleWatchTask } = useToggleWatchTask({ projectIdentifier, milestoneIdentifier: parentMilestoneIdentifier })
   const { deleteTask } = useDeleteTask({ projectIdentifier, parentMilestoneIdentifier, milestoneId, onDeleteSuccess })
@@ -108,24 +109,26 @@ export default function TaskDetailMenu({
           </div>
         ) : (
           <div className='py-2'>
-            <Button
-              size='sm'
-              className='w-full justify-start gap-2 rounded-none'
-              variant='ghost'
-              onClick={handleToggleWatchTask}
-            >
-              <EyeIcon />
-              <p>{t('task.column.watching')}</p>
+            {canUpdate ? (
+              <Button
+                size='sm'
+                className='w-full justify-start gap-2 rounded-none'
+                variant='ghost'
+                onClick={handleToggleWatchTask}
+              >
+                <EyeIcon />
+                <p>{t('task.column.watching')}</p>
 
-              {isWatchingTask ? (
-                <>
-                  <div className='flex-1' />
-                  <div className='size-4 bg-lime-600 rounded-sm flex items-center justify-center'>
-                    <CheckIcon className='size-3 text-white' />
-                  </div>
-                </>
-              ) : null}
-            </Button>
+                {isWatchingTask ? (
+                  <>
+                    <div className='flex-1' />
+                    <div className='size-4 bg-lime-600 rounded-sm flex items-center justify-center'>
+                      <CheckIcon className='size-3 text-white' />
+                    </div>
+                  </>
+                ) : null}
+              </Button>
+            ) : null}
 
             <Button
               size='sm'

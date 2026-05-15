@@ -59,8 +59,8 @@ export default function FileAttachment({
         )}
 
         <div className='flex-1 min-w-0'>
-          <p className='font-medium text-sm line-clamp-2'>{attachment.name}</p>
-          <p className='text-xs text-muted-foreground'>
+          <p className='font-medium text-sm line-clamp-2 truncate'>{attachment.name}</p>
+          <p className='text-xs text-muted-foreground truncate'>
             {t('task.attachment.addedAt', { date: format(new Date(attachment.createdAt), 'HH:mm dd/MM/yyyy') })}
           </p>
         </div>
