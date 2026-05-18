@@ -1,5 +1,6 @@
+import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -9,6 +10,7 @@ import { bookPackageSchema, type BookPackageFormValues } from '../validations'
 
 export const useBookPackage = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { t } = useTranslation()
 
   const methods = useForm<BookPackageFormValues>({
@@ -31,6 +33,11 @@ export const useBookPackage = () => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
       })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions.statusStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions.typeStats() })
     }
   })
 

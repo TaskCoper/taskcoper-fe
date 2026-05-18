@@ -59,6 +59,7 @@ export const useMoveTask = ({
           queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
         })
       }
+
       if (targetMilestoneIdentifier && targetMilestoneIdentifier !== currentMilestoneIdentifier) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.milestones.byParent(projectIdentifier, targetMilestoneIdentifier)

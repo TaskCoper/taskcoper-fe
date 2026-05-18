@@ -18,8 +18,13 @@ export const useDeleteVoucher = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.all })
+    onSettled: (_, _error, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(variables.voucherId), exact: true })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.scopeStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.typeStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.targetStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.statusStats() })
     }
   })
 

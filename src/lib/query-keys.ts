@@ -199,14 +199,16 @@ export const queryKeys = {
           startDate,
           endDate
         ] as const,
-      stats: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'revenue-stats'] as const,
+      stats: (projectIdentifier?: string) =>
+        [...queryKeys.projects.detail(projectIdentifier), 'revenue-stats'] as const,
       typeStats: (projectIdentifier?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'revenue-type-stats'] as const
     },
 
     revenueLabels: {
       all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'revenue-labels'] as const,
-      list: (projectIdentifier?: string) => [...queryKeys.projects.revenueLabels.all(projectIdentifier), 'list'] as const,
+      list: (projectIdentifier?: string) =>
+        [...queryKeys.projects.revenueLabels.all(projectIdentifier), 'list'] as const,
       stats: (projectIdentifier?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'revenue-labels-stats'] as const
     }

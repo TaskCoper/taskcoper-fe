@@ -235,7 +235,9 @@ export default function MeetingDialogPage() {
 
   const { meetingId } = useParams<{ meetingId: string }>()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
-  const { completeMeeting, isCompletingMeeting } = useCompleteMeeting()
+  const { completeMeeting, isCompletingMeeting } = useCompleteMeeting({
+    mentorId: meeting?.mentorUserId
+  })
   const { me } = useGetMe()
 
   const { t } = useTranslation()

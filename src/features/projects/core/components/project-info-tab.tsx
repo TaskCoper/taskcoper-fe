@@ -162,7 +162,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
     if (!ok) return
 
     deleteProject(
-      { projectId: project.id },
+      { projectIdentifier: project.slug },
       {
         onSuccess: () => {
           navigate('/projects')

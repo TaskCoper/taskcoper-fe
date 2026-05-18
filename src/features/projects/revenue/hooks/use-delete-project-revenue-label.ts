@@ -50,6 +50,7 @@ export const useDeleteProjectRevenueLabel = ({ projectIdentifier }: { projectIde
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.list(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.stats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.all(projectIdentifier) })
     }
   })
 

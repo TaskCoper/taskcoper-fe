@@ -26,7 +26,11 @@ export const useUpdateMentorProfile = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(variables.body.userIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.detail(variables.body.userIdentifier),
+        exact: true
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentors.lists() })
     }
   })
 

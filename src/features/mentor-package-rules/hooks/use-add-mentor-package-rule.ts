@@ -35,7 +35,10 @@ export const useAddMentorPackageRule = (mentorPackageId?: string) => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId),
+        exact: true
+      })
     }
   })
 

@@ -46,6 +46,8 @@ export const useCreateMentorPackage = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.pinStatistics() })
     }
   })
 

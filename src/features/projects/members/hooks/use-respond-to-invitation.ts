@@ -22,7 +22,8 @@ export const useRespondToInvitation = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
 
       if (variables.isAccepted) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.all })
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.forPackage() })
       }
     }
   })

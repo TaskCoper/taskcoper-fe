@@ -21,6 +21,9 @@ export const useLeaveProject = ({ identifier }: { identifier?: string }) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(identifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.forPackage() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(identifier), exact: true })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.myPermissions(identifier) })
     }
   })
 

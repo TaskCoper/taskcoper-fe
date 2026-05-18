@@ -57,7 +57,8 @@ export function MentorScheduleContent({
 
   const { updateMeeting, isUpdatingMeeting } = useUpdateMeeting({
     packageId: packageBookingId ?? undefined,
-    mentorId: mentorUserId
+    mentorId: mentorUserId,
+    projectIdentifier
   })
 
   const { meeting } = useGetMeeting({ meetingId, enabled: open })

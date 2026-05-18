@@ -8,9 +8,10 @@ import meetingService from '../services'
 interface UseCancelMeetingOptions {
   mentorId: string
   packageId?: string
+  projectIdentifier?: string
 }
 
-export const useCancelMeeting = ({ mentorId, packageId }: UseCancelMeetingOptions) => {
+export const useCancelMeeting = ({ mentorId, packageId, projectIdentifier }: UseCancelMeetingOptions) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -31,6 +32,10 @@ export const useCancelMeeting = ({ mentorId, packageId }: UseCancelMeetingOption
 
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
+
+      if (projectIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allProject(projectIdentifier) })
       }
     }
   })
