@@ -35,53 +35,68 @@ export const queryKeys = {
   // Auth
   auth: {
     all: ['auth'] as const,
-    me: () => ['me'] as const
+    me: () => [...queryKeys.auth.all, 'me'] as const
   },
+
   // Users
   users: {
     all: ['users'] as const,
-    googleAuthUrl: (userId?: string) => [...queryKeys.users.all, 'google-auth-url', userId] as const,
-    list: ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) =>
-      [...queryKeys.users.all, searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles] as const,
-    detail: (userId?: string) => ['user', userId] as const
+    lists: () => [...queryKeys.users.all, 'list'] as const,
+    list: (params: GetUsersParams) => [...queryKeys.users.lists(), params] as const,
+    details: () => [...queryKeys.users.all, 'detail'] as const,
+    detail: (userId?: string) => [...queryKeys.users.details(), userId] as const,
+    googleAuthUrl: (userId?: string) => [...queryKeys.users.detail(userId), 'google-auth-url'] as const
   },
+
   // Projects
   projects: {
     all: ['projects'] as const,
-    allMy: ['my-projects'] as const,
-    list: ({
-      searchTerm,
-      pageIndex,
-      pageSize,
-      startDate,
-      endDate,
-      organizationId,
-      domainId,
-      sortBy
-    }: GetProjectsParams) =>
-      [
-        ...queryKeys.projects.all,
-        searchTerm,
-        pageIndex,
-        pageSize,
-        startDate,
-        endDate,
-        organizationId,
-        domainId,
-        sortBy
-      ] as const,
+
+    // System-wide project list (admin)
+    lists: () => [...queryKeys.projects.all, 'list'] as const,
+    list: (params: GetProjectsParams) => [...queryKeys.projects.lists(), params] as const,
+    forPackage: () => [...queryKeys.projects.lists(), 'for-package'] as const,
+
+    // Current user's projects
+    allMy: () => [...queryKeys.projects.lists(), 'my'] as const,
     listMy: (userId?: string, status?: string[], searchTerm?: string, pageIndex?: number, pageSize?: number) =>
-      [...queryKeys.projects.allMy, userId, status, searchTerm, pageIndex, pageSize] as const,
+      [...queryKeys.projects.allMy(), userId, status, searchTerm, pageIndex, pageSize] as const,
     listMyInfinite: (userId?: string, status?: string[], searchTerm?: string, pageSize?: number) =>
-      [...queryKeys.projects.allMy, 'infinite', userId, status, searchTerm, pageSize] as const,
-    detail: (identifier?: string) => ['project', identifier] as const,
+      [...queryKeys.projects.allMy(), 'infinite', userId, status, searchTerm, pageSize] as const,
+
+    // Per-project
+    details: () => [...queryKeys.projects.all, 'detail'] as const,
+    detail: (identifier?: string) => [...queryKeys.projects.details(), identifier] as const,
+
+    parentMilestones: (identifier?: string) => [...queryKeys.projects.detail(identifier), 'parent-milestones'] as const,
+    labels: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'labels'] as const,
+    labelStatsAll: (projectIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'label-stats'] as const,
+    labelStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) =>
+      [...queryKeys.projects.labelStatsAll(projectIdentifier), parentMilestoneIdentifier] as const,
+    taskStatusStats: (projectIdentifier?: string, parentMilestoneIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'task-status-stats', parentMilestoneIdentifier] as const,
+    memberStats: (projectIdentifier?: string, parentMilestoneIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'member-stats', parentMilestoneIdentifier] as const,
+    resourceStats: (projectIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'resource-stats'] as const,
+    mimeTypeStats: (projectIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'mime-type-stats'] as const,
+    resourceMemberStats: (projectIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'resource-member-stats'] as const,
+    priorityStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectPriorityStatsParams) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'priority-stats', parentMilestoneIdentifier] as const,
+    myPermissions: (projectIdentifier?: string) =>
+      [...queryKeys.projects.detail(projectIdentifier), 'my-permissions'] as const,
+
     members: {
-      all: (identifier?: string) => ['members', identifier] as const,
+      all: (identifier?: string) => [...queryKeys.projects.detail(identifier), 'members'] as const,
       list: ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: GetProjectMembersParams) =>
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
       detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
-        ['members', 'detail', projectIdentifier, userId] as const,
-      allRequests: (projectIdentifier?: string) => ['member-requests', projectIdentifier] as const,
+        [...queryKeys.projects.members.all(projectIdentifier), 'detail', userId] as const,
+      allRequests: (projectIdentifier?: string) =>
+        [...queryKeys.projects.detail(projectIdentifier), 'member-requests'] as const,
       requests: ({
         projectIdentifier,
         isInviteUser,
@@ -97,59 +112,125 @@ export const queryKeys = {
           searchTerm
         ] as const
     },
-    parentMilestones: (identifier?: string) => ['parent-milestones', identifier] as const,
-    labels: (projectIdentifier?: string) => ['project-labels', projectIdentifier],
-    labelStatsAll: (projectIdentifier: string) => ['project-label-stats', projectIdentifier],
-    labelStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) => [
-      ...queryKeys.projects.labelStatsAll(projectIdentifier),
-      parentMilestoneIdentifier
-    ],
-    taskStatusStats: (projectIdentifier: string, parentMilestoneIdentifier?: string) => [
-      'project-task-status-stats',
-      projectIdentifier,
-      parentMilestoneIdentifier
-    ],
-    memberStats: (projectIdentifier: string, parentMilestoneId?: string) => [
-      'project-member-stats',
-      projectIdentifier,
-      parentMilestoneId
-    ],
-    resourceStats: (projectIdentifier?: string) => ['project-resource-stats', projectIdentifier] as const,
-    mimeTypeStats: (projectIdentifier?: string) => ['project-mime-type-stats', projectIdentifier] as const,
-    resourceMemberStats: (projectIdentifier?: string) => ['project-resource-member-stats', projectIdentifier] as const,
-    priorityStats: ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectPriorityStatsParams) => [
-      'project-priority-stats',
-      projectIdentifier,
-      parentMilestoneIdentifier
-    ],
-    myPermissions: (projectIdentifier?: string) => ['project-my-permissions', projectIdentifier] as const,
+
     roles: {
-      all: (identifier?: string) => ['project-roles', identifier] as const,
+      all: (identifier?: string) => [...queryKeys.projects.detail(identifier), 'roles'] as const,
       list: (identifier?: string) => [...queryKeys.projects.roles.all(identifier)] as const,
       detail: ({ projectIdentifier, roleId }: GetProjectRoleParams) =>
-        ['project-role', projectIdentifier, roleId] as const,
-      templates: (projectIdentifier?: string) => ['project-role-templates', projectIdentifier] as const
+        [...queryKeys.projects.roles.all(projectIdentifier), 'detail', roleId] as const,
+      templates: (projectIdentifier?: string) =>
+        [...queryKeys.projects.detail(projectIdentifier), 'role-templates'] as const
     },
+
     positionTitles: {
-      all: (identifier?: string) => ['project-position-titles', identifier] as const,
+      all: (identifier?: string) => [...queryKeys.projects.detail(identifier), 'position-titles'] as const,
       list: (identifier?: string) => [...queryKeys.projects.positionTitles.all(identifier)] as const,
       member: (projectIdentifier?: string, userId?: string) =>
-        ['project-member-position-titles', projectIdentifier, userId] as const
+        [...queryKeys.projects.detail(projectIdentifier), 'member-position-titles', userId] as const
     },
-    forPackage: () => ['projects-for-package'] as const
+
+    resources: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'resources'] as const,
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        sortBy,
+        name,
+        from,
+        to,
+        mimeTypes,
+        memberIds
+      }: GetProjectResourcesParams) =>
+        [
+          ...queryKeys.projects.resources.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          sortBy,
+          name,
+          from,
+          to,
+          mimeTypes,
+          memberIds
+        ] as const
+    },
+
+    efficiency: {
+      heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) =>
+        [...queryKeys.projects.detail(projectId), 'efficiency', 'heatmap', from, to] as const,
+      taskStats: ({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }: GetProjectTaskStatsParams) =>
+        [
+          ...queryKeys.projects.detail(projectId),
+          'efficiency',
+          'task-stats',
+          from,
+          to,
+          parentMilestoneId,
+          isViewInMonth,
+          userId
+        ] as const,
+      topContributors: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
+        [...queryKeys.projects.detail(projectId), 'efficiency', 'top-contributors', from, to] as const,
+      onTimeCompleters: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
+        [...queryKeys.projects.detail(projectId), 'efficiency', 'on-time-completers', from, to] as const
+    },
+
+    revenues: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'revenues'] as const,
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        labelIds,
+        searchTerm,
+        type,
+        sortBy,
+        startDate,
+        endDate
+      }: GetProjectRevenueParams) =>
+        [
+          ...queryKeys.projects.revenues.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          labelIds,
+          searchTerm,
+          type,
+          sortBy,
+          startDate,
+          endDate
+        ] as const,
+      stats: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'revenue-stats'] as const,
+      typeStats: (projectIdentifier?: string) =>
+        [...queryKeys.projects.detail(projectIdentifier), 'revenue-type-stats'] as const
+    },
+
+    revenueLabels: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'revenue-labels'] as const,
+      list: (projectIdentifier?: string) => [...queryKeys.projects.revenueLabels.all(projectIdentifier), 'list'] as const,
+      stats: (projectIdentifier?: string) =>
+        [...queryKeys.projects.detail(projectIdentifier), 'revenue-labels-stats'] as const
+    }
   },
+
   // Milestones
   milestones: {
     all: ['milestones'] as const,
     byParent: (identifier?: string, parentMilestoneIdentifier?: string) =>
-      ['milestones', identifier, parentMilestoneIdentifier] as const,
-    tasks: (milestoneId?: string) => ['milestones-tasks', milestoneId] as const,
-    childMilestones: (parentMilestoneIdentifier?: string) => ['child-milestones', parentMilestoneIdentifier] as const,
-    stats: (parentMilestoneIdentifier?: string) => ['milestone-stats', parentMilestoneIdentifier] as const
+      [...queryKeys.milestones.all, 'by-parent', identifier, parentMilestoneIdentifier] as const,
+    tasks: (milestoneId?: string) => [...queryKeys.milestones.all, 'tasks', milestoneId] as const,
+    childMilestones: (parentMilestoneIdentifier?: string) =>
+      [...queryKeys.milestones.all, 'children', parentMilestoneIdentifier] as const,
+    stats: (parentMilestoneIdentifier?: string) =>
+      [...queryKeys.milestones.all, 'stats', parentMilestoneIdentifier] as const
   },
+
   // Tasks
   tasks: {
     all: ['tasks'] as const,
+    lists: () => [...queryKeys.tasks.all, 'list'] as const,
+    // listParent is a prefix of list — invalidating it cascades to every filter combo for that milestone
+    listParent: (parentMilestoneIdentifier?: string) =>
+      [...queryKeys.tasks.lists(), 'by-parent', parentMilestoneIdentifier] as const,
     list: ({
       parentMilestoneIdentifier,
       pageIndex,
@@ -182,198 +263,153 @@ export const queryKeys = {
         projectIdentifier,
         isWatchingTask
       ] as const,
-    listParent: (parentMilestoneIdentifier?: string) => [...queryKeys.tasks.all, parentMilestoneIdentifier] as const,
-    detail: (taskIdentifier?: string) => ['task', taskIdentifier] as const,
-    members: (taskId?: string) => ['taskMembers', taskId] as const,
-    myAssigned: (identifier?: string, userId?: string) => ['my-assigned-tasks', identifier, userId] as const
+    myAssigned: (identifier?: string, userId?: string) =>
+      [...queryKeys.tasks.lists(), 'my-assigned', identifier, userId] as const,
+    details: () => [...queryKeys.tasks.all, 'detail'] as const,
+    detail: (taskIdentifier?: string) => [...queryKeys.tasks.details(), taskIdentifier] as const,
+    members: (taskId?: string) => [...queryKeys.tasks.detail(taskId), 'members'] as const
   },
+
   // Subtasks
   subtasks: {
-    all: ['subtasks'] as const,
-    byTask: (taskIdentifier?: string) => ['subtasks', taskIdentifier] as const
+    byTask: (taskIdentifier?: string) => [...queryKeys.tasks.detail(taskIdentifier), 'subtasks'] as const
   },
+
   // Comments
   comments: {
-    all: ['comments'] as const,
-    byTask: (taskIdentifier?: string) => ['comments', taskIdentifier] as const
+    byTask: (taskIdentifier?: string) => [...queryKeys.tasks.detail(taskIdentifier), 'comments'] as const
   },
+
+  // Attachments
+  attachments: {
+    byTask: (taskId?: string) => [...queryKeys.tasks.detail(taskId), 'attachments'] as const
+  },
+
   // Notifications
   notifications: {
     all: ['notifications'] as const,
-    list: (userId?: string, pageSize?: number) => ['notifications', userId, pageSize] as const,
+    list: (userId?: string, pageSize?: number) => [...queryKeys.notifications.all, 'list', userId, pageSize] as const,
     unreadCount: {
-      all: () => ['unread-count'] as const,
-      byUser: (userId?: string) => ['unread-count', userId] as const
+      all: () => [...queryKeys.notifications.all, 'unread-count'] as const,
+      byUser: (userId?: string) => [...queryKeys.notifications.unreadCount.all(), userId] as const
     }
   },
+
   // Location
   location: {
-    provinces: () => ['provinces'] as const,
-    wards: (provinceCode?: string) => ['wards', provinceCode] as const
+    all: ['location'] as const,
+    provinces: () => [...queryKeys.location.all, 'provinces'] as const,
+    wards: (provinceCode?: string) => [...queryKeys.location.all, 'wards', provinceCode] as const
   },
+
   // Domains
   domains: {
-    all: () => ['domains'] as const,
+    all: ['domains'] as const,
+    lists: () => [...queryKeys.domains.all, 'list'] as const,
     list: (searchTerm?: string, pageIndex?: number, pageSize?: number) =>
-      ['domains', searchTerm, pageIndex, pageSize] as const,
+      [...queryKeys.domains.lists(), searchTerm, pageIndex, pageSize] as const,
     listInfinite: (searchTerm?: string, pageSize?: number) =>
-      [...queryKeys.domains.all(), 'infinite', searchTerm, pageSize] as const,
-    stats: () => ['domain-stats'] as const
+      [...queryKeys.domains.lists(), 'infinite', searchTerm, pageSize] as const,
+    stats: () => [...queryKeys.domains.all, 'stats'] as const
   },
-  // Attachments
-  attachments: {
-    byTask: (taskId?: string) => ['attachments', taskId] as const
-  },
+
   // Organizations
   organizations: {
-    detail: (organizationId?: string | null) => ['organization', organizationId] as const,
-    stats: () => ['organization-stats'] as const
+    all: ['organizations'] as const,
+    detail: (organizationId?: string | null) => [...queryKeys.organizations.all, 'detail', organizationId] as const,
+    stats: () => [...queryKeys.organizations.all, 'stats'] as const
   },
-  // Roles
+
+  // Roles (system-level role stats)
   roles: {
-    stats: () => ['role-stats'] as const
+    all: ['roles'] as const,
+    stats: () => [...queryKeys.roles.all, 'stats'] as const
   },
-  // Project Resources
-  projectResources: {
-    all: (projectId?: string) => ['project-resources', projectId] as const,
-    list: ({
-      projectIdentifier,
-      pageIndex,
-      pageSize,
-      sortBy,
-      name,
-      from,
-      to,
-      mimeTypes,
-      memberIds
-    }: GetProjectResourcesParams) =>
-      [
-        'project-resources',
-        projectIdentifier,
-        pageIndex,
-        pageSize,
-        sortBy,
-        name,
-        from,
-        to,
-        mimeTypes,
-        memberIds
-      ] as const
-  },
-  // Efficiency
-  efficiency: {
-    heatmap: ({ projectId, from, to }: GetProjectHeatmapParams) => ['heatmap', projectId, from, to] as const,
-    taskStats: ({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }: GetProjectTaskStatsParams) =>
-      ['task-stats', projectId, from, to, parentMilestoneId, isViewInMonth, userId] as const,
-    topContributors: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
-      ['top-contributors', projectId, from, to] as const,
-    onTimeCompleters: ({ projectId, from, to }: GetProjectTopContributorsParams) =>
-      ['on-time-completers', projectId, from, to] as const
-  },
+
   // Mentors
   mentors: {
+    all: ['mentors'] as const,
+    lists: () => [...queryKeys.mentors.all, 'list'] as const,
     list: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
-      ['mentors', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
+      [...queryKeys.mentors.lists(), pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const,
     listInfinite: ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) =>
-      ['mentors-infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
+      [...queryKeys.mentors.lists(), 'infinite', pageIndex, pageSize, domainIds, searchTerm, rating, sortBy] as const
   },
+
   // Mentor Applications
   mentorApplications: {
     all: ['mentor-applications'] as const,
+    lists: () => [...queryKeys.mentorApplications.all, 'list'] as const,
     list: ({ status, sortBy }: GetMentorApplicationsParams = {}) =>
-      [...queryKeys.mentorApplications.all, status, sortBy] as const,
-    allMy: ['mentor-applications', 'my'] as const,
+      [...queryKeys.mentorApplications.lists(), status, sortBy] as const,
+    allMy: () => [...queryKeys.mentorApplications.all, 'my'] as const,
     my: ({ status, sortBy }: GetMyMentorApplicationsParams = {}) =>
-      [...queryKeys.mentorApplications.allMy, status, sortBy] as const
+      [...queryKeys.mentorApplications.allMy(), status, sortBy] as const
   },
+
   // Mentor Packages
   mentorPackages: {
     all: ['mentor-packages'] as const,
-    allMy: ['mentor-packages', 'my'] as const,
+    lists: () => [...queryKeys.mentorPackages.all, 'list'] as const,
+    allMy: () => [...queryKeys.mentorPackages.all, 'my'] as const,
     my: ({ pageIndex, pageSize, sortBy, searchTerm, isPin }: GetMyMentorPackagesParams) =>
-      [...queryKeys.mentorPackages.allMy, pageIndex, pageSize, sortBy, searchTerm, isPin] as const,
+      [...queryKeys.mentorPackages.allMy(), pageIndex, pageSize, sortBy, searchTerm, isPin] as const,
     purchased: ({ mode, isNeedFeedback }: GetPurchasedMentorPackagesParams) =>
       [...queryKeys.mentorPackages.all, 'purchased', mode, isNeedFeedback] as const,
     projectPurchased: (projectIdentifier?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'project', projectIdentifier] as const,
     purchasedDetail: (packageId?: string) =>
       [...queryKeys.mentorPackages.all, 'purchased', 'detail', packageId] as const,
-    list: ({ mentorId, isPin }: GetMentorPackagesParams) => [...queryKeys.mentorPackages.all, mentorId, isPin] as const,
+    list: ({ mentorId, isPin }: GetMentorPackagesParams) =>
+      [...queryKeys.mentorPackages.lists(), mentorId, isPin] as const,
     listInfinite: (params: { pageIndex?: number; pageSize?: number; searchTerm?: string } = {}) =>
-      [...queryKeys.mentorPackages.all, 'infinite', params] as const,
-    detail: (packageId?: string) => ['mentor-package', packageId] as const,
+      [...queryKeys.mentorPackages.lists(), 'infinite', params] as const,
+    details: () => [...queryKeys.mentorPackages.all, 'detail'] as const,
+    detail: (packageId?: string) => [...queryKeys.mentorPackages.details(), packageId] as const,
     statistics: ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) =>
-      [...queryKeys.mentorPackages.all, 'statistics', mentorPackageId, startTime, endTime] as const,
+      [...queryKeys.mentorPackages.detail(mentorPackageId), 'statistics', startTime, endTime] as const,
     pinStatistics: () => [...queryKeys.mentorPackages.all, 'pin', 'statistics'] as const,
-    allBookings: (mentorPackageId?: string) => [...queryKeys.mentorPackages.all, 'bookings', mentorPackageId] as const,
+    allBookings: (mentorPackageId?: string) =>
+      [...queryKeys.mentorPackages.detail(mentorPackageId), 'bookings'] as const,
     bookings: ({ mentorPackageId, pageIndex, pageSize, sortBy, status }: GetMentorPackageBookingsParams) =>
       [...queryKeys.mentorPackages.allBookings(mentorPackageId), pageIndex, pageSize, sortBy, status] as const,
     allStatistics: ({ startTime, endTime }: GetMentorPackagesStatisticsParams) =>
       [...queryKeys.mentorPackages.all, 'statistics', startTime, endTime] as const
   },
+
   // Schedules
   schedules: {
     all: ['schedules'] as const,
-    allMy: ['schedules', 'my'] as const,
-    my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy, isActive] as const,
+    lists: () => [...queryKeys.schedules.all, 'list'] as const,
+    allMy: () => [...queryKeys.schedules.all, 'my'] as const,
+    my: ({ isActive }: GetMySchedulesParams = {}) => [...queryKeys.schedules.allMy(), isActive] as const,
     list: ({ userId, activeFrom, activeTo }: GetScheduleParams) =>
-      [...queryKeys.schedules.all, userId, activeFrom, activeTo] as const
+      [...queryKeys.schedules.lists(), userId, activeFrom, activeTo] as const
   },
-  // Project Revenues
-  projectRevenues: {
-    all: (projectIdentifier?: string) => ['project-revenues', projectIdentifier] as const,
-    list: ({
-      projectIdentifier,
-      pageIndex,
-      pageSize,
-      labelIds,
-      searchTerm,
-      type,
-      sortBy,
-      startDate,
-      endDate
-    }: GetProjectRevenueParams) =>
-      [
-        ...queryKeys.projectRevenues.all(projectIdentifier),
-        pageIndex,
-        pageSize,
-        labelIds,
-        searchTerm,
-        type,
-        sortBy,
-        startDate,
-        endDate
-      ] as const,
-    stats: (projectIdentifier?: string) => ['project-revenue-stats', projectIdentifier] as const,
-    typeStats: (projectIdentifier?: string) => ['project-revenue-type-stats', projectIdentifier] as const
-  },
-  // Project Revenue Labels
-  projectRevenueLabels: {
-    all: (projectId?: string) => ['project-revenue-labels', projectId] as const,
-    list: (projectIdentifier?: string) => [...queryKeys.projectRevenueLabels.all(projectIdentifier)] as const,
-    stats: (projectIdentifier?: string) => ['project-revenue-labels-stats', projectIdentifier] as const
-  },
+
   // Meetings
   meetings: {
     all: ['meetings'] as const,
-    allMentor: (mentorId?: string) => ['meetings', 'mentor', mentorId] as const,
+    details: () => [...queryKeys.meetings.all, 'detail'] as const,
+    detail: (meetingId?: string) => [...queryKeys.meetings.details(), meetingId] as const,
+    allMentor: (mentorId?: string) => [...queryKeys.meetings.all, 'mentor', mentorId] as const,
     mentor: ({ mentorId, activeFrom, activeTo }: GetMentorMeetingsParams) =>
       [...queryKeys.meetings.allMentor(mentorId), activeFrom, activeTo] as const,
-    allMy: ['meetings', 'my'] as const,
+    allMy: () => [...queryKeys.meetings.all, 'my'] as const,
     my: ({ activeFrom, activeTo, packageBookingIds, mode, status }: GetMyMeetingsParams) =>
-      [...queryKeys.meetings.allMy, activeFrom, activeTo, packageBookingIds, mode, status] as const,
-    detail: (meetingId?: string) => ['meeting', meetingId] as const,
-    allProject: (projectIdentifier?: string) => ['meetings', 'project', projectIdentifier] as const,
+      [...queryKeys.meetings.allMy(), activeFrom, activeTo, packageBookingIds, mode, status] as const,
+    allProject: (projectIdentifier?: string) => [...queryKeys.meetings.all, 'project', projectIdentifier] as const,
     project: ({ projectIdentifier, activeFrom, activeTo, status }: GetProjectMeetingsParams) =>
       [...queryKeys.meetings.allProject(projectIdentifier), activeFrom, activeTo, status] as const
   },
+
   // Transactions
   transactions: {
     all: ['transactions'] as const,
+    allMy: () => [...queryKeys.transactions.all, 'my'] as const,
     my: ({ pageIndex, pageSize, status, type, sortBy, searchTerm, createdFrom, createdTo }: GetMyTransactionsParams) =>
       [
-        ...queryKeys.transactions.all,
-        'my',
+        ...queryKeys.transactions.allMy(),
         pageIndex,
         pageSize,
         status,
@@ -383,22 +419,26 @@ export const queryKeys = {
         createdFrom,
         createdTo
       ] as const,
-    detail: (transactionId?: string) => ['transaction', transactionId] as const,
-    statusStats: () => ['transaction-status-stats'] as const,
-    typeStats: () => ['transaction-type-stats'] as const,
-    status: (transactionId?: string) => ['transaction-status', transactionId] as const
+    details: () => [...queryKeys.transactions.all, 'detail'] as const,
+    detail: (transactionId?: string) => [...queryKeys.transactions.details(), transactionId] as const,
+    status: (transactionId?: string) => [...queryKeys.transactions.detail(transactionId), 'status'] as const,
+    statusStats: () => [...queryKeys.transactions.all, 'status-stats'] as const,
+    typeStats: () => [...queryKeys.transactions.all, 'type-stats'] as const
   },
+
   // Commissions
   commissions: {
     all: ['commissions'] as const,
+    lists: () => [...queryKeys.commissions.all, 'list'] as const,
     list: ({ page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy }: GetCommissionsParams) =>
-      [...queryKeys.commissions.all, page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const,
+      [...queryKeys.commissions.lists(), page, limit, targetModel, titleLevel, minAmount, maxAmount, sortBy] as const,
     public: () => [...queryKeys.commissions.all, 'public'] as const
   },
-  // Vouchers
+
+  // Vouchers — single root, all per-voucher data nests under detail(id)
   vouchers: {
     all: ['vouchers'] as const,
-    single: ['voucher'] as const,
+    lists: () => [...queryKeys.vouchers.all, 'list'] as const,
     list: ({
       pageIndex,
       pageSize,
@@ -413,7 +453,7 @@ export const queryKeys = {
       endTime
     }: GetVouchersParams) =>
       [
-        ...queryKeys.vouchers.all,
+        ...queryKeys.vouchers.lists(),
         pageIndex,
         pageSize,
         searchTerm,
@@ -426,20 +466,25 @@ export const queryKeys = {
         startTime,
         endTime
       ] as const,
-    detail: (voucherId?: string) => [...queryKeys.vouchers.single, voucherId] as const,
-    scopeStats: () => [...queryKeys.vouchers.single, 'scope-stats'] as const,
-    typeStats: () => [...queryKeys.vouchers.single, 'type-stats'] as const,
-    targetStats: () => [...queryKeys.vouchers.single, 'target-stats'] as const,
-    statusStats: () => [...queryKeys.vouchers.single, 'status-stats'] as const,
-    byCode: (voucherCode?: string) => [...queryKeys.vouchers.single, 'code', voucherCode] as const,
+    details: () => [...queryKeys.vouchers.all, 'detail'] as const,
+    detail: (voucherId?: string) => [...queryKeys.vouchers.details(), voucherId] as const,
+    byCode: (voucherCode?: string) => [...queryKeys.vouchers.all, 'by-code', voucherCode] as const,
+    scopeStats: () => [...queryKeys.vouchers.all, 'scope-stats'] as const,
+    typeStats: () => [...queryKeys.vouchers.all, 'type-stats'] as const,
+    targetStats: () => [...queryKeys.vouchers.all, 'target-stats'] as const,
+    statusStats: () => [...queryKeys.vouchers.all, 'status-stats'] as const,
     redemptions: ({ voucherId, pageIndex, pageSize, sortBy, searchTerm }: GetVoucherRedemptionsParams) =>
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   },
+
+  // Feedbacks
   feedbacks: {
-    byPackage: (packageBookingId?: string) => ['feedbacks', 'package', packageBookingId] as const,
-    listInfinite: ({ targetId, targetType, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
-      ['feedbacks', 'infinite', targetId, targetType, pageSize, sortBy, searchTerm] as const,
+    all: ['feedbacks'] as const,
+    lists: () => [...queryKeys.feedbacks.all, 'list'] as const,
     list: ({ targetId, targetType, pageIndex, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
-      ['feedbacks', targetId, targetType, pageIndex, pageSize, sortBy, searchTerm] as const
+      [...queryKeys.feedbacks.lists(), targetId, targetType, pageIndex, pageSize, sortBy, searchTerm] as const,
+    listInfinite: ({ targetId, targetType, pageSize, sortBy, searchTerm }: GetFeedbacksParams) =>
+      [...queryKeys.feedbacks.lists(), 'infinite', targetId, targetType, pageSize, sortBy, searchTerm] as const,
+    byPackage: (packageBookingId?: string) => [...queryKeys.feedbacks.all, 'package', packageBookingId] as const
   }
 } as const

@@ -20,7 +20,7 @@ export const useLeaveProject = ({ identifier }: { identifier?: string }) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(identifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
     }
   })
 

@@ -20,15 +20,15 @@ export const useUpdateProjectRevenue = () => {
   const { mutate: updateProjectRevenue, isPending: isUpdatingProjectRevenue } = useMutation({
     mutationFn: projectRevenueService.updateProjectRevenue,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projects.revenues.all(variables.body.projectIdentifier) })
 
       const previousRevenues = queryClient.getQueriesData<BasePaginationResponse<Revenue>>({
-        queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier)
+        queryKey: queryKeys.projects.revenues.all(variables.body.projectIdentifier)
       })
 
       queryClient.setQueriesData<BasePaginationResponse<Revenue>>(
         {
-          queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier)
+          queryKey: queryKeys.projects.revenues.all(variables.body.projectIdentifier)
         },
         (old) => {
           if (!old) return old
@@ -61,7 +61,7 @@ export const useUpdateProjectRevenue = () => {
     onError: (error, variables, context) => {
       if (context?.previousRevenues) {
         queryClient.setQueryData(
-          queryKeys.projectRevenues.all(variables.body.projectIdentifier),
+          queryKeys.projects.revenues.all(variables.body.projectIdentifier),
           context.previousRevenues
         )
       }
@@ -71,12 +71,12 @@ export const useUpdateProjectRevenue = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(variables.body.projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.typeStats(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.all(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.typeStats(variables.body.projectIdentifier) })
       queryClient.invalidateQueries({
-        queryKey: queryKeys.projectRevenueLabels.stats(variables.body.projectIdentifier)
+        queryKey: queryKeys.projects.revenueLabels.stats(variables.body.projectIdentifier)
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.stats(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.stats(variables.body.projectIdentifier) })
     }
   })
 

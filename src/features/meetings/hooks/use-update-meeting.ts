@@ -27,7 +27,7 @@ export const useUpdateMeeting = ({ packageId, mentorId, showSuccessToast = true 
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.body.meetingId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(mentorId) })
 

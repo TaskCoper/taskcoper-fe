@@ -19,7 +19,7 @@ export const useDeleteProject = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
     }
   })
 

@@ -19,7 +19,7 @@ export const useCompleteMeeting = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.meetingId) })
     }
   })

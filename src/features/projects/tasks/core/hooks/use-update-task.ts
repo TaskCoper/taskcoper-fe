@@ -1,4 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -70,29 +71,23 @@ export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier 
       })
     },
     onSettled: () => {
-      if (taskIdentifier) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
-      }
+      invalidateTaskTree(queryClient, {
+        taskId: taskIdentifier,
+        projectIdentifier: identifier,
+        parentMilestoneIdentifier: milestoneIdentifier,
+        userId: user?.id
+      })
 
-      if (milestoneIdentifier) {
-        if (identifier) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.projects.taskStatusStats(identifier, milestoneIdentifier)
+      if (identifier && milestoneIdentifier) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.projects.taskStatusStats(identifier, milestoneIdentifier)
+        })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.projects.priorityStats({
+            projectIdentifier: identifier,
+            parentMilestoneIdentifier: milestoneIdentifier
           })
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.projects.priorityStats({
-              projectIdentifier: identifier,
-              parentMilestoneIdentifier: milestoneIdentifier
-            })
-          })
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
-      }
-
-      if (identifier && user?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
+        })
       }
     }
   })

@@ -25,7 +25,7 @@ export const useCancelMeeting = ({ mentorId, packageId }: UseCancelMeetingOption
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.meetingId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(mentorId) })
 

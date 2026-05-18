@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import milestoneService from '../services'
 
 export interface DeleteMilestoneParams {
-  queryKey: unknown[]
+  queryKey: readonly unknown[]
   parentMilestoneIdentifier?: string
   onSuccessCallback?: () => void
 }
