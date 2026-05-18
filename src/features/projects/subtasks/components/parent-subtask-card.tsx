@@ -142,7 +142,7 @@ export default function ParentSubtaskCard({
           <div className='flex justify-start items-center gap-2 w-full'>
             <p
               className={cn(
-                'font-semibold hover:bg-muted rounded-sm py-1',
+                'font-semibold hover:bg-muted rounded-sm py-1 truncate',
                 canUpdate ? 'cursor-text' : 'cursor-default'
               )}
               {...(canUpdate ? triggerProps : {})}

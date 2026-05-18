@@ -101,13 +101,13 @@ export default function CommentCard({
         </Avatar>
 
         <div className='w-full'>
-          <p className='text-sm text-foreground/70'>
+          <p className='text-sm text-foreground/70 truncate'>
             <span className='font-semibold text-foreground'>
               {comment.firstName} {comment.lastName}
             </span>{' '}
             {t(taskLogContent[comment.content])}
           </p>
-          <p className='text-xs font-normal underline text-primary'>
+          <p className='text-xs font-normal underline text-primary truncate'>
             {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
           </p>
         </div>
@@ -124,10 +124,10 @@ export default function CommentCard({
 
       <div className='space-y-1 w-full'>
         <div className='flex items-baseline gap-2'>
-          <p className='text-sm font-semibold'>
+          <p className='text-sm font-semibold truncate'>
             {comment.firstName} {comment.lastName}
           </p>
-          <p className='text-xs font-normal underline text-primary'>
+          <p className='text-xs font-normal underline text-primary truncate'>
             {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
           </p>
         </div>

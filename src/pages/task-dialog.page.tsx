@@ -323,7 +323,7 @@ export default function TaskDialogPage() {
       <DialogContent
         showCloseButton={false}
         position='top-center'
-        className='min-w-6xl p-0 gap-0 flex flex-col border-none'
+        className='min-w-[95%] xl:min-w-6xl p-0 gap-0 flex flex-col border-none'
         onInteractOutside={handleClose}
       >
         <FormProvider {...updateTaskMethods}>
@@ -390,6 +390,7 @@ export default function TaskDialogPage() {
                   className='rounded-full'
                   variant={task?.backgroundImage ? 'outline' : 'ghost'}
                   size='icon-sm'
+                  disabled={!canUpdate}
                   onClick={() => {
                     if (!task?.taskId) return
                     toggleWatchTask({ taskId: task.taskId, isWatching: false })
@@ -913,7 +914,7 @@ export default function TaskDialogPage() {
             <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
               <div className='flex items-center gap-2'>
                 <MessageSquareText className='size-4' />
-                <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
+                <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>
               </div>
 
               {isEditComment ? (
