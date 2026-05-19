@@ -114,7 +114,7 @@ const refreshAccessToken = async (): Promise<boolean> => {
   } catch (err) {
     const error = err as AxiosError<ErrorResponse>
 
-    // If refresh token is invalid => redirect to sign in page
+    // If refresh token is invalid
     if (error.response?.data?.messageCode === 'InvalidRefreshToken') {
       clearAllUserPreferences()
       const isOnPublicRoute = isPublicRoutePath(window.location.pathname)

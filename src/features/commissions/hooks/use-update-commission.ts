@@ -26,7 +26,8 @@ export const useUpdateCommission = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.public() })
     }
   })
 

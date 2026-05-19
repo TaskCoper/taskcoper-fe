@@ -26,7 +26,7 @@ export const useGetProjectRevenue = ({
   endDate
 }: GetProjectRevenueParams) => {
   const { data: projectRevenues, isLoading: isLoadingProjectRevenues } = useQuery({
-    queryKey: queryKeys.projectRevenues.list({
+    queryKey: queryKeys.projects.revenues.list({
       projectIdentifier,
       pageIndex,
       pageSize,

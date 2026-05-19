@@ -79,7 +79,7 @@ export default function SubtaskCard({
       <Checkbox checked={subtask.isCompleted} onCheckedChange={handleCheckboxChange} disabled={!canUpdate} />
       <div className='flex items-center gap-2 w-full hover:bg-muted rounded-sm px-2 py-1 group/subtask-item'>
         <p
-          className={cn('text-sm cursor-pointer w-full', canUpdate ? 'cursor-text' : 'cursor-default')}
+          className={cn('text-sm cursor-pointer max-w-full truncate', canUpdate ? 'cursor-text' : 'cursor-default')}
           {...(canUpdate ? triggerProps : {})}
         >
           {subtask.name}

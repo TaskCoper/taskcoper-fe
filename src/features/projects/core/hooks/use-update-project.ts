@@ -27,7 +27,8 @@ export const useUpdateProject = ({ projectIdentifier }: { projectIdentifier?: st
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.forPackage() })
     }
   })
 

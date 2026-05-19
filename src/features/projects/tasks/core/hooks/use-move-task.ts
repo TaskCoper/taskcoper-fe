@@ -1,4 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -38,9 +39,12 @@ export const useMoveTask = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
+      invalidateTaskTree(queryClient, {
+        taskId: taskIdentifier,
+        projectIdentifier,
+        parentMilestoneIdentifier: milestoneIdentifier,
+        userId: user?.id
+      })
 
       if (!isDragging) {
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskIdentifier) })
@@ -48,30 +52,23 @@ export const useMoveTask = ({
 
       if (milestoneIdentifier) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(milestoneIdentifier) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
       }
 
       if (currentMilestoneIdentifier) {
-        if (targetMilestoneIdentifier) {
-          if (currentMilestoneIdentifier !== targetMilestoneIdentifier) {
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
-            })
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.milestones.byParent(projectIdentifier, targetMilestoneIdentifier)
-            })
-          } else {
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
-            })
-          }
-        }
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.milestones.byParent(projectIdentifier, currentMilestoneIdentifier)
+        })
+      }
+
+      if (targetMilestoneIdentifier && targetMilestoneIdentifier !== currentMilestoneIdentifier) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.milestones.byParent(projectIdentifier, targetMilestoneIdentifier)
+        })
       }
 
       if (milestoneId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(milestoneId) })
       }
-
       if (targetMilestoneId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.tasks(targetMilestoneId) })
       }

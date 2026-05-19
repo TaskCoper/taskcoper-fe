@@ -19,7 +19,7 @@ import { updateMilestoneSchema } from '../validations'
 interface SortableMilestoneTabProps {
   milestone: ParentMilestone
   isActive: boolean
-  queryKey: unknown[]
+  queryKey: readonly unknown[]
   onDeleteSuccess?: () => void
   canDelete: boolean
 }

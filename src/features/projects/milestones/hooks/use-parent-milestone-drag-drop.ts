@@ -12,7 +12,7 @@ import { useUpdateMilestone } from './use-update-milestone'
 
 interface UseParentMilestoneDragDropProps {
   items: Milestone[]
-  queryKey: unknown[]
+  queryKey: readonly unknown[]
 }
 
 export function useParentMilestoneDragDrop({ items, queryKey }: UseParentMilestoneDragDropProps) {

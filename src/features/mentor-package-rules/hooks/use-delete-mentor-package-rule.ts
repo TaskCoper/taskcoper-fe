@@ -20,7 +20,8 @@ export const useDeleteMentorPackageRule = ({ mentorPackageId }: { mentorPackageI
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.mentorPackages.detail(mentorPackageId)
+        queryKey: queryKeys.mentorPackages.detail(mentorPackageId),
+        exact: true
       })
     }
   })

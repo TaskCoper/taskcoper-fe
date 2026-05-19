@@ -1,4 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -34,21 +35,19 @@ export const useDeleteTask = ({
       onDeleteSuccess?.()
     },
     onSettled: () => {
+      invalidateTaskTree(queryClient, {
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
+      })
+
       if (parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
         if (projectIdentifier) {
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
-          })
           queryClient.invalidateQueries({
             queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
           })
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
-      }
-
-      if (projectIdentifier && user?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       }
 
       if (milestoneId) {

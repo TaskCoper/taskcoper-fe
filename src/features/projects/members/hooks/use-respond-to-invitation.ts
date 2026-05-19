@@ -10,11 +10,8 @@ export const useRespondToInvitation = () => {
 
   const { mutate: respondToInvitation, isPending: isRespondingToInvitation } = useMutation({
     mutationFn: projectMemberService.respondToInvitation,
-    onSuccess: (message, variables) => {
+    onSuccess: (message) => {
       toast.success(message)
-      if (variables.isAccepted) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.all })
-      }
     },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
@@ -25,7 +22,8 @@ export const useRespondToInvitation = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
 
       if (variables.isAccepted) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.projects.forPackage() })
       }
     }
   })

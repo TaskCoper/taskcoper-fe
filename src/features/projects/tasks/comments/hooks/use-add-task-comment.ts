@@ -1,5 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { queryKeys } from '@/lib/query-keys'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -39,20 +39,12 @@ export const useAddTaskComment = ({ taskId, identifier, milestoneIdentifier }: A
       })
     },
     onSettled: () => {
-      if (taskId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      }
-
-      if (milestoneIdentifier) {
-        if (identifier) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
-      }
-
-      if (identifier) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
-      }
+      invalidateTaskTree(queryClient, {
+        taskId,
+        projectIdentifier: identifier,
+        parentMilestoneIdentifier: milestoneIdentifier,
+        userId: user?.id
+      })
     }
   })
 
