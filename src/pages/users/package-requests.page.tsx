@@ -28,12 +28,15 @@ export default function PackageRequestsPage() {
     prefix: 'packageRequests'
   })
 
+  const [searchTermFilter] = useQueryState('packageRequests_mentorPackage', parseAsString)
   const [statusFilter] = useQueryState('packageRequests_status', parseAsString)
 
   const status = statusFilter ?? undefined
+  const searchTerm = searchTermFilter ?? undefined
 
   const { packageIncomingRequests, isLoadingPackageRequests } = useGetMyIncomingRequests({
     status,
+    searchTerm,
     pageIndex: page,
     pageSize: limit
   })

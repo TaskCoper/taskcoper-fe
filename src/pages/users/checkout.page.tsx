@@ -59,11 +59,15 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (isPaid && isInitiallyPaid === false) {
       const timer = setTimeout(() => {
-        navigate('/transactions', { replace: true })
+        if (transaction?.targetModel === 'PackageBooking' && transaction.targetModelId) {
+          navigate(`/purchases/${transaction.targetModelId}`, { replace: true })
+        } else {
+          navigate('/transactions', { replace: true })
+        }
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [isPaid, isInitiallyPaid, navigate])
+  }, [isPaid, isInitiallyPaid, navigate, transaction])
 
   const { remainingMs, isExpired, progress } = usePaymentCountdown({
     createdOnUtc: transaction?.createdOnUtc,

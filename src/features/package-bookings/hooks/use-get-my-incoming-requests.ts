@@ -10,20 +10,29 @@ export interface GetMyIncomingRequestsParams {
   status?: string
   pageIndex?: number
   pageSize?: number
+  searchTerm?: string
 }
 
 export const useGetMyIncomingRequests = ({
   mentorPackageId,
   status,
   pageIndex = DEFAULT_PAGE_INDEX,
-  pageSize = DEFAULT_PAGE_SIZE
+  pageSize = DEFAULT_PAGE_SIZE,
+  searchTerm
 }: GetMyIncomingRequestsParams = {}) => {
   const {
     data: packageIncomingRequests = getDefaultPaginationResponse<PackageIncomingRequest>(),
     isLoading: isLoadingPackageRequests
   } = useQuery({
-    queryKey: queryKeys.mentorPackages.requests.myIncoming({ mentorPackageId, status, pageIndex, pageSize }),
-    queryFn: () => packageBookingService.getMyIncomingRequests({ mentorPackageId, status, pageIndex, pageSize })
+    queryKey: queryKeys.mentorPackages.requests.myIncoming({
+      mentorPackageId,
+      status,
+      pageIndex,
+      pageSize,
+      searchTerm
+    }),
+    queryFn: () =>
+      packageBookingService.getMyIncomingRequests({ mentorPackageId, status, pageIndex, pageSize, searchTerm })
   })
 
   return {

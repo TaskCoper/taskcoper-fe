@@ -1079,43 +1079,95 @@
       },
       "slides": {
         "connection": {
+          "eyebrow": "TaskCoper's mission",
+          "titleSegments": {
+            "connect": "Connect ",
+            "mentor": "Mentor",
+            "with": " with ",
+            "mentee": "Mentee",
+            "growth": " for faster growth"
+          },
+          "body": "Each mentoring session shortens the path from ideas to real-world execution.",
+          "cta": "Find the right expert",
           "stats": {
             "verifiedExperts": {
+              "value": "500+",
               "label": "Verified experts"
             },
             "completedSessions": {
+              "value": "12k+",
               "label": "Sessions completed"
             },
             "averageRating": {
+              "value": "4.9★",
               "label": "Average rating"
             }
           }
         },
         "mentee": {
+          "eyebrow": "For learners",
+          "titleSegments": {
+            "learnFrom": "Learn from those ",
+            "experienced": "who have been there",
+            "rightPath": " on the path you're taking now"
+          },
+          "body": "Get practical feedback tailored to your context instead of long trial-and-error cycles.",
+          "cta": "Explore domains",
           "stats": {
             "specialties": {
+              "value": "40+",
               "label": "Specialty domains"
             },
             "bookingResponse": {
+              "value": "< 24h",
               "label": "Booking response"
             },
             "returningMentees": {
+              "value": "92%",
               "label": "Returning mentees"
             }
           }
         },
         "mentor": {
+          "eyebrow": "For experts",
+          "titleSegments": {
+            "shareExperience": "Share experience. ",
+            "createImpact": "Create impact.",
+            "getRecognized": " Be recognized."
+          },
+          "body": "Create your own mentoring package, manage bookings, and grow your mentee community on one platform.",
+          "cta": "Become an expert",
           "stats": {
             "packageSetup": {
+              "value": "6 min",
               "label": "To create a package"
             },
             "hiddenFees": {
+              "value": "0%",
               "label": "Hidden fees"
             },
             "integrations": {
+              "value": "Integrated",
               "label": "Calendar & Meet"
             }
           }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Proactive connection",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Faster structured learning",
+          "spotlight": "12W",
+          "subtitle": "Weekly plan"
+        },
+        "mentor": {
+          "badge": "Sustainable growth",
+          "spotlight": "4.9★",
+          "subtitle": "Highly rated by mentees"
         }
       }
     }
@@ -2231,6 +2283,7 @@
     "form": {
       "name": "Package name",
       "namePlaceholder": "Enter package name",
+      "searchByName": "Search by package name...",
       "description": "Description",
       "totalSessions": "Total sessions",
       "totalSessionsPlaceholder": "e.g. 10",
@@ -2390,6 +2443,7 @@
       "noProblemStatement": "No problem statement provided.",
       "dateFormat": "dd/MM/yyyy",
       "cancelRequest": "Cancel request",
+      "payNow": "Pay now",
       "cancelConfirmTitle": "Cancel request",
       "cancelConfirmDescription": "Are you sure you want to cancel this request? This action cannot be undone.",
       "cancelConfirmText": "Yes, cancel it"

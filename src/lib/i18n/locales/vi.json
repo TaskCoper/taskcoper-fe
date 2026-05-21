@@ -1079,43 +1079,95 @@
       },
       "slides": {
         "connection": {
+          "eyebrow": "Sứ mệnh của TaskCoper",
+          "titleSegments": {
+            "connect": "Kết nối ",
+            "mentor": "Mentor",
+            "with": " với ",
+            "mentee": "Mentee",
+            "growth": " để phát triển nhanh hơn"
+          },
+          "body": "Mỗi buổi mentoring là một bước rút ngắn khoảng cách từ ý tưởng đến hành động thực tế.",
+          "cta": "Tìm chuyên gia phù hợp",
           "stats": {
             "verifiedExperts": {
+              "value": "500+",
               "label": "Chuyên gia kiểm định"
             },
             "completedSessions": {
+              "value": "12k+",
               "label": "Buổi hoàn thành"
             },
             "averageRating": {
+              "value": "4.9★",
               "label": "Đánh giá trung bình"
             }
           }
         },
         "mentee": {
+          "eyebrow": "Vì người học",
+          "titleSegments": {
+            "learnFrom": "Học từ những ",
+            "experienced": "người đã đi qua",
+            "rightPath": " đúng con đường bạn đang đi"
+          },
+          "body": "Nhận phản hồi thực chiến theo ngữ cảnh của bạn, thay vì phải tự thử sai trong thời gian dài.",
+          "cta": "Khám phá lĩnh vực",
           "stats": {
             "specialties": {
+              "value": "40+",
               "label": "Lĩnh vực chuyên môn"
             },
             "bookingResponse": {
+              "value": "< 24h",
               "label": "Phản hồi đặt lịch"
             },
             "returningMentees": {
+              "value": "92%",
               "label": "Mentee quay lại"
             }
           }
         },
         "mentor": {
+          "eyebrow": "Vì chuyên gia",
+          "titleSegments": {
+            "shareExperience": "Chia sẻ kinh nghiệm. ",
+            "createImpact": "Tạo tác động.",
+            "getRecognized": " Được ghi nhận."
+          },
+          "body": "Tạo gói mentoring riêng, quản lý lịch hẹn, và phát triển cộng đồng mentee ngay trên một nền tảng.",
+          "cta": "Trở thành chuyên gia",
           "stats": {
             "packageSetup": {
+              "value": "6 phút",
               "label": "Tạo gói lịch hẹn"
             },
             "hiddenFees": {
+              "value": "0%",
               "label": "Phí ẩn"
             },
             "integrations": {
+              "value": "Tích hợp",
               "label": "Calendar & Meet"
             }
           }
+        }
+      },
+      "visualThemes": {
+        "connection": {
+          "badge": "Kết nối chủ động",
+          "spotlight": "360°",
+          "subtitle": "Mentor x Mentee"
+        },
+        "mentee": {
+          "badge": "Học nhanh có lộ trình",
+          "spotlight": "12W",
+          "subtitle": "Kế hoạch từng tuần"
+        },
+        "mentor": {
+          "badge": "Tăng trưởng bền vững",
+          "spotlight": "4.9★",
+          "subtitle": "Được mentee đánh giá cao"
         }
       }
     }
@@ -2231,6 +2283,7 @@
     "form": {
       "name": "Tên gói",
       "namePlaceholder": "Nhập tên gói",
+      "searchByName": "Tìm theo tên gói...",
       "description": "Mô tả",
       "totalSessions": "Tổng số buổi",
       "totalSessionsPlaceholder": "VD: 10",
@@ -2390,6 +2443,7 @@
       "noProblemStatement": "Chưa cung cấp mô tả vấn đề.",
       "dateFormat": "dd/MM/yyyy",
       "cancelRequest": "Hủy yêu cầu",
+      "payNow": "Thanh toán",
       "cancelConfirmTitle": "Hủy yêu cầu",
       "cancelConfirmDescription": "Bạn có chắc chắn muốn hủy yêu cầu này? Hành động này không thể hoàn tác.",
       "cancelConfirmText": "Có, hủy yêu cầu"

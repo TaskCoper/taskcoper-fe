@@ -154,21 +154,23 @@ export const getColumns = (
     {
       id: 'actions',
       cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='size-8 p-0'>
-              <span className='sr-only'>{i18next.t('common.ui.openMenu')}</span>
-              <MoreHorizontalIcon className='size-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>{i18next.t('common.ui.action')}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onViewDetails?.(row.original)}>
-              {i18next.t('transactions.column.viewDetails')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className='flex justify-center'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='size-8 p-0'>
+                <span className='sr-only'>{i18next.t('common.ui.openMenu')}</span>
+                <MoreHorizontalIcon className='size-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>{i18next.t('common.ui.action')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onViewDetails?.(row.original)}>
+                {i18next.t('transactions.column.viewDetails')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       ),
       size: 50
     }

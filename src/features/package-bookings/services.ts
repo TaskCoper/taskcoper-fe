@@ -24,11 +24,17 @@ class PackageBookingService {
     return data.value
   }
 
-  getMyIncomingRequests = async ({ mentorPackageId, status, pageIndex, pageSize }: GetMyIncomingRequestsParams) => {
+  getMyIncomingRequests = async ({
+    mentorPackageId,
+    status,
+    pageIndex,
+    pageSize,
+    searchTerm
+  }: GetMyIncomingRequestsParams) => {
     const { data } = await api.get<BasePaginationResponse<PackageIncomingRequest>>(
       `/v1/${this.baseUrl}/requests/incoming`,
       {
-        params: { mentorPackageId, status, pageIndex, pageSize }
+        params: { mentorPackageId, status, pageIndex, pageSize, searchTerm }
       }
     )
 

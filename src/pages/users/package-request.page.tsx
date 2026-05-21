@@ -1,5 +1,4 @@
 import SanitizedHtml from '@/components/sanitized-html'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
@@ -8,9 +7,10 @@ import { useCancelRequest } from '@/features/package-bookings/hooks/use-cancel-r
 import { useGetOutgoingRequest } from '@/features/package-bookings/hooks/use-get-outgoing-request'
 import { PackageRequestStatus, PackageRequestStatusLabel } from '@/features/package-bookings/types'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { formatCurrency, getAvatarFallback, getFirstParagraphTextFromHtml, getPlainTextFromHtml } from '@/shared/utils'
+import { cn, formatCurrency, getFirstParagraphTextFromHtml, getPlainTextFromHtml } from '@/shared/utils'
 import { format } from 'date-fns'
 import {
+  ActivityIcon,
   BoxIcon,
   CalendarDaysIcon,
   CheckCircle2Icon,
@@ -25,28 +25,64 @@ import { Link, useParams } from 'react-router'
 
 const PackageRequestSkeleton = () => (
   <div className='absolute inset-0 overflow-y-auto'>
-    <div className='max-w-7xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
-      <div className='col-span-8 space-y-4'>
-        <Skeleton className='w-full h-60 rounded-xl' />
-        <div className='space-y-2'>
-          <Skeleton className='h-7 w-2/3' />
+    <div className='max-w-5xl mx-auto p-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8'>
+      <div className='space-y-5 lg:col-span-8'>
+        <Skeleton className='h-60 w-full rounded-xl' />
+
+        <div className='space-y-3'>
+          <Skeleton className='h-8 w-3/4' />
           <Skeleton className='h-4 w-full' />
-          <Skeleton className='h-4 w-5/6' />
+          <Skeleton className='h-4 w-11/12' />
         </div>
-        <Skeleton className='h-32 w-full rounded-md' />
-        <Skeleton className='h-24 w-full rounded-md' />
+
+        <div className='space-y-2'>
+          <Skeleton className='h-5 w-40' />
+          <div className='space-y-2 rounded-lg border border-dashed p-3'>
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-10/12' />
+            <Skeleton className='h-4 w-8/12' />
+          </div>
+        </div>
+
+        <div className='space-y-2'>
+          <Skeleton className='h-5 w-40' />
+          <div className='space-y-2 rounded-md bg-muted/40 px-4 py-3'>
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-11/12' />
+            <Skeleton className='h-4 w-9/12' />
+          </div>
+        </div>
       </div>
 
-      <div className='col-span-4 space-y-8'>
-        <Skeleton className='h-20 w-full rounded-md' />
-        <div className='space-y-2'>
-          {[1, 2, 3, 4].map((row) => (
-            <div key={row} className='flex items-center justify-between'>
-              <Skeleton className='h-3 w-28' />
-              <Skeleton className='h-3 w-24' />
-            </div>
-          ))}
+      <div className='space-y-8 lg:col-span-4'>
+        <div className='space-y-3'>
+          <Skeleton className='h-6 w-44' />
+          <div className='space-y-2'>
+            {[1, 2, 3, 4, 5].map((row) => (
+              <div key={row} className='flex items-center justify-between gap-2'>
+                <Skeleton className='h-4 w-28' />
+                <Skeleton className='h-4 w-24' />
+              </div>
+            ))}
+          </div>
         </div>
+
+        <div className='space-y-3'>
+          <Skeleton className='h-6 w-44' />
+          <div className='space-y-2'>
+            {[1, 2, 3].map((row) => (
+              <div key={row} className='flex items-center justify-between gap-2'>
+                <Skeleton className='h-4 w-28' />
+                <Skeleton className='h-4 w-24' />
+              </div>
+            ))}
+          </div>
+
+          <Skeleton className='h-10 w-full rounded-md' />
+          <Skeleton className='h-10 w-full rounded-md' />
+        </div>
+
         <div className='space-y-2.5'>
           <Skeleton className='h-4 w-24' />
           <div className='flex items-center gap-2'>
@@ -105,7 +141,7 @@ export default function PackageRequestPage() {
 
   return (
     <div className='absolute inset-0 overflow-y-auto'>
-      <div className='max-w-7xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
+      <div className='max-w-5xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
         <div className='col-span-8 space-y-4'>
           <img
             src={outgoingRequest.mentorPackageCoverImageUrl ?? undefined}
@@ -127,6 +163,7 @@ export default function PackageRequestPage() {
 
           <div className='space-y-2'>
             <p className='font-semibold'>{t('packageBooking.requestDetail.problemStatement')}</p>
+
             {problemStatementText ? (
               <div className='p-3 bg-muted rounded-lg border border-dashed'>
                 <SanitizedHtml html={outgoingRequest.problemStatement} className='!prose-sm text-sm' />
@@ -141,9 +178,10 @@ export default function PackageRequestPage() {
 
           <div className='space-y-2'>
             <p className='font-semibold'>{t('packageBooking.requestDetail.mentorResponse')}</p>
+
             {outgoingRequest.mentorResponseNote ? (
               <div className='flex items-start gap-2 bg-primary/10 px-4 py-3 rounded-md'>
-                <p className='text-sm text-primary/90 whitespace-pre-wrap'>{outgoingRequest.mentorResponseNote}</p>
+                <p className='text-sm text-primary whitespace-pre-wrap'>{outgoingRequest.mentorResponseNote}</p>
               </div>
             ) : (
               <div className='flex flex-col justify-center items-center gap-2 p-8 bg-muted rounded-md'>
@@ -154,19 +192,9 @@ export default function PackageRequestPage() {
           </div>
         </div>
 
-        <div className='col-span-4 space-y-8'>
-          <div className={`flex items-center gap-2 rounded-md border border-dashed px-3 py-2 ${statusClass}`}>
-            <p className='text-sm font-semibold flex items-center gap-1.5'>
-              <StatusIcon className='size-3.5' />
-              {t(PackageRequestStatusLabel[outgoingRequest.status])}
-            </p>
-          </div>
-
-          <div className='space-y-4'>
-            <div>
-              <p className='font-semibold'>{t('packageBooking.requestDetail.information')}</p>
-              <p className='text-xs text-muted-foreground'>{t('packageBooking.requestDetail.requestInformation')}</p>
-            </div>
+        <div className='col-span-4 space-y-10'>
+          <div className='space-y-3'>
+            <p className='font-semibold'>{t('purchasedPackage.packageInformation')}</p>
 
             <div className='space-y-2'>
               <div className='flex items-center justify-between gap-2'>
@@ -224,6 +252,29 @@ export default function PackageRequestPage() {
                   {format(new Date(outgoingRequest.createdOnUtc), t('packageBooking.requestDetail.dateFormat'))}
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className='space-y-3'>
+            <p className='font-semibold'>{t('packageBooking.requestDetail.requestInformation')}</p>
+
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex items-center gap-2 text-muted-foreground'>
+                  <ActivityIcon className='size-4' />
+                  <p className='text-xs font-medium'>{t('common.ui.status')}</p>
+                </div>
+
+                <p
+                  className={cn(
+                    'text-xs font-semibold px-1 py-0.5 flex items-center gap-1 border border-dashed rounded-md',
+                    statusClass
+                  )}
+                >
+                  <StatusIcon className='size-3.5' />
+                  {t(PackageRequestStatusLabel[outgoingRequest.status])}
+                </p>
+              </div>
 
               {outgoingRequest.reviewedOnUtc ? (
                 <div className='flex items-center justify-between gap-2'>
@@ -249,47 +300,31 @@ export default function PackageRequestPage() {
                 </div>
               ) : null}
             </div>
+            {outgoingRequest.status === PackageRequestStatus.Approved ? (
+              <BookPackageDialog
+                mentorPackage={{
+                  id: outgoingRequest.mentorPackageId,
+                  name: outgoingRequest.mentorPackageName,
+                  price: outgoingRequest.mentorPackagePrice,
+                  currency: outgoingRequest.mentorPackageCurrency
+                }}
+                projectId={outgoingRequest.bookedByProjectId}
+              >
+                <Button className='w-full'>{t('packageBooking.requestDetail.payNow')}</Button>
+              </BookPackageDialog>
+            ) : null}
+
+            {outgoingRequest.status === PackageRequestStatus.Pending ? (
+              <Button
+                className='w-full'
+                variant='destructive'
+                onClick={handleCancelRequest}
+                disabled={isCancellingRequest}
+              >
+                {t('packageBooking.requestDetail.cancelRequest')}
+              </Button>
+            ) : null}
           </div>
-
-          <div className='space-y-2.5'>
-            <p className='font-semibold'>{t('packageBooking.requestDetail.mentor')}</p>
-
-            <Link to={`/users/${outgoingRequest.mentorId}`} className='flex items-center gap-2'>
-              <Avatar>
-                <AvatarImage className='hover:brightness-90' src={undefined} />
-                <AvatarFallback>{getAvatarFallback(mentorFullName)}</AvatarFallback>
-              </Avatar>
-
-              <div className='-space-y-0.5'>
-                <p className='text-sm font-medium hover:underline hover:text-primary'>{mentorFullName}</p>
-              </div>
-            </Link>
-          </div>
-
-          {outgoingRequest.status === PackageRequestStatus.Approved ? (
-            <BookPackageDialog
-              mentorPackage={{
-                id: outgoingRequest.mentorPackageId,
-                name: outgoingRequest.mentorPackageName,
-                price: outgoingRequest.mentorPackagePrice,
-                currency: outgoingRequest.mentorPackageCurrency
-              }}
-              projectId={outgoingRequest.bookedByProjectId}
-            >
-              <Button className='w-full'>Thanh toán</Button>
-            </BookPackageDialog>
-          ) : null}
-
-          {outgoingRequest.status === PackageRequestStatus.Pending ? (
-            <Button
-              className='w-full'
-              variant='destructive'
-              onClick={handleCancelRequest}
-              disabled={isCancellingRequest}
-            >
-              {t('packageBooking.requestDetail.cancelRequest')}
-            </Button>
-          ) : null}
         </div>
       </div>
     </div>

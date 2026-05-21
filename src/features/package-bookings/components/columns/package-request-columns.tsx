@@ -20,7 +20,7 @@ import {
 import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
-import { MoreHorizontalIcon } from 'lucide-react'
+import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 
 export const getColumns = (
@@ -79,7 +79,10 @@ export const getColumns = (
       id: 'mentorPackage',
       accessorFn: (row) => row.mentorPackageName,
       meta: {
-        label: 'mentorPackage.form.name'
+        label: 'mentorPackage.form.name',
+        variant: 'text',
+        icon: SearchIcon,
+        placeholder: i18next.t('mentorPackage.form.searchByName')
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='mentorPackage.form.name' />,
       cell: ({ row }) => (
@@ -96,6 +99,7 @@ export const getColumns = (
         </div>
       ),
       enableSorting: false,
+      enableColumnFilter: true,
       size: 240
     },
     {
