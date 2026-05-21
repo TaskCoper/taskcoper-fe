@@ -6,6 +6,7 @@ import { Field } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { PACKAGE_REQUEST_STATUS_THEME } from '@/features/package-bookings/constants'
 import {
   PackageRequestStatus,
   PackageRequestStatusLabel,
@@ -14,37 +15,18 @@ import {
 import { formatDate, getAvatarFallback, getPlainTextFromHtml } from '@/shared/utils'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { formatDistanceToNow } from 'date-fns'
-import { CheckCircle2Icon, Clock3Icon, PackageCheckIcon, XCircleIcon } from 'lucide-react'
+import { CheckCircle2Icon, PackageCheckIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, FormProvider } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useGetRequest } from '../hooks/use-get-request'
+import { useGetIncomingRequest } from '../hooks/use-get-incoming-request'
 import { useReviewRequest } from '../hooks/use-review-request'
 import type { ReviewPackageFormValues } from '../validations'
 
-interface RequestInfoDialogProps {
+interface IncomingRequestDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   requestId?: string
-}
-
-const statusConfig: Record<PackageRequestStatus, { icon: typeof Clock3Icon; className: string }> = {
-  [PackageRequestStatus.Pending]: {
-    icon: Clock3Icon,
-    className: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-  },
-  [PackageRequestStatus.Approved]: {
-    icon: CheckCircle2Icon,
-    className: 'bg-green-500/10 text-green-600 border-green-500/20'
-  },
-  [PackageRequestStatus.Rejected]: {
-    icon: XCircleIcon,
-    className: 'bg-destructive/10 text-destructive border-destructive/20'
-  },
-  [PackageRequestStatus.Consumed]: {
-    icon: PackageCheckIcon,
-    className: 'bg-sky-500/10 text-sky-600 border-sky-500/20'
-  }
 }
 
 function LoadingState() {
@@ -61,7 +43,7 @@ function LoadingState() {
   )
 }
 
-interface RequestInfoContentProps {
+interface IncomingRequestDialogContentProps {
   request: PackageRequestDetail
   noteValue: string
   isReviewingRequest: boolean
@@ -69,10 +51,16 @@ interface RequestInfoContentProps {
   onReject: () => void
 }
 
-function RequestInfoContent({ request, noteValue, isReviewingRequest, onApprove, onReject }: RequestInfoContentProps) {
+function RequestInfoContent({
+  request,
+  noteValue,
+  isReviewingRequest,
+  onApprove,
+  onReject
+}: IncomingRequestDialogContentProps) {
   const { t } = useTranslation()
 
-  const theme = statusConfig[request.status]
+  const theme = PACKAGE_REQUEST_STATUS_THEME[request.status]
   const StatusIcon = theme.icon
 
   const fullName = `${request.requestedByFirstName} ${request.requestedByLastName}`
@@ -191,9 +179,9 @@ function RequestInfoContent({ request, noteValue, isReviewingRequest, onApprove,
   )
 }
 
-export default function RequestInfoDialog({ open, onOpenChange, requestId }: RequestInfoDialogProps) {
+export default function IncomingRequestDialog({ open, onOpenChange, requestId }: IncomingRequestDialogProps) {
   const { t } = useTranslation()
-  const { request, isLoadingRequest } = useGetRequest({ requestId, enabled: open })
+  const { request, isLoadingRequest } = useGetIncomingRequest({ requestId, enabled: open })
   const { methods, reviewRequest, isReviewingRequest } = useReviewRequest()
 
   const noteValue = methods.watch('mentorResponseNote') ?? ''

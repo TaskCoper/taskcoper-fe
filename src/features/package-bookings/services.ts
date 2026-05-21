@@ -1,7 +1,12 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { GetMyIncomingRequestsParams } from './hooks/use-get-my-incoming-requests'
-import type { PackageIncomingRequest, PackageRequestDetail } from './types'
+import type { GetMyOutcomingRequestsParams } from './hooks/use-get-my-outcoming-requests'
+import type {
+  PackageIncomingRequest,
+  PackageIncomingRequestDetail,
+  PackageOutgoingRequest,
+  PackageOutgoingRequestDetail
+} from './types'
 import type { BookPackageFormValues, RequestPackageFormValues, ReviewPackageFormValues } from './validations'
 
 class PackageBookingService {
@@ -20,8 +25,6 @@ class PackageBookingService {
   }
 
   getMyIncomingRequests = async ({ mentorPackageId, status, pageIndex, pageSize }: GetMyIncomingRequestsParams) => {
-    if (!mentorPackageId) return getDefaultPaginationResponse<PackageIncomingRequest>()
-
     const { data } = await api.get<BasePaginationResponse<PackageIncomingRequest>>(
       `/v1/${this.baseUrl}/requests/incoming`,
       {
@@ -32,10 +35,27 @@ class PackageBookingService {
     return data
   }
 
-  getRequest = async ({ requestId }: { requestId?: string }) => {
+  getMyOutgoingRequests = async ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutcomingRequestsParams) => {
+    const { data } = await api.get<BasePaginationResponse<PackageOutgoingRequest>>(`/v1/${this.baseUrl}/requests/me`, {
+      params: { mentorPackageId, status, pageIndex, pageSize }
+    })
+
+    return data
+  }
+
+  getIncomingRequest = async ({ requestId }: { requestId?: string }) => {
     if (!requestId) return null
-    const { data } = await api.get<BaseResponse<PackageRequestDetail>>(
+    const { data } = await api.get<BaseResponse<PackageIncomingRequestDetail>>(
       `/v1/${this.baseUrl}/requests/incoming/${requestId}`
+    )
+
+    return data.value
+  }
+
+  getOutgoingRequest = async ({ requestId }: { requestId?: string }) => {
+    if (!requestId) return null
+    const { data } = await api.get<BaseResponse<PackageOutgoingRequestDetail>>(
+      `/v1/${this.baseUrl}/requests/${requestId}`
     )
 
     return data.value
@@ -43,6 +63,12 @@ class PackageBookingService {
 
   reviewRequest = async ({ body }: { body: ReviewPackageFormValues }) => {
     const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/requests/${body.requestId}/review`, body)
+
+    return data.value
+  }
+
+  cancelRequest = async ({ requestId }: { requestId: string }) => {
+    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/requests/${requestId}/cancel`)
 
     return data.value
   }

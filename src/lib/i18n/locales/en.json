@@ -221,7 +221,10 @@
     },
     "field": {
       "isActive": "Active status",
-      "isActiveDescription": "If disabled, the schedule will not be active"
+      "isActiveDescription": "If disabled, the schedule will not be active",
+      "availableDays": "Available days",
+      "startTime": "Start time",
+      "endTime": "End time"
     },
     "button": {
       "create": "Create Schedule",
@@ -415,7 +418,9 @@
       "targets": "Specific Targets Selection",
       "targetsPlaceholder": "Select target packages...",
       "isActive": "Status",
-      "isActiveDescription": "Indicates if this voucher can be used."
+      "isActiveDescription": "Indicates if this voucher can be used.",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
     },
     "discountType": {
       "percent": "Percent",
@@ -660,6 +665,7 @@
     "updateProjectDomains": {
       "title": "Project domains",
       "description": "Edit the project domains",
+      "searchLabel": "Search domains",
       "selectedDomains": "Selected domains",
       "validation": {
         "domainIds": {
@@ -731,6 +737,7 @@
     "inviteMembers": {
       "title": "New members",
       "description": "Add new members to your project to collaborate and share tasks.",
+      "searchLabel": "Search users",
       "pendingInvites": {
         "title": "Pending invites",
         "description": "These invitations are waiting for recipients to accept."
@@ -1441,6 +1448,12 @@
         },
         "domain": {
           "label": "Domains"
+        },
+        "province": {
+          "label": "Province"
+        },
+        "ward": {
+          "label": "Ward"
         }
       }
     },
@@ -1510,7 +1523,12 @@
       "otherSettingsDesc": "Manage other settings related to your account"
     },
     "location": {
-      "description": "Select the time zone used for your schedule and meetings."
+      "description": "Select the time zone used for your schedule and meetings.",
+      "field": {
+        "timeZone": {
+          "label": "Time zone"
+        }
+      }
     },
     "coverImageAlt": "{{name}} cover image",
     "role": {
@@ -1989,6 +2007,8 @@
   "systemProjects": {
     "createProject": "Create project",
     "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
       "projectName": "Project name",
       "projectNamePlaceholder": "Enter project name or code...",
       "organization": "Organization",
@@ -2017,6 +2037,8 @@
   "systemUsers": {
     "createUser": "Create user",
     "column": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
       "name": "Name",
       "namePlaceholder": "Search by name or email...",
       "organization": "Organization",
@@ -2104,7 +2126,9 @@
       "weeks": "Weeks",
       "months": "Months",
       "year": "Year",
-      "selectYear": "Select year"
+      "selectYear": "Select year",
+      "from": "From",
+      "to": "To"
     },
     "taskStatistics": "Task statistics",
     "noTaskStatistics": "No task statistics for this range.",
@@ -2240,7 +2264,8 @@
     "sidebar": {
       "menu": "Menu",
       "overview": "Overview",
-      "packageList": "Package List"
+      "packageList": "Package List",
+      "requests": "Mentoring Requests"
     },
     "delete": {
       "title": "Delete package",
@@ -2272,7 +2297,9 @@
       "activationDays": "Activation days",
       "usageDays": "Usage days",
       "courseRating": "{{rating}} course rating",
-      "ratingsCount": "{{count}} ratings"
+      "ratingsCount": "{{count}} ratings",
+      "pendingRequestNotice": "You already have a pending request on this package.",
+      "viewPendingRequest": "View pending request"
     }
   },
   "mentorPackageStatistics": {
@@ -2336,13 +2363,47 @@
       "pending": "Pending",
       "approved": "Approved",
       "rejected": "Rejected",
-      "consumed": "Consumed"
+      "consumed": "Consumed",
+      "cancelled": "Cancelled"
+    },
+    "incomingRequests": {
+      "title": "Incoming Requests",
+      "description": "Review and manage package requests from your students."
+    },
+    "outgoingRequests": {
+      "title": "My Requests",
+      "description": "Track the status of packages you have requested from mentors."
+    },
+    "requestDetail": {
+      "information": "Information",
+      "requestInformation": "Your request information",
+      "sessions": "Sessions",
+      "price": "Price",
+      "belongsToProject": "Belongs to project",
+      "mentor": "Mentor",
+      "requestedOn": "Requested on",
+      "reviewedOn": "Reviewed on",
+      "consumedOn": "Consumed on",
+      "mentorResponse": "Mentor's response",
+      "noResponseYet": "The mentor hasn't responded yet.",
+      "problemStatement": "Problem statement",
+      "noProblemStatement": "No problem statement provided.",
+      "dateFormat": "dd/MM/yyyy",
+      "cancelRequest": "Cancel request",
+      "cancelConfirmTitle": "Cancel request",
+      "cancelConfirmDescription": "Are you sure you want to cancel this request? This action cannot be undone.",
+      "cancelConfirmText": "Yes, cancel it"
     }
   },
   "pageTitle": {
     "transactions": "Transactions",
     "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "calendarComingSoon": "Calendar coming soon",
+    "network": "Network",
+    "news": "News"
   },
   "transactions": {
     "title": "Transactions History",
@@ -2583,6 +2644,10 @@
     "page": {
       "org": "Org Admin Page",
       "super": "Super Admin Page"
+    },
+    "route": {
+      "projectDetail": "Project detail",
+      "projectSettings": "Project settings"
     }
   },
   "commandDialog": {

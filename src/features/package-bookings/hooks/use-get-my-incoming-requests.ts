@@ -17,14 +17,13 @@ export const useGetMyIncomingRequests = ({
   status,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE
-}: GetMyIncomingRequestsParams) => {
+}: GetMyIncomingRequestsParams = {}) => {
   const {
     data: packageIncomingRequests = getDefaultPaginationResponse<PackageIncomingRequest>(),
     isLoading: isLoadingPackageRequests
   } = useQuery({
     queryKey: queryKeys.mentorPackages.requests.myIncoming({ mentorPackageId, status, pageIndex, pageSize }),
-    queryFn: () => packageBookingService.getMyIncomingRequests({ mentorPackageId, status, pageIndex, pageSize }),
-    enabled: !!mentorPackageId
+    queryFn: () => packageBookingService.getMyIncomingRequests({ mentorPackageId, status, pageIndex, pageSize })
   })
 
   return {

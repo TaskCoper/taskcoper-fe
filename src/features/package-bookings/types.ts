@@ -26,7 +26,8 @@ export const PackageRequestStatus = {
   Pending: 'Pending',
   Approved: 'Approved',
   Rejected: 'Rejected',
-  Consumed: 'Consumed'
+  Consumed: 'Consumed',
+  Cancelled: 'Cancelled'
 } as const
 
 export type PackageRequestStatus = (typeof PackageRequestStatus)[keyof typeof PackageRequestStatus]
@@ -35,11 +36,13 @@ export const PackageRequestStatusLabel: Record<PackageRequestStatus, string> = {
   [PackageRequestStatus.Pending]: 'packageBooking.requestStatus.pending',
   [PackageRequestStatus.Approved]: 'packageBooking.requestStatus.approved',
   [PackageRequestStatus.Rejected]: 'packageBooking.requestStatus.rejected',
-  [PackageRequestStatus.Consumed]: 'packageBooking.requestStatus.consumed'
+  [PackageRequestStatus.Consumed]: 'packageBooking.requestStatus.consumed',
+  [PackageRequestStatus.Cancelled]: 'packageBooking.requestStatus.cancelled'
 }
 
 export type PackageRequestStatusLabel = (typeof PackageRequestStatusLabel)[PackageRequestStatus]
 
+// for mentors
 export interface PackageIncomingRequest {
   id: string
   mentorPackageId: string
@@ -61,8 +64,43 @@ export interface PackageIncomingRequest {
   modifiedOnUtc: string | null
 }
 
-export interface PackageRequestDetail extends PackageIncomingRequest {
+// for students
+export interface PackageOutgoingRequest {
+  id: string
+  mentorPackageId: string
+  mentorPackageName: string
+  mentorPackageCoverImageUrl: string | null
+  mentorPackageTotalSessions: number
+  mentorPackagePrice: number
+  mentorPackageCurrency: Currency
+  mentorId: string
+  mentorFirstName: string
+  mentorLastName: string
+  requestedByUserId: string
+  bookedByProjectId: string | null
+  projectName: string | null
+  requestedByEmail: string
+  requestedByFirstName: string
+  requestedByLastName: string
+  status: PackageRequestStatus
+  consumedByPackageBookingId: string | null
+  consumedOnUtc: string | null
+  createdOnUtc: string
+  modifiedOnUtc: string | null
+}
+
+export interface PackageIncomingRequestDetail extends PackageIncomingRequest {
   mentorPackageDescription: string | null
+  problemStatement: string
+  mentorResponseNote: string | null
+  reviewedByUserId: string | null
+  reviewedOnUtc: string | null
+}
+
+export interface PackageOutgoingRequestDetail extends PackageOutgoingRequest {
+  mentorPackageDescription: string
+  mentorSlug: string
+  mentorAvatarUrl: string | null
   problemStatement: string
   mentorResponseNote: string | null
   reviewedByUserId: string | null

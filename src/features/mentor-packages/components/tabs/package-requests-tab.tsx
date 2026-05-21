@@ -1,6 +1,6 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
-import RequestInfoDialog from '@/features/package-bookings/components/request-info-dialog'
+import IncomingRequestDialog from '@/features/package-bookings/components/incoming-request-dialog'
 import { useGetMyIncomingRequests } from '@/features/package-bookings/hooks/use-get-my-incoming-requests'
 import type { PackageIncomingRequest } from '@/features/package-bookings/types'
 import { useDataTable } from '@/hooks/use-data-table'
@@ -64,7 +64,7 @@ export default function PackageRequestsTab() {
         <DataTableToolbar table={table} />
       </DataTable>
 
-      <RequestInfoDialog open={dialogOpen} onOpenChange={setDialogOpen} requestId={selectedRequestId} />
+      <IncomingRequestDialog open={dialogOpen} onOpenChange={setDialogOpen} requestId={selectedRequestId} />
     </>
   )
 }

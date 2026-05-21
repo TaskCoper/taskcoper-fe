@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { PACKAGE_REQUEST_STATUS_BADGE_THEME } from '@/features/package-bookings/constants'
 import {
   PackageRequestStatus,
   PackageRequestStatusLabel,
@@ -19,26 +20,7 @@ import {
 import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
-import { CheckCircle2Icon, Clock3Icon, MoreHorizontalIcon, PackageCheckIcon, XCircleIcon } from 'lucide-react'
-
-const statusConfig: Record<PackageRequestStatus, { icon: typeof Clock3Icon; className: string }> = {
-  [PackageRequestStatus.Pending]: {
-    icon: Clock3Icon,
-    className: 'bg-amber-50 text-amber-700 border-amber-200/50'
-  },
-  [PackageRequestStatus.Approved]: {
-    icon: CheckCircle2Icon,
-    className: 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-  },
-  [PackageRequestStatus.Rejected]: {
-    icon: XCircleIcon,
-    className: 'bg-rose-50 text-rose-700 border-rose-200/50'
-  },
-  [PackageRequestStatus.Consumed]: {
-    icon: PackageCheckIcon,
-    className: 'bg-sky-50 text-sky-700 border-sky-200/50'
-  }
-}
+import { MoreHorizontalIcon } from 'lucide-react'
 
 export const getColumns = (
   onViewDetails?: (request: PackageIncomingRequest) => void
@@ -108,7 +90,7 @@ export const getColumns = (
       ),
       cell: ({ row }) => {
         const status = row.original.status
-        const config = statusConfig[status]
+        const config = PACKAGE_REQUEST_STATUS_BADGE_THEME[status]
         const Icon = config.icon
 
         return (

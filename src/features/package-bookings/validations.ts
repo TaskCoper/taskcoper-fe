@@ -9,7 +9,8 @@ export const bookPackageSchema = (t: TFunction) =>
       gatewayId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       bookedByProjectId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
       voucherCode: z.string().nullable(),
-      voucherIdempotencyKey: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable()
+      voucherIdempotencyKey: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
+      purchaseRequestId: z.uuid({ message: t('common.validation.uuid.invalid') })
     })
     .strict()
 

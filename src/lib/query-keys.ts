@@ -13,6 +13,7 @@ import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { GetMyIncomingRequestsParams } from '@/features/package-bookings/hooks/use-get-my-incoming-requests'
+import type { GetMyOutcomingRequestsParams } from '@/features/package-bookings/hooks/use-get-my-outcoming-requests'
 import type { GetProjectLabelStatsParams } from '@/features/projects/analytics/hooks/use-get-project-label-stats'
 import type { GetProjectPriorityStatsParams } from '@/features/projects/analytics/hooks/use-get-project-priority-stats'
 import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/use-get-project-heatmap'
@@ -373,11 +374,25 @@ export const queryKeys = {
 
     requests: {
       all: () => ['requests'] as const,
-      allMyIncoming: () => [...queryKeys.mentorPackages.requests.all(), 'my'] as const,
+      allMyIncoming: () => [...queryKeys.mentorPackages.requests.all(), 'my', 'incoming'] as const,
       myIncoming: ({ mentorPackageId, status, pageIndex, pageSize }: GetMyIncomingRequestsParams) =>
         [...queryKeys.mentorPackages.requests.allMyIncoming(), mentorPackageId, status, pageIndex, pageSize] as const,
+      allMyOutgoing: () => [...queryKeys.mentorPackages.requests.all(), 'my', 'outgoing'] as const,
+      myOutgoing: ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutcomingRequestsParams) =>
+        [
+          ...queryKeys.mentorPackages.requests.allMyOutgoing(),
+          'my',
+          'outgoing',
+          mentorPackageId,
+          status,
+          pageIndex,
+          pageSize
+        ] as const,
       details: () => [...queryKeys.mentorPackages.requests.all(), 'detail'] as const,
-      detail: (requestId?: string) => [...queryKeys.mentorPackages.requests.details(), requestId] as const
+      detailIncoming: (requestId?: string) =>
+        [...queryKeys.mentorPackages.requests.details(), 'incoming', requestId] as const,
+      detailOutgoing: (requestId?: string) =>
+        [...queryKeys.mentorPackages.requests.details(), 'outgoing', requestId] as const
     },
     statistics: ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) =>
       [...queryKeys.mentorPackages.detail(mentorPackageId), 'statistics', startTime, endTime] as const,

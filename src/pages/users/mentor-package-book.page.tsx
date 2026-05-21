@@ -21,6 +21,7 @@ import RequestPackageDialog from '@/features/package-bookings/components/request
 import { cn, formatCurrency, formatDate, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import { formatDistanceToNow } from 'date-fns'
 import {
+  AlertTriangleIcon,
   CalendarDaysIcon,
   CheckCheckIcon,
   GlobeIcon,
@@ -415,23 +416,40 @@ export default function MentorPackageBookPage() {
                       </Button>
                     </div>
 
-                    {mentorPackage ? (
-                      !isCreator ? (
-                        <RequestPackageDialog mentorPackage={mentorPackage}>
-                          <Button className='w-full'>
-                            <CalendarDaysIcon />
-                            {t('packageBooking.bookPackage.proceed')}
-                          </Button>
-                        </RequestPackageDialog>
+                    {mentorPackage &&
+                      (mentorPackage.pendingRequest?.id ? (
+                        <div className='space-y-2'>
+                          <p className='flex items-start gap-1.5 font-medium text-xs border border-amber-600 border-dashed text-amber-600 px-3 py-2 bg-amber-50 rounded-sm'>
+                            <AlertTriangleIcon className='size-3.5 shrink-0 mt-0.5' />
+                            {t('mentorPackage.bookPage.pendingRequestNotice')}
+                          </p>
+
+                          <Link to={`/requests/${mentorPackage.pendingRequest.id}`}>
+                            <Button className='w-full' variant='outline'>
+                              <CalendarDaysIcon />
+                              {t('mentorPackage.bookPage.viewPendingRequest')}
+                            </Button>
+                          </Link>
+                        </div>
                       ) : (
-                        <Link to={`/packages/${mentorPackage.id}`}>
-                          <Button className='w-full' size='sm' variant='outline'>
-                            <SettingsIcon />
-                            {t('mentorPackage.card.managePackage')}
-                          </Button>
-                        </Link>
-                      )
-                    ) : null}
+                        !isCreator && (
+                          <RequestPackageDialog mentorPackage={mentorPackage}>
+                            <Button className='w-full'>
+                              <CalendarDaysIcon />
+                              {t('packageBooking.bookPackage.proceed')}
+                            </Button>
+                          </RequestPackageDialog>
+                        )
+                      ))}
+
+                    {isCreator && mentorPackage && (
+                      <Link to={`/packages/${mentorPackage.id}`}>
+                        <Button className='w-full' size='sm' variant='outline'>
+                          <SettingsIcon />
+                          {t('mentorPackage.card.managePackage')}
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </Card>
               </div>
