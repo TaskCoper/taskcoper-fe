@@ -303,7 +303,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 <Input
                   className='w-28'
                   value={localStartTime}
-                  placeholder='HH:mm'
+                  placeholder={t('common.ui.timeFormatPlaceholder')}
                   disabled={!startDate}
                   aria-invalid={startTimeInvalid}
                   onChange={(e) => {
@@ -327,7 +327,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 <Input
                   className='w-28'
                   value={localEndTime}
-                  placeholder='HH:mm'
+                  placeholder={t('common.ui.timeFormatPlaceholder')}
                   disabled={!endDate}
                   aria-invalid={endTimeInvalid}
                   onChange={(e) => {

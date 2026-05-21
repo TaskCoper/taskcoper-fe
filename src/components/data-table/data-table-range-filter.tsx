@@ -3,6 +3,7 @@ import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRangeFilterProps<TData> extends React.ComponentProps<'div'> {
   filter: ExtendedColumnFilter<TData>
@@ -19,6 +20,7 @@ export function DataTableRangeFilter<TData>({
   className,
   ...props
 }: DataTableRangeFilterProps<TData>) {
+  const { t } = useTranslation()
   const meta = column.columnDef.meta
 
   const [min, max] = React.useMemo(() => {
@@ -72,7 +74,7 @@ export function DataTableRangeFilter<TData>({
       <Input
         id={`${inputId}-min`}
         type='number'
-        aria-label={`${meta?.label} minimum value`}
+        aria-label={t('dataTable.filter.aria.minimumValue', { field: meta?.label ?? column.id })}
         aria-valuemin={min}
         aria-valuemax={max}
         data-slot='range-min'
@@ -84,11 +86,11 @@ export function DataTableRangeFilter<TData>({
         defaultValue={value[0]}
         onChange={(event) => onRangeValueChange(event.target.value, true)}
       />
-      <span className='sr-only shrink-0 text-muted-foreground'>to</span>
+      <span className='sr-only shrink-0 text-muted-foreground'>{t('dataTable.filter.to')}</span>
       <Input
         id={`${inputId}-max`}
         type='number'
-        aria-label={`${meta?.label} maximum value`}
+        aria-label={t('dataTable.filter.aria.maximumValue', { field: meta?.label ?? column.id })}
         aria-valuemin={min}
         aria-valuemax={max}
         data-slot='range-max'

@@ -1,5 +1,5 @@
 import type { Meeting } from '../meetings/types'
-import type { PackageBookingStatus } from '../package-bookings/types'
+import type { PackageBookingStatus, PackageRequestStatus } from '../package-bookings/types'
 import type { Currency } from '../transactions/types'
 
 export interface MentorPackage {
@@ -40,6 +40,14 @@ export interface MentorPackageDetail extends MentorPackage {
     slug: string
     avatarUrl: string | null
   }
+  pendingRequest: {
+    id: string
+    requestedByUserId: string
+    bookedByProjectId: string | null
+    status: PackageRequestStatus
+    createdOnUtc: string
+    modifiedOnUtc: string | null
+  } | null
   averageFeedbackRating: number
   totalBuyers: number
   totalFeedbacks: number

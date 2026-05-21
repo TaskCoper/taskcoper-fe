@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import InfoTab from '@/features/mentor-packages/components/tabs/info-tab'
 import PackageBookingsTab from '@/features/mentor-packages/components/tabs/package-bookings-tab'
 import PackageFeedbacksTab from '@/features/mentor-packages/components/tabs/package-feedbacks-tab'
+import PackageRequestsTab from '@/features/mentor-packages/components/tabs/package-requests-tab'
 import PackageRulesTab from '@/features/mentor-packages/components/tabs/package-rules-tab'
 import PackageStatisticsTab from '@/features/mentor-packages/components/tabs/package-statistics-tab'
 import { useDeleteMentorPackage } from '@/features/mentor-packages/hooks/use-delete-mentor-package'
@@ -268,6 +269,11 @@ export default function MentorPackagePage() {
         value: 'usages',
         label: t('mentorPackage.page.bookingsTitle'),
         content: <PackageBookingsTab />
+      },
+      {
+        value: 'requests',
+        label: t('mentorPackage.page.requestsTitle'),
+        content: <PackageRequestsTab />
       },
       {
         value: 'statistics',

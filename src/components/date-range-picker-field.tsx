@@ -138,7 +138,7 @@ export function DateRangePickerField<T extends FieldValues>({
                       }}
                     >
                       <XCircleIcon className='size-4 opacity-50 hover:opacity-100' />
-                      <span className='sr-only'>Clear</span>
+                      <span className='sr-only'>{t('common.button.clear')}</span>
                     </div>
                   )}
                 </Button>

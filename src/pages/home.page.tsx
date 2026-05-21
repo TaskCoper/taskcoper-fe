@@ -141,7 +141,7 @@ export default function HomePage() {
                             {t('home.cards.taskCard.members', { count: 3 })}
                           </span>
                         </div>
-                        <span className='text-[10px] text-slate-400 font-medium'>Jan 12</span>
+                        <span className='text-[10px] text-slate-400 font-medium'>{t('home.cards.taskCard.date')}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -379,7 +379,7 @@ export default function HomePage() {
                             <p className='text-[11px] font-medium text-slate-500'>
                               {t('home.cards.timeline.designSync')}
                             </p>
-                            <p className='text-[9px] text-slate-400'>3:00 PM</p>
+                            <p className='text-[9px] text-slate-400'>{t('home.cards.timeline.designSyncAt')}</p>
                           </div>
                         </div>
                       </div>
@@ -503,7 +503,7 @@ export default function HomePage() {
             {t('pageTitle.privacyPolicy')}
           </Link>
           <Separator orientation='vertical' className='h-3 bg-slate-200' />
-          <p>© {new Date().getFullYear()} TaskCoper</p>
+          <p>{t('common.copyright.short', { year: new Date().getFullYear() })}</p>
         </footer>
       </div>
     </>

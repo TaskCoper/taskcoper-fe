@@ -1,17 +1,10 @@
 {
   "header": {
     "home": "Home",
-    "featuredProjects": "Featured Projects",
     "expertNetwork": "Expert Network",
-    "startupCommunity": "Startup Community",
     "news": "News",
     "manageProjects": "Manage",
     "verifyYourEmail": "Verify Your Account"
-  },
-  "role": {
-    "owner": "Owner",
-    "editor": "Editor",
-    "viewer": "Viewer"
   },
   "validation": {
     "mustBeNumber": "Must be a valid number"
@@ -31,9 +24,14 @@
       "leave": "Leave",
       "delete": "Delete",
       "insert": "Insert",
-      "download": "Download",
-      "back": "Back",
-      "upload": "Upload"
+      "upload": "Upload",
+      "addTeam": "Add team",
+      "clear": "Clear",
+      "clearAll": "Clear all",
+      "close": "Close",
+      "generateCode": "Generate code",
+      "toggleMenu": "Toggle menu",
+      "toggleSidebar": "Toggle sidebar"
     },
     "field": {
       "label": "Label",
@@ -41,7 +39,6 @@
       "title": "Title",
       "name": "Name",
       "email": "Email",
-      "password": "Password",
       "isActive": "Active",
       "startDate": "Start date",
       "endDate": "End date",
@@ -58,17 +55,13 @@
       },
       "required": "This field is required",
       "maxLength": {
-        "20": "Max 20 characters",
         "25": "Max 25 characters",
         "255": "Max 255 characters",
         "2000": "Max 2000 characters",
         "10000": "Max 10000 characters"
       },
       "minLength": {
-        "1": "This field is required",
-        "5": "Must be at least 5 characters",
-        "6": "Must be 6 characters",
-        "8": "Must be at least 8 characters long"
+        "5": "Must be at least 5 characters"
       },
       "url": {
         "invalid": "Invalid URL"
@@ -95,6 +88,9 @@
         "dayRequired": "At least one day must be selected",
         "startTimeRequired": "Start time is required",
         "endTimeRequired": "End time is required"
+      },
+      "string": {
+        "max": "Must not exceed {{max}} characters"
       }
     },
     "ui": {
@@ -104,9 +100,6 @@
       "search": "Search...",
       "selectPlaceholder": "Select option",
       "noResults": "No results found.",
-      "viewOnly": "View only",
-      "canEdit": "Can edit",
-      "none": "None",
       "uploading": "Uploading...",
       "pleaseWait": "Please wait...",
       "uploadSuccess": "Upload successful",
@@ -119,31 +112,36 @@
       "viewLess": "View less",
       "noDescription": "No description provided",
       "me": "me",
-      "yes": "Yes",
-      "no": "No",
       "action": "Action",
       "members": "Members",
       "date": "Date",
       "optional": "optional",
       "apply": "Apply",
       "noDataAvailable": "No data available",
-      "filter": "Filter",
       "month": "Month",
       "week": "Week",
       "day": "Day",
       "today": "Today",
-      "files": "files",
-      "emptyValue": "—",
+      "emptyValue": "Not yet set",
       "openMenu": "Open menu",
       "toggle": "Toggle",
-      "comingSoon": "Coming Soon",
       "more": "+{{count}} more",
       "infiniteSelect": {
         "placeholder": "Search...",
         "selectedCount": "{{count}} selected",
         "loading": "Loading...",
         "noResults": "No results found"
-      }
+      },
+      "breadcrumb": "Breadcrumb",
+      "menu": "Menu",
+      "sidebar": "Sidebar",
+      "mobileSidebarDescription": "Displays the mobile sidebar.",
+      "teams": "Teams",
+      "domain": "Domain",
+      "status": "Status",
+      "moreLabel": "More",
+      "noDescriptionAvailable": "No description available.",
+      "timeFormatPlaceholder": "HH:mm"
     },
     "status": {
       "all": "All",
@@ -151,7 +149,47 @@
       "inactive": "Inactive",
       "disabled": "Disabled"
     },
-    "off": "Off"
+    "off": "Off",
+    "alt": {
+      "logo": "TaskCoper logo",
+      "authBackground": "Authentication background",
+      "paymentQr": "Payment QR",
+      "verificationBackground": "Verification background",
+      "cover": "Cover image",
+      "background": "Background image"
+    },
+    "copyright": {
+      "allRightsReserved": "© {{year}} TaskCoper. All rights reserved.",
+      "short": "© {{year}} TaskCoper"
+    },
+    "confirm": {
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone.",
+      "confirmText": "Continue",
+      "cancelText": "Cancel"
+    },
+    "error": {
+      "rebalancePositions": "Need to rebalance positions."
+    },
+    "sortable": {
+      "dragStart": "Grabbed sortable item \"{{item}}\". Current position is {{position}} of {{total}}. Use arrow keys to move, space to drop.",
+      "dragOver": "Sortable item \"{{item}}\" moved {{direction}} to position {{position}} of {{total}}.",
+      "notOverDropzone": "Sortable item is no longer over a droppable area. Press escape to cancel.",
+      "dragEnd": "Sortable item \"{{item}}\" dropped at position {{position}} of {{total}}.",
+      "dragEndNoChanges": "Sortable item \"{{item}}\" dropped. No changes were made.",
+      "dragCancel": "Sorting cancelled. Sortable item \"{{item}}\" returned to position {{position}} of {{total}}.",
+      "dragMove": "Sortable item \"{{item}}\" is moving {{direction}} to position {{position}} of {{total}}.",
+      "direction": {
+        "up": "up",
+        "down": "down",
+        "upAndDown": "up and down",
+        "leftAndRight": "left and right",
+        "arrow": "arrow"
+      },
+      "instructions": {
+        "draggable": "To pick up a sortable item, press space or enter. While dragging, use the {{direction}} keys to move the item. Press space or enter again to drop the item in its new position, or press escape to cancel."
+      }
+    }
   },
   "network": {
     "filter": {
@@ -182,11 +220,11 @@
       "description": "Add the time slots when you're available to meet with students. Once saved, students can start booking sessions."
     },
     "field": {
-      "availableDays": "Available Days",
-      "startTime": "Start time",
-      "endTime": "End time",
       "isActive": "Active status",
-      "isActiveDescription": "If disabled, the schedule will not be active"
+      "isActiveDescription": "If disabled, the schedule will not be active",
+      "availableDays": "Available days",
+      "startTime": "Start time",
+      "endTime": "End time"
     },
     "button": {
       "create": "Create Schedule",
@@ -194,10 +232,8 @@
       "update": "Update Schedule"
     },
     "popover": {
-      "title": "Schedules",
       "showOverlay": "Schedule overlay",
-      "description": "Display your active schedules on the calendar.",
-      "manageSchedules": "Manage Schedules"
+      "description": "Display your active schedules on the calendar."
     },
     "filter": {
       "title": "Display schedule",
@@ -227,10 +263,6 @@
       "title": "Delete schedule?",
       "description": "This schedule will be removed. This action cannot be undone."
     },
-    "tab": {
-      "calendar": "Calendar",
-      "timeline": "Timeline"
-    },
     "timeline": {
       "empty": "No schedule yet",
       "emptyDescription": "Create your availability to let students book mentoring sessions with you.",
@@ -255,6 +287,10 @@
         "toOnly": "To date",
         "range": "Active between dates"
       }
+    },
+    "status": {
+      "expired": "Expired",
+      "upcoming": "Upcoming"
     }
   },
   "meeting": {
@@ -299,7 +335,6 @@
       "mentor": "Mentor",
       "participants": "Participants",
       "dateFormat": "dd MMM, yyyy",
-      "meetingDateTimeAt": "at",
       "cancel": "Cancel",
       "reschedule": "Reschedule",
       "completeMeeting": "Complete",
@@ -309,9 +344,10 @@
       "cancelReasonPlaceholder": "Enter reason for cancellation...",
       "rescheduleReasonPlaceholder": "Enter reason for rescheduling...",
       "confirmCancel": "Confirm Cancel",
-      "history": "History",
       "cancelledBy": "Cancelled by",
-      "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time."
+      "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time.",
+      "loadingTitle": "Loading meeting details",
+      "loadingDescription": "Please wait while we load the meeting."
     },
     "status": {
       "free": "Free",
@@ -351,7 +387,6 @@
       "targets": "Targets",
       "scope": "Scope",
       "usageLimitPerUser": "Limit per User",
-      "isStackable": "Can be used with other vouchers",
       "createdOnUtc": "Created On",
       "dateFormat": "HH:mm dd/MM/yyyy"
     },
@@ -368,10 +403,6 @@
       "namePlaceholder": "Enter voucher name",
       "code": "Voucher Code",
       "codePlaceholder": "EXAMPLE2026",
-      "startsAt": "Starts At",
-      "startsAtPlaceholder": "Select start date",
-      "endsAt": "Ends At",
-      "endsAtPlaceholder": "Select end date",
       "discountType": "Discount Type",
       "discountValue": "Discount Value",
       "discountValuePlaceholder": "Enter discount value",
@@ -387,7 +418,9 @@
       "targets": "Specific Targets Selection",
       "targetsPlaceholder": "Select target packages...",
       "isActive": "Status",
-      "isActiveDescription": "Indicates if this voucher can be used."
+      "isActiveDescription": "Indicates if this voucher can be used.",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at"
     },
     "discountType": {
       "percent": "Percent",
@@ -466,6 +499,9 @@
       "minAmount": "Min Amount",
       "maxAmount": "Max Amount",
       "isActiveDescription": "Enable this to apply the commission configuration."
+    },
+    "targetModel": {
+      "mentorPackage": "Mentor Package"
     }
   },
   "adminSidebar": {
@@ -508,8 +544,6 @@
     "note": "Note:",
     "bookingNote": "You can only select consecutive time slots. Please select {{slots}} consecutive time slots to book a meeting.",
     "completedProgress": "Completed {{progress}}%",
-    "meetButton": "Meet",
-    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm",
     "purchasedOnDateFormat": "dd/MM/yyyy",
     "purchasedPackages": "Purchased packages",
     "selectPackageToBook": "Select your purchased package to book.",
@@ -520,7 +554,6 @@
     "feedbackTitle": "Feedback",
     "feedbackDescription": "It is time to leave your feedback about this package.",
     "feedbackButton": "Give feedback",
-    "noNoteAvailable": "No note available",
     "noFeedback": "No feedback yet",
     "history": {
       "title": "History",
@@ -533,7 +566,6 @@
     "memberProjects": "Other projects",
     "memberProjectsDescription": "Projects assigned to you as a team member",
     "addCoverImage": "Add cover image",
-    "addLogoImage": "Add logo image",
     "coverImageAlt": "{{name}} Cover",
     "logoImageAlt": "{{name}} Logo",
     "info": {
@@ -543,13 +575,9 @@
       "domains": "Domains",
       "domainDescription": "Help classify your project better",
       "teamSize": "Team size",
-      "teamSizeDescription": "Number of team members in the project currently",
       "teamContact": "Team contact",
-      "teamContactDescription": "Contact information for the team",
       "teamEmail": "Team email",
-      "teamEmailDescription": "Email address for the team",
       "schoolSubject": "School subject",
-      "schoolSubjectDescription": "Subject of the school the project is related to",
       "members": "Members",
       "memberDescription": "Number of members in the project currently",
       "inviteMembers": "Invite members",
@@ -569,8 +597,7 @@
           "placeholder": "Enter project name"
         },
         "description": {
-          "label": "Description",
-          "placeholder": "Enter project description"
+          "label": "Description"
         }
       }
     },
@@ -626,15 +653,8 @@
         "teamContact": {
           "maxLength": "Max 255 characters"
         },
-        "teamEmail": {
-          "invalid": "Invalid email address"
-        },
         "schoolSubject": {
           "maxLength": "Max 255 characters"
-        },
-        "domainIds": {
-          "minLength": "At least one domain is required",
-          "invalid": "Invalid domain"
         }
       }
     },
@@ -645,7 +665,7 @@
     "updateProjectDomains": {
       "title": "Project domains",
       "description": "Edit the project domains",
-      "searchLabel": "Domains",
+      "searchLabel": "Search domains",
       "selectedDomains": "Selected domains",
       "validation": {
         "domainIds": {
@@ -662,8 +682,7 @@
         "description": "Are you sure you want to remove {{fullName}} from the project?",
         "leaveTitle": "Leave project",
         "leaveDescription": "Are you sure you want to leave this project?",
-        "confirmText": "Remove",
-        "cancelText": "Cancel"
+        "confirmText": "Remove"
       },
       "ownerTransfer": {
         "title": "Transfer ownership",
@@ -680,10 +699,7 @@
         "noPhoneNumber": "No phone number",
         "positionTitles": "Position titles",
         "noPositionTitles": "No position titles",
-        "role": "Role",
-        "rolePlaceholder": "Select role",
-        "permission": "Permission",
-        "canEdit": "Editor"
+        "role": "Role"
       },
       "positionTitle": {
         "title": "Position titles",
@@ -697,9 +713,7 @@
         "owner": "Owner",
         "admin": "Admin",
         "editor": "Editor",
-        "viewer": "Viewer",
-        "systemTooltip": "System defined role",
-        "defaultTooltip": "Default role for new members"
+        "viewer": "Viewer"
       }
     },
     "memberProfile": {
@@ -723,6 +737,7 @@
     "inviteMembers": {
       "title": "New members",
       "description": "Add new members to your project to collaborate and share tasks.",
+      "searchLabel": "Search users",
       "pendingInvites": {
         "title": "Pending invites",
         "description": "These invitations are waiting for recipients to accept."
@@ -733,9 +748,6 @@
         "confirmText": "Revoke"
       },
       "invitedUsers": "Invited users",
-      "comboboxPlaceholder": "Click to invite",
-      "search": "Type email to search...",
-      "searchLabel": "Member",
       "validation": {
         "inviteMembers": {
           "minLength": "At least one member is required"
@@ -757,9 +769,6 @@
             "invalid": "Invalid expiration date format"
           }
         },
-        "projectId": {
-          "invalid": "Invalid project ID"
-        },
         "dateRequired": "Expiration date is required when expiration is enabled",
         "dateInvalid": "Expiration date must be greater than today"
       },
@@ -769,15 +778,13 @@
           "description": "Enable expiration to set a date for the invite to expire"
         },
         "expirationDate": {
-          "label": "Expiration date",
-          "placeholder": "Select expiration date"
+          "label": "Expiration date"
         }
       }
     },
     "sidebar": {
       "aboutProject": "About Project",
       "tasks": "My Tasks",
-      "quickActions": "Quick Actions",
       "calendar": "Calendar",
       "chat": "Chat",
       "note": "Note",
@@ -785,12 +792,7 @@
       "revenue": "Revenue",
       "storagePage": {
         "title": "Project Storage",
-        "description": "All files uploaded to tasks in this project.",
-        "noFiles": "No files uploaded yet.",
-        "today": "Today",
-        "yesterday": "Yesterday",
-        "download": "Download",
-        "task": "Task"
+        "description": "All files uploaded to tasks in this project."
       },
       "revenuePage": {
         "title": "Project Revenue",
@@ -816,19 +818,6 @@
           "label": "Project name",
           "placeholder": "Enter project name"
         },
-        "description": {
-          "label": "Description",
-          "placeholder": "Enter project description",
-          "description": "This will be displayed on the project page."
-        },
-        "startDate": {
-          "label": "Start date",
-          "placeholder": "Pick a start date"
-        },
-        "endDate": {
-          "label": "End date",
-          "placeholder": "Pick a end date"
-        },
         "domain": {
           "label": "Domain",
           "placeholder": "Select a domain",
@@ -840,19 +829,8 @@
           "minLength": "Project name is required",
           "maxLength": "Max 255 characters"
         },
-        "description": {
-          "maxLength": "Max 255 characters"
-        },
-        "startDate": {
-          "invalid": "Start date is required"
-        },
         "endDate": {
-          "invalid": "End date is required",
           "mustBeGreater": "End date must be greater than start date"
-        },
-        "domainIds": {
-          "invalid": "Domain is required",
-          "minLength": "At least one domain is required"
         }
       }
     },
@@ -896,19 +874,9 @@
     "priviewDocument": {
       "preview": "Preview",
       "click_to_open": "Click to open",
-      "file_type_pdf": "PDF",
-      "file_type_image": "IMG",
       "unsupported": "Preview not supported"
     },
     "addProjectRevenue": {
-      "title": {
-        "cashIn": "Add New <highlight>Income</highlight>",
-        "cashOut": "Add New <highlight>Expense</highlight>"
-      },
-      "description": {
-        "cashIn": "Add a new income to your project.",
-        "cashOut": "Add a new expense to your project."
-      },
       "trigger": {
         "cashIn": "Add Income",
         "cashOut": "Add Expense"
@@ -957,7 +925,6 @@
       }
     },
     "settings": {
-      "title": "Project settings",
       "description": "Manage general information and project permission configuration.",
       "tabs": {
         "info": "Project Information",
@@ -980,11 +947,9 @@
     "updateProjectRole": {
       "field": {
         "name": {
-          "label": "Role name",
           "placeholder": "Enter role name"
         },
         "description": {
-          "label": "Description",
           "placeholder": "Enter role description"
         }
       },
@@ -1017,202 +982,6 @@
         "storageReadTitle": "Storage read extensions",
         "downloadFiles": "Download files",
         "empty": "No detailed permissions configured."
-      },
-      "permissionsConfig": {
-        "tasks": {
-          "canRead": {
-            "permission": {
-              "readTasks": "Read tasks"
-            },
-            "extensions": {
-              "viewTasksInKanbanOrTable": "View tasks in Kanban or Table"
-            }
-          },
-          "canWrite": {
-            "permission": {
-              "writeTasks": "Write tasks"
-            },
-            "extensions": {
-              "createParentMilestonesMilestonesAndTasks": "Create parent milestones, milestones, and tasks",
-              "addAttachmentsSubtasksAndCommentsOnTasks": "Add attachments, subtasks, and comments on tasks",
-              "assignMembersToTasks": "Assign members to tasks",
-              "createOrAssignLabelsToTasks": "Create or assign labels to tasks"
-            }
-          },
-          "canDelete": {
-            "permission": {
-              "deleteTasks": "Delete tasks"
-            },
-            "extensions": {
-              "deleteParentMilestonesMilestonesAndTasks": "Delete parent milestones, milestones, and tasks",
-              "deleteAttachmentsSubtasksAndCommentsOnTasks": "Delete attachments, subtasks, and comments on tasks",
-              "unassignMembersFromTasks": "Unassign members from tasks",
-              "unassignLabelsFromTasks": "Unassign labels from tasks",
-              "deleteLabelsFromProject": "Delete labels from project"
-            }
-          },
-          "canUpdate": {
-            "permission": {
-              "updateTasks": "Update tasks"
-            },
-            "extensions": {
-              "updateTaskNameDescriptionPriorityTaskPointsBackgroundImageAndDueDate": "Update task name, description, priority, task points, background image, and due date",
-              "watchOrUnwatchTask": "Watch or unwatch task",
-              "updateMilestoneName": "Update milestone name",
-              "moveMilestone": "Move milestone",
-              "moveTaskBetweenMilestones": "Move task between milestones",
-              "toggleTaskStatus": "Toggle task status"
-            }
-          }
-        },
-        "performance": {
-          "canRead": {
-            "permission": {
-              "readTaskPerformance": "Read task performance"
-            },
-            "extensions": {
-              "viewTaskPerformanceMetrics": "View task performance metrics"
-            }
-          }
-        },
-        "calendar": {
-          "canRead": {
-            "permission": {
-              "readCalendar": "Read calendar"
-            },
-            "extensions": {
-              "viewProjectCalendar": "View project calendar",
-              "viewMeetingDetails": "View meeting details"
-            }
-          },
-          "canWrite": {
-            "permission": {
-              "writeCalendar": "Write calendar"
-            },
-            "extensions": {
-              "purchaseMeetingPackage": "Purchase meeting package",
-              "bookMeeting": "Book meeting"
-            }
-          },
-          "canUpdate": {
-            "permission": {
-              "updateCalendar": "Update calendar"
-            },
-            "extensions": {
-              "rescheduleMeeting": "Reschedule meeting"
-            }
-          },
-          "canDelete": {
-            "permission": {
-              "deleteCalendar": "Delete calendar"
-            },
-            "extensions": {
-              "cancelMeeting": "Cancel meeting"
-            }
-          }
-        },
-        "storage": {
-          "canRead": {
-            "permission": {
-              "readProjectStorage": "Read project storage"
-            },
-            "extensions": {
-              "viewProjectStorage": "View project storage",
-              "downloadFiles": "Download files"
-            }
-          },
-          "canWrite": {
-            "permission": {
-              "writeProjectStorage": "Write project storage"
-            },
-            "extensions": {
-              "uploadFilesToProjectStorage": "Upload files to project storage"
-            }
-          },
-          "canDelete": {
-            "permission": {
-              "deleteProjectStorage": "Delete project storage"
-            },
-            "extensions": {
-              "deleteFilesFromProjectStorage": "Delete files from project storage"
-            }
-          }
-        },
-        "revenue": {
-          "canRead": {
-            "permission": {
-              "readProjectRevenue": "Read project revenue"
-            },
-            "extensions": {
-              "viewRevenueMetrics": "View revenue metrics"
-            }
-          },
-          "canWrite": {
-            "permission": {
-              "writeProjectRevenue": "Write project revenue"
-            },
-            "extensions": {
-              "addIncomeExpenseRecords": "Add income or expense records",
-              "addRevenueLabels": "Add revenue labels"
-            }
-          },
-          "canUpdate": {
-            "permission": {
-              "updateProjectRevenue": "Update project revenue"
-            },
-            "extensions": {
-              "updateIncomeExpenseRecords": "Update income or expense records",
-              "assignRevenueLabels": "Assign revenue labels"
-            }
-          },
-          "canDelete": {
-            "permission": {
-              "deleteProjectRevenue": "Delete project revenue"
-            },
-            "extensions": {
-              "deleteIncomeExpenseRecords": "Delete income or expense records",
-              "unassignRevenueLabels": "Unassign revenue labels",
-              "deleteRevenueLabelsFromProject": "Delete revenue labels from project"
-            }
-          }
-        },
-        "settings": {
-          "canRead": {
-            "permission": {
-              "readProjectSettings": "Read project settings"
-            },
-            "extensions": {
-              "viewProjectInfoMembersAndRoles": "View project info, members, and roles"
-            }
-          },
-          "canWrite": {
-            "permission": {
-              "writeProjectSettings": "Write project settings"
-            },
-            "extensions": {
-              "inviteMembers": "Invite members",
-              "createProjectRoles": "Create project roles"
-            }
-          },
-          "canUpdate": {
-            "permission": {
-              "updateProjectSettings": "Update project settings"
-            },
-            "extensions": {
-              "updateProjectRoles": "Update project roles",
-              "assignOrUnassignMemberRoles": "Assign or unassign member roles"
-            }
-          },
-          "canDelete": {
-            "permission": {
-              "deleteProjectSettings": "Delete project settings"
-            },
-            "extensions": {
-              "removeMembers": "Remove members",
-              "deleteProjectRoles": "Delete project roles"
-            }
-          }
-        }
       }
     },
     "deleteProjectRole": {
@@ -1237,6 +1006,14 @@
         "description": "This action will permanently remove this project and its related data.",
         "deleteButton": "Delete project"
       }
+    },
+    "memberRequestStatus": {
+      "request": "Requested",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "milestones": {
+      "tabs": "Tabs"
     }
   },
   "projectRevenue": {
@@ -1397,11 +1174,8 @@
   },
   "task": {
     "addTask": {
-      "title": "Task",
-      "description": "Add a task to your milestone",
       "field": {
         "name": {
-          "label": "Task name",
           "placeholder": "Enter task name..."
         }
       }
@@ -1418,8 +1192,7 @@
     "deleteTask": {
       "title": "Delete task",
       "description": "Are you sure you want to delete {{taskName}}?",
-      "confirmText": "Delete",
-      "cancelText": "Cancel"
+      "confirmText": "Delete"
     },
     "copyLink": {
       "title": "Copy link",
@@ -1451,38 +1224,24 @@
     },
     "date": {
       "notSetDate": "DD/MM/YYYY",
-      "notSetTime": "H:mm",
       "reminderSetting": "Reminder Setting",
       "selectReminderTime": "Select reminder time",
-      "reminderDescription": "Reminder will be sent to all members and followers of this card.",
-      "expiredDate": "At expiration date",
-      "fiveMinutesBefore": "5 minutes before",
-      "tenMinutesBefore": "10 minutes before",
-      "fifteenMinutesBefore": "15 minutes before",
-      "oneHourBefore": "1 hour before",
-      "twoHoursBefore": "2 hours before",
-      "oneDayBefore": "1 day before",
-      "twoDaysBefore": "2 days before"
+      "reminderDescription": "Reminder will be sent to all members and followers of this card."
     },
     "label": {
       "createLabel": "Create new label",
       "findLabel": "Find label...",
       "editLabel": "Edit label",
-      "updateLabel": "Update label",
       "deleteLabel": "Delete label",
       "deleteLabelConfirmation": "This will remove this label from all cards. There is no undo.",
       "chooseColor": "Choose a color",
       "removeColor": "Remove color",
       "create": "Create",
       "validation": {
-        "projectId": {
-          "invalid": "Invalid project ID"
-        },
         "id": {
           "invalid": "Invalid label ID"
         },
         "name": {
-          "minLength": "Label name is required",
           "maxLength": "Max 255 characters"
         },
         "color": {
@@ -1531,7 +1290,6 @@
       "attachmentValuePlaceholder": "Search recent links or paste a new link",
       "attachmentDisplay": "Display text",
       "attachmentDisplayPlaceholder": "Text to display",
-      "attachmentDisplayDescription": "Provide a title or description for this link",
       "deleteAttachment": {
         "title": "Delete attachment",
         "description": "Are you sure you want to delete {{attachmentName}}?",
@@ -1593,26 +1351,6 @@
         "content": {
           "minLength": "Comment content is required",
           "maxLength": "Max 10000 characters"
-        },
-        "commentResources": {
-          "fileUrl": {
-            "invalid": "Invalid file URL"
-          },
-          "storageKey": {
-            "minLength": "Storage key is required"
-          },
-          "fileName": {
-            "minLength": "File name is required"
-          },
-          "fileType": {
-            "minLength": "File type is required"
-          },
-          "fileSize": {
-            "positive": "File size must be positive"
-          },
-          "fileExtension": {
-            "minLength": "File extension is required"
-          }
         }
       }
     },
@@ -1674,7 +1412,6 @@
     }
   },
   "richTextEditor": {
-    "placeholder": "Pro tip: Press 'Enter' for a new line and 'Shift + Enter' for a simple line break.",
     "strikethrough": "Strikethrough",
     "inlineCode": "Inline Code",
     "attachFile": "Attach file",
@@ -1717,6 +1454,19 @@
     },
     "image": {
       "label": "Image"
+    },
+    "imageUpload": {
+      "clickToUpload": "Click to upload",
+      "orDragAndDrop": "or drag and drop",
+      "maximumFiles_one": "Maximum {{count}} file, {{sizeMb}}MB each.",
+      "maximumFiles_other": "Maximum {{count}} files, {{sizeMb}}MB each.",
+      "uploadingFiles_one": "Uploading {{count}} file",
+      "uploadingFiles_other": "Uploading {{count}} files",
+      "errors": {
+        "noFileSelected": "No file selected"
+      },
+      "maximumFiles": "Maximum {{count}} files, {{sizeMb}}MB each.",
+      "uploadingFiles": "Uploading {{count}} files"
     }
   },
   "language": {
@@ -1748,23 +1498,14 @@
         "address": {
           "label": "Address"
         },
-        "province": {
-          "label": "Province",
-          "placeholder": "Select province",
-          "searchPlaceholder": "Search province..."
-        },
-        "ward": {
-          "label": "Ward",
-          "placeholder": "Select ward",
-          "searchPlaceholder": "Search ward..."
-        },
         "domain": {
           "label": "Domains"
-        }
-      },
-      "validation": {
-        "phoneNumber": {
-          "invalid": "Invalid phone number format"
+        },
+        "province": {
+          "label": "Province"
+        },
+        "ward": {
+          "label": "Ward"
         }
       }
     },
@@ -1790,7 +1531,6 @@
       "location": "Location",
       "connectedApps": "Connected Apps",
       "googleCalendar": "Google Calendar",
-      "connectWithCalendar": "Connect with Calendar",
       "googleCallback": {
         "loading": {
           "title": "Connecting Google Calendar",
@@ -1807,7 +1547,9 @@
         "verifyingOauthToken": "Verifying Google OAuth token",
         "connectedBadge": "Connected",
         "goBack": "Go Back"
-      }
+      },
+      "profileTitle": "Profile",
+      "profileDescription": "Customize your profile here"
     },
     "tabs": {
       "all": "All",
@@ -1836,12 +1578,16 @@
       "description": "Select the time zone used for your schedule and meetings.",
       "field": {
         "timeZone": {
-          "label": "Time zone",
-          "placeholder": "Select a time zone",
-          "searchPlaceholder": "Search time zone...",
-          "emptyMessage": "No time zone found."
+          "label": "Time zone"
         }
       }
+    },
+    "coverImageAlt": "{{name}} cover image",
+    "role": {
+      "user": "User",
+      "mentor": "Mentor",
+      "lecturer": "Lecturer",
+      "admin": "Admin"
     }
   },
   "auth": {
@@ -1852,20 +1598,7 @@
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
       "description": "Sign in to your account to continue",
-      "field": {
-        "email": {
-          "label": "Email",
-          "placeholder": "example@gmail.com"
-        },
-        "password": {
-          "label": "Password",
-          "placeholder": "Enter your password"
-        }
-      },
       "validation": {
-        "email": {
-          "invalid": "Invalid email address"
-        },
         "code": {
           "minLength": "Code must be 6 characters"
         },
@@ -1900,9 +1633,6 @@
         }
       },
       "validation": {
-        "email": {
-          "invalid": "Invalid email address"
-        },
         "password": {
           "minLength": "Password must be at least 8 characters long",
           "strong": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one special character and one number"
@@ -1965,23 +1695,8 @@
     "maintenance": "System is down for Maintenance",
     "maintenanceDescription": "We promise, we'll be right back!"
   },
-  "comboboxField": {
-    "placeholder": "Select option",
-    "searchPlaceholder": "Search...",
-    "emptyMessage": "No option found."
-  },
-  "datePickerField": {
-    "placeholder": "Select date"
-  },
-  "comboboxMultiField": {
-    "placeholder": "Select options",
-    "searchPlaceholder": "Search...",
-    "emptyMessage": "No options found."
-  },
   "milestone": {
     "addParentMilestone": {
-      "title": "Parent milestone",
-      "description": "Add a parent milestone to your project",
       "field": {
         "milestoneName": {
           "label": "Milestone name",
@@ -1997,11 +1712,8 @@
       "cancelText": "Cancel"
     },
     "addMilestone": {
-      "title": "Milestone",
-      "description": "Add a milestone to your project",
       "field": {
         "milestoneName": {
-          "label": "Milestone name",
           "placeholder": "Enter milestone name..."
         }
       }
@@ -2010,12 +1722,6 @@
       "milestoneName": {
         "minLength": "Milestone name is required",
         "maxLength": "Max 255 characters"
-      },
-      "projectId": {
-        "invalid": "Invalid project ID"
-      },
-      "parentId": {
-        "invalid": "Invalid parent milestone"
       },
       "milestoneId": {
         "invalid": "Invalid milestone ID"
@@ -2075,7 +1781,6 @@
       "approved": "Approved",
       "rejected": "Rejected",
       "pending": "New",
-      "pendingReview": "Pending Review",
       "pendingLock": "Accept to view details",
       "inReview": "In Review",
       "inOffers": "Interview"
@@ -2097,7 +1802,8 @@
       "fileCount_one": "{{count}} file",
       "fileCount_other": "{{count}} files",
       "noApplications": "No applications found.",
-      "selectApplicationToView": "Select an application to view details"
+      "selectApplicationToView": "Select an application to view details",
+      "fileCount": "{{count}} files"
     },
     "sidebar": {
       "title": "Mentor Applications",
@@ -2165,8 +1871,7 @@
       "titleHighlight": "No. 1 in Vietnam",
       "description": "TaskCoper helps teams organize work, track progress, and collaborate seamlessly. All in one powerful platform.",
       "cta": "Start Your Journey",
-      "trustBadge": "Trusted by 500+ teams worldwide",
-      "brandName": "TaskCoper"
+      "trustBadge": "Trusted by 500+ teams worldwide"
     },
     "stats": {
       "projects": "Projects",
@@ -2182,7 +1887,8 @@
         "description": "Finalize dashboard components and design system tokens for v2.0 release.",
         "priority": "High Priority",
         "comments": "{{count}} comments",
-        "members": "{{count}} members"
+        "members": "{{count}} members",
+        "date": "Jan 12"
       },
       "teamChat": {
         "title": "Team Chat",
@@ -2221,7 +1927,8 @@
         "sprintReviewTime": "9:00 AM - Done",
         "teamStandup": "Team Standup",
         "now": "Now",
-        "designSync": "Design Sync"
+        "designSync": "Design Sync",
+        "designSyncAt": "3:00 PM"
       },
       "sprint": {
         "title": "Sprint 12",
@@ -2230,26 +1937,7 @@
         "inProgress": "In Progress",
         "done": "Done"
       }
-    },
-    "title": "TaskCoper - Project Management Platform"
-  },
-  "activities": {
-    "FileAddedToTaskActivity": "added a file to the task",
-    "FileAddedToTaskCommentActivity": "added a file to a task comment",
-    "FileUpdatedInTaskActivity": "updated a file in the task",
-    "FileRemovedInTaskActivity": "removed a file from the task",
-    "TaskUpdatedActivity": "updated the task",
-    "TaskCreatedActivity": "created the task",
-    "TaskMovedInTaskActivity": "moved the task",
-    "TaskMarkedInTaskActivity": "marked the task as completed",
-    "TaskUnMarkedInTaskActivity": "unmarked the task as completed",
-    "UserAddedToTaskActivity": "added a user to the task",
-    "UserRemovedInTaskActivity": "removed a user from the task",
-    "SubTaskAddedToTaskActivity": "added a subtask to the task",
-    "SubtaskUpdatedInTaskActivity": "updated the subtask",
-    "SubtaskDeletedInTaskActivity": "deleted the subtask",
-    "LabelAddedToTaskActivity": "added a label to the task",
-    "LabelDeletedToTaskActivity": "removed a label from the task"
+    }
   },
   "dataTable": {
     "table": {
@@ -2282,13 +1970,90 @@
       "selectDate": "Select date",
       "selectDateRange": "Select date range",
       "from": "From",
-      "to": "to"
+      "to": "to",
+      "filter": "Filter",
+      "filters": "Filters",
+      "noFiltersApplied": "No filters applied",
+      "modifyFiltersDescription": "Modify filters to refine your rows.",
+      "addFiltersDescription": "Add filters to refine your rows.",
+      "addFilter": "Add filter",
+      "resetFilters": "Reset filters",
+      "resetAllFilters": "Reset all filters",
+      "openFilterCommandMenu": "Open filter command menu",
+      "where": "Where",
+      "selectJoinOperator": "Select join operator",
+      "joinOperator": {
+        "and": "and",
+        "or": "or"
+      },
+      "searchFields": "Search fields...",
+      "noFieldsFound": "No fields found.",
+      "noOptionsFound": "No options found.",
+      "selectField": "Select field",
+      "enterValue": "Enter a value...",
+      "true": "True",
+      "false": "False",
+      "selectOption": "Select option...",
+      "selectOptions": "Select options...",
+      "selectedCount": "{{count}} selected",
+      "searchOptions": "Search options...",
+      "pickDate": "Pick a date",
+      "typeToAddFilter": "Type to add filter...",
+      "filterByValue": "Filter by \"{{value}}\"",
+      "clearSpecificFilter": "Clear {{title}} filter",
+      "aria": {
+        "empty": "empty",
+        "notEmpty": "not empty",
+        "filterState": "{{field}} filter is {{state}}",
+        "filterValue": "{{field}} filter value",
+        "booleanFilter": "{{field}} boolean filter",
+        "multipleSuffix": "s",
+        "selectFilter": "{{field}} filter value{{suffix}}",
+        "searchOptions": "Search {{field}} options",
+        "dateFilter": "{{field}} date filter",
+        "selectDateRange": "Select {{field}} date range",
+        "selectDate": "Select {{field}} date",
+        "minimumValue": "{{field}} minimum value",
+        "maximumValue": "{{field}} maximum value",
+        "slider": "{{title}} slider"
+      }
     },
     "viewOptions": {
       "view": "View",
       "toggleColumns": "Toggle columns",
       "searchColumns": "Search columns...",
       "noColumnsFound": "No columns found."
+    },
+    "operator": {
+      "contains": "Contains",
+      "notContains": "Does not contain",
+      "is": "Is",
+      "isNot": "Is not",
+      "isEmpty": "Is empty",
+      "isNotEmpty": "Is not empty",
+      "isLessThan": "Is less than",
+      "isLessThanOrEqualTo": "Is less than or equal to",
+      "isGreaterThan": "Is greater than",
+      "isGreaterThanOrEqualTo": "Is greater than or equal to",
+      "isBetween": "Is between",
+      "isBefore": "Is before",
+      "isAfter": "Is after",
+      "isOnOrBefore": "Is on or before",
+      "isOnOrAfter": "Is on or after",
+      "isRelativeToToday": "Is relative to today",
+      "hasAnyOf": "Has any of",
+      "hasNoneOf": "Has none of"
+    },
+    "sort": {
+      "sort": "Sort",
+      "sortBy": "Sort by",
+      "noSortingApplied": "No sorting applied",
+      "modifySortingDescription": "Modify sorting to organize your rows.",
+      "addSortingDescription": "Add sorting to organize your rows.",
+      "addSort": "Add sort",
+      "resetSorting": "Reset sorting",
+      "searchFields": "Search fields...",
+      "noFieldsFound": "No fields found."
     }
   },
   "systemProjects": {
@@ -2391,8 +2156,6 @@
     "statFiles": "Uploaded files",
     "statSubtasks": "Created subtasks",
     "statTasks": "Created tasks",
-    "trendLabel": "compared to last month",
-    "contributions": "{{count}} contributions in {{year}}",
     "tooltipNoActivitiesOn": "No activities on {{date}}",
     "tooltipTasksCreated": "Tasks created",
     "tooltipTasksCompleted": "Tasks completed",
@@ -2401,7 +2164,6 @@
     "tooltipFilesUploaded": "Files uploaded",
     "tooltipTotalActivities": "{{count}} total activities",
     "heatmap": {
-      "tooltipDefault": "{{count}} activities on {{date}}",
       "tooltipNoCount": "No",
       "legendZero": "0 activities",
       "legendOneToNine": "1-9 activities",
@@ -2415,17 +2177,13 @@
       "actionDescription": "Choose date and view mode.",
       "weeks": "Weeks",
       "months": "Months",
-      "tab": "Tab",
       "year": "Year",
       "selectYear": "Select year",
       "from": "From",
-      "to": "To",
-      "selectDate": "Select date"
+      "to": "To"
     },
     "taskStatistics": "Task statistics",
     "noTaskStatistics": "No task statistics for this range.",
-    "trendingUp": "Trending up by {{value}}% this month",
-    "showingVisitors": "Showing total visitors for the last {{months}} months",
     "chartCreated": "Created",
     "chartCompleted": "Completed",
     "topContributorsPercentage": "Top Contributors (%)",
@@ -2513,29 +2271,24 @@
       "title": "Meeting Packages",
       "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
       "bookingsTitle": "Bookings",
-      "emptyTitle": "No packages yet",
-      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
       "infoTitle": "Information",
       "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
-      "durationTitle": "Session Duration Rules",
+      "durationTitle": "Session Duration",
       "durationDescription": "Each slot equals 1 hour. Expand a session below to see its total duration.",
       "feedbackTitle": "Feedback",
       "feedbackDescription": "{{totalCount}} feedback entries for this package",
+      "requestsTitle": "Requests",
       "manage": "Manage package"
     },
     "form": {
       "name": "Package name",
       "namePlaceholder": "Enter package name",
+      "searchByName": "Search by package name...",
       "description": "Description",
-      "descriptionPlaceholder": "Enter package description",
-      "durationInMinutes": "Duration (minutes)",
-      "durationPlaceholder": "e.g. 60",
       "totalSessions": "Total sessions",
       "totalSessionsPlaceholder": "e.g. 10",
       "price": "Price",
       "pricePlaceholder": "Enter price",
-      "currency": "Currency",
-      "currencyPlaceholder": "Select currency",
       "coverImage": "Cover image",
       "coverImageHint": "Click the image area to choose a cover, then press Save to upload.",
       "isActive": "Active",
@@ -2544,10 +2297,8 @@
       "isPinDescription": "Pin this package to the top of the list for mentees to see easily.",
       "activationDeadlineDays": "First Booking Deadline (days)",
       "activationDeadlineDaysPlaceholder": "e.g. 10",
-      "activationDeadlineDaysDescription": "User needs to use the package within these days from the purchase date.",
       "usageDeadlineDays": "Usage Period (days)",
-      "usageDeadlineDaysPlaceholder": "e.g. 30",
-      "usageDeadlineDaysDescription": "After the first session, the user must complete all sessions within these days."
+      "usageDeadlineDaysPlaceholder": "e.g. 30"
     },
     "list": {
       "newPackage": "New package",
@@ -2560,13 +2311,14 @@
       "viewPackage": "View package",
       "bookFor": "Book for {{price}}",
       "sessions": "{{sessions}} sessions",
-      "sortOrder": "Sort order"
+      "managePackage": "Manage Package",
+      "sessionsCount": "{{count}} sessions"
     },
     "sidebar": {
-      "meetingSessionPackages": "Meeting Session Packages",
       "menu": "Menu",
       "overview": "Overview",
-      "packageList": "Package List"
+      "packageList": "Package List",
+      "requests": "Mentoring Requests"
     },
     "delete": {
       "title": "Delete package",
@@ -2574,9 +2326,7 @@
     },
     "validation": {
       "nameRequired": "Name required",
-      "descriptionMax": "Max 255 chars",
-      "sessionsPositive": "Must be > 0",
-      "pricePositive": "Must be > 0"
+      "descriptionMax": "Max 255 chars"
     },
     "dialog": {
       "title": "Package information",
@@ -2585,7 +2335,6 @@
     "bookingDialog": {
       "bookingInformation": "Booking Information",
       "bookedBy": "Booked by",
-      "feedbackSubmitted": "Feedback submitted",
       "activationDeadline": "Activation deadline",
       "activatedOn": "Activated on",
       "usageDeadline": "Usage deadline",
@@ -2598,10 +2347,12 @@
       "ratingsCount_one": "{{count}} rating",
       "ratingsCount_other": "{{count}} ratings",
       "buyers": "buyers",
-      "discountPercent": "Save {{percent}}%",
       "activationDays": "Activation days",
       "usageDays": "Usage days",
-      "courseRating": "{{rating}} course rating"
+      "courseRating": "{{rating}} course rating",
+      "ratingsCount": "{{count}} ratings",
+      "pendingRequestNotice": "You already have a pending request on this package.",
+      "viewPendingRequest": "View pending request"
     }
   },
   "mentorPackageStatistics": {
@@ -2639,24 +2390,79 @@
       "voucherNotStarted": "Voucher hasn't started yet",
       "voucherExpired": "Voucher has expired",
       "voucherLowUsage": "This voucher is running low on uses! Hurry up!"
+    },
+    "requestPackage": {
+      "title": "Request package",
+      "proceed": "Send request",
+      "problemStatement": "Problem statement"
+    },
+    "requestInfo": {
+      "reviewedOn": "Reviewed {{date}}",
+      "consumedOn": "Consumed {{date}}",
+      "yourResponse": "Your response",
+      "responsePlaceholder": "Add an optional note for approval or a required note for rejection.",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "expiredUnused": "Expired Unused",
+      "expiredUnfinished": "Expired Unfinished"
+    },
+    "requestStatus": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "consumed": "Consumed",
+      "cancelled": "Cancelled"
+    },
+    "incomingRequests": {
+      "title": "Incoming Requests",
+      "description": "Review and manage package requests from your students."
+    },
+    "outgoingRequests": {
+      "title": "My Requests",
+      "description": "Track the status of packages you have requested from mentors."
+    },
+    "requestDetail": {
+      "information": "Information",
+      "requestInformation": "Your request information",
+      "sessions": "Sessions",
+      "price": "Price",
+      "belongsToProject": "Belongs to project",
+      "mentor": "Mentor",
+      "requestedOn": "Requested on",
+      "reviewedOn": "Reviewed on",
+      "consumedOn": "Consumed on",
+      "mentorResponse": "Mentor's response",
+      "noResponseYet": "The mentor hasn't responded yet.",
+      "problemStatement": "Problem statement",
+      "noProblemStatement": "No problem statement provided.",
+      "dateFormat": "dd/MM/yyyy",
+      "cancelRequest": "Cancel request",
+      "payNow": "Pay now",
+      "cancelConfirmTitle": "Cancel request",
+      "cancelConfirmDescription": "Are you sure you want to cancel this request? This action cannot be undone.",
+      "cancelConfirmText": "Yes, cancel it"
     }
   },
   "pageTitle": {
-    "network": "Network",
-    "projects": "Projects",
-    "calendar": "Calendar",
-    "featuredProjects": "Featured Projects",
-    "community": "Community",
-    "news": "News",
     "transactions": "Transactions",
     "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "calendarComingSoon": "Calendar coming soon",
+    "network": "Network",
+    "news": "News"
   },
   "transactions": {
     "title": "Transactions History",
     "description": "View and manage your transaction history.",
     "column": {
-      "reference": "Reference",
       "targetModel": "Target Model",
       "amount": "Amount",
       "status": "Status",
@@ -2665,7 +2471,6 @@
       "description": "Description",
       "descriptionPlaceholder": "Search by description...",
       "createdDate": "Created Date",
-      "paidDate": "Paid Date",
       "actions": "Actions",
       "copyId": "Copy ID",
       "viewDetails": "View Details",
@@ -2713,7 +2518,8 @@
     "refresh": "Refresh",
     "openPaymentLink": "Open payment link",
     "amountLabel": "Total amount",
-    "securePayment": "Secure Payment"
+    "securePayment": "Secure Payment",
+    "transactionLabel": "Transaction"
   },
   "mentorTitle": {
     "bronze": "Bronze",
@@ -2725,16 +2531,8 @@
     "title": "Purchased Packages",
     "description": "Manage your purchased packages.",
     "meetingsCount": "{{booked}}/{{total}} sessions",
-    "price": "Price",
-    "duration": "Duration",
-    "viewDetails": "View Details",
-    "bookSession": "Book Session",
     "detail": {
-      "about": "About",
       "progress": "Progress",
-      "mentor": "Mentor",
-      "details": "Package Details",
-      "meetings": "Meetings",
       "noMeetings": "No meetings scheduled yet"
     },
     "legal": {
@@ -2840,7 +2638,6 @@
     "title": "Feedback",
     "description": "Share your experience to help mentors improve future sessions.",
     "noteLabel": "Additional note",
-    "notePlaceholder": "Share any extra context or feedback...",
     "submitButton": "Submit feedback",
     "confirm": {
       "title": "Submit feedback?",
@@ -2871,54 +2668,44 @@
     "questions": {
       "punctuality": {
         "title": "Did the mentor show up on time and manage the schedule effectively?",
-        "label": "Punctuality",
-        "options": {
-          "4": "Started exactly on time and managed the schedule perfectly.",
-          "3": "Mostly on time, minor delays but communicated well.",
-          "2": "Noticeably late or rushed the meeting.",
-          "1": "Very late, no-show, or highly disrespectful of time."
-        }
+        "label": "Punctuality"
       },
       "preparation": {
         "title": "Did the mentor review your project details before the meeting?",
-        "label": "Preparation",
-        "options": {
-          "4": "Thoroughly reviewed materials and understood the context immediately.",
-          "3": "Skimmed the materials, had a basic understanding of the startup.",
-          "2": "Unprepared, had to explain everything from scratch.",
-          "1": "Completely unprepared or confused the project with another."
-        }
+        "label": "Preparation"
       },
       "quality": {
         "title": "Was the feedback valuable for your current stage?",
-        "label": "Quality",
-        "options": {
-          "4": "Deeply insightful, solved core problems directly.",
-          "3": "Helpful and provided a good general direction.",
-          "2": "Somewhat generic, lacking specific depth for the industry.",
-          "1": "Irrelevant, outdated, or fundamentally incorrect advice."
-        }
+        "label": "Quality"
       },
       "communication": {
         "title": "Was the mentor actively listening and engaging?",
-        "label": "Communication",
-        "options": {
-          "4": "Exceptionally clear, engaged, and actively listened.",
-          "3": "Professional, clear, and easy to converse with.",
-          "2": "Dominated the conversation or used confusing jargon.",
-          "1": "Condescending, dismissive, or hard to communicate with."
-        }
+        "label": "Communication"
       },
       "actionability": {
         "title": "Did you walk away knowing exactly what to do next?",
-        "label": "Actionability",
-        "options": {
-          "4": "Provided a clear, step-by-step action plan.",
-          "3": "Suggested a few practical next steps to try.",
-          "2": "Mostly theoretical advice, hard to apply immediately.",
-          "1": "No clear takeaways or next steps were established."
-        }
+        "label": "Actionability"
       }
     }
+  },
+  "admin": {
+    "layout": {
+      "breadcrumb": {
+        "primary": "Building Your Application",
+        "secondary": "Data Fetching"
+      }
+    },
+    "page": {
+      "org": "Org Admin Page",
+      "super": "Super Admin Page"
+    },
+    "route": {
+      "projectDetail": "Project detail",
+      "projectSettings": "Project settings"
+    }
+  },
+  "commandDialog": {
+    "title": "Command Palette",
+    "description": "Search for a command to run..."
   }
 }

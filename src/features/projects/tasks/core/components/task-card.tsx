@@ -19,6 +19,7 @@ import {
   TypeIcon
 } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import type { TaskPreview } from '../../../core/types'
 import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
@@ -46,6 +47,7 @@ interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
 
 const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
   ({ task, dragging, style, shouldDisplayParentMilestone = false, ...props }, ref) => {
+    const { t } = useTranslation()
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -92,7 +94,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
       <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props} onClick={handleCardClick}>
         {task.backgroundImage ? (
           <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
-            <img src={task.backgroundImage} alt='Cover' className='w-full h-full object-cover' />
+            <img src={task.backgroundImage} alt={t('common.alt.cover')} className='w-full h-full object-cover' />
           </div>
         ) : null}
 

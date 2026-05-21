@@ -72,7 +72,9 @@ export const useUpdateProjectRevenue = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.all(variables.body.projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.typeStats(variables.body.projectIdentifier) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.revenues.typeStats(variables.body.projectIdentifier)
+      })
       queryClient.invalidateQueries({
         queryKey: queryKeys.projects.revenueLabels.stats(variables.body.projectIdentifier)
       })

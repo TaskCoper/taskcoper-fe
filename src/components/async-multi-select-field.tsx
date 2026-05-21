@@ -200,7 +200,7 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
                   <div className='mt-4 border-t'>
                     <DrawerHeader className='sr-only'>
                       <DrawerTitle>{t(label ?? 'common.ui.search')}</DrawerTitle>
-                      <DrawerDescription>Search...</DrawerDescription>
+                      <DrawerDescription>{t('common.ui.search')}</DrawerDescription>
                     </DrawerHeader>
                     <ComboboxList {...listProps} />
                   </div>

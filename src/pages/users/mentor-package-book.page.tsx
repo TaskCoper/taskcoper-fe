@@ -17,10 +17,11 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetFeedbacks } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import PackageFeedbacksDialog from '@/features/mentor-packages/components/package-feedbacks-dialog'
 import { useGetMentorPackage } from '@/features/mentor-packages/hooks/use-get-mentor-package'
-import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
+import RequestPackageDialog from '@/features/package-bookings/components/request-package-dialog'
 import { cn, formatCurrency, formatDate, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import { formatDistanceToNow } from 'date-fns'
 import {
+  AlertTriangleIcon,
   CalendarDaysIcon,
   CheckCheckIcon,
   GlobeIcon,
@@ -218,6 +219,21 @@ export default function MentorPackageBookPage() {
     ? formatDate(mentorPackage.modifiedOnUtc)
     : formatDate(mentorPackage?.createdOnUtc)
   const averageFeedbackRatingDisplay = mentorPackage?.averageFeedbackRating?.toFixed(1) ?? notAvailableText
+  const durationRules =
+    mentorPackage && mentorPackage.totalSessions > 0
+      ? (() => {
+          const totalTimeSlotsBySession = new Map(mentorPackage.rules.map((rule) => [rule.no, rule.totalTimeSlots]))
+
+          return Array.from({ length: mentorPackage.totalSessions }, (_, index) => {
+            const sessionNo = index + 1
+
+            return {
+              no: sessionNo,
+              totalTimeSlots: totalTimeSlotsBySession.get(sessionNo) ?? 1
+            }
+          })
+        })()
+      : []
 
   if (isLoadingMentorPackage || isLoadingFeedbacks) {
     return <MentorPackageBookSkeleton />
@@ -250,7 +266,7 @@ export default function MentorPackageBookPage() {
 
                 <p className='text-background text-3xl font-bold'>{mentorPackage?.name}</p>
                 <p className='text-sm text-background/90 text-justify'>
-                  {getFirstParagraphTextFromHtml(mentorPackage?.description) || 'No description available.'}
+                  {getFirstParagraphTextFromHtml(mentorPackage?.description) || t('common.ui.noDescriptionAvailable')}
                 </p>
 
                 <div className='flex items-center gap-6'>
@@ -350,7 +366,7 @@ export default function MentorPackageBookPage() {
 
                     <div className='flex flex-col items-center justify-center gap-1'>
                       <LockKeyholeIcon className='text-emerald-600 size-4' />
-                      <p className='text-[10px] text-emerald-600 font-medium'>Secure Payment</p>
+                      <p className='text-[10px] text-emerald-600 font-medium'>{t('checkout.securePayment')}</p>
                     </div>
                   </div>
 
@@ -400,23 +416,40 @@ export default function MentorPackageBookPage() {
                       </Button>
                     </div>
 
-                    {mentorPackage ? (
-                      !isCreator ? (
-                        <BookPackageDialog mentorPackage={mentorPackage}>
-                          <Button className='w-full'>
-                            <CalendarDaysIcon />
-                            {t('packageBooking.bookPackage.proceed')}
-                          </Button>
-                        </BookPackageDialog>
+                    {mentorPackage &&
+                      (mentorPackage.pendingRequest?.id ? (
+                        <div className='space-y-2'>
+                          <p className='flex items-start gap-1.5 font-medium text-xs border border-amber-600 border-dashed text-amber-600 px-3 py-2 bg-amber-50 rounded-sm'>
+                            <AlertTriangleIcon className='size-3.5 shrink-0 mt-0.5' />
+                            {t('mentorPackage.bookPage.pendingRequestNotice')}
+                          </p>
+
+                          <Link to={`/requests/${mentorPackage.pendingRequest.id}`}>
+                            <Button className='w-full' variant='outline'>
+                              <CalendarDaysIcon />
+                              {t('mentorPackage.bookPage.viewPendingRequest')}
+                            </Button>
+                          </Link>
+                        </div>
                       ) : (
-                        <Link to={`/packages/${mentorPackage.id}`}>
-                          <Button className='w-full' size='sm' variant='outline'>
-                            <SettingsIcon />
-                            Manage Package
-                          </Button>
-                        </Link>
-                      )
-                    ) : null}
+                        !isCreator && (
+                          <RequestPackageDialog mentorPackage={mentorPackage}>
+                            <Button className='w-full'>
+                              <CalendarDaysIcon />
+                              {t('packageBooking.bookPackage.proceed')}
+                            </Button>
+                          </RequestPackageDialog>
+                        )
+                      ))}
+
+                    {isCreator && mentorPackage && (
+                      <Link to={`/packages/${mentorPackage.id}`}>
+                        <Button className='w-full' size='sm' variant='outline'>
+                          <SettingsIcon />
+                          {t('mentorPackage.card.managePackage')}
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </Card>
               </div>
@@ -431,11 +464,11 @@ export default function MentorPackageBookPage() {
               {mentorPackage?.description ? (
                 <SanitizedHtml html={mentorPackage.description} className='mt-2 text-justify' />
               ) : (
-                <p className='text-sm text-muted-foreground'>No description available.</p>
+                <p className='text-sm text-muted-foreground'>{t('common.ui.noDescriptionAvailable')}</p>
               )}
             </div>
 
-            {mentorPackage?.rules.length ? (
+            {durationRules.length ? (
               <div className='space-y-2.5'>
                 <div>
                   <p className='text-xl font-bold'>{t('mentorPackage.page.durationTitle')}</p>
@@ -443,21 +476,18 @@ export default function MentorPackageBookPage() {
                 </div>
                 <div className='space-y-2'>
                   <Accordion type='single' collapsible className='w-full space-y-2'>
-                    {mentorPackage.rules
-                      .slice()
-                      .sort((a, b) => a.no - b.no)
-                      .map((rule) => (
-                        <AccordionItem key={rule.id} value={`session-${rule.no}`}>
-                          <AccordionTrigger className='px-2 py-2 hover:no-underline'>
-                            <p className='text-sm font-medium'>
-                              {t('mentorPackageRule.item.session')} {rule.no}
-                            </p>
-                          </AccordionTrigger>
-                          <AccordionContent className='px-2 pb-2'>
-                            <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
+                    {durationRules.map((rule) => (
+                      <AccordionItem key={rule.no} value={`session-${rule.no}`}>
+                        <AccordionTrigger className='px-2 py-2 hover:no-underline'>
+                          <p className='text-sm font-medium'>
+                            {t('mentorPackageRule.item.session')} {rule.no}
+                          </p>
+                        </AccordionTrigger>
+                        <AccordionContent className='px-2 pb-2'>
+                          <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
                   </Accordion>
                 </div>
               </div>

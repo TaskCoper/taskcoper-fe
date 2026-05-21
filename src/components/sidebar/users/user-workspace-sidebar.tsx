@@ -15,13 +15,14 @@ import {
 } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
 import { NavMain } from './nav-main'
 
 type NavItem = {
   titleKey: string
   url: string
   icon: LucideIcon
+  activePatterns?: string[]
+  activeExcludePatterns?: string[]
 }
 
 type NavItemConfig = NavItem & {
@@ -47,17 +48,25 @@ const NAV_CONFIG: NavItemConfig[] = [
   {
     titleKey: 'project.sidebar.myProjects',
     url: '/projects',
-    icon: FolderOpenIcon
+    icon: FolderOpenIcon,
+    activePatterns: ['/projects', '/projects/:identifier/*']
   },
   {
     titleKey: 'project.sidebar.myCalendar',
     url: '/calendar',
-    icon: CalendarDaysIcon
+    icon: CalendarDaysIcon,
+    activePatterns: ['/calendar', '/calendar/*']
   },
   {
     titleKey: 'purchaseHistory.title',
     url: '/purchases',
-    icon: ShoppingBagIcon
+    icon: ShoppingBagIcon,
+    activePatterns: [
+      '/purchases',
+      '/purchases/:packageId',
+      '/purchases/:packageId/meetings/:meetingId',
+      '/requests/:requestId'
+    ]
   },
   {
     titleKey: 'voucher.sidebar.vouchers',
@@ -95,13 +104,17 @@ const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
         url: '/packages',
         activePatterns: ['/packages', '/packages/:packageId'],
         activeExcludePatterns: ['/packages/dashboard']
+      },
+      {
+        titleKey: 'mentorPackage.sidebar.requests',
+        url: '/requests',
+        activePatterns: ['/requests']
       }
     ]
   }
 ]
 
 export function UserWorkspaceSidebar({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
-  const location = useLocation()
   const { me: user } = useGetMe()
   const { t } = useTranslation()
 
@@ -127,18 +140,12 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
       }).map((item) => ({
         name: t(item.titleKey),
         url: item.url,
-        icon: item.icon
+        icon: item.icon,
+        activePatterns: item.activePatterns,
+        activeExcludePatterns: item.activeExcludePatterns
       }))
     }
   }, [t, user?.role])
-
-  const activeSegment = React.useMemo(() => {
-    const quickActionItems = data.quickActions
-    const sortedNav = [...quickActionItems].sort((a, b) => b.url.length - a.url.length)
-    const activeItem = sortedNav.find((item) => location.pathname.startsWith(item.url))
-
-    return activeItem?.url
-  }, [location.pathname, data.quickActions])
 
   const sidebarClassName = cn('top-14 h-[calc(100svh-3.5rem)]', className)
 
@@ -148,7 +155,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader> */}
       <SidebarContent className='gap-1'>
-        <NavQuickActions items={data.quickActions} activeSegment={activeSegment} />
+        <NavQuickActions items={data.quickActions} />
         <NavMain items={data.navMain} />
         <div className='mt-auto px-2.5 pb-2'>
           <SidebarTrigger />

@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/utils'
 import { CheckIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import type { ParentMilestone } from '../../core/types'
 
@@ -19,6 +20,7 @@ interface ParentMilestonesMenuProps {
 }
 
 export default function ParentMilestonesMenu({ children, open, onOpenChange, items }: ParentMilestonesMenuProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { identifier, milestoneIdentifier } = useParams<{ identifier: string; milestoneIdentifier: string }>()
 
@@ -37,7 +39,7 @@ export default function ParentMilestonesMenu({ children, open, onOpenChange, ite
     <DropdownMenu modal open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent className='w-64' side='bottom' align='start' sideOffset={8}>
-        <DropdownMenuLabel>Tabs</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('project.milestones.tabs')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {items.map((item) => {
           const isSelected = item.slug === milestoneIdentifier
