@@ -63,6 +63,16 @@ const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React
   return <>{children}</>
 }
 
+const ComingSoonView = ({ titleKey }: { titleKey: string }) => {
+  const { t } = useTranslation()
+
+  return (
+    <div className='w-full h-full flex justify-center items-center'>
+      <p className='text-2xl font-bold'>{t(titleKey)}</p>
+    </div>
+  )
+}
+
 export const userRoutes: RouteObject[] = [
   {
     element: <AuthGuardLayout requiresAuth={true} />,
@@ -154,9 +164,7 @@ export const userRoutes: RouteObject[] = [
                   {
                     element: (
                       <PageWrapper titleKey='pageTitle.calendar'>
-                        <div className='w-full h-full flex justify-center items-center'>
-                          <p className='text-2xl font-bold'>Calendar Comming Soon</p>
-                        </div>
+                        <ComingSoonView titleKey='pageTitle.calendarComingSoon' />
                       </PageWrapper>
                     )
                   },

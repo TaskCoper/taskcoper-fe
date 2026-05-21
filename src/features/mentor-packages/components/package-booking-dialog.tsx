@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import PackageFeedbackCard from '@/features/feedbacks/components/package-feedback-card'
 import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
@@ -38,6 +39,30 @@ const formatRange = (startISO: string, endISO: string) => {
 
   const endDatePart = format(end, 'd MMM yyyy')
   return `${datePart}, ${startTime} → ${endDatePart}, ${endTime} (${gmt})`
+}
+
+function FeedbackLoadingState() {
+  return (
+    <div className='space-y-4'>
+      {Array.from({ length: 2 }).map((_, index) => (
+        <div key={index} className='rounded-md border p-4 shadow-xs'>
+          <div className='flex items-center gap-3'>
+            <Skeleton className='size-10 rounded-full' />
+            <div className='space-y-2'>
+              <Skeleton className='h-3 w-32 rounded-md' />
+              <Skeleton className='h-3 w-20 rounded-md' />
+            </div>
+          </div>
+
+          <div className='mt-4 space-y-2'>
+            <Skeleton className='h-3 w-full rounded-md' />
+            <Skeleton className='h-3 w-11/12 rounded-md' />
+            <Skeleton className='h-3 w-9/12 rounded-md' />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default function PackageBookingDialog({ open, onOpenChange, booking }: PackageBookingDialogProps) {
@@ -94,9 +119,7 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                   ))}
                 </div>
               ) : isLoadingFeedbacks ? (
-                <div className='flex flex-col items-center justify-center gap-2 rounded-md bg-muted p-8'>
-                  <p className='text-xs text-muted-foreground'>{t('common.ui.loading')}</p>
-                </div>
+                <FeedbackLoadingState />
               ) : (
                 <div className='flex flex-col items-center justify-center gap-2 rounded-md bg-muted p-8'>
                   <BoxIcon className='size-6 text-muted-foreground' />

@@ -111,7 +111,7 @@ export const getColumns = (
         variant: 'radio',
         options: Object.values(PackageBookingStatus).map((status) => ({
           value: status,
-          label: PackageBookingStatusLabel[status]
+          label: i18next.t(PackageBookingStatusLabel[status])
         }))
       },
       header: ({ column }) => (
@@ -129,7 +129,7 @@ export const getColumns = (
               className={`flex items-center gap-1.5 px-2 py-0.5 font-medium rounded-md ${config.className}`}
             >
               <Icon className='size-3.5' />
-              {PackageBookingStatusLabel[status]}
+              {i18next.t(PackageBookingStatusLabel[status])}
             </Badge>
           </div>
         )

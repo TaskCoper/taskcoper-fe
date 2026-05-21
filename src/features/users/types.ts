@@ -10,10 +10,10 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 export const RoleLabel: Record<Role, string> = {
-  [Role.User]: 'User',
-  [Role.Mentor]: 'Mentor',
-  [Role.Lecturer]: 'Lecturer',
-  [Role.Admin]: 'Admin'
+  [Role.User]: 'user.role.user',
+  [Role.Mentor]: 'user.role.mentor',
+  [Role.Lecturer]: 'user.role.lecturer',
+  [Role.Admin]: 'user.role.admin'
 } as const
 
 export type RoleLabel = (typeof RoleLabel)[keyof typeof RoleLabel]

@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
         <div className='hidden lg:block lg:col-span-7 h-full'>
           <img
             src='/images/auth-bg.jpg'
-            alt='Verification background'
+            alt={t('common.alt.verificationBackground')}
             className='w-full h-full object-cover rounded-lg'
           />
         </div>

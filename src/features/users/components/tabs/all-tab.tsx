@@ -55,7 +55,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
           <div className='space-y-2'>
             <div className='flex items-center gap-2'>
               <GraduationCapIcon className='size-5 text-primary' />
-              <p className='font-medium'>Domain</p>
+              <p className='font-medium'>{t('common.ui.domain')}</p>
             </div>
             <div className='flex items-center flex-wrap gap-1'>
               {userDetail?.domains.map((domain) => (
@@ -139,7 +139,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
                               {getFirstParagraphTextFromHtml(pkg.description)}
                             </p>
                           ) : (
-                            <p className='text-xs text-muted-foreground'>No description available.</p>
+                            <p className='text-xs text-muted-foreground'>{t('common.ui.noDescriptionAvailable')}</p>
                           )}
                         </div>
                       </div>

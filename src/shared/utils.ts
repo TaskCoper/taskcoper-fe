@@ -113,7 +113,7 @@ export const calculateReorderPosition = (items: { position: number }[], newIndex
   }
 
   if ((prevItem && newPosition === prevItem.position) || (nextItem && newPosition === nextItem.position)) {
-    alert('Need to rebalance positions.')
+    alert(i18next.t('common.error.rebalancePositions'))
     return prevItem.position + 0.0000000001
   }
 

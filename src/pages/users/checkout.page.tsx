@@ -142,7 +142,7 @@ export default function CheckoutPage() {
                 ) : (
                   <img
                     src={transaction.qrCodePaymentUrl}
-                    alt='Payment QR'
+                    alt={t('common.alt.paymentQr')}
                     className='w-full object-contain mix-blend-multiply'
                     onError={() => setQrBroken(true)}
                   />
