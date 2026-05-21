@@ -141,7 +141,8 @@
       "status": "Trạng thái",
       "moreLabel": "Thêm",
       "noDescriptionAvailable": "Không có mô tả.",
-      "timeFormatPlaceholder": "HH:mm"
+      "timeFormatPlaceholder": "HH:mm",
+      "none": "Không có"
     },
     "status": {
       "all": "Tất cả",
@@ -169,7 +170,8 @@
       "cancelText": "Hủy"
     },
     "error": {
-      "rebalancePositions": "Cần cân bằng lại vị trí."
+      "rebalancePositions": "Cần cân bằng lại vị trí.",
+      "uploadNoUrlReturned": "Tải tệp lên không trả về URL"
     },
     "sortable": {
       "dragStart": "Đã chọn mục sắp xếp \"{{item}}\". Vị trí hiện tại là {{position}} trên {{total}}. Dùng phím mũi tên để di chuyển, phím cách để thả.",
@@ -188,6 +190,16 @@
       },
       "instructions": {
         "draggable": "Để nhấc một mục sắp xếp, nhấn phím cách hoặc enter. Khi đang kéo, dùng phím {{direction}} để di chuyển mục. Nhấn phím cách hoặc enter lần nữa để thả mục vào vị trí mới, hoặc nhấn escape để hủy."
+      }
+    },
+    "unit": {
+      "fileSize": {
+        "zeroBytes": "0 Bytes",
+        "bytes": "Bytes",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB",
+        "tb": "TB"
       }
     }
   },
@@ -420,7 +432,9 @@
       "isActive": "Trạng thái",
       "isActiveDescription": "Cho biết voucher này có thể được sử dụng hay không.",
       "startsAt": "Bắt đầu lúc",
-      "endsAt": "Kết thúc lúc"
+      "endsAt": "Kết thúc lúc",
+      "startsAtPlaceholder": "Chọn ngày bắt đầu",
+      "endsAtPlaceholder": "Chọn ngày kết thúc"
     },
     "discountType": {
       "percent": "Phần trăm",
@@ -526,6 +540,20 @@
       "commissions": {
         "title": "Hoa hồng",
         "config": "Cấu hình"
+      }
+    },
+    "teams": {
+      "acmeInc": {
+        "name": "Acme Inc",
+        "plan": "Doanh nghiệp"
+      },
+      "acmeCorp": {
+        "name": "Acme Corp.",
+        "plan": "Khởi nghiệp"
+      },
+      "evilCorp": {
+        "name": "Evil Corp.",
+        "plan": "Miễn phí"
       }
     }
   },
@@ -699,7 +727,8 @@
         "noPhoneNumber": "Chưa có số điện thoại",
         "positionTitles": "Chức danh",
         "noPositionTitles": "Không có chức danh",
-        "role": "Vai trò"
+        "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò"
       },
       "positionTitle": {
         "title": "Chức danh",
@@ -778,7 +807,8 @@
           "description": "Bật hạn chế thời gian để đặt ngày hết hạn cho lời mời"
         },
         "expirationDate": {
-          "label": "Ngày hết hạn"
+          "label": "Ngày hết hạn",
+          "placeholder": "Chọn ngày hết hạn"
         }
       }
     },
@@ -822,6 +852,12 @@
           "label": "Lĩnh vực",
           "placeholder": "Chọn lĩnh vực",
           "searchPlaceholder": "Tìm kiếm lĩnh vực..."
+        },
+        "startDate": {
+          "placeholder": "Chọn ngày bắt đầu"
+        },
+        "endDate": {
+          "placeholder": "Chọn ngày kết thúc"
         }
       },
       "validation": {
@@ -907,6 +943,14 @@
         "note": {
           "maxLength": "Tối đa 255 ký tự"
         }
+      },
+      "title": {
+        "cashIn": "Thêm giao dịch <highlight>khoản thu</highlight>",
+        "cashOut": "Thêm giao dịch <highlight>khoản chi</highlight>"
+      },
+      "description": {
+        "cashIn": "Ghi nhận khoản tiền vào cho dự án này.",
+        "cashOut": "Ghi nhận khoản tiền ra cho dự án này."
       }
     },
     "updateProjectRevenue": {
@@ -1226,7 +1270,15 @@
       "notSetDate": "N/T/NNNN",
       "reminderSetting": "Thiết lập Nhắc nhở",
       "selectReminderTime": "Chọn thời gian nhắc nhở",
-      "reminderDescription": "Nhắc nhở sẽ được gửi đến tất cả các thành viên và người theo dõi thẻ này."
+      "reminderDescription": "Nhắc nhở sẽ được gửi đến tất cả các thành viên và người theo dõi thẻ này.",
+      "expiredDate": "Đúng hạn",
+      "fiveMinutesBefore": "Trước 5 phút",
+      "tenMinutesBefore": "Trước 10 phút",
+      "fifteenMinutesBefore": "Trước 15 phút",
+      "oneHourBefore": "Trước 1 giờ",
+      "twoHoursBefore": "Trước 2 giờ",
+      "oneDayBefore": "Trước 1 ngày",
+      "twoDaysBefore": "Trước 2 ngày"
     },
     "label": {
       "createLabel": "Tạo nhãn mới",
@@ -1467,7 +1519,8 @@
       },
       "maximumFiles": "Tối đa {{count}} tệp, mỗi tệp {{sizeMb}}MB.",
       "uploadingFiles": "Đang tải lên {{count}} tệp"
-    }
+    },
+    "placeholder": "Nhập nội dung..."
   },
   "language": {
     "english": "Tiếng Anh",
@@ -1502,10 +1555,14 @@
           "label": "Lĩnh vực"
         },
         "province": {
-          "label": "Tỉnh/Thành phố"
+          "label": "Tỉnh/Thành phố",
+          "placeholder": "Chọn tỉnh/thành phố",
+          "searchPlaceholder": "Tìm tỉnh/thành phố..."
         },
         "ward": {
-          "label": "Phường/Xã"
+          "label": "Phường/Xã",
+          "placeholder": "Chọn phường/xã",
+          "searchPlaceholder": "Tìm phường/xã..."
         }
       }
     },
@@ -1578,7 +1635,10 @@
       "description": "Chọn múi giờ được sử dụng cho lịch và các cuộc họp của bạn.",
       "field": {
         "timeZone": {
-          "label": "Múi giờ"
+          "label": "Múi giờ",
+          "placeholder": "Chọn múi giờ",
+          "searchPlaceholder": "Tìm múi giờ...",
+          "emptyMessage": "Không tìm thấy múi giờ."
         }
       }
     },
@@ -1693,7 +1753,8 @@
     "serverError": "Trang này không hoạt động",
     "serverErrorDescription": "Chúng tôi xin lỗi và đang khắc phục sự cố. Vui lòng thử lại sau.",
     "maintenance": "Hệ thống đang bảo trì",
-    "maintenanceDescription": "Chúng tôi sẽ quay lại ngay!"
+    "maintenanceDescription": "Chúng tôi sẽ quay lại ngay!",
+    "oops": "Oops!"
   },
   "milestone": {
     "addParentMilestone": {
@@ -2171,7 +2232,8 @@
       "legendTwentyToTwentyNine": "20-29 hoạt động",
       "legendThirtyPlus": "30+ hoạt động",
       "less": "Ít",
-      "more": "Nhiều"
+      "more": "Nhiều",
+      "tooltipDefault": "{{count}} hoạt động vào {{date}}"
     },
     "popover": {
       "actionDescription": "Chọn ngày và chế độ xem.",
@@ -2180,7 +2242,8 @@
       "year": "Năm",
       "selectYear": "Chọn năm",
       "from": "Từ",
-      "to": "Đến"
+      "to": "Đến",
+      "selectDate": "Chọn ngày"
     },
     "taskStatistics": "Thống kê công việc",
     "noTaskStatistics": "Không có thống kê công việc cho khoảng thời gian này.",
@@ -2189,7 +2252,8 @@
     "topContributorsPercentage": "Top đóng góp (%)",
     "topContributorsPercentageTooltip": "Phần trăm",
     "topOnTimeCompleters": "Top hoàn thành đúng hạn",
-    "topOnTimeCompletersTooltip": "Số lượng"
+    "topOnTimeCompletersTooltip": "Số lượng",
+    "contributions": "Tổng cộng {{count}} hoạt động trong năm {{year}}"
   },
   "mimeTypes": {
     "unknownFile": "Tệp không xác định",
@@ -2298,7 +2362,8 @@
       "activationDeadlineDays": "Hạn đặt lịch đầu tiên (ngày)",
       "activationDeadlineDaysPlaceholder": "VD: 10",
       "usageDeadlineDays": "Thời hạn sử dụng (ngày)",
-      "usageDeadlineDaysPlaceholder": "VD: 30"
+      "usageDeadlineDaysPlaceholder": "VD: 30",
+      "descriptionPlaceholder": "Nhập mô tả gói"
     },
     "list": {
       "newPackage": "Gói mới",
@@ -2326,7 +2391,9 @@
     },
     "validation": {
       "nameRequired": "Yêu cầu nhập tên",
-      "descriptionMax": "Tối đa 255 ký tự"
+      "descriptionMax": "Tối đa 255 ký tự",
+      "sessionsPositive": "Số buổi phải lớn hơn 0",
+      "pricePositive": "Giá phải lớn hơn 0"
     },
     "dialog": {
       "title": "Thông tin gói",
@@ -2394,7 +2461,8 @@
     "requestPackage": {
       "title": "Gửi yêu cầu gói",
       "proceed": "Gửi yêu cầu",
-      "problemStatement": "Mô tả vấn đề"
+      "problemStatement": "Mô tả vấn đề",
+      "problemStatementPlaceholder": "Mô tả vấn đề bạn cần được tư vấn"
     },
     "requestInfo": {
       "reviewedOn": "Đã duyệt {{date}}",
@@ -2668,25 +2736,56 @@
     "questions": {
       "punctuality": {
         "title": "Chuyên gia có đúng giờ và quản lý thời gian hiệu quả không?",
-        "label": "Đúng giờ"
+        "label": "Đúng giờ",
+        "options": {
+          "1": "Không đồng ý",
+          "2": "Trung lập",
+          "3": "Đồng ý",
+          "4": "Rất đồng ý"
+        }
       },
       "preparation": {
         "title": "Chuyên gia có nghiên cứu trước về dự án của bạn không?",
-        "label": "Chuẩn bị"
+        "label": "Chuẩn bị",
+        "options": {
+          "1": "Không đồng ý",
+          "2": "Trung lập",
+          "3": "Đồng ý",
+          "4": "Rất đồng ý"
+        }
       },
       "quality": {
         "title": "Lời khuyên của chuyên gia có mang lại giá trị thực tế không?",
-        "label": "Chất lượng"
+        "label": "Chất lượng",
+        "options": {
+          "1": "Không đồng ý",
+          "2": "Trung lập",
+          "3": "Đồng ý",
+          "4": "Rất đồng ý"
+        }
       },
       "communication": {
         "title": "Chuyên gia có thái độ cởi mở và biết lắng nghe không?",
-        "label": "Giao tiếp"
+        "label": "Giao tiếp",
+        "options": {
+          "1": "Không đồng ý",
+          "2": "Trung lập",
+          "3": "Đồng ý",
+          "4": "Rất đồng ý"
+        }
       },
       "actionability": {
         "title": "Bạn có biết mình cần làm gì tiếp theo sau buổi gặp không?",
-        "label": "Tính ứng dụng"
+        "label": "Tính ứng dụng",
+        "options": {
+          "1": "Không đồng ý",
+          "2": "Trung lập",
+          "3": "Đồng ý",
+          "4": "Rất đồng ý"
+        }
       }
-    }
+    },
+    "notePlaceholder": "Chia sẻ thêm chi tiết về trải nghiệm của bạn"
   },
   "admin": {
     "layout": {
@@ -2707,5 +2806,36 @@
   "commandDialog": {
     "title": "Bảng lệnh",
     "description": "Tìm kiếm lệnh để thực thi..."
+  },
+  "comboboxField": {
+    "placeholder": "Chọn một mục",
+    "searchPlaceholder": "Tìm kiếm...",
+    "emptyMessage": "Không tìm thấy mục nào."
+  },
+  "comboboxMultiField": {
+    "placeholder": "Chọn các mục",
+    "searchPlaceholder": "Tìm kiếm...",
+    "emptyMessage": "Không tìm thấy mục nào."
+  },
+  "datePickerField": {
+    "placeholder": "Chọn ngày"
+  },
+  "activities": {
+    "FileAddedToTaskActivity": "đã thêm tệp đính kèm vào thẻ",
+    "FileAddedToTaskCommentActivity": "đã thêm tệp đính kèm trong bình luận",
+    "FileUpdatedInTaskActivity": "đã cập nhật tệp đính kèm trong thẻ",
+    "FileRemovedInTaskActivity": "đã xóa tệp đính kèm khỏi thẻ",
+    "TaskUpdatedActivity": "đã cập nhật thẻ này",
+    "TaskCreatedActivity": "đã tạo thẻ này",
+    "TaskMovedInTaskActivity": "đã di chuyển thẻ này",
+    "TaskMarkedInTaskActivity": "đã đánh dấu thẻ này là hoàn thành",
+    "TaskUnMarkedInTaskActivity": "đã bỏ đánh dấu hoàn thành thẻ này",
+    "UserAddedToTaskActivity": "đã thêm thành viên vào thẻ này",
+    "UserRemovedInTaskActivity": "đã xóa thành viên khỏi thẻ này",
+    "SubTaskAddedToTaskActivity": "đã thêm công việc con",
+    "SubtaskUpdatedInTaskActivity": "đã cập nhật công việc con",
+    "SubtaskDeletedInTaskActivity": "đã xóa công việc con",
+    "LabelAddedToTaskActivity": "đã thêm nhãn cho thẻ này",
+    "LabelDeletedToTaskActivity": "đã gỡ nhãn khỏi thẻ này"
   }
 }

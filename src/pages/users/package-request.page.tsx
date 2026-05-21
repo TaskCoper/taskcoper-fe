@@ -103,7 +103,7 @@ export default function PackageRequestPage() {
   const { t } = useTranslation()
   const { confirm } = useConfirmStore()
   const { outgoingRequest, isOutgoingRequestLoading } = useGetOutgoingRequest({ requestId })
-  const { cancelRequest, isCancellingRequest } = useCancelRequest()
+  const { cancelRequest, isCancellingRequest } = useCancelRequest({ packageId: outgoingRequest?.mentorPackageId })
 
   const handleCancelRequest = async () => {
     if (!outgoingRequest?.id) return

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import packageBookingService from '../services'
 
-export const useCancelRequest = () => {
+export const useCancelRequest = ({ packageId }: { packageId?: string }) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -23,6 +23,12 @@ export const useCancelRequest = () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.mentorPackages.requests.detailOutgoing(variables.requestId)
       })
+
+      if (packageId) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.mentorPackages.detail(packageId)
+        })
+      }
     }
   })
 

@@ -141,7 +141,8 @@
       "status": "Status",
       "moreLabel": "More",
       "noDescriptionAvailable": "No description available.",
-      "timeFormatPlaceholder": "HH:mm"
+      "timeFormatPlaceholder": "HH:mm",
+      "none": "None"
     },
     "status": {
       "all": "All",
@@ -169,7 +170,8 @@
       "cancelText": "Cancel"
     },
     "error": {
-      "rebalancePositions": "Need to rebalance positions."
+      "rebalancePositions": "Need to rebalance positions.",
+      "uploadNoUrlReturned": "Upload did not return a URL"
     },
     "sortable": {
       "dragStart": "Grabbed sortable item \"{{item}}\". Current position is {{position}} of {{total}}. Use arrow keys to move, space to drop.",
@@ -188,6 +190,16 @@
       },
       "instructions": {
         "draggable": "To pick up a sortable item, press space or enter. While dragging, use the {{direction}} keys to move the item. Press space or enter again to drop the item in its new position, or press escape to cancel."
+      }
+    },
+    "unit": {
+      "fileSize": {
+        "zeroBytes": "0 Bytes",
+        "bytes": "Bytes",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB",
+        "tb": "TB"
       }
     }
   },
@@ -420,7 +432,9 @@
       "isActive": "Status",
       "isActiveDescription": "Indicates if this voucher can be used.",
       "startsAt": "Starts at",
-      "endsAt": "Ends at"
+      "endsAt": "Ends at",
+      "startsAtPlaceholder": "Select start date",
+      "endsAtPlaceholder": "Select end date"
     },
     "discountType": {
       "percent": "Percent",
@@ -526,6 +540,20 @@
       "commissions": {
         "title": "Commissions",
         "config": "Configuration"
+      }
+    },
+    "teams": {
+      "acmeInc": {
+        "name": "Acme Inc",
+        "plan": "Enterprise"
+      },
+      "acmeCorp": {
+        "name": "Acme Corp.",
+        "plan": "Startup"
+      },
+      "evilCorp": {
+        "name": "Evil Corp.",
+        "plan": "Free"
       }
     }
   },
@@ -699,7 +727,8 @@
         "noPhoneNumber": "No phone number",
         "positionTitles": "Position titles",
         "noPositionTitles": "No position titles",
-        "role": "Role"
+        "role": "Role",
+        "rolePlaceholder": "Select roles"
       },
       "positionTitle": {
         "title": "Position titles",
@@ -778,7 +807,8 @@
           "description": "Enable expiration to set a date for the invite to expire"
         },
         "expirationDate": {
-          "label": "Expiration date"
+          "label": "Expiration date",
+          "placeholder": "Select expiration date"
         }
       }
     },
@@ -822,6 +852,12 @@
           "label": "Domain",
           "placeholder": "Select a domain",
           "searchPlaceholder": "Search domain..."
+        },
+        "startDate": {
+          "placeholder": "Select start date"
+        },
+        "endDate": {
+          "placeholder": "Select end date"
         }
       },
       "validation": {
@@ -907,6 +943,14 @@
         "note": {
           "maxLength": "Max 255 characters"
         }
+      },
+      "title": {
+        "cashIn": "Add <highlight>income</highlight> transaction",
+        "cashOut": "Add <highlight>expense</highlight> transaction"
+      },
+      "description": {
+        "cashIn": "Record incoming money for this project.",
+        "cashOut": "Record outgoing money for this project."
       }
     },
     "updateProjectRevenue": {
@@ -1226,7 +1270,15 @@
       "notSetDate": "DD/MM/YYYY",
       "reminderSetting": "Reminder Setting",
       "selectReminderTime": "Select reminder time",
-      "reminderDescription": "Reminder will be sent to all members and followers of this card."
+      "reminderDescription": "Reminder will be sent to all members and followers of this card.",
+      "expiredDate": "At due date",
+      "fiveMinutesBefore": "5 minutes before",
+      "tenMinutesBefore": "10 minutes before",
+      "fifteenMinutesBefore": "15 minutes before",
+      "oneHourBefore": "1 hour before",
+      "twoHoursBefore": "2 hours before",
+      "oneDayBefore": "1 day before",
+      "twoDaysBefore": "2 days before"
     },
     "label": {
       "createLabel": "Create new label",
@@ -1467,7 +1519,8 @@
       },
       "maximumFiles": "Maximum {{count}} files, {{sizeMb}}MB each.",
       "uploadingFiles": "Uploading {{count}} files"
-    }
+    },
+    "placeholder": "Write something..."
   },
   "language": {
     "english": "English",
@@ -1502,10 +1555,14 @@
           "label": "Domains"
         },
         "province": {
-          "label": "Province"
+          "label": "Province",
+          "placeholder": "Select province",
+          "searchPlaceholder": "Search province..."
         },
         "ward": {
-          "label": "Ward"
+          "label": "Ward",
+          "placeholder": "Select ward",
+          "searchPlaceholder": "Search ward..."
         }
       }
     },
@@ -1578,7 +1635,10 @@
       "description": "Select the time zone used for your schedule and meetings.",
       "field": {
         "timeZone": {
-          "label": "Time zone"
+          "label": "Time zone",
+          "placeholder": "Select time zone",
+          "searchPlaceholder": "Search time zones...",
+          "emptyMessage": "No time zones found."
         }
       }
     },
@@ -1693,7 +1753,8 @@
     "serverError": "This page isn't working",
     "serverErrorDescription": "We apologise and are fixing the problem. Please try again later.",
     "maintenance": "System is down for Maintenance",
-    "maintenanceDescription": "We promise, we'll be right back!"
+    "maintenanceDescription": "We promise, we'll be right back!",
+    "oops": "Oops!"
   },
   "milestone": {
     "addParentMilestone": {
@@ -2171,7 +2232,8 @@
       "legendTwentyToTwentyNine": "20-29 activities",
       "legendThirtyPlus": "30+ activities",
       "less": "Less",
-      "more": "More"
+      "more": "More",
+      "tooltipDefault": "{{count}} activities on {{date}}"
     },
     "popover": {
       "actionDescription": "Choose date and view mode.",
@@ -2180,7 +2242,8 @@
       "year": "Year",
       "selectYear": "Select year",
       "from": "From",
-      "to": "To"
+      "to": "To",
+      "selectDate": "Select date"
     },
     "taskStatistics": "Task statistics",
     "noTaskStatistics": "No task statistics for this range.",
@@ -2189,7 +2252,8 @@
     "topContributorsPercentage": "Top Contributors (%)",
     "topContributorsPercentageTooltip": "Percentage",
     "topOnTimeCompleters": "Top On-Time Completers",
-    "topOnTimeCompletersTooltip": "Tasks"
+    "topOnTimeCompletersTooltip": "Tasks",
+    "contributions": "{{count}} total activities in {{year}}"
   },
   "mimeTypes": {
     "unknownFile": "Unknown File",
@@ -2298,7 +2362,8 @@
       "activationDeadlineDays": "First Booking Deadline (days)",
       "activationDeadlineDaysPlaceholder": "e.g. 10",
       "usageDeadlineDays": "Usage Period (days)",
-      "usageDeadlineDaysPlaceholder": "e.g. 30"
+      "usageDeadlineDaysPlaceholder": "e.g. 30",
+      "descriptionPlaceholder": "Enter package description"
     },
     "list": {
       "newPackage": "New package",
@@ -2326,7 +2391,9 @@
     },
     "validation": {
       "nameRequired": "Name required",
-      "descriptionMax": "Max 255 chars"
+      "descriptionMax": "Max 255 chars",
+      "sessionsPositive": "Total sessions must be greater than 0",
+      "pricePositive": "Price must be greater than 0"
     },
     "dialog": {
       "title": "Package information",
@@ -2394,7 +2461,8 @@
     "requestPackage": {
       "title": "Request package",
       "proceed": "Send request",
-      "problemStatement": "Problem statement"
+      "problemStatement": "Problem statement",
+      "problemStatementPlaceholder": "Describe your problem statement"
     },
     "requestInfo": {
       "reviewedOn": "Reviewed {{date}}",
@@ -2668,25 +2736,56 @@
     "questions": {
       "punctuality": {
         "title": "Did the mentor show up on time and manage the schedule effectively?",
-        "label": "Punctuality"
+        "label": "Punctuality",
+        "options": {
+          "1": "Disagree",
+          "2": "Neutral",
+          "3": "Agree",
+          "4": "Strongly agree"
+        }
       },
       "preparation": {
         "title": "Did the mentor review your project details before the meeting?",
-        "label": "Preparation"
+        "label": "Preparation",
+        "options": {
+          "1": "Disagree",
+          "2": "Neutral",
+          "3": "Agree",
+          "4": "Strongly agree"
+        }
       },
       "quality": {
         "title": "Was the feedback valuable for your current stage?",
-        "label": "Quality"
+        "label": "Quality",
+        "options": {
+          "1": "Disagree",
+          "2": "Neutral",
+          "3": "Agree",
+          "4": "Strongly agree"
+        }
       },
       "communication": {
         "title": "Was the mentor actively listening and engaging?",
-        "label": "Communication"
+        "label": "Communication",
+        "options": {
+          "1": "Disagree",
+          "2": "Neutral",
+          "3": "Agree",
+          "4": "Strongly agree"
+        }
       },
       "actionability": {
         "title": "Did you walk away knowing exactly what to do next?",
-        "label": "Actionability"
+        "label": "Actionability",
+        "options": {
+          "1": "Disagree",
+          "2": "Neutral",
+          "3": "Agree",
+          "4": "Strongly agree"
+        }
       }
-    }
+    },
+    "notePlaceholder": "Share more details about your experience"
   },
   "admin": {
     "layout": {
@@ -2707,5 +2806,36 @@
   "commandDialog": {
     "title": "Command Palette",
     "description": "Search for a command to run..."
+  },
+  "comboboxField": {
+    "placeholder": "Select option",
+    "searchPlaceholder": "Search options...",
+    "emptyMessage": "No options found."
+  },
+  "comboboxMultiField": {
+    "placeholder": "Select options",
+    "searchPlaceholder": "Search options...",
+    "emptyMessage": "No options found."
+  },
+  "datePickerField": {
+    "placeholder": "Pick a date"
+  },
+  "activities": {
+    "FileAddedToTaskActivity": "added an attachment to this task",
+    "FileAddedToTaskCommentActivity": "added an attachment in a task comment",
+    "FileUpdatedInTaskActivity": "updated an attachment in this task",
+    "FileRemovedInTaskActivity": "removed an attachment from this task",
+    "TaskUpdatedActivity": "updated this task",
+    "TaskCreatedActivity": "created this task",
+    "TaskMovedInTaskActivity": "moved this task",
+    "TaskMarkedInTaskActivity": "marked this task as completed",
+    "TaskUnMarkedInTaskActivity": "marked this task as not completed",
+    "UserAddedToTaskActivity": "added a member to this task",
+    "UserRemovedInTaskActivity": "removed a member from this task",
+    "SubTaskAddedToTaskActivity": "added a subtask",
+    "SubtaskUpdatedInTaskActivity": "updated a subtask",
+    "SubtaskDeletedInTaskActivity": "deleted a subtask",
+    "LabelAddedToTaskActivity": "added a label to this task",
+    "LabelDeletedToTaskActivity": "removed a label from this task"
   }
 }
