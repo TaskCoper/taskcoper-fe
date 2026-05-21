@@ -373,7 +373,7 @@ export const queryKeys = {
     detail: (packageId?: string) => [...queryKeys.mentorPackages.details(), packageId] as const,
 
     requests: {
-      all: () => ['requests'] as const,
+      all: () => [...queryKeys.mentorPackages.all, 'requests'] as const,
       allMyIncoming: () => [...queryKeys.mentorPackages.requests.all(), 'my', 'incoming'] as const,
       myIncoming: ({ mentorPackageId, status, pageIndex, pageSize, searchTerm }: GetMyIncomingRequestsParams) =>
         [
@@ -386,15 +386,7 @@ export const queryKeys = {
         ] as const,
       allMyOutgoing: () => [...queryKeys.mentorPackages.requests.all(), 'my', 'outgoing'] as const,
       myOutgoing: ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutcomingRequestsParams) =>
-        [
-          ...queryKeys.mentorPackages.requests.allMyOutgoing(),
-          'my',
-          'outgoing',
-          mentorPackageId,
-          status,
-          pageIndex,
-          pageSize
-        ] as const,
+        [...queryKeys.mentorPackages.requests.allMyOutgoing(), mentorPackageId, status, pageIndex, pageSize] as const,
       details: () => [...queryKeys.mentorPackages.requests.all(), 'detail'] as const,
       detailIncoming: (requestId?: string) =>
         [...queryKeys.mentorPackages.requests.details(), 'incoming', requestId] as const,

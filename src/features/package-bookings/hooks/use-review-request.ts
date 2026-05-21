@@ -27,7 +27,9 @@ export const useReviewRequest = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.requests.allMyIncoming() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.requests.detail(variables.body.requestId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.mentorPackages.requests.detailIncoming(variables.body.requestId)
+      })
     }
   })
 

@@ -10,7 +10,7 @@ import { PACKAGE_REQUEST_STATUS_THEME } from '@/features/package-bookings/consta
 import {
   PackageRequestStatus,
   PackageRequestStatusLabel,
-  type PackageRequestDetail
+  type PackageIncomingRequestDetail
 } from '@/features/package-bookings/types'
 import { formatDate, getAvatarFallback, getPlainTextFromHtml } from '@/shared/utils'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -44,7 +44,7 @@ function LoadingState() {
 }
 
 interface IncomingRequestDialogContentProps {
-  request: PackageRequestDetail
+  request: PackageIncomingRequestDetail
   noteValue: string
   isReviewingRequest: boolean
   onApprove: () => void

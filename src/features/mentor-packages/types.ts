@@ -6,7 +6,7 @@ export interface MentorPackage {
   id: string
   mentorId: string
   name: string
-  description: string | null
+  description: string
   durationInMinutes: number
   totalSessions: number
   price: number
