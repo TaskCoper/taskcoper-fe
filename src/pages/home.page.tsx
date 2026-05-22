@@ -69,7 +69,12 @@ const stats = [
 ]
 
 export default function HomePage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const sprintProgress = 75
+  const sprintProgressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
+    style: 'percent',
+    maximumFractionDigits: 0
+  }).format(sprintProgress / 100)
 
   return (
     <>
@@ -122,8 +127,9 @@ export default function HomePage() {
                         >
                           {t('home.cards.taskCard.priority')}
                         </Badge>
-                        <span className='text-[9px] text-slate-400'>
-                          💬 {t('home.cards.taskCard.comments', { count: 8 })}
+                        <span className='text-[9px] text-slate-400 inline-flex items-center gap-1'>
+                          <MessageSquareIcon className='size-3.5' />
+                          {t('home.cards.taskCard.comments', { count: 8 })}
                         </span>
                       </div>
                       <div className='pt-2 border-t border-slate-100 flex items-center justify-between'>
@@ -410,9 +416,9 @@ export default function HomePage() {
                             </p>
                           </div>
                         </div>
-                        <span className='text-lg font-bold text-primary'>75%</span>
+                        <span className='text-lg font-bold text-primary'>{sprintProgressLabel}</span>
                       </div>
-                      <Progress value={75} className='h-2' />
+                      <Progress value={sprintProgress} className='h-2' />
                       <div className='grid grid-cols-3 gap-2 pt-1'>
                         <div className='text-center'>
                           <div className='text-sm font-bold text-slate-400'>12</div>

@@ -133,8 +133,10 @@ export default function ProjectPermissionsTab({ projectIdentifier }: ProjectPerm
   const roles = useMemo(() => projectRoles?.value?.items ?? [], [projectRoles])
 
   useEffect(() => {
+    const animationTimers = animationTimersRef.current
+
     return () => {
-      Object.values(animationTimersRef.current).forEach((timer) => {
+      Object.values(animationTimers).forEach((timer) => {
         if (timer) {
           clearTimeout(timer)
         }

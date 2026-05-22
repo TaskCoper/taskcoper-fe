@@ -10,9 +10,25 @@
     "build:dev": "tsc -b && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "postinstall": "node .husky/install.mjs",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "check": "yarn run lint && tsc -b",
+    "i18n:extract": "i18next-cli extract",
+    "i18n:extract:check": "i18next-cli extract --dry-run --ci --quiet",
+    "i18n:status": "i18next-cli status",
+    "i18n:types": "i18next-cli types --quiet",
+    "i18n:lint": "i18next-cli lint --quiet",
+    "i18n:check": "i18n-check --locales src/lib/i18n/locales --source en --format i18next --unused src --only missingKeys invalidKeys undefined --reporter summary",
+    "i18n:check:unused": "i18n-check --locales src/lib/i18n/locales --source en --format i18next --unused src --only unused --reporter summary",
+    "i18n:verify": "yarn run i18n:extract:check && yarn run i18n:status && yarn run i18n:check && yarn run i18n:lint && yarn run i18n:types",
+    "check": "yarn run lint && yarn run i18n:verify && tsc -b",
     "docker:build": "docker compose -f .docker/docker-compose.yml build --no-cache && docker compose -f .docker/docker-compose.yml up -d"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{js,mjs,cjs,json,md,css,scss,html,yml,yaml}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -98,6 +114,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@lingual/i18n-check": "^0.9.5",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@types/lodash": "^4",
     "@types/node": "^24.10.2",
@@ -105,9 +122,13 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9.39.1",
+    "eslint-plugin-i18next": "^6.1.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "i18next-cli": "^1.58.0",
+    "lint-staged": "^17.0.5",
     "prettier": "^3.7.4",
     "sass-embedded": "^1.96.0",
     "tw-animate-css": "^1.4.0",
