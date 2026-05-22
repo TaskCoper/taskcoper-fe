@@ -1,3 +1,4 @@
+import EnvironmentTag from '@/components/environment-tag'
 import NavUser from '@/components/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -82,6 +83,8 @@ export default function PublicLayout() {
                   </Button>
                 )
               })}
+
+              <EnvironmentTag />
             </div>
           </div>
 
