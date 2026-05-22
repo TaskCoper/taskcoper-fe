@@ -25,6 +25,10 @@ export default function ProjectInfoPage() {
 
   const currentLocale = DATE_LOCALES[i18n.language] || enUS
   const dateFormat = i18n.language === 'vi-VN' ? 'd MMM, yyyy' : 'MMM d, yyyy'
+  const progressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
+    style: 'percent',
+    maximumFractionDigits: 0
+  }).format((project?.progress ?? 0) / 100)
 
   const generalItems = [
     {
@@ -138,7 +142,7 @@ export default function ProjectInfoPage() {
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1'>
               <div>
                 <p className='font-semibold'>
-                  {t('project.info.progress')} ({project?.progress ? project.progress : 0}%)
+                  {t('project.info.progress')} ({progressLabel})
                 </p>
                 <p className='text-xs text-muted-foreground'>{t('project.info.progressDescription')}</p>
               </div>

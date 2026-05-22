@@ -1,0 +1,38 @@
+name: Quality Check
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: Check And Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Run Checks
+        env:
+          HUSKY: 0
+        run: yarn check
+
+      - name: Build App
+        env:
+          HUSKY: 0
+        run: yarn build

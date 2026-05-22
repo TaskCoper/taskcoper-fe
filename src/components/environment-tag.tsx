@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 const DEV_HOST = 'taskcoper-client.bentran1vn.com'
 
 export default function EnvironmentTag() {
