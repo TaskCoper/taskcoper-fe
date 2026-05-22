@@ -4,6 +4,7 @@ import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -100,6 +101,7 @@ export default function TaskDialogPage() {
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
   const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
   const [openBackgroundImagePopover, setOpenBackgroundImagePopover] = useState(false)
+  const [currentTime] = useState(() => Date.now())
 
   const sensors = useDndSensors()
 
@@ -111,6 +113,11 @@ export default function TaskDialogPage() {
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
+  const isTaskExpired = !!(
+    task?.taskEndDate &&
+    !Number.isNaN(new Date(task.taskEndDate).getTime()) &&
+    new Date(task.taskEndDate).getTime() < currentTime
+  )
 
   const isWatchingTask =
     taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.id) !== undefined
@@ -710,7 +717,14 @@ export default function TaskDialogPage() {
                       onRemove={handleRemoveDate}
                       disabled={!canUpdate}
                     >
-                      <Button variant='secondary' size='sm'>
+                      <Button
+                        variant='secondary'
+                        size='sm'
+                        className={cn(
+                          'gap-1.5',
+                          isTaskExpired ? 'bg-rose-50 text-rose-700 hover:bg-rose-100' : 'hover:bg-muted-foreground/15'
+                        )}
+                      >
                         {task?.taskStartDate ? (
                           <p className='font-semibold'>
                             {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
@@ -721,6 +735,14 @@ export default function TaskDialogPage() {
                           <p className='font-semibold'>
                             {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
+                        ) : null}
+                        {isTaskExpired ? (
+                          <Badge
+                            variant='outline'
+                            className='h-5 border-none rounded-md bg-rose-600 px-1.5 text-[10px] text-white'
+                          >
+                            {t('task.detail.expired')}
+                          </Badge>
                         ) : null}
                         <ChevronDownIcon />
                       </Button>

@@ -224,18 +224,27 @@ const TaskStoryPointsChip = ({ storyPoints }: { storyPoints: number }) => {
 }
 
 const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDate: string | null }) => {
+  const [currentTime] = useState(() => Date.now())
+  const isExpired = !!(
+    endDate &&
+    !Number.isNaN(new Date(endDate).getTime()) &&
+    new Date(endDate).getTime() < currentTime
+  )
+
   return (
-    <div className='flex items-center gap-1.5 rounded-sm'>
+    <div
+      className={cn('flex items-center gap-1.5 rounded-sm px-1 py-0.5', isExpired ? 'bg-rose-100 text-rose-700' : '')}
+    >
       <ClockIcon className='size-3' />
       <div className='flex items-center gap-1'>
         {startDate && (
-          <p className='text-xs font-semibold text-muted-foreground'>
+          <p className='text-xs font-semibold text-inherit'>
             {format(new Date(startDate), "d 'thg' M y", { locale: vi })}
           </p>
         )}
-        {startDate && endDate && <p className='text-xs font-semibold text-muted-foreground'>–</p>}
+        {startDate && endDate && <p className='text-xs font-semibold text-inherit'>–</p>}
         {endDate && (
-          <p className='text-xs font-semibold text-muted-foreground'>
+          <p className='text-xs font-semibold text-inherit'>
             {format(new Date(endDate), "d 'thg' M y", { locale: vi })}
           </p>
         )}

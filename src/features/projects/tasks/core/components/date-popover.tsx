@@ -55,7 +55,15 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   const endDateValue = watch('endDate')
   const announceBeforeMinutes = watch('announceBeforeMinutes')
 
-  const reminderType = useMemo(() => minutesToReminder(announceBeforeMinutes || 0), [announceBeforeMinutes])
+  const reminderType = useMemo(() => {
+    if (announceBeforeMinutes == null) {
+      return 'NONE'
+    }
+    if (announceBeforeMinutes === 0) {
+      return 'EXPIRED_DATE'
+    }
+    return minutesToReminder(announceBeforeMinutes)
+  }, [announceBeforeMinutes])
 
   const { startDate, startTime, endDate, endTime } = useMemo(() => {
     let startDate = null
@@ -86,6 +94,9 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   }, [startDateValue, endDateValue])
 
   const isDateRange = !!(startDate && endDate && startTime && endTime)
+  const hasStartTimeChange = !!(startDate && localStartTime && localStartTime !== startTime)
+  const hasEndTimeChange = !!(endDate && localEndTime && localEndTime !== endTime)
+  const canSave = isDirty || hasStartTimeChange || hasEndTimeChange
 
   const handleUpdateDates = (updates: DateUpdates) => {
     if ('startDate' in updates) {
@@ -342,8 +353,14 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
               <p className='font-semibold text-xs py-1'>{t('task.date.reminderSetting')}</p>
               <Select
                 onValueChange={(value) => {
-                  const minutes = reminderToMinutes(value as keyof typeof TaskReminder)
-                  handleUpdateDates({ announceBeforeMinutes: minutes === 0 ? null : minutes })
+                  const reminder = value as keyof typeof TaskReminder
+                  if (reminder === 'NONE') {
+                    handleUpdateDates({ announceBeforeMinutes: null })
+                    return
+                  }
+
+                  const minutes = reminderToMinutes(reminder)
+                  handleUpdateDates({ announceBeforeMinutes: minutes })
                 }}
                 value={reminderType}
               >
@@ -362,7 +379,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
               <p className='text-xs text-muted-foreground my-2'>{t('task.date.reminderDescription')}</p>
             </div>
 
-            <Button className='w-full' onClick={handleSave} disabled={!isDirty}>
+            <Button className='w-full' onClick={handleSave} disabled={!canSave}>
               {t('common.button.save')}
             </Button>
             {canDelete ? (

@@ -1422,7 +1422,8 @@
       "none": "None",
       "dateFormat": "HH:mm MMM d, y",
       "startDate": "Start date",
-      "dueDate": "Due date"
+      "dueDate": "Due date",
+      "expired": "Expired"
     },
     "column": {
       "card": "Task",

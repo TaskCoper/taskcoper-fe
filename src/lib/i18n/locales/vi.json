@@ -1422,7 +1422,8 @@
       "none": "Không có",
       "dateFormat": "HH:mm d 'thg' M, y",
       "startDate": "Ngày bắt đầu",
-      "dueDate": "Ngày hết hạn"
+      "dueDate": "Ngày hết hạn",
+      "expired": "Đã hết hạn"
     },
     "column": {
       "card": "Thẻ",
