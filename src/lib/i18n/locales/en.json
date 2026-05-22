@@ -1403,6 +1403,7 @@
       "price": "Price",
       "problemStatement": "Problem statement",
       "requestedOn": "Requested on",
+      "requester": "Requested by",
       "requestInformation": "Your request information",
       "reviewedOn": "Reviewed on",
       "sessions": "Sessions"
@@ -2400,7 +2401,8 @@
     "selectPackageToBook": "Select your purchased package to book.",
     "statusTooltip": "Status: {{status}}",
     "upcomingMeetingNote": "Complete the scheduled meeting on {{date}} before booking the next one.",
-    "viewMeeting": "View meeting"
+    "viewMeeting": "View meeting",
+    "viewPurchaseRequest": "View purchase request"
   },
   "purchaseHistory": {
     "bookSession": "Book Session",

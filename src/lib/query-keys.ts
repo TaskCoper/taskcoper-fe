@@ -13,7 +13,7 @@ import type { GetMyMentorPackagesParams } from '@/features/mentor-packages/hooks
 import type { GetPurchasedMentorPackagesParams } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { GetMentorsParams } from '@/features/mentors/hooks/use-get-mentors'
 import type { GetMyIncomingRequestsParams } from '@/features/package-bookings/hooks/use-get-my-incoming-requests'
-import type { GetMyOutcomingRequestsParams } from '@/features/package-bookings/hooks/use-get-my-outcoming-requests'
+import type { GetMyOutgoingRequestsParams } from '@/features/package-bookings/hooks/use-get-my-outgoing-requests'
 import type { GetProjectLabelStatsParams } from '@/features/projects/analytics/hooks/use-get-project-label-stats'
 import type { GetProjectPriorityStatsParams } from '@/features/projects/analytics/hooks/use-get-project-priority-stats'
 import type { GetProjectHeatmapParams } from '@/features/projects/charts/hooks/use-get-project-heatmap'
@@ -385,7 +385,7 @@ export const queryKeys = {
           searchTerm
         ] as const,
       allMyOutgoing: () => [...queryKeys.mentorPackages.requests.all(), 'my', 'outgoing'] as const,
-      myOutgoing: ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutcomingRequestsParams) =>
+      myOutgoing: ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutgoingRequestsParams) =>
         [...queryKeys.mentorPackages.requests.allMyOutgoing(), mentorPackageId, status, pageIndex, pageSize] as const,
       details: () => [...queryKeys.mentorPackages.requests.all(), 'detail'] as const,
       detailIncoming: (requestId?: string) =>

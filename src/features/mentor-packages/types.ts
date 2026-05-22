@@ -64,6 +64,15 @@ export interface PurchasedMentorPackage extends MentorPackage {
   mentorUserId: string
   meetings: Meeting[]
   projectOwnerId: string
+  purchaseRequestId: string | null
+  participants: Array<{
+    userId: string
+    email: string
+    firstName: string
+    lastName: string
+    slug: string
+    avatarUrl: string | null
+  }> | null
   mentor: {
     email: string
     firstName: string

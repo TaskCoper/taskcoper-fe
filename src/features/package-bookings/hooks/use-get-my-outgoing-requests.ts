@@ -5,19 +5,19 @@ import { useQuery } from '@tanstack/react-query'
 import packageBookingService from '../services'
 import type { PackageOutgoingRequest } from '../types'
 
-export interface GetMyOutcomingRequestsParams {
+export interface GetMyOutgoingRequestsParams {
   mentorPackageId?: string
   status?: string[]
   pageIndex?: number
   pageSize?: number
 }
 
-export const useGetMyOutcomingRequests = ({
+export const useGetMyOutgoingRequests = ({
   mentorPackageId,
   status,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE
-}: GetMyOutcomingRequestsParams = {}) => {
+}: GetMyOutgoingRequestsParams = {}) => {
   const {
     data: myOutgoingRequests = getDefaultPaginationResponse<PackageOutgoingRequest>(),
     isLoading: isMyOutgoingRequestsLoading

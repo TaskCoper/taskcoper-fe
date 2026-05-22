@@ -1388,6 +1388,7 @@
       "price": "Giá",
       "problemStatement": "Vấn đề cần giải quyết",
       "requestedOn": "Ngày gửi",
+      "requester": "Người gửi yêu cầu",
       "requestInformation": "Thông tin yêu cầu của bạn",
       "reviewedOn": "Đã duyệt vào",
       "sessions": "Số buổi"
@@ -2383,7 +2384,8 @@
     "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
     "statusTooltip": "Trạng thái: {{status}}",
     "upcomingMeetingNote": "Hoàn thành buổi gặp dự kiến vào {{date}} trước khi đặt buổi tiếp theo.",
-    "viewMeeting": "Xem lịch hẹn"
+    "viewMeeting": "Xem lịch hẹn",
+    "viewPurchaseRequest": "Xem yêu cầu mua"
   },
   "purchaseHistory": {
     "bookSession": "Đặt lịch",

@@ -1,6 +1,6 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
 import type { GetMyIncomingRequestsParams } from './hooks/use-get-my-incoming-requests'
-import type { GetMyOutcomingRequestsParams } from './hooks/use-get-my-outcoming-requests'
+import type { GetMyOutgoingRequestsParams } from './hooks/use-get-my-outgoing-requests'
 import type {
   PackageIncomingRequest,
   PackageIncomingRequestDetail,
@@ -41,7 +41,7 @@ class PackageBookingService {
     return data
   }
 
-  getMyOutgoingRequests = async ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutcomingRequestsParams) => {
+  getMyOutgoingRequests = async ({ mentorPackageId, status, pageIndex, pageSize }: GetMyOutgoingRequestsParams) => {
     const { data } = await api.get<BasePaginationResponse<PackageOutgoingRequest>>(`/v1/${this.baseUrl}/requests/me`, {
       params: { mentorPackageId, status, pageIndex, pageSize }
     })

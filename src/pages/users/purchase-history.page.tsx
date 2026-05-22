@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import PurchasedMentorPackageCard from '@/features/mentor-packages/components/purchased-mentor-package-card'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import OutgoingRequestCard from '@/features/package-bookings/components/outgoing-request-card'
-import { useGetMyOutcomingRequests } from '@/features/package-bookings/hooks/use-get-my-outcoming-requests'
+import { useGetMyOutgoingRequests } from '@/features/package-bookings/hooks/use-get-my-outgoing-requests'
 import { PackageRequestStatus } from '@/features/package-bookings/types'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -12,7 +12,7 @@ const responsiveColSpan = 'col-span-12 sm:col-span-6 md:col-span-4'
 export default function PurchaseHistoryPage() {
   const { t } = useTranslation()
   const { purchasedMentorPackages, isLoadingPurchasedMentorPackages } = useGetPurchasedMentorPackages()
-  const { myOutgoingRequests, isMyOutgoingRequestsLoading } = useGetMyOutcomingRequests({
+  const { myOutgoingRequests, isMyOutgoingRequestsLoading } = useGetMyOutgoingRequests({
     status: [PackageRequestStatus.Pending, PackageRequestStatus.Approved]
   })
 
