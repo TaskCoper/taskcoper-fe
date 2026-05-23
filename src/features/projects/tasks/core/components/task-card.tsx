@@ -233,7 +233,7 @@ const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDat
 
   return (
     <div
-      className={cn('flex items-center gap-1.5 rounded-sm px-1 py-0.5', isExpired ? 'bg-rose-100 text-rose-700' : '')}
+      className={cn('flex items-center gap-1.5 rounded-sm', isExpired ? 'bg-rose-100 text-rose-700 px-1 py-0.5' : '')}
     >
       <ClockIcon className='size-3' />
       <div className='flex items-center gap-1'>

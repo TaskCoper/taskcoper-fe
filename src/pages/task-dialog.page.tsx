@@ -4,7 +4,6 @@ import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -704,12 +703,16 @@ export default function TaskDialogPage() {
                 {/* Date section */}
                 {task?.taskStartDate || task?.taskEndDate ? (
                   <div className='space-y-1'>
-                    <p className='text-sm font-semibold text-muted-foreground'>
-                      {task.taskStartDate && task.taskEndDate
-                        ? t('common.ui.date')
-                        : task.taskStartDate
-                          ? t('task.detail.startDate')
-                          : t('task.detail.dueDate')}
+                    <p
+                      className={cn('text-sm font-semibold text-muted-foreground', isTaskExpired && 'text-destructive')}
+                    >
+                      {isTaskExpired
+                        ? t('task.detail.expired')
+                        : task.taskStartDate && task.taskEndDate
+                          ? t('common.ui.date')
+                          : task.taskStartDate
+                            ? t('task.detail.startDate')
+                            : t('task.detail.dueDate')}
                     </p>
 
                     <DatePopover
@@ -720,29 +723,20 @@ export default function TaskDialogPage() {
                       <Button
                         variant='secondary'
                         size='sm'
-                        className={cn(
-                          'gap-1.5',
-                          isTaskExpired ? 'bg-rose-50 text-rose-700 hover:bg-rose-100' : 'hover:bg-muted-foreground/15'
-                        )}
+                        className={cn('gap-1.5', isTaskExpired ? 'text-destructive' : 'hover:bg-muted-foreground/15')}
                       >
                         {task?.taskStartDate ? (
                           <p className='font-semibold'>
                             {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
                         ) : null}
+
                         {task?.taskStartDate && task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
+
                         {task?.taskEndDate ? (
                           <p className='font-semibold'>
                             {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
                           </p>
-                        ) : null}
-                        {isTaskExpired ? (
-                          <Badge
-                            variant='outline'
-                            className='h-5 border-none rounded-md bg-rose-600 px-1.5 text-[10px] text-white'
-                          >
-                            {t('task.detail.expired')}
-                          </Badge>
                         ) : null}
                         <ChevronDownIcon />
                       </Button>

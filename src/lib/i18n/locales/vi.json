@@ -2901,7 +2901,16 @@
       "subtask": "Việc cần làm",
       "subtaskTitle": "Thêm danh sách công việc",
       "title": "Tiêu đề",
+      "tooltip": {
+        "assignMember": "Giao việc cho thành viên",
+        "convertToTask": "Chuyển thành nhiệm vụ",
+        "delete": "Xóa",
+        "setDeadline": "Đặt thời hạn"
+      },
       "validation": {
+        "deadline": {
+          "invalid": "Thời hạn không hợp lệ"
+        },
         "index": {
           "invalid": "Vị trí không hợp lệ"
         },
@@ -2912,8 +2921,14 @@
         "parentId": {
           "invalid": "ID cha không hợp lệ"
         },
+        "subtaskId": {
+          "invalid": "ID công việc con không hợp lệ"
+        },
         "taskId": {
           "invalid": "ID thẻ không hợp lệ"
+        },
+        "userId": {
+          "invalid": "ID người dùng không hợp lệ"
         }
       }
     },

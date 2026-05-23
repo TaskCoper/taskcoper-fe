@@ -2918,7 +2918,16 @@
       "subtask": "Subtask",
       "subtaskTitle": "Add a list of tasks",
       "title": "Title",
+      "tooltip": {
+        "assignMember": "Assign member",
+        "convertToTask": "Convert to task",
+        "delete": "Delete",
+        "setDeadline": "Set deadline"
+      },
       "validation": {
+        "deadline": {
+          "invalid": "task.subtask.validation.deadline.invalid"
+        },
         "index": {
           "invalid": "Invalid index"
         },
@@ -2929,8 +2938,14 @@
         "parentId": {
           "invalid": "Invalid parent ID"
         },
+        "subtaskId": {
+          "invalid": "task.subtask.validation.subtaskId.invalid"
+        },
         "taskId": {
           "invalid": "Invalid task ID"
+        },
+        "userId": {
+          "invalid": "task.subtask.validation.userId.invalid"
         }
       }
     },

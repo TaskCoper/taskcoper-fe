@@ -139,7 +139,7 @@ export default function ParentSubtaskCard({
             className='mt-2 size-4'
             disabled={!canUpdate}
           />
-          <div className='flex justify-start items-center gap-2 w-full'>
+          <div className='flex justify-start items-center gap-2 w-full min-w-0'>
             <p
               className={cn(
                 'font-semibold hover:bg-muted rounded-sm py-1 truncate',
@@ -175,7 +175,7 @@ export default function ParentSubtaskCard({
       <div className='flex gap-3'>
         <p className='text-[10px] text-muted-foreground'>{progress.toFixed(0)}%</p>
 
-        <div className='w-full space-y-2 mt-1'>
+        <div className='w-full min-w-0 space-y-2 mt-1'>
           <Progress value={progress} />
 
           {displayedChildren.length === 0 && subtask.isCompleted ? (
