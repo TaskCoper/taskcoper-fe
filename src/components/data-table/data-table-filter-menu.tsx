@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { getFiltersStateParser } from '@/lib/data-table/parsers'
 import { generateId, getDefaultFilterOperator, getFilterOperators } from '@/lib/data-table/utils'
-import { cn, formatDate } from '@/shared/utils'
+import { formatDate } from '@/lib/date'
+import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
 import { BadgeCheck, CalendarIcon, Check, ListFilter, Text, X } from 'lucide-react'
@@ -685,9 +686,9 @@ function onFilterInputRender<TData>({
 
       const displayValue =
         filter.operator === 'isBetween' && dateValue.length === 2 && !isSameDate
-          ? `${formatDate(startDate, { month: 'short' })} - ${formatDate(endDate, { month: 'short' })}`
+          ? `${formatDate(startDate, 'monthShort')} - ${formatDate(endDate, 'monthShort')}`
           : startDate
-            ? formatDate(startDate, { month: 'short' })
+            ? formatDate(startDate, 'monthShort')
             : t('dataTable.filter.pickDate')
 
       return (

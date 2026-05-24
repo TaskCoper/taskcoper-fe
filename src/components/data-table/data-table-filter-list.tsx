@@ -22,7 +22,8 @@ import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { dataTableConfig } from '@/lib/data-table/data-table'
 import { getFiltersStateParser } from '@/lib/data-table/parsers'
 import { generateId, getDefaultFilterOperator, getFilterOperators } from '@/lib/data-table/utils'
-import { cn, formatDate } from '@/shared/utils'
+import { formatDate } from '@/lib/date'
+import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter, FilterOperator, JoinOperator } from '@/types/data-table.type'
 import type { Column, ColumnMeta, Table } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
@@ -615,9 +616,9 @@ function onFilterInputRender<TData>({
 
       const displayValue =
         filter.operator === 'isBetween' && dateValue.length === 2 && !isSameDate
-          ? `${formatDate(startDate, { month: 'short' })} - ${formatDate(endDate, { month: 'short' })}`
+          ? `${formatDate(startDate, 'monthShort')} - ${formatDate(endDate, 'monthShort')}`
           : startDate
-            ? formatDate(startDate, { month: 'short' })
+            ? formatDate(startDate, 'monthShort')
             : t('dataTable.filter.pickDate')
 
       return (

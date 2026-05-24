@@ -3,8 +3,9 @@ import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
 import StatCard from '@/features/projects/core/components/stat-card'
+import { useDateFormat } from '@/lib/date'
 import { formatCurrency } from '@/shared/utils'
-import { endOfYear, format, getYear, startOfYear } from 'date-fns'
+import { endOfYear, getYear, startOfYear } from 'date-fns'
 import {
   BanknoteIcon,
   HandCoinsIcon,
@@ -24,6 +25,7 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 export default function PackageStatisticsTab() {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const { packageId } = useParams<{ packageId: string }>()
   const [selectedYear, setSelectedYear] = useState(currentYear)
 
@@ -41,7 +43,7 @@ export default function PackageStatisticsTab() {
 
   const chartData = packageStatistics?.monthlyBreakdown
     ? packageStatistics.monthlyBreakdown.map((item) => ({
-        period: format(new Date(item.year, item.month - 1, 1), 'MMM'),
+        period: formatDate(new Date(item.year, item.month - 1, 1), 'monthShort'),
         grossRevenue: item.grossRevenueAtListPrice,
         netRevenue: item.netRevenueAfterVoucher,
         mentorPayout: item.mentorPayoutAfterCommission,

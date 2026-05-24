@@ -5,8 +5,8 @@ import { PACKAGE_REQUEST_STATUS_THEME } from '@/features/package-bookings/consta
 import { useGetIncomingRequest } from '@/features/package-bookings/hooks/use-get-incoming-request'
 import { useGetOutgoingRequest } from '@/features/package-bookings/hooks/use-get-outgoing-request'
 import { PackageRequestStatusLabel } from '@/features/package-bookings/types'
+import { useDateFormat } from '@/lib/date'
 import { cn, formatCurrency, getFirstParagraphTextFromHtml, getPlainTextFromHtml } from '@/shared/utils'
-import { format } from 'date-fns'
 import {
   ActivityIcon,
   BoxIcon,
@@ -77,6 +77,7 @@ export default function PurchaseRequestDialog({
   isMentorView
 }: PurchaseRequestDialogProps) {
   const { t } = useTranslation()
+  const { formatDateTime } = useDateFormat()
 
   const { outgoingRequest, isOutgoingRequestLoading } = useGetOutgoingRequest({
     requestId: isMentorView ? undefined : requestId
@@ -232,9 +233,7 @@ export default function PurchaseRequestDialog({
                       <CalendarDaysIcon className='size-4' />
                       <p className='text-xs font-medium'>{t('packageBooking.requestDetail.requestedOn')}</p>
                     </div>
-                    <p className='text-xs font-semibold'>
-                      {format(new Date(request.createdOnUtc), t('packageBooking.requestDetail.dateFormat'))}
-                    </p>
+                    <p className='text-xs font-semibold'>{formatDateTime(request.createdOnUtc, 'dateTimeMedium')}</p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
@@ -261,9 +260,7 @@ export default function PurchaseRequestDialog({
                         <CheckCircle2Icon className='size-4' />
                         <p className='text-xs font-medium'>{t('packageBooking.requestDetail.reviewedOn')}</p>
                       </div>
-                      <p className='text-xs font-semibold'>
-                        {format(new Date(request.reviewedOnUtc), t('packageBooking.requestDetail.dateFormat'))}
-                      </p>
+                      <p className='text-xs font-semibold'>{formatDateTime(request.reviewedOnUtc, 'dateTimeMedium')}</p>
                     </div>
                   ) : null}
 
@@ -273,9 +270,7 @@ export default function PurchaseRequestDialog({
                         <PackageCheckIcon className='size-4' />
                         <p className='text-xs font-medium'>{t('packageBooking.requestDetail.consumedOn')}</p>
                       </div>
-                      <p className='text-xs font-semibold'>
-                        {format(new Date(request.consumedOnUtc), t('packageBooking.requestDetail.dateFormat'))}
-                      </p>
+                      <p className='text-xs font-semibold'>{formatDateTime(request.consumedOnUtc, 'dateTimeMedium')}</p>
                     </div>
                   ) : null}
                 </div>

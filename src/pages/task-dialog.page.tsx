@@ -43,12 +43,11 @@ import AssigneePopover from '@/features/projects/tasks/members/components/assign
 import { useGetTaskMembers } from '@/features/projects/tasks/members/hooks/use-get-task-members'
 import { useGetTaskSubtasks } from '@/features/projects/tasks/subtasks/hooks/use-get-subtasks'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { format } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
 import {
   ChevronDownIcon,
   ChevronsUpIcon,
@@ -76,7 +75,8 @@ export default function TaskDialogPage() {
   const location = useLocation()
 
   const { me: user } = useGetMe()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const { identifier, milestoneIdentifier, taskIdentifier } = useParams<{
     identifier: string
     milestoneIdentifier: string
@@ -88,8 +88,6 @@ export default function TaskDialogPage() {
   const canToggleTaskStatus = check('TASKS', 'canUpdate', 'canToggleTaskStatus')
   const canWrite = check('TASKS', 'canWrite')
   const canUpdate = check('TASKS', 'canUpdate')
-
-  const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
 
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
@@ -726,17 +724,13 @@ export default function TaskDialogPage() {
                         className={cn('gap-1.5', isTaskExpired ? 'text-destructive' : 'hover:bg-muted-foreground/15')}
                       >
                         {task?.taskStartDate ? (
-                          <p className='font-semibold'>
-                            {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
-                          </p>
+                          <p className='font-semibold'>{formatDate(task.taskStartDate, 'dateTimeMedium')}</p>
                         ) : null}
 
                         {task?.taskStartDate && task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
 
                         {task?.taskEndDate ? (
-                          <p className='font-semibold'>
-                            {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
-                          </p>
+                          <p className='font-semibold'>{formatDate(task.taskEndDate, 'dateTimeMedium')}</p>
                         ) : null}
                         <ChevronDownIcon />
                       </Button>

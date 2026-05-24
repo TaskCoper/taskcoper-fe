@@ -1,6 +1,5 @@
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
 import type { NewsArticle } from '../types'
 import { NewsArticleImage } from './news-article-image'
@@ -12,7 +11,8 @@ interface FeaturedSideListItemProps {
 
 export function FeaturedSideListItem({ article, onSelect }: FeaturedSideListItemProps) {
   const { t } = useTranslation()
-  const relativeTime = formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true, locale: vi })
+  const { formatRelative } = useDateFormat()
+  const relativeTime = formatRelative(article.publishedAt)
 
   return (
     <a

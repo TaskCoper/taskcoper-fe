@@ -17,7 +17,8 @@ import {
   PackageRequestStatusLabel,
   type PackageIncomingRequest
 } from '@/features/package-bookings/types'
-import { formatDate, getAvatarFallback } from '@/shared/utils'
+import { formatDateTime } from '@/lib/date'
+import { getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
@@ -148,11 +149,7 @@ export const getColumns = (
       ),
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
-          {formatDate(row.original.createdOnUtc, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-          })}
+          {formatDateTime(row.original.createdOnUtc, 'dateTimeMedium')}
         </p>
       ),
       enableSorting: false,

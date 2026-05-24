@@ -12,11 +12,11 @@ import { useGetMentorMeetings } from '@/features/meetings/hooks/use-get-mentor-m
 import { useUpdateMeeting } from '@/features/meetings/hooks/use-update-meeting'
 import { combineDateTimeToUtc, formatTimeRange, groupSlotsByDay } from '@/features/meetings/utils'
 import type { PurchasedMentorPackageRule } from '@/features/mentor-packages/types'
+import { useDateFormat } from '@/lib/date'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
-import { addWeeks, endOfWeek, format, getISOWeek, getYear, startOfWeek, subWeeks } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
+import { addWeeks, endOfWeek, getISOWeek, getYear, startOfWeek, subWeeks } from 'date-fns'
 import { AlertCircleIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -64,6 +64,7 @@ export function MentorScheduleContent({
   const { meeting } = useGetMeeting({ meetingId, enabled: open })
 
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
 
   const today = new Date()
   const [selectedYear, setSelectedYear] = useState<number>(getYear(today))
@@ -85,7 +86,7 @@ export function MentorScheduleContent({
       if (getYear(weekStart) === selectedYear || getYear(weekEnd) === selectedYear) {
         weeks.push({
           value: weekStart.toISOString(),
-          label: `${format(weekStart, 'dd/MM')} - ${format(weekEnd, 'dd/MM')}`,
+          label: `${formatDate(weekStart, 'dayMonth')} - ${formatDate(weekEnd, 'dayMonth')}`,
           start: weekStart
         })
       }
@@ -93,7 +94,7 @@ export function MentorScheduleContent({
       if (weeks.length > 53) break
     }
     return weeks
-  }, [selectedYear])
+  }, [selectedYear, formatDate])
 
   const weekEnd = endOfWeek(currentWeekStart, { weekStartsOn: 1 })
 
@@ -122,8 +123,8 @@ export function MentorScheduleContent({
   )
 
   const currentWeekLabel = useMemo(
-    () => `${format(currentWeekStart, 'dd/MM')} - ${format(weekEnd, 'dd/MM')}`,
-    [currentWeekStart, weekEnd]
+    () => `${formatDate(currentWeekStart, 'dayMonth')} - ${formatDate(weekEnd, 'dayMonth')}`,
+    [currentWeekStart, weekEnd, formatDate]
   )
 
   const handlePrevWeek = () => {
@@ -306,7 +307,7 @@ export function MentorScheduleContent({
                   >
                     <p className='text-xs font-medium'>{t(`schedule.timeline.${DAY_OF_WEEKS[index].key}`)}</p>
                     <p className={cn('text-[10px] font-medium', dayIsToday ? 'text-white' : 'text-muted-foreground')}>
-                      ({format(day.date, 'dd/MM')})
+                      ({formatDate(day.date, 'dayMonth')})
                     </p>
                   </div>
 
@@ -480,8 +481,8 @@ export default function MentorScheduleDialog({
   nextRule,
   meetingId
 }: MentorScheduleDialogProps) {
-  const { t, i18n } = useTranslation()
-  const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
+  const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
 
   return (
@@ -497,7 +498,7 @@ export default function MentorScheduleDialog({
           <DialogDescription>
             {t('meeting.mentorSchedule.weekLabel', {
               week: getISOWeek(currentWeekStart),
-              month: format(currentWeekStart, 'MMMM yyyy', { locale: dateLocale })
+              month: formatDate(currentWeekStart, 'monthYear')
             })}
           </DialogDescription>
         </DialogHeader>

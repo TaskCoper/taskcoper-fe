@@ -16,8 +16,9 @@ import {
 } from '@/features/projects/charts/validations'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
+import { formatDate, useDateFormat } from '@/lib/date'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { endOfDay, endOfMonth, format, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
+import { endOfDay, endOfMonth, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
 import { CircleCheckBigIcon, LayersPlus, ListTreeIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -62,7 +63,7 @@ function mapToHeatmapData(stats: ProjectHeatmap[]): CalendarHeatmapData<Omit<Pro
   }))
 }
 
-const today = format(new Date(), 'yyyy-MM-dd')
+const today = formatDate(new Date(), 'iso')
 const currentDateRange = {
   from: today,
   to: today
@@ -73,6 +74,7 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 export default function ProjectPerformancePage() {
   const { t } = useTranslation()
+  const { formatDate: formatDateHook } = useDateFormat()
   const { identifier } = useParams<{ identifier: string }>()
 
   const [selectedYear, setSelectedYear] = useState(currentYear)
@@ -82,8 +84,8 @@ export default function ProjectPerformancePage() {
   })
 
   const dateRange = useMemo(() => {
-    const from = format(new Date(selectedYear, 0, 1), 'yyyy-MM-dd')
-    const to = selectedYear === currentYear ? today : format(new Date(selectedYear, 11, 31), 'yyyy-MM-dd')
+    const from = formatDate(new Date(selectedYear, 0, 1), 'iso')
+    const to = selectedYear === currentYear ? today : formatDate(new Date(selectedYear, 11, 31), 'iso')
     return { from, to }
   }, [selectedYear])
 
@@ -150,7 +152,9 @@ export default function ProjectPerformancePage() {
       projectTaskStats?.map((item) => {
         const start = parseISO(item.startDate)
         const end = parseISO(item.endDate)
-        const period = formIsViewInMonth ? format(start, 'MMM') : `${format(start, 'dd/MM')} - ${format(end, 'dd/MM')}`
+        const period = formIsViewInMonth
+          ? formatDateHook(start, 'monthShort')
+          : `${formatDateHook(start, 'dayMonth')} - ${formatDateHook(end, 'dayMonth')}`
         return {
           period,
           created: item.totalTasksCreated,
@@ -158,30 +162,27 @@ export default function ProjectPerformancePage() {
         }
       }) ?? []
     )
-  }, [projectTaskStats, formIsViewInMonth])
+  }, [projectTaskStats, formIsViewInMonth, formatDateHook])
 
   const taskStatsRangeLabel = useMemo(() => {
-    const fromLabel = formFrom ? format(parseISO(formFrom), 'MMM d, yyyy') : ''
-    const toLabel = formTo ? format(parseISO(formTo), 'MMM d, yyyy') : ''
+    const fromLabel = formFrom ? formatDateHook(formFrom, 'dateMedium') : ''
+    const toLabel = formTo ? formatDateHook(formTo, 'dateMedium') : ''
     const isViewInMonth = formIsViewInMonth ? t('common.ui.month') : t('common.ui.week')
 
-    // const milestone = parentMilestones?.value.items?.find((m) => m.id === formParentMilestoneId)
-    // const milestoneLabel = milestone ? ` • ${milestone.name}` : ''
-
     return `${fromLabel} - ${toLabel} (${isViewInMonth})`
-  }, [formFrom, formTo, formIsViewInMonth, t])
+  }, [formFrom, formTo, formIsViewInMonth, t, formatDateHook])
 
   const topOnTimeCompletersRangeLabel = useMemo(() => {
-    const fromLabel = onTimeCompletersFilters.from ? format(parseISO(onTimeCompletersFilters.from), 'MMM d, yyyy') : ''
-    const toLabel = onTimeCompletersFilters.to ? format(parseISO(onTimeCompletersFilters.to), 'MMM d, yyyy') : ''
+    const fromLabel = onTimeCompletersFilters.from ? formatDateHook(onTimeCompletersFilters.from, 'dateMedium') : ''
+    const toLabel = onTimeCompletersFilters.to ? formatDateHook(onTimeCompletersFilters.to, 'dateMedium') : ''
     return `${fromLabel} - ${toLabel}`
-  }, [onTimeCompletersFilters.from, onTimeCompletersFilters.to])
+  }, [onTimeCompletersFilters.from, onTimeCompletersFilters.to, formatDateHook])
 
   const topContributorsRangeLabel = useMemo(() => {
-    const fromLabel = topContributorsFilters.from ? format(parseISO(topContributorsFilters.from), 'MMM d, yyyy') : ''
-    const toLabel = topContributorsFilters.to ? format(parseISO(topContributorsFilters.to), 'MMM d, yyyy') : ''
+    const fromLabel = topContributorsFilters.from ? formatDateHook(topContributorsFilters.from, 'dateMedium') : ''
+    const toLabel = topContributorsFilters.to ? formatDateHook(topContributorsFilters.to, 'dateMedium') : ''
     return `${fromLabel} - ${toLabel}`
-  }, [topContributorsFilters.from, topContributorsFilters.to])
+  }, [topContributorsFilters.from, topContributorsFilters.to, formatDateHook])
 
   const heatmapData = useMemo(() => mapToHeatmapData(projectActivityStats ?? []), [projectActivityStats])
   const totalContributions = useMemo(() => heatmapData.reduce((sum, d) => sum + d.count, 0), [heatmapData])
@@ -208,7 +209,7 @@ export default function ProjectPerformancePage() {
       if (!raw || data.count === 0) {
         return (
           <p className='text-xs text-muted-foreground'>
-            {t('projectPerformance.tooltipNoActivitiesOn', { date: format(date, 'MMM d, yyyy') })}
+            {t('projectPerformance.tooltipNoActivitiesOn', { date: formatDateHook(date, 'dateMedium') })}
           </p>
         )
       }
@@ -224,7 +225,7 @@ export default function ProjectPerformancePage() {
       return (
         <div className='space-y-1'>
           <div>
-            <p className='text-xs font-bold'>{format(date, 'MMM d, yyyy')}</p>
+            <p className='text-xs font-bold'>{formatDateHook(date, 'dateMedium')}</p>
             <p className='text-xs text-background/80'>
               {t('projectPerformance.tooltipTotalActivities', { count: data.count })}
             </p>
@@ -243,7 +244,7 @@ export default function ProjectPerformancePage() {
         </div>
       )
     },
-    [t]
+    [t, formatDateHook]
   )
 
   const topOnTimeCompletersData = useMemo(() => {

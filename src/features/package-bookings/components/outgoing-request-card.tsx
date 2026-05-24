@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { PACKAGE_REQUEST_STATUS_SOLID_THEME } from '@/features/package-bookings/constants'
 import { PackageRequestStatusLabel, type PackageOutgoingRequest } from '@/features/package-bookings/types'
-import { format } from 'date-fns'
+import { formatDate } from '@/lib/date'
 import i18next from 'i18next'
 import { Clock3Icon, FolderIcon } from 'lucide-react'
 
@@ -42,7 +42,7 @@ export default function OutgoingRequestCard({ request }: OutgoingRequestCardProp
         ) : (
           <div className='h-4 flex items-center gap-1'>
             <Clock3Icon className='size-3 text-muted-foreground' />
-            <p className='text-xs text-muted-foreground'>{format(new Date(request.createdOnUtc), 'dd/MM/yyyy')}</p>
+            <p className='text-xs text-muted-foreground'>{formatDate(request.createdOnUtc, 'dateShort')}</p>
           </div>
         )}
 

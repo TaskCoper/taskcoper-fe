@@ -8,6 +8,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { useDateFormat } from '@/lib/date'
 import { STATUS_CONFIG } from '@/shared/constants'
 import { AlertCircleIcon, CalendarIcon, CheckCircle2Icon, ExternalLinkIcon, FileTextIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -24,18 +25,15 @@ function SectionLabel({ label }: { label: string }) {
 }
 
 export default function MentorApplicationDialog({ application, children }: MentorApplicationDialogProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const [open, setOpen] = useState(false)
 
   const config = STATUS_CONFIG[application.status]
   const StatusIcon = config.icon
 
-  const dateFormatOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-  const submittedDate = new Date(application.createdOnUtc).toLocaleDateString(i18n.language, dateFormatOptions)
-
-  const reviewedDate = application.reviewedAt
-    ? new Date(application.reviewedAt).toLocaleDateString(i18n.language, dateFormatOptions)
-    : null
+  const submittedDate = formatDate(application.createdOnUtc, 'dateLong')
+  const reviewedDate = application.reviewedAt ? formatDate(application.reviewedAt, 'dateLong') : null
 
   const fileNames = (application.portfolioUrls ?? []).map((url) => {
     const raw = url.split('/').pop() ?? url

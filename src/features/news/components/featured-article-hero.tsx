@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { NewsArticle } from '../types'
@@ -16,6 +15,7 @@ interface FeaturedArticleHeroProps {
 
 export function FeaturedArticleHero({ article, onPrev, onNext }: FeaturedArticleHeroProps) {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
 
   return (
     <div
@@ -76,7 +76,7 @@ export function FeaturedArticleHero({ article, onPrev, onNext }: FeaturedArticle
             <div className='flex items-center gap-3'>
               <NewsSourceRow source={article.source} publishedAt={article.publishedAt} size='md' />
               <span className='hidden text-[11px] text-muted-foreground sm:inline'>
-                · {format(new Date(article.publishedAt), 'dd MMM yyyy', { locale: vi })}
+                · {formatDate(article.publishedAt, 'dateMedium')}
               </span>
             </div>
 

@@ -4,7 +4,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { addDays, format } from 'date-fns'
+import { useDateFormat } from '@/lib/date'
+import { addDays } from 'date-fns'
 import { XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,6 @@ interface SubtaskDeadlinePopoverProps {
   triggerTooltip?: React.ReactNode
 }
 
-const dateFormat = 'MM/dd/yyyy'
 const minDate = new Date('1900-01-01')
 const maxDate = new Date(new Date().getFullYear() + 10, 11, 31)
 const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/
@@ -39,6 +39,7 @@ export default function SubtaskDeadlinePopover({
   triggerTooltip
 }: SubtaskDeadlinePopoverProps) {
   const { t } = useTranslation()
+  const { formatDate, formatTime } = useDateFormat()
   const [open, setOpen] = useState(false)
   const [localDeadline, setLocalDeadline] = useState<string | null>(deadline)
   const [localEndTime, setLocalEndTime] = useState('')
@@ -52,10 +53,10 @@ export default function SubtaskDeadlinePopover({
     }
 
     return {
-      endDate: format(date, dateFormat),
-      endTime: format(date, 'HH:mm')
+      endDate: formatDate(date, 'dateShort'),
+      endTime: formatTime(date, 'HH:mm')
     }
-  }, [localDeadline])
+  }, [localDeadline, formatDate, formatTime])
 
   const canSave = localDeadline !== deadline || !!(localDeadline && localEndTime && localEndTime !== endTime)
   const selectedDate = parseIsoDate(localDeadline) || undefined
@@ -141,7 +142,7 @@ export default function SubtaskDeadlinePopover({
     if (newOpen) {
       const parsedDeadline = parseIsoDate(deadline)
       setLocalDeadline(deadline)
-      setLocalEndTime(parsedDeadline ? format(parsedDeadline, 'HH:mm') : '')
+      setLocalEndTime(parsedDeadline ? formatTime(parsedDeadline, 'HH:mm') : '')
       setEndTimeInvalid(false)
     }
   }
@@ -216,15 +217,17 @@ export default function SubtaskDeadlinePopover({
               </div>
             </div>
 
-            <Button className='w-full' onClick={handleSave} disabled={!canSave}>
-              {t('common.button.save')}
-            </Button>
-
-            {deadline ? (
-              <Button className='w-full' variant='secondary' onClick={handleRemove}>
-                {t('common.button.remove')}
+            <div className='space-y-2'>
+              <Button className='w-full' onClick={handleSave} disabled={!canSave}>
+                {t('common.button.save')}
               </Button>
-            ) : null}
+
+              {deadline ? (
+                <Button className='w-full' variant='secondary' onClick={handleRemove}>
+                  {t('common.button.remove')}
+                </Button>
+              ) : null}
+            </div>
           </div>
         </div>
       </PopoverContent>

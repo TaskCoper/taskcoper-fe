@@ -7,10 +7,8 @@ import { Field } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { DATE_LOCALES } from '@/shared/constants'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { enUS } from 'date-fns/locale'
 import { XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Controller, type SubmitHandler } from 'react-hook-form'
@@ -53,7 +51,8 @@ export default function CommentCard({
   projectIdentifier,
   parentMilestoneIdentifier
 }: CommentCardProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const { formatRelative } = useDateFormat()
   const { me: user } = useGetMe()
   const [isEditComment, setIsEditComment] = useState(false)
   const [isDeleteComment, setIsDeleteComment] = useState(false)
@@ -69,8 +68,6 @@ export default function CommentCard({
   })
 
   const { control, reset, handleSubmit } = methods
-
-  const currentLocale = DATE_LOCALES[i18n.language] || enUS
 
   const onSubmit: SubmitHandler<UpdateTaskCommentFormValues> = (body) => {
     setIsEditComment(false)
@@ -107,9 +104,7 @@ export default function CommentCard({
             </span>{' '}
             {t(taskLogContent[comment.content])}
           </p>
-          <p className='text-xs font-normal underline text-primary truncate'>
-            {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
-          </p>
+          <p className='text-xs font-normal underline text-primary truncate'>{formatRelative(comment.createdAt)}</p>
         </div>
       </div>
     )
@@ -127,9 +122,7 @@ export default function CommentCard({
           <p className='text-sm font-semibold truncate'>
             {comment.firstName} {comment.lastName}
           </p>
-          <p className='text-xs font-normal underline text-primary truncate'>
-            {formatDistanceToNow(comment.createdAt, { locale: currentLocale, addSuffix: true })}
-          </p>
+          <p className='text-xs font-normal underline text-primary truncate'>{formatRelative(comment.createdAt)}</p>
         </div>
 
         {isEditComment ? (

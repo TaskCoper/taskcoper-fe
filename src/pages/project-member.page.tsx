@@ -12,10 +12,11 @@ import ProjectMemberTaskTable from '@/features/projects/members/components/proje
 import { useGetProjectMember } from '@/features/projects/members/hooks/use-get-project-member'
 import { MemberStatus, MemberStatusLabel } from '@/features/projects/members/types'
 import { useGetUser } from '@/features/users/hooks/use-get-user'
+import { useDateFormat } from '@/lib/date'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { endOfMonth, format, parseISO, startOfMonth } from 'date-fns'
+import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 import { ActivityIcon, GlobeIcon, MapPinIcon, PhoneIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -26,6 +27,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 export default function ProjectMemberPage() {
   const { identifier, memberIdentifier } = useParams<{ identifier: string; memberIdentifier: string }>()
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const { getLastActiveMilestone } = useMilestonePreferencesStore()
 
   const { project, isLoadingProject } = useGetProject({ identifier })
@@ -74,7 +76,9 @@ export default function ProjectMemberPage() {
       projectTaskStats?.map((item) => {
         const start = parseISO(item.startDate)
         const end = parseISO(item.endDate)
-        const period = formIsViewInMonth ? format(start, 'MMM') : `${format(start, 'dd/MM')} - ${format(end, 'dd/MM')}`
+        const period = formIsViewInMonth
+          ? formatDate(start, 'monthShort')
+          : `${formatDate(start, 'dayMonth')} - ${formatDate(end, 'dayMonth')}`
         return {
           period,
           created: item.totalTasksCreated,
@@ -82,15 +86,15 @@ export default function ProjectMemberPage() {
         }
       }) ?? []
     )
-  }, [projectTaskStats, formIsViewInMonth])
+  }, [projectTaskStats, formIsViewInMonth, formatDate])
 
   const taskStatsRangeLabel = useMemo(() => {
-    const fromLabel = formFrom ? format(parseISO(formFrom), 'MMM d, yyyy') : ''
-    const toLabel = formTo ? format(parseISO(formTo), 'MMM d, yyyy') : ''
+    const fromLabel = formFrom ? formatDate(formFrom, 'dateMedium') : ''
+    const toLabel = formTo ? formatDate(formTo, 'dateMedium') : ''
     const viewBy = formIsViewInMonth ? t('common.ui.month') : t('common.ui.week')
 
     return `${fromLabel} - ${toLabel} (${viewBy})`
-  }, [formFrom, formTo, formIsViewInMonth, t])
+  }, [formFrom, formTo, formIsViewInMonth, t, formatDate])
 
   const projectTaskStatsChartConfig = useMemo(
     () =>

@@ -8,9 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { formatDate } from '@/lib/date'
 import { getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { ProjectMemberRequest } from '../types'
@@ -126,7 +126,7 @@ export const getColumns = ({
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label='systemUsers.column.createdAt' className='mx-auto' />
       ),
-      cell: ({ row }) => <p className='text-center'>{format(new Date(row.original.createdOnUtc), 'dd/MM/yyyy')}</p>,
+      cell: ({ row }) => <p className='text-center'>{formatDate(row.original.createdOnUtc, 'dateShort')}</p>,
       enableColumnFilter: false,
       enableSorting: false,
       size: 80
@@ -149,7 +149,7 @@ export const getColumns = ({
           return <p className='text-center text-muted-foreground'>{i18next.t('task.column.none')}</p>
         }
 
-        return <p className='text-center'>{format(new Date(row.original.inviteExpireDate), 'dd/MM/yyyy')}</p>
+        return <p className='text-center'>{formatDate(row.original.inviteExpireDate, 'dateShort')}</p>
       },
       enableColumnFilter: false,
       enableSorting: false,

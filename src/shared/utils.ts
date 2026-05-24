@@ -155,21 +155,6 @@ export const getColorTextClass = (color: string) => {
   )
 }
 
-export const formatDate = (date: Date | string | number | undefined, opts: Intl.DateTimeFormatOptions = {}) => {
-  if (!date) return ''
-
-  try {
-    return new Intl.DateTimeFormat(i18next.language || 'en-US', {
-      month: opts.month ?? 'long',
-      day: opts.day ?? 'numeric',
-      year: opts.year ?? 'numeric',
-      ...opts
-    }).format(new Date(date))
-  } catch {
-    return ''
-  }
-}
-
 export const getUserType = (user: Me | null | undefined): RoleType | null => {
   if (!user) return null
   if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
