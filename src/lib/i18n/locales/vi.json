@@ -6,6 +6,7 @@
     "settings": "Cài đặt"
   },
   "activities": {
+    "ConvertSubTaskToTaskActivity": "đã chuyển công việc con <0>{{taskName}}</0> thành thẻ",
     "FileAddedToTaskActivity": "đã thêm tệp đính kèm vào thẻ",
     "FileAddedToTaskCommentActivity": "đã thêm tệp đính kèm trong bình luận",
     "FileRemovedInTaskActivity": "đã xóa tệp đính kèm khỏi thẻ",
@@ -16,6 +17,7 @@
     "SubtaskDeletedInTaskActivity": "đã xóa công việc con",
     "SubtaskUpdatedInTaskActivity": "đã cập nhật công việc con",
     "TaskCreatedActivity": "đã tạo thẻ này",
+    "TaskIsUsedToBeSubTaskToTaskActivity": "đã chuyển thẻ này từ công việc con của <0>{{taskName}}</0>",
     "TaskMarkedInTaskActivity": "đã đánh dấu thẻ này là hoàn thành",
     "TaskMovedInTaskActivity": "đã di chuyển thẻ này",
     "TaskUnMarkedInTaskActivity": "đã bỏ đánh dấu hoàn thành thẻ này",

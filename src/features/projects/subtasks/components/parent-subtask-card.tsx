@@ -17,7 +17,12 @@ import { useDeleteSubtask } from '../hooks/use-delete-subtask'
 import { useUpdateSubtask } from '../hooks/use-update-subtask'
 import { useUpdateSubtaskStatus } from '../hooks/use-update-subtask-status'
 import type { SubtaskWithChildren } from '../types'
-import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
+import {
+  updateSubtaskSchema,
+  updateSubtaskStatusSchema,
+  type UpdateSubtaskFormValues,
+  type UpdateSubtaskStatusFormValues
+} from '../validations'
 import SortableSubtaskCard from './sortable-subtask-card'
 
 interface ParentSubtaskCardProps {
@@ -72,12 +77,14 @@ export default function ParentSubtaskCard({
     initialValue: subtask.name,
     clickType: 'single',
     onSave: (newName) => {
-      const validated = updateSubtaskSchema(t).safeParse({
+      const payload: UpdateSubtaskFormValues = {
         id: subtask.id,
         name: newName,
         index: subtask.index,
-        parentId: subtask.parentId
-      })
+        parentId: subtask.parentId,
+        deadline: subtask.deadline
+      }
+      const validated = updateSubtaskSchema(t).safeParse(payload)
 
       if (validated.success) {
         updateSubtask({ body: validated.data })
@@ -103,10 +110,11 @@ export default function ParentSubtaskCard({
   }
 
   const handleCheckboxChange = (checked: boolean) => {
-    const validated = updateSubtaskStatusSchema(t).safeParse({
+    const payload: UpdateSubtaskStatusFormValues = {
       id: subtask.id,
       isCompleted: checked
-    })
+    }
+    const validated = updateSubtaskStatusSchema(t).safeParse(payload)
 
     if (validated.success) {
       updateSubtaskStatus({ body: validated.data })

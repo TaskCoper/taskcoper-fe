@@ -14,6 +14,7 @@ interface SubtaskDeadlinePopoverProps {
   children: React.ReactNode
   deadline: string | null
   onSubmit: (deadline: string | null) => void
+  open?: boolean
   onOpenChange?: (open: boolean) => void
   disabled?: boolean
   triggerTooltip?: React.ReactNode
@@ -34,16 +35,27 @@ export default function SubtaskDeadlinePopover({
   children,
   deadline,
   onSubmit,
+  open: controlledOpen,
   onOpenChange,
   disabled = false,
   triggerTooltip
 }: SubtaskDeadlinePopoverProps) {
   const { t } = useTranslation()
   const { formatDate, formatTime } = useDateFormat()
-  const [open, setOpen] = useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const open = controlledOpen ?? uncontrolledOpen
   const [localDeadline, setLocalDeadline] = useState<string | null>(deadline)
   const [localEndTime, setLocalEndTime] = useState('')
+  const [initialDeadline, setInitialDeadline] = useState<string | null>(deadline)
+  const [initialEndTime, setInitialEndTime] = useState('')
   const [endTimeInvalid, setEndTimeInvalid] = useState(false)
+
+  const setOpen = (nextOpen: boolean) => {
+    if (controlledOpen === undefined) {
+      setUncontrolledOpen(nextOpen)
+    }
+    onOpenChange?.(nextOpen)
+  }
 
   const { endDate, endTime } = useMemo(() => {
     const date = parseIsoDate(localDeadline)
@@ -58,7 +70,7 @@ export default function SubtaskDeadlinePopover({
     }
   }, [localDeadline, formatDate, formatTime])
 
-  const canSave = localDeadline !== deadline || !!(localDeadline && localEndTime && localEndTime !== endTime)
+  const canSave = localDeadline !== initialDeadline || !!(localDeadline && localEndTime !== initialEndTime)
   const selectedDate = parseIsoDate(localDeadline) || undefined
 
   const validateTimeFormat = (time: string): boolean => {
@@ -116,33 +128,47 @@ export default function SubtaskDeadlinePopover({
       return
     }
 
+    setOpen(false)
+
     if (localDeadline && localEndTime && localEndTime !== endTime) {
-      onSubmit(applyTimeToDate(localDeadline, localEndTime))
-      setOpen(false)
-      onOpenChange?.(false)
+      const nextDeadline = applyTimeToDate(localDeadline, localEndTime)
+      const parsedDeadline = parseIsoDate(nextDeadline)
+      const nextEndTime = parsedDeadline ? formatTime(parsedDeadline, 'HH:mm') : ''
+
+      onSubmit(nextDeadline)
+      setInitialDeadline(nextDeadline)
+      setInitialEndTime(nextEndTime)
+      setLocalDeadline(nextDeadline)
+      setLocalEndTime(nextEndTime)
       return
     }
 
+    const parsedDeadline = parseIsoDate(localDeadline)
+    const nextEndTime = parsedDeadline ? formatTime(parsedDeadline, 'HH:mm') : ''
+
     onSubmit(localDeadline)
-    setOpen(false)
-    onOpenChange?.(false)
+    setInitialDeadline(localDeadline)
+    setInitialEndTime(nextEndTime)
+    setLocalDeadline(localDeadline)
+    setLocalEndTime(nextEndTime)
   }
 
   const handleRemove = () => {
     setLocalDeadline(null)
     onSubmit(null)
     setOpen(false)
-    onOpenChange?.(false)
   }
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
-    onOpenChange?.(newOpen)
 
     if (newOpen) {
       const parsedDeadline = parseIsoDate(deadline)
+      const nextEndTime = parsedDeadline ? formatTime(parsedDeadline, 'HH:mm') : ''
+      setInitialDeadline(deadline)
+      setInitialEndTime(nextEndTime)
       setLocalDeadline(deadline)
-      setLocalEndTime(parsedDeadline ? formatTime(parsedDeadline, 'HH:mm') : '')
+      setLocalEndTime(nextEndTime)
       setEndTimeInvalid(false)
     }
   }
@@ -176,7 +202,6 @@ export default function SubtaskDeadlinePopover({
               className='size-4 absolute right-0 cursor-pointer'
               onClick={() => {
                 setOpen(false)
-                onOpenChange?.(false)
               }}
             />
           </div>

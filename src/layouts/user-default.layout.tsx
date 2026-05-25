@@ -58,8 +58,9 @@ export default function UserDefaultLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
+
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
-    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+    enabled: !!me && !isVerificationRequired
   })
 
   return (

@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
 import { useGetProjectMembers } from '../../members/hooks/use-get-project-members'
+import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useAssignSubtaskMember } from '../hooks/use-assign-subtask-member'
 import { useUnassignSubtaskMember } from '../hooks/use-unassign-subtask-member'
 
@@ -37,12 +38,19 @@ export default function SubtaskAssigneePopover({
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [pendingAssignUserId, setPendingAssignUserId] = useState<string | null>(null)
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
+  const { check } = useGetMyProjectPermissions({ projectIdentifier })
+  const canWrite = check('TASKS', 'canWrite')
+  const canUpdate = check('TASKS', 'canUpdate')
+  const canDelete = check('TASKS', 'canDelete')
+  const canOpenPopover = canWrite || canDelete
+  const canAssign = canWrite && canUpdate
 
   const { members, isLoadingMembers } = useGetProjectMembers({
     identifier: projectIdentifier,
     searchTerm: debouncedSearchTerm ? debouncedSearchTerm : undefined,
-    enabled: open
+    enabled: open && canOpenPopover
   })
 
   const { assignSubtaskMember, isAssigningSubtaskMember } = useAssignSubtaskMember({
@@ -70,19 +78,27 @@ export default function SubtaskAssigneePopover({
 
   const handleAssign = (e: React.MouseEvent, userId: string) => {
     e.stopPropagation()
-    if (isAssigningSubtaskMember || isUnassigningSubtaskMember) return
+    if (!canAssign || isAssigningSubtaskMember || isUnassigningSubtaskMember) return
 
-    assignSubtaskMember({
-      body: {
-        subtaskId,
-        userId
+    setPendingAssignUserId(userId)
+    assignSubtaskMember(
+      {
+        body: {
+          subtaskId,
+          userId
+        }
+      },
+      {
+        onSettled: () => {
+          setPendingAssignUserId(null)
+        }
       }
-    })
+    )
   }
 
   const handleUnassign = (e: React.MouseEvent, userId: string) => {
     e.stopPropagation()
-    if (isAssigningSubtaskMember || isUnassigningSubtaskMember) return
+    if (!canDelete || isAssigningSubtaskMember || isUnassigningSubtaskMember) return
 
     unassignSubtaskMember({
       body: {
@@ -97,14 +113,14 @@ export default function SubtaskAssigneePopover({
       {triggerTooltip ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <PopoverTrigger asChild disabled={disabled}>
+            <PopoverTrigger asChild disabled={disabled || !canOpenPopover}>
               {children}
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent>{triggerTooltip}</TooltipContent>
         </Tooltip>
       ) : (
-        <PopoverTrigger asChild disabled={disabled}>
+        <PopoverTrigger asChild disabled={disabled || !canOpenPopover}>
           {children}
         </PopoverTrigger>
       )}
@@ -153,7 +169,11 @@ export default function SubtaskAssigneePopover({
                           'flex items-center gap-2.5 rounded-sm p-1 transition-opacity',
                           isAssigningSubtaskMember || isUnassigningSubtaskMember
                             ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:bg-muted cursor-pointer'
+                            : isAssigned && !canDelete
+                              ? 'cursor-not-allowed opacity-70'
+                              : !isAssigned && !canAssign
+                                ? 'cursor-not-allowed opacity-70'
+                                : 'hover:bg-muted cursor-pointer'
                         )}
                       >
                         <Avatar>
@@ -164,7 +184,7 @@ export default function SubtaskAssigneePopover({
                           <p className='text-sm font-medium truncate'>{member.fullName}</p>
                           <p className='text-xs text-muted-foreground truncate'>{member.email}</p>
                         </div>
-                        {isAssigned ? (
+                        {isAssigned && canDelete ? (
                           <Button
                             variant='ghost'
                             size='icon-sm'
@@ -173,7 +193,7 @@ export default function SubtaskAssigneePopover({
                           >
                             <XIcon />
                           </Button>
-                        ) : isAssigningSubtaskMember ? (
+                        ) : isAssigningSubtaskMember && pendingAssignUserId === member.userId ? (
                           <Button variant='ghost' size='icon-sm' className='size-6 text-primary' disabled>
                             <CheckIcon />
                           </Button>

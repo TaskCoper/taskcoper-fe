@@ -6,6 +6,7 @@
     "settings": "Settings"
   },
   "activities": {
+    "ConvertSubTaskToTaskActivity": "converted subtask <0>{{taskName}}</0> into a task",
     "FileAddedToTaskActivity": "added an attachment to this task",
     "FileAddedToTaskCommentActivity": "added an attachment in a task comment",
     "FileRemovedInTaskActivity": "removed an attachment from this task",
@@ -16,6 +17,7 @@
     "SubtaskDeletedInTaskActivity": "deleted a subtask",
     "SubtaskUpdatedInTaskActivity": "updated a subtask",
     "TaskCreatedActivity": "created this task",
+    "TaskIsUsedToBeSubTaskToTaskActivity": "converted this task from a subtask of <0>{{taskName}}</0>",
     "TaskMarkedInTaskActivity": "marked this task as completed",
     "TaskMovedInTaskActivity": "moved this task",
     "TaskUnMarkedInTaskActivity": "marked this task as not completed",

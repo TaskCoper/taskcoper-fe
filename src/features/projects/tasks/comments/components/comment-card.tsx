@@ -12,7 +12,8 @@ import { cn, getAvatarFallback } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Controller, type SubmitHandler } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
 import { useDeleteTaskComment } from '../hooks/use-delete-task-comment'
 import { useUpdateTaskComment } from '../hooks/use-update-task-comment'
@@ -24,6 +25,12 @@ interface CommentCardProps {
   taskId: string
   projectIdentifier: string
   parentMilestoneIdentifier: string
+}
+
+interface ActivityData {
+  key: string
+  slug: string
+  name: string
 }
 
 const taskLogContent: Record<string, string> = {
@@ -42,7 +49,28 @@ const taskLogContent: Record<string, string> = {
   SubtaskUpdatedInTaskActivity: 'activities.SubtaskUpdatedInTaskActivity',
   SubtaskDeletedInTaskActivity: 'activities.SubtaskDeletedInTaskActivity',
   LabelAddedToTaskActivity: 'activities.LabelAddedToTaskActivity',
-  LabelDeletedToTaskActivity: 'activities.LabelDeletedToTaskActivity'
+  LabelDeletedToTaskActivity: 'activities.LabelDeletedToTaskActivity',
+  // for children converted task
+  TaskIsUsedToBeSubTaskToTaskActivity: 'activities.TaskIsUsedToBeSubTaskToTaskActivity',
+  // for parent task
+  ConvertSubTaskToTaskActivity: 'activities.ConvertSubTaskToTaskActivity'
+}
+
+const parseActivityString = (activityStr: string): ActivityData => {
+  // Matches the first two '|' delimiters and captures what's around them
+  // 1st group: key, 2nd group: slug, 3rd group: everything else (the name)
+  const match = activityStr.match(/^([^|]+)\|([^|]+)\|(.*)$/)
+
+  if (!match) {
+    // Fallback or error handling if the string format is completely wrong
+    return { key: '', slug: '', name: activityStr }
+  }
+
+  return {
+    key: match[1].trim(),
+    slug: match[2].trim(),
+    name: match[3].trim() // This safely preserves any '|' inside the task name
+  }
 }
 
 export default function CommentCard({
@@ -89,7 +117,48 @@ export default function CommentCard({
     }
   }, [isEditComment, reset, comment, taskId])
 
+  const parsedActivity = comment.isTaskLog ? parseActivityString(comment.content) : null
+  const activityKey = parsedActivity?.key ?? comment.content
+  const isTaskConversionActivity =
+    activityKey === 'TaskIsUsedToBeSubTaskToTaskActivity' || activityKey === 'ConvertSubTaskToTaskActivity'
+  const relatedTaskLink = parsedActivity?.slug
+    ? `/projects/${projectIdentifier}/milestones/${parentMilestoneIdentifier}/tasks/${parsedActivity.slug}`
+    : ''
+
   if (comment.isTaskLog) {
+    if (isTaskConversionActivity) {
+      return (
+        <div className='flex items-start gap-2'>
+          <Avatar>
+            <AvatarImage src={comment.avatar || ''} />
+            <AvatarFallback>{getAvatarFallback(`${comment.firstName} ${comment.lastName}`)}</AvatarFallback>
+          </Avatar>
+
+          <div className='w-full'>
+            <p className='text-sm text-foreground/70'>
+              <span className='font-semibold text-foreground'>
+                {comment.firstName} {comment.lastName}
+              </span>{' '}
+              <Trans
+                i18nKey={taskLogContent[activityKey]}
+                values={{ taskName: parsedActivity?.name ?? '' }}
+                components={[
+                  relatedTaskLink ? (
+                    <Link to={relatedTaskLink} className='text-primary underline hover:text-primary/80' />
+                  ) : (
+                    <span className='text-foreground' />
+                  )
+                ]}
+              />
+            </p>
+            <p className='text-[11px] text-muted-foreground font-normal truncate'>
+              {formatRelative(comment.createdAt)}
+            </p>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className='flex items-start gap-2'>
         <Avatar>
@@ -104,7 +173,7 @@ export default function CommentCard({
             </span>{' '}
             {t(taskLogContent[comment.content])}
           </p>
-          <p className='text-xs font-normal underline text-primary truncate'>{formatRelative(comment.createdAt)}</p>
+          <p className='text-[11px] text-muted-foreground font-normal truncate'>{formatRelative(comment.createdAt)}</p>
         </div>
       </div>
     )
@@ -122,7 +191,7 @@ export default function CommentCard({
           <p className='text-sm font-semibold truncate'>
             {comment.firstName} {comment.lastName}
           </p>
-          <p className='text-xs font-normal underline text-primary truncate'>{formatRelative(comment.createdAt)}</p>
+          <p className='text-[11px] text-muted-foreground font-normal truncate'>{formatRelative(comment.createdAt)}</p>
         </div>
 
         {isEditComment ? (

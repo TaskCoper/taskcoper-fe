@@ -1,18 +1,19 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { invalidateTaskTree } from '@/lib/invalidations'
+import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import subtaskService from '../services'
 
 interface UseConvertSubtaskToTaskParams {
-  taskIdentifier?: string
+  taskId: string
   projectIdentifier: string
   milestoneIdentifier: string
 }
 
 export const useConvertSubtaskToTask = ({
-  taskIdentifier,
+  taskId,
   projectIdentifier,
   milestoneIdentifier
 }: UseConvertSubtaskToTaskParams) => {
@@ -29,11 +30,13 @@ export const useConvertSubtaskToTask = ({
     },
     onSettled: () => {
       invalidateTaskTree(queryClient, {
-        taskId: taskIdentifier,
         projectIdentifier,
         parentMilestoneIdentifier: milestoneIdentifier,
         userId: me?.id
       })
+
+      queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
     }
   })
 

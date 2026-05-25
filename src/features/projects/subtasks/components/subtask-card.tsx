@@ -2,21 +2,26 @@ import AvatarWithTooltip from '@/components/avatar-with-tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { format } from 'date-fns'
 import { CircleUserIcon, ClockIcon, PanelBottomOpenIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import { useConvertSubtaskToTask } from '../hooks/use-convert-subtask-to-task'
 import { useDeleteSubtask } from '../hooks/use-delete-subtask'
 import { useUpdateSubtask } from '../hooks/use-update-subtask'
 import { useUpdateSubtaskStatus } from '../hooks/use-update-subtask-status'
 import type { Subtask } from '../shared-types'
-import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
+import {
+  updateSubtaskSchema,
+  updateSubtaskStatusSchema,
+  type UpdateSubtaskFormValues,
+  type UpdateSubtaskStatusFormValues
+} from '../validations'
 import SubtaskAssigneePopover from './subtask-assignee-popover'
 import SubtaskDeadlinePopover from './subtask-deadline-popover'
 
@@ -34,14 +39,13 @@ export default function SubtaskCard({
   parentMilestoneIdentifier
 }: SubtaskCardProps) {
   const { t } = useTranslation()
-
-  const { taskIdentifier } = useParams<{ taskIdentifier: string }>()
+  const { formatDateTime } = useDateFormat()
 
   const { updateSubtask } = useUpdateSubtask({ taskId })
   const { updateSubtaskStatus } = useUpdateSubtaskStatus({ taskId, projectIdentifier, parentMilestoneIdentifier })
   const { deleteSubtask } = useDeleteSubtask({ taskId, projectIdentifier, parentMilestoneIdentifier })
   const { convertSubtaskToTask, isConvertingSubtaskToTask } = useConvertSubtaskToTask({
-    taskIdentifier,
+    taskId,
     projectIdentifier,
     milestoneIdentifier: parentMilestoneIdentifier
   })
@@ -61,6 +65,12 @@ export default function SubtaskCard({
   const hasAssignee = (subtask.assignees?.length ?? 0) > 0
   const hasValidDeadline = !!(parsedDeadline && !Number.isNaN(parsedDeadline.getTime()))
   const shouldShowActions = isHovered || isDeadlinePopoverOpen || isAssigneePopoverOpen
+  const canManageAssignees = canUpdate || canDelete
+  const showReadOnlyDeadline = !canUpdate && hasValidDeadline
+  const showEditableDeadline = canUpdate && (hasValidDeadline || shouldShowActions)
+  const showReadOnlyAssignees = hasAssignee && !canManageAssignees
+  const showAssigneePopover = hasAssignee && canManageAssignees
+  const showAddAssigneeButton = !hasAssignee && canUpdate && shouldShowActions
   const isExpired = !!(
     hasValidDeadline &&
     parsedDeadline &&
@@ -72,13 +82,14 @@ export default function SubtaskCard({
     initialValue: subtask.name,
     clickType: 'single',
     onSave: (newName) => {
-      const validated = updateSubtaskSchema(t).safeParse({
+      const payload: UpdateSubtaskFormValues = {
         id: subtask.id,
         name: newName,
         index: subtask.index,
         parentId: subtask.parentId,
         deadline: subtask.deadline
-      })
+      }
+      const validated = updateSubtaskSchema(t).safeParse(payload)
 
       if (validated.success) {
         updateSubtask({ body: validated.data })
@@ -87,10 +98,11 @@ export default function SubtaskCard({
   })
 
   const handleCheckboxChange = (checked: boolean) => {
-    const validated = updateSubtaskStatusSchema(t).safeParse({
+    const payload: UpdateSubtaskStatusFormValues = {
       id: subtask.id,
       isCompleted: checked
-    })
+    }
+    const validated = updateSubtaskStatusSchema(t).safeParse(payload)
 
     if (validated.success) {
       updateSubtaskStatus({ body: validated.data })
@@ -102,13 +114,14 @@ export default function SubtaskCard({
   }
 
   const handleUpdateDeadline = (deadline: string | null) => {
-    const validated = updateSubtaskSchema(t).safeParse({
+    const payload: UpdateSubtaskFormValues = {
       id: subtask.id,
       name: subtask.name,
       index: subtask.index,
       parentId: subtask.parentId,
       deadline
-    })
+    }
+    const validated = updateSubtaskSchema(t).safeParse(payload)
 
     if (validated.success) {
       updateSubtask({ body: validated.data })
@@ -145,9 +158,22 @@ export default function SubtaskCard({
         </p>
 
         <div className='flex items-center gap-2 shrink-0 ml-auto'>
-          {canUpdate && (hasValidDeadline || shouldShowActions) ? (
+          {showReadOnlyDeadline ? (
+            <button
+              type='button'
+              className={cn(
+                'mr-1 border rounded-sm text-xs text-foreground/70 transition-colors font-medium px-1.5 py-0.5 whitespace-nowrap',
+                isExpired ? 'text-destructive bg-destructive/10 rounded-sm' : ''
+              )}
+            >
+              {formatDateTime(parsedDeadline, 'dateTimeShort')}
+            </button>
+          ) : null}
+
+          {showEditableDeadline ? (
             <SubtaskDeadlinePopover
               deadline={subtask.deadline}
+              open={isDeadlinePopoverOpen}
               onSubmit={handleUpdateDeadline}
               onOpenChange={setIsDeadlinePopoverOpen}
               triggerTooltip={!hasValidDeadline ? t('task.subtask.tooltip.setDeadline') : undefined}
@@ -160,7 +186,7 @@ export default function SubtaskCard({
                     isExpired ? 'text-destructive hover:text-destructive bg-destructive/10 rounded-sm' : ''
                   )}
                 >
-                  {format(parsedDeadline, `HH:mm dd 'thg' MM yyyy`)}
+                  {formatDateTime(parsedDeadline, 'dateTimeShort')}
                 </button>
               ) : (
                 <button
@@ -177,13 +203,35 @@ export default function SubtaskCard({
             </SubtaskDeadlinePopover>
           ) : null}
 
-          {hasAssignee ? (
+          {showReadOnlyAssignees ? (
+            <div className='flex items-center shrink-0 *:ring-2 *:ring-primary *:ring-offset-2 mr-1'>
+              {subtask.assignees.slice(0, 3).map((member, index) => (
+                <AvatarWithTooltip
+                  key={member.userId}
+                  avatar={member.avatar}
+                  fullName={`${member.firstName} ${member.lastName}`}
+                  className='size-4'
+                  email={member.email}
+                  isActive={activeAssigneeIndex === index}
+                  onMouseEnter={() => setActiveAssigneeIndex(index)}
+                  onMouseLeave={() => setActiveAssigneeIndex(null)}
+                />
+              ))}
+
+              {subtask.assignees.length > 3 ? (
+                <Avatar className='z-10 text-sm font-medium text-muted-foreground size-4'>
+                  <AvatarFallback>
+                    <p className='text-xs font-medium'>+{subtask.assignees.length - 3}</p>
+                  </AvatarFallback>
+                </Avatar>
+              ) : null}
+            </div>
+          ) : showAssigneePopover ? (
             <SubtaskAssigneePopover
               taskId={taskId}
               subtaskId={subtask.id}
               projectIdentifier={projectIdentifier}
               assignedUserIds={subtask.assignees.map((x) => x.userId)}
-              disabled={!canUpdate}
               onOpenChange={setIsAssigneePopoverOpen}
             >
               <div className='flex items-center cursor-pointer shrink-0 *:ring-2 *:ring-primary *:ring-offset-2 mr-1'>
@@ -209,7 +257,7 @@ export default function SubtaskCard({
                 ) : null}
               </div>
             </SubtaskAssigneePopover>
-          ) : canWrite && shouldShowActions ? (
+          ) : showAddAssigneeButton ? (
             <SubtaskAssigneePopover
               taskId={taskId}
               subtaskId={subtask.id}
@@ -237,7 +285,11 @@ export default function SubtaskCard({
                   type='button'
                   className='flex items-center rounded-full p-0.5 text-foreground/70 border hover:bg-primary/10 hover:text-primary cursor-pointer shrink-0'
                 >
-                  <PanelBottomOpenIcon className='size-3.5' />
+                  {isConvertingSubtaskToTask ? (
+                    <Spinner className='size-3.5' />
+                  ) : (
+                    <PanelBottomOpenIcon className='size-3.5' />
+                  )}
                 </button>
               </TooltipTrigger>
               <TooltipContent>{t('task.subtask.tooltip.convertToTask')}</TooltipContent>
