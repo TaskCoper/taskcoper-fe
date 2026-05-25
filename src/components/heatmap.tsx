@@ -1,5 +1,6 @@
 import { Calendar } from '@/components/ui/calendar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import { subMonths } from 'date-fns'
 import React, { createContext, useContext, useMemo } from 'react'
@@ -107,6 +108,7 @@ function HeatmapLegend() {
 }
 
 function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth }: CalendarHeatmapProps<T>) {
+  const { formatDate } = useDateFormat()
   const defaultStartMonth = startMonth ?? subMonths(new Date(), 11)
 
   const dataMap = useMemo(() => {
@@ -151,7 +153,7 @@ function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth
   }, [data])
 
   const formatCaption = (date: Date) => {
-    return date.toLocaleString('default', { month: 'short' })
+    return formatDate(date, 'monthShort')
   }
 
   return (

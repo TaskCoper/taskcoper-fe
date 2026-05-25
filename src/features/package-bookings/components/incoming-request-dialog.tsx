@@ -12,9 +12,9 @@ import {
   PackageRequestStatusLabel,
   type PackageIncomingRequestDetail
 } from '@/features/package-bookings/types'
-import { formatDate, getAvatarFallback, getPlainTextFromHtml } from '@/shared/utils'
+import { useDateFormat } from '@/lib/date'
+import { getAvatarFallback, getPlainTextFromHtml } from '@/shared/utils'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { formatDistanceToNow } from 'date-fns'
 import { CheckCircle2Icon, PackageCheckIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, FormProvider } from 'react-hook-form'
@@ -59,6 +59,7 @@ function RequestInfoContent({
   onReject
 }: IncomingRequestDialogContentProps) {
   const { t } = useTranslation()
+  const { formatDate, formatRelative } = useDateFormat()
 
   const theme = PACKAGE_REQUEST_STATUS_THEME[request.status]
   const StatusIcon = theme.icon
@@ -85,9 +86,7 @@ function RequestInfoContent({
 
           <div className='-space-y-0.5'>
             <p className='text-sm font-medium'>{fullName}</p>
-            <p className='text-xs text-muted-foreground'>
-              {formatDistanceToNow(request.createdOnUtc, { addSuffix: true })}
-            </p>
+            <p className='text-xs text-muted-foreground'>{formatRelative(request.createdOnUtc)}</p>
           </div>
         </div>
 
@@ -122,14 +121,14 @@ function RequestInfoContent({
             {request.reviewedOnUtc && (
               <span className='flex items-center gap-1.5 text-primary font-medium'>
                 <CheckCircle2Icon className='size-3.5' />
-                {t('packageBooking.requestInfo.reviewedOn', { date: formatDate(request.reviewedOnUtc) })}
+                {t('packageBooking.requestInfo.reviewedOn', { date: formatDate(request.reviewedOnUtc, 'dateLong') })}
               </span>
             )}
 
             {request.consumedOnUtc && (
               <span className='flex items-center gap-1.5 text-primary font-medium'>
                 <PackageCheckIcon className='size-3.5' />
-                {t('packageBooking.requestInfo.consumedOn', { date: formatDate(request.consumedOnUtc) })}
+                {t('packageBooking.requestInfo.consumedOn', { date: formatDate(request.consumedOnUtc, 'dateLong') })}
               </span>
             )}
           </div>

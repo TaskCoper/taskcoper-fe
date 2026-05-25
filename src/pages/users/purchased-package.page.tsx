@@ -12,8 +12,8 @@ import { getMeetingStatusTheme } from '@/features/meetings/utils'
 import PurchaseRequestDialog from '@/features/mentor-packages/components/purchase-request-dialog'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
-import { format } from 'date-fns'
 import {
   BoxIcon,
   CalendarDaysIcon,
@@ -35,15 +35,20 @@ export interface SelectedTimeSlot {
   endTimeUtc: string
 }
 
-const formatRange = (startISO: string, endISO: string) => {
+const formatRange = (
+  startISO: string,
+  endISO: string,
+  formatDate: (input: Date | string, preset?: string) => string,
+  formatTime: (input: Date | string, preset?: string) => string
+) => {
   const start = new Date(startISO)
   const end = new Date(endISO)
 
-  const sameDay = format(start, 'yyyy-MM-dd') === format(end, 'yyyy-MM-dd')
+  const sameDay = formatDate(start, 'iso') === formatDate(end, 'iso')
 
-  const datePart = format(start, 'd MMM yyyy')
-  const startTime = format(start, 'HH:mm')
-  const endTime = format(end, 'HH:mm')
+  const datePart = formatDate(start, 'dateMedium')
+  const startTime = formatTime(start)
+  const endTime = formatTime(end)
 
   // get GMT offset from local timezone
   const offsetMinutes = -start.getTimezoneOffset()
@@ -56,7 +61,7 @@ const formatRange = (startISO: string, endISO: string) => {
     return `${datePart}, ${startTime} – ${endTime} (${gmt})`
   }
 
-  const endDatePart = format(end, 'd MMM yyyy')
+  const endDatePart = formatDate(end, 'dateMedium')
   return `${datePart}, ${startTime} → ${endDatePart}, ${endTime} (${gmt})`
 }
 
@@ -178,6 +183,7 @@ export default function PurchasedPackagePage() {
   const [open, setOpen] = useState(false)
   const [openRequestDialog, setOpenRequestDialog] = useState(false)
   const { t } = useTranslation()
+  const { formatDate, formatTime } = useDateFormat()
   const { me } = useGetMe()
 
   const { purchasedMentorPackage, isLoadingPurchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
@@ -332,7 +338,7 @@ export default function PurchasedPackagePage() {
 
                 <p className='text-xs font-semibold'>
                   {purchasedMentorPackage?.createdOnUtc
-                    ? format(new Date(purchasedMentorPackage.createdOnUtc), t('purchasedPackage.purchasedOnDateFormat'))
+                    ? formatDate(purchasedMentorPackage.createdOnUtc, 'dateLong')
                     : '-'}
                 </p>
               </div>
@@ -441,7 +447,7 @@ export default function PurchasedPackagePage() {
                       </Tooltip>
                       <div className='flex flex-col justify-between py-1'>
                         <p className='text-xs text-muted-foreground'>
-                          {formatRange(meeting.startTimeUtc, meeting.endTimeUtc)}
+                          {formatRange(meeting.startTimeUtc, meeting.endTimeUtc, formatDate, formatTime)}
                         </p>
 
                         <div>

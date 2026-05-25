@@ -1,4 +1,5 @@
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import {
   addDays,
@@ -6,7 +7,6 @@ import {
   addWeeks,
   endOfMonth,
   endOfWeek,
-  format,
   startOfMonth,
   startOfWeek,
   subDays,
@@ -53,6 +53,7 @@ export default function CalendarViewContainer({
   const [internalShowSchedulesOverlay] = useState(false)
   const showSchedulesOverlay = showSchedulesOverlayProp ?? internalShowSchedulesOverlay
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
 
   const { schedules } = useGetMySchedules({ isActive: true })
   const statusLegend = [MeetingStatus.BOOKED, MeetingStatus.COMPLETED, MeetingStatus.CANCELLED]
@@ -106,13 +107,13 @@ export default function CalendarViewContainer({
 
   const headerTitle = (() => {
     if (viewMode === 'day') {
-      return format(currentDate, 'MMMM d, yyyy')
+      return formatDate(currentDate, 'dateLong')
     }
     if (viewMode === 'week') {
       const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
-      return format(weekStart, 'MMMM yyyy')
+      return formatDate(weekStart, 'monthYear')
     }
-    return format(currentDate, 'MMMM yyyy')
+    return formatDate(currentDate, 'monthYear')
   })()
 
   return (

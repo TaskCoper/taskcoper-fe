@@ -6,6 +6,7 @@
     "settings": "Settings"
   },
   "activities": {
+    "ConvertSubTaskToTaskActivity": "converted subtask <0>{{taskName}}</0> into a task",
     "FileAddedToTaskActivity": "added an attachment to this task",
     "FileAddedToTaskCommentActivity": "added an attachment in a task comment",
     "FileRemovedInTaskActivity": "removed an attachment from this task",
@@ -16,6 +17,7 @@
     "SubtaskDeletedInTaskActivity": "deleted a subtask",
     "SubtaskUpdatedInTaskActivity": "updated a subtask",
     "TaskCreatedActivity": "created this task",
+    "TaskIsUsedToBeSubTaskToTaskActivity": "converted this task from a subtask of <0>{{taskName}}</0>",
     "TaskMarkedInTaskActivity": "marked this task as completed",
     "TaskMovedInTaskActivity": "moved this task",
     "TaskUnMarkedInTaskActivity": "marked this task as not completed",
@@ -890,7 +892,6 @@
       "cancelTitle": "Cancel meeting",
       "completeMeeting": "Complete",
       "confirmCancel": "Confirm Cancel",
-      "dateFormat": "dd MMM, yyyy",
       "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time.",
       "history": "History",
       "information": "Information",
@@ -1393,7 +1394,6 @@
       "cancelConfirmTitle": "Cancel request",
       "cancelRequest": "Cancel request",
       "consumedOn": "Consumed on",
-      "dateFormat": "dd/MM/yyyy",
       "information": "Information",
       "mentor": "Mentor",
       "mentorResponse": "Mentor's response",
@@ -1456,7 +1456,6 @@
         "purchasedAt": "Purchased on",
         "rating": "Rating"
       },
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "description": "Leave feedback for the packages you purchased.",
       "giveFeedback": "Give feedback",
       "notAvailable": "N/A",
@@ -2396,7 +2395,6 @@
     "packageInformation": "Mentor package information",
     "progress": "Progress",
     "purchasedOn": "Purchased on",
-    "purchasedOnDateFormat": "dd/MM/yyyy",
     "purchasedPackages": "Purchased packages",
     "selectPackageToBook": "Select your purchased package to book.",
     "statusTooltip": "Status: {{status}}",
@@ -2844,7 +2842,6 @@
     "detail": {
       "backgroundImage": "Background Image",
       "chooseImage": "Upload image",
-      "dateFormat": "HH:mm MMM d, y",
       "description": "Task Description",
       "dueDate": "Due date",
       "enterStoryPoints": "Enter task points",
@@ -2918,7 +2915,16 @@
       "subtask": "Subtask",
       "subtaskTitle": "Add a list of tasks",
       "title": "Title",
+      "tooltip": {
+        "assignMember": "Assign member",
+        "convertToTask": "Convert to task",
+        "delete": "Delete",
+        "setDeadline": "Set deadline"
+      },
       "validation": {
+        "deadline": {
+          "invalid": "task.subtask.validation.deadline.invalid"
+        },
         "index": {
           "invalid": "Invalid index"
         },
@@ -2929,8 +2935,14 @@
         "parentId": {
           "invalid": "Invalid parent ID"
         },
+        "subtaskId": {
+          "invalid": "task.subtask.validation.subtaskId.invalid"
+        },
         "taskId": {
           "invalid": "Invalid task ID"
+        },
+        "userId": {
+          "invalid": "task.subtask.validation.userId.invalid"
         }
       }
     },
@@ -2966,7 +2978,6 @@
       "amount": "Amount",
       "copyId": "Copy ID",
       "createdDate": "Created Date",
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "description": "Description",
       "descriptionPlaceholder": "Search by description...",
       "method": "Gateway",
@@ -3136,7 +3147,6 @@
       "code": "Code",
       "codePlaceholder": "Enter code to search...",
       "createdOnUtc": "Created On",
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "discount": "Discount",
       "discountType": "Type",
       "endsAt": "Ends At",

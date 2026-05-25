@@ -11,12 +11,13 @@ import type { TaskDetail } from '../types'
 import { updateTaskSchema, type UpdateTaskFormValues } from '../validations'
 
 interface UseUpdateTaskProps {
+  taskId?: string
   taskIdentifier?: string
   identifier?: string
   milestoneIdentifier?: string
 }
 
-export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
+export const useUpdateTask = ({ taskId, taskIdentifier, identifier, milestoneIdentifier }: UseUpdateTaskProps) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
   const { me: user } = useGetMe()
@@ -78,10 +79,13 @@ export const useUpdateTask = ({ taskIdentifier, identifier, milestoneIdentifier 
         userId: user?.id
       })
 
+      queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+
       if (identifier && milestoneIdentifier) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.projects.taskStatusStats(identifier, milestoneIdentifier)
         })
+
         queryClient.invalidateQueries({
           queryKey: queryKeys.projects.priorityStats({
             projectIdentifier: identifier,

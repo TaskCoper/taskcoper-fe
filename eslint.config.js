@@ -24,7 +24,29 @@ export default defineConfig([
       globals: globals.browser
     },
     rules: {
-      'i18next/no-literal-string': ['warn', { mode: 'jsx-text-only' }]
+      'i18next/no-literal-string': ['warn', { mode: 'jsx-text-only' }],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'date-fns',
+              importNames: ['format', 'formatDistance', 'formatDistanceToNow', 'formatRelative'],
+              message: "Use the helpers from '@/lib/date' instead so dates render in the active locale."
+            },
+            {
+              name: 'date-fns/locale',
+              message: "Don't import date-fns locales directly; '@/lib/date' resolves the locale from i18next."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    files: ['src/lib/date/**'],
+    rules: {
+      'no-restricted-imports': 'off'
     }
   }
 ])

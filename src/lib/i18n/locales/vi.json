@@ -6,6 +6,7 @@
     "settings": "Cài đặt"
   },
   "activities": {
+    "ConvertSubTaskToTaskActivity": "đã chuyển công việc con <0>{{taskName}}</0> thành thẻ",
     "FileAddedToTaskActivity": "đã thêm tệp đính kèm vào thẻ",
     "FileAddedToTaskCommentActivity": "đã thêm tệp đính kèm trong bình luận",
     "FileRemovedInTaskActivity": "đã xóa tệp đính kèm khỏi thẻ",
@@ -16,6 +17,7 @@
     "SubtaskDeletedInTaskActivity": "đã xóa công việc con",
     "SubtaskUpdatedInTaskActivity": "đã cập nhật công việc con",
     "TaskCreatedActivity": "đã tạo thẻ này",
+    "TaskIsUsedToBeSubTaskToTaskActivity": "đã chuyển thẻ này từ công việc con của <0>{{taskName}}</0>",
     "TaskMarkedInTaskActivity": "đã đánh dấu thẻ này là hoàn thành",
     "TaskMovedInTaskActivity": "đã di chuyển thẻ này",
     "TaskUnMarkedInTaskActivity": "đã bỏ đánh dấu hoàn thành thẻ này",
@@ -880,7 +882,6 @@
       "cancelTitle": "Hủy lịch hẹn",
       "completeMeeting": "Hoàn thành",
       "confirmCancel": "Xác nhận hủy",
-      "dateFormat": "dd 'thg' MM, yyyy",
       "disabledActionTooltip": "Bạn chỉ có thể dời lịch hoặc hủy lịch hẹn trước thời gian bắt đầu ít nhất 32 giờ.",
       "history": "Lịch sử",
       "information": "Thông tin",
@@ -1378,7 +1379,6 @@
       "cancelConfirmTitle": "Hủy yêu cầu",
       "cancelRequest": "Hủy yêu cầu",
       "consumedOn": "Đã sử dụng vào",
-      "dateFormat": "dd/MM/yyyy",
       "information": "Thông tin",
       "mentor": "Mentor",
       "mentorResponse": "Phản hồi của mentor",
@@ -1441,7 +1441,6 @@
         "purchasedAt": "Ngày mua",
         "rating": "Đánh giá"
       },
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "description": "Đánh giá các gói bạn đã mua.",
       "giveFeedback": "Đánh giá",
       "notAvailable": "Không có",
@@ -2379,7 +2378,6 @@
     "packageInformation": "Thông tin gói mentor",
     "progress": "Tiến độ",
     "purchasedOn": "Đã mua vào",
-    "purchasedOnDateFormat": "dd/MM/yyyy",
     "purchasedPackages": "Gói đã mua",
     "selectPackageToBook": "Chọn gói đã mua của bạn để đặt lịch.",
     "statusTooltip": "Trạng thái: {{status}}",
@@ -2827,7 +2825,6 @@
     "detail": {
       "backgroundImage": "Ảnh bìa",
       "chooseImage": "Tải lên ảnh bìa",
-      "dateFormat": "HH:mm d 'thg' M, y",
       "description": "Mô tả công việc",
       "dueDate": "Ngày hết hạn",
       "enterStoryPoints": "Nhập điểm công việc",
@@ -2901,7 +2898,16 @@
       "subtask": "Việc cần làm",
       "subtaskTitle": "Thêm danh sách công việc",
       "title": "Tiêu đề",
+      "tooltip": {
+        "assignMember": "Giao việc cho thành viên",
+        "convertToTask": "Chuyển thành nhiệm vụ",
+        "delete": "Xóa",
+        "setDeadline": "Đặt thời hạn"
+      },
       "validation": {
+        "deadline": {
+          "invalid": "Thời hạn không hợp lệ"
+        },
         "index": {
           "invalid": "Vị trí không hợp lệ"
         },
@@ -2912,8 +2918,14 @@
         "parentId": {
           "invalid": "ID cha không hợp lệ"
         },
+        "subtaskId": {
+          "invalid": "ID công việc con không hợp lệ"
+        },
         "taskId": {
           "invalid": "ID thẻ không hợp lệ"
+        },
+        "userId": {
+          "invalid": "ID người dùng không hợp lệ"
         }
       }
     },
@@ -2949,7 +2961,6 @@
       "amount": "Số tiền",
       "copyId": "Sao chép ID",
       "createdDate": "Ngày tạo",
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "description": "Mô tả",
       "descriptionPlaceholder": "Tìm kiếm theo mô tả...",
       "method": "Cổng thanh toán",
@@ -3119,7 +3130,6 @@
       "code": "Mã",
       "codePlaceholder": "Nhập mã để tìm kiếm...",
       "createdOnUtc": "Ngày tạo",
-      "dateFormat": "HH:mm dd/MM/yyyy",
       "discount": "Giảm giá",
       "discountType": "Loại",
       "endsAt": "Kết thúc",

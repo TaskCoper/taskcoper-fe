@@ -9,9 +9,10 @@ import UpdateScheduleDialog from '@/features/schedules/components/update-schedul
 import { useDeleteSchedule } from '@/features/schedules/hooks/use-delete-schedule'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { MeetingRule } from '@/features/schedules/types'
+import { formatDate } from '@/lib/date'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
-import { format, isAfter, isBefore, parseISO } from 'date-fns'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 import { CalendarClock, CalendarPlusIcon, PencilIcon, Trash2Icon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +59,7 @@ const getScheduleActivationVariant = (rule: MeetingRule): ScheduleActivationVari
 }
 
 const formatDateCompact = (iso: string): string => {
-  return format(parseISO(iso), 'MMM d')
+  return formatDate(parseISO(iso), 'MMM d')
 }
 
 const formatDuration = (startTime: string, endTime: string): string => {

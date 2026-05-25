@@ -18,8 +18,8 @@ import { useGetFeedbacks } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import PackageFeedbacksDialog from '@/features/mentor-packages/components/package-feedbacks-dialog'
 import { useGetMentorPackage } from '@/features/mentor-packages/hooks/use-get-mentor-package'
 import RequestPackageDialog from '@/features/package-bookings/components/request-package-dialog'
-import { cn, formatCurrency, formatDate, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
-import { formatDistanceToNow } from 'date-fns'
+import { useDateFormat } from '@/lib/date'
+import { cn, formatCurrency, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import {
   AlertTriangleIcon,
   CalendarDaysIcon,
@@ -151,6 +151,7 @@ const MentorPackageBookSkeleton = () => (
 
 export default function MentorPackageBookPage() {
   const { t } = useTranslation()
+  const { formatDate, formatRelative } = useDateFormat()
   const { me } = useGetMe()
   const { packageId } = useParams<{ packageId: string }>()
 
@@ -216,8 +217,8 @@ export default function MentorPackageBookPage() {
 
   const notAvailableText = t('mentorPackage.bookPage.notAvailable')
   const updatedOnDisplay = mentorPackage?.modifiedOnUtc
-    ? formatDate(mentorPackage.modifiedOnUtc)
-    : formatDate(mentorPackage?.createdOnUtc)
+    ? formatDate(mentorPackage.modifiedOnUtc, 'dateLong')
+    : formatDate(mentorPackage?.createdOnUtc, 'dateLong')
   const averageFeedbackRatingDisplay = mentorPackage?.averageFeedbackRating?.toFixed(1) ?? notAvailableText
   const durationRules =
     mentorPackage && mentorPackage.totalSessions > 0
@@ -532,9 +533,7 @@ export default function MentorPackageBookPage() {
                               className='gap-0.5'
                             />
 
-                            <p className='text-xs text-muted-foreground'>
-                              {formatDistanceToNow(new Date(feedback.createdOnUtc), { addSuffix: true })}
-                            </p>
+                            <p className='text-xs text-muted-foreground'>{formatRelative(feedback.createdOnUtc)}</p>
                           </div>
                         </div>
                       </div>

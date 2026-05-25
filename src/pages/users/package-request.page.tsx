@@ -6,9 +6,9 @@ import { PACKAGE_REQUEST_STATUS_THEME } from '@/features/package-bookings/consta
 import { useCancelRequest } from '@/features/package-bookings/hooks/use-cancel-request'
 import { useGetOutgoingRequest } from '@/features/package-bookings/hooks/use-get-outgoing-request'
 import { PackageRequestStatus, PackageRequestStatusLabel } from '@/features/package-bookings/types'
+import { useDateFormat } from '@/lib/date'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn, formatCurrency, getFirstParagraphTextFromHtml, getPlainTextFromHtml } from '@/shared/utils'
-import { format } from 'date-fns'
 import {
   ActivityIcon,
   BoxIcon,
@@ -101,6 +101,7 @@ const PackageRequestSkeleton = () => (
 export default function PackageRequestPage() {
   const { requestId } = useParams<{ requestId: string }>()
   const { t } = useTranslation()
+  const { formatDateTime } = useDateFormat()
   const { confirm } = useConfirmStore()
   const { outgoingRequest, isOutgoingRequestLoading } = useGetOutgoingRequest({ requestId })
   const { cancelRequest, isCancellingRequest } = useCancelRequest({ packageId: outgoingRequest?.mentorPackageId })
@@ -249,7 +250,7 @@ export default function PackageRequestPage() {
                 </div>
 
                 <p className='text-xs font-semibold'>
-                  {format(new Date(outgoingRequest.createdOnUtc), t('packageBooking.requestDetail.dateFormat'))}
+                  {formatDateTime(outgoingRequest.createdOnUtc, 'dateTimeMedium')}
                 </p>
               </div>
             </div>
@@ -283,7 +284,7 @@ export default function PackageRequestPage() {
                     <p className='text-xs font-medium'>{t('packageBooking.requestDetail.reviewedOn')}</p>
                   </div>
                   <p className='text-xs font-semibold'>
-                    {format(new Date(outgoingRequest.reviewedOnUtc), t('packageBooking.requestDetail.dateFormat'))}
+                    {formatDateTime(outgoingRequest.reviewedOnUtc, 'dateTimeMedium')}
                   </p>
                 </div>
               ) : null}
@@ -295,7 +296,7 @@ export default function PackageRequestPage() {
                     <p className='text-xs font-medium'>{t('packageBooking.requestDetail.consumedOn')}</p>
                   </div>
                   <p className='text-xs font-semibold'>
-                    {format(new Date(outgoingRequest.consumedOnUtc), t('packageBooking.requestDetail.dateFormat'))}
+                    {formatDateTime(outgoingRequest.consumedOnUtc, 'dateTimeMedium')}
                   </p>
                 </div>
               ) : null}

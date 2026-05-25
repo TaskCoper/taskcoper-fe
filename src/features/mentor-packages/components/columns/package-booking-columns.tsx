@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { PackageBookingStatus, PackageBookingStatusLabel } from '@/features/package-bookings/types'
-import { formatCurrency, formatDate, getAvatarFallback } from '@/shared/utils'
+import { formatDateTime } from '@/lib/date'
+import { formatCurrency, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CheckCircle2Icon, Clock3Icon, MoreHorizontalIcon, XCircleIcon } from 'lucide-react'
@@ -190,11 +191,7 @@ export const getColumns = (
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
           {row.original.activationDeadlineUtc
-            ? formatDate(row.original.activationDeadlineUtc, {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-              })
+            ? formatDateTime(row.original.activationDeadlineUtc, 'dateTimeMedium')
             : i18next.t('common.ui.emptyValue')}
         </p>
       ),
@@ -214,11 +211,7 @@ export const getColumns = (
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
           {row.original.usageDeadlineUtc
-            ? formatDate(row.original.usageDeadlineUtc, {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-              })
+            ? formatDateTime(row.original.usageDeadlineUtc, 'dateTimeMedium')
             : i18next.t('common.ui.emptyValue')}
         </p>
       ),
@@ -237,11 +230,7 @@ export const getColumns = (
       ),
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
-          {formatDate(row.original.createdOnUtc, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-          })}
+          {formatDateTime(row.original.createdOnUtc, 'dateTimeMedium')}
         </p>
       ),
       enableSorting: true,

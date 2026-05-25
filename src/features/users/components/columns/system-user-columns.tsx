@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { cn, formatDate, getAvatarFallback } from '@/shared/utils'
+import { formatDate } from '@/lib/date'
+import { cn, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import {
@@ -291,7 +292,7 @@ export const getColumns = (): ColumnDef<User>[] => {
       cell: ({ row }) => {
         const value = row.getValue('createdOnUtc')
         if (!value) return <p className='text-muted-foreground'>-</p>
-        return <p className='text-sm'>{formatDate(value as string)}</p>
+        return <p className='text-sm'>{formatDate(value as string, 'dateLong')}</p>
       },
       enableSorting: true,
       enableHiding: true,

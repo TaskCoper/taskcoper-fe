@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatCurrency, formatDate } from '@/shared/utils'
+import { formatDate } from '@/lib/date'
+import { formatCurrency } from '@/shared/utils'
 import type { Row } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CheckCircle2Icon, CheckIcon, CircleXIcon, EditIcon, Trash2Icon, XIcon } from 'lucide-react'
@@ -99,7 +100,7 @@ function CommissionTableRowItem({
               render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} />}
             />
           </TableCell>
-          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc)}</TableCell>
+          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc, 'dateLong')}</TableCell>
           <TableCell className='py-2'>
             <Button variant='ghost' size='icon-sm' onClick={onSubmit} disabled={isUpdatingCommission}>
               <CheckIcon className='size-4 text-green-600' />
@@ -124,7 +125,7 @@ function CommissionTableRowItem({
               )}
             </div>
           </TableCell>
-          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc)}</TableCell>
+          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc, 'dateLong')}</TableCell>
           <TableCell className='py-2'>
             <Button variant='ghost' size='icon-sm' onClick={onEdit}>
               <EditIcon className='size-3.5' />
