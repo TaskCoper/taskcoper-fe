@@ -1,4 +1,5 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { TransactionTargetModel } from '../transactions/types'
 import type { GetMyIncomingRequestsParams } from './hooks/use-get-my-incoming-requests'
 import type { GetMyOutgoingRequestsParams } from './hooks/use-get-my-outgoing-requests'
 import type {
@@ -13,9 +14,16 @@ class PackageBookingService {
   private readonly baseUrl = 'package-bookings'
 
   bookPackage = async ({ body }: { body: BookPackageFormValues }) => {
-    const { data } = await api.post<BaseResponse<{ transactionId: string }>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await api.post<
+      BaseResponse<{
+        transactionId: string
+        isAmountZero: boolean
+        targetModel: TransactionTargetModel
+        targetModelId: string
+      }>
+    >(`/v1/${this.baseUrl}`, body)
 
-    return data.value.transactionId
+    return data.value
   }
 
   requestPackage = async ({ body }: { body: RequestPackageFormValues }) => {

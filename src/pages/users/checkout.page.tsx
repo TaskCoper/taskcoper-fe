@@ -4,17 +4,10 @@ import { Progress } from '@/components/ui/progress'
 import { Spinner } from '@/components/ui/spinner'
 import { useGetTransaction } from '@/features/transactions/hooks/use-get-transaction'
 import { useGetTransactionStatus } from '@/features/transactions/hooks/use-get-transaction-status'
+import { TransactionStatus } from '@/features/transactions/types'
 import { usePaymentCountdown } from '@/hooks/use-payment-countdown'
 import { cn, formatCurrency } from '@/shared/utils'
-import {
-  CheckCircle2Icon,
-  CopyIcon,
-  ExternalLinkIcon,
-  LockKeyholeIcon,
-  RefreshCcwIcon,
-  ShieldAlertIcon,
-  TimerIcon
-} from 'lucide-react'
+import { CheckCircle2Icon, CopyIcon, ExternalLinkIcon, LockKeyholeIcon, ShieldAlertIcon, TimerIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
@@ -124,7 +117,7 @@ export default function CheckoutPage() {
               <Link to='/'>{t('common.button.cancel')}</Link>
             </Button>
           </div>
-        ) : (
+        ) : transaction.status === TransactionStatus.Pending ? (
           <Card className='flex flex-row overflow-hidden p-2'>
             <div className='flex-1 p-4 flex flex-col gap-5'>
               <div>
@@ -134,8 +127,8 @@ export default function CheckoutPage() {
 
               <div
                 className={cn(
-                  'aspect-square overflow-hidden self-center w-full max-w-72',
-                  !isPaid && isExpired && 'opacity-40 grayscale'
+                  'aspect-square overflow-hidden self-center w-full max-w-72 flex justify-center items-center',
+                  !isPaid && isExpired && 'opacity-40 grayscale bg-muted rounded-lg'
                 )}
               >
                 {!transaction.qrCodePaymentUrl || qrBroken ? (
@@ -232,24 +225,14 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className='flex gap-2 mt-auto'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='flex-1 gap-1.5'
-                  onClick={() => window.location.reload()}
-                  disabled={isPaid}
-                >
-                  <RefreshCcwIcon className='size-3.5' />
-                  {t('checkout.refresh')}
-                </Button>
+              {transaction.qrCodePaymentUrl && (
                 <Button asChild variant='outline' size='sm' className='flex-1 gap-1.5'>
                   <a href={transaction.qrCodePaymentUrl} target='_blank' rel='noreferrer'>
                     <ExternalLinkIcon className='size-3.5' />
                     {t('checkout.openPaymentLink')}
                   </a>
                 </Button>
-              </div>
+              )}
             </div>
 
             <div className='w-80 shrink-0 bg-blue-100/40 p-8 flex flex-col justify-center items-center gap-6 rounded-lg'>
@@ -264,6 +247,25 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+          </Card>
+        ) : (
+          <Card className='max-w-md mx-auto p-8 flex flex-col justify-center items-center text-center gap-1'>
+            {isPaid ? (
+              <CheckCircle2Icon className='size-12 text-emerald-600' />
+            ) : (
+              <ShieldAlertIcon className='size-12 text-destructive' />
+            )}
+            <p className='text-lg font-semibold'>
+              {isPaid ? t('checkout.status.paidDesc') : t('checkout.error.expired')}
+            </p>
+            {isPaid && isInitiallyPaid === false && (
+              <p className='text-sm text-muted-foreground'>{t('checkout.status.redirecting')}</p>
+            )}
+            {!isPaid && <p className='text-sm text-muted-foreground'>{t('checkout.error.expiredDesc')}</p>}
+
+            <Button size='sm' variant='outline' className='mt-4' onClick={() => navigate(-1)}>
+              {t('common.button.back')}
+            </Button>
           </Card>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { TransactionTargetModel } from '@/features/transactions/types'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -26,8 +27,13 @@ export const useBookPackage = () => {
 
   const { mutate: bookPackage, isPending: isBookingPackage } = useMutation({
     mutationFn: packageBookingService.bookPackage,
-    onSuccess: (transactionId) => {
-      navigate(`/payments/checkout?transactionId=${transactionId}`)
+    onSuccess: ({ targetModel, transactionId, targetModelId, isAmountZero }) => {
+      // For 100% voucher discount, we want to navigate users to the purchase details page instead of the checkout page since there's no payment needed
+      if (targetModel === TransactionTargetModel.PackageBooking && isAmountZero) {
+        navigate(`/purchases/${targetModelId}`)
+      } else {
+        navigate(`/payments/checkout?transactionId=${transactionId}`)
+      }
     },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
