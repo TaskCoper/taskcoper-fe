@@ -30,6 +30,8 @@ export const useBookPackage = () => {
     onSuccess: ({ targetModel, transactionId, targetModelId, isAmountZero }) => {
       // For 100% voucher discount, we want to navigate users to the purchase details page instead of the checkout page since there's no payment needed
       if (targetModel === TransactionTargetModel.PackageBooking && isAmountZero) {
+        // since the request status will change to Consumed so we need to invalidate the cache of outgoing requests to reflect the change in the UI
+        queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.requests.allMyOutgoing() })
         navigate(`/purchases/${targetModelId}`)
       } else {
         navigate(`/payments/checkout?transactionId=${transactionId}`)
@@ -40,10 +42,13 @@ export const useBookPackage = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: () => {
+    onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions.allMy() })
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions.statusStats() })
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions.typeStats() })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.mentorPackages.requests.detailOutgoing(variables.body.purchaseRequestId)
+      })
     }
   })
 
