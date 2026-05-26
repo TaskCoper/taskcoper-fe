@@ -23,7 +23,8 @@ export const useGetMyOutgoingRequests = ({
     isLoading: isMyOutgoingRequestsLoading
   } = useQuery({
     queryKey: queryKeys.mentorPackages.requests.myOutgoing({ mentorPackageId, status, pageIndex, pageSize }),
-    queryFn: () => packageBookingService.getMyOutgoingRequests({ mentorPackageId, status, pageIndex, pageSize })
+    queryFn: () => packageBookingService.getMyOutgoingRequests({ mentorPackageId, status, pageIndex, pageSize }),
+    staleTime: 5 * 60 * 1000 // 5 minutes
   })
 
   return { myOutgoingRequests, isMyOutgoingRequestsLoading }

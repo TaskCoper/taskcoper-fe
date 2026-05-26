@@ -18,7 +18,10 @@ export const requestPackageSchema = (t: TFunction) => {
   return z.object({
     mentorPackageId: z.uuid({ message: t('common.validation.uuid.invalid') }),
     bookedByProjectId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
-    problemStatement: z.string().max(20_000, { message: t('common.validation.string.max', { max: 20000 }) })
+    problemStatement: z
+      .string()
+      .min(1, { message: t('common.validation.string.min', { min: 1 }) })
+      .max(20_000, { message: t('common.validation.string.max', { max: 20000 }) })
   })
 }
 
