@@ -480,8 +480,8 @@
         "startTimeRequired": "Start time is required"
       },
       "string": {
-        "min": "Must be at least {{min}} characters",
-        "max": "Must not exceed {{max}} characters"
+        "max": "Must not exceed {{max}} characters",
+        "min": "Must be at least {{min}} characters"
       },
       "timeZone": {
         "invalid": "Invalid time zone"
