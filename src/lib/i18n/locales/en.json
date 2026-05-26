@@ -627,6 +627,7 @@
     "wednesday": "Wed"
   },
   "error": {
+    "chunkLoadDescription": "A new version is available. Please refresh the page.",
     "forbidden": "Forbidden",
     "forbiddenDescription": "Accessing the page or resource you were trying to reach is forbidden",
     "home": "Go to homepage",
@@ -635,6 +636,7 @@
     "oops": "Oops!",
     "pageNotFound": "Something went wrong",
     "pageNotFoundDescription": "Sorry we were unable to find that page",
+    "refresh": "Refresh page",
     "serverError": "This page isn't working",
     "serverErrorDescription": "We apologise and are fixing the problem. Please try again later.",
     "somethingWentWrong": "Something went wrong",

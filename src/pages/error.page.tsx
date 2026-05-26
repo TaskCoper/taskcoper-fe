@@ -1,12 +1,51 @@
 import { Button } from '@/components/ui/button'
 import { AxiosError } from 'axios'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router'
+
+const DYNAMIC_IMPORT_RETRY_KEY = 'dynamic-import-retry'
+
+const DYNAMIC_IMPORT_ERROR_PATTERNS = [
+  'Failed to fetch dynamically imported module',
+  'Importing a module script failed',
+  'error loading dynamically imported module'
+]
+
+const normalizeErrorMessage = (error: unknown) => {
+  if (typeof error === 'string') return error
+  if (error instanceof Error) return error.message
+  return ''
+}
+
+const isDynamicImportError = (error: unknown) => {
+  const normalized = normalizeErrorMessage(error).toLowerCase()
+  return DYNAMIC_IMPORT_ERROR_PATTERNS.some((pattern) => normalized.includes(pattern.toLowerCase()))
+}
+
+const extractChunkUrl = (error: unknown) => {
+  const message = normalizeErrorMessage(error)
+  const urlMatch = message.match(/https?:\/\/[^\s)]+/i)
+  return urlMatch?.[0] ?? 'unknown-chunk'
+}
 
 export default function ErrorPage() {
   const { t } = useTranslation()
   const error = useRouteError()
   const navigate = useNavigate()
+  const chunkError = isDynamicImportError(error)
+
+  useEffect(() => {
+    if (!chunkError) return
+
+    const chunkUrl = extractChunkUrl(error)
+    const retriedChunkUrl = sessionStorage.getItem(DYNAMIC_IMPORT_RETRY_KEY)
+
+    if (retriedChunkUrl === chunkUrl) return
+
+    sessionStorage.setItem(DYNAMIC_IMPORT_RETRY_KEY, chunkUrl)
+    window.location.reload()
+  }, [chunkError, error])
 
   let title = t('error.maintenance')
   let message = t('error.maintenanceDescription')
@@ -41,8 +80,13 @@ export default function ErrorPage() {
       message = t('error.maintenanceDescription')
     }
   } else if (error instanceof Error) {
-    title = t('error.maintenance')
-    message = t('error.maintenanceDescription')
+    if (chunkError) {
+      title = t('error.maintenance')
+      message = t('error.chunkLoadDescription')
+    } else {
+      title = t('error.maintenance')
+      message = t('error.maintenanceDescription')
+    }
   }
 
   return (
@@ -55,9 +99,15 @@ export default function ErrorPage() {
           <p className='text-xs font-medium text-foreground/60 sm:text-base'>{message}</p>
         </div>
 
-        <Button onClick={() => navigate('/', { replace: true })} className='w-full sm:w-auto'>
-          {t('error.home')}
-        </Button>
+        {chunkError ? (
+          <Button onClick={() => window.location.reload()} className='w-full sm:w-auto'>
+            {t('error.refresh')}
+          </Button>
+        ) : (
+          <Button onClick={() => navigate('/', { replace: true })} className='w-full sm:w-auto'>
+            {t('error.home')}
+          </Button>
+        )}
       </div>
     </div>
   )
