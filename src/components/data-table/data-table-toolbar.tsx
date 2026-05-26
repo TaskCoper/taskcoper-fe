@@ -88,7 +88,13 @@ export function DataTableToolbar<TData>({
           />
         ))}
         {isFiltered && (
-          <Button aria-label='Reset filters' variant='outline' size='sm' className='border-dashed' onClick={onReset}>
+          <Button
+            aria-label={t('dataTable.filter.resetFilters')}
+            variant='outline'
+            size='sm'
+            className='border-dashed'
+            onClick={onReset}
+          >
             <X />
             {t('dataTable.toolbar.reset')}
           </Button>

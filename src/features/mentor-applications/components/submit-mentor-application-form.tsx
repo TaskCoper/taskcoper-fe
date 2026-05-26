@@ -165,6 +165,7 @@ export default function SubmitMentorApplicationForm({
 
                                 <FileTypeIcon className={cn('size-8', isPdf ? 'text-red-500' : 'text-blue-500')} />
                                 <p className='w-full truncate text-xs font-medium'>{file.name}</p>
+                                {/* i18next-instrument-ignore-next-line */}
                                 <p className='text-muted-foreground text-xs'>{(file.size / 1024).toFixed(0)} KB</p>
 
                                 {status === 'uploading' && (

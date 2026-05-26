@@ -17,7 +17,12 @@ import { useDeleteSubtask } from '../hooks/use-delete-subtask'
 import { useUpdateSubtask } from '../hooks/use-update-subtask'
 import { useUpdateSubtaskStatus } from '../hooks/use-update-subtask-status'
 import type { SubtaskWithChildren } from '../types'
-import { updateSubtaskSchema, updateSubtaskStatusSchema } from '../validations'
+import {
+  updateSubtaskSchema,
+  updateSubtaskStatusSchema,
+  type UpdateSubtaskFormValues,
+  type UpdateSubtaskStatusFormValues
+} from '../validations'
 import SortableSubtaskCard from './sortable-subtask-card'
 
 interface ParentSubtaskCardProps {
@@ -72,12 +77,14 @@ export default function ParentSubtaskCard({
     initialValue: subtask.name,
     clickType: 'single',
     onSave: (newName) => {
-      const validated = updateSubtaskSchema(t).safeParse({
+      const payload: UpdateSubtaskFormValues = {
         id: subtask.id,
         name: newName,
         index: subtask.index,
-        parentId: subtask.parentId
-      })
+        parentId: subtask.parentId,
+        deadline: subtask.deadline
+      }
+      const validated = updateSubtaskSchema(t).safeParse(payload)
 
       if (validated.success) {
         updateSubtask({ body: validated.data })
@@ -103,10 +110,11 @@ export default function ParentSubtaskCard({
   }
 
   const handleCheckboxChange = (checked: boolean) => {
-    const validated = updateSubtaskStatusSchema(t).safeParse({
+    const payload: UpdateSubtaskStatusFormValues = {
       id: subtask.id,
       isCompleted: checked
-    })
+    }
+    const validated = updateSubtaskStatusSchema(t).safeParse(payload)
 
     if (validated.success) {
       updateSubtaskStatus({ body: validated.data })
@@ -139,10 +147,10 @@ export default function ParentSubtaskCard({
             className='mt-2 size-4'
             disabled={!canUpdate}
           />
-          <div className='flex justify-start items-center gap-2 w-full'>
+          <div className='flex justify-start items-center gap-2 w-full min-w-0'>
             <p
               className={cn(
-                'font-semibold hover:bg-muted rounded-sm py-1',
+                'font-semibold hover:bg-muted rounded-sm py-1 truncate',
                 canUpdate ? 'cursor-text' : 'cursor-default'
               )}
               {...(canUpdate ? triggerProps : {})}
@@ -175,7 +183,7 @@ export default function ParentSubtaskCard({
       <div className='flex gap-3'>
         <p className='text-[10px] text-muted-foreground'>{progress.toFixed(0)}%</p>
 
-        <div className='w-full space-y-2 mt-1'>
+        <div className='w-full min-w-0 space-y-2 mt-1'>
           <Progress value={progress} />
 
           {displayedChildren.length === 0 && subtask.isCompleted ? (

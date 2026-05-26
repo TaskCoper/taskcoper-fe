@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatDate, getAvatarFallback } from '@/shared/utils'
+import { formatDate } from '@/lib/date'
+import { getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CalendarIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
@@ -236,7 +237,7 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
         const value = row.getValue('startDate')
         if (!value) return <p className='text-muted-foreground'>{i18next.t('systemProjects.column.notProvided')}</p>
 
-        return <p>{formatDate(value as string)}</p>
+        return <p>{formatDate(value as string, 'dateLong')}</p>
       },
       enableSorting: true,
       enableHiding: true,
@@ -257,7 +258,7 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
         const value = row.getValue('endDate')
         if (!value) return <p className='text-muted-foreground'>{i18next.t('systemProjects.column.notProvided')}</p>
 
-        return <p>{formatDate(value as string)}</p>
+        return <p>{formatDate(value as string, 'dateLong')}</p>
       },
       enableSorting: true,
       enableHiding: true,

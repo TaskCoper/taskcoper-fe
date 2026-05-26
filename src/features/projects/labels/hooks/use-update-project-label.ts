@@ -1,5 +1,6 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -38,7 +39,7 @@ export const useUpdateProjectLabel = ({
   const { mutate: updateProjectLabel, isPending: isUpdatingProjectLabel } = useMutation({
     mutationFn: projectLabelService.updateProjectLabel,
     onMutate: async ({ body }) => {
-      const queryKey = ['project-labels', projectIdentifier]
+      const queryKey = queryKeys.projects.labels(projectIdentifier)
       await queryClient.cancelQueries({ queryKey })
 
       const previousLabels = queryClient.getQueryData<BasePaginationResponse<Label>>(queryKey)
@@ -89,15 +90,13 @@ export const useUpdateProjectLabel = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.tasks.detail(taskIdentifier)
+      invalidateTaskTree(queryClient, {
+        taskId: taskIdentifier,
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
       })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.labels(projectIdentifier) })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
-      })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.labelStatsAll(projectIdentifier) })
     }
   })

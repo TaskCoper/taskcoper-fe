@@ -4,14 +4,16 @@ import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import PackageFeedbackCard from '@/features/feedbacks/components/package-feedback-card'
 import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
 import { MeetingStatus } from '@/features/meetings/types'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
+import PurchaseRequestDialog from '@/features/mentor-packages/components/purchase-request-dialog'
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
-import { cn, getAvatarFallback } from '@/shared/utils'
-import { format } from 'date-fns'
+import { useDateFormat } from '@/lib/date'
+import { cn, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import {
   BoxIcon,
   CalendarDaysIcon,
@@ -33,15 +35,20 @@ export interface SelectedTimeSlot {
   endTimeUtc: string
 }
 
-const formatRange = (startISO: string, endISO: string) => {
+const formatRange = (
+  startISO: string,
+  endISO: string,
+  formatDate: (input: Date | string, preset?: string) => string,
+  formatTime: (input: Date | string, preset?: string) => string
+) => {
   const start = new Date(startISO)
   const end = new Date(endISO)
 
-  const sameDay = format(start, 'yyyy-MM-dd') === format(end, 'yyyy-MM-dd')
+  const sameDay = formatDate(start, 'iso') === formatDate(end, 'iso')
 
-  const datePart = format(start, 'd MMM yyyy')
-  const startTime = format(start, 'HH:mm')
-  const endTime = format(end, 'HH:mm')
+  const datePart = formatDate(start, 'dateMedium')
+  const startTime = formatTime(start)
+  const endTime = formatTime(end)
 
   // get GMT offset from local timezone
   const offsetMinutes = -start.getTimezoneOffset()
@@ -54,67 +61,71 @@ const formatRange = (startISO: string, endISO: string) => {
     return `${datePart}, ${startTime} – ${endTime} (${gmt})`
   }
 
-  const endDatePart = format(end, 'd MMM yyyy')
+  const endDatePart = formatDate(end, 'dateMedium')
   return `${datePart}, ${startTime} → ${endDatePart}, ${endTime} (${gmt})`
 }
 
+const FeedbackCardSkeleton = () => (
+  <div className='border border-border rounded-xl overflow-hidden'>
+    <div className='flex items-center justify-between p-4'>
+      <div className='flex items-center gap-2'>
+        <Skeleton className='size-9 rounded-full' />
+        <div className='space-y-1'>
+          <Skeleton className='h-4 w-28' />
+          <Skeleton className='h-3 w-20' />
+        </div>
+      </div>
+      <Skeleton className='h-6 w-16 rounded-md' />
+    </div>
+
+    <div className='border-t border-border bg-muted/50 px-4 py-3 space-y-2'>
+      {[1, 2].map((row) => (
+        <div key={row} className='flex items-center justify-between'>
+          <Skeleton className='h-3 w-40' />
+          <Skeleton className='h-4 w-20' />
+        </div>
+      ))}
+    </div>
+
+    <div className='border-t border-border p-4 space-y-2'>
+      <Skeleton className='h-3 w-full' />
+      <Skeleton className='h-3 w-5/6' />
+      <Skeleton className='h-3 w-3/4' />
+    </div>
+  </div>
+)
+
 const PurchasedPackageSkeleton = () => (
   <div className='absolute inset-0 overflow-y-auto'>
-    <div className='max-w-7xl mx-auto space-y-10 p-4 pb-10 grid grid-cols-12 gap-6'>
+    <div className='max-w-7xl mx-auto p-4 pb-10 grid grid-cols-12 gap-6'>
       <div className='col-span-8 space-y-4'>
         <Skeleton className='w-full h-60 rounded-xl' />
 
-        <div className='space-y-2'>
+        <div className='space-y-1.5'>
           <Skeleton className='h-7 w-2/3' />
           <Skeleton className='h-4 w-full' />
-          <Skeleton className='h-4 w-5/6' />
+          <Skeleton className='h-4 w-4/5' />
         </div>
 
         <div className='space-y-4'>
-          {[1, 2].map((item) => (
-            <div key={item} className='p-4 border border-muted rounded-xl space-y-3'>
-              <div className='flex items-start justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Skeleton className='size-9 rounded-full' />
-                  <div className='space-y-1'>
-                    <Skeleton className='h-4 w-32' />
-                    <Skeleton className='h-3 w-24' />
-                  </div>
-                </div>
-                <Skeleton className='h-6 w-16 rounded-md' />
-              </div>
-
-              <div className='space-y-2'>
-                <Skeleton className='h-4 w-full' />
-                <Skeleton className='h-4 w-5/6' />
-                <Skeleton className='h-4 w-2/3' />
-              </div>
-
-              <div className='grid grid-cols-2 gap-x-6 gap-y-2.5 pt-2'>
-                {[1, 2, 3, 4].map((metric) => (
-                  <div key={metric} className='flex items-center justify-between'>
-                    <Skeleton className='h-3 w-20' />
-                    <Skeleton className='h-4 w-16' />
-                  </div>
-                ))}
-              </div>
-            </div>
+          {[1, 2].map((i) => (
+            <FeedbackCardSkeleton key={i} />
           ))}
         </div>
       </div>
 
       <div className='col-span-4 space-y-8'>
-        <Skeleton className='h-24 w-full rounded-lg' />
-
         <div className='space-y-2'>
-          <Skeleton className='h-4 w-40' />
-          <Skeleton className='h-3 w-56' />
+          <div className='space-y-0.5'>
+            <Skeleton className='h-5 w-44' />
+            <Skeleton className='h-3 w-52' />
+          </div>
           <Skeleton className='h-2 w-full rounded-full' />
         </div>
 
         <div className='space-y-4'>
-          <div className='space-y-1'>
-            <Skeleton className='h-4 w-32' />
+          <div className='space-y-0.5'>
+            <Skeleton className='h-5 w-32' />
             <Skeleton className='h-3 w-52' />
           </div>
 
@@ -122,21 +133,21 @@ const PurchasedPackageSkeleton = () => (
             {[1, 2, 3].map((row) => (
               <div key={row} className='flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
-                  <Skeleton className='size-4 rounded-full' />
+                  <Skeleton className='size-4' />
                   <Skeleton className='h-3 w-28' />
                 </div>
-                <Skeleton className='h-3 w-20' />
+                <Skeleton className='h-3 w-24' />
               </div>
             ))}
           </div>
 
-          <Skeleton className='h-10 w-full rounded-md' />
+          <Skeleton className='h-9 w-full rounded-md' />
         </div>
 
         <div className='space-y-2.5'>
-          <Skeleton className='h-4 w-24' />
+          <Skeleton className='h-5 w-16' />
           <div className='flex items-center gap-2'>
-            <Skeleton className='size-9 rounded-full' />
+            <Skeleton className='size-10 rounded-full' />
             <div className='space-y-1'>
               <Skeleton className='h-4 w-28' />
               <Skeleton className='h-3 w-36' />
@@ -145,19 +156,19 @@ const PurchasedPackageSkeleton = () => (
         </div>
 
         <div className='space-y-2.5'>
-          <Skeleton className='h-4 w-28' />
-          <Skeleton className='h-3 w-40' />
-        </div>
-
-        <div className='space-y-2.5'>
-          <div className='space-y-1'>
-            <Skeleton className='h-4 w-24' />
-            <Skeleton className='h-3 w-56' />
-          </div>
-
+          <Skeleton className='h-5 w-24' />
           <div className='space-y-2'>
-            {[1, 2, 3].map((item) => (
-              <Skeleton key={item} className='h-16 w-full rounded-md' />
+            {[1, 2, 3].map((i) => (
+              <div key={i} className='flex items-start gap-2 p-1 h-18 border border-border rounded-md'>
+                <Skeleton className='h-full w-1.5 rounded-full' />
+                <div className='flex flex-col justify-between py-1 flex-1 h-full'>
+                  <Skeleton className='h-3 w-40' />
+                  <div className='space-y-0.5'>
+                    <Skeleton className='h-4 w-28' />
+                    <Skeleton className='h-3 w-36' />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -170,7 +181,10 @@ export default function PurchasedPackagePage() {
   const { packageId } = useParams<{ packageId: string }>()
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
   const [open, setOpen] = useState(false)
+  const [openRequestDialog, setOpenRequestDialog] = useState(false)
   const { t } = useTranslation()
+  const { formatDate, formatTime } = useDateFormat()
+  const { me } = useGetMe()
 
   const { purchasedMentorPackage, isLoadingPurchasedMentorPackage } = useGetPurchasedMentorPackage({ packageId })
   const { feedbacks } = useGetPurchasedPackageFeedbacks({
@@ -225,8 +239,12 @@ export default function PurchasedPackagePage() {
           />
 
           <div>
-            <p className='text-2xl font-bold'>{purchasedMentorPackage?.name}</p>
-            <p className='text-muted-foreground text-sm'>{purchasedMentorPackage?.description}</p>
+            <Link to={`/packages/${purchasedMentorPackage?.id}/book`} className='hover:underline hover:text-primary'>
+              <p className='text-2xl font-bold'>{purchasedMentorPackage?.name}</p>
+            </Link>
+            <p className='text-muted-foreground text-sm'>
+              {getFirstParagraphTextFromHtml(purchasedMentorPackage?.description)}
+            </p>
           </div>
 
           {(feedbacks?.value?.items?.length ?? 0) > 0 ? (
@@ -320,16 +338,25 @@ export default function PurchasedPackagePage() {
 
                 <p className='text-xs font-semibold'>
                   {purchasedMentorPackage?.createdOnUtc
-                    ? format(new Date(purchasedMentorPackage.createdOnUtc), t('purchasedPackage.purchasedOnDateFormat'))
+                    ? formatDate(purchasedMentorPackage.createdOnUtc, 'dateLong')
                     : '-'}
                 </p>
               </div>
             </div>
 
-            <Button onClick={() => setOpen(true)} className='w-full'>
-              <CalendarPlusIcon />
-              {t('purchasedPackage.bookSchedule')}
-            </Button>
+            <div className='space-y-2'>
+              <Button onClick={() => setOpen(true)} className='w-full'>
+                <CalendarPlusIcon />
+                {t('purchasedPackage.bookSchedule')}
+              </Button>
+
+              {purchasedMentorPackage?.purchaseRequestId ? (
+                <Button variant='outline' size='sm' className='w-full' onClick={() => setOpenRequestDialog(true)}>
+                  <FileTextIcon />
+                  {t('purchasedPackage.viewPurchaseRequest')}
+                </Button>
+              ) : null}
+            </div>
           </div>
 
           <div className='space-y-2.5'>
@@ -357,79 +384,117 @@ export default function PurchasedPackagePage() {
             </Link>
           </div>
 
-          <div className='space-y-2.5'>
-            <p className='font-semibold'>{t('meeting.detail.participants')}</p>
-          </div>
+          {purchasedMentorPackage?.participants && purchasedMentorPackage.participants.length ? (
+            <div className='space-y-2.5'>
+              <p className='font-semibold'>{t('meeting.detail.participants')}</p>
+              <div className='flex flex-wrap gap-2'>
+                {purchasedMentorPackage.participants
+                  .filter((x) => x.userId !== purchasedMentorPackage?.mentorUserId)
+                  .map((participant) => (
+                    <Link
+                      key={participant.userId}
+                      to={`/users/${participant.userId}`}
+                      className='flex items-center gap-2'
+                    >
+                      <Avatar className='hover:brightness-90'>
+                        <AvatarImage src={participant.avatarUrl ?? undefined} />
+                        <AvatarFallback>
+                          {getAvatarFallback(`${participant.firstName} ${participant.lastName}`)}
+                        </AvatarFallback>
+                      </Avatar>
 
-          <div className='space-y-2.5'>
-            <div>
-              <p className='font-semibold'>{t('purchasedPackage.history.title')}</p>
-              <p className='text-xs text-muted-foreground'>{t('purchasedPackage.history.description')}</p>
-            </div>
-
-            <div className='space-y-2'>
-              {purchasedMentorPackage?.meetings
-                .filter((x) => !x.parentId)
-                .sort(
-                  (a, b) =>
-                    b.packageBookingSequence - a.packageBookingSequence ||
-                    new Date(b.createdOnUtc).getTime() - new Date(a.createdOnUtc).getTime()
-                )
-                .map((meeting) => (
-                  <Card key={meeting.meetingId} className='p-1 shadow-none rounded-md h-18 flex-row gap-2 relative'>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div
-                          className={cn(
-                            'h-full w-1.5 rounded-full cursor-default',
-                            getMeetingStatusTheme(meeting.status).dot
-                          )}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent side='top' className='text-xs'>
-                        {t('purchasedPackage.statusTooltip', {
-                          status: t(`meeting.status.${meeting.status.toLowerCase()}`)
-                        })}
-                      </TooltipContent>
-                    </Tooltip>
-                    <div className='flex flex-col justify-between py-1'>
-                      <p className='text-xs text-muted-foreground'>
-                        {formatRange(meeting.startTimeUtc, meeting.endTimeUtc)}
-                      </p>
-
-                      <div>
-                        <Link
-                          to={`meetings/${meeting.meetingId}`}
-                          className='hover:underline hover:text-primary leading-none'
-                        >
-                          <p className='font-semibold'>
-                            {t('purchasedPackage.meetingSession', { sequence: meeting.packageBookingSequence })}
-                          </p>
-                        </Link>
-
-                        {meeting.meetingLink ? (
-                          <Link
-                            to={meeting.meetingLink}
-                            target='_blank'
-                            className='text-xs text-foreground/80 hover:underline'
-                          >
-                            <p>{meeting.meetingLink.replace('https://', '')}</p>
-                          </Link>
-                        ) : (
-                          <p className='text-xs text-muted-foreground'>{t('meeting.detail.noLinkYet')}</p>
-                        )}
+                      <div className='-space-y-0.5'>
+                        <p className='text-sm font-medium hover:underline hover:text-primary'>
+                          {participant.firstName} {participant.lastName}
+                        </p>
+                        <p className='text-xs text-muted-foreground'>{participant.email}</p>
                       </div>
-                    </div>
-
-                    {meeting.note ? (
-                      <FileTextIcon className='size-4 text-muted-foreground absolute top-2 right-2' />
-                    ) : null}
-                  </Card>
-                ))}
+                    </Link>
+                  ))}
+              </div>
             </div>
-          </div>
+          ) : null}
+
+          {purchasedMentorPackage?.meetings?.length ? (
+            <div className='space-y-2.5'>
+              <div>
+                <p className='font-semibold'>{t('purchasedPackage.history.title')}</p>
+                <p className='text-xs text-muted-foreground'>{t('purchasedPackage.history.description')}</p>
+              </div>
+
+              <div className='space-y-2'>
+                {purchasedMentorPackage?.meetings
+                  .filter((x) => !x.parentId)
+                  .sort(
+                    (a, b) =>
+                      b.packageBookingSequence - a.packageBookingSequence ||
+                      new Date(b.createdOnUtc).getTime() - new Date(a.createdOnUtc).getTime()
+                  )
+                  .map((meeting) => (
+                    <Card key={meeting.meetingId} className='p-1 shadow-none rounded-md h-18 flex-row gap-2 relative'>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div
+                            className={cn(
+                              'h-full w-1.5 rounded-full cursor-default',
+                              getMeetingStatusTheme(meeting.status).dot
+                            )}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent side='top' className='text-xs'>
+                          {t('purchasedPackage.statusTooltip', {
+                            status: t(`meeting.status.${meeting.status.toLowerCase()}`)
+                          })}
+                        </TooltipContent>
+                      </Tooltip>
+                      <div className='flex flex-col justify-between py-1'>
+                        <p className='text-xs text-muted-foreground'>
+                          {formatRange(meeting.startTimeUtc, meeting.endTimeUtc, formatDate, formatTime)}
+                        </p>
+
+                        <div>
+                          <Link
+                            to={`meetings/${meeting.meetingId}`}
+                            className='hover:underline hover:text-primary leading-none'
+                          >
+                            <p className='font-semibold'>
+                              {t('purchasedPackage.meetingSession', { sequence: meeting.packageBookingSequence })}
+                            </p>
+                          </Link>
+
+                          {meeting.meetingLink ? (
+                            <Link
+                              to={meeting.meetingLink}
+                              target='_blank'
+                              className='text-xs text-foreground/80 hover:underline'
+                            >
+                              <p>{meeting.meetingLink.replace('https://', '')}</p>
+                            </Link>
+                          ) : (
+                            <p className='text-xs text-muted-foreground'>{t('meeting.detail.noLinkYet')}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {meeting.note ? (
+                        <FileTextIcon className='size-4 text-muted-foreground absolute top-2 right-2' />
+                      ) : null}
+                    </Card>
+                  ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
+
+      {purchasedMentorPackage?.purchaseRequestId ? (
+        <PurchaseRequestDialog
+          open={openRequestDialog}
+          onOpenChange={setOpenRequestDialog}
+          requestId={purchasedMentorPackage.purchaseRequestId}
+          isMentorView={me?.id === purchasedMentorPackage.mentorUserId}
+        />
+      ) : null}
 
       {purchasedMentorPackage?.mentorUserId ? (
         <MentorScheduleDialog

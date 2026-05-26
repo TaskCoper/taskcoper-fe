@@ -7,7 +7,7 @@ export const CommissionTargetModel = {
 export type CommissionTargetModel = (typeof CommissionTargetModel)[keyof typeof CommissionTargetModel]
 
 export const CommissionTargetModelLabel = {
-  [CommissionTargetModel.MentorPackage]: 'Mentor Package'
+  [CommissionTargetModel.MentorPackage]: 'commission.targetModel.mentorPackage'
 } as const
 
 export type CommissionTargetModelLabel = (typeof CommissionTargetModelLabel)[CommissionTargetModel]

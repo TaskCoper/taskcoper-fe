@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
         <header className='h-14 border-b bg-background/80 backdrop-blur-md flex items-center px-4 sticky top-0 z-50'>
           <div className='max-w-4xl mx-auto w-full flex items-center justify-between'>
             <Link to='/' className='flex items-center gap-2 group transition-opacity hover:opacity-80'>
-              <img src={logo} alt='TaskCoper' className='h-7 w-auto object-contain' />
+              <img src={logo} alt={t('common.alt.logo')} className='h-7 w-auto object-contain' />
             </Link>
           </div>
         </header>
@@ -32,12 +32,14 @@ export default function PrivacyPolicyPage() {
           <div className='max-w-2xl mx-auto'>
             <div className='mb-12'>
               <div className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary mb-4'>
-                {t('legal.privacy.lastUpdated')}
+                {t('purchaseHistory.legal.privacy.lastUpdated')}
               </div>
               <h1 className='text-3xl sm:text-4xl font-bold tracking-tight text-slate-900'>
-                {t('legal.privacy.title')}
+                {t('purchaseHistory.legal.privacy.title')}
               </h1>
-              <p className='mt-4 text-base text-muted-foreground leading-relaxed'>{t('legal.privacy.intro')}</p>
+              <p className='mt-4 text-base text-muted-foreground leading-relaxed'>
+                {t('purchaseHistory.legal.privacy.intro')}
+              </p>
             </div>
 
             <div className='space-y-12'>
@@ -47,11 +49,13 @@ export default function PrivacyPolicyPage() {
                     <div className='p-2 rounded-lg bg-slate-50 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors'>
                       <Icon className='size-5' />
                     </div>
-                    <h2 className='text-lg font-semibold text-slate-800'>{t(`legal.privacy.sections.${key}.title`)}</h2>
+                    <h2 className='text-lg font-semibold text-slate-800'>
+                      {t(`purchaseHistory.legal.privacy.sections.${key}.title`)}
+                    </h2>
                   </div>
                   <div className='pl-12'>
                     <p className='text-sm sm:text-base text-slate-600 leading-relaxed'>
-                      {t(`legal.privacy.sections.${key}.content`)}
+                      {t(`purchaseHistory.legal.privacy.sections.${key}.content`)}
                     </p>
                   </div>
                 </section>
@@ -61,10 +65,10 @@ export default function PrivacyPolicyPage() {
             <Separator className='my-16 bg-slate-100' />
 
             <footer className='text-center text-sm text-muted-foreground pb-12'>
-              <p>© {new Date().getFullYear()} TaskCoper. All rights reserved.</p>
+              <p>{t('common.copyright.allRightsReserved', { year: new Date().getFullYear() })}</p>
               <div className='flex justify-center gap-4 mt-4'>
                 <Link to='/terms-of-service' className='hover:text-primary transition-colors'>
-                  {t('legal.terms.title')}
+                  {t('purchaseHistory.legal.terms.title')}
                 </Link>
                 <span>•</span>
                 <Link to='/' className='hover:text-primary transition-colors'>

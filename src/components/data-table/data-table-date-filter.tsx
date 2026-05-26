@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { formatDate } from '@/shared/utils'
+import { useDateFormat } from '@/lib/date'
 import type { Column } from '@tanstack/react-table'
 import { endOfDay, startOfDay } from 'date-fns'
 import { CalendarIcon, XCircle } from 'lucide-react'
@@ -52,6 +52,7 @@ interface DataTableDateFilterProps<TData> {
 
 export function DataTableDateFilter<TData>({ column, title, multiple }: DataTableDateFilterProps<TData>) {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const columnFilterValue = column.getFilterValue()
 
   const selectedDates = React.useMemo<DateSelection>(() => {
@@ -107,13 +108,16 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
     return selectedDates.length > 0
   }, [multiple, selectedDates])
 
-  const formatDateRange = React.useCallback((range: DateRange) => {
-    if (!range.from && !range.to) return ''
-    if (range.from && range.to) {
-      return `${formatDate(range.from)} - ${formatDate(range.to)}`
-    }
-    return formatDate(range.from ?? range.to)
-  }, [])
+  const formatDateRange = React.useCallback(
+    (range: DateRange) => {
+      if (!range.from && !range.to) return ''
+      if (range.from && range.to) {
+        return `${formatDate(range.from, 'dateMedium')} - ${formatDate(range.to, 'dateMedium')}`
+      }
+      return formatDate(range.from ?? range.to, 'dateMedium')
+    },
+    [formatDate]
+  )
 
   const label = React.useMemo(() => {
     if (multiple) {
@@ -138,7 +142,7 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
     if (getIsDateRange(selectedDates)) return null
 
     const hasSelectedDate = selectedDates.length > 0
-    const dateText = hasSelectedDate ? formatDate(selectedDates[0]) : t('dataTable.filter.selectDate')
+    const dateText = hasSelectedDate ? formatDate(selectedDates[0], 'dateMedium') : t('dataTable.filter.selectDate')
 
     return (
       <span className='flex items-center gap-2'>
@@ -151,7 +155,7 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
         )}
       </span>
     )
-  }, [selectedDates, multiple, formatDateRange, title, t])
+  }, [selectedDates, multiple, formatDateRange, title, t, formatDate])
 
   return (
     <Popover>

@@ -1,5 +1,6 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -110,22 +111,12 @@ export const useUpdateSubtaskStatus = ({
       })
     },
     onSettled: () => {
-      if (taskId) {
-        queryClient.invalidateQueries({ queryKey })
-      }
-
-      if (parentMilestoneIdentifier) {
-        if (projectIdentifier) {
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
-          })
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      }
-
-      if (projectIdentifier && user?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
-      }
+      invalidateTaskTree(queryClient, {
+        taskId,
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
+      })
     }
   })
 

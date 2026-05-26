@@ -1,4 +1,4 @@
-import { Field } from '@/components/ui/field'
+import { Field, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -41,6 +41,7 @@ export default function AddTaskForm({ onBlur }: AddTaskFormProps) {
                 }
               }}
             />
+            {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
           </Field>
         )}
       />

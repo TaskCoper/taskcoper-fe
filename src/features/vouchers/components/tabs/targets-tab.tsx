@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { getFirstParagraphTextFromHtml } from '@/shared/utils'
 import { PackageIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useDeleteVoucherTarget } from '../../hooks/use-delete-voucher-target'
@@ -98,7 +99,9 @@ const VoucherTargetCard = ({ target, voucherId }: { target: VoucherTargetRow; vo
             </Button>
           </div>
         </div>
-        <p className='text-sm text-muted-foreground'>{target.targetDescription}</p>
+        <p className='text-sm text-muted-foreground line-clamp-2'>
+          {getFirstParagraphTextFromHtml(target.targetDescription)}
+        </p>
       </div>
     </div>
   )

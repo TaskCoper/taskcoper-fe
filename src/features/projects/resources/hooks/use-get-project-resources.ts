@@ -32,7 +32,7 @@ export const useGetProjectResources = ({
     data: projectResources = getDefaultPaginationResponse<ProjectResource>(),
     isLoading: isLoadingProjectResources
   } = useQuery({
-    queryKey: queryKeys.projectResources.list({
+    queryKey: queryKeys.projects.resources.list({
       projectIdentifier,
       pageIndex,
       pageSize,

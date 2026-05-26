@@ -28,7 +28,10 @@ export const useUpdateMentorPackageRule = ({ mentorPackageId }: { mentorPackageI
     },
     onSettled: () => {
       if (mentorPackageId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.detail(mentorPackageId) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.mentorPackages.detail(mentorPackageId),
+          exact: true
+        })
       }
     }
   })

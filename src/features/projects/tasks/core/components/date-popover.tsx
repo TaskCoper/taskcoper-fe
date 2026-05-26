@@ -4,8 +4,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { addDays, format } from 'date-fns'
+import { addDays } from 'date-fns'
 import { XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -27,13 +28,13 @@ interface DateUpdates {
   announceBeforeMinutes?: number | null
 }
 
-const dateFormat = 'MM/dd/yyyy'
 const minDate = new Date('1900-01-01')
 const maxDate = new Date(new Date().getFullYear() + 10, 11, 31)
 const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/
 
 export default function DatePopover({ children, onSubmit, onRemove, disabled = false }: DatePopoverProps) {
   const { t } = useTranslation()
+  const { formatDate, formatTime } = useDateFormat()
   const [open, setOpen] = useState(false)
   const { identifier } = useParams<{ identifier: string }>()
 
@@ -55,7 +56,15 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   const endDateValue = watch('endDate')
   const announceBeforeMinutes = watch('announceBeforeMinutes')
 
-  const reminderType = useMemo(() => minutesToReminder(announceBeforeMinutes || 0), [announceBeforeMinutes])
+  const reminderType = useMemo(() => {
+    if (announceBeforeMinutes == null) {
+      return 'NONE'
+    }
+    if (announceBeforeMinutes === 0) {
+      return 'EXPIRED_DATE'
+    }
+    return minutesToReminder(announceBeforeMinutes)
+  }, [announceBeforeMinutes])
 
   const { startDate, startTime, endDate, endTime } = useMemo(() => {
     let startDate = null
@@ -65,18 +74,18 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
 
     if (startDateValue) {
       const date = new Date(startDateValue)
-      startDate = format(date, dateFormat)
-      startTime = format(date, 'HH:mm')
+      startDate = formatDate(date, 'dateShort')
+      startTime = formatTime(date, 'HH:mm')
     }
 
     if (endDateValue) {
       const date = new Date(endDateValue)
-      endDate = format(date, dateFormat)
-      endTime = format(date, 'HH:mm')
+      endDate = formatDate(date, 'dateShort')
+      endTime = formatTime(date, 'HH:mm')
     }
 
     return { startDate, startTime, endDate, endTime }
-  }, [startDateValue, endDateValue])
+  }, [startDateValue, endDateValue, formatDate, formatTime])
 
   const dateRange = useMemo(() => {
     return {
@@ -86,6 +95,9 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   }, [startDateValue, endDateValue])
 
   const isDateRange = !!(startDate && endDate && startTime && endTime)
+  const hasStartTimeChange = !!(startDate && localStartTime && localStartTime !== startTime)
+  const hasEndTimeChange = !!(endDate && localEndTime && localEndTime !== endTime)
+  const canSave = isDirty || hasStartTimeChange || hasEndTimeChange
 
   const handleUpdateDates = (updates: DateUpdates) => {
     if ('startDate' in updates) {
@@ -303,7 +315,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 <Input
                   className='w-28'
                   value={localStartTime}
-                  placeholder='HH:mm'
+                  placeholder={t('common.ui.timeFormatPlaceholder')}
                   disabled={!startDate}
                   aria-invalid={startTimeInvalid}
                   onChange={(e) => {
@@ -327,7 +339,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 <Input
                   className='w-28'
                   value={localEndTime}
-                  placeholder='HH:mm'
+                  placeholder={t('common.ui.timeFormatPlaceholder')}
                   disabled={!endDate}
                   aria-invalid={endTimeInvalid}
                   onChange={(e) => {
@@ -342,8 +354,14 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
               <p className='font-semibold text-xs py-1'>{t('task.date.reminderSetting')}</p>
               <Select
                 onValueChange={(value) => {
-                  const minutes = reminderToMinutes(value as keyof typeof TaskReminder)
-                  handleUpdateDates({ announceBeforeMinutes: minutes === 0 ? null : minutes })
+                  const reminder = value as keyof typeof TaskReminder
+                  if (reminder === 'NONE') {
+                    handleUpdateDates({ announceBeforeMinutes: null })
+                    return
+                  }
+
+                  const minutes = reminderToMinutes(reminder)
+                  handleUpdateDates({ announceBeforeMinutes: minutes })
                 }}
                 value={reminderType}
               >
@@ -362,7 +380,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
               <p className='text-xs text-muted-foreground my-2'>{t('task.date.reminderDescription')}</p>
             </div>
 
-            <Button className='w-full' onClick={handleSave} disabled={!isDirty}>
+            <Button className='w-full' onClick={handleSave} disabled={!canSave}>
               {t('common.button.save')}
             </Button>
             {canDelete ? (

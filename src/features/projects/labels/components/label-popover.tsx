@@ -13,7 +13,7 @@ import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project
 import { useAddTaskLabel } from '../../tasks/labels/hooks/use-add-task-label'
 import { useDeleteTaskLabel } from '../../tasks/labels/hooks/use-delete-task-label'
 import type { TaskLabel } from '../../tasks/labels/types'
-import { addTaskLabelSchema } from '../../tasks/labels/validations'
+import { addTaskLabelSchema, type AddTaskLabelFormValues } from '../../tasks/labels/validations'
 import { sortedTaskLabelColors } from '../constants'
 import { useAddProjectLabel } from '../hooks/use-add-project-label'
 import { useDeleteProjectLabel } from '../hooks/use-delete-project-label'
@@ -56,8 +56,15 @@ export default function LabelPopover({
   const canUpdate = check('TASKS', 'canUpdate')
 
   const { labels, isLoadingLabels } = useGetProjectLabels({ projectIdentifier, enabled: open })
+  const sortedLabels = useMemo(() => {
+    if (!labels) return []
+    return [...labels.value.items].sort(
+      (a, b) => new Date(a.createdOnUtc).getTime() - new Date(b.createdOnUtc).getTime()
+    )
+  }, [labels])
+
   const filteredLabels =
-    labels?.value.items.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase())) || []
+    sortedLabels.filter((label) => label.name.toLowerCase().includes(searchQuery.toLowerCase())) || []
 
   const selectedLabelIds = useMemo(() => taskLabels.map((tl) => tl.projectTaskLabelId), [taskLabels])
 
@@ -97,7 +104,10 @@ export default function LabelPopover({
     isAddingTaskLabel
   } = useAddTaskLabel({ taskIdentifier: taskSlug, projectIdentifier, parentMilestoneIdentifier, enabled: open })
   const onAddTaskLabel = () => {
-    const result = addTaskLabelSchema(t).safeParse(addTaskLabelMethods.getValues())
+    const payload: AddTaskLabelFormValues = {
+      ...addTaskLabelMethods.getValues()
+    }
+    const result = addTaskLabelSchema(t).safeParse(payload)
 
     if (result.success) {
       addTaskLabel({ body: result.data })

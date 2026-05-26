@@ -4,7 +4,7 @@ import projectAnalyticService from '../services'
 
 export const useGetProjectRevenueTypeStats = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { data: revenueTypeStats = [], isLoading: isLoadingRevenueTypeStats } = useQuery({
-    queryKey: queryKeys.projectRevenues.typeStats(projectIdentifier),
+    queryKey: queryKeys.projects.revenues.typeStats(projectIdentifier),
     queryFn: () => projectAnalyticService.getProjectRevenueTypeStats({ projectIdentifier }),
     enabled: !!projectIdentifier
   })

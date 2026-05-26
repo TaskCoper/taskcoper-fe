@@ -38,11 +38,15 @@ interface ComboboxDomainItem {
 export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProps) {
   const navigate = useNavigate()
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { confirm } = useConfirmStore()
 
   const { me: user } = useGetMe()
   const { project, isLoadingProject } = useGetProject({ identifier: projectIdentifier })
+  const progressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
+    style: 'percent',
+    maximumFractionDigits: 0
+  }).format((project?.progress ?? 0) / 100)
   const { permissions } = useGetMyProjectPermissions({ projectIdentifier })
   const { deleteProject, isDeletingProject } = useDeleteProject()
   const { methods, updateProject, isUpdatingProject } = useUpdateProject({ projectIdentifier })
@@ -162,7 +166,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
     if (!ok) return
 
     deleteProject(
-      { projectId: project.id },
+      { projectIdentifier: project.slug },
       {
         onSuccess: () => {
           navigate('/projects')
@@ -276,7 +280,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
           <div className='space-y-2'>
             <div>
               <p className='font-semibold'>
-                {t('project.info.progress')} ({project?.progress ? project.progress : 0}%)
+                {t('project.info.progress')} ({progressLabel})
               </p>
               <p className='text-xs text-muted-foreground'>{t('project.info.progressDescription')}</p>
             </div>

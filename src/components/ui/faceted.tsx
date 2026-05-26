@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/shared/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 type FacetedValue<Multiple extends boolean> = Multiple extends true ? string[] : string
 
@@ -118,10 +119,11 @@ interface FacetedBadgeListProps extends React.ComponentProps<'div'> {
 }
 
 function FacetedBadgeList(props: FacetedBadgeListProps) {
+  const { t } = useTranslation()
   const {
     options = [],
     max = 2,
-    placeholder = 'Select options...',
+    placeholder = t('dataTable.filter.selectOptions'),
     className,
     badgeClassName,
     ...badgeListProps
@@ -151,7 +153,7 @@ function FacetedBadgeList(props: FacetedBadgeListProps) {
     <div {...badgeListProps} className={cn('flex flex-wrap items-center gap-1', className)}>
       {values.length > max ? (
         <Badge variant='secondary' className={cn('rounded-sm px-1 font-normal', badgeClassName)}>
-          {values.length} selected
+          {t('dataTable.filter.selectedCount', { count: values.length })}
         </Badge>
       ) : (
         values.map((value) => (

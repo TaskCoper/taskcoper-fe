@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 
 # Copy package files and Yarn configuration
 COPY package.json yarn.lock .yarnrc.yml ./
+COPY .husky/install.mjs ./.husky/install.mjs
 
 # Install dependencies
 RUN yarn install --frozen-lockfile

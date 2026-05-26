@@ -18,9 +18,9 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { MeetingStatus } from '@/features/meetings/types'
 import { MentorScheduleContent } from '@/features/schedules/components/mentor-schedule-dialog'
+import { useDateFormat } from '@/lib/date'
 import type { SelectedTimeSlot } from '@/pages/users/purchased-package.page'
-import { format, getISOWeek, startOfWeek } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
+import { getISOWeek, startOfWeek } from 'date-fns'
 import { CalendarDaysIcon, EyeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -42,9 +42,8 @@ export default function BookMeetingFromCalendarDialog({
   children,
   packages
 }: BookMeetingFromCalendarDialogProps) {
-  const { t, i18n } = useTranslation()
-
-  const dateLocale = i18n.language.startsWith('vi') ? vi : enUS
+  const { t } = useTranslation()
+  const { formatDate, formatDateTime } = useDateFormat()
   const { identifier } = useParams<{ identifier: string }>()
 
   const [selectedPackage, setSelectedPackage] = useState<PurchasedMentorPackage | null>(null)
@@ -135,7 +134,7 @@ export default function BookMeetingFromCalendarDialog({
               <DialogDescription>
                 {t('meeting.mentorSchedule.weekLabel', {
                   week: getISOWeek(currentWeekStart),
-                  month: format(currentWeekStart, 'MMMM yyyy', { locale: dateLocale })
+                  month: formatDate(currentWeekStart, 'monthYear')
                 })}
               </DialogDescription>
             </>
@@ -178,13 +177,7 @@ export default function BookMeetingFromCalendarDialog({
                 <h3 className='text-lg font-semibold'>{t('purchasedPackage.hasUpcomingMeeting')}</h3>
                 <p className='text-sm text-muted-foreground max-w-sm'>
                   {t('purchasedPackage.upcomingMeetingNote', {
-                    date: i18n.language.startsWith('vi')
-                      ? format(new Date(upcomingMeeting.startTimeUtc), "'lúc' hh:mm a dd/MM/yyyy", {
-                          locale: vi
-                        })
-                      : format(new Date(upcomingMeeting.startTimeUtc), "'at' hh:mm a 'on' MMMM do, yyyy", {
-                          locale: enUS
-                        })
+                    date: formatDateTime(upcomingMeeting.startTimeUtc, 'dateTimeLong')
                   })}
                 </p>
 

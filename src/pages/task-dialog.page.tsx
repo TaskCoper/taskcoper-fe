@@ -43,12 +43,11 @@ import AssigneePopover from '@/features/projects/tasks/members/components/assign
 import { useGetTaskMembers } from '@/features/projects/tasks/members/hooks/use-get-task-members'
 import { useGetTaskSubtasks } from '@/features/projects/tasks/subtasks/hooks/use-get-subtasks'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { format } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
 import {
   ChevronDownIcon,
   ChevronsUpIcon,
@@ -76,7 +75,8 @@ export default function TaskDialogPage() {
   const location = useLocation()
 
   const { me: user } = useGetMe()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const { identifier, milestoneIdentifier, taskIdentifier } = useParams<{
     identifier: string
     milestoneIdentifier: string
@@ -89,8 +89,6 @@ export default function TaskDialogPage() {
   const canWrite = check('TASKS', 'canWrite')
   const canUpdate = check('TASKS', 'canUpdate')
 
-  const dateLocale = i18n.language === 'vi-VN' ? vi : enUS
-
   const [isEditDescription, setIsEditDescription] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
@@ -100,6 +98,7 @@ export default function TaskDialogPage() {
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
   const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
   const [openBackgroundImagePopover, setOpenBackgroundImagePopover] = useState(false)
+  const [currentTime] = useState(() => Date.now())
 
   const sensors = useDndSensors()
 
@@ -111,6 +110,11 @@ export default function TaskDialogPage() {
 
   const isLoading =
     isLoadingTask || isLoadingComments || isLoadingSubtasks || isLoadingTaskMembers || isLoadingAttachments
+  const isTaskExpired = !!(
+    task?.taskEndDate &&
+    !Number.isNaN(new Date(task.taskEndDate).getTime()) &&
+    new Date(task.taskEndDate).getTime() < currentTime
+  )
 
   const isWatchingTask =
     taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.id) !== undefined
@@ -119,7 +123,7 @@ export default function TaskDialogPage() {
     methods: updateTaskMethods,
     updateTask,
     isUpdatingTask
-  } = useUpdateTask({ taskIdentifier, identifier, milestoneIdentifier })
+  } = useUpdateTask({ taskId: task?.taskId, taskIdentifier, identifier, milestoneIdentifier })
   const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
@@ -149,7 +153,7 @@ export default function TaskDialogPage() {
     onSave: (newName) => {
       if (!task) return
 
-      const values: UpdateTaskFormValues = {
+      const payload: UpdateTaskFormValues = {
         id: task.taskId,
         name: newName,
         priority: task.priority,
@@ -164,8 +168,7 @@ export default function TaskDialogPage() {
         backgroundImage: task.backgroundImage,
         mentionUsers: task.mentionedUsers.map((user) => ({ userId: user.userId, mentionId: user.id }))
       }
-
-      const validated = updateTaskSchema(t).safeParse(values)
+      const validated = updateTaskSchema(t).safeParse(payload)
 
       if (validated.success) {
         updateTask({ body: validated.data })
@@ -323,7 +326,7 @@ export default function TaskDialogPage() {
       <DialogContent
         showCloseButton={false}
         position='top-center'
-        className='min-w-6xl p-0 gap-0 flex flex-col border-none'
+        className='min-w-[95%] xl:min-w-6xl p-0 gap-0 flex flex-col border-none'
         onInteractOutside={handleClose}
       >
         <FormProvider {...updateTaskMethods}>
@@ -390,6 +393,7 @@ export default function TaskDialogPage() {
                   className='rounded-full'
                   variant={task?.backgroundImage ? 'outline' : 'ghost'}
                   size='icon-sm'
+                  disabled={!canUpdate}
                   onClick={() => {
                     if (!task?.taskId) return
                     toggleWatchTask({ taskId: task.taskId, isWatching: false })
@@ -451,135 +455,179 @@ export default function TaskDialogPage() {
 
           <div className='grid grid-cols-12 flex-1 overflow-hidden'>
             <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
-              {/* Task name + popovers */}
-              <div className='flex gap-2'>
-                <Checkbox
-                  checked={task?.isCompleted}
-                  disabled={!canToggleTaskStatus}
-                  onCheckedChange={(checked) => {
-                    const result = updateTaskSchema(t).safeParse({
-                      ...updateTaskMethods.getValues(),
-                      isCompleted: checked as boolean
-                    })
+              <div className='space-y-4'>
+                {/* <div className='min-w-0 w-full'>
+                  <Breadcrumb className='w-full overflow-hidden'>
+                    <BreadcrumbList className='flex-nowrap overflow-hidden whitespace-nowrap gap-1.5!'>
+                      <BreadcrumbItem className='min-w-0 max-w-[30ch]'>
+                        <BreadcrumbLink
+                          asChild
+                          className='block text-background hover:text-background bg-indigo-600 px-1.5 py-0.5 rounded-sm'
+                        >
+                          <Link
+                            to={`/projects/${identifier}/milestones/${milestoneIdentifier}`}
+                            className='flex min-w-0 items-center gap-1.5 overflow-hidden'
+                          >
+                            <LayersIcon className='size-3 shrink-0' />
+                            <span className='truncate'>
+                              This is a very long milestone name that should be truncated
+                            </span>
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
 
-                    if (result.success) {
-                      updateTask({ body: result.data })
-                    }
-                  }}
-                  className={cn(
-                    'rounded-full border-foreground',
-                    isEditingName ? 'mt-5' : 'mt-2.5',
-                    !canToggleTaskStatus ? 'cursor-not-allowed' : ''
-                  )}
-                />
-                <div className='space-y-4'>
-                  {isEditingName ? (
-                    <Input className='text-3xl! font-bold w-full h-14' {...nameInputProps} />
-                  ) : (
-                    <p
-                      className={cn(
-                        'text-3xl font-bold cursor-text',
-                        task?.isCompleted ? 'text-muted-foreground' : '',
-                        canUpdate ? 'cursor-text' : 'cursor-default'
-                      )}
-                      {...(canUpdate ? nameTriggerProps : {})}
-                    >
-                      {task?.taskName}
-                    </p>
-                  )}
+                      <BreadcrumbSeparator className='shrink-0' />
 
-                  {/* Action Buttons */}
-                  <div className='flex items-center gap-2 flex-wrap'>
-                    {!task?.priority ? (
-                      <PriorityPopover
-                        onSubmit={handleSubmitTask(onSubmitUpdateTask)}
-                        onRemove={handleRemovePriority}
-                        disabled={!canUpdate}
+                      <BreadcrumbItem className='min-w-0 max-w-[40ch]'>
+                        <BreadcrumbLink
+                          asChild
+                          className='block text-foreground hover:text-foreground bg-slate-200 px-1.5 py-0.5 rounded-sm'
+                        >
+                          <Link
+                            to={`/projects/${identifier}/milestones/${milestoneIdentifier}`}
+                            className='flex min-w-0 items-center gap-1.5 overflow-hidden'
+                          >
+                            <NetworkIcon className='size-3 shrink-0' />
+                            <span className='truncate'>
+                              This is a very long milestone name that should be truncated
+                            </span>
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </div> */}
+
+                {/* Task name + popovers */}
+                <div className='flex gap-2'>
+                  <Checkbox
+                    checked={task?.isCompleted}
+                    disabled={!canToggleTaskStatus}
+                    onCheckedChange={(checked) => {
+                      const result = updateTaskSchema(t).safeParse({
+                        ...updateTaskMethods.getValues(),
+                        isCompleted: checked as boolean
+                      })
+
+                      if (result.success) {
+                        updateTask({ body: result.data })
+                      }
+                    }}
+                    className={cn(
+                      'rounded-full border-foreground',
+                      isEditingName ? 'mt-5' : 'mt-2.5',
+                      !canToggleTaskStatus ? 'cursor-not-allowed' : ''
+                    )}
+                  />
+                  <div className='space-y-4'>
+                    {isEditingName ? (
+                      <Input className='text-3xl! font-bold w-full h-14' {...nameInputProps} />
+                    ) : (
+                      <p
+                        className={cn(
+                          'text-3xl font-bold cursor-text',
+                          task?.isCompleted ? 'text-muted-foreground' : '',
+                          canUpdate ? 'cursor-text' : 'cursor-default'
+                        )}
+                        {...(canUpdate ? nameTriggerProps : {})}
                       >
-                        <Button variant='outline' size='sm'>
-                          <ChevronsUpIcon />
-                          {t('task.priority.title')}
-                        </Button>
-                      </PriorityPopover>
-                    ) : null}
+                        {task?.taskName}
+                      </p>
+                    )}
 
-                    {(task?.taskLabels.length ?? 0) === 0 &&
-                    identifier &&
-                    task?.taskSlug &&
-                    task?.taskId &&
-                    milestoneIdentifier ? (
-                      <LabelPopover
-                        projectIdentifier={identifier}
-                        taskSlug={task.taskSlug}
-                        taskId={task.taskId}
-                        parentMilestoneIdentifier={milestoneIdentifier}
-                        taskLabels={task?.taskLabels ?? []}
-                        disabled={!canUpdate}
-                      >
-                        <Button variant='outline' size='sm'>
-                          <TagIcon />
-                          {t('common.field.label')}
-                        </Button>
-                      </LabelPopover>
-                    ) : null}
+                    {/* Action Buttons */}
+                    <div className='flex items-center gap-2 flex-wrap'>
+                      {!task?.priority ? (
+                        <PriorityPopover
+                          onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                          onRemove={handleRemovePriority}
+                          disabled={!canUpdate}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <ChevronsUpIcon />
+                            {t('task.priority.title')}
+                          </Button>
+                        </PriorityPopover>
+                      ) : null}
 
-                    {!task?.taskStartDate && !task?.taskEndDate ? (
-                      <DatePopover
-                        onSubmit={handleSubmitTask(onSubmitUpdateTask)}
-                        onRemove={handleRemoveDate}
-                        disabled={!canUpdate}
-                      >
-                        <Button variant='outline' size='sm'>
-                          <ClockIcon />
-                          {t('common.field.date')}
-                        </Button>
-                      </DatePopover>
-                    ) : null}
+                      {(task?.taskLabels.length ?? 0) === 0 &&
+                      identifier &&
+                      task?.taskSlug &&
+                      task?.taskId &&
+                      milestoneIdentifier ? (
+                        <LabelPopover
+                          projectIdentifier={identifier}
+                          taskSlug={task.taskSlug}
+                          taskId={task.taskId}
+                          parentMilestoneIdentifier={milestoneIdentifier}
+                          taskLabels={task?.taskLabels ?? []}
+                          disabled={!canUpdate}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <TagIcon />
+                            {t('common.field.label')}
+                          </Button>
+                        </LabelPopover>
+                      ) : null}
 
-                    {identifier && task?.taskId && milestoneIdentifier ? (
-                      <SubtaskPopover
-                        projectIdentifier={identifier}
-                        taskId={task.taskId}
-                        parentMilestoneIdentifier={milestoneIdentifier}
-                        disabled={!canWrite}
-                      >
-                        <Button variant='outline' size='sm'>
-                          <SquareCheckBigIcon />
-                          {t('task.subtask.subtask')}
-                        </Button>
-                      </SubtaskPopover>
-                    ) : null}
+                      {!task?.taskStartDate && !task?.taskEndDate ? (
+                        <DatePopover
+                          onSubmit={handleSubmitTask(onSubmitUpdateTask)}
+                          onRemove={handleRemoveDate}
+                          disabled={!canUpdate}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <ClockIcon />
+                            {t('common.field.date')}
+                          </Button>
+                        </DatePopover>
+                      ) : null}
 
-                    {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
-                    identifier &&
-                    task?.taskId &&
-                    milestoneIdentifier ? (
-                      <AssigneePopover
-                        projectIdentifier={identifier}
-                        taskId={task.taskId}
-                        parentMilestoneIdentifier={milestoneIdentifier}
-                        disabled={!canWrite}
-                      >
-                        <Button variant='outline' size='sm'>
-                          <UserRoundPlusIcon />
-                          {t('task.assignee.assignee')}
-                        </Button>
-                      </AssigneePopover>
-                    ) : null}
+                      {identifier && task?.taskId && milestoneIdentifier ? (
+                        <SubtaskPopover
+                          projectIdentifier={identifier}
+                          taskId={task.taskId}
+                          parentMilestoneIdentifier={milestoneIdentifier}
+                          disabled={!canWrite}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <SquareCheckBigIcon />
+                            {t('task.subtask.subtask')}
+                          </Button>
+                        </SubtaskPopover>
+                      ) : null}
 
-                    {task?.taskId && identifier && milestoneIdentifier ? (
-                      <AttachmentPopover
-                        taskId={task.taskId}
-                        projectIdentifier={identifier}
-                        parentMilestoneIdentifier={milestoneIdentifier}
-                        disabled={!canWrite}
-                      >
-                        <Button variant='outline' size='sm'>
-                          <PaperclipIcon />
-                          {t('task.attachment.attachment')}
-                        </Button>
-                      </AttachmentPopover>
-                    ) : null}
+                      {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
+                      identifier &&
+                      task?.taskId &&
+                      milestoneIdentifier ? (
+                        <AssigneePopover
+                          projectIdentifier={identifier}
+                          taskId={task.taskId}
+                          parentMilestoneIdentifier={milestoneIdentifier}
+                          disabled={!canWrite}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <UserRoundPlusIcon />
+                            {t('task.assignee.assignee')}
+                          </Button>
+                        </AssigneePopover>
+                      ) : null}
+
+                      {task?.taskId && identifier && milestoneIdentifier ? (
+                        <AttachmentPopover
+                          taskId={task.taskId}
+                          projectIdentifier={identifier}
+                          parentMilestoneIdentifier={milestoneIdentifier}
+                          disabled={!canWrite}
+                        >
+                          <Button variant='outline' size='sm'>
+                            <PaperclipIcon />
+                            {t('task.attachment.attachment')}
+                          </Button>
+                        </AttachmentPopover>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -696,12 +744,16 @@ export default function TaskDialogPage() {
                 {/* Date section */}
                 {task?.taskStartDate || task?.taskEndDate ? (
                   <div className='space-y-1'>
-                    <p className='text-sm font-semibold text-muted-foreground'>
-                      {task.taskStartDate && task.taskEndDate
-                        ? t('common.ui.date')
-                        : task.taskStartDate
-                          ? t('task.detail.startDate')
-                          : t('task.detail.dueDate')}
+                    <p
+                      className={cn('text-sm font-semibold text-muted-foreground', isTaskExpired && 'text-destructive')}
+                    >
+                      {isTaskExpired
+                        ? t('task.detail.expired')
+                        : task.taskStartDate && task.taskEndDate
+                          ? t('common.ui.date')
+                          : task.taskStartDate
+                            ? t('task.detail.startDate')
+                            : t('task.detail.dueDate')}
                     </p>
 
                     <DatePopover
@@ -709,17 +761,19 @@ export default function TaskDialogPage() {
                       onRemove={handleRemoveDate}
                       disabled={!canUpdate}
                     >
-                      <Button variant='secondary' size='sm'>
+                      <Button
+                        variant='secondary'
+                        size='sm'
+                        className={cn('gap-1.5', isTaskExpired ? 'text-destructive' : 'hover:bg-muted-foreground/15')}
+                      >
                         {task?.taskStartDate ? (
-                          <p className='font-semibold'>
-                            {format(new Date(task.taskStartDate), t('task.detail.dateFormat'), { locale: dateLocale })}
-                          </p>
+                          <p className='font-semibold'>{formatDate(task.taskStartDate, 'dateTimeMedium')}</p>
                         ) : null}
+
                         {task?.taskStartDate && task?.taskEndDate ? <p className='font-semibold'>-</p> : null}
+
                         {task?.taskEndDate ? (
-                          <p className='font-semibold'>
-                            {format(new Date(task.taskEndDate), t('task.detail.dateFormat'), { locale: dateLocale })}
-                          </p>
+                          <p className='font-semibold'>{formatDate(task.taskEndDate, 'dateTimeMedium')}</p>
                         ) : null}
                         <ChevronDownIcon />
                       </Button>
@@ -913,7 +967,7 @@ export default function TaskDialogPage() {
             <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
               <div className='flex items-center gap-2'>
                 <MessageSquareText className='size-4' />
-                <p className='text-sm font-bold'>{t('task.comment.comment')}</p>
+                <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>
               </div>
 
               {isEditComment ? (

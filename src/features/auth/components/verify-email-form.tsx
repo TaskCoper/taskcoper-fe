@@ -52,7 +52,9 @@ export default function VerifyEmailForm({ email, onSuccess, autoStart = true }: 
       >
         <div className='text-center'>
           <p className='text-2xl font-bold'>{t('auth.signUp.verifyEmail.title')}</p>
-          <p className='text-muted-foreground text-sm'>{t('auth.signUp.verifyEmail.description')}</p>
+          <p className='text-muted-foreground text-sm'>
+            {t('auth.signUp.verifyEmail.description')} ({email})
+          </p>
         </div>
 
         <Controller

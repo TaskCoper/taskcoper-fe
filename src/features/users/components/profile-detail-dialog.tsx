@@ -42,8 +42,8 @@ export default function ProfileDetailDialog({ open, onOpenChange, children }: Pr
     <Dialog open={open} onOpenChange={onOpenChange}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent position='top-center' className='p-0 overflow-hidden min-w-4xl'>
-        <DialogTitle className='sr-only'>Profile</DialogTitle>
-        <DialogDescription className='sr-only'>Customize your profile here</DialogDescription>
+        <DialogTitle className='sr-only'>{t('user.profileDialog.profileTitle')}</DialogTitle>
+        <DialogDescription className='sr-only'>{t('user.profileDialog.profileDescription')}</DialogDescription>
         <SidebarProvider className='items-start min-h-96'>
           <Sidebar collapsible='none' className='hidden md:flex shrink'>
             <SidebarContent>

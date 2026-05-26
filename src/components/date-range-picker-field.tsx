@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { format } from 'date-fns'
 import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { DateRange, Matcher } from 'react-day-picker'
@@ -49,9 +49,9 @@ function toSelectedRange(value: unknown): DateRange {
   }
 }
 
-function formatRangeLabel(range: DateRange) {
-  const fromText = range.from ? format(range.from, 'PPP') : ''
-  const toText = range.to ? format(range.to, 'PPP') : ''
+function formatRangeLabel(range: DateRange, formatDate: (input: Date | string, preset?: string) => string) {
+  const fromText = range.from ? formatDate(range.from, 'dateLong') : ''
+  const toText = range.to ? formatDate(range.to, 'dateLong') : ''
   if (fromText && toText) return `${fromText} - ${toText}`
   return fromText || toText
 }
@@ -71,6 +71,7 @@ export function DateRangePickerField<T extends FieldValues>({
   disabled
 }: DateRangePickerFieldProps<T>) {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const [open, setOpen] = useState(false)
 
   const context = useFormContext<T>()
@@ -124,7 +125,7 @@ export function DateRangePickerField<T extends FieldValues>({
                 >
                   <span className='flex items-center gap-2 truncate'>
                     <CalendarIcon className='opacity-50 size-4' />
-                    {hasValue ? formatRangeLabel(selectedRange) : <span>{t(placeholder)}</span>}
+                    {hasValue ? formatRangeLabel(selectedRange, formatDate) : <span>{t(placeholder)}</span>}
                   </span>
 
                   {hasValue && !isDisabled && (
@@ -138,7 +139,7 @@ export function DateRangePickerField<T extends FieldValues>({
                       }}
                     >
                       <XCircleIcon className='size-4 opacity-50 hover:opacity-100' />
-                      <span className='sr-only'>Clear</span>
+                      <span className='sr-only'>{t('common.button.clear')}</span>
                     </div>
                   )}
                 </Button>

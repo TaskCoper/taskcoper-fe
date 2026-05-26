@@ -7,6 +7,7 @@ import { focusNextNode, isValidPosition } from '@/shared/tiptap-utils'
 import type { NodeViewProps } from '@tiptap/react'
 import { NodeViewWrapper } from '@tiptap/react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface FileItem {
   /**
@@ -371,28 +372,33 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ fileItem, onRem
   )
 }
 
-const DropZoneContent: React.FC<{ maxSize: number; limit: number }> = ({ maxSize, limit }) => (
-  <>
-    <div className='tiptap-image-upload-dropzone'>
-      <FileIcon />
-      <FileCornerIcon />
-      <div className='tiptap-image-upload-icon-container'>
-        <CloudUploadIcon />
-      </div>
-    </div>
+const DropZoneContent: React.FC<{ maxSize: number; limit: number }> = ({ maxSize, limit }) => {
+  const { t } = useTranslation()
 
-    <div className='tiptap-image-upload-content'>
-      <span className='tiptap-image-upload-text'>
-        <em>Click to upload</em> or drag and drop
-      </span>
-      <span className='tiptap-image-upload-subtext'>
-        Maximum {limit} file{limit === 1 ? '' : 's'}, {maxSize / 1024 / 1024}MB each.
-      </span>
-    </div>
-  </>
-)
+  return (
+    <>
+      <div className='tiptap-image-upload-dropzone'>
+        <FileIcon />
+        <FileCornerIcon />
+        <div className='tiptap-image-upload-icon-container'>
+          <CloudUploadIcon />
+        </div>
+      </div>
+
+      <div className='tiptap-image-upload-content'>
+        <span className='tiptap-image-upload-text'>
+          <em>{t('richTextEditor.imageUpload.clickToUpload')}</em> {t('richTextEditor.imageUpload.orDragAndDrop')}
+        </span>
+        <span className='tiptap-image-upload-subtext'>
+          {t('richTextEditor.imageUpload.maximumFiles', { count: limit, sizeMb: maxSize / 1024 / 1024 })}
+        </span>
+      </div>
+    </>
+  )
+}
 
 export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
+  const { t } = useTranslation()
   const { accept, limit, maxSize } = props.node.attrs
   const inputRef = React.useRef<HTMLInputElement>(null)
   const extension = props.extension
@@ -443,7 +449,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length === 0) {
-      extension.options.onError?.(new Error('No file selected'))
+      extension.options.onError?.(new Error(t('richTextEditor.imageUpload.errors.noFileSelected')))
       return
     }
     handleUpload(Array.from(files))
@@ -470,7 +476,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
         <div className='tiptap-image-upload-previews'>
           {fileItems.length > 1 && (
             <div className='tiptap-image-upload-header'>
-              <span>Uploading {fileItems.length} files</span>
+              <span>{t('richTextEditor.imageUpload.uploadingFiles', { count: fileItems.length })}</span>
               <Button
                 type='button'
                 data-style='ghost'
@@ -479,7 +485,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
                   clearAllFiles()
                 }}
               >
-                Clear All
+                {t('common.button.clearAll')}
               </Button>
             </div>
           )}

@@ -1,5 +1,6 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -108,23 +109,17 @@ export const useUpdateTaskStatus = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
+      invalidateTaskTree(queryClient, {
+        taskId,
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
+      })
 
-      if (parentMilestoneIdentifier) {
-        if (projectIdentifier) {
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
-          })
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
-          })
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      }
-
-      if (projectIdentifier && user?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
+      if (projectIdentifier && parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.projects.taskStatusStats(projectIdentifier, parentMilestoneIdentifier)
+        })
       }
     }
   })

@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { format } from 'date-fns'
 import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { Matcher } from 'react-day-picker'
@@ -43,6 +43,7 @@ export function DatePickerField<T extends FieldValues>({
   disabled
 }: DatePickerFieldProps<T>) {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const [open, setOpen] = useState(false)
 
   const context = useFormContext<T>()
@@ -90,7 +91,7 @@ export function DatePickerField<T extends FieldValues>({
               >
                 <span className='flex items-center gap-2 truncate'>
                   <CalendarIcon className='opacity-50 size-4' />
-                  {field.value ? format(new Date(field.value), 'PPP') : <span>{t(placeholder)}</span>}
+                  {field.value ? formatDate(field.value, 'dateLong') : <span>{t(placeholder)}</span>}
                 </span>
 
                 {field.value && !isDisabled && (
@@ -105,7 +106,7 @@ export function DatePickerField<T extends FieldValues>({
                     }}
                   >
                     <XCircleIcon className='size-4 opacity-50 hover:opacity-100' />
-                    <span className='sr-only'>Clear</span>
+                    <span className='sr-only'>{t('common.button.clear')}</span>
                   </div>
                 )}
               </Button>

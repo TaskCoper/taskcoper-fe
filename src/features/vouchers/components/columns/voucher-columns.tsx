@@ -8,10 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { formatDateTime } from '@/lib/date'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { format } from 'date-fns'
-import { enUS, vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import { CopyIcon, MoreHorizontalIcon, SearchIcon, TicketPercentIcon, Trash2Icon } from 'lucide-react'
 import { Link } from 'react-router'
@@ -244,15 +243,11 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label='voucher.column.startsAt' className='mx-auto' />
       ),
-      cell: ({ row }) => {
-        const locale = i18next.language === 'vi' ? vi : enUS
-        const dateFormat = i18next.t('voucher.column.dateFormat')
-        return (
-          <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.startsAtUtc), dateFormat, { locale })}
-          </p>
-        )
-      },
+      cell: ({ row }) => (
+        <p className='text-center whitespace-nowrap text-muted-foreground'>
+          {formatDateTime(row.original.startsAtUtc, 'dateTimeShort')}
+        </p>
+      ),
       enableSorting: true,
       enableColumnFilter: true
     },
@@ -263,15 +258,11 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label='voucher.column.endsAt' className='mx-auto' />
       ),
-      cell: ({ row }) => {
-        const locale = i18next.language === 'vi' ? vi : enUS
-        const dateFormat = i18next.t('voucher.column.dateFormat')
-        return (
-          <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.endsAtUtc), dateFormat, { locale })}
-          </p>
-        )
-      },
+      cell: ({ row }) => (
+        <p className='text-center whitespace-nowrap text-muted-foreground'>
+          {formatDateTime(row.original.endsAtUtc, 'dateTimeShort')}
+        </p>
+      ),
       enableSorting: true,
       enableColumnFilter: true
     },
@@ -282,15 +273,11 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label='voucher.column.createdOnUtc' className='mx-auto' />
       ),
-      cell: ({ row }) => {
-        const locale = i18next.language === 'vi' ? vi : enUS
-        const dateFormat = i18next.t('voucher.column.dateFormat')
-        return (
-          <p className='text-center whitespace-nowrap text-muted-foreground'>
-            {format(new Date(row.original.createdOnUtc), dateFormat, { locale })}
-          </p>
-        )
-      },
+      cell: ({ row }) => (
+        <p className='text-center whitespace-nowrap text-muted-foreground'>
+          {formatDateTime(row.original.createdOnUtc, 'dateTimeShort')}
+        </p>
+      ),
       enableSorting: true,
       enableHiding: true
     },

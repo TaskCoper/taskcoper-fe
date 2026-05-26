@@ -7,10 +7,16 @@ import meetingService from '../services'
 interface UseUpdateMeetingOptions {
   packageId?: string
   mentorId: string
+  projectIdentifier?: string
   showSuccessToast?: boolean
 }
 
-export const useUpdateMeeting = ({ packageId, mentorId, showSuccessToast = true }: UseUpdateMeetingOptions) => {
+export const useUpdateMeeting = ({
+  packageId,
+  mentorId,
+  projectIdentifier,
+  showSuccessToast = true
+}: UseUpdateMeetingOptions) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -27,12 +33,16 @@ export const useUpdateMeeting = ({ packageId, mentorId, showSuccessToast = true 
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.body.meetingId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(mentorId) })
 
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
+      }
+
+      if (projectIdentifier) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allProject(projectIdentifier) })
       }
     }
   })

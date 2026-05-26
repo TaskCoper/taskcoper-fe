@@ -1,3 +1,4 @@
+import EnvironmentTag from '@/components/environment-tag'
 import NavUser from '@/components/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -57,15 +58,16 @@ export default function UserDefaultLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
+
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
-    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+    enabled: !!me && !isVerificationRequired
   })
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
       <header className='flex h-14 items-center gap-3 px-4 border-b shrink-0 bg-background z-50 relative'>
         <Link to='/' className='shrink-0'>
-          <img src={logo} alt='TaskCoper' className='h-7 w-auto object-contain' />
+          <img src={logo} alt={t('common.alt.logo')} className='h-7 w-auto object-contain' />
         </Link>
 
         {org ? (
@@ -98,6 +100,8 @@ export default function UserDefaultLayout() {
               </Button>
             )
           })}
+
+          <EnvironmentTag />
         </div>
 
         <div className='flex-1' />
@@ -134,12 +138,12 @@ export default function UserDefaultLayout() {
             <SheetTrigger asChild>
               <Button variant='ghost' size='icon' className='lg:hidden -mr-2'>
                 <MenuIcon className='size-5' />
-                <span className='sr-only'>Toggle menu</span>
+                <span className='sr-only'>{t('common.button.toggleMenu')}</span>
               </Button>
             </SheetTrigger>
             <SheetContent side='right' className='gap-0'>
               <SheetHeader>
-                <SheetTitle className='text-left'>Menu</SheetTitle>
+                <SheetTitle className='text-left'>{t('common.ui.menu')}</SheetTitle>
               </SheetHeader>
 
               <div className='flex flex-col gap-4'>

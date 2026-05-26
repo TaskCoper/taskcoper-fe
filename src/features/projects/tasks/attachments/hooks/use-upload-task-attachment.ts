@@ -1,5 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { queryKeys } from '@/lib/query-keys'
+import { invalidateProjectResources, invalidateTaskTree } from '@/lib/invalidations'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -72,17 +72,13 @@ export const useUploadTaskAttachment = ({
       setOpen(false)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(taskId) })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      invalidateTaskTree(queryClient, {
+        taskId,
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
       })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })
+      invalidateProjectResources(queryClient, projectIdentifier)
     }
   })
 
