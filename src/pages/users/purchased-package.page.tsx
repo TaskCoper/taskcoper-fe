@@ -388,27 +388,29 @@ export default function PurchasedPackagePage() {
             <div className='space-y-2.5'>
               <p className='font-semibold'>{t('meeting.detail.participants')}</p>
               <div className='flex flex-wrap gap-2'>
-                {purchasedMentorPackage.participants.map((participant) => (
-                  <Link
-                    key={participant.userId}
-                    to={`/users/${participant.userId}`}
-                    className='flex items-center gap-2'
-                  >
-                    <Avatar className='hover:brightness-90'>
-                      <AvatarImage src={participant.avatarUrl ?? undefined} />
-                      <AvatarFallback>
-                        {getAvatarFallback(`${participant.firstName} ${participant.lastName}`)}
-                      </AvatarFallback>
-                    </Avatar>
+                {purchasedMentorPackage.participants
+                  .filter((x) => x.userId !== purchasedMentorPackage?.mentorUserId)
+                  .map((participant) => (
+                    <Link
+                      key={participant.userId}
+                      to={`/users/${participant.userId}`}
+                      className='flex items-center gap-2'
+                    >
+                      <Avatar className='hover:brightness-90'>
+                        <AvatarImage src={participant.avatarUrl ?? undefined} />
+                        <AvatarFallback>
+                          {getAvatarFallback(`${participant.firstName} ${participant.lastName}`)}
+                        </AvatarFallback>
+                      </Avatar>
 
-                    <div className='-space-y-0.5'>
-                      <p className='text-sm font-medium hover:underline hover:text-primary'>
-                        {participant.firstName} {participant.lastName}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>{participant.email}</p>
-                    </div>
-                  </Link>
-                ))}
+                      <div className='-space-y-0.5'>
+                        <p className='text-sm font-medium hover:underline hover:text-primary'>
+                          {participant.firstName} {participant.lastName}
+                        </p>
+                        <p className='text-xs text-muted-foreground'>{participant.email}</p>
+                      </div>
+                    </Link>
+                  ))}
               </div>
             </div>
           ) : null}
