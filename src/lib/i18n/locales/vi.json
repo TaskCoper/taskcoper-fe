@@ -624,6 +624,7 @@
     "wednesday": "T4"
   },
   "error": {
+    "chunkLoadDescription": "Đã có phiên bản mới. Vui lòng tải lại trang.",
     "forbidden": "Bị cấm",
     "forbiddenDescription": "Bạn không có quyền truy cập trang hoặc tài nguyên này",
     "home": "Về trang chủ",
@@ -632,6 +633,7 @@
     "oops": "Oops!",
     "pageNotFound": "Đã có lỗi xảy ra",
     "pageNotFoundDescription": "Xin lỗi, chúng tôi không thể tìm thấy trang đó",
+    "refresh": "Tải lại trang",
     "serverError": "Trang này không hoạt động",
     "serverErrorDescription": "Chúng tôi xin lỗi và đang khắc phục sự cố. Vui lòng thử lại sau.",
     "somethingWentWrong": "Đã có lỗi xảy ra",
