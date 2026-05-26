@@ -1,4 +1,4 @@
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { ChildMilestone } from '@/features/projects/milestones/types'
@@ -36,7 +36,6 @@ export default function AddTaskWithMilestoneForm({ milestones, isLoading }: AddT
               spellCheck={false}
               autoFocus={true}
             />
-            {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
           </Field>
         )}
       />

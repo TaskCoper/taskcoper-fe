@@ -9,8 +9,8 @@ import {
   type GetMyMentorApplicationsParams
 } from '@/features/mentor-applications/hooks/use-get-my-mentor-applications'
 import type { Application, ApplicationStatus } from '@/features/mentor-applications/types'
-import { formatDate } from '@/lib/date'
 import { STATUS_CONFIG } from '@/shared/constants'
+import { formatDate } from '@/shared/utils'
 import { LinkIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -114,9 +114,7 @@ export default function MentorApplicationsPage() {
 
                           <div className='flex-1 min-w-0'>
                             <p className='text-sm font-medium truncate'>{application.shortBio}</p>
-                            <p className='text-xs text-muted-foreground'>
-                              {formatDate(application.createdOnUtc, 'dateLong')}
-                            </p>
+                            <p className='text-xs text-muted-foreground'>{formatDate(application.createdOnUtc)}</p>
                           </div>
 
                           <div className='flex items-center gap-2 shrink-0'>

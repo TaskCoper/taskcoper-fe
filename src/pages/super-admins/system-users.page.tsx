@@ -13,10 +13,8 @@ import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { PlusCircleIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export default function SystemUsersPage() {
-  const { t } = useTranslation()
   const columns = useMemo(() => getColumns(), [])
 
   const { page, limit, sorting, sortBy, orderBy } = useTableQueryParams({
@@ -97,7 +95,7 @@ export default function SystemUsersPage() {
         <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
           <Button size='sm'>
             <PlusCircleIcon />
-            {t('systemUsers.createUser')}
+            Tạo người dùng
           </Button>
         </DataTableToolbar>
       </DataTable>

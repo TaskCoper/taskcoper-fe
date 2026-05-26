@@ -10,7 +10,7 @@ export interface GetProjectTopContributorsParams {
 
 export const useGetProjectTopContributors = ({ projectId, from, to }: GetProjectTopContributorsParams) => {
   const { data: projectTopContributors, isLoading: isLoadingProjectTopContributors } = useQuery({
-    queryKey: queryKeys.projects.efficiency.topContributors({ projectId, from, to }),
+    queryKey: queryKeys.efficiency.topContributors({ projectId, from, to }),
     queryFn: () => efficiencyService.getTopContributors({ projectId, from, to }),
     enabled: !!projectId
   })

@@ -11,7 +11,6 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Spinner } from '@/components/ui/spinner'
 import { Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
 interface AdminDefaultLayoutProps {
@@ -19,8 +18,6 @@ interface AdminDefaultLayoutProps {
 }
 
 export default function AdminDefaultLayout({ basePath }: AdminDefaultLayoutProps) {
-  const { t } = useTranslation()
-
   return (
     <SidebarProvider>
       <AdminSidebar basePath={basePath} />
@@ -32,11 +29,11 @@ export default function AdminDefaultLayout({ basePath }: AdminDefaultLayoutProps
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>{t('admin.layout.breadcrumb.primary')}</BreadcrumbLink>
+                  <BreadcrumbLink href='#'>Building Your Application</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block' />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{t('admin.layout.breadcrumb.secondary')}</BreadcrumbPage>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

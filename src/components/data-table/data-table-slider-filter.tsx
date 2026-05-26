@@ -124,7 +124,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
           {columnFilterValue ? (
             <div
               role='button'
-              aria-label={t('dataTable.filter.clearSpecificFilter', { title })}
+              aria-label={`Clear ${title} filter`}
               tabIndex={0}
               className='rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
               onClick={onReset}
@@ -198,7 +198,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
             </div>
           </div>
           <Label htmlFor={`${id}-slider`} className='sr-only'>
-            {t('dataTable.filter.aria.slider', { title })}
+            {title} slider
           </Label>
           <Slider
             id={`${id}-slider`}
@@ -209,12 +209,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
             onValueChange={onSliderValueChange}
           />
         </div>
-        <Button
-          aria-label={t('dataTable.filter.clearSpecificFilter', { title })}
-          variant='outline'
-          size='sm'
-          onClick={onReset}
-        >
+        <Button aria-label={`Clear ${title} filter`} variant='outline' size='sm' onClick={onReset}>
           {t('dataTable.filter.clear')}
         </Button>
       </PopoverContent>

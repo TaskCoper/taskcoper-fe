@@ -2,7 +2,6 @@
 
 import type { Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -88,7 +87,6 @@ export function getActiveHeadingLevel(editor: Editor | null, levels: Level[] = [
  */
 export function useHeadingDropdownMenu(config?: UseHeadingDropdownMenuConfig) {
   const { editor: providedEditor, levels = [1, 2, 3, 4, 5, 6], hideWhenUnavailable = false } = config || {}
-  const { t } = useTranslation()
 
   const { editor } = useTiptapEditor(providedEditor)
   const [isVisible, setIsVisible] = React.useState(true)
@@ -119,7 +117,7 @@ export function useHeadingDropdownMenu(config?: UseHeadingDropdownMenuConfig) {
     isActive,
     canToggle: canToggleState,
     levels,
-    label: t('richTextEditor.heading.label'),
+    label: 'Heading',
     Icon: activeLevel ? headingIcons[activeLevel] : HeadingIcon
   }
 }

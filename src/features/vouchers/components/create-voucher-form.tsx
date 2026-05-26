@@ -91,8 +91,8 @@ export default function CreateVoucherForm() {
 
                 <InputGroupAddon align='inline-end'>
                   <InputGroupButton
-                    aria-label={t('common.button.generateCode')}
-                    title={t('common.button.generateCode')}
+                    aria-label='Generate code'
+                    title='Generate code'
                     size='icon-xs'
                     onClick={generateCode}
                   >

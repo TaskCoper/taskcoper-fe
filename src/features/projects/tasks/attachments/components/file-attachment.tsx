@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useDateFormat } from '@/lib/date'
+import { format } from 'date-fns'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Attachment } from '../types'
@@ -32,7 +32,6 @@ export default function FileAttachment({
   projectIdentifier
 }: FileAttachmentProps) {
   const { t } = useTranslation()
-  const { formatDateTime } = useDateFormat()
   const isImage = isImageMimeType(attachment.mimeType)
   const extension = getFileExtension(attachment.name)
 
@@ -60,9 +59,9 @@ export default function FileAttachment({
         )}
 
         <div className='flex-1 min-w-0'>
-          <p className='font-medium text-sm line-clamp-2 truncate'>{attachment.name}</p>
-          <p className='text-xs text-muted-foreground truncate'>
-            {t('task.attachment.addedAt', { date: formatDateTime(attachment.createdAt, 'dateTimeShort') })}
+          <p className='font-medium text-sm line-clamp-2'>{attachment.name}</p>
+          <p className='text-xs text-muted-foreground'>
+            {t('task.attachment.addedAt', { date: format(new Date(attachment.createdAt), 'HH:mm dd/MM/yyyy') })}
           </p>
         </div>
 

@@ -19,9 +19,8 @@ export const useUpdateVoucherTargetStatus = ({ voucherId }: { voucherId: string 
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.lists() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(voucherId), exact: true })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.targetStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(voucherId) })
     }
   })
 

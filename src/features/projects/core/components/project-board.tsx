@@ -19,11 +19,11 @@ import AddMilestoneButton from '../../milestones/components/add-milestone-button
 import SortableMilestoneColumn from '../../milestones/components/sortable-milestone-column'
 import { useUpdateMilestone } from '../../milestones/hooks/use-update-milestone'
 import type { Milestone } from '../../milestones/types'
-import { updateMilestoneSchema, type UpdateMilestoneFormValues } from '../../milestones/validations'
+import { updateMilestoneSchema } from '../../milestones/validations'
 import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project-permissions'
 import SortableTaskCard from '../../tasks/core/components/sortable-task-card'
 import { useMoveTask } from '../../tasks/core/hooks/use-move-task'
-import { moveTaskSchema, type MoveTaskFormValues } from '../../tasks/core/validations'
+import { moveTaskSchema } from '../../tasks/core/validations'
 import type { MilestoneWithTasks, TaskPreview } from '../types'
 import ProjectContainer from './project-container'
 
@@ -48,10 +48,7 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
   const [activeColumn, setActiveColumn] = useState<Milestone | null>(null)
   const [activeTask, setActiveTask] = useState<TaskPreview | null>(null)
 
-  const { updateMilestone } = useUpdateMilestone({
-    projectIdentifier: identifier,
-    parentMilestoneIdentifier: milestoneIdentifier
-  })
+  const { updateMilestone } = useUpdateMilestone()
   const { moveTask } = useMoveTask({
     projectIdentifier: identifier,
     milestoneIdentifier,
@@ -179,13 +176,12 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, milestones: newMilestones }
       })
 
-      const payload: UpdateMilestoneFormValues = {
-        milestoneId: String(activeId),
-        parentMilestoneIdentifier: milestoneIdentifier ?? null,
+      const validated = updateMilestoneSchema(t).safeParse({
+        milestoneId: activeId,
+        parentMilestoneIdentifier: milestoneIdentifier,
         milestoneName: activeData.column.name,
         position: newPosition
-      }
-      const validated = updateMilestoneSchema(t).safeParse(payload)
+      })
 
       if (validated.success) {
         updateMilestone({ body: validated.data })
@@ -217,12 +213,11 @@ export default function ProjectBoard({ initialColumns, initialTasks }: ProjectBo
         return { ...old, tasks: newTasks }
       })
 
-      const payload: MoveTaskFormValues = {
-        id: String(activeId),
+      const validated = moveTaskSchema(t).safeParse({
+        id: activeId,
         targetMilestoneId: currentTask.milestoneId,
         targetPosition: newPosition
-      }
-      const validated = moveTaskSchema(t).safeParse(payload)
+      })
 
       if (validated.success) {
         moveTask(

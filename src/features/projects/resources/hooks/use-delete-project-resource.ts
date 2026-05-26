@@ -27,7 +27,7 @@ export const useDeleteProjectResource = ({ projectIdentifier }: DeleteProjectRes
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })

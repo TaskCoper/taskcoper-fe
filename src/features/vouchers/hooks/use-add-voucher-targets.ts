@@ -26,9 +26,8 @@ export const useAddVoucherTargets = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.lists() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(variables.body.voucherId), exact: true })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.targetStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.detail(variables.body.voucherId) })
     }
   })
 

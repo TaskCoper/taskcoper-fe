@@ -17,18 +17,15 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetFeedbacks } from '@/features/feedbacks/hooks/use-get-feedbacks'
 import PackageFeedbacksDialog from '@/features/mentor-packages/components/package-feedbacks-dialog'
 import { useGetMentorPackage } from '@/features/mentor-packages/hooks/use-get-mentor-package'
-import RequestPackageDialog from '@/features/package-bookings/components/request-package-dialog'
-import { useDateFormat } from '@/lib/date'
-import { cn, formatCurrency, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
+import BookPackageDialog from '@/features/package-bookings/components/book-package-dialog'
+import { cn, formatCurrency, formatDate, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
+import { formatDistanceToNow } from 'date-fns'
 import {
-  AlertTriangleIcon,
   CalendarDaysIcon,
   CheckCheckIcon,
   GlobeIcon,
   HeartIcon,
   LinkIcon,
-  LockKeyholeIcon,
-  SettingsIcon,
   Share2Icon,
   StarIcon,
   UsersRoundIcon
@@ -36,17 +33,16 @@ import {
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
-import placholderCoverImage from '/images/placeholder-cover.png'
 
 const gridGapClass = 'gap-10'
 
 const MentorPackageBookSkeleton = () => (
   <div className='relative pb-8 h-full overflow-y-auto'>
     <div className='relative'>
-      <div className='bg-primary/95 relative overflow-visible'>
+      <div className='bg-primary relative overflow-visible'>
         <div className={`mx-auto max-w-6xl grid grid-cols-3 ${gridGapClass}`}>
           <div className='col-span-2 relative'>
-            <div className='px-6 pt-6 pb-16 space-y-6'>
+            <div className='px-8 pt-8 pb-16 space-y-6'>
               <div className='flex items-center gap-2'>
                 <Skeleton className='h-4 w-28 bg-background/20' />
                 <Skeleton className='h-4 w-2 bg-background/20' />
@@ -89,7 +85,7 @@ const MentorPackageBookSkeleton = () => (
       <div className='absolute inset-y-0 inset-x-0 pointer-events-none z-20'>
         <div className={`mx-auto h-full max-w-6xl grid grid-cols-3 grid-rows-[1fr] ${gridGapClass}`}>
           <div className='col-span-2' />
-          <div className='col-span-1 pt-6'>
+          <div className='col-span-1'>
             <div className='sticky top-6 pointer-events-auto'>
               <Card className='rounded-xl p-1 gap-2 shadow-xl'>
                 <Skeleton className='w-full h-40 rounded-md' />
@@ -151,7 +147,6 @@ const MentorPackageBookSkeleton = () => (
 
 export default function MentorPackageBookPage() {
   const { t } = useTranslation()
-  const { formatDate, formatRelative } = useDateFormat()
   const { me } = useGetMe()
   const { packageId } = useParams<{ packageId: string }>()
 
@@ -169,7 +164,6 @@ export default function MentorPackageBookPage() {
   })
 
   const meSlug = me?.slug
-  const isCreator = mentorPackage?.creator.userId === me?.id
 
   const showCopiedIndicator = useCallback((type: 'link' | 'share') => {
     if (type === 'link') {
@@ -216,25 +210,8 @@ export default function MentorPackageBookPage() {
   }, [copyToClipboard, meSlug, showCopiedIndicator])
 
   const notAvailableText = t('mentorPackage.bookPage.notAvailable')
-  const updatedOnDisplay = mentorPackage?.modifiedOnUtc
-    ? formatDate(mentorPackage.modifiedOnUtc, 'dateLong')
-    : formatDate(mentorPackage?.createdOnUtc, 'dateLong')
+  const updatedOnDisplay = mentorPackage?.modifiedOnUtc ? formatDate(mentorPackage.modifiedOnUtc) : notAvailableText
   const averageFeedbackRatingDisplay = mentorPackage?.averageFeedbackRating?.toFixed(1) ?? notAvailableText
-  const durationRules =
-    mentorPackage && mentorPackage.totalSessions > 0
-      ? (() => {
-          const totalTimeSlotsBySession = new Map(mentorPackage.rules.map((rule) => [rule.no, rule.totalTimeSlots]))
-
-          return Array.from({ length: mentorPackage.totalSessions }, (_, index) => {
-            const sessionNo = index + 1
-
-            return {
-              no: sessionNo,
-              totalTimeSlots: totalTimeSlotsBySession.get(sessionNo) ?? 1
-            }
-          })
-        })()
-      : []
 
   if (isLoadingMentorPackage || isLoadingFeedbacks) {
     return <MentorPackageBookSkeleton />
@@ -243,12 +220,12 @@ export default function MentorPackageBookPage() {
   return (
     <div className='relative pb-8 h-full overflow-y-auto'>
       <div className='relative'>
-        <div className='bg-primary/95 relative overflow-visible'>
+        <div className='bg-primary relative overflow-visible'>
           {/* Headline */}
           <div className={`mx-auto max-w-6xl grid grid-cols-3 ${gridGapClass}`}>
             {/* Package Info */}
             <div className='col-span-2 relative'>
-              <div className='px-6 pt-6 pb-16 space-y-6'>
+              <div className='px-8 pt-8 pb-16 space-y-6'>
                 <Breadcrumb>
                   <BreadcrumbList>
                     <BreadcrumbItem>
@@ -267,7 +244,7 @@ export default function MentorPackageBookPage() {
 
                 <p className='text-background text-3xl font-bold'>{mentorPackage?.name}</p>
                 <p className='text-sm text-background/90 text-justify'>
-                  {getFirstParagraphTextFromHtml(mentorPackage?.description) || t('common.ui.noDescriptionAvailable')}
+                  {getFirstParagraphTextFromHtml(mentorPackage?.description)}
                 </p>
 
                 <div className='flex items-center gap-6'>
@@ -336,42 +313,28 @@ export default function MentorPackageBookPage() {
         <div className='absolute inset-y-0 inset-x-0 pointer-events-none z-20'>
           <div className={`mx-auto h-full max-w-6xl grid grid-cols-3 grid-rows-[1fr] ${gridGapClass}`}>
             <div className='col-span-2' />
-            <div className='col-span-1 pt-6'>
+            <div className='col-span-1'>
               <div className='sticky top-6 pointer-events-auto'>
-                {/* Floating Card */}
                 <Card className='rounded-xl p-1 gap-2 shadow-xl'>
-                  {mentorPackage?.coverImageUrl ? (
-                    <img
-                      src={mentorPackage?.coverImageUrl ?? undefined}
-                      alt={mentorPackage?.name}
-                      className='w-full h-40 object-cover rounded-md'
-                    />
-                  ) : (
-                    <img
-                      src={placholderCoverImage}
-                      alt={mentorPackage?.name}
-                      className='w-full h-40 object-cover rounded-md'
-                    />
-                  )}
+                  <img
+                    src={mentorPackage?.coverImageUrl ?? undefined}
+                    alt={mentorPackage?.name}
+                    className='w-full h-40 object-cover rounded-md'
+                  />
 
-                  <div className='flex items-center justify-between w-full bg-emerald-50 p-4 rounded-md'>
-                    <p className='text-4xl font-bold text-emerald-500'>
+                  <div className='p-4'>
+                    <p className='text-3xl font-bold text-primary'>
                       {formatCurrency(mentorPackage?.price ?? 0)}{' '}
                       {/* <span className='text-base font-normal line-through text-foreground/50'>
-                          {formatCurrency(2449000)}
-                        </span>{' '}
-                        <span className='text-sm font-normal text-foreground/60'>
-                          {t('mentorPackage.bookPage.discountPercent', { percent: 84 })}
-                        </span> */}
+                        {formatCurrency(2449000)}
+                      </span>{' '}
+                      <span className='text-sm font-normal text-foreground/60'>
+                        {t('mentorPackage.bookPage.discountPercent', { percent: 84 })}
+                      </span> */}
                     </p>
-
-                    <div className='flex flex-col items-center justify-center gap-1'>
-                      <LockKeyholeIcon className='text-emerald-600 size-4' />
-                      <p className='text-[10px] text-emerald-600 font-medium'>{t('checkout.securePayment')}</p>
-                    </div>
                   </div>
 
-                  <div className='space-y-2 p-2'>
+                  <div className='space-y-2 px-2 pb-2'>
                     <div className='flex items-center justify-between gap-2'>
                       <p className='text-xs text-muted-foreground'>{t('packageBooking.bookPackage.sessions')}</p>
                       <p className='text-xs font-semibold'>{mentorPackage?.totalSessions}</p>
@@ -387,7 +350,7 @@ export default function MentorPackageBookPage() {
                       <p className='text-xs font-semibold'>{mentorPackage?.usageDeadlineDays}</p>
                     </div>
 
-                    <div className='flex justify-center items-center gap-3 py-3 mt-2'>
+                    <div className='flex justify-center items-center gap-3 py-3 bg-muted/30 border border-dashed rounded-md mt-4'>
                       <Button type='button' variant='outline' className='rounded-full' size='icon'>
                         <HeartIcon />
                       </Button>
@@ -417,40 +380,11 @@ export default function MentorPackageBookPage() {
                       </Button>
                     </div>
 
-                    {mentorPackage &&
-                      (mentorPackage.pendingRequest?.id ? (
-                        <div className='space-y-2'>
-                          <p className='flex items-start gap-1.5 font-medium text-xs border border-amber-600 border-dashed text-amber-600 px-3 py-2 bg-amber-50 rounded-sm'>
-                            <AlertTriangleIcon className='size-3.5 shrink-0 mt-0.5' />
-                            {t('mentorPackage.bookPage.pendingRequestNotice')}
-                          </p>
-
-                          <Link to={`/requests/${mentorPackage.pendingRequest.id}`}>
-                            <Button className='w-full' variant='outline'>
-                              <CalendarDaysIcon />
-                              {t('mentorPackage.bookPage.viewPendingRequest')}
-                            </Button>
-                          </Link>
-                        </div>
-                      ) : (
-                        !isCreator && (
-                          <RequestPackageDialog mentorPackage={mentorPackage}>
-                            <Button className='w-full'>
-                              <CalendarDaysIcon />
-                              {t('packageBooking.bookPackage.proceed')}
-                            </Button>
-                          </RequestPackageDialog>
-                        )
-                      ))}
-
-                    {isCreator && mentorPackage && (
-                      <Link to={`/packages/${mentorPackage.id}`}>
-                        <Button className='w-full' size='sm' variant='outline'>
-                          <SettingsIcon />
-                          {t('mentorPackage.card.managePackage')}
-                        </Button>
-                      </Link>
-                    )}
+                    {mentorPackage ? (
+                      <BookPackageDialog mentorPackage={mentorPackage}>
+                        <Button className='w-full'>{t('packageBooking.bookPackage.proceed')}</Button>
+                      </BookPackageDialog>
+                    ) : null}
                   </div>
                 </Card>
               </div>
@@ -462,14 +396,10 @@ export default function MentorPackageBookPage() {
           <div className='col-span-2 pt-18 space-y-14'>
             <div>
               <p className='text-xl font-bold'>{t('mentorPackage.form.description')}</p>
-              {mentorPackage?.description ? (
-                <SanitizedHtml html={mentorPackage.description} className='mt-2 text-justify' />
-              ) : (
-                <p className='text-sm text-muted-foreground'>{t('common.ui.noDescriptionAvailable')}</p>
-              )}
+              <SanitizedHtml html={mentorPackage?.description ?? ''} className='mt-2 text-justify' />
             </div>
 
-            {durationRules.length ? (
+            {mentorPackage?.rules.length ? (
               <div className='space-y-2.5'>
                 <div>
                   <p className='text-xl font-bold'>{t('mentorPackage.page.durationTitle')}</p>
@@ -477,81 +407,83 @@ export default function MentorPackageBookPage() {
                 </div>
                 <div className='space-y-2'>
                   <Accordion type='single' collapsible className='w-full space-y-2'>
-                    {durationRules.map((rule) => (
-                      <AccordionItem key={rule.no} value={`session-${rule.no}`}>
-                        <AccordionTrigger className='px-2 py-2 hover:no-underline'>
-                          <p className='text-sm font-medium'>
-                            {t('mentorPackageRule.item.session')} {rule.no}
-                          </p>
-                        </AccordionTrigger>
-                        <AccordionContent className='px-2 pb-2'>
-                          <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
+                    {mentorPackage.rules
+                      .slice()
+                      .sort((a, b) => a.no - b.no)
+                      .map((rule) => (
+                        <AccordionItem key={rule.id} value={`session-${rule.no}`}>
+                          <AccordionTrigger className='px-2 py-2 hover:no-underline'>
+                            <p className='text-sm font-medium'>
+                              {t('mentorPackageRule.item.session')} {rule.no}
+                            </p>
+                          </AccordionTrigger>
+                          <AccordionContent className='px-2 pb-2'>
+                            <p>{t('mentorPackageRule.item.sessionTakesHours', { hours: rule.totalTimeSlots })}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
                   </Accordion>
                 </div>
               </div>
             ) : null}
 
-            {feedbacks.value.totalCount > 0 ? (
-              <div className='space-y-3'>
+            <div className='space-y-3'>
+              <div className='flex items-center gap-2'>
                 <div className='flex items-center gap-2'>
-                  <div className='flex items-center gap-2'>
-                    <StarIcon className='size-4 fill-amber-500 text-amber-500' />
-                    <p className='text-xl font-bold'>
-                      {t('mentorPackage.bookPage.courseRating', { rating: averageFeedbackRatingDisplay })}
-                    </p>
-                  </div>
-                  <div className='size-1.5 bg-foreground/80 rounded-full' />
+                  <StarIcon className='size-4 fill-amber-500 text-amber-500' />
                   <p className='text-xl font-bold'>
-                    {t('mentorPackage.bookPage.ratingsCount', { count: mentorPackage?.totalFeedbacks ?? 0 })}
+                    {t('mentorPackage.bookPage.courseRating', { rating: averageFeedbackRatingDisplay })}
                   </p>
                 </div>
+                <div className='size-1.5 bg-foreground/80 rounded-full' />
+                <p className='text-xl font-bold'>
+                  {t('mentorPackage.bookPage.ratingsCount', { count: mentorPackage?.totalFeedbacks ?? 0 })}
+                </p>
+              </div>
+              <div className='grid grid-cols-2 gap-x-8 gap-y-6'>
+                {feedbacks.value.items.map((feedback) => (
+                  <div key={feedback.id} className='border-t py-4'>
+                    <div className='flex items-center gap-2'>
+                      <Avatar className='size-9'>
+                        <AvatarImage src={feedback.author.avatarUrl ?? ''} />
+                        <AvatarFallback>
+                          {getAvatarFallback(`${feedback.author.firstName} ${feedback.author.lastName}`)}
+                        </AvatarFallback>
+                      </Avatar>
 
-                <div className='grid grid-cols-2 gap-x-8 gap-y-6'>
-                  {feedbacks.value.items.map((feedback) => (
-                    <div key={feedback.id} className='border-t py-4'>
-                      <div className='flex items-center gap-2'>
-                        <Avatar className='size-9'>
-                          <AvatarImage src={feedback.author.avatarUrl ?? ''} />
-                          <AvatarFallback>
-                            {getAvatarFallback(`${feedback.author.firstName} ${feedback.author.lastName}`)}
-                          </AvatarFallback>
-                        </Avatar>
+                      <div>
+                        <p className='text-sm font-medium'>
+                          {feedback.author.firstName} {feedback.author.lastName}
+                        </p>
 
-                        <div>
-                          <p className='text-sm font-medium'>
-                            {feedback.author.firstName} {feedback.author.lastName}
+                        <div className='flex items-center gap-2'>
+                          <RatingField
+                            value={feedback.rating as RatingValue}
+                            setValue={() => {}}
+                            size={10}
+                            className='gap-0.5'
+                          />
+
+                          <p className='text-xs text-muted-foreground'>
+                            {formatDistanceToNow(new Date(feedback.createdOnUtc), { addSuffix: true })}
                           </p>
-
-                          <div className='flex items-center gap-2'>
-                            <RatingField
-                              value={feedback.rating as RatingValue}
-                              setValue={() => {}}
-                              size={10}
-                              className='gap-0.5'
-                            />
-
-                            <p className='text-xs text-muted-foreground'>{formatRelative(feedback.createdOnUtc)}</p>
-                          </div>
                         </div>
                       </div>
-
-                      <p className='text-sm text-muted-foreground py-2'>
-                        {getFirstParagraphTextFromHtml(feedback.comment)}
-                      </p>
                     </div>
-                  ))}
-                </div>
 
-                <PackageFeedbacksDialog>
-                  <Button variant='outline' className='w-full'>
-                    {t('home.cards.teamChat.viewAll')}
-                  </Button>
-                </PackageFeedbacksDialog>
+                    <p className='text-sm text-muted-foreground py-2'>
+                      {getFirstParagraphTextFromHtml(feedback.comment)}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ) : null}
+
+              <PackageFeedbacksDialog>
+                <Button variant='outline' className='w-full'>
+                  {t('home.cards.teamChat.viewAll')}
+                </Button>
+              </PackageFeedbacksDialog>
+            </div>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import type { RevenueLabel } from '../types'
 export const useGetProjectRevenueLabels = ({ projectIdentifier }: { projectIdentifier?: string }) => {
   const { data: revenueLabels = getDefaultPaginationResponse<RevenueLabel>(), isLoading: isLoadingRevenueLabels } =
     useQuery({
-      queryKey: queryKeys.projects.revenueLabels.list(projectIdentifier),
+      queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier),
       queryFn: () => projectRevenueService.getProjectRevenueLabels({ projectIdentifier }),
       enabled: !!projectIdentifier
     })

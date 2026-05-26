@@ -32,7 +32,7 @@ export default function CreateCommissionForm() {
                 <SelectContent className='min-w-(--radix-select-trigger-width)'>
                   {Object.values(CommissionTargetModel).map((targetModel) => (
                     <SelectItem key={targetModel} value={targetModel}>
-                      {t(CommissionTargetModelLabel[targetModel])}
+                      {CommissionTargetModelLabel[targetModel]}
                     </SelectItem>
                   ))}
                 </SelectContent>

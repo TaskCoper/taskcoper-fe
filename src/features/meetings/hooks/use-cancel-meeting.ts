@@ -8,10 +8,9 @@ import meetingService from '../services'
 interface UseCancelMeetingOptions {
   mentorId: string
   packageId?: string
-  projectIdentifier?: string
 }
 
-export const useCancelMeeting = ({ mentorId, packageId, projectIdentifier }: UseCancelMeetingOptions) => {
+export const useCancelMeeting = ({ mentorId, packageId }: UseCancelMeetingOptions) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -26,16 +25,12 @@ export const useCancelMeeting = ({ mentorId, packageId, projectIdentifier }: Use
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.detail(variables.meetingId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(mentorId) })
 
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
-      }
-
-      if (projectIdentifier) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allProject(projectIdentifier) })
       }
     }
   })

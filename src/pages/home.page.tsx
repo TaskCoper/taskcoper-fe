@@ -69,12 +69,7 @@ const stats = [
 ]
 
 export default function HomePage() {
-  const { t, i18n } = useTranslation()
-  const sprintProgress = 75
-  const sprintProgressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0
-  }).format(sprintProgress / 100)
+  const { t } = useTranslation()
 
   return (
     <>
@@ -127,9 +122,8 @@ export default function HomePage() {
                         >
                           {t('home.cards.taskCard.priority')}
                         </Badge>
-                        <span className='text-[9px] text-slate-400 inline-flex items-center gap-1'>
-                          <MessageSquareIcon className='size-3.5' />
-                          {t('home.cards.taskCard.comments', { count: 8 })}
+                        <span className='text-[9px] text-slate-400'>
+                          💬 {t('home.cards.taskCard.comments', { count: 8 })}
                         </span>
                       </div>
                       <div className='pt-2 border-t border-slate-100 flex items-center justify-between'>
@@ -147,7 +141,7 @@ export default function HomePage() {
                             {t('home.cards.taskCard.members', { count: 3 })}
                           </span>
                         </div>
-                        <span className='text-[10px] text-slate-400 font-medium'>{t('home.cards.taskCard.date')}</span>
+                        <span className='text-[10px] text-slate-400 font-medium'>Jan 12</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -385,7 +379,7 @@ export default function HomePage() {
                             <p className='text-[11px] font-medium text-slate-500'>
                               {t('home.cards.timeline.designSync')}
                             </p>
-                            <p className='text-[9px] text-slate-400'>{t('home.cards.timeline.designSyncAt')}</p>
+                            <p className='text-[9px] text-slate-400'>3:00 PM</p>
                           </div>
                         </div>
                       </div>
@@ -416,9 +410,9 @@ export default function HomePage() {
                             </p>
                           </div>
                         </div>
-                        <span className='text-lg font-bold text-primary'>{sprintProgressLabel}</span>
+                        <span className='text-lg font-bold text-primary'>75%</span>
                       </div>
-                      <Progress value={sprintProgress} className='h-2' />
+                      <Progress value={75} className='h-2' />
                       <div className='grid grid-cols-3 gap-2 pt-1'>
                         <div className='text-center'>
                           <div className='text-sm font-bold text-slate-400'>12</div>
@@ -509,7 +503,7 @@ export default function HomePage() {
             {t('pageTitle.privacyPolicy')}
           </Link>
           <Separator orientation='vertical' className='h-3 bg-slate-200' />
-          <p>{t('common.copyright.short', { year: new Date().getFullYear() })}</p>
+          <p>© {new Date().getFullYear()} TaskCoper</p>
         </footer>
       </div>
     </>

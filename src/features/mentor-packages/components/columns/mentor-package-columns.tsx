@@ -10,8 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatDateTime } from '@/lib/date'
-import { cn, formatCurrency } from '@/shared/utils'
+import { cn, formatCurrency, formatDate } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { CheckCircleIcon, MoreHorizontalIcon, SearchIcon, XCircleIcon } from 'lucide-react'
@@ -203,7 +202,11 @@ export const getColumns = (): ColumnDef<MentorPackage>[] => {
       ),
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
-          {formatDateTime(row.original.createdOnUtc, 'dateTimeMedium')}
+          {formatDate(row.original.createdOnUtc, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          })}
         </p>
       ),
       enableSorting: true,
@@ -222,7 +225,11 @@ export const getColumns = (): ColumnDef<MentorPackage>[] => {
       cell: ({ row }) => (
         <p className='text-muted-foreground text-center text-sm'>
           {row.original.modifiedOnUtc
-            ? formatDateTime(row.original.modifiedOnUtc, 'dateTimeMedium')
+            ? formatDate(row.original.modifiedOnUtc, {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              })
             : i18next.t('common.ui.emptyValue')}
         </p>
       ),

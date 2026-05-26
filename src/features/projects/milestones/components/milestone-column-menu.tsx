@@ -6,7 +6,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { queryKeys } from '@/lib/query-keys'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { Trash2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +36,7 @@ export default function MilestoneColumnMenu({
   const canDelete = check('TASKS', 'canDelete')
 
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
-    queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier),
+    queryKey: ['milestones', identifier, milestoneIdentifier],
     parentMilestoneIdentifier: milestoneIdentifier
   })
 

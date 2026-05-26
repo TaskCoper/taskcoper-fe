@@ -67,8 +67,8 @@ class ProjectService {
     return data.value
   }
 
-  deleteProject = async ({ projectIdentifier }: { projectIdentifier: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}`)
+  deleteProject = async ({ projectId }: { projectId: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}`)
 
     return data.value
   }

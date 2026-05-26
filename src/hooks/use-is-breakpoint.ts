@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useSyncExternalStore } from 'react'
+import { useEffect, useState } from 'react'
 
 type BreakpointMode = 'min' | 'max'
 
@@ -11,25 +11,21 @@ type BreakpointMode = 'min' | 'max'
  *   useIsBreakpoint("min", 1024)  // true when width >= 1024
  */
 export function useIsBreakpoint(mode: BreakpointMode = 'max', breakpoint = 768) {
-  const query = useMemo(() => {
-    return mode === 'min' ? `(min-width: ${breakpoint}px)` : `(max-width: ${breakpoint - 1}px)`
+  const [matches, setMatches] = useState<boolean | undefined>(undefined)
+
+  useEffect(() => {
+    const query = mode === 'min' ? `(min-width: ${breakpoint}px)` : `(max-width: ${breakpoint - 1}px)`
+
+    const mql = window.matchMedia(query)
+    const onChange = (e: MediaQueryListEvent) => setMatches(e.matches)
+
+    // Set initial value
+    setMatches(mql.matches)
+
+    // Add listener
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
   }, [mode, breakpoint])
 
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      const mediaQueryList = window.matchMedia(query)
-      const onChange = () => onStoreChange()
-
-      mediaQueryList.addEventListener('change', onChange)
-      return () => mediaQueryList.removeEventListener('change', onChange)
-    },
-    [query]
-  )
-
-  const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query])
-  const getServerSnapshot = useCallback(() => false, [])
-
-  const matches = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-
-  return matches
+  return !!matches
 }

@@ -1,4 +1,6 @@
+import SingleSelectField from '@/components/single-select-field'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -12,27 +14,24 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import type { MentorPackage } from '@/features/mentor-packages/types'
+import { useGetProjectsForPackage } from '@/features/projects/core/hooks/use-get-projects-for-package'
 import { useGetVoucherByCode } from '@/features/vouchers/hooks/use-get-voucher-by-code'
 import { DiscountType } from '@/features/vouchers/types'
-import { formatCurrency } from '@/shared/utils'
-import { TicketPercentIcon } from 'lucide-react'
+import { formatCurrency, getFirstParagraphTextFromHtml } from '@/shared/utils'
+import { CalendarDaysIcon, Clock3Icon, Layers3Icon, TicketPercentIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
 import { useBookPackage } from '../hooks/use-book-package'
 import type { BookPackageFormValues } from '../validations'
 
 interface BookPackageDialogProps {
   children: React.ReactNode
-  projectId: string | null
-  mentorPackage: Pick<MentorPackage, 'id' | 'name' | 'price' | 'currency'>
+  mentorPackage: MentorPackage
 }
 
-export default function BookPackageDialog({ children, mentorPackage, projectId }: BookPackageDialogProps) {
+export default function BookPackageDialog({ children, mentorPackage }: BookPackageDialogProps) {
   const { t } = useTranslation()
-  const { requestId } = useParams<{ requestId: string }>()
-
   const { methods, bookPackage, isBookingPackage } = useBookPackage()
 
   const [open, setOpen] = useState(false)
@@ -85,16 +84,21 @@ export default function BookPackageDialog({ children, mentorPackage, projectId }
     bookPackage({ body: updatedBody })
   }
 
+  const { projects: bookableProjects, isLoadingProjects: isLoadingBookableProjects } = useGetProjectsForPackage(open)
+
+  const projectOptions = useMemo(
+    () => bookableProjects.value.items.map((project) => ({ value: project.id, label: project.name })),
+    [bookableProjects.value.items]
+  )
+
   useEffect(() => {
     const values = methods.getValues()
 
     methods.reset({
       ...values,
-      bookedByProjectId: projectId,
-      mentorPackageId: mentorPackage.id,
-      purchaseRequestId: requestId
+      mentorPackageId: mentorPackage.id
     })
-  }, [mentorPackage, methods, requestId, projectId])
+  }, [mentorPackage, methods])
 
   return (
     <Dialog
@@ -107,23 +111,40 @@ export default function BookPackageDialog({ children, mentorPackage, projectId }
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent position='top-center' className='min-w-lg' onInteractOutside={onClose} showCloseButton={false}>
-        <DialogHeader>
-          <DialogTitle>{t('packageBooking.bookPackage.title')}</DialogTitle>
-          <DialogDescription>{mentorPackage.name}</DialogDescription>
+      <DialogContent
+        position='top-center'
+        className='min-w-xl overflow-hidden p-0 sm:min-w-4xl border-none gap-0'
+        onInteractOutside={onClose}
+        showCloseButton={false}
+      >
+        <DialogHeader className='bg-primary p-6 text-left'>
+          <DialogTitle className='text-xl text-background'>{t('packageBooking.bookPackage.title')}</DialogTitle>
+          <DialogDescription className='text-background/90'>
+            {getFirstParagraphTextFromHtml(mentorPackage.description) || t('packageBooking.bookPackage.description')}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className='flex flex-col gap-4'>
+        <div className='grid gap-4 p-4 lg:grid-cols-5'>
           <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4'>
+            <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-4 lg:col-span-2'>
+              <SingleSelectField
+                control={methods.control}
+                name='bookedByProjectId'
+                label='meeting.form.projectLabel'
+                options={projectOptions}
+                placeholder='meeting.form.projectPlaceholder'
+                searchPlaceholder='meeting.form.projectSearchPlaceholder'
+                disabled={isLoadingBookableProjects}
+              />
+
               <Controller
                 name='voucherCode'
                 control={methods.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid} className='gap-1'>
-                    <FieldLabel htmlFor={field.name} className='gap-1 items-baseline'>
+                    <FieldLabel htmlFor={field.name} className='gap-0.5'>
                       {t('packageBooking.bookPackage.voucherCode')}
-                      <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+                      <span className='font-semibold text-destructive'>*</span>
                     </FieldLabel>
 
                     <Input
@@ -150,6 +171,68 @@ export default function BookPackageDialog({ children, mentorPackage, projectId }
                   </Field>
                 )}
               />
+
+              <Button
+                className='w-full'
+                disabled={isBookingPackage || (!!voucherCode && (!!voucherError || isLoadingVoucher))}
+              >
+                {isBookingPackage ? <Spinner /> : null}
+                {t('packageBooking.bookPackage.proceed')}
+              </Button>
+            </form>
+          </FormProvider>
+
+          <Card className='gap-3 rounded-xl p-1 shadow-sm lg:col-span-3'>
+            {mentorPackage.coverImageUrl ? (
+              <img
+                src={mentorPackage.coverImageUrl}
+                alt={mentorPackage.name}
+                className='h-40 w-full rounded-md object-cover'
+              />
+            ) : (
+              <div className='h-40 rounded-md border border-dashed border-border bg-linear-to-br from-primary/20 via-primary/10 to-background' />
+            )}
+
+            <div className='space-y-4 px-3 pb-3'>
+              <div className='space-y-1.5'>
+                <p className='text-xs font-mono tracking-wide text-muted-foreground'>
+                  {t('packageBooking.bookPackage.receipt')}
+                </p>
+                <p className='line-clamp-2 text-base font-semibold leading-snug'>{mentorPackage.name}</p>
+                <p className='line-clamp-2 text-xs text-muted-foreground'>
+                  {getFirstParagraphTextFromHtml(mentorPackage.description)}
+                </p>
+              </div>
+
+              <div className='space-y-2 rounded-md border bg-muted/35 p-3'>
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <Layers3Icon className='size-3.5' />
+                    <p>{t('packageBooking.bookPackage.sessions')}</p>
+                  </div>
+                  <p className='text-xs font-semibold'>{mentorPackage.totalSessions}</p>
+                </div>
+
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <Clock3Icon className='size-3.5' />
+                    <p>{t('packageBooking.bookPackage.durationPerSession')}</p>
+                  </div>
+                  <p className='text-xs font-semibold'>
+                    {mentorPackage.durationInMinutes} {t('packageBooking.bookPackage.min')}
+                  </p>
+                </div>
+
+                <div className='flex items-center justify-between gap-2'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <CalendarDaysIcon className='size-3.5' />
+                    <p>{t('mentorPackage.form.price')}</p>
+                  </div>
+                  <p className='text-sm font-bold text-primary'>
+                    {formatCurrency(mentorPackage.price, mentorPackage.currency)}
+                  </p>
+                </div>
+              </div>
 
               <div className='space-y-1.5 rounded-md border border-dashed p-3'>
                 {isLoadingVoucher ? (
@@ -178,16 +261,8 @@ export default function BookPackageDialog({ children, mentorPackage, projectId }
                   )}
                 </div>
               </div>
-
-              <Button
-                className='w-full'
-                disabled={isBookingPackage || (!!voucherCode && (!!voucherError || isLoadingVoucher))}
-              >
-                {isBookingPackage ? <Spinner /> : null}
-                {t('packageBooking.bookPackage.proceed')}
-              </Button>
-            </form>
-          </FormProvider>
+            </div>
+          </Card>
         </div>
       </DialogContent>
     </Dialog>

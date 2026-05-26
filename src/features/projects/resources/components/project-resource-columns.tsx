@@ -10,8 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatDate } from '@/lib/date'
-import { getAvatarFallback } from '@/shared/utils'
+import { formatDate, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
@@ -198,7 +197,7 @@ export const getColumns = ({
       cell: ({ row }) => {
         const value = row.getValue('createdOnUtc')
         if (!value) return <p className='text-muted-foreground'>-</p>
-        return <p className='text-sm'>{formatDate(value as string, 'dateLong')}</p>
+        return <p className='text-sm'>{formatDate(value as string)}</p>
       },
       enableSorting: true,
       enableHiding: true,

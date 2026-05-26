@@ -1,6 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
-import { invalidateProjectResources, invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -61,13 +60,19 @@ export const useDeleteTaskAttachment = ({
       })
     },
     onSettled: (_, _error, variables) => {
-      invalidateTaskTree(queryClient, {
-        taskId: variables.taskId,
-        projectIdentifier,
-        parentMilestoneIdentifier,
-        userId: user?.id
-      })
-      invalidateProjectResources(queryClient, projectIdentifier)
+      queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(variables.taskId) })
+      if (parentMilestoneIdentifier) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+        })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
+      }
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.taskId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resourceMemberStats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.mimeTypeStats(projectIdentifier) })
     }
   })
 

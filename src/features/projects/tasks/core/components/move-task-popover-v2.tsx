@@ -12,7 +12,7 @@ import { useGetParentMilestones } from '../../../core/hooks/use-get-parent-miles
 import { useGetChildMilestones } from '../../../milestones/hooks/use-get-child-milestones'
 import { useGetMilestoneTasks } from '../../../milestones/hooks/use-get-milestone-tasks'
 import { useMoveTask } from '../hooks/use-move-task'
-import { moveTaskSchema, type MoveTaskFormValues } from '../validations'
+import { moveTaskSchema } from '../validations'
 
 interface MoveTaskPopoverV2Props {
   children: React.ReactNode
@@ -145,16 +145,11 @@ export default function MoveTaskPopoverV2({
       newPosition = (prevItem?.position ?? 0) + 0.0000000001
     }
 
-    if (!selectedMilestoneId) {
-      return
-    }
-
-    const payload: MoveTaskFormValues = {
+    const validation = moveTaskSchema(t).safeParse({
       id: taskId,
       targetMilestoneId: selectedMilestoneId,
       targetPosition: newPosition
-    }
-    const validation = moveTaskSchema(t).safeParse(payload)
+    })
 
     if (validation.success) {
       moveTask(

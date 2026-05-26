@@ -1,6 +1,6 @@
 import { Progress } from '@/components/ui/progress'
 import { MeetingStatus } from '@/features/meetings/types'
-import { useDateFormat } from '@/lib/date'
+import { format } from 'date-fns'
 import { AlertCircleIcon, ClockIcon, FolderIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { PurchasedMentorPackage } from '../types'
@@ -15,7 +15,6 @@ export default function PurchasedMentorPackageCard({
   displayProject = true
 }: PurchasedMentorPackageCardProps) {
   const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
 
   const progress =
     ((mentorPackage?.meetings?.filter((meeting) => meeting.status === MeetingStatus.COMPLETED && !meeting.parentId)
@@ -47,7 +46,7 @@ export default function PurchasedMentorPackageCard({
         ) : (
           <div className='h-4 flex items-center gap-1'>
             <ClockIcon className='size-3' />
-            <p className='text-xs'>{formatDate(mentorPackage.createdOnUtc, 'dateShort')}</p>
+            <p className='text-xs'>{format(new Date(mentorPackage.createdOnUtc), 'dd/MM/yyyy')}</p>
           </div>
         )}
 

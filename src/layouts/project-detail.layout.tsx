@@ -18,7 +18,6 @@ import { useParentMilestoneDragDrop } from '@/features/projects/milestones/hooks
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useProjectRouting } from '@/hooks/use-project-routing'
-import { queryKeys } from '@/lib/query-keys'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
 import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
@@ -100,7 +99,7 @@ export default function ProjectDetailLayout() {
   //   project?.members?.find((member) => member.userId === user?.UserId && member.roles.some((role) => role.isSystem)) !==
   //   undefined
 
-  const queryKey = queryKeys.projects.parentMilestones(identifier)
+  const queryKey = ['parent-milestones', identifier]
 
   const { shouldDisplayTabs, activeTabValue, handleTabChange } = useProjectRouting({
     identifier,

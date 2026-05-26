@@ -154,17 +154,16 @@ export const TooltipTrigger = React.forwardRef<HTMLElement, TooltipTriggerProps>
     const dataAttributes = {
       'data-tooltip-state': context.open ? 'open' : 'closed'
     }
-    const referenceProps = context.getReferenceProps({
-      ...props,
-      ...(typeof children.props === 'object' ? children.props : {})
-    })
 
-    // eslint-disable-next-line react-hooks/refs, @typescript-eslint/no-explicit-any
-    return React.cloneElement(children as React.ReactElement<any>, {
-      ...referenceProps,
-      ...dataAttributes,
-      ref
-    })
+    return React.cloneElement(
+      children,
+      context.getReferenceProps({
+        ref,
+        ...props,
+        ...(typeof children.props === 'object' ? children.props : {}),
+        ...dataAttributes
+      })
+    )
   }
 
   return (

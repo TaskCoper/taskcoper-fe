@@ -37,8 +37,7 @@ export const useCreateCommission = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.lists() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.public() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.commissions.all })
     }
   })
 

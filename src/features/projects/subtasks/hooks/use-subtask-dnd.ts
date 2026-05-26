@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import type { Subtask } from '../shared-types'
 import type { SubtaskWithChildren } from '../types'
 import { recalculateParentStatus, transformSubtasks } from '../utils'
-import { updateSubtaskSchema, type UpdateSubtaskFormValues } from '../validations'
+import { updateSubtaskSchema } from '../validations'
 import { useUpdateSubtask } from './use-update-subtask'
 
 interface UseSubtaskDndProps {
@@ -169,14 +169,12 @@ export const useSubtaskDnd = ({ taskId, identifier, milestoneIdentifier, subtask
 
       if (originalParent.index === newIndex) return
 
-      const payload: UpdateSubtaskFormValues = {
+      const validated = updateSubtaskSchema(t).safeParse({
         id: activeId,
         name: originalParent.name,
         index: newIndex,
-        parentId: null,
-        deadline: originalParent.deadline
-      }
-      const validated = updateSubtaskSchema(t).safeParse(payload)
+        parentId: null
+      })
 
       if (validated.success) {
         updateSubtask({
@@ -200,14 +198,12 @@ export const useSubtaskDnd = ({ taskId, identifier, milestoneIdentifier, subtask
 
       if (originalChild.index === newIndex && originalChild.parentId === currentChild.parentId) return
 
-      const payload: UpdateSubtaskFormValues = {
+      const validated = updateSubtaskSchema(t).safeParse({
         id: activeId,
         name: originalChild.name,
         index: newIndex,
-        parentId: currentChild.parentId,
-        deadline: originalChild.deadline
-      }
-      const validated = updateSubtaskSchema(t).safeParse(payload)
+        parentId: currentChild.parentId
+      })
 
       if (validated.success) {
         updateSubtask({

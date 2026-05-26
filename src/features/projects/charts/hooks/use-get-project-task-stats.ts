@@ -23,14 +23,7 @@ export const useGetProjectTaskStats = ({
   userId
 }: GetProjectTaskStatsParams) => {
   const { data: projectTaskStats, isLoading: isLoadingProjectTaskStats } = useQuery({
-    queryKey: queryKeys.projects.efficiency.taskStats({
-      projectId,
-      from,
-      to,
-      parentMilestoneId,
-      isViewInMonth,
-      userId
-    }),
+    queryKey: queryKeys.efficiency.taskStats({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }),
     queryFn: () =>
       efficiencyService.getProjectTaskStats({ projectId, from, to, parentMilestoneId, isViewInMonth, userId }),
     enabled: !!projectId && !!from && !!to

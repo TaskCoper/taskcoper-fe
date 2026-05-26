@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useGetChildMilestones } from '../../../milestones/hooks/use-get-child-milestones'
 import { useGetMilestoneTasks } from '../../../milestones/hooks/use-get-milestone-tasks'
 import { useMoveTask } from '../hooks/use-move-task'
-import { moveTaskSchema, type MoveTaskFormValues } from '../validations'
+import { moveTaskSchema } from '../validations'
 
 interface MoveTaskPopoverProps {
   children: React.ReactNode
@@ -98,14 +98,13 @@ export default function MoveTaskPopover({
       newPosition = prevItem.position + 0.0000000001
     }
 
-    const payload: MoveTaskFormValues = {
+    const result = moveTaskSchema(t).safeParse({
       id: taskId,
       targetMilestoneId: selectedMilestoneId,
       targetPosition: newPosition
-    }
-    const validation = moveTaskSchema(t).safeParse(payload)
+    })
 
-    if (validation.success) {
+    if (result.success) {
       moveTask(
         {
           body: {

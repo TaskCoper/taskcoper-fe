@@ -13,9 +13,9 @@ import { useReviewMentorApplication } from '@/features/mentor-applications/hooks
 import type { Application } from '@/features/mentor-applications/types'
 import { ApplicationStatus, MentorTitle, MentorTitleLabel } from '@/features/mentor-applications/types'
 import type { ReviewMentorApplicationFormValues } from '@/features/mentor-applications/validations'
-import { useDateFormat } from '@/lib/date'
 import { STATUS_CONFIG } from '@/shared/constants'
-import { type TFunction } from 'i18next'
+import { formatDate } from '@/shared/utils'
+import { type i18n as Ii18n, type TFunction } from 'i18next'
 import {
   AlertCircleIcon,
   CalendarIcon,
@@ -60,8 +60,7 @@ const SectionLabel = ({ label }: { label: string }) => {
 }
 
 export default function SystemMentorApplicationsPage() {
-  const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
+  const { t, i18n } = useTranslation()
   const [status, setStatus] = useState<ApplicationStatus>()
   const [sortBy, setSortBy] = useState<GetMyMentorApplicationsParams['sortBy']>('-createdat')
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null)
@@ -137,7 +136,7 @@ export default function SystemMentorApplicationsPage() {
                           <p className='text-sm font-medium line-clamp-1 break-all'>{application.shortBio}</p>
                           <p className='text-xs text-muted-foreground flex items-center gap-1'>
                             <CalendarIcon className='size-3 text-muted-foreground/60' />
-                            {formatDate(application.createdOnUtc, 'dateLong')}
+                            {formatDate(application.createdOnUtc)}
                           </p>
                         </div>
                         <div className='flex flex-col items-end gap-1.5 shrink-0'>
@@ -157,7 +156,7 @@ export default function SystemMentorApplicationsPage() {
 
         <div className='col-span-7 flex flex-col min-h-0 h-full border rounded-xl overflow-hidden bg-card'>
           {selectedApplication ? (
-            <ApplicationDetailView application={selectedApplication} t={t} />
+            <ApplicationDetailView application={selectedApplication} t={t} i18n={i18n} />
           ) : (
             <div className='flex items-center justify-center h-full text-muted-foreground flex-col gap-2'>
               <FileTextIcon className='size-10 opacity-20' />
@@ -170,8 +169,7 @@ export default function SystemMentorApplicationsPage() {
   )
 }
 
-const ApplicationDetailView = ({ application, t }: { application: Application; t: TFunction }) => {
-  const { formatDateTime } = useDateFormat()
+const ApplicationDetailView = ({ application, t, i18n }: { application: Application; t: TFunction; i18n: Ii18n }) => {
   const config = STATUS_CONFIG[application.status]
   const StatusIcon = config.icon
 
@@ -201,8 +199,18 @@ const ApplicationDetailView = ({ application, t }: { application: Application; t
     return ApplicationStatus.APPROVED
   }
 
-  const submittedDate = formatDateTime(application.createdOnUtc, 'dateTimeMedium')
-  const reviewedDate = application.reviewedAt ? formatDateTime(application.reviewedAt, 'dateTimeMedium') : null
+  const dateFormatOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
+  const submittedDate = new Date(application.createdOnUtc).toLocaleDateString(i18n.language, dateFormatOptions)
+
+  const reviewedDate = application.reviewedAt
+    ? new Date(application.reviewedAt).toLocaleDateString(i18n.language, dateFormatOptions)
+    : null
 
   const fileNames = (application.portfolioUrls ?? []).map((url) => {
     const raw = url.split('/').pop() ?? url

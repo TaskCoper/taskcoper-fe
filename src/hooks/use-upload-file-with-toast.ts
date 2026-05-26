@@ -51,7 +51,7 @@ export const useUploadFileWithToast = (options?: Parameters<typeof useUploadFile
         if (!url) {
           toast.error(t('error.somethingWentWrong'), {
             id: toastId,
-            description: errorDescription?.(new Error(t('common.error.uploadNoUrlReturned')))
+            description: errorDescription?.(new Error('Upload did not return a URL'))
           })
           return null
         }

@@ -18,14 +18,8 @@ export const useDeleteMentorPackage = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.lists() })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.mentorPackages.detail(variables.mentorPackageId),
-        exact: true
-      })
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.pinStatistics() })
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy })
     }
   })
 

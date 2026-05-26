@@ -7,8 +7,10 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
-import { useDateFormat } from '@/lib/date'
+import { DATE_LOCALES } from '@/shared/constants'
 import { cn, getAvatarFallback } from '@/shared/utils'
+import { format } from 'date-fns'
+import { enUS } from 'date-fns/locale'
 import { BookOpenIcon, CameraIcon, ChevronsRightIcon, ImageOffIcon, MailIcon, PhoneIcon, UsersIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,14 +20,11 @@ export default function ProjectInfoPage() {
   const { t, i18n } = useTranslation()
   const { identifier } = useParams<{ identifier: string }>()
   const { me: user } = useGetMe()
-  const { formatDate } = useDateFormat()
 
   const { project, isLoadingProject } = useGetProject({ identifier })
 
-  const progressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0
-  }).format((project?.progress ?? 0) / 100)
+  const currentLocale = DATE_LOCALES[i18n.language] || enUS
+  const dateFormat = i18n.language === 'vi-VN' ? 'd MMM, yyyy' : 'MMM d, yyyy'
 
   const generalItems = [
     {
@@ -139,7 +138,7 @@ export default function ProjectInfoPage() {
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1'>
               <div>
                 <p className='font-semibold'>
-                  {t('project.info.progress')} ({progressLabel})
+                  {t('project.info.progress')} ({project?.progress ? project.progress : 0}%)
                 </p>
                 <p className='text-xs text-muted-foreground'>{t('project.info.progressDescription')}</p>
               </div>
@@ -206,7 +205,9 @@ export default function ProjectInfoPage() {
                 <div>
                   <p className='text-xs text-muted-foreground'>{t('project.info.startDate')}</p>
                   <p className='font-bold text-primary'>
-                    {project?.startDate ? formatDate(project.startDate, 'dateMedium') : 'N/A'}
+                    {project?.startDate
+                      ? format(new Date(project.startDate), dateFormat, { locale: currentLocale })
+                      : 'N/A'}
                   </p>
                 </div>
 
@@ -215,7 +216,9 @@ export default function ProjectInfoPage() {
                 <div>
                   <p className='text-xs text-muted-foreground'>{t('project.info.endDate')}</p>
                   <p className='font-bold text-primary'>
-                    {project?.endDate ? formatDate(project.endDate, 'dateMedium') : 'N/A'}
+                    {project?.endDate
+                      ? format(new Date(project.endDate), dateFormat, { locale: currentLocale })
+                      : 'N/A'}
                   </p>
                 </div>
               </Card>

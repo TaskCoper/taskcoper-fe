@@ -20,7 +20,6 @@ export const useDeleteProjectMember = ({ identifier }: { identifier: string }) =
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(identifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(identifier), exact: true })
     }
   })
 

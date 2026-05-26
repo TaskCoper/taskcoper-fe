@@ -50,7 +50,7 @@ export type TransactionTargetModelLabel = (typeof TransactionTargetModelLabel)[k
 
 export interface Transaction {
   transactionId: string
-  targetModel: TransactionTargetModel
+  targetModel: string
   targetModelId: string
   type: TransactionType
   amount: number

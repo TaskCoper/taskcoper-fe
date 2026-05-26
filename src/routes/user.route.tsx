@@ -44,8 +44,6 @@ const MentorPackageBookPage = lazy(() => import('@/pages/users/mentor-package-bo
 const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
 const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
 const PackageFeedbackPage = lazy(() => import('@/pages/users/package-feedback.page'))
-const PackageRequestsPage = lazy(() => import('@/pages/users/package-requests.page'))
-const PackageRequestPage = lazy(() => import('@/pages/users/package-request.page'))
 
 const MentorVouchersPage = lazy(() => import('@/pages/users/mentor-vouchers.page'))
 const MentorVoucherPage = lazy(() => import('@/pages/users/mentor-voucher.page'))
@@ -63,16 +61,6 @@ const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React
   }, [title])
 
   return <>{children}</>
-}
-
-const ComingSoonView = ({ titleKey }: { titleKey: string }) => {
-  const { t } = useTranslation()
-
-  return (
-    <div className='w-full h-full flex justify-center items-center'>
-      <p className='text-2xl font-bold'>{t(titleKey)}</p>
-    </div>
-  )
 }
 
 export const userRoutes: RouteObject[] = [
@@ -166,7 +154,9 @@ export const userRoutes: RouteObject[] = [
                   {
                     element: (
                       <PageWrapper titleKey='pageTitle.calendar'>
-                        <ComingSoonView titleKey='pageTitle.calendarComingSoon' />
+                        <div className='w-full h-full flex justify-center items-center'>
+                          <p className='text-2xl font-bold'>Calendar Comming Soon</p>
+                        </div>
                       </PageWrapper>
                     )
                   },
@@ -177,8 +167,7 @@ export const userRoutes: RouteObject[] = [
                         path: 'applications/submit',
                         element: <MentorApplicationPage />
                       },
-                      { path: 'applications', element: <MentorApplicationsPage /> },
-                      { path: 'requests/:requestId', element: <PackageRequestPage /> }
+                      { path: 'applications', element: <MentorApplicationsPage /> }
                     ]
                   },
                   {
@@ -188,8 +177,7 @@ export const userRoutes: RouteObject[] = [
                       { path: 'packages/:packageId', element: <MentorPackagePage /> },
                       { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
                       { path: 'vouchers', element: <MentorVouchersPage /> },
-                      { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> },
-                      { path: 'requests', element: <PackageRequestsPage /> }
+                      { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> }
                     ]
                   }
                 ]

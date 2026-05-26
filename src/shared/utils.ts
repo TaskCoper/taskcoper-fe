@@ -113,7 +113,7 @@ export const calculateReorderPosition = (items: { position: number }[], newIndex
   }
 
   if ((prevItem && newPosition === prevItem.position) || (nextItem && newPosition === nextItem.position)) {
-    alert(i18next.t('common.error.rebalancePositions'))
+    alert('Need to rebalance positions.')
     return prevItem.position + 0.0000000001
   }
 
@@ -153,6 +153,21 @@ export const getColorTextClass = (color: string) => {
     sortedTaskLabelColors.flatMap((col) => col.shades).find((shade) => shade.value === color)?.textColor ||
     'text-foreground'
   )
+}
+
+export const formatDate = (date: Date | string | number | undefined, opts: Intl.DateTimeFormatOptions = {}) => {
+  if (!date) return ''
+
+  try {
+    return new Intl.DateTimeFormat(i18next.language || 'en-US', {
+      month: opts.month ?? 'long',
+      day: opts.day ?? 'numeric',
+      year: opts.year ?? 'numeric',
+      ...opts
+    }).format(new Date(date))
+  } catch {
+    return ''
+  }
 }
 
 export const getUserType = (user: Me | null | undefined): RoleType | null => {

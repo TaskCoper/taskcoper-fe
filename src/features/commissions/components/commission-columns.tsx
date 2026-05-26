@@ -26,7 +26,7 @@ export const getColumns = (): ColumnDef<CommissionRow>[] => {
       id: 'titleLevel',
       accessorKey: 'titleLevel',
       meta: {
-        label: 'commission.field.titleLevel'
+        label: 'Title Level'
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='commission.field.titleLevel' />,
       cell: ({ row }) => {

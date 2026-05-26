@@ -49,11 +49,7 @@ export const useCreateVoucher = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.lists() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.scopeStats() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.typeStats() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.targetStats() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.statusStats() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vouchers.all })
     }
   })
 

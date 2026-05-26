@@ -16,7 +16,7 @@ import AddTaskButton from '../../tasks/core/components/add-task-button'
 import SortableTaskCard from '../../tasks/core/components/sortable-task-card'
 import { useUpdateMilestone } from '../hooks/use-update-milestone'
 import type { Milestone, MilestoneColumnDragData } from '../types'
-import { updateMilestoneSchema, type UpdateMilestoneFormValues } from '../validations'
+import { updateMilestoneSchema } from '../validations'
 import MilestoneColumnMenu from './milestone-column-menu'
 
 interface SortableMilestoneColumnProps {
@@ -53,13 +53,12 @@ export default function SortableMilestoneColumn({
     initialValue: column.name,
     clickType: 'single',
     onSave: (newName) => {
-      const payload: UpdateMilestoneFormValues = {
+      const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: column.id,
-        parentMilestoneIdentifier: milestoneIdentifier ?? null,
+        parentMilestoneIdentifier: milestoneIdentifier,
         milestoneName: newName,
         position: column.position
-      }
-      const validated = updateMilestoneSchema(t).safeParse(payload)
+      })
 
       if (validated.success) {
         updateMilestone({ body: validated.data })

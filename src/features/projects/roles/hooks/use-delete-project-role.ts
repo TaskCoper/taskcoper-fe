@@ -23,13 +23,6 @@ export const useDeleteProjectRole = () => {
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.roles.list(variables.projectIdentifier) })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.projects.roles.detail({
-          projectIdentifier: variables.projectIdentifier,
-          roleId: variables.roleId
-        })
-      })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.myPermissions(variables.projectIdentifier) })
     }
   })
 

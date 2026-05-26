@@ -47,12 +47,7 @@ export const useSubmitPackageFeedback = ({ packageId }: { packageId?: string }) 
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      if (variables.body.targetId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.feedbacks.byPackage(variables.body.targetId) })
-      }
-      queryClient.invalidateQueries({ queryKey: queryKeys.feedbacks.lists() })
-
+    onSettled: () => {
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })
       }

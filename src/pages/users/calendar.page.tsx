@@ -190,7 +190,7 @@ export default function CalendarPage() {
         )}
 
         <div className='space-y-3 px-3'>
-          <p className='text-sm font-medium'>{t('common.ui.status')}</p>
+          <p className='text-sm font-medium'>Trạng thái</p>
 
           {Object.values(MeetingStatus).map((status) => (
             <div key={status} className='flex items-center gap-2'>

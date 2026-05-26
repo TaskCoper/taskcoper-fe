@@ -3,7 +3,6 @@ import AdminDefaultLayout from '@/layouts/admin-default.layout'
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import { lazy } from 'react'
-import { useTranslation } from 'react-i18next'
 import type { RouteObject } from 'react-router'
 
 const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projects.page'))
@@ -11,11 +10,6 @@ const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.pag
 const SystemMentorApplicationsPage = lazy(() => import('@/pages/super-admins/system-mentor-applications.page'))
 const CommissionsPage = lazy(() => import('@/pages/super-admins/commissions.page'))
 const DashboardPage = lazy(() => import('@/pages/super-admins/dashboard.page'))
-
-function AdminRoutePlaceholder({ titleKey }: { titleKey: string }) {
-  const { t } = useTranslation()
-  return <div>{t(titleKey)}</div>
-}
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -41,11 +35,11 @@ export const adminRoutes: RouteObject[] = [
                   },
                   {
                     path: ':projectId',
-                    element: <AdminRoutePlaceholder titleKey='admin.route.projectDetail' />
+                    element: <div>Project Detail</div>
                   },
                   {
                     path: 'settings',
-                    element: <AdminRoutePlaceholder titleKey='admin.route.projectSettings' />
+                    element: <div>Projects Settings</div>
                   }
                 ]
               },

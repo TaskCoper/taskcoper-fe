@@ -18,12 +18,9 @@ export const useUnassignProjectPositionTitle = ({ projectIdentifier }: { project
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.members.all(projectIdentifier) })
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.positionTitles.list(projectIdentifier) })
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.projects.positionTitles.member(projectIdentifier, variables.userId)
-      })
     }
   })
 

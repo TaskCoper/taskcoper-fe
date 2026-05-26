@@ -9,9 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatDateTime } from '@/lib/date'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { enUS, vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import {
   AlertCircle,
@@ -190,7 +191,11 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
       meta: { label: 'transactions.column.createdDate', variant: 'dateRange' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='transactions.column.createdDate' />,
       cell: ({ row }) => (
-        <p className='text-muted-foreground'>{formatDateTime(row.original.createdOnUtc, 'dateTimeShort')}</p>
+        <p className='text-muted-foreground'>
+          {format(new Date(row.original.createdOnUtc), i18next.t('transactions.column.dateFormat'), {
+            locale: i18next.language === 'vi' ? vi : enUS
+          })}
+        </p>
       ),
       enableSorting: true,
       enableColumnFilter: true,

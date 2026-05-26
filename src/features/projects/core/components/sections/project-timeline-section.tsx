@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useDateFormat } from '@/lib/date'
+import { DATE_LOCALES } from '@/shared/constants'
+import { format } from 'date-fns'
+import { enUS } from 'date-fns/locale'
 import { ChevronsRightIcon, SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import UpdateProjectTimelineDialog from '../dialogs/update-project-timeline-dialog'
@@ -18,8 +20,10 @@ export default function ProjectTimelineSection({
   isPending,
   isCurrentUserMain
 }: ProjectTimelineSectionProps) {
-  const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
+  const { t, i18n } = useTranslation()
+
+  const currentLocale = DATE_LOCALES[i18n.language] || enUS
+  const dateFormat = i18n.language === 'vi-VN' ? 'd MMM, yyyy' : 'MMM d, yyyy'
 
   return (
     <div className='space-y-2'>
@@ -41,14 +45,18 @@ export default function ProjectTimelineSection({
       <Card className='p-4 border-dashed shadow-none flex-row items-center justify-between gap-4 cursor-pointer hover:bg-muted/30'>
         <div>
           <p className='text-xs text-muted-foreground'>{t('project.info.startDate')}</p>
-          <p className='font-bold text-primary'>{startDate ? formatDate(startDate, 'dateMedium') : 'N/A'}</p>
+          <p className='font-bold text-primary'>
+            {startDate ? format(new Date(startDate), dateFormat, { locale: currentLocale }) : 'N/A'}
+          </p>
         </div>
 
         <ChevronsRightIcon className='size-5 text-muted-foreground' />
 
         <div>
           <p className='text-xs text-muted-foreground'>{t('project.info.endDate')}</p>
-          <p className='font-bold text-primary'>{endDate ? formatDate(endDate, 'dateMedium') : 'N/A'}</p>
+          <p className='font-bold text-primary'>
+            {endDate ? format(new Date(endDate), dateFormat, { locale: currentLocale }) : 'N/A'}
+          </p>
         </div>
       </Card>
     </div>

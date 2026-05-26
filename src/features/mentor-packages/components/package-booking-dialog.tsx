@@ -3,13 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
-import { Skeleton } from '@/components/ui/skeleton'
 import PackageFeedbackCard from '@/features/feedbacks/components/package-feedback-card'
 import { useGetPurchasedPackageFeedbacks } from '@/features/feedbacks/hooks/use-get-purchased-package-feedback'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
-import { useDateFormat } from '@/lib/date'
-import { cn, getAvatarFallback } from '@/shared/utils'
+import { cn, formatDate, getAvatarFallback } from '@/shared/utils'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { format } from 'date-fns'
 import { BoxIcon, CalendarDaysIcon, FileTextIcon, FolderOpenIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -21,19 +20,14 @@ interface PackageBookingDialogProps {
   booking: MentorPackageBooking | null
 }
 
-const formatRange = (
-  startISO: string,
-  endISO: string,
-  formatDate: (input: Date | string, preset?: string) => string,
-  formatTime: (input: Date | string, preset?: string) => string
-) => {
+const formatRange = (startISO: string, endISO: string) => {
   const start = new Date(startISO)
   const end = new Date(endISO)
 
-  const sameDay = formatDate(start, 'iso') === formatDate(end, 'iso')
-  const datePart = formatDate(start, 'dateMedium')
-  const startTime = formatTime(start)
-  const endTime = formatTime(end)
+  const sameDay = format(start, 'yyyy-MM-dd') === format(end, 'yyyy-MM-dd')
+  const datePart = format(start, 'd MMM yyyy')
+  const startTime = format(start, 'HH:mm')
+  const endTime = format(end, 'HH:mm')
 
   const offsetMinutes = -start.getTimezoneOffset()
   const sign = offsetMinutes >= 0 ? '+' : '-'
@@ -42,37 +36,12 @@ const formatRange = (
 
   if (sameDay) return `${datePart}, ${startTime} – ${endTime} (${gmt})`
 
-  const endDatePart = formatDate(end, 'dateMedium')
+  const endDatePart = format(end, 'd MMM yyyy')
   return `${datePart}, ${startTime} → ${endDatePart}, ${endTime} (${gmt})`
-}
-
-function FeedbackLoadingState() {
-  return (
-    <div className='space-y-4'>
-      {Array.from({ length: 2 }).map((_, index) => (
-        <div key={index} className='rounded-md border p-4 shadow-xs'>
-          <div className='flex items-center gap-3'>
-            <Skeleton className='size-10 rounded-full' />
-            <div className='space-y-2'>
-              <Skeleton className='h-3 w-32 rounded-md' />
-              <Skeleton className='h-3 w-20 rounded-md' />
-            </div>
-          </div>
-
-          <div className='mt-4 space-y-2'>
-            <Skeleton className='h-3 w-full rounded-md' />
-            <Skeleton className='h-3 w-11/12 rounded-md' />
-            <Skeleton className='h-3 w-9/12 rounded-md' />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
 }
 
 export default function PackageBookingDialog({ open, onOpenChange, booking }: PackageBookingDialogProps) {
   const { t } = useTranslation()
-  const { formatDate, formatTime } = useDateFormat()
   const progress = booking && booking.totalSessions > 0 ? (booking.completedSessions / booking.totalSessions) * 100 : 0
   const { feedbacks, isLoadingFeedbacks } = useGetPurchasedPackageFeedbacks({
     packageBookingId: booking?.packageBookingId,
@@ -125,7 +94,9 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                   ))}
                 </div>
               ) : isLoadingFeedbacks ? (
-                <FeedbackLoadingState />
+                <div className='flex flex-col items-center justify-center gap-2 rounded-md bg-muted p-8'>
+                  <p className='text-xs text-muted-foreground'>{t('common.ui.loading')}</p>
+                </div>
               ) : (
                 <div className='flex flex-col items-center justify-center gap-2 rounded-md bg-muted p-8'>
                   <BoxIcon className='size-6 text-muted-foreground' />
@@ -176,7 +147,7 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                         <div className={cn('h-full w-1.5 rounded-full', getMeetingStatusTheme(meeting.status).dot)} />
                         <div className='flex flex-1 flex-col justify-between py-1'>
                           <p className='text-xs text-muted-foreground'>
-                            {formatRange(meeting.startTimeUtc, meeting.endTimeUtc, formatDate, formatTime)}
+                            {formatRange(meeting.startTimeUtc, meeting.endTimeUtc)}
                           </p>
                           <div>
                             <p className='text-sm font-semibold'>
@@ -243,7 +214,7 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                       <p className='text-xs font-medium'>{t('purchasedPackage.purchasedOn')}</p>
                     </div>
                     <p className='text-xs font-semibold'>
-                      {booking.createdOnUtc ? formatDate(booking.createdOnUtc, 'dateLong') : '—'}
+                      {booking.createdOnUtc ? formatDate(booking.createdOnUtc) : '—'}
                     </p>
                   </div>
                 </div>
@@ -263,21 +234,21 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                       {t('mentorPackage.bookingDialog.activationDeadline')}
                     </p>
                     <p className='text-xs font-semibold'>
-                      {booking.activationDeadlineUtc ? formatDate(booking.activationDeadlineUtc, 'dateLong') : '—'}
+                      {booking.activationDeadlineUtc ? formatDate(booking.activationDeadlineUtc) : '—'}
                     </p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
                     <p className='text-xs text-muted-foreground'>{t('mentorPackage.bookingDialog.activatedOn')}</p>
                     <p className='text-xs font-semibold'>
-                      {booking.activatedOnUtc ? formatDate(booking.activatedOnUtc, 'dateLong') : '—'}
+                      {booking.activatedOnUtc ? formatDate(booking.activatedOnUtc) : '—'}
                     </p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
                     <p className='text-xs text-muted-foreground'>{t('mentorPackage.bookingDialog.usageDeadline')}</p>
                     <p className='text-xs font-semibold'>
-                      {booking.usageDeadlineUtc ? formatDate(booking.usageDeadlineUtc, 'dateLong') : '—'}
+                      {booking.usageDeadlineUtc ? formatDate(booking.usageDeadlineUtc) : '—'}
                     </p>
                   </div>
                 </div>

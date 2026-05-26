@@ -26,15 +26,15 @@ export const useUpdateProjectRevenueLabel = ({ projectIdentifier }: { projectIde
   const { mutate: updateProjectRevenueLabel, isPending: isUpdatingProjectRevenueLabel } = useMutation({
     mutationFn: projectRevenueService.updateProjectRevenueLabel,
     onMutate: async ({ body }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projects.revenueLabels.all(projectIdentifier) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectIdentifier) })
 
       const previousData = queryClient.getQueryData<BasePaginationResponse<RevenueLabel>>(
-        queryKeys.projects.revenueLabels.list(projectIdentifier)
+        queryKeys.projectRevenueLabels.list(projectIdentifier)
       )
 
       if (previousData) {
         queryClient.setQueryData<BasePaginationResponse<RevenueLabel>>(
-          queryKeys.projects.revenueLabels.list(projectIdentifier),
+          queryKeys.projectRevenueLabels.list(projectIdentifier),
           (old) => {
             if (!old) return old
 
@@ -55,7 +55,7 @@ export const useUpdateProjectRevenueLabel = ({ projectIdentifier }: { projectIde
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projects.revenueLabels.list(projectIdentifier), context.previousData)
+        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -63,9 +63,9 @@ export const useUpdateProjectRevenueLabel = ({ projectIdentifier }: { projectIde
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.list(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.stats(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenues.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenues.all(projectIdentifier) })
     }
   })
 

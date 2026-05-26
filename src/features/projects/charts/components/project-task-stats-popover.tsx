@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useDateFormat } from '@/lib/date'
-import { endOfMonth, endOfYear, getYear, startOfMonth, startOfYear } from 'date-fns'
+import { endOfMonth, endOfYear, format, getYear, startOfMonth, startOfYear } from 'date-fns'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -28,7 +27,6 @@ interface ProjectTaskStatsPopoverProps {
 
 export default function ProjectTaskStatsPopover({ onApplyFilters }: ProjectTaskStatsPopoverProps) {
   const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
   const { setValue, getValues, handleSubmit } = useFormContext<ProjectTaskStatisticsParams>()
 
   const handleApply = handleSubmit((data) => {
@@ -120,7 +118,7 @@ export default function ProjectTaskStatsPopover({ onApplyFilters }: ProjectTaskS
                     <SelectContent>
                       {Array.from({ length: 12 }, (_, i) => i).map((month) => (
                         <SelectItem key={month} value={month.toString()}>
-                          {formatDate(new Date(currentYear, month, 1), 'monthLong')}
+                          {format(new Date(currentYear, month, 1), 'MMMM')}
                         </SelectItem>
                       ))}
                     </SelectContent>

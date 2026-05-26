@@ -113,7 +113,7 @@ export const useSubmitMentorApplication = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorApplications.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorApplications.allMy })
     }
   })
 

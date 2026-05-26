@@ -3,9 +3,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { type Currency } from '@/features/transactions/types'
-import { formatDateTime } from '@/lib/date'
 import { formatCurrency, getAvatarFallback } from '@/shared/utils'
 import { type ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import { SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
@@ -226,7 +227,17 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
       accessorKey: 'createdOnUtc',
       meta: { label: 'voucher.redemption.column.redeemedAt' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='voucher.redemption.column.redeemedAt' />,
-      cell: ({ row }) => <div>{formatDateTime(row.original.createdOnUtc, 'dateTimeShort')}</div>,
+      cell: ({ row }) => {
+        const formatStr = i18next.t('voucher.column.dateFormat')
+
+        return (
+          <div>
+            {format(new Date(row.original.createdOnUtc), formatStr, {
+              locale: vi
+            })}
+          </div>
+        )
+      },
       size: 150
     }
   ]

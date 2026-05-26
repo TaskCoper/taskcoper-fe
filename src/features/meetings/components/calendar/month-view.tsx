@@ -1,6 +1,5 @@
-import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
-import { addDays, endOfMonth, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
+import { addDays, endOfMonth, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import type { MeetingBooking } from '../../types'
 import CalendarEvent from './calendar-event'
@@ -36,7 +35,6 @@ function getMonthGrid(date: Date) {
 
 export default function MonthView({ date, meetings, onMeetingClick }: MonthViewProps) {
   const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
   const weekdayNames = [
     t('dayOfWeek.sunday'),
     t('dayOfWeek.monday'),
@@ -88,7 +86,7 @@ export default function MonthView({ date, meetings, onMeetingClick }: MonthViewP
                     !today && !inMonth && 'text-muted-foreground'
                   )}
                 >
-                  {formatDate(day, 'dayOfMonth')}
+                  {format(day, 'd')}
                 </span>
               </div>
 

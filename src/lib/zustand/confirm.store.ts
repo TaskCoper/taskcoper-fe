@@ -1,4 +1,3 @@
-import i18next from 'i18next'
 import { create } from 'zustand'
 
 interface ConfirmOptions {
@@ -27,10 +26,10 @@ export const useConfirmStore = create<ConfirmStore>((set, get) => ({
       set({
         isOpen: true,
         options: {
-          title: options.title ?? i18next.t('common.confirm.title'),
-          description: options.description ?? i18next.t('common.confirm.description'),
-          confirmText: options.confirmText ?? i18next.t('common.confirm.confirmText'),
-          cancelText: options.cancelText ?? i18next.t('common.confirm.cancelText'),
+          title: options.title ?? 'Are you absolutely sure?',
+          description: options.description ?? 'This action cannot be undone.',
+          confirmText: options.confirmText ?? 'Continue',
+          cancelText: options.cancelText ?? 'Cancel',
           variant: options.variant ?? 'default'
         },
         resolver: resolve

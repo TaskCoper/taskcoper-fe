@@ -14,12 +14,12 @@ import { useGetMyProjectPermissions } from '../../roles/hooks/use-get-my-project
 import { useDeleteMilestone } from '../hooks/use-delete-milestone'
 import { useUpdateMilestone } from '../hooks/use-update-milestone'
 import type { MilestoneTabDragData } from '../types'
-import { updateMilestoneSchema, type UpdateMilestoneFormValues } from '../validations'
+import { updateMilestoneSchema } from '../validations'
 
 interface SortableMilestoneTabProps {
   milestone: ParentMilestone
   isActive: boolean
-  queryKey: readonly unknown[]
+  queryKey: unknown[]
   onDeleteSuccess?: () => void
   canDelete: boolean
 }
@@ -49,13 +49,12 @@ export const SortableMilestoneTab = ({
     initialValue: milestone.name,
     clickType: 'double',
     onSave: (newName) => {
-      const payload: UpdateMilestoneFormValues = {
+      const validated = updateMilestoneSchema(t).safeParse({
         milestoneId: milestone.id,
         parentMilestoneIdentifier: null,
         milestoneName: newName,
         position: milestone.position
-      }
-      const validated = updateMilestoneSchema(t).safeParse(payload)
+      })
 
       if (validated.success) {
         updateMilestone({ body: validated.data })

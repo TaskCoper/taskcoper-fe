@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import milestoneService from '../services'
 
 export interface DeleteMilestoneParams {
-  queryKey: readonly unknown[]
+  queryKey: unknown[]
   parentMilestoneIdentifier?: string
   onSuccessCallback?: () => void
 }
@@ -35,7 +35,6 @@ export const useDeleteMilestone = ({
       if (parentMilestoneIdentifier) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
         queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
       }
     }
   })

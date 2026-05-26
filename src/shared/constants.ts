@@ -1,4 +1,6 @@
 import { ApplicationStatus } from '@/features/mentor-applications/types'
+import type { Locale } from 'date-fns'
+import { enUS, vi } from 'date-fns/locale'
 import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'
 
 export const DEFAULT_PAGE_INDEX = 1
@@ -22,6 +24,12 @@ export const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024 // 10MB
 
 // task background
 export const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024 // 10MB
+
+// TODO: should apply this more on any dates using date-fns
+export const DATE_LOCALES: Record<string, Locale> = {
+  ['vi-VN']: vi,
+  ['en-US']: enUS
+}
 
 export const UNDERLINE_TAB_CLASSNAME = {
   TabList:

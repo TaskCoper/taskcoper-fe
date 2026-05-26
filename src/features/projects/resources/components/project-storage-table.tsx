@@ -86,7 +86,6 @@ export default function ProjectStorageTable({ projectIdentifier }: ProjectStorag
             <div className='w-72 space-y-1'>
               <p className='text-xs text-muted-foreground truncate'>{file.name}</p>
               <Progress value={0} className='w-full' />
-              {/* i18next-instrument-ignore-next-line */}
               <p className='text-xs text-muted-foreground'>0%</p>
             </div>
           ),

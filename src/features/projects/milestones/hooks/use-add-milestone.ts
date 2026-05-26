@@ -1,4 +1,4 @@
-import { invalidateMilestoneTree } from '@/lib/invalidations'
+import { queryKeys } from '@/lib/query-keys'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -71,7 +71,12 @@ export const useAddMilestone = ({
       })
     },
     onSettled: () => {
-      invalidateMilestoneTree(queryClient, { projectIdentifier, parentMilestoneIdentifier })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.childMilestones(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.stats(parentMilestoneIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
     }
   })
 

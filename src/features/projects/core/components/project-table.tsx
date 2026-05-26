@@ -182,8 +182,7 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
       sorting: (sorting ?? []) as ExtendedColumnSort<TaskRow>[],
       columnPinning: { right: ['actions'] },
       columnVisibility: {
-        domainId: false,
-        memberIds: false
+        domainId: false
       }
     },
     getRowId: ({ id }) => id,

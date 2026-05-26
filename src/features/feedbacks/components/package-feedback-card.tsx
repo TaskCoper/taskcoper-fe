@@ -3,8 +3,8 @@ import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { useDateFormat } from '@/lib/date'
 import { getAvatarFallback, safeParseJson } from '@/shared/utils'
+import { format } from 'date-fns'
 import { StarIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { packageFeedbackQuestions } from '../constants'
@@ -17,7 +17,6 @@ interface PackageFeedbackCardProps {
 
 export default function PackageFeedbackCard({ feedback }: PackageFeedbackCardProps) {
   const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
 
   const metaDataObj = safeParseJson<FeedbackMetadata>(feedback.metaData)
 
@@ -43,7 +42,7 @@ export default function PackageFeedbackCard({ feedback }: PackageFeedbackCardPro
               {feedback.author.firstName} {feedback.author.lastName}
             </p>
             <p className='text-xs text-muted-foreground'>
-              {feedback.createdOnUtc ? formatDate(feedback.createdOnUtc, 'dateLong') : ''}
+              {feedback.createdOnUtc ? format(new Date(feedback.createdOnUtc), 'PPP') : ''}
             </p>
           </div>
         </div>

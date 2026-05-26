@@ -97,7 +97,7 @@ function BackgroundImagePopoverContent({ onSubmit, onClose }: BackgroundImagePop
       </div>
 
       {backgroundImage ? (
-        <img src={backgroundImage} alt={t('common.alt.background')} className='w-full h-32 object-cover rounded-md' />
+        <img src={backgroundImage} alt='Background' className='w-full h-32 object-cover rounded-md' />
       ) : (
         <div className='w-full h-32 rounded-md bg-muted flex items-center justify-center'>
           <ImageOffIcon className='size-8 text-muted-foreground' />

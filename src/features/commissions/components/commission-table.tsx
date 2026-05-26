@@ -2,10 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatDate } from '@/lib/date'
-import { formatCurrency } from '@/shared/utils'
+import { formatCurrency, formatDate } from '@/shared/utils'
 import type { Row } from '@tanstack/react-table'
-import i18next from 'i18next'
 import { CheckCircle2Icon, CheckIcon, CircleXIcon, EditIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Controller } from 'react-hook-form'
@@ -62,7 +60,7 @@ function CommissionTableRowItem({
     <TableRow>
       {isEditing ? (
         <>
-          <TableCell className='py-2 font-medium'>{i18next.t(CommissionTargetModelLabel[item.targetModel])}</TableCell>
+          <TableCell className='py-2 font-medium'>{CommissionTargetModelLabel[item.targetModel]}</TableCell>
           <TableCell className='py-2'>
             <div className='flex items-center gap-1'>
               <Input
@@ -100,7 +98,7 @@ function CommissionTableRowItem({
               render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} />}
             />
           </TableCell>
-          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc, 'dateLong')}</TableCell>
+          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc)}</TableCell>
           <TableCell className='py-2'>
             <Button variant='ghost' size='icon-sm' onClick={onSubmit} disabled={isUpdatingCommission}>
               <CheckIcon className='size-4 text-green-600' />
@@ -112,7 +110,7 @@ function CommissionTableRowItem({
         </>
       ) : (
         <>
-          <TableCell className='py-2 font-medium'>{i18next.t(CommissionTargetModelLabel[item.targetModel])}</TableCell>
+          <TableCell className='py-2 font-medium'>{CommissionTargetModelLabel[item.targetModel]}</TableCell>
           <TableCell className='py-2 text-primary font-semibold'>{(item.rate * 100).toFixed(0)}%</TableCell>
           <TableCell className='py-2'>{formatCurrency(item.minAmount)}</TableCell>
           <TableCell className='py-2'>{formatCurrency(item.maxAmount)}</TableCell>
@@ -125,7 +123,7 @@ function CommissionTableRowItem({
               )}
             </div>
           </TableCell>
-          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc, 'dateLong')}</TableCell>
+          <TableCell className='py-2 text-muted-foreground'>{formatDate(item.createdOnUtc)}</TableCell>
           <TableCell className='py-2'>
             <Button variant='ghost' size='icon-sm' onClick={onEdit}>
               <EditIcon className='size-3.5' />

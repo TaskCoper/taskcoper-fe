@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import userService from '../services'
-import type { Me } from '../types'
 import { type UpdateMeFormValues, updateMeSchema } from '../validations'
 
 export const useUpdateMe = () => {
@@ -41,14 +40,7 @@ export const useUpdateMe = () => {
       })
     },
     onSettled: () => {
-      const me = queryClient.getQueryData<Me>(queryKeys.auth.me())
-
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.me() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() })
-
-      if (me?.slug) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(me.slug), exact: true })
-      }
     }
   })
 

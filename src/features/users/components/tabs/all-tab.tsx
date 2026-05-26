@@ -13,7 +13,6 @@ import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { UserDetail } from '../../types'
-import placholderCoverImage from '/images/placeholder-cover.png'
 
 const COLLAPSED_HEIGHT = 300
 
@@ -55,7 +54,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
           <div className='space-y-2'>
             <div className='flex items-center gap-2'>
               <GraduationCapIcon className='size-5 text-primary' />
-              <p className='font-medium'>{t('common.ui.domain')}</p>
+              <p className='font-medium'>Domain</p>
             </div>
             <div className='flex items-center flex-wrap gap-1'>
               {userDetail?.domains.map((domain) => (
@@ -112,15 +111,11 @@ export default function AllTab({ userDetail }: AllTabProps) {
                         mentorPackages.value.items.length > 3 ? 'w-70 lg:w-[30%] snap-start' : 'col-span-4'
                       )}
                     >
-                      {pkg.coverImageUrl ? (
-                        <img src={pkg.coverImageUrl} alt={pkg.name} className='w-full h-28 object-cover rounded-t-lg' />
-                      ) : (
-                        <img
-                          src={placholderCoverImage}
-                          alt={pkg.name}
-                          className='w-full h-28 object-cover rounded-t-lg'
-                        />
-                      )}
+                      <img
+                        src={pkg.coverImageUrl ?? undefined}
+                        alt={pkg.name}
+                        className='w-full h-28 object-cover rounded-t-lg'
+                      />
 
                       <div className='flex-1'>
                         <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
@@ -134,24 +129,26 @@ export default function AllTab({ userDetail }: AllTabProps) {
                         </div>
 
                         <div className='px-2 pb-2'>
-                          {pkg.description ? (
-                            <p className='text-xs text-muted-foreground line-clamp-3'>
-                              {getFirstParagraphTextFromHtml(pkg.description)}
-                            </p>
-                          ) : (
-                            <p className='text-xs text-muted-foreground'>{t('common.ui.noDescriptionAvailable')}</p>
-                          )}
+                          <p className='text-xs text-muted-foreground line-clamp-3'>
+                            {getFirstParagraphTextFromHtml(pkg.description)}
+                          </p>
                         </div>
                       </div>
 
                       <div className='px-2 pb-2'>
-                        <Link to={`/packages/${pkg.id}/book`}>
-                          <Button className='w-full' size='sm'>
-                            {isViewingOwnProfile
-                              ? t('mentorPackage.card.viewPackage')
-                              : t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
-                          </Button>
-                        </Link>
+                        {isViewingOwnProfile ? (
+                          <Link to={`/packages/${pkg.id}`}>
+                            <Button className='w-full' size='sm'>
+                              {t('mentorPackage.card.viewPackage')}
+                            </Button>
+                          </Link>
+                        ) : (
+                          <Link to={`/packages/${pkg.id}/book`}>
+                            <Button className='w-full' size='sm'>
+                              {t('mentorPackage.card.bookFor', { price: formatCurrency(pkg.price, pkg.currency) })}
+                            </Button>
+                          </Link>
+                        )}
                       </div>
                     </Card>
                   ))}

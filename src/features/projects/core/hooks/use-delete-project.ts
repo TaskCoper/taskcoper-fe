@@ -18,10 +18,8 @@ export const useDeleteProject = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.forPackage() })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.projectIdentifier) })
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.allMy })
     }
   })
 

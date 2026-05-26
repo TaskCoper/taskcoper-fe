@@ -4,9 +4,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { ScheduleSlot } from '@/features/schedules/types'
-import { useDateFormat } from '@/lib/date'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
+import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -43,12 +43,13 @@ export default function BookMeetingForm({
   const { clearErrors, control, setValue } = useFormContext<BookMeetingFormValues>()
 
   const { t } = useTranslation()
-  const { formatDate } = useDateFormat()
   const [isBookingForProject, setIsBookingForProject] = useState(false)
 
   const [activeDay, setActiveDay] = useState<DaySchedule | null>(() => {
     if (!initialDate) return schedule[0] ?? null
-    return schedule.find((d) => formatDate(d.date, 'iso') === formatDate(initialDate, 'iso')) ?? schedule[0] ?? null
+    return (
+      schedule.find((d) => format(d.date, 'yyyy-MM-dd') === format(initialDate, 'yyyy-MM-dd')) ?? schedule[0] ?? null
+    )
   })
 
   const [activeSlot, setActiveSlot] = useState<ScheduleSlot | null>(initialSlot ?? null)
@@ -85,7 +86,7 @@ export default function BookMeetingForm({
     bookedSchedule[dayIndex]?.slots.some((b) => b.startTimeUtc === slot.startTimeUtc) ?? false
 
   const activeDayIndex = activeDay
-    ? schedule.findIndex((d) => formatDate(d.date, 'iso') === formatDate(activeDay.date, 'iso'))
+    ? schedule.findIndex((d) => format(d.date, 'yyyy-MM-dd') === format(activeDay.date, 'yyyy-MM-dd'))
     : -1
 
   return (
@@ -93,7 +94,7 @@ export default function BookMeetingForm({
       <div className='grid grid-cols-7 gap-2'>
         {schedule.map((day, index) => {
           const availableCount = day.slots.filter((s) => !isSlotBooked(index, s)).length
-          const isActive = activeDay ? formatDate(activeDay.date, 'iso') === formatDate(day.date, 'iso') : false
+          const isActive = activeDay ? format(activeDay.date, 'yyyy-MM-dd') === format(day.date, 'yyyy-MM-dd') : false
           const hasSlots = availableCount > 0
 
           return (
@@ -117,7 +118,7 @@ export default function BookMeetingForm({
             >
               <p className='font-semibold'>{t(`dayOfWeek.${DAY_OF_WEEKS[index].key}`)}</p>
               <p className={cn('text-[10px]', isActive ? 'text-primary-foreground/80' : 'text-muted-foreground')}>
-                {formatDate(day.date, 'dayMonth')}
+                {format(day.date, 'dd/MM')}
               </p>
             </button>
           )

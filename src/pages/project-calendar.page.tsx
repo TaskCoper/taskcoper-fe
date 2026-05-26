@@ -132,7 +132,7 @@ export default function ProjectCalendarPage() {
 
       <div className='flex flex-col justify-between gap-8 mt-4 px-2'>
         <div className='space-y-3 px-3'>
-          <p className='text-sm font-medium'>{t('common.ui.status')}</p>
+          <p className='text-sm font-medium'>Trạng thái</p>
 
           {Object.values(MeetingStatus).map((status) => (
             <div key={status} className='flex items-center gap-2'>

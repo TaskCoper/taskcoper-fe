@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
+import { formatDistanceToNow } from 'date-fns'
+import { enUS, vi } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
 import { useRespondToInvitation } from '../../projects/members/hooks/use-respond-to-invitation'
 import { useReadNotification } from '../hooks/use-read-notification'
@@ -11,8 +12,7 @@ interface NotificationItemProps {
 }
 
 export default function NotificationItem({ notification }: NotificationItemProps) {
-  const { t } = useTranslation()
-  const { formatRelative } = useDateFormat()
+  const { t, i18n } = useTranslation()
   const { respondToInvitation, isRespondingToInvitation } = useRespondToInvitation()
   const { readNotification, isReadingNotification } = useReadNotification()
 
@@ -59,7 +59,12 @@ export default function NotificationItem({ notification }: NotificationItemProps
       <div className='flex items-center gap-2'>
         <p className='text-xs text-muted-foreground/80'>{t(NotificationTypeLabel[notification.notificationType])}</p>
         <div className='size-1 bg-muted-foreground/50 rounded-full' />
-        <p className='text-xs text-muted-foreground/80'>{formatRelative(notification.createdAt)}</p>
+        <p className='text-xs text-muted-foreground/80'>
+          {formatDistanceToNow(new Date(notification.createdAt), {
+            locale: i18n.language === 'vi-VN' ? vi : enUS,
+            addSuffix: true
+          })}
+        </p>
       </div>
 
       {!notification.isInteract && payload ? (

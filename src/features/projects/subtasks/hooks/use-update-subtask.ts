@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { BasePaginationResponse } from '@/lib/axios'
-import { invalidateTaskTree } from '@/lib/invalidations'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -127,12 +126,21 @@ export const useUpdateSubtask = ({ taskId, identifier, milestoneIdentifier }: Up
       })
     },
     onSettled: () => {
-      invalidateTaskTree(queryClient, {
-        taskId,
-        projectIdentifier: identifier,
-        parentMilestoneIdentifier: milestoneIdentifier,
-        userId: user?.id
-      })
+      if (taskId) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
+      }
+
+      if (milestoneIdentifier) {
+        if (identifier) {
+          queryClient.invalidateQueries({ queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier) })
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(milestoneIdentifier) })
+      }
+
+      if (identifier && user?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(identifier, user?.id) })
+      }
     }
   })
 

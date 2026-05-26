@@ -13,14 +13,14 @@ export const useDeleteSchedule = () => {
   const { mutate: deleteSchedule, isPending: isDeletingSchedule } = useMutation({
     mutationFn: scheduleService.deleteSchedule,
     onMutate: async ({ id }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.schedules.allMy() })
+      await queryClient.cancelQueries({ queryKey: queryKeys.schedules.allMy })
 
       const previousQueries = queryClient.getQueriesData<BasePaginationResponse<MeetingRule>>({
-        queryKey: queryKeys.schedules.allMy()
+        queryKey: queryKeys.schedules.allMy
       })
 
       queryClient.setQueriesData<BasePaginationResponse<MeetingRule>>(
-        { queryKey: queryKeys.schedules.allMy() },
+        { queryKey: queryKeys.schedules.allMy },
         (old) => {
           if (!old?.value?.items) return old
 
@@ -50,7 +50,7 @@ export const useDeleteSchedule = () => {
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.schedules.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.schedules.allMy })
     }
   })
 

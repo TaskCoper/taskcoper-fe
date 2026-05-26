@@ -618,7 +618,7 @@ export default function ProfilePage() {
 
       <div className='w-full max-w-315 mx-auto py-4'>
         {tabs.map((tab) => (
-          <TabsContent key={tab.id} value={tab.value} className='px-4 pb-40'>
+          <TabsContent key={tab.id} value={tab.value} className='px-4'>
             {tab.content}
           </TabsContent>
         ))}

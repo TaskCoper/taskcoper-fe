@@ -7,12 +7,12 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ParentMilestone } from '../../core/types'
 import type { Milestone } from '../types'
-import { updateMilestoneSchema, type UpdateMilestoneFormValues } from '../validations'
+import { updateMilestoneSchema } from '../validations'
 import { useUpdateMilestone } from './use-update-milestone'
 
 interface UseParentMilestoneDragDropProps {
   items: Milestone[]
-  queryKey: readonly unknown[]
+  queryKey: unknown[]
 }
 
 export function useParentMilestoneDragDrop({ items, queryKey }: UseParentMilestoneDragDropProps) {
@@ -95,13 +95,12 @@ export function useParentMilestoneDragDrop({ items, queryKey }: UseParentMilesto
         }
       })
 
-      const payload: UpdateMilestoneFormValues = {
-        milestoneId: String(active.id),
-        parentMilestoneIdentifier: null,
+      const validated = updateMilestoneSchema(t).safeParse({
+        milestoneId: active.id,
+        parentId: null,
         milestoneName: activeData.milestone.name,
         position: newPosition
-      }
-      const validated = updateMilestoneSchema(t).safeParse(payload)
+      })
 
       if (validated.success) {
         updateMilestone({ body: validated.data })

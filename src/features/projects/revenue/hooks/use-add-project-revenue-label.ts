@@ -21,14 +21,14 @@ export const useAddProjectRevenueLabel = ({ projectIdentifier }: { projectIdenti
   const { mutate: addProjectRevenueLabel, isPending: isAddingProjectRevenueLabel } = useMutation({
     mutationFn: projectRevenueService.addProjectRevenueLabel,
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projects.revenueLabels.all(projectIdentifier) })
+      await queryClient.cancelQueries({ queryKey: queryKeys.projectRevenueLabels.all(projectIdentifier) })
       const previousData = queryClient.getQueryData<BasePaginationResponse<RevenueLabel>>(
-        queryKeys.projects.revenueLabels.list(projectIdentifier)
+        queryKeys.projectRevenueLabels.list(projectIdentifier)
       )
 
       if (previousData) {
         queryClient.setQueryData<BasePaginationResponse<RevenueLabel>>(
-          queryKeys.projects.revenueLabels.list(projectIdentifier),
+          queryKeys.projectRevenueLabels.list(projectIdentifier),
           (old) => {
             if (!old) return old
 
@@ -60,7 +60,7 @@ export const useAddProjectRevenueLabel = ({ projectIdentifier }: { projectIdenti
     },
     onError: (error, _variables, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(queryKeys.projects.revenueLabels.list(projectIdentifier), context.previousData)
+        queryClient.setQueryData(queryKeys.projectRevenueLabels.list(projectIdentifier), context.previousData)
       }
 
       toast(t('error.somethingWentWrong'), {
@@ -68,8 +68,8 @@ export const useAddProjectRevenueLabel = ({ projectIdentifier }: { projectIdenti
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.list(projectIdentifier) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.revenueLabels.stats(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.list(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projectRevenueLabels.stats(projectIdentifier) })
     }
   })
 
