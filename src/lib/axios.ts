@@ -35,30 +35,6 @@ export interface ErrorResponse {
   errors: Record<string, unknown>[] | null
 }
 
-const PUBLIC_ROUTE_PATHS = new Set([
-  '/',
-  '/commissions',
-  '/forgot-password',
-  '/redirect',
-  '/sign-in',
-  '/sign-up',
-  '/terms-of-service',
-  '/privacy-policy'
-])
-
-const normalizePathname = (pathname: string) => {
-  if (pathname === '/') {
-    return pathname
-  }
-
-  return pathname.replace(/\/+$/, '')
-}
-
-const isPublicRoutePath = (pathname: string) => {
-  const normalizedPathname = normalizePathname(pathname)
-  return PUBLIC_ROUTE_PATHS.has(normalizedPathname)
-}
-
 export const api = axios.create({
   baseURL: `${config.baseURL}/api`,
   withCredentials: true,
@@ -117,10 +93,10 @@ const refreshAccessToken = async (): Promise<boolean> => {
     // If refresh token is invalid
     if (error.response?.data?.messageCode === 'InvalidRefreshToken') {
       clearAllUserPreferences()
-      const isOnPublicRoute = isPublicRoutePath(window.location.pathname)
+      const isOnSignInPage = window.location.pathname === '/sign-in'
 
-      // Avoid hard-reload loops when a protected call is made from public pages.
-      if (!isOnPublicRoute) {
+      // Avoid hard-reload loops when a protected call is made from /sign-in.
+      if (!isOnSignInPage) {
         window.location.replace('/sign-in')
       }
     }
