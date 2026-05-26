@@ -1,5 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { queryKeys } from '@/lib/query-keys'
+import { invalidateTaskTree } from '@/lib/invalidations'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -81,23 +81,12 @@ export const useAddTaskSubtask = ({
       })
     },
     onSettled: () => {
-      if (taskId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.subtasks.byTask(taskId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(taskId) })
-      }
-
-      if (parentMilestoneIdentifier) {
-        if (projectIdentifier) {
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier)
-          })
-        }
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.listParent(parentMilestoneIdentifier) })
-      }
-
-      if (projectIdentifier && user?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.myAssigned(projectIdentifier, user?.id) })
-      }
+      invalidateTaskTree(queryClient, {
+        taskId,
+        projectIdentifier,
+        parentMilestoneIdentifier,
+        userId: user?.id
+      })
     }
   })
 

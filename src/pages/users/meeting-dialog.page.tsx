@@ -18,9 +18,9 @@ import type { UpdateMeetingFormValues } from '@/features/meetings/validations'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { format } from 'date-fns'
 import {
   ArrowDown01Icon,
   CalendarIcon,
@@ -235,10 +235,13 @@ export default function MeetingDialogPage() {
 
   const { meetingId } = useParams<{ meetingId: string }>()
   const { meeting, isLoadingMeeting } = useGetMeeting({ meetingId })
-  const { completeMeeting, isCompletingMeeting } = useCompleteMeeting()
+  const { completeMeeting, isCompletingMeeting } = useCompleteMeeting({
+    mentorId: meeting?.mentorUserId
+  })
   const { me } = useGetMe()
 
   const { t } = useTranslation()
+  const { formatDate, formatTime } = useDateFormat()
   const [isRescheduling, setIsRescheduling] = useState(false)
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<SelectedTimeSlot[]>([])
 
@@ -378,14 +381,14 @@ export default function MeetingDialogPage() {
 
           <div className='flex items-center gap-2'>
             <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
-              {meeting?.startTimeUtc ? format(new Date(meeting.startTimeUtc), t('meeting.detail.dateFormat')) : '-'}
+              {meeting?.startTimeUtc ? formatDate(meeting.startTimeUtc, 'dateMedium') : '-'}
             </p>
             <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
-              {meeting?.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : '-'}
+              {meeting?.startTimeUtc ? formatTime(meeting.startTimeUtc) : '-'}
             </p>
             <p className='text-sm font-medium px-1'>{t('meeting.detail.to')}</p>
             <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
-              {meeting?.endTimeUtc ? format(new Date(meeting.endTimeUtc), 'h:mm a') : '-'}
+              {meeting?.endTimeUtc ? formatTime(meeting.endTimeUtc) : '-'}
             </p>
             <p className='text-sm ml-2'>{getTimezoneString()}</p>
           </div>

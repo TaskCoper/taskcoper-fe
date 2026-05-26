@@ -51,7 +51,7 @@ export const updateTaskSchema = (t: TFunction) => {
       priority: z.enum(TaskPriority, { message: t('common.validation.enum.invalid') }).nullable(),
       announceBeforeMinutes: z
         .number()
-        .positive({ message: t('common.validation.number.positive') })
+        .nonnegative({ message: t('common.validation.number.nonNegative') })
         .nullable(),
       mentionUsers: z.array(
         z

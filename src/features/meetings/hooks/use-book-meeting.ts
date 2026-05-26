@@ -42,7 +42,7 @@ export const useBookMeeting = ({ packageId, projectIdentifier }: UseBookMeetingO
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMentor(variables.body.mentorId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy })
+      queryClient.invalidateQueries({ queryKey: queryKeys.meetings.allMy() })
 
       if (packageId) {
         queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.purchasedDetail(packageId) })

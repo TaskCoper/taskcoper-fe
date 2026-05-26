@@ -9,9 +9,10 @@ import UpdateScheduleDialog from '@/features/schedules/components/update-schedul
 import { useDeleteSchedule } from '@/features/schedules/hooks/use-delete-schedule'
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { MeetingRule } from '@/features/schedules/types'
+import { formatDate } from '@/lib/date'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
-import { format, isAfter, isBefore, parseISO } from 'date-fns'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 import { CalendarClock, CalendarPlusIcon, PencilIcon, Trash2Icon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +59,7 @@ const getScheduleActivationVariant = (rule: MeetingRule): ScheduleActivationVari
 }
 
 const formatDateCompact = (iso: string): string => {
-  return format(parseISO(iso), 'MMM d')
+  return formatDate(parseISO(iso), 'MMM d')
 }
 
 const formatDuration = (startTime: string, endTime: string): string => {
@@ -136,9 +137,9 @@ const ScheduleRow = ({ schedule, onEdit }: { schedule: MeetingRule; onEdit: (sch
         <TooltipContent side='left' className='text-xs'>
           {!isActive
             ? inactiveReason === 'expired'
-              ? t('schedule.status.expired', 'Expired')
+              ? t('schedule.status.expired')
               : inactiveReason === 'upcoming'
-                ? t('schedule.status.upcoming', 'Upcoming')
+                ? t('schedule.status.upcoming')
                 : t('common.status.disabled')
             : t(activationLabelKey)}
         </TooltipContent>
@@ -168,7 +169,7 @@ const ScheduleRow = ({ schedule, onEdit }: { schedule: MeetingRule; onEdit: (sch
         {!isActive && inactiveReason === 'expired' && (
           <div className='flex items-center gap-1.5 px-1.5 py-0.5 border border-destructive/30 rounded-sm bg-destructive/10'>
             <p className='text-[10px] font-bold uppercase tracking-widest text-destructive/90'>
-              {t('schedule.status.expired', 'Expired')}
+              {t('schedule.status.expired')}
             </p>
             {schedule.activeTo && (
               <span className='text-[10px] font-bold text-destructive'>{formatDateCompact(schedule.activeTo)}</span>
@@ -179,7 +180,7 @@ const ScheduleRow = ({ schedule, onEdit }: { schedule: MeetingRule; onEdit: (sch
         {!isActive && inactiveReason === 'upcoming' && (
           <div className='flex items-center gap-1.5 px-1.5 py-0.5 border border-amber-500/30 rounded-sm bg-amber-500/10'>
             <p className='text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-500'>
-              {t('schedule.status.upcoming', 'Upcoming')}
+              {t('schedule.status.upcoming')}
             </p>
             {schedule.activeFrom && (
               <span className='text-[10px] font-bold text-amber-600 dark:text-amber-500'>

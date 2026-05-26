@@ -3,8 +3,9 @@ import {
   CALENDAR_TIME_GUTTER_WIDTH as TIME_GUTTER_WIDTH
 } from '@/features/projects/tasks/core/constants'
 import type { MeetingRule } from '@/features/schedules/types'
+import { useDateFormat } from '@/lib/date'
 import { cn, getTimezoneOffsetString } from '@/shared/utils'
-import { addDays, format, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay, startOfWeek } from 'date-fns'
+import { addDays, isAfter, isBefore, isSameDay, isToday, setHours, startOfDay, startOfWeek } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MeetingBooking } from '../../types'
@@ -32,6 +33,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
   const days = getWeekDays(date)
   const now = new Date()
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
 
   const weekdayNames = [
     t('dayOfWeek.sunday'),
@@ -71,7 +73,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
                   today && 'bg-primary text-primary-foreground'
                 )}
               >
-                {format(day, 'd')}
+                {formatDate(day, 'dayOfMonth')}
               </div>
             </div>
           )
@@ -86,7 +88,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
               className='absolute w-full text-[11px] text-muted-foreground text-right pr-2 -translate-y-2.5 select-none'
               style={{ top: hour * HOUR_HEIGHT }}
             >
-              {hour === 0 ? '' : format(setHours(new Date(), hour), 'h a')}
+              {hour === 0 ? '' : formatDate(setHours(new Date(), hour), 'hourShort')}
             </div>
           ))}
         </div>
@@ -144,13 +146,13 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
 
                   if (rule.activeFrom && rule.activeTo) {
                     bgClass = 'bg-purple-500/15 border-purple-500/30 text-purple-900 dark:text-purple-400' // range
-                    labelText = `${format(new Date(rule.activeFrom), 'dd/MM/yy')} - ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+                    labelText = `${formatDate(rule.activeFrom, 'dateShort2y')} - ${formatDate(rule.activeTo, 'dateShort2y')}`
                   } else if (rule.activeFrom) {
                     bgClass = 'bg-blue-500/15 border-blue-500/30 text-blue-900 dark:text-blue-400' // fromOnly
-                    labelText = `${t('schedule.timeline.activeFrom')} ${format(new Date(rule.activeFrom), 'dd/MM/yy')}`
+                    labelText = `${t('schedule.timeline.activeFrom')} ${formatDate(rule.activeFrom, 'dateShort2y')}`
                   } else if (rule.activeTo) {
                     bgClass = 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-400' // toOnly
-                    labelText = `${t('schedule.timeline.activeTo')} ${format(new Date(rule.activeTo), 'dd/MM/yy')}`
+                    labelText = `${t('schedule.timeline.activeTo')} ${formatDate(rule.activeTo, 'dateShort2y')}`
                   }
 
                   return (

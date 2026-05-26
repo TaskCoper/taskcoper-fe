@@ -32,19 +32,19 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
     return {
       teams: [
         {
-          name: 'Acme Inc',
+          name: t('adminSidebar.teams.acmeInc.name'),
           logo: GalleryVerticalEnd,
-          plan: 'Enterprise'
+          plan: t('adminSidebar.teams.acmeInc.plan')
         },
         {
-          name: 'Acme Corp.',
+          name: t('adminSidebar.teams.acmeCorp.name'),
           logo: AudioWaveform,
-          plan: 'Startup'
+          plan: t('adminSidebar.teams.acmeCorp.plan')
         },
         {
-          name: 'Evil Corp.',
+          name: t('adminSidebar.teams.evilCorp.name'),
           logo: Command,
-          plan: 'Free'
+          plan: t('adminSidebar.teams.evilCorp.plan')
         }
       ],
       navMain: [

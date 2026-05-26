@@ -4,8 +4,8 @@ import {
   CALENDAR_HOUR_HEIGHT,
   CALENDAR_EVENT_MIN_HEIGHT as MIN_HEIGHT_FOR_TIME
 } from '@/features/projects/tasks/core/constants'
+import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { format } from 'date-fns'
 import { MicIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { MeetingStatus, type MeetingBooking } from '../../types'
@@ -21,6 +21,7 @@ interface CalendarEventProps {
 
 export default function CalendarEvent({ meeting, variant = 'block', style, className, onClick }: CalendarEventProps) {
   const { t } = useTranslation()
+  const { formatTime } = useDateFormat()
   const { me: user } = useGetMe()
 
   const isMentor = meeting.mentorUserId === user?.id
@@ -38,8 +39,8 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
 
   const title = `${projectText}${titleText}`
 
-  const startTime = meeting.startTimeUtc ? format(new Date(meeting.startTimeUtc), 'h:mm a') : ''
-  const endTime = meeting.endTimeUtc ? format(new Date(meeting.endTimeUtc), 'h:mm a') : ''
+  const startTime = meeting.startTimeUtc ? formatTime(meeting.startTimeUtc) : ''
+  const endTime = meeting.endTimeUtc ? formatTime(meeting.endTimeUtc) : ''
   const timeString = startTime && endTime ? `${startTime} - ${endTime}` : ''
 
   // month view chip

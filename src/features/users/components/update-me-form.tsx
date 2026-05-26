@@ -82,7 +82,7 @@ export default function UpdateMeForm({ provinces, wards, isLoadingProvinces, isL
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
                 <FieldLabel htmlFor={field.name} className='gap-0.5'>
-                  Email
+                  {t('common.field.email')}
                   <span className='text-destructive font-semibold'>*</span>
                 </FieldLabel>
                 <Input

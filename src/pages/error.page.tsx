@@ -10,7 +10,7 @@ export default function ErrorPage() {
 
   let title = t('error.maintenance')
   let message = t('error.maintenanceDescription')
-  let statusCode: string | number = 'Oops!'
+  let statusCode: string | number = t('error.oops')
 
   if (isRouteErrorResponse(error)) {
     statusCode = error.status

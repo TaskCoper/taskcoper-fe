@@ -35,6 +35,9 @@ export const useAddProjectPositionTitle = ({ projectIdentifier }: { projectIdent
       queryClient.invalidateQueries({
         queryKey: queryKeys.projects.positionTitles.list(variables.body.projectIdentifier)
       })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.members.all(variables.body.projectIdentifier)
+      })
     }
   })
 

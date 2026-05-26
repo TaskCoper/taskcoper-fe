@@ -1,3 +1,4 @@
+import EnvironmentTag from '@/components/environment-tag'
 import NavUser from '@/components/nav-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -39,8 +40,9 @@ export default function PublicLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
+
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
-    enabled: !!me && openNotificationsPopover && !isVerificationRequired
+    enabled: !!me && !isVerificationRequired
   })
 
   return (
@@ -49,7 +51,7 @@ export default function PublicLayout() {
         <div className='px-4 h-14 flex items-center justify-between'>
           <div className='flex items-center gap-3'>
             <Link to='/' className='shrink-0'>
-              <img src={logo} alt='TaskCoper' className='h-7' />
+              <img src={logo} alt={t('common.alt.logo')} className='h-7' />
             </Link>
 
             {org ? (
@@ -82,6 +84,8 @@ export default function PublicLayout() {
                   </Button>
                 )
               })}
+
+              <EnvironmentTag />
             </div>
           </div>
 
@@ -130,12 +134,12 @@ export default function PublicLayout() {
                 <SheetTrigger asChild>
                   <Button variant='ghost' size='icon' className='lg:hidden -mr-2'>
                     <MenuIcon className='size-5' />
-                    <span className='sr-only'>Toggle menu</span>
+                    <span className='sr-only'>{t('common.button.toggleMenu')}</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side='right' className='gap-0'>
                   <SheetHeader>
-                    <SheetTitle className='text-left'>Menu</SheetTitle>
+                    <SheetTitle className='text-left'>{t('common.ui.menu')}</SheetTitle>
                   </SheetHeader>
 
                   <div className='flex flex-col gap-4'>

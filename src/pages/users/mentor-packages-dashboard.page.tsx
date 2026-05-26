@@ -6,8 +6,9 @@ import { useGetMentorPackagesStatistics } from '@/features/mentor-packages/hooks
 import BarChartHorizontal from '@/features/projects/charts/components/bar-chart-horizontal'
 import PieChartLabel from '@/features/projects/charts/components/pie-chart'
 import StatCard from '@/features/projects/core/components/stat-card'
+import { useDateFormat } from '@/lib/date'
 import { formatCurrency } from '@/shared/utils'
-import { endOfYear, format, getYear, startOfYear } from 'date-fns'
+import { endOfYear, getYear, startOfYear } from 'date-fns'
 import {
   BanknoteIcon,
   HandCoinsIcon,
@@ -26,6 +27,7 @@ const pieChartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 
 export default function MentorPackagesDashboardPage() {
   const { t } = useTranslation()
+  const { formatDate } = useDateFormat()
   const [selectedYear, setSelectedYear] = useState(currentYear)
 
   const dateRange = useMemo(
@@ -51,12 +53,12 @@ export default function MentorPackagesDashboardPage() {
 
   const monthlyRevenueData = useMemo(() => {
     return (mentorPackagesStatistics?.monthlyBreakdown ?? []).map((item) => ({
-      period: format(new Date(item.year, item.month - 1, 1), 'MMM'),
+      period: formatDate(new Date(item.year, item.month - 1, 1), 'monthShort'),
       grossRevenue: item.grossRevenueAtListPrice,
       netRevenue: item.netRevenueAfterVoucher,
       mentorPayout: item.mentorPayoutAfterCommission
     }))
-  }, [mentorPackagesStatistics?.monthlyBreakdown])
+  }, [mentorPackagesStatistics?.monthlyBreakdown, formatDate])
 
   const topPackagesByBookingsData = useMemo(() => {
     return [...packageBreakdown]

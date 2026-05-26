@@ -1,4 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button'
+import { formatDate, getCurrentAppLocale, getDateFnsLocale, resolveAppLocale } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import * as React from 'react'
@@ -12,11 +13,14 @@ function Calendar({
   buttonVariant = 'ghost',
   formatters,
   components,
+  locale,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>['variant']
 }) {
   const defaultClassNames = getDefaultClassNames()
+  const appLocale = resolveAppLocale(locale?.code ?? getCurrentAppLocale())
+  const calendarLocale = locale ?? getDateFnsLocale(appLocale)
 
   return (
     <DayPicker
@@ -28,8 +32,9 @@ function Calendar({
         className
       )}
       captionLayout={captionLayout}
+      locale={calendarLocale}
       formatters={{
-        formatMonthDropdown: (date) => date.toLocaleString('default', { month: 'short' }),
+        formatMonthDropdown: (date) => formatDate(date, 'monthShort', { locale: appLocale }),
         ...formatters
       }}
       classNames={{
@@ -138,7 +143,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: React.Compon
       ref={ref}
       variant='ghost'
       size='icon'
-      data-day={day.date.toLocaleDateString()}
+      data-day={formatDate(day.date, 'iso')}
       data-selected-single={
         modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle
       }

@@ -3,15 +3,15 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useDateFormat } from '@/lib/date'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
 import { cn, getColorTextClass } from '@/shared/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import {
   CircleCheckBigIcon,
   ClockIcon,
   EyeIcon,
+  LayersIcon,
   MessageSquareIcon,
   PaperclipIcon,
   SquarePenIcon,
@@ -19,6 +19,7 @@ import {
   TypeIcon
 } from 'lucide-react'
 import { forwardRef, useState, type CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import type { TaskPreview } from '../../../core/types'
 import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
@@ -46,6 +47,7 @@ interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
 
 const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
   ({ task, dragging, style, shouldDisplayParentMilestone = false, ...props }, ref) => {
+    const { t } = useTranslation()
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -92,7 +94,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
       <Card ref={ref} style={style} className={taskCardVariants({ dragging })} {...props} onClick={handleCardClick}>
         {task.backgroundImage ? (
           <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
-            <img src={task.backgroundImage} alt='Cover' className='w-full h-full object-cover' />
+            <img src={task.backgroundImage} alt={t('common.alt.cover')} className='w-full h-full object-cover' />
           </div>
         ) : null}
 
@@ -126,6 +128,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
               )}
             </div>
           ) : null}
+
           <div
             className={cn(
               'size-6 hidden group-hover/card:flex items-center justify-center absolute right-1 top-2',
@@ -134,16 +137,21 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
           >
             <SquarePenIcon className='size-3.5' />
           </div>
-          <div className='space-y-0.5'>
-            {shouldDisplayParentMilestone ? (
-              <Link
-                to={`/projects/${identifier}/milestones/${task.parentMilestoneSlug}`}
-                className='text-xs font-medium text-muted-foreground hover:underline hover:text-primary'
-                onClick={(e) => e.stopPropagation()}
-              >
-                {task.parentMilestoneName}
-              </Link>
-            ) : null}
+
+          <div className='space-y-1'>
+            <div className='flex items-center flex-wrap gap-4'>
+              {shouldDisplayParentMilestone ? (
+                <Link
+                  to={`/projects/${identifier}/milestones/${task.parentMilestoneSlug}`}
+                  className='text-xs font-semibold text-indigo-600 hover:underline hover:text-primary flex items-center gap-1.5'
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <LayersIcon className='size-3' />
+                  {task.parentMilestoneName}
+                </Link>
+              ) : null}
+            </div>
+
             <div className='flex items-start gap-2'>
               <Checkbox
                 className={cn(
@@ -222,21 +230,23 @@ const TaskStoryPointsChip = ({ storyPoints }: { storyPoints: number }) => {
 }
 
 const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDate: string | null }) => {
+  const { formatDate } = useDateFormat()
+  const [currentTime] = useState(() => Date.now())
+  const isExpired = !!(
+    endDate &&
+    !Number.isNaN(new Date(endDate).getTime()) &&
+    new Date(endDate).getTime() < currentTime
+  )
+
   return (
-    <div className='flex items-center gap-1.5 rounded-sm'>
+    <div
+      className={cn('flex items-center gap-1.5 rounded-sm', isExpired ? 'bg-rose-100 text-rose-700 px-1 py-0.5' : '')}
+    >
       <ClockIcon className='size-3' />
       <div className='flex items-center gap-1'>
-        {startDate && (
-          <p className='text-xs font-semibold text-muted-foreground'>
-            {format(new Date(startDate), "d 'thg' M y", { locale: vi })}
-          </p>
-        )}
-        {startDate && endDate && <p className='text-xs font-semibold text-muted-foreground'>–</p>}
-        {endDate && (
-          <p className='text-xs font-semibold text-muted-foreground'>
-            {format(new Date(endDate), "d 'thg' M y", { locale: vi })}
-          </p>
-        )}
+        {startDate && <p className='text-xs font-semibold text-inherit'>{formatDate(startDate, 'dateMedium')}</p>}
+        {startDate && endDate && <p className='text-xs font-semibold text-inherit'>–</p>}
+        {endDate && <p className='text-xs font-semibold text-inherit'>{formatDate(endDate, 'dateMedium')}</p>}
       </div>
     </div>
   )

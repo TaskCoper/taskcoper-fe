@@ -204,6 +204,7 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
   ) => {
     const { editor } = useTiptapEditor(providedEditor)
     const [isOpen, setIsOpen] = React.useState(false)
+    const skipAutoOpenRef = React.useRef(false)
 
     const { isVisible, canSet, isActive, url, setUrl, setLink, removeLink, openLink, label, Icon } = useLinkPopover({
       editor,
@@ -220,6 +221,7 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
     )
 
     const handleSetLink = React.useCallback(() => {
+      skipAutoOpenRef.current = true
       setLink()
       setIsOpen(false)
     }, [setLink])
@@ -234,6 +236,10 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
     )
 
     React.useEffect(() => {
+      if (skipAutoOpenRef.current) {
+        skipAutoOpenRef.current = false
+        return
+      }
       if (autoOpenOnLinkActive && isActive) {
         setIsOpen(true)
       }
@@ -260,10 +266,7 @@ export const LinkPopover = React.forwardRef<HTMLButtonElement, LinkPopoverProps>
           </LinkButton>
         </PopoverTrigger>
 
-        <PopoverContent
-          className='max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'
-          sideOffset={8}
-        >
+        <PopoverContent sideOffset={8}>
           <LinkMain
             url={url}
             setUrl={setUrl}

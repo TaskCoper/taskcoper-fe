@@ -10,7 +10,7 @@ export interface GetProjectOnTimeCompletersParams {
 
 export const useGetProjectOnTimeCompleters = ({ projectId, from, to }: GetProjectOnTimeCompletersParams) => {
   const { data: projectOnTimeCompleters, isLoading: isLoadingProjectOnTimeCompleters } = useQuery({
-    queryKey: queryKeys.efficiency.onTimeCompleters({ projectId, from, to }),
+    queryKey: queryKeys.projects.efficiency.onTimeCompleters({ projectId, from, to }),
     queryFn: () => efficiencyService.getOnTimeCompleters({ projectId, from, to }),
     enabled: !!projectId
   })

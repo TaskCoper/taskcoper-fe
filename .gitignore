@@ -31,3 +31,6 @@ package-lock.json
 
 # Yarn
 .yarn/install-state.gz
+
+# i18n generated types
+.i18n-types

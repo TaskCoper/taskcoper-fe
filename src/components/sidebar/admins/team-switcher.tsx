@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +11,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { ChevronsUpDown, Plus } from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export function TeamSwitcher({
   teams
@@ -20,6 +22,7 @@ export function TeamSwitcher({
     plan: string
   }[]
 }) {
+  const { t } = useTranslation()
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
@@ -52,7 +55,7 @@ export function TeamSwitcher({
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className='text-muted-foreground text-xs'>Teams</DropdownMenuLabel>
+            <DropdownMenuLabel className='text-muted-foreground text-xs'>{t('common.ui.teams')}</DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem key={team.name} onClick={() => setActiveTeam(team)} className='gap-2 p-2'>
                 <div className='flex size-6 items-center justify-center rounded-md border'>
@@ -67,7 +70,7 @@ export function TeamSwitcher({
               <div className='flex size-6 items-center justify-center rounded-md border bg-transparent'>
                 <Plus className='size-4' />
               </div>
-              <div className='text-muted-foreground font-medium'>Add team</div>
+              <div className='text-muted-foreground font-medium'>{t('common.button.addTeam')}</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,5 +1,5 @@
 import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { Subtask } from './types'
+import type { Subtask } from '../../subtasks/shared-types'
 import type { AddTaskSubtaskFormValues } from './validations'
 
 class TaskSubtaskService {

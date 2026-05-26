@@ -12,10 +12,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { formatDate } from '@/lib/date'
 import { cn, getColorTextClass } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import {
   CircleCheckBigIcon,
@@ -342,11 +341,7 @@ export const getColumns = ({
       ),
       cell: ({ row }) => {
         if (row.original.startDate) {
-          return (
-            <p className='text-center'>
-              {format(new Date(row.original.startDate), i18next.t('task.detail.dateFormat'), { locale: vi })}
-            </p>
-          )
+          return <p className='text-center'>{formatDate(row.original.startDate, 'dateMedium')}</p>
         }
 
         return <p className='text-center text-muted-foreground'>{i18next.t('task.column.notStarted')}</p>
@@ -363,11 +358,7 @@ export const getColumns = ({
       header: ({ column }) => <DataTableColumnHeader column={column} label='task.column.dueDate' className='mx-auto' />,
       cell: ({ row }) => {
         if (row.original.endDate) {
-          return (
-            <p className='text-center'>
-              {format(new Date(row.original.endDate), i18next.t('task.detail.dateFormat'), { locale: vi })}
-            </p>
-          )
+          return <p className='text-center'>{formatDate(row.original.endDate, 'dateMedium')}</p>
         }
 
         return <p className='text-center text-muted-foreground'>{i18next.t('task.column.noDueDate')}</p>

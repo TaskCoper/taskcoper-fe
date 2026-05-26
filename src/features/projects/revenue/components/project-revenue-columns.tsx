@@ -9,10 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { formatDate } from '@/lib/date'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon, TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
 import { RevenueType, RevenueTypeLabel, type Revenue } from '../types'
@@ -236,11 +235,7 @@ export const getColumns = ({
       cell: ({ row }) => {
         if (row.original.createdOnUtc) {
           return (
-            <p className='text-center text-muted-foreground'>
-              {format(new Date(row.original.createdOnUtc), 'dd/MM/yyyy', {
-                locale: i18next.language === 'vi' ? vi : undefined
-              })}
-            </p>
+            <p className='text-center text-muted-foreground'>{formatDate(row.original.createdOnUtc, 'dateShort')}</p>
           )
         }
 

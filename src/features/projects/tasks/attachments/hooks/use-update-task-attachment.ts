@@ -76,7 +76,7 @@ export const useUpdateTaskAttachment = ({ projectIdentifier }: { projectIdentifi
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attachments.byTask(variables.body.taskId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.byTask(variables.body.taskId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.projectResources.all(projectIdentifier) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.resources.all(projectIdentifier) })
     }
   })
 

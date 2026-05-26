@@ -38,8 +38,13 @@ export const useUpdateMentorPackage = () => {
       })
     },
     onSettled: (_, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy })
-      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.allMy() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.lists() })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.mentorPackages.detail(variables.body.mentorPackageId),
+        exact: true
+      })
+      queryClient.invalidateQueries({ queryKey: queryKeys.mentorPackages.pinStatistics() })
     }
   })
 

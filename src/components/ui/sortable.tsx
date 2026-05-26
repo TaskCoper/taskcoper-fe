@@ -33,6 +33,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Slot } from '@radix-ui/react-slot'
+import i18next from 'i18next'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
@@ -191,7 +192,11 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
     () => ({
       onDragStart({ active }) {
         const activeValue = active.id.toString()
-        return `Grabbed sortable item "${activeValue}". Current position is ${active.data.current?.sortable.index + 1} of ${value.length}. Use arrow keys to move, space to drop.`
+        return i18next.t('common.sortable.dragStart', {
+          item: activeValue,
+          position: (active.data.current?.sortable.index ?? 0) + 1,
+          total: value.length
+        })
       },
       onDragOver({ active, over }) {
         if (over) {
@@ -199,22 +204,37 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
           const activeIndex = active.data.current?.sortable.index ?? 0
           const moveDirection = overIndex > activeIndex ? 'down' : 'up'
           const activeValue = active.id.toString()
-          return `Sortable item "${activeValue}" moved ${moveDirection} to position ${overIndex + 1} of ${value.length}.`
+          return i18next.t('common.sortable.dragOver', {
+            item: activeValue,
+            direction: i18next.t(`common.sortable.direction.${moveDirection}`),
+            position: overIndex + 1,
+            total: value.length
+          })
         }
-        return 'Sortable item is no longer over a droppable area. Press escape to cancel.'
+        return i18next.t('common.sortable.notOverDropzone')
       },
       onDragEnd({ active, over }) {
         const activeValue = active.id.toString()
         if (over) {
           const overIndex = over.data.current?.sortable.index ?? 0
-          return `Sortable item "${activeValue}" dropped at position ${overIndex + 1} of ${value.length}.`
+          return i18next.t('common.sortable.dragEnd', {
+            item: activeValue,
+            position: overIndex + 1,
+            total: value.length
+          })
         }
-        return `Sortable item "${activeValue}" dropped. No changes were made.`
+        return i18next.t('common.sortable.dragEndNoChanges', {
+          item: activeValue
+        })
       },
       onDragCancel({ active }) {
         const activeIndex = active.data.current?.sortable.index ?? 0
         const activeValue = active.id.toString()
-        return `Sorting cancelled. Sortable item "${activeValue}" returned to position ${activeIndex + 1} of ${value.length}.`
+        return i18next.t('common.sortable.dragCancel', {
+          item: activeValue,
+          position: activeIndex + 1,
+          total: value.length
+        })
       },
       onDragMove({ active, over }) {
         if (over) {
@@ -222,9 +242,14 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
           const activeIndex = active.data.current?.sortable.index ?? 0
           const moveDirection = overIndex > activeIndex ? 'down' : 'up'
           const activeValue = active.id.toString()
-          return `Sortable item "${activeValue}" is moving ${moveDirection} to position ${overIndex + 1} of ${value.length}.`
+          return i18next.t('common.sortable.dragMove', {
+            item: activeValue,
+            direction: i18next.t(`common.sortable.direction.${moveDirection}`),
+            position: overIndex + 1,
+            total: value.length
+          })
         }
-        return 'Sortable item is no longer over a droppable area. Press escape to cancel.'
+        return i18next.t('common.sortable.notOverDropzone')
       }
     }),
     [value]
@@ -232,11 +257,14 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
 
   const screenReaderInstructions: ScreenReaderInstructions = React.useMemo(
     () => ({
-      draggable: `
-        To pick up a sortable item, press space or enter.
-        While dragging, use the ${orientation === 'vertical' ? 'up and down' : orientation === 'horizontal' ? 'left and right' : 'arrow'} keys to move the item.
-        Press space or enter again to drop the item in its new position, or press escape to cancel.
-      `
+      draggable: i18next.t('common.sortable.instructions.draggable', {
+        direction:
+          orientation === 'vertical'
+            ? i18next.t('common.sortable.direction.upAndDown')
+            : orientation === 'horizontal'
+              ? i18next.t('common.sortable.direction.leftAndRight')
+              : i18next.t('common.sortable.direction.arrow')
+      })
     }),
     [orientation]
   )
