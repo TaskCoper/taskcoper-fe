@@ -478,6 +478,7 @@
         "startTimeRequired": "Thời gian bắt đầu là bắt buộc"
       },
       "string": {
+        "min": "Phải có ít nhất {{min}} ký tự",
         "max": "Không được vượt quá {{max}} ký tự"
       },
       "timeZone": {
