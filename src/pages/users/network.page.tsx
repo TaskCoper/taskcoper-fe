@@ -220,7 +220,7 @@ function HeroVisualPanel({ slide }: { slide: HeroSlide }) {
         </div>
       </div>
 
-      <div className='absolute -bottom-1 left-1/2 hidden w-[82%] -translate-x-1/2 rounded-lg border border-white/80 bg-white/92 p-3 shadow-[0_18px_26px_-20px_rgba(14,30,66,0.52)] backdrop-blur sm:block'>
+      <div className='absolute -bottom-1 left-1/2 hidden w-[82%] -translate-x-1/2 rounded-lg border border-white/90 bg-white/92 p-3 shadow-[0_18px_26px_-20px_rgba(14,30,66,0.52)] backdrop-blur sm:block'>
         <div className='flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
             <Avatar className='h-9 w-9 ring-2 ring-white'>
