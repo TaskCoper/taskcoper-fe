@@ -65,7 +65,7 @@ export default function SubmitMentorApplicationForm({
               compact
               invalid={fieldState.invalid}
               error={fieldState.error}
-              placeholder={t('mentorApplication.form.detailedIntroductionPlaceholder')}
+              placeholder='mentorApplication.form.detailedIntroductionPlaceholder'
             />
           </Field>
         )}

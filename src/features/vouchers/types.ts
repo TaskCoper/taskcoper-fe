@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import type { Currency } from '../transactions/types'
 
 export const DiscountType = {
@@ -7,7 +8,7 @@ export const DiscountType = {
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
 
-export const DiscountTypeLabel: Record<DiscountType, string> = {
+export const DiscountTypeLabel: Record<DiscountType, I18nKey> = {
   [DiscountType.Percentage]: 'voucher.discountType.percent',
   [DiscountType.FixedAmount]: 'voucher.discountType.fixedAmount'
 }
@@ -21,7 +22,7 @@ export const Scope = {
 
 export type Scope = (typeof Scope)[keyof typeof Scope]
 
-export const ScopeLabel: Record<Scope, string> = {
+export const ScopeLabel: Record<Scope, I18nKey> = {
   [Scope.AllTargets]: 'voucher.scope.allTargets',
   [Scope.SpecificTargets]: 'voucher.scope.specificTargets'
 }
@@ -36,7 +37,7 @@ export const TargetType = {
 
 export type TargetType = (typeof TargetType)[keyof typeof TargetType]
 
-export const TargetTypeLabel: Record<TargetType, string> = {
+export const TargetTypeLabel: Record<TargetType, I18nKey> = {
   [TargetType.AllTargets]: 'voucher.targetType.allTargets',
   [TargetType.MentorPackage]: 'voucher.targetType.mentorPackage',
   [TargetType.SubscriptionPlan]: 'voucher.targetType.subscriptionPlan'
@@ -103,7 +104,7 @@ export const VoucherRedemptionStatus = {
 
 export type VoucherRedemptionStatus = (typeof VoucherRedemptionStatus)[keyof typeof VoucherRedemptionStatus]
 
-export const VoucherRedemptionStatusLabel: Record<VoucherRedemptionStatus, string> = {
+export const VoucherRedemptionStatusLabel: Record<VoucherRedemptionStatus, I18nKey> = {
   [VoucherRedemptionStatus.Reserved]: 'voucher.redemptionStatus.reserved',
   [VoucherRedemptionStatus.Applied]: 'voucher.redemptionStatus.applied',
   [VoucherRedemptionStatus.Released]: 'voucher.redemptionStatus.released',

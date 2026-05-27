@@ -99,16 +99,6 @@
     "signIn": {
       "button": "Let's go!",
       "description": "Sign in to your account to continue",
-      "field": {
-        "email": {
-          "label": "Email",
-          "placeholder": "example@gmail.com"
-        },
-        "password": {
-          "label": "Password",
-          "placeholder": "Enter your password"
-        }
-      },
       "forgotPassword": "Forgot password?",
       "label": "Sign in",
       "noAccount": "Don't have an account?",
@@ -116,9 +106,6 @@
       "validation": {
         "code": {
           "minLength": "Code must be 6 characters"
-        },
-        "email": {
-          "invalid": "Invalid email address"
         },
         "password": {
           "minLength": "Password must be at least 8 characters long"
@@ -147,9 +134,6 @@
         "code": {
           "maxLength": "Code must be 6 characters",
           "minLength": "Code must be 6 characters"
-        },
-        "email": {
-          "invalid": "Invalid email address"
         },
         "firstName": {
           "maxLength": "Max 20 characters",
@@ -205,7 +189,6 @@
     "qrBank": "Bank",
     "qrUnavailable": "QR unavailable",
     "qrUnavailableDesc": "Please use the payment link.",
-    "refresh": "Refresh",
     "scanToPayDesc": "Use your banking app to scan this QR.",
     "securePayment": "Secure Payment",
     "status": {
@@ -302,7 +285,6 @@
       "create": "Create",
       "decline": "Decline",
       "delete": "Delete",
-      "download": "Download",
       "edit": "Edit",
       "generateCode": "Generate code",
       "insert": "Insert",
@@ -339,7 +321,6 @@
       "label": "Label",
       "modifiedOnUtc": "Modified at",
       "name": "Name",
-      "password": "Password",
       "startDate": "Start date",
       "title": "Title"
     },
@@ -373,17 +354,13 @@
       "action": "Action",
       "apply": "Apply",
       "breadcrumb": "Breadcrumb",
-      "canEdit": "Can edit",
       "characters": "characters",
-      "comingSoon": "Coming Soon",
       "count": "Count",
       "date": "Date",
       "day": "Day",
       "domain": "Domain",
       "emptyValue": "Not yet set",
-      "files": "files",
       "fileTooLarge": "File too large",
-      "filter": "Filter",
       "infiniteSelect": {
         "loading": "Loading...",
         "noResults": "No results found",
@@ -403,7 +380,6 @@
       "more_one": "+{{count}} more",
       "more_other": "+{{count}} more",
       "moreLabel": "More",
-      "no": "No",
       "noDataAvailable": "No data available",
       "noDescription": "No description provided",
       "noDescriptionAvailable": "No description available.",
@@ -427,9 +403,7 @@
       "uploadSuccess": "Upload successful",
       "viewLess": "View less",
       "viewMore": "View more",
-      "viewOnly": "View only",
-      "week": "Week",
-      "yes": "Yes"
+      "week": "Week"
     },
     "unit": {
       "fileSize": {
@@ -454,17 +428,13 @@
         "invalid": "Invalid option selected"
       },
       "maxLength": {
-        "20": "Max 20 characters",
         "25": "Max 25 characters",
         "255": "Max 255 characters",
         "2000": "Max 2000 characters",
         "10000": "Max 10000 characters"
       },
       "minLength": {
-        "1": "This field is required",
-        "5": "Must be at least 5 characters",
-        "6": "Must be 6 characters",
-        "8": "Must be at least 8 characters long"
+        "5": "Must be at least 5 characters"
       },
       "number": {
         "integer": "Must be an integer",
@@ -861,7 +831,6 @@
     },
     "hero": {
       "badge": "Top Trusted Choice",
-      "brandName": "TaskCoper",
       "cta": "Start Your Journey",
       "description": "TaskCoper helps teams organize work, track progress, and collaborate seamlessly. All in one powerful platform.",
       "title": "Project Management Platform",
@@ -873,8 +842,7 @@
       "support": "Support",
       "tasksDone": "Tasks Done",
       "uptime": "Uptime"
-    },
-    "title": "TaskCoper - Project Management Platform"
+    }
   },
   "language": {
     "english": "English",
@@ -896,13 +864,11 @@
       "completeMeeting": "Complete",
       "confirmCancel": "Confirm Cancel",
       "disabledActionTooltip": "You can only reschedule or cancel the meeting at least 32 hours before the start time.",
-      "history": "History",
       "information": "Information",
       "joinViaGoogleMeet": "Join via Google Meet",
       "loadingDescription": "Please wait while we load the meeting.",
       "loadingTitle": "Loading meeting details",
       "maxGuests": "Max 100 guests",
-      "meetingDateTimeAt": "at",
       "meetingWith": "Meeting with",
       "mentor": "Mentor",
       "mentoringSession": "Mentoring Session",
@@ -1027,7 +993,6 @@
       "inReview": "In Review",
       "pending": "New",
       "pendingLock": "Accept to view details",
-      "pendingReview": "Pending Review",
       "rejected": "Rejected"
     },
     "submit": {
@@ -1066,7 +1031,6 @@
       "bookingInformation": "Booking Information",
       "deadlinesDescription": "Keep these dates in mind to activate and use your package on time.",
       "deadlinesTitle": "Deadlines",
-      "feedbackSubmitted": "Feedback submitted",
       "usageDeadline": "Usage deadline"
     },
     "bookPage": {
@@ -1090,7 +1054,6 @@
       "sessionsCount": "{{count}} sessions",
       "sessionsCount_one": "{{count}} session",
       "sessionsCount_other": "{{count}} sessions",
-      "sortOrder": "Sort order",
       "viewPackage": "View package"
     },
     "create": {
@@ -1107,7 +1070,6 @@
     },
     "form": {
       "activationDeadlineDays": "First Booking Deadline (days)",
-      "activationDeadlineDaysDescription": "User needs to use the package within these days from the purchase date.",
       "activationDeadlineDaysPlaceholder": "e.g. 10",
       "coverImage": "Cover image",
       "coverImageHint": "Click the image area to choose a cover, then press Save to upload.",
@@ -1129,7 +1091,6 @@
       "totalSessions": "Total sessions",
       "totalSessionsPlaceholder": "e.g. 10",
       "usageDeadlineDays": "Usage Period (days)",
-      "usageDeadlineDaysDescription": "After the first session, the user must complete all sessions within these days.",
       "usageDeadlineDaysPlaceholder": "e.g. 30"
     },
     "list": {
@@ -1142,8 +1103,6 @@
       "description": "Create and manage bundled meeting sessions with flexible pricing for mentees.",
       "durationDescription": "Each slot equals 1 hour. Expand a session below to see its total duration.",
       "durationTitle": "Session Duration",
-      "emptyDescription": "Create your first meeting session package to offer structured, multi-session support to mentees.",
-      "emptyTitle": "No packages yet",
       "feedbackDescription": "{{totalCount}} feedback entries for this package",
       "feedbackTitle": "Feedback",
       "infoDescription": "Enter basic package information, including name, description, number of sessions, and price for users to easily understand and choose.",
@@ -1153,7 +1112,6 @@
       "title": "Meeting Packages"
     },
     "sidebar": {
-      "meetingSessionPackages": "Meeting Session Packages",
       "menu": "Menu",
       "overview": "Overview",
       "packageList": "Package List",
@@ -1221,24 +1179,19 @@
   },
   "milestone": {
     "addMilestone": {
-      "description": "Add a milestone to your project",
       "field": {
         "milestoneName": {
-          "label": "Milestone name",
           "placeholder": "Enter milestone name..."
         }
-      },
-      "title": "Milestone"
+      }
     },
     "addParentMilestone": {
-      "description": "Add a parent milestone to your project",
       "field": {
         "milestoneName": {
           "label": "Milestone name",
           "placeholder": "Enter milestone name"
         }
-      },
-      "title": "Parent milestone"
+      }
     },
     "deleteMilestone": {
       "cancelText": "Cancel",
@@ -1255,14 +1208,8 @@
         "maxLength": "Max 255 characters",
         "minLength": "Milestone name is required"
       },
-      "parentId": {
-        "invalid": "Invalid parent milestone"
-      },
       "position": {
         "invalid": "Invalid position"
-      },
-      "projectId": {
-        "invalid": "Invalid project ID"
       }
     }
   },
@@ -1366,12 +1313,8 @@
   },
   "packageBooking": {
     "bookPackage": {
-      "description": "Confirm your package and select a project to book for.",
       "discount": "Discount",
-      "durationPerSession": "Duration / session",
-      "min": "min",
       "proceed": "Book now",
-      "receipt": "TASKCOPER • RECEIPT",
       "sessions": "Sessions",
       "title": "Book package",
       "total": "TOTAL",
@@ -1449,20 +1392,10 @@
     "description": "Share your experience to help mentors improve future sessions.",
     "list": {
       "columns": {
-        "action": "Action",
         "author": "Author",
         "authorPlaceholder": "Type author name to search...",
-        "index": "No",
-        "mentor": "Mentor",
-        "packageName": "Package name",
-        "project": "Project",
-        "purchasedAt": "Purchased on",
         "rating": "Rating"
-      },
-      "description": "Leave feedback for the packages you purchased.",
-      "giveFeedback": "Give feedback",
-      "notAvailable": "N/A",
-      "title": "Packages needing feedback"
+      }
     },
     "noteLabel": "Additional note",
     "notePlaceholder": "Share more details about your experience",
@@ -1539,7 +1472,6 @@
   },
   "project": {
     "addCoverImage": "Add cover image",
-    "addLogoImage": "Add logo image",
     "addProjectRevenue": {
       "amount": {
         "label": "Amount",
@@ -1647,10 +1579,6 @@
         "description": {
           "maxLength": "Max 255 characters"
         },
-        "domainIds": {
-          "invalid": "Domain is required",
-          "minLength": "At least one domain is required"
-        },
         "endDate": {
           "invalid": "End date is required",
           "mustBeGreater": "End date must be greater than start date"
@@ -1701,19 +1629,14 @@
       "progressDescription": "Overall project progress",
       "readme": "README",
       "schoolSubject": "School subject",
-      "schoolSubjectDescription": "Subject of the school the project is related to",
       "startDate": "Start date",
       "teamContact": "Team contact",
-      "teamContactDescription": "Contact information for the team",
       "teamEmail": "Team email",
-      "teamEmailDescription": "Email address for the team",
       "teamSize": "Team size",
-      "teamSizeDescription": "Number of team members in the project currently",
       "timeline": "Timeline",
       "timelineDescription": "The planned start and end time"
     },
     "inviteMembers": {
-      "comboboxPlaceholder": "Click to invite",
       "description": "Add new members to your project to collaborate and share tasks.",
       "field": {
         "expirationDate": {
@@ -1735,7 +1658,6 @@
         "description": "Are you sure you want to revoke the invitation for {{fullName}}? They will no longer be able to accept it.",
         "title": "Revoke invitation"
       },
-      "search": "Type email to search...",
       "searchLabel": "Search users",
       "title": "New members",
       "validation": {
@@ -1743,9 +1665,6 @@
         "dateRequired": "Expiration date is required when expiration is enabled",
         "inviteMembers": {
           "minLength": "At least one member is required"
-        },
-        "projectId": {
-          "invalid": "Invalid project ID"
         },
         "users": {
           "avatar": {
@@ -1810,8 +1729,6 @@
     },
     "priviewDocument": {
       "click_to_open": "Click to open",
-      "file_type_image": "IMG",
-      "file_type_pdf": "PDF",
       "preview": "Preview",
       "unsupported": "Preview not supported"
     },
@@ -1822,8 +1739,7 @@
         "invites": "Invites",
         "members": "Members",
         "permissions": "Roles & Permissions"
-      },
-      "title": "Project settings"
+      }
     },
     "sidebar": {
       "aboutProject": "About Project",
@@ -1835,7 +1751,6 @@
       "noPendingTasks": "Yay! You have no pending tasks",
       "note": "Note",
       "performance": "Performance",
-      "quickActions": "Quick Actions",
       "revenue": "Revenue",
       "revenuePage": {
         "description": "Manage project income and expenses.",
@@ -1845,12 +1760,7 @@
       "storage": "Storage",
       "storagePage": {
         "description": "All files uploaded to tasks in this project.",
-        "download": "Download",
-        "noFiles": "No files uploaded yet.",
-        "task": "Task",
-        "title": "Project Storage",
-        "today": "Today",
-        "yesterday": "Yesterday"
+        "title": "Project Storage"
       },
       "tasks": "My Tasks"
     },
@@ -1866,10 +1776,6 @@
         },
         "description": {
           "maxLength": "Max 10000 characters"
-        },
-        "domainIds": {
-          "invalid": "Invalid domain",
-          "minLength": "At least one domain is required"
         },
         "endDate": {
           "invalid": "Invalid end date format"
@@ -1892,9 +1798,6 @@
         },
         "teamContact": {
           "maxLength": "Max 255 characters"
-        },
-        "teamEmail": {
-          "invalid": "Invalid email address"
         },
         "teamSize": {
           "maxLength": "Max 255 characters"
@@ -1939,8 +1842,7 @@
       "description": "Edit the project name and summary",
       "field": {
         "description": {
-          "label": "Description",
-          "placeholder": "Enter project description"
+          "label": "Description"
         },
         "name": {
           "label": "Project name",
@@ -1951,20 +1853,17 @@
     },
     "updateProjectMembers": {
       "column": {
-        "canEdit": "Editor",
         "member": "Member",
         "memberPlaceholder": "Search by name or email...",
         "no": "No",
         "noPhoneNumber": "No phone number",
         "noPositionTitles": "No position titles",
-        "permission": "Permission",
         "phoneNumber": "Phone Number",
         "positionTitles": "Position titles",
         "role": "Role",
         "rolePlaceholder": "Select roles"
       },
       "confirm": {
-        "cancelText": "Cancel",
         "confirmText": "Remove",
         "description": "Are you sure you want to remove {{fullName}} from the project?",
         "leaveDescription": "Are you sure you want to leave this project?",
@@ -1989,10 +1888,8 @@
       },
       "role": {
         "admin": "Admin",
-        "defaultTooltip": "Default role for new members",
         "editor": "Editor",
         "owner": "Owner",
-        "systemTooltip": "System defined role",
         "viewer": "Viewer"
       },
       "title": "Project members"
@@ -2024,11 +1921,9 @@
       },
       "field": {
         "description": {
-          "label": "Description",
           "placeholder": "Enter role description"
         },
         "name": {
-          "label": "Role name",
           "placeholder": "Enter role name"
         }
       },
@@ -2388,11 +2283,8 @@
       "title": "History"
     },
     "information": "Information",
-    "meetButton": "Meet",
-    "meetingDateFormat": "dd/MM/yyyy 'at' HH:mm",
     "meetingSession": "Session {{sequence}}",
     "noFeedback": "No feedback yet",
-    "noNoteAvailable": "No note available",
     "note": "Note:",
     "overallProgress": "Overall progress of the mentor package",
     "packageInformation": "Mentor package information",
@@ -2406,17 +2298,11 @@
     "viewPurchaseRequest": "View purchase request"
   },
   "purchaseHistory": {
-    "bookSession": "Book Session",
     "description": "Manage your purchased packages.",
     "detail": {
-      "about": "About",
-      "details": "Package Details",
-      "meetings": "Meetings",
-      "mentor": "Mentor",
       "noMeetings": "No meetings scheduled yet",
       "progress": "Progress"
     },
-    "duration": "Duration",
     "legal": {
       "privacy": {
         "intro": "We respect your privacy and are committed to protecting your personal data.",
@@ -2470,9 +2356,7 @@
       }
     },
     "meetingsCount": "{{booked}}/{{total}} sessions",
-    "price": "Price",
-    "title": "Purchased Packages",
-    "viewDetails": "View Details"
+    "title": "Purchased Packages"
   },
   "richTextEditor": {
     "attachFile": "Attach file",
@@ -2533,11 +2417,6 @@
     "placeholder": "Write something...",
     "strikethrough": "Strikethrough"
   },
-  "role": {
-    "editor": "Editor",
-    "owner": "Owner",
-    "viewer": "Viewer"
-  },
   "schedule": {
     "button": {
       "create": "Create Schedule",
@@ -2582,17 +2461,11 @@
     },
     "popover": {
       "description": "Display your active schedules on the calendar.",
-      "manageSchedules": "Manage Schedules",
-      "showOverlay": "Schedule overlay",
-      "title": "Schedules"
+      "showOverlay": "Schedule overlay"
     },
     "status": {
       "expired": "Expired",
       "upcoming": "Upcoming"
-    },
-    "tab": {
-      "calendar": "Calendar",
-      "timeline": "Timeline"
     },
     "timeline": {
       "activeFrom": "from",
@@ -2684,14 +2557,11 @@
   },
   "task": {
     "addTask": {
-      "description": "Add a task to your milestone",
       "field": {
         "name": {
-          "label": "Task name",
           "placeholder": "Enter task name..."
         }
-      },
-      "title": "Task"
+      }
     },
     "assignee": {
       "assignee": "Assignee",
@@ -2704,7 +2574,6 @@
       "attachment": "Attachment",
       "attachmentDescription": "You can also drag and drop files to upload them.",
       "attachmentDisplay": "Display text",
-      "attachmentDisplayDescription": "Provide a title or description for this link",
       "attachmentDisplayPlaceholder": "Text to display",
       "attachmentsSection": "Attachments",
       "attachmentTitle": "Attach files from your computer",
@@ -2782,26 +2651,6 @@
         "title": "Delete comment?"
       },
       "validation": {
-        "commentResources": {
-          "fileExtension": {
-            "minLength": "File extension is required"
-          },
-          "fileName": {
-            "minLength": "File name is required"
-          },
-          "fileSize": {
-            "positive": "File size must be positive"
-          },
-          "fileType": {
-            "minLength": "File type is required"
-          },
-          "fileUrl": {
-            "invalid": "Invalid file URL"
-          },
-          "storageKey": {
-            "minLength": "Storage key is required"
-          }
-        },
         "content": {
           "maxLength": "Max 10000 characters",
           "minLength": "Comment content is required"
@@ -2823,7 +2672,6 @@
       "fifteenMinutesBefore": "15 minutes before",
       "fiveMinutesBefore": "5 minutes before",
       "notSetDate": "DD/MM/YYYY",
-      "notSetTime": "H:mm",
       "oneDayBefore": "1 day before",
       "oneHourBefore": "1 hour before",
       "reminderDescription": "Reminder will be sent to all members and followers of this card.",
@@ -2834,7 +2682,6 @@
       "twoHoursBefore": "2 hours before"
     },
     "deleteTask": {
-      "cancelText": "Cancel",
       "confirmText": "Delete",
       "description": "Are you sure you want to delete {{taskName}}?",
       "title": "Delete task"
@@ -2864,7 +2711,6 @@
       "editLabel": "Edit label",
       "findLabel": "Find label...",
       "removeColor": "Remove color",
-      "updateLabel": "Update label",
       "validation": {
         "color": {
           "maxLength": "Max 255 characters"
@@ -2873,13 +2719,9 @@
           "invalid": "Invalid label ID"
         },
         "name": {
-          "maxLength": "Max 255 characters",
-          "minLength": "Label name is required"
+          "maxLength": "Max 255 characters"
         },
-        "nameOrColorRequired": "Label must have at least a name or a color",
-        "projectId": {
-          "invalid": "Invalid project ID"
-        }
+        "nameOrColorRequired": "Label must have at least a name or a color"
       }
     },
     "moveTask": {
@@ -2984,8 +2826,6 @@
       "description": "Description",
       "descriptionPlaceholder": "Search by description...",
       "method": "Gateway",
-      "paidDate": "Paid Date",
-      "reference": "Reference",
       "status": "Status",
       "targetModel": "Target Model",
       "type": "Type",
@@ -3050,7 +2890,6 @@
     },
     "profileDialog": {
       "connectedApps": "Connected Apps",
-      "connectWithCalendar": "Connect with Calendar",
       "googleCalendar": "Google Calendar",
       "googleCallback": {
         "connectedBadge": "Connected",
@@ -3125,11 +2964,6 @@
       "section": {
         "contact": "Contact Information",
         "other": "Other Information"
-      },
-      "validation": {
-        "phoneNumber": {
-          "invalid": "Invalid phone number format"
-        }
       }
     }
   },

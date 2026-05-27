@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import type { Currency } from '../transactions/types'
 
 export const PackageBookingStatus = {
@@ -11,7 +12,7 @@ export const PackageBookingStatus = {
 
 export type PackageBookingStatus = (typeof PackageBookingStatus)[keyof typeof PackageBookingStatus]
 
-export const PackageBookingStatusLabel: Record<PackageBookingStatus, string> = {
+export const PackageBookingStatusLabel: Record<PackageBookingStatus, I18nKey> = {
   [PackageBookingStatus.Pending]: 'packageBooking.status.pending',
   [PackageBookingStatus.Active]: 'packageBooking.status.active',
   [PackageBookingStatus.Completed]: 'packageBooking.status.completed',
@@ -32,7 +33,7 @@ export const PackageRequestStatus = {
 
 export type PackageRequestStatus = (typeof PackageRequestStatus)[keyof typeof PackageRequestStatus]
 
-export const PackageRequestStatusLabel: Record<PackageRequestStatus, string> = {
+export const PackageRequestStatusLabel: Record<PackageRequestStatus, I18nKey> = {
   [PackageRequestStatus.Pending]: 'packageBooking.requestStatus.pending',
   [PackageRequestStatus.Approved]: 'packageBooking.requestStatus.approved',
   [PackageRequestStatus.Rejected]: 'packageBooking.requestStatus.rejected',

@@ -142,7 +142,7 @@ export default function WeekView({ date, meetings, onMeetingClick, schedules, sh
                   const height = (endHour + endMin / 60) * HOUR_HEIGHT - top - 4
 
                   let bgClass = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-900 dark:text-emerald-400' // permanent
-                  let labelText = t('schedule.timeline.legend.permanent')
+                  let labelText: string = t('schedule.timeline.legend.permanent')
 
                   if (rule.activeFrom && rule.activeTo) {
                     bgClass = 'bg-purple-500/15 border-purple-500/30 text-purple-900 dark:text-purple-400' // range

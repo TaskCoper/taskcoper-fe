@@ -5,6 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
 import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff, X } from 'lucide-react'
@@ -12,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>
-  label: string
+  label: I18nKey
 }
 
 export function DataTableColumnHeader<TData, TValue>({

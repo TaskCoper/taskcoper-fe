@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import type { ExtendedColumnFilter, FilterOperator, FilterVariant } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import { customAlphabet } from 'nanoid'
@@ -33,7 +34,7 @@ export function getColumnPinningStyle<TData>({
 }
 
 export function getFilterOperators(filterVariant: FilterVariant) {
-  const operatorMap: Record<FilterVariant, { label: string; value: FilterOperator }[]> = {
+  const operatorMap: Record<FilterVariant, { label: I18nKey; value: FilterOperator }[]> = {
     text: dataTableConfig.textOperators,
     number: dataTableConfig.numericOperators,
     range: dataTableConfig.numericOperators,

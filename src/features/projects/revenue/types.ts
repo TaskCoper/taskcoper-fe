@@ -1,3 +1,5 @@
+import type { I18nKey } from '@/lib/i18n/types'
+
 export const RevenueType = {
   Revenue: 'Revenue',
   Expense: 'Expense'
@@ -5,7 +7,7 @@ export const RevenueType = {
 
 export type RevenueType = (typeof RevenueType)[keyof typeof RevenueType]
 
-export const RevenueTypeLabel = {
+export const RevenueTypeLabel: Record<RevenueType, I18nKey> = {
   [RevenueType.Revenue]: 'project.addProjectRevenue.type.cashIn',
   [RevenueType.Expense]: 'project.addProjectRevenue.type.cashOut'
 }

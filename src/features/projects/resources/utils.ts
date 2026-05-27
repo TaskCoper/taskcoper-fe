@@ -1,9 +1,10 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import i18next from 'i18next'
 
 export const formatBytes = (bytes: number): string => {
   if (bytes === 0) return i18next.t('common.unit.fileSize.zeroBytes')
   const k = 1024
-  const sizes = [
+  const sizes: I18nKey[] = [
     'common.unit.fileSize.bytes',
     'common.unit.fileSize.kb',
     'common.unit.fileSize.mb',

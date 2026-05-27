@@ -3,6 +3,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useDateFormat } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -18,10 +19,10 @@ interface DateConstraints {
 
 interface DatePickerFieldProps<T extends FieldValues> extends DateConstraints {
   name: Path<T>
-  label: string
+  label: I18nKey
   control?: Control<T>
   onValueChange?: (value: string | null) => void
-  placeholder?: string
+  placeholder?: I18nKey
   isRequired?: boolean
   isDisabled?: boolean
   className?: string

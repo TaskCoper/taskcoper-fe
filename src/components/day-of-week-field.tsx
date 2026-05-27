@@ -1,4 +1,5 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import type { I18nKey } from '@/lib/i18n/types'
 import { DAY_OF_WEEKS } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 interface DayOfWeekFieldProps<T extends FieldValues> {
   name: Path<T>
-  label: string
+  label: I18nKey
   control?: Control<T>
   isRequired?: boolean
   isDisabled?: boolean

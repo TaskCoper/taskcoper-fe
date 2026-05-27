@@ -46,7 +46,12 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   const [startTimeInvalid, setStartTimeInvalid] = useState(false)
   const [endTimeInvalid, setEndTimeInvalid] = useState(false)
 
-  const { watch, getValues, setValue } = useFormContext()
+  const {
+    watch,
+    getValues,
+    setValue,
+    formState: { dirtyFields }
+  } = useFormContext()
   const startDateValue = watch('startDate')
   const endDateValue = watch('endDate')
   const announceBeforeMinutes = watch('announceBeforeMinutes')
@@ -92,7 +97,8 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   const isDateRange = !!(startDate && endDate && startTime && endTime)
   const hasStartTimeChange = !!(startDate && localStartTime.trim() !== (startTime || ''))
   const hasEndTimeChange = !!(endDate && localEndTime.trim() !== (endTime || ''))
-  const canSave = hasStartTimeChange || hasEndTimeChange
+  const hasDateFieldChange = !!(dirtyFields.startDate || dirtyFields.endDate || dirtyFields.announceBeforeMinutes)
+  const canSave = hasDateFieldChange || hasStartTimeChange || hasEndTimeChange
 
   const getDateMs = (value?: string | null) => {
     if (!value) {

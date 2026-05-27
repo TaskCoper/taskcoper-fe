@@ -5,6 +5,7 @@ import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.lay
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
 import UserWorkspaceLayout from '@/layouts/user-workspace.layout'
+import type { I18nKey } from '@/lib/i18n/types'
 import { lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
@@ -54,7 +55,7 @@ const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page')
 
 const GoogleCallbackPage = lazy(() => import('@/pages/google-callback.page'))
 
-const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React.ReactNode }) => {
+const PageWrapper = ({ titleKey, children }: { titleKey: I18nKey; children: React.ReactNode }) => {
   const { t } = useTranslation()
   const title = t(titleKey)
 
@@ -65,7 +66,7 @@ const PageWrapper = ({ titleKey, children }: { titleKey: string; children: React
   return <>{children}</>
 }
 
-const ComingSoonView = ({ titleKey }: { titleKey: string }) => {
+const ComingSoonView = ({ titleKey }: { titleKey: I18nKey }) => {
   const { t } = useTranslation()
 
   return (

@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import DomainMultiSelect from '@/features/mentors/components/domain-multi-select'
 import { useGetMentorsInfinite } from '@/features/mentors/hooks/use-get-mentors-infinite'
 import type { Mentor } from '@/features/mentors/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SparkleIcon, StarIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -39,12 +40,12 @@ function StarRow({ rating }: { rating: number }) {
 type HeroVisual = 'connection' | 'mentee' | 'mentor'
 
 interface HeroSlide {
-  eyebrow: string
-  body: string
-  cta: string
+  eyebrow: I18nKey
+  body: I18nKey
+  cta: I18nKey
   visual: HeroVisual
-  titleSegments: Array<{ text: string; tone?: 'default' | 'primary' | 'success' }>
-  stats: Array<{ value: string; label: string }>
+  titleSegments: Array<{ text: I18nKey; tone?: 'default' | 'primary' | 'success' }>
+  stats: Array<{ value: I18nKey; label: I18nKey }>
 }
 
 const HERO_SLIDES: HeroSlide[] = [
@@ -128,12 +129,12 @@ const HERO_SLIDES: HeroSlide[] = [
 ]
 
 interface HeroVisualTheme {
-  badge: string
+  badge: I18nKey
   chipClassName: string
   glowClassName: string
   panelGradientClassName: string
-  spotlight: string
-  subtitle: string
+  spotlight: I18nKey
+  subtitle: I18nKey
 }
 
 const HERO_VISUAL_THEMES: Record<HeroVisual, HeroVisualTheme> = {

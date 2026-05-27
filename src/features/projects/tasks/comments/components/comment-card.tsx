@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useDateFormat } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -33,7 +34,7 @@ interface ActivityData {
   name: string
 }
 
-const taskLogContent: Record<string, string> = {
+const taskLogContent: Record<string, I18nKey> = {
   FileAddedToTaskActivity: 'activities.FileAddedToTaskActivity',
   FileAddedToTaskCommentActivity: 'activities.FileAddedToTaskCommentActivity',
   FileUpdatedInTaskActivity: 'activities.FileUpdatedInTaskActivity',
@@ -140,7 +141,7 @@ export default function CommentCard({
                 {comment.firstName} {comment.lastName}
               </span>{' '}
               <Trans
-                i18nKey={taskLogContent[activityKey]}
+                i18nKey={taskLogContent[activityKey] as 'activities.ConvertSubTaskToTaskActivity'}
                 values={{ taskName: parsedActivity?.name ?? '' }}
                 components={[
                   relatedTaskLink ? (

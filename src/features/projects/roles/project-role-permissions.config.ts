@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import {
   CalendarDaysIcon,
   GaugeIcon,
@@ -28,7 +29,7 @@ type ExtensionsBySectionAction<K extends SectionKey, A extends ActionKey> =
 
 type ParentControlledExtensionConfig = {
   id: number
-  name: string
+  name: I18nKey
   affectedByParent: true
   type?: never
   variant: ExtensionVariant
@@ -39,7 +40,7 @@ type CustomExtensionConfig<K extends SectionKey, A extends ActionKey> =
     ? never
     : {
         id: number
-        name: string
+        name: I18nKey
         affectedByParent: false
         type: ExtensionsBySectionAction<K, A>
         variant: ExtensionVariant
@@ -51,7 +52,7 @@ type ExtensionConfig<K extends SectionKey, A extends ActionKey> =
 
 type PermissionConfig<K extends SectionKey, A extends ActionKey> = {
   id: number
-  name: string
+  name: I18nKey
   extensions?: Array<ExtensionConfig<K, A>>
 }
 

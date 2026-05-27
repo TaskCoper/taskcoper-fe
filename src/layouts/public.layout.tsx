@@ -9,6 +9,7 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import {
   BellIcon,
@@ -24,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
-const navigations = [
+const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: string }[] = [
   { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
   // { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
   { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },

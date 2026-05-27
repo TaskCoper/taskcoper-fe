@@ -20,7 +20,7 @@ import i18next from 'i18next'
 import { MoreHorizontalIcon, Search, StarIcon } from 'lucide-react'
 import { Link } from 'react-router'
 
-export const getColumns = (t: TFunction, onViewDetails: (feedback: Feedback) => void): ColumnDef<Feedback>[] => {
+export const getColumns = (_t: TFunction, onViewDetails: (feedback: Feedback) => void): ColumnDef<Feedback>[] => {
   return [
     {
       id: 'select',
@@ -47,15 +47,13 @@ export const getColumns = (t: TFunction, onViewDetails: (feedback: Feedback) => 
     {
       id: 'author',
       meta: {
-        label: t('packageFeedback.list.columns.author'),
+        label: 'packageFeedback.list.columns.author',
         variant: 'text',
         icon: Search,
         placeholder: 'packageFeedback.list.columns.authorPlaceholder'
       },
       accessorFn: (row) => `${row.author.firstName} ${row.author.lastName}`,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t('packageFeedback.list.columns.author')} />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} label='packageFeedback.list.columns.author' />,
       cell: ({ row }) => {
         const { avatarUrl, firstName, lastName, slug } = row.original.author
         const fullName = `${firstName} ${lastName}`
@@ -83,7 +81,7 @@ export const getColumns = (t: TFunction, onViewDetails: (feedback: Feedback) => 
     {
       accessorKey: 'rating',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t('packageFeedback.list.columns.rating')} className='mx-auto' />
+        <DataTableColumnHeader column={column} label='packageFeedback.list.columns.rating' className='mx-auto' />
       ),
       cell: ({ row }) => (
         <div className='flex justify-center items-center gap-1.5'>
@@ -97,11 +95,7 @@ export const getColumns = (t: TFunction, onViewDetails: (feedback: Feedback) => 
       (question): ColumnDef<Feedback> => ({
         id: question.id,
         header: ({ column }) => (
-          <DataTableColumnHeader
-            column={column}
-            label={t(question.labelKey || question.titleKey)}
-            className='mx-auto'
-          />
+          <DataTableColumnHeader column={column} label={question.labelKey || question.titleKey} className='mx-auto' />
         ),
         cell: ({ row }) => {
           const meta = safeParseJson<FeedbackMetadata>(row.original.metaData)
