@@ -2,6 +2,7 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
+import type { I18nKey } from '@/lib/i18n/types'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
@@ -49,12 +50,12 @@ export default function TransactionsTable() {
     return {
       status: transactionStatusStats.value.items.map((item) => ({
         value: item.status,
-        label: t(`transactions.status.${item.status.toLowerCase()}`),
+        label: t(`transactions.status.${item.status.toLowerCase()}` as I18nKey),
         count: item.totalTransactions
       })),
       type: transactionTypeStats.value.items.map((item) => ({
         value: item.type,
-        label: t(`transactions.type.${item.type.toLowerCase()}`),
+        label: t(`transactions.type.${item.type.toLowerCase()}` as I18nKey),
         count: item.totalTransactions
       }))
     }

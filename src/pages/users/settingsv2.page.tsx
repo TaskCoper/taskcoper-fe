@@ -4,6 +4,7 @@ import ConnectedAppsSection from '@/features/users/components/connected-apps-sec
 import LocationSection from '@/features/users/components/location-section'
 import PasswordSection from '@/features/users/components/password-section'
 import ProfileSection from '@/features/users/components/profile-section'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { GlobeIcon, InfoIcon, LockKeyholeIcon, PuzzleIcon, SearchIcon, type LucideIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
@@ -14,8 +15,8 @@ type Section = 'profile' | 'password' | 'apps' | 'location'
 const sections: Section[] = ['profile', 'password', 'apps', 'location']
 
 type SectionMeta = {
-  titleKey: string
-  descriptionKey: string
+  titleKey: I18nKey
+  descriptionKey: I18nKey
 }
 
 const accountCenterMeta: SectionMeta = {
@@ -30,7 +31,7 @@ const otherSettingsMeta: SectionMeta = {
 
 type SectionItemConfig = {
   key: Section
-  nameKey: string
+  nameKey: I18nKey
   icon: LucideIcon
   content: React.ReactNode
 }

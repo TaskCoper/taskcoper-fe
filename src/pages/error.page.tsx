@@ -47,8 +47,8 @@ export default function ErrorPage() {
     window.location.reload()
   }, [chunkError, error])
 
-  let title = t('error.maintenance')
-  let message = t('error.maintenanceDescription')
+  let title: string = t('error.maintenance')
+  let message: string = t('error.maintenanceDescription')
   let statusCode: string | number = t('error.oops')
 
   if (isRouteErrorResponse(error)) {

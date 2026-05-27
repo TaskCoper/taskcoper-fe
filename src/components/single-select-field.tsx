@@ -11,6 +11,7 @@ import {
 import { Field, FieldError as FieldErrorComponent, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useMediaQuery } from '@/hooks/use-media-query'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
@@ -25,12 +26,12 @@ interface Option {
 
 interface SingleSelectFieldProps<T extends FieldValues> {
   name: Path<T>
-  label: string
+  label?: I18nKey
   options: Option[]
   control?: Control<T>
-  placeholder?: string
-  searchPlaceholder?: string
-  emptyMessage?: string
+  placeholder?: I18nKey
+  searchPlaceholder?: I18nKey
+  emptyMessage?: I18nKey
   disabled?: boolean
   className?: string
   modal?: boolean
@@ -149,7 +150,7 @@ export default function SingleSelectField<T extends FieldValues>({
             <DrawerContent>
               <div className='mt-4 border-t'>
                 <DrawerHeader className='sr-only'>
-                  <DrawerTitle>{t(label)}</DrawerTitle>
+                  <DrawerTitle>{label ? t(label) : ''}</DrawerTitle>
                   <DrawerDescription>{t(placeholder)}</DrawerDescription>
                 </DrawerHeader>
                 <SingleOptionList

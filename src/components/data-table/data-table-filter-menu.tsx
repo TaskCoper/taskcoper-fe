@@ -12,6 +12,7 @@ import { formatDate } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
+import type { TFunction } from 'i18next'
 import { BadgeCheck, CalendarIcon, Check, ListFilter, Text, X } from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import * as React from 'react'
@@ -516,7 +517,7 @@ function onFilterInputRender<TData>({
   onFilterUpdate: (filterId: string, updates: Partial<Omit<ExtendedColumnFilter<TData>, 'filterId'>>) => void
   showValueSelector: boolean
   setShowValueSelector: (value: boolean) => void
-  t: (key: string, options?: Record<string, unknown>) => string
+  t: TFunction<'translation'>
 }) {
   if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') {
     return (

@@ -1,4 +1,13 @@
-export const packageFeedbackQuestions = [
+import type { I18nKey } from '@/lib/i18n/types'
+
+type FeedbackQuestion = {
+  id: 'punctuality' | 'preparation' | 'quality' | 'communication' | 'actionability'
+  titleKey: I18nKey
+  labelKey: I18nKey
+  options: { value: string; labelKey: I18nKey }[]
+}
+
+export const packageFeedbackQuestions: FeedbackQuestion[] = [
   {
     id: 'punctuality' as const,
     titleKey: 'packageFeedback.questions.punctuality.title',

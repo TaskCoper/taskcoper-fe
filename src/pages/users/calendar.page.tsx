@@ -13,6 +13,7 @@ import { MeetingStatus, type MeetingBooking } from '@/features/meetings/types'
 import { getStatusCheckboxClassName } from '@/features/meetings/utils'
 import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
@@ -202,7 +203,7 @@ export default function CalendarPage() {
               />
 
               <FieldLabel className='cursor-pointer font-normal' htmlFor={`status-${status}`}>
-                {t(`meeting.status.${status.toLowerCase()}`)}
+                {t(`meeting.status.${status.toLowerCase()}` as I18nKey)}
               </FieldLabel>
             </div>
           ))}

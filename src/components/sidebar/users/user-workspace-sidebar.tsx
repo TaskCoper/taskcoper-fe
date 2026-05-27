@@ -2,6 +2,7 @@ import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
 import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { Role } from '@/features/users/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,
@@ -18,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { NavMain } from './nav-main'
 
 type NavItem = {
-  titleKey: string
+  titleKey: I18nKey
   url: string
   icon: LucideIcon
   activePatterns?: string[]
@@ -30,14 +31,14 @@ type NavItemConfig = NavItem & {
 }
 
 type NavMainSubItemConfig = {
-  titleKey: string
+  titleKey: I18nKey
   url: string
   activePatterns?: string[]
   activeExcludePatterns?: string[]
 }
 
 type NavMainItemConfig = {
-  titleKey: string
+  titleKey: I18nKey
   url: string
   icon: LucideIcon
   items: NavMainSubItemConfig[]

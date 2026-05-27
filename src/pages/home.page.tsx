@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
+import type { I18nKey } from '@/lib/i18n/types'
 import {
   ArrowRight,
   CalendarCheck,
@@ -61,7 +62,7 @@ const customStyles = `
   }
 `
 
-const stats = [
+const stats: { value: string; label: I18nKey }[] = [
   { value: '10K+', label: 'home.stats.projects' },
   { value: '50K+', label: 'home.stats.tasksDone' },
   { value: '99.9%', label: 'home.stats.uptime' },

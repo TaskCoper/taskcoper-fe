@@ -1,6 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
+import type { I18nKey } from '@/lib/i18n/types'
 import type { UseFormSetValue } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ACTIONS, SECTION_ICONS, SECTION_PERMISSION_CONFIG_MAP } from '../project-role-permissions.config'
@@ -14,7 +15,7 @@ const UPDATE_FIELD_OPTIONS = {
 } as const
 
 type ParentLinkedExtension = {
-  name: string
+  name: I18nKey
   affectedByParent: boolean
   type?: string
   variant: 'switch' | 'checkbox'

@@ -43,7 +43,9 @@ export function DataTableViewOptions<TData>({ table, disabled, ...props }: DataT
             <CommandGroup>
               {columns.map((column) => (
                 <CommandItem key={column.id} onSelect={() => column.toggleVisibility(!column.getIsVisible())}>
-                  <span className='truncate'>{t(column.columnDef.meta?.label ?? column.id)}</span>
+                  <span className='truncate'>
+                    {column.columnDef.meta?.label ? t(column.columnDef.meta.label) : column.id}
+                  </span>
                   <Check
                     className={cn('ml-auto size-4 shrink-0', column.getIsVisible() ? 'opacity-100' : 'opacity-0')}
                   />

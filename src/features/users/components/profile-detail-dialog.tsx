@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
   SidebarProvider
 } from '@/components/ui/sidebar'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { CircleUserRoundIcon, LockKeyholeIcon, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -24,7 +25,7 @@ interface ProfileDetailDialogProps {
 
 interface NavItem {
   id: number
-  nameKey: string
+  nameKey: I18nKey
   icon: LucideIcon
   content: React.ReactNode
 }

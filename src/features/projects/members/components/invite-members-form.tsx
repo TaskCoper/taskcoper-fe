@@ -50,7 +50,6 @@ export default function InviteMembersForm({ fields, remove, roles = [] }: Invite
                   <Field data-invalid={fieldState.invalid} className='w-fit min-w-50'>
                     <MultiSelectField
                       name={field.name}
-                      label=''
                       options={roles.map((role) => ({
                         label: role.name,
                         value: role.id,

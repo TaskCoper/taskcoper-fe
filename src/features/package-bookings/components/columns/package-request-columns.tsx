@@ -83,7 +83,7 @@ export const getColumns = (
         label: 'mentorPackage.form.name',
         variant: 'text',
         icon: SearchIcon,
-        placeholder: i18next.t('mentorPackage.form.searchByName')
+        placeholder: 'mentorPackage.form.searchByName'
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label='mentorPackage.form.name' />,
       cell: ({ row }) => (

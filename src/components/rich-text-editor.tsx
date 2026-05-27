@@ -19,6 +19,7 @@ import type { ProjectMember } from '@/features/projects/core/types'
 import projectMemberService from '@/features/projects/members/services'
 import type { MentionUser } from '@/features/users/types'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
+import type { I18nKey } from '@/lib/i18n/types'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
@@ -55,7 +56,7 @@ interface RichTextEditorProps {
   isInitialFocus?: boolean
   compact?: boolean
   content: string
-  placeholder?: string
+  placeholder?: I18nKey
   onChange: (html: string) => void
   onMentionIdsChange?: (mentionIds: string[]) => void
   invalid?: boolean
@@ -101,7 +102,7 @@ export default function RichTextEditor({
   const { t, i18n } = useTranslation()
   const { uploadFileWithToast } = useUploadFileWithToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const placeholderText = t(placeholder)
+  const placeholderText: string = t(placeholder)
 
   const finalContent = useMemo(() => {
     if (!mentionedUsers.length || !content) return content

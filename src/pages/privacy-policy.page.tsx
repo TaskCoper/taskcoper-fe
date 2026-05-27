@@ -1,5 +1,6 @@
 import PageWrapper from '@/components/page-wrapper'
 import { Separator } from '@/components/ui/separator'
+import type { I18nKey } from '@/lib/i18n/types'
 import { Database, Eye, Lock, Shield } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -50,12 +51,12 @@ export default function PrivacyPolicyPage() {
                       <Icon className='size-5' />
                     </div>
                     <h2 className='text-lg font-semibold text-slate-800'>
-                      {t(`purchaseHistory.legal.privacy.sections.${key}.title`)}
+                      {t(`purchaseHistory.legal.privacy.sections.${key}.title` as I18nKey)}
                     </h2>
                   </div>
                   <div className='pl-12'>
                     <p className='text-sm sm:text-base text-slate-600 leading-relaxed'>
-                      {t(`purchaseHistory.legal.privacy.sections.${key}.content`)}
+                      {t(`purchaseHistory.legal.privacy.sections.${key}.content` as I18nKey)}
                     </p>
                   </div>
                 </section>

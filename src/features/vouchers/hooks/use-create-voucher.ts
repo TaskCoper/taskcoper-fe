@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import { queryKeys } from '@/lib/query-keys'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -39,7 +40,7 @@ export const useCreateVoucher = () => {
   } = useMutation({
     mutationFn: voucherService.createVoucher,
     onSuccess: (message) => {
-      toast.success(t(message))
+      toast.success(t(message as I18nKey))
       methods.reset()
       setOpen(false)
     },

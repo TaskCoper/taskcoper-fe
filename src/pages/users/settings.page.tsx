@@ -11,6 +11,7 @@ import {
 import ConnectedAppsSection from '@/features/users/components/connected-apps-section'
 import PasswordSection from '@/features/users/components/password-section'
 import ProfileSection from '@/features/users/components/profile-section'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { CircleUserRoundIcon, LockKeyholeIcon, PuzzleIcon, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -18,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 
 interface NavItem {
   id: number
-  nameKey: string
+  nameKey: I18nKey
   icon: LucideIcon
   content: React.ReactNode
 }

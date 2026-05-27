@@ -1,3 +1,4 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import type {
   CalendarSectionExtensionsFormValues,
   StorageSectionExtensionsFormValues,
@@ -18,7 +19,7 @@ export const SectionKey = {
 
 export type SectionKey = (typeof SectionKey)[keyof typeof SectionKey]
 
-export const SectionKeyLabel: Record<SectionKey, string> = {
+export const SectionKeyLabel: Record<SectionKey, I18nKey> = {
   [SectionKey.OVERVIEW]: 'project.sidebar.aboutProject',
   [SectionKey.TASKS]: 'project.sidebar.tasks',
   [SectionKey.PERFORMANCE]: 'project.sidebar.performance',
@@ -41,7 +42,7 @@ export const ActionKey = {
 
 export type ActionKey = (typeof ActionKey)[keyof typeof ActionKey]
 
-export const ActionKeyLabel: Record<ActionKey, string> = {
+export const ActionKeyLabel: Record<ActionKey, I18nKey> = {
   [ActionKey.canRead]: 'project.permissions.action.canRead',
   [ActionKey.canWrite]: 'project.permissions.action.canWrite',
   [ActionKey.canUpdate]: 'project.permissions.action.canUpdate',
@@ -59,7 +60,7 @@ export const ProjectRoleName = {
 
 export type ProjectRoleName = (typeof ProjectRoleName)[keyof typeof ProjectRoleName]
 
-export const ProjectRoleNameLabel: Record<ProjectRoleName, string> = {
+export const ProjectRoleNameLabel: Record<ProjectRoleName, I18nKey> = {
   [ProjectRoleName.Owner]: 'project.updateProjectMembers.role.owner',
   [ProjectRoleName.Admin]: 'project.updateProjectMembers.role.admin',
   [ProjectRoleName.Editor]: 'project.updateProjectMembers.role.editor',
