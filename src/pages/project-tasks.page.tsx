@@ -37,7 +37,7 @@ export default function ProjectTasksPage() {
     <>
       <div className='w-full h-full relative'>
         {mode === 'board' && milestoneIdentifier && project?.id ? (
-          <div className='w-full h-full bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
+          <div className='w-full h-full pb-14 bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
             {isLoadingMilestones ? (
               <div className='flex items-start gap-3 p-4'>
                 <Skeleton className='w-64 shrink-0 h-48' />
