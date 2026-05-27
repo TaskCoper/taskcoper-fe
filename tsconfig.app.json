@@ -28,5 +28,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", ".i18n-types/**/*.d.ts"]
+  "include": ["src"]
 }
