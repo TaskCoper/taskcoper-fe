@@ -30,11 +30,7 @@ export const getColumns = ({
     {
       id: 'no',
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={i18next.t('project.updateProjectMembers.column.no')}
-          className='mx-auto'
-        />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.no' className='mx-auto' />
       ),
       cell: ({ row }) => <p className='text-center'>{row.index + 1}</p>,
       enableSorting: false,
@@ -45,13 +41,13 @@ export const getColumns = ({
       id: 'searchTerm',
       accessorFn: (row) => `${row.fullName} ${row.email}`,
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.member'),
-        placeholder: i18next.t('project.updateProjectMembers.column.memberPlaceholder'),
+        label: 'project.updateProjectMembers.column.member',
+        placeholder: 'project.updateProjectMembers.column.memberPlaceholder',
         variant: 'text',
         icon: SearchIcon
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={i18next.t('project.updateProjectMembers.column.member')} />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.member' />
       ),
       cell: ({ row }) => {
         const { fullName, avatar, email } = row.original
@@ -77,14 +73,10 @@ export const getColumns = ({
       id: 'roles',
       accessorFn: (row) => row.roles.map((role) => role.name).join(', '),
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.role')
+        label: 'project.updateProjectMembers.column.role'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={i18next.t('project.updateProjectMembers.column.role')}
-          className='mx-auto'
-        />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.role' className='mx-auto' />
       ),
       cell: ({ row }) => {
         if (row.original.roles.length === 0) {

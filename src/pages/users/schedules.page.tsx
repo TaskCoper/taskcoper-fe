@@ -10,6 +10,7 @@ import { useDeleteSchedule } from '@/features/schedules/hooks/use-delete-schedul
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import type { MeetingRule } from '@/features/schedules/types'
 import { formatDate } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
 import { isAfter, isBefore, parseISO } from 'date-fns'
@@ -19,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 
 const DISPLAY_ORDER = [1, 2, 3, 4, 5, 6, 0] as const
 
-const DAY_I18N_KEY: Record<number, string> = {
+const DAY_I18N_KEY: Record<number, I18nKey> = {
   0: 'schedule.timeline.sunday',
   1: 'schedule.timeline.monday',
   2: 'schedule.timeline.tuesday',

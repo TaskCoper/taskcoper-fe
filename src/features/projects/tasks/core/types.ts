@@ -40,6 +40,7 @@ export type TaskPriorityLabel = (typeof TaskPriorityLabel)[keyof typeof TaskPrio
 export interface TaskRow {
   id: string
   name: string
+  slug: string
   position: number
   estimatedPoints: number | null
   backgroundImage: string | null

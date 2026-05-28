@@ -1,4 +1,5 @@
 import type { SectionPermission } from '@/features/projects/roles/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import type { PurchasedMentorPackageRule } from '../mentor-packages/types'
 
 export const MeetingStatus = {
@@ -12,7 +13,7 @@ export const MeetingStatus = {
 
 export type MeetingStatus = (typeof MeetingStatus)[keyof typeof MeetingStatus]
 
-export const MeetingStatusLabel = {
+export const MeetingStatusLabel: Record<MeetingStatus, I18nKey> = {
   // [MeetingStatus.FREE]: 'meeting.status.free',
   [MeetingStatus.BOOKED]: 'meeting.status.booked',
   [MeetingStatus.COMPLETED]: 'meeting.status.completed',

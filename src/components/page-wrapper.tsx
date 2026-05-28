@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { I18nKey } from '@/lib/i18n/types'
+
 interface PageWrapperProps {
-  titleKey: string
+  titleKey: I18nKey
   children: React.ReactNode
 }
 

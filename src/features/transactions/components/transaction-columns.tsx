@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { formatDateTime } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn, formatCurrency } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
@@ -113,7 +114,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
               className={cn('flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium', config.className)}
             >
               <Icon className='size-3.5' />
-              {i18next.t(`transactions.status.${status.toLowerCase()}`)}
+              {i18next.t(`transactions.status.${status.toLowerCase()}` as I18nKey)}
             </Badge>
           </div>
         )
@@ -137,7 +138,9 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
         return (
           <div className='flex items-center gap-2'>
             <Icon className='size-4 text-muted-foreground/80' />
-            <span className='text-sm font-medium'>{i18next.t(`transactions.type.${type.toLowerCase()}`)}</span>
+            <span className='text-sm font-medium'>
+              {i18next.t(`transactions.type.${type.toLowerCase()}` as I18nKey)}
+            </span>
           </div>
         )
       },
@@ -160,7 +163,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
         return (
           <div className='flex items-center gap-2'>
             <Icon className='size-4 text-muted-foreground/80' />
-            <span className='text-sm font-medium'>{i18next.t(`transactions.targetModel.${targetKey}`)}</span>
+            <span className='text-sm font-medium'>{i18next.t(`transactions.targetModel.${targetKey}` as I18nKey)}</span>
           </div>
         )
       },

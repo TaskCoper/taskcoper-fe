@@ -2,6 +2,7 @@
 import AdminDefaultLayout from '@/layouts/admin-default.layout'
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
+import type { I18nKey } from '@/lib/i18n/types'
 import { lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RouteObject } from 'react-router'
@@ -12,7 +13,7 @@ const SystemMentorApplicationsPage = lazy(() => import('@/pages/super-admins/sys
 const CommissionsPage = lazy(() => import('@/pages/super-admins/commissions.page'))
 const DashboardPage = lazy(() => import('@/pages/super-admins/dashboard.page'))
 
-function AdminRoutePlaceholder({ titleKey }: { titleKey: string }) {
+function AdminRoutePlaceholder({ titleKey }: { titleKey: I18nKey }) {
   const { t } = useTranslation()
   return <div>{t(titleKey)}</div>
 }

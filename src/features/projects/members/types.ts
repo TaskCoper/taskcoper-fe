@@ -1,4 +1,5 @@
 import type { Role } from '@/features/users/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import type { ProjectDomain, ProjectMember } from '../core/types'
 
 export const MemberStatus = {
@@ -8,7 +9,7 @@ export const MemberStatus = {
 
 export type MemberStatus = (typeof MemberStatus)[keyof typeof MemberStatus]
 
-export const MemberStatusLabel: Record<MemberStatus, string> = {
+export const MemberStatusLabel: Record<MemberStatus, I18nKey> = {
   [MemberStatus.Free]: 'project.memberStatus.free',
   [MemberStatus.Busy]: 'project.memberStatus.busy'
 }
@@ -23,7 +24,7 @@ export const ProjectMemberRequestStatus = {
 
 export type ProjectMemberRequestStatus = (typeof ProjectMemberRequestStatus)[keyof typeof ProjectMemberRequestStatus]
 
-export const ProjectMemberRequestStatusLabel: Record<ProjectMemberRequestStatus, string> = {
+export const ProjectMemberRequestStatusLabel: Record<ProjectMemberRequestStatus, I18nKey> = {
   [ProjectMemberRequestStatus.Request]: 'project.memberRequestStatus.request',
   [ProjectMemberRequestStatus.Approved]: 'project.memberRequestStatus.approved',
   [ProjectMemberRequestStatus.Rejected]: 'project.memberRequestStatus.rejected'

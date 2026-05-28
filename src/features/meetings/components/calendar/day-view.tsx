@@ -120,7 +120,7 @@ export default function DayView({ date, meetings, onMeetingClick, schedules, sho
               const height = (endHour + endMin / 60) * HOUR_HEIGHT - top
 
               let bgClass = 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' // permanent
-              let labelText = t('schedule.timeline.legend.permanent')
+              let labelText: string = t('schedule.timeline.legend.permanent')
 
               if (rule.activeFrom && rule.activeTo) {
                 bgClass = 'bg-purple-500/10 border-purple-500/30 text-purple-700 dark:text-purple-400' // range

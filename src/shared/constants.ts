@@ -1,4 +1,5 @@
 import { ApplicationStatus } from '@/features/mentor-applications/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import { AlertCircleIcon, BriefcaseIcon, CheckCircle2Icon, ClockIcon, EyeIcon } from 'lucide-react'
 
 export const DEFAULT_PAGE_INDEX = 1
@@ -42,7 +43,7 @@ export const DAY_OF_WEEKS = [
 
 export const STATUS_CONFIG: Record<
   ApplicationStatus,
-  { labelKey: string; icon: React.ElementType; className: string }
+  { labelKey: I18nKey; icon: React.ElementType; className: string }
 > = {
   [ApplicationStatus.PENDING]: {
     labelKey: 'mentorApplication.status.pending',

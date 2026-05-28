@@ -38,7 +38,7 @@ export function DataTableSortList<TData>({ table, disabled, ...props }: DataTabl
     for (const column of table.getAllColumns()) {
       if (!column.getCanSort()) continue
 
-      const label = column.columnDef.meta?.label ?? column.id
+      const label = column.columnDef.meta?.label ? t(column.columnDef.meta.label) : column.id
       labels.set(column.id, label)
 
       if (!sortingIds.has(column.id)) {
@@ -50,7 +50,7 @@ export function DataTableSortList<TData>({ table, disabled, ...props }: DataTabl
       columnLabels: labels,
       columns: availableColumns
     }
-  }, [sorting, table])
+  }, [sorting, table, t])
 
   const onSortAdd = React.useCallback(() => {
     const firstColumn = columns[0]

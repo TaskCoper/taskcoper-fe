@@ -13,6 +13,7 @@ import PurchaseRequestDialog from '@/features/mentor-packages/components/purchas
 import { useGetPurchasedMentorPackage } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-package'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { useDateFormat } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback, getFirstParagraphTextFromHtml } from '@/shared/utils'
 import {
   BoxIcon,
@@ -443,7 +444,7 @@ export default function PurchasedPackagePage() {
                         </TooltipTrigger>
                         <TooltipContent side='top' className='text-xs'>
                           {t('purchasedPackage.statusTooltip', {
-                            status: t(`meeting.status.${meeting.status.toLowerCase()}`)
+                            status: t(`meeting.status.${meeting.status.toLowerCase()}` as I18nKey)
                           })}
                         </TooltipContent>
                       </Tooltip>

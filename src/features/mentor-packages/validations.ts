@@ -1,8 +1,9 @@
+import type { I18nKey } from '@/lib/i18n/types'
 import { getPlainTextFromHtml } from '@/shared/utils'
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
-export const positiveNumberString = (t: TFunction, errorKey: string) =>
+export const positiveNumberString = (t: TFunction, errorKey: I18nKey) =>
   z.string().superRefine((val, ctx) => {
     if (val === '') return
 

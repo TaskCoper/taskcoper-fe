@@ -1,5 +1,6 @@
 import { useGetMySchedules } from '@/features/schedules/hooks/use-get-my-schedules'
 import { useDateFormat } from '@/lib/date'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import {
   addDays,
@@ -170,7 +171,7 @@ export default function CalendarViewContainer({
                   return (
                     <div key={status} className='flex items-center gap-1.5'>
                       <p className={cn('size-2 rounded-full', theme.dot)} />
-                      <p className='text-[13px]'>{t(`meeting.status.${status.toLowerCase()}`)}</p>
+                      <p className='text-[13px]'>{t(`meeting.status.${status.toLowerCase()}` as I18nKey)}</p>
                     </div>
                   )
                 })}

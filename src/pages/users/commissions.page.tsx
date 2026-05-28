@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetPublicCommissions } from '@/features/commissions/hooks/use-get-public-commissions'
 import type { Commission } from '@/features/commissions/types'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn, formatCurrency } from '@/shared/utils'
 import { CircleCheckBigIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -17,9 +18,11 @@ export default function CommissionsPage() {
     const validRanks = ['Bronze', 'Silver', 'Gold', 'Platinum']
     const rankKey = validRanks.includes(titleLevel) ? titleLevel : 'default'
     return {
-      description: t(`commissionPage.ranks.${rankKey}.description`),
+      description: t(`commissionPage.ranks.${rankKey}.description` as I18nKey) as string,
       subprice: t('commissionPage.revenueShare'),
-      cta: t(`commissionPage.ranks.${rankKey}.cta`, { rank: titleLevel }),
+      cta: t(`commissionPage.ranks.${rankKey}.cta` as 'commissionPage.ranks.Silver.cta', {
+        rank: titleLevel
+      }) as string,
       featuresTitle: t('commissionPage.featuresTitle')
     }
   }

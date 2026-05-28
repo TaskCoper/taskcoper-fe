@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { DataTableConfig } from '@/lib/data-table/data-table'
 import type { FilterItemSchema } from '@/lib/data-table/parsers'
+import type { I18nKey } from '@/lib/i18n/types'
 import type { ColumnSort, Row, RowData } from '@tanstack/react-table'
 
 declare module '@tanstack/react-table' {
@@ -11,8 +12,8 @@ declare module '@tanstack/react-table' {
 
   // biome-ignore lint/correctness/noUnusedVariables: TData and TValue are used in the ColumnMeta interface
   interface ColumnMeta<TData extends RowData, TValue> {
-    label?: string
-    placeholder?: string
+    label?: I18nKey
+    placeholder?: I18nKey
     variant?: FilterVariant
     options?: Option[]
     range?: [number, number]

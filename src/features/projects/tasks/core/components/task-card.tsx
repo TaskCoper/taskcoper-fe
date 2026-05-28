@@ -175,14 +175,14 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
           {isDisplayIcons ? (
             <div
               className={cn(
-                'flex flex-wrap items-center gap-x-4 gap-y-2 mt-1',
+                'flex flex-wrap items-center gap-x-4 gap-y-2.5 mt-1',
                 task.progressPercentage > 0 ? 'mb-1' : ''
               )}
             >
               {isWatchingTask ? <EyeIcon className='size-3.5' /> : null}
               {task.hasDescription ? <TypeIcon className='size-3' /> : null}
               {task.startDate || task.endDate ? (
-                <TaskDateChip startDate={task.startDate} endDate={task.endDate} />
+                <TaskDateChip isCompleted={task.isCompleted} startDate={task.startDate} endDate={task.endDate} />
               ) : null}
               {task.estimatedPoints && task.estimatedPoints > 0 ? (
                 <TaskStoryPointsChip storyPoints={task.estimatedPoints} />
@@ -229,18 +229,27 @@ const TaskStoryPointsChip = ({ storyPoints }: { storyPoints: number }) => {
   )
 }
 
-const TaskDateChip = ({ startDate, endDate }: { startDate: string | null; endDate: string | null }) => {
+const TaskDateChip = ({
+  startDate,
+  endDate,
+  isCompleted
+}: {
+  startDate: string | null
+  endDate: string | null
+  isCompleted: boolean
+}) => {
   const { formatDate } = useDateFormat()
   const [currentTime] = useState(() => Date.now())
-  const isExpired = !!(
-    endDate &&
-    !Number.isNaN(new Date(endDate).getTime()) &&
-    new Date(endDate).getTime() < currentTime
-  )
+  const isExpired =
+    !!(endDate && !Number.isNaN(new Date(endDate).getTime()) && new Date(endDate).getTime() < currentTime) &&
+    !isCompleted
 
   return (
     <div
-      className={cn('flex items-center gap-1.5 rounded-sm', isExpired ? 'bg-rose-100 text-rose-700 px-1 py-0.5' : '')}
+      className={cn(
+        'flex items-center gap-1 rounded-sm',
+        isExpired ? 'bg-rose-100 text-rose-700 px-1 py-0.5' : 'text-muted-foreground'
+      )}
     >
       <ClockIcon className='size-3' />
       <div className='flex items-center gap-1'>

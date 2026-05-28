@@ -1,5 +1,6 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import { ClockIcon } from 'lucide-react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
@@ -7,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 interface TimeInputFieldProps<T extends FieldValues> {
   name: Path<T>
-  label: string
+  label: I18nKey
   control?: Control<T>
   placeholder?: string
   isRequired?: boolean

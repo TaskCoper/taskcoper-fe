@@ -44,7 +44,7 @@ export const getColumns = ({
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          label={i18next.t('project.updateProjectMembers.column.no')}
+          label='project.updateProjectMembers.column.no'
           className='flex mx-auto'
         />
       ),
@@ -59,13 +59,13 @@ export const getColumns = ({
       id: 'member',
       accessorKey: 'email',
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.member'),
-        placeholder: i18next.t('project.updateProjectMembers.column.memberPlaceholder'),
+        label: 'project.updateProjectMembers.column.member',
+        placeholder: 'project.updateProjectMembers.column.memberPlaceholder',
         variant: 'text',
         icon: SearchIcon
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={i18next.t('project.updateProjectMembers.column.member')} />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.member' />
       ),
       cell: ({ row }) => {
         const { userId, fullName, avatar, slug } = row.original
@@ -100,12 +100,12 @@ export const getColumns = ({
       id: 'phoneNumber',
       accessorKey: 'phoneNumber',
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.phoneNumber')
+        label: 'project.updateProjectMembers.column.phoneNumber'
       },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          label={i18next.t('project.updateProjectMembers.column.phoneNumber')}
+          label='project.updateProjectMembers.column.phoneNumber'
           className='mx-auto'
         />
       ),
@@ -128,14 +128,11 @@ export const getColumns = ({
       id: 'positionTitles',
       accessorKey: 'positionTitles',
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.positionTitles'),
+        label: 'project.updateProjectMembers.column.positionTitles',
         variant: 'multiSelect'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={i18next.t('project.updateProjectMembers.column.positionTitles')}
-        />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.positionTitles' />
       ),
       cell: ({ row }) => {
         const { userId, positionTitles } = row.original
@@ -159,11 +156,11 @@ export const getColumns = ({
       id: 'roles',
       accessorKey: 'roles',
       meta: {
-        label: i18next.t('project.updateProjectMembers.column.role'),
+        label: 'project.updateProjectMembers.column.role',
         variant: 'multiSelect'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={i18next.t('project.updateProjectMembers.column.role')} />
+        <DataTableColumnHeader column={column} label='project.updateProjectMembers.column.role' />
       ),
       cell: ({ row }) => {
         const { userId, roles: memberRoles } = row.original
@@ -173,7 +170,6 @@ export const getColumns = ({
           <div className='max-w-full'>
             <MultiSelectField
               name={`role-${userId}`}
-              label=''
               className='w-fit min-w-40'
               options={roles.map((role) => ({
                 label: role.name,

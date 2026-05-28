@@ -227,7 +227,7 @@ export default function ProjectDetailLayout() {
               {isLoadingParentMilestones ? (
                 <Skeleton className='w-52 h-8' />
               ) : (
-                <div className='flex-1 max-w-4/6 overflow-x-auto'>
+                <div className='flex-1 max-w-4/6 overflow-x-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-black/20'>
                   <div className='flex items-center gap-2'>
                     <DndContext
                       collisionDetection={customCollisionDetection}

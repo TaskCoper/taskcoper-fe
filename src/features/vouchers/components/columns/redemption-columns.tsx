@@ -1,7 +1,6 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { type Currency } from '@/features/transactions/types'
 import { formatDateTime } from '@/lib/date'
 import { formatCurrency, getAvatarFallback } from '@/shared/utils'
@@ -58,27 +57,13 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
       meta: { label: 'voucher.redemption.column.appliedTo', variant: 'text', icon: SearchIcon },
       header: ({ column }) => <DataTableColumnHeader column={column} label='voucher.redemption.column.appliedTo' />,
       cell: ({ row }) => {
-        const { appliedToId, appliedToName, appliedToDescription } = row.original
+        const { appliedToId, appliedToName } = row.original
 
         return (
           <div className='flex flex-col'>
             <Link to={`/packages/${appliedToId}`} className='font-medium hover:underline line-clamp-1'>
               {appliedToName}
             </Link>
-            {appliedToDescription && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <p className='text-[10px] text-muted-foreground line-clamp-1 cursor-default'>
-                      {appliedToDescription}
-                    </p>
-                  </TooltipTrigger>
-                  <TooltipContent side='bottom' className='max-w-xs'>
-                    {appliedToDescription}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
           </div>
         )
       },

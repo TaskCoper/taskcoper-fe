@@ -48,9 +48,9 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
 
   const {
     watch,
+    getValues,
     setValue,
-    reset,
-    formState: { isDirty }
+    formState: { dirtyFields }
   } = useFormContext()
   const startDateValue = watch('startDate')
   const endDateValue = watch('endDate')
@@ -95,27 +95,58 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
   }, [startDateValue, endDateValue])
 
   const isDateRange = !!(startDate && endDate && startTime && endTime)
-  const hasStartTimeChange = !!(startDate && localStartTime && localStartTime !== startTime)
-  const hasEndTimeChange = !!(endDate && localEndTime && localEndTime !== endTime)
-  const canSave = isDirty || hasStartTimeChange || hasEndTimeChange
+  const hasStartTimeChange = !!(startDate && localStartTime.trim() !== (startTime || ''))
+  const hasEndTimeChange = !!(endDate && localEndTime.trim() !== (endTime || ''))
+  const hasDateFieldChange = !!(dirtyFields.startDate || dirtyFields.endDate || dirtyFields.announceBeforeMinutes)
+  const canSave = hasDateFieldChange || hasStartTimeChange || hasEndTimeChange
+
+  const getDateMs = (value?: string | null) => {
+    if (!value) {
+      return null
+    }
+
+    const ms = new Date(value).getTime()
+    return Number.isNaN(ms) ? null : ms
+  }
 
   const handleUpdateDates = (updates: DateUpdates) => {
-    if ('startDate' in updates) {
-      setValue('startDate', updates.startDate, {
+    const normalizedUpdates: DateUpdates = { ...updates }
+    const currentStartDate = (getValues('startDate') as string | null) || null
+    const currentEndDate = (getValues('endDate') as string | null) || null
+    const nextStartDate = ('startDate' in normalizedUpdates ? normalizedUpdates.startDate : currentStartDate) || null
+    const nextEndDate = ('endDate' in normalizedUpdates ? normalizedUpdates.endDate : currentEndDate) || null
+
+    if (nextStartDate && nextEndDate) {
+      const startMs = getDateMs(nextStartDate)
+      const endMs = getDateMs(nextEndDate)
+
+      if (startMs != null && endMs != null && startMs > endMs) {
+        if ('startDate' in normalizedUpdates && !('endDate' in normalizedUpdates)) {
+          normalizedUpdates.startDate = nextEndDate
+        } else if ('endDate' in normalizedUpdates && !('startDate' in normalizedUpdates)) {
+          normalizedUpdates.endDate = nextStartDate
+        } else {
+          normalizedUpdates.endDate = nextStartDate
+        }
+      }
+    }
+
+    if ('startDate' in normalizedUpdates) {
+      setValue('startDate', normalizedUpdates.startDate, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
       })
     }
-    if ('endDate' in updates) {
-      setValue('endDate', updates.endDate, {
+    if ('endDate' in normalizedUpdates) {
+      setValue('endDate', normalizedUpdates.endDate, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
       })
     }
-    if ('announceBeforeMinutes' in updates) {
-      setValue('announceBeforeMinutes', updates.announceBeforeMinutes, {
+    if ('announceBeforeMinutes' in normalizedUpdates) {
+      setValue('announceBeforeMinutes', normalizedUpdates.announceBeforeMinutes, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
@@ -172,7 +203,9 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
     if (startDateValue) {
       handleUpdateDates({ startDate: null })
     } else {
-      const date = new Date()
+      const now = new Date()
+      const endDateMs = getDateMs(endDateValue)
+      const date = endDateMs != null && now.getTime() > endDateMs ? new Date(endDateMs) : now
       handleUpdateDates({ startDate: date.toISOString() })
     }
   }
@@ -181,24 +214,35 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
     if (endDateValue) {
       handleUpdateDates({ endDate: null })
     } else {
-      const date = addDays(new Date(), 1)
+      const tomorrow = addDays(new Date(), 1)
+      const startDateMs = getDateMs(startDateValue)
+      const date = startDateMs != null && tomorrow.getTime() < startDateMs ? new Date(startDateMs) : tomorrow
       handleUpdateDates({ endDate: date.toISOString() })
     }
   }
 
   const validateTimeFormat = (time: string): boolean => {
-    if (!time) {
+    const normalizedTime = time.trim()
+    if (!normalizedTime) {
       return true
     }
-    return timeRegex.test(time)
+    return timeRegex.test(normalizedTime)
   }
 
   const applyTimeToDate = (dateValue: string, timeValue: string): string => {
-    const [hours, minutes] = timeValue.split(':').map(Number)
+    const [hours, minutes] = timeValue.trim().split(':').map(Number)
     const newDate = new Date(dateValue)
     newDate.setHours(hours)
     newDate.setMinutes(minutes)
     return newDate.toISOString()
+  }
+
+  const resolveTimeInput = (timeValue: string): string => {
+    const normalizedTime = timeValue.trim()
+    if (normalizedTime) {
+      return normalizedTime
+    }
+    return formatTime(new Date(), 'HH:mm')
   }
 
   const handleRemove = () => {
@@ -236,12 +280,49 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
       return
     }
 
-    if (startDate && localStartTime && localStartTime !== startTime) {
-      handleUpdateDates({ startDate: applyTimeToDate(startDateValue, localStartTime) })
+    const updates: DateUpdates = {}
+    let nextStartDate: string | null = startDateValue || null
+    let nextEndDate: string | null = endDateValue || null
+    const nextStartTime = startDate ? resolveTimeInput(localStartTime) : null
+    const nextEndTime = endDate ? resolveTimeInput(localEndTime) : null
+
+    if (startDate && nextStartTime && !localStartTime.trim()) {
+      setLocalStartTime(nextStartTime)
     }
 
-    if (endDate && localEndTime && localEndTime !== endTime) {
-      handleUpdateDates({ endDate: applyTimeToDate(endDateValue, localEndTime) })
+    if (endDate && nextEndTime && !localEndTime.trim()) {
+      setLocalEndTime(nextEndTime)
+    }
+
+    if (startDate && startDateValue && nextStartTime) {
+      if (nextStartTime !== startTime) {
+        const updatedStartDate = applyTimeToDate(startDateValue, nextStartTime)
+        updates.startDate = updatedStartDate
+        nextStartDate = updatedStartDate
+      }
+    }
+
+    if (endDate && endDateValue && nextEndTime) {
+      if (nextEndTime !== endTime) {
+        const updatedEndDate = applyTimeToDate(endDateValue, nextEndTime)
+        updates.endDate = updatedEndDate
+        nextEndDate = updatedEndDate
+      }
+    }
+
+    if (nextStartDate && nextEndDate) {
+      const startMs = getDateMs(nextStartDate)
+      const endMs = getDateMs(nextEndDate)
+
+      if (startMs != null && endMs != null && startMs > endMs) {
+        setStartTimeInvalid(true)
+        setEndTimeInvalid(true)
+        return
+      }
+    }
+
+    if ('startDate' in updates || 'endDate' in updates) {
+      handleUpdateDates(updates)
     }
 
     onSubmit()
@@ -255,8 +336,6 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
       setLocalEndTime(endTime || '')
       setStartTimeInvalid(false)
       setEndTimeInvalid(false)
-    } else {
-      reset()
     }
   }
 
@@ -353,6 +432,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
             <div>
               <p className='font-semibold text-xs py-1'>{t('task.date.reminderSetting')}</p>
               <Select
+                disabled={!endDateValue}
                 onValueChange={(value) => {
                   const reminder = value as keyof typeof TaskReminder
                   if (reminder === 'NONE') {
@@ -365,7 +445,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 }}
                 value={reminderType}
               >
-                <SelectTrigger className={cn('w-full')}>
+                <SelectTrigger className={cn('w-full')} disabled={!endDateValue}>
                   <SelectValue placeholder={t('task.date.selectReminderTime')} />
                 </SelectTrigger>
                 <SelectContent>
