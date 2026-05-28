@@ -11,6 +11,7 @@ import { useToggleWatchTask } from '../hooks/use-toggle-watch-task'
 
 interface TaskDetailMenuProps {
   taskId: string
+  taskIdentifier: string
   projectIdentifier: string
   milestoneId: string
   parentMilestoneIdentifier: string
@@ -24,6 +25,7 @@ interface TaskDetailMenuProps {
 
 export default function TaskDetailMenu({
   taskId,
+  taskIdentifier,
   projectIdentifier,
   parentMilestoneIdentifier,
   milestoneId,
@@ -100,7 +102,7 @@ export default function TaskDetailMenu({
               className='w-full mt-2'
               variant='destructive'
               onClick={() => {
-                deleteTask({ taskId })
+                deleteTask({ taskIdentifier })
                 onClose()
               }}
             >

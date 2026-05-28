@@ -432,6 +432,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
             <div>
               <p className='font-semibold text-xs py-1'>{t('task.date.reminderSetting')}</p>
               <Select
+                disabled={!endDateValue}
                 onValueChange={(value) => {
                   const reminder = value as keyof typeof TaskReminder
                   if (reminder === 'NONE') {
@@ -444,7 +445,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
                 }}
                 value={reminderType}
               >
-                <SelectTrigger className={cn('w-full')}>
+                <SelectTrigger className={cn('w-full')} disabled={!endDateValue}>
                   <SelectValue placeholder={t('task.date.selectReminderTime')} />
                 </SelectTrigger>
                 <SelectContent>

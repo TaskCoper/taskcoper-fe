@@ -66,10 +66,10 @@ class TaskService {
     return data.value
   }
 
-  deleteTask = async ({ taskId }: { taskId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}`, {
+  deleteTask = async ({ taskIdentifier }: { taskIdentifier: string }) => {
+    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskIdentifier}`, {
       data: {
-        id: taskId
+        id: taskIdentifier
       }
     })
 

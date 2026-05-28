@@ -36,9 +36,11 @@ export const useGetMyProjectsInfinite = ({
   })
 
   const projects: ProjectPreview[] = query.data?.pages.flatMap((p) => p.value.items) ?? []
+  const totalCount = query.data?.pages[0]?.value.totalCount ?? 0
 
   return {
     projects,
+    totalCount,
     isLoading: query.isLoading,
     isFetchingNextPage: query.isFetchingNextPage,
     hasNextPage: query.hasNextPage ?? false,

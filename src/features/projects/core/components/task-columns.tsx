@@ -45,7 +45,7 @@ export const getColumns = ({
 }: {
   projectIdentifier: string
   parentMilestoneIdentifier?: string
-  onDeleteTask: (taskId: string, taskName: string) => void
+  onDeleteTask: (taskIdentifier: string, taskName: string) => void
   userId?: string
   searchParams?: string
   taskDetailBasePath?: string
@@ -371,7 +371,7 @@ export const getColumns = ({
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id, name } = row.original
+        const { id, name, slug } = row.original
 
         return (
           <DropdownMenu>
@@ -406,7 +406,7 @@ export const getColumns = ({
                 <Link to={buildTaskPath(id)}>{i18next.t('task.column.viewDetails')}</Link>
               </DropdownMenuItem>
               {canDelete ? (
-                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(id, name)}>
+                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteTask(slug, name)}>
                   {i18next.t('task.column.delete')}
                 </DropdownMenuItem>
               ) : null}

@@ -30,8 +30,9 @@ export const useDeleteTask = ({
         description: error.response?.data?.detail
       })
     },
-    onSuccess: (message) => {
+    onSuccess: (message, variables) => {
       toast.success(message)
+      queryClient.removeQueries({ queryKey: queryKeys.tasks.detail(variables.taskIdentifier) })
       onDeleteSuccess?.()
     },
     onSettled: () => {

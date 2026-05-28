@@ -418,7 +418,12 @@ export default function TaskDialogPage() {
                 </Button>
               </BackgroundImagePopover>
 
-              {task?.taskId && task?.taskName && identifier && milestoneIdentifier && task.milestoneId ? (
+              {task?.taskId &&
+              task?.taskSlug &&
+              task?.taskName &&
+              identifier &&
+              milestoneIdentifier &&
+              task.milestoneId ? (
                 <TaskDetailMenu
                   projectIdentifier={identifier}
                   parentMilestoneIdentifier={milestoneIdentifier}
@@ -429,6 +434,7 @@ export default function TaskDialogPage() {
                   open={openTaskDetailMenu}
                   setOpen={setOpenTaskDetailMenu}
                   isWatchingTask={isWatchingTask}
+                  taskIdentifier={task.taskSlug}
                 >
                   <Button
                     className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}

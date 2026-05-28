@@ -43,7 +43,7 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
   const canDelete = check('TASKS', 'canDelete')
 
   const onDeleteTask = useCallback(
-    async (taskId: string, taskName: string) => {
+    async (taskIdentifier: string, taskName: string) => {
       const confirmed = await confirm({
         title: t('task.deleteTask.title'),
         description: t('task.deleteTask.description', { taskName }),
@@ -52,7 +52,7 @@ export default function ProjectTable({ projectIdentifier, parentMilestoneIdentif
         variant: 'destructive'
       })
       if (confirmed) {
-        deleteTask({ taskId })
+        deleteTask({ taskIdentifier })
       }
     },
     [confirm, deleteTask, t]
