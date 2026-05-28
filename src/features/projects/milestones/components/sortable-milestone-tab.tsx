@@ -42,6 +42,7 @@ export const SortableMilestoneTab = ({
   const { updateMilestone } = useUpdateMilestone({ queryKey, shouldInvalidate: true, projectIdentifier: identifier })
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
     queryKey,
+    projectIdentifier: identifier,
     onSuccessCallback: onDeleteSuccess
   })
 

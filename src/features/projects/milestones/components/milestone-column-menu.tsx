@@ -38,6 +38,7 @@ export default function MilestoneColumnMenu({
 
   const { deleteMilestone, isDeletingMilestone } = useDeleteMilestone({
     queryKey: queryKeys.milestones.byParent(identifier, milestoneIdentifier),
+    projectIdentifier: identifier,
     parentMilestoneIdentifier: milestoneIdentifier
   })
 
