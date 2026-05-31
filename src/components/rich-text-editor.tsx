@@ -44,6 +44,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
+import { softInsetSurfaceClasses } from '../shared/effects'
 import MentionList, { type MentionListRef } from './mention-list'
 import { ImageUploadNode } from './tiptap-node/image-upload-node'
 import { Button } from './tiptap-ui-primitive/button'
@@ -427,8 +428,9 @@ export default function RichTextEditor({
         <EditorContext.Provider value={{ editor }}>
           <div
             className={cn(
-              'rounded-md border bg-background shadow-xs focus-within:ring-2',
-              invalid ? 'border-destructive focus-within:ring-destructive' : 'border-border focus-within:ring-primary'
+              'border bg-background focus-within:ring-2',
+              invalid ? 'border-destructive focus-within:ring-destructive' : 'border-border focus-within:ring-primary',
+              softInsetSurfaceClasses
             )}
           >
             <div className='p-2 flex gap-2 border-b items-center flex-wrap'>

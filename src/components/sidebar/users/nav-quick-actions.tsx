@@ -1,4 +1,5 @@
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { activePrimaryControlClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import { type LucideIcon } from 'lucide-react'
 import { Link, matchPath, useLocation } from 'react-router'
@@ -35,13 +36,11 @@ export function NavQuickActions({
           const active = isItemActive(item)
 
           return (
-            <SidebarMenuItem
-              key={item.name}
-              className={cn(
-                active ? 'bg-primary/10 text-primary rounded-md group-data-[collapsible=icon]:bg-primary/10' : ''
-              )}
-            >
-              <SidebarMenuButton asChild>
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton
+                asChild
+                className={cn('hover:bg-muted-foreground/15', active && activePrimaryControlClasses)}
+              >
                 <Link to={item.url}>
                   <item.icon />
                   <span>{item.name}</span>

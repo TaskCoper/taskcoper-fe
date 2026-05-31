@@ -74,13 +74,13 @@ export const getColumns = (): ColumnDef<SystemProject>[] => {
 
             <div className='truncate flex gap-1'>
               {row.original.domains.slice(0, 3).map((domain) => (
-                <Badge key={domain.id} className='rounded-sm py-0 px-1' variant='secondary'>
+                <Badge key={domain.id} className='rounded-sm py-0 px-1' variant='outline'>
                   <p className='text-[11px] font-normal'>{domain.name}</p>
                 </Badge>
               ))}
 
               {row.original.domains.length > 3 && (
-                <Badge className='rounded-sm py-0 px-1' variant='secondary'>
+                <Badge className='rounded-sm py-0 px-1' variant='outline'>
                   <p className='text-[11px] font-normal'>+{row.original.domains.length - 3}</p>
                 </Badge>
               )}

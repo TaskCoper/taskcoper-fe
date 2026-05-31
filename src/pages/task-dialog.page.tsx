@@ -65,10 +65,18 @@ import {
   UserRoundPlusIcon,
   XIcon
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
+
+const TASK_DIALOG_INSET_SHADOW_COLOR = 'rgba(0,0,0,0.6)'
+const TASK_DIALOG_SHADOW_STYLE = {
+  '--task-dialog-inset-shadow-color': TASK_DIALOG_INSET_SHADOW_COLOR
+} as CSSProperties
+const TASK_DIALOG_MILESTONE_BUTTON_CLASSES = 'bg-muted-foreground/20 hover:bg-muted-foreground/40'
+const TASK_DIALOG_MUTED_BUTTON_CLASSES = 'hover:bg-muted-foreground/15'
+const TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES = 'rounded-full'
 
 export default function TaskDialogPage() {
   const navigate = useNavigate()
@@ -118,6 +126,7 @@ export default function TaskDialogPage() {
 
   const isWatchingTask =
     taskMembers?.value.items.find((member) => !member.isMemberInTask && member.userId === user?.id) !== undefined
+  const assignedTaskMembers = taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []
 
   const {
     methods: updateTaskMethods,
@@ -282,7 +291,7 @@ export default function TaskDialogPage() {
         <DialogContent
           showCloseButton={false}
           position='top-center'
-          className='min-w-6xl p-6 gap-4'
+          className='min-w-[95%] xl:min-w-6xl gap-4 rounded-3xl'
           onInteractOutside={handleClose}
         >
           <VisuallyHidden>
@@ -326,7 +335,8 @@ export default function TaskDialogPage() {
       <DialogContent
         showCloseButton={false}
         position='top-center'
-        className='min-w-[95%] xl:min-w-6xl p-0 gap-0 flex flex-col border-none'
+        className='min-w-[95%] xl:min-w-6xl p-0 gap-0 flex flex-col rounded-3xl shadow-[0_1px_3px_rgba(0,0,0,0.1),inset_0_0_4px_var(--task-dialog-inset-shadow-color)]'
+        style={TASK_DIALOG_SHADOW_STYLE}
         onInteractOutside={handleClose}
       >
         <FormProvider {...updateTaskMethods}>
@@ -338,7 +348,7 @@ export default function TaskDialogPage() {
           </VisuallyHidden>
 
           {task?.backgroundImage ? (
-            <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
+            <div className='relative w-full h-44 shrink-0 group rounded-t-3xl bg-gray-300/80 shadow-[inset_0_4px_4px_-4px_var(--task-dialog-inset-shadow-color),inset_4px_0_4px_-4px_var(--task-dialog-inset-shadow-color),inset_-4px_0_4px_-4px_var(--task-dialog-inset-shadow-color)]'>
               <img
                 src={task.backgroundImage}
                 alt={t('task.detail.backgroundImage')}
@@ -349,7 +359,7 @@ export default function TaskDialogPage() {
 
           <div
             className={cn(
-              'px-6 py-4 flex items-center justify-between gap-2 z-10',
+              'p-5 flex items-center justify-between gap-2 z-10',
               task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
             )}
           >
@@ -361,7 +371,7 @@ export default function TaskDialogPage() {
                 milestoneId={task.milestoneId}
                 taskId={task.taskId}
               >
-                <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
                   {task?.milestoneName}
                   <ChevronDownIcon />
                 </Button>
@@ -376,22 +386,22 @@ export default function TaskDialogPage() {
                 taskParentMilestoneSlug={task.parentMilestoneSlug}
                 taskMilestoneId={task.milestoneId}
               >
-                <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+                <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
                   {task?.milestoneName}
                   <ChevronDownIcon />
                 </Button>
               </MoveTaskPopoverV2>
             ) : (
-              <Button size='sm' variant='secondary' className='bg-muted-foreground/20 hover:bg-muted-foreground/40'>
+              <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
                 {task?.milestoneName}
               </Button>
             )}
 
-            <div className='flex items-center gap-1'>
+            <div className='flex items-center gap-2'>
               {isWatchingTask ? (
                 <Button
-                  className='rounded-full'
-                  variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                  className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
+                  variant='default'
                   size='icon-sm'
                   disabled={!canUpdate}
                   onClick={() => {
@@ -410,8 +420,8 @@ export default function TaskDialogPage() {
                 disabled={!canUpdate}
               >
                 <Button
-                  className={cn('rounded-full', openBackgroundImagePopover ? 'bg-primary/10 text-primary' : '')}
-                  variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                  className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
+                  variant={openBackgroundImagePopover ? 'default' : 'outline'}
                   size='icon-sm'
                 >
                   <ImageIcon />
@@ -437,8 +447,8 @@ export default function TaskDialogPage() {
                   taskIdentifier={task.taskSlug}
                 >
                   <Button
-                    className={cn('rounded-full', openTaskDetailMenu ? 'bg-primary/10 text-primary' : '')}
-                    variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                    className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
+                    variant={openTaskDetailMenu ? 'default' : 'outline'}
                     size='icon-sm'
                   >
                     <MoreHorizontalIcon />
@@ -447,8 +457,8 @@ export default function TaskDialogPage() {
               ) : null}
 
               <Button
-                className='rounded-full'
-                variant={task?.backgroundImage ? 'outline' : 'ghost'}
+                className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
+                variant='outline'
                 size='icon-sm'
                 onClick={handleClose}
               >
@@ -460,7 +470,7 @@ export default function TaskDialogPage() {
           <Separator />
 
           <div className='grid grid-cols-12 flex-1 overflow-hidden'>
-            <div className='col-span-7 p-6 border-r border-border overflow-y-auto space-y-6'>
+            <div className='col-span-7 p-5 border-r border-border overflow-y-auto space-y-6'>
               <div className='space-y-4'>
                 {/* <div className='min-w-0 w-full'>
                   <Breadcrumb className='w-full overflow-hidden'>
@@ -505,7 +515,7 @@ export default function TaskDialogPage() {
                 </div> */}
 
                 {/* Task name + popovers */}
-                <div className='flex gap-2'>
+                <div className='flex gap-1'>
                   <Checkbox
                     checked={task?.isCompleted}
                     disabled={!canToggleTaskStatus}
@@ -520,8 +530,8 @@ export default function TaskDialogPage() {
                       }
                     }}
                     className={cn(
-                      'rounded-full border-foreground',
-                      isEditingName ? 'mt-5' : 'mt-2.5',
+                      'rounded-full border-foreground size-4.5',
+                      isEditingName ? 'mt-4.5' : 'mt-2',
                       !canToggleTaskStatus ? 'cursor-not-allowed' : ''
                     )}
                   />
@@ -603,10 +613,7 @@ export default function TaskDialogPage() {
                         </SubtaskPopover>
                       ) : null}
 
-                      {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length === 0 &&
-                      identifier &&
-                      task?.taskId &&
-                      milestoneIdentifier ? (
+                      {assignedTaskMembers.length === 0 && identifier && task?.taskId && milestoneIdentifier ? (
                         <AssigneePopover
                           projectIdentifier={identifier}
                           taskId={task.taskId}
@@ -649,7 +656,7 @@ export default function TaskDialogPage() {
                       onRemove={handleRemovePriority}
                       disabled={!canUpdate}
                     >
-                      <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
+                      <Button variant='outline' size='sm' className={TASK_DIALOG_MUTED_BUTTON_CLASSES}>
                         <div className='flex items-center gap-2 min-w-10'>
                           {getTaskPriorityIcon()[task.priority]}
                           <p className='font-semibold'>{t(TaskPriorityLabel[task.priority])}</p>
@@ -664,7 +671,7 @@ export default function TaskDialogPage() {
                   <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.storyPoints')}</p>
 
                   <TaskPointsPopover onSubmit={handleSubmitTask(onSubmitUpdateTask)} disabled={!canUpdate}>
-                    <Button variant='secondary' size='sm' className='hover:bg-muted-foreground/15'>
+                    <Button variant='outline' size='sm' className={TASK_DIALOG_MUTED_BUTTON_CLASSES}>
                       {task?.estimatedPoints ? (
                         <p className='font-semibold min-w-10'>{task.estimatedPoints}</p>
                       ) : (
@@ -705,7 +712,7 @@ export default function TaskDialogPage() {
                           taskLabels={task?.taskLabels ?? []}
                           disabled={!canUpdate}
                         >
-                          <Button variant='secondary' size='icon-sm'>
+                          <Button variant='outline' size='icon-sm'>
                             <PlusIcon />
                           </Button>
                         </LabelPopover>
@@ -715,21 +722,17 @@ export default function TaskDialogPage() {
                 ) : null}
 
                 {/* Assigned members section */}
-                {(taskMembers?.value.items.filter((x) => x.isMemberInTask) ?? []).length > 0 ? (
+                {assignedTaskMembers.length > 0 ? (
                   <div className='space-y-1'>
                     <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.members')}</p>
 
                     <div className='flex items-center gap-1'>
-                      {taskMembers?.value.items
-                        .filter((x) => x.isMemberInTask)
-                        .map((member) => (
-                          <Avatar key={member.userId} className='size-8'>
-                            <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
-                            <AvatarFallback>
-                              {getAvatarFallback(`${member.firstName} ${member.lastName}`)}
-                            </AvatarFallback>
-                          </Avatar>
-                        ))}
+                      {assignedTaskMembers.map((member) => (
+                        <Avatar key={member.userId} className='size-8'>
+                          <AvatarImage src={member.avatar || ''} alt={`${member.firstName} ${member.lastName}`} />
+                          <AvatarFallback>{getAvatarFallback(`${member.firstName} ${member.lastName}`)}</AvatarFallback>
+                        </Avatar>
+                      ))}
 
                       {identifier && task?.taskId && milestoneIdentifier ? (
                         <AssigneePopover
@@ -738,7 +741,7 @@ export default function TaskDialogPage() {
                           parentMilestoneIdentifier={milestoneIdentifier}
                           disabled={!canWrite}
                         >
-                          <Button className='rounded-full size-8' size='icon' variant='secondary'>
+                          <Button className='rounded-full size-8' size='icon' variant='outline'>
                             <PlusIcon />
                           </Button>
                         </AssigneePopover>
@@ -768,9 +771,9 @@ export default function TaskDialogPage() {
                       disabled={!canUpdate}
                     >
                       <Button
-                        variant='secondary'
+                        variant='outline'
                         size='sm'
-                        className={cn('gap-1.5', isTaskExpired ? 'text-destructive' : 'hover:bg-muted-foreground/15')}
+                        className={cn('gap-1.5', isTaskExpired ? 'text-destructive' : TASK_DIALOG_MUTED_BUTTON_CLASSES)}
                       >
                         {task?.taskStartDate ? (
                           <p className='font-semibold'>{formatDate(task.taskStartDate, 'dateTimeMedium')}</p>
@@ -794,7 +797,7 @@ export default function TaskDialogPage() {
                   <div className='flex items-start justify-between'>
                     <p className='font-semibold'>{t('common.field.description')}</p>
                     {!isEditDescription && task?.taskDescription && canUpdate ? (
-                      <Button variant='secondary' size='sm' onClick={() => setIsEditDescription(true)}>
+                      <Button variant='outline' size='sm' onClick={() => setIsEditDescription(true)}>
                         {t('common.button.edit')}
                       </Button>
                     ) : null}
@@ -846,7 +849,7 @@ export default function TaskDialogPage() {
                           {t('common.button.save')}
                         </Button>
                         <Button
-                          variant='ghost'
+                          variant='outline'
                           onClick={() => {
                             setIsEditDescription(false)
                             resetTask()
@@ -875,7 +878,7 @@ export default function TaskDialogPage() {
 
                       {showDescriptionToggle && (
                         <Button
-                          variant='secondary'
+                          variant='outline'
                           className='w-full mt-1'
                           onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                         >
@@ -970,7 +973,7 @@ export default function TaskDialogPage() {
               </DndContext>
             </div>
 
-            <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
+            <div className='col-span-5 p-5 bg-muted space-y-4 overflow-y-auto shadow-[inset_-4px_0_4px_-4px_var(--task-dialog-inset-shadow-color),inset_0_-4px_4px_-4px_var(--task-dialog-inset-shadow-color)] rounded-br-3xl'>
               <div className='flex items-center gap-2'>
                 <MessageSquareText className='size-4' />
                 <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>

@@ -90,7 +90,7 @@ export function DataTableToolbar<TData>({
         {isFiltered && (
           <Button
             aria-label={t('dataTable.filter.resetFilters')}
-            variant='outline'
+            variant='destructive'
             size='sm'
             className='border-dashed'
             onClick={onReset}
@@ -141,7 +141,7 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
               placeholder={placeholder}
               value={(column.getFilterValue() as string) ?? ''}
               onValueChange={(value) => column.setFilterValue(value)}
-              className='h-8 min-w-72 peer pl-9'
+              className='h-7.5 min-w-72 peer pl-9'
               spellCheck={false}
             />
           </div>
@@ -153,7 +153,7 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
           placeholder={placeholder}
           value={(column.getFilterValue() as string) ?? ''}
           onValueChange={(value) => column.setFilterValue(value)}
-          className='h-8 min-w-72'
+          className='h-7.5 min-w-72'
         />
       )
 
@@ -166,7 +166,7 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
             placeholder={placeholder}
             value={(column.getFilterValue() as string) ?? ''}
             onValueChange={(value) => column.setFilterValue(value)}
-            className={cn('h-8 w-[120px]', columnMeta.unit && 'pr-8')}
+            className={cn('h-7.5 w-[120px]', columnMeta.unit && 'pr-8')}
           />
           {columnMeta.unit && (
             <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>

@@ -47,6 +47,7 @@ export default function CreateProjectDialog({ children }: CreateProjectDialogPro
         position='top-center'
         className='w-[95vw] sm:w-full sm:max-w-xl max-h-[90vh] overflow-y-auto p-4 sm:p-6'
         onInteractOutside={onClose}
+        showCloseButton={false}
       >
         <DialogHeader>
           <DialogTitle>{t('project.createProject.title')}</DialogTitle>

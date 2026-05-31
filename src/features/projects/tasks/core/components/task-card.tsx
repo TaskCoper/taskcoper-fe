@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useDateFormat } from '@/lib/date'
 import { useTaskUIStore } from '@/lib/zustand/task-ui.store'
+import { primaryControlEffectClasses } from '@/shared/effects'
 import { cn, getColorTextClass } from '@/shared/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import {
@@ -28,7 +29,7 @@ import { getTaskPriorityIcon } from '../constants'
 import { useUpdateTaskStatus } from '../hooks/use-update-task-status'
 
 const taskCardVariants = cva(
-  'gap-0 p-0 border-none rounded-md cursor-pointer hover:ring-2 hover:ring-primary relative group/card overflow-hidden',
+  'gap-0 p-0 border-none cursor-pointer hover:ring-2 hover:ring-primary relative group/card overflow-hidden',
   {
     variants: {
       dragging: {
@@ -64,6 +65,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
       parentMilestoneIdentifier: milestoneIdentifier
     })
 
+    const assignedMembers = task.members.filter((x) => x.isMemberInTask)
     const isWatchingTask = task.members.find((x) => !x.isMemberInTask && x.userId === user?.id) !== undefined
 
     const isDisplayIcons =
@@ -72,7 +74,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
       task.endDate ||
       task.totalComments > 0 ||
       task.completedSubtasks > 0 ||
-      task.members.filter((x) => x.isMemberInTask).length > 0 ||
+      assignedMembers.length > 0 ||
       task.progressPercentage > 0 ||
       task.totalResources > 0 ||
       task.totalSubtasks > 0 ||
@@ -139,18 +141,16 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
           </div>
 
           <div className='space-y-1'>
-            <div className='flex items-center flex-wrap gap-4'>
-              {shouldDisplayParentMilestone ? (
-                <Link
-                  to={`/projects/${identifier}/milestones/${task.parentMilestoneSlug}`}
-                  className='text-xs font-semibold text-indigo-600 hover:underline hover:text-primary flex items-center gap-1.5'
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <LayersIcon className='size-3' />
-                  {task.parentMilestoneName}
-                </Link>
-              ) : null}
-            </div>
+            {shouldDisplayParentMilestone ? (
+              <Link
+                to={`/projects/${identifier}/milestones/${task.parentMilestoneSlug}`}
+                className='text-xs font-semibold text-indigo-600 hover:underline hover:text-primary flex items-center gap-1.5'
+                onClick={(e) => e.stopPropagation()}
+              >
+                <LayersIcon className='size-3' />
+                {task.parentMilestoneName}
+              </Link>
+            ) : null}
 
             <div className='flex items-start gap-2'>
               <Checkbox
@@ -192,12 +192,10 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
               ) : null}
               {task.totalComments > 0 ? <TaskCommentChip commentCount={task.totalComments} /> : null}
               {task.totalResources > 0 ? <TaskAttachmentChip totalResources={task.totalResources} /> : null}
-              {task.priority || task.members.filter((x) => x.isMemberInTask).length > 0 ? (
+              {task.priority || assignedMembers.length > 0 ? (
                 <div className='ml-auto flex items-center gap-2'>
                   {task.priority ? getTaskPriorityIcon()[task.priority] : null}
-                  {task.members.filter((x) => x.isMemberInTask).length > 0 ? (
-                    <TaskMembersChip members={task.members.filter((x) => x.isMemberInTask)} />
-                  ) : null}
+                  {assignedMembers.length > 0 ? <TaskMembersChip members={assignedMembers} /> : null}
                 </div>
               ) : null}
             </div>
@@ -206,7 +204,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
           {task.progressPercentage > 0 && (
             <div className='absolute bottom-0 left-0 right-0 h-1'>
               <div
-                className='h-full bg-primary transition-all duration-300'
+                className={cn('h-full transition-all duration-300', primaryControlEffectClasses)}
                 style={{ width: `${task.progressPercentage.toFixed(0)}%` }}
               />
             </div>

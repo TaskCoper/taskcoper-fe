@@ -193,7 +193,7 @@ const ScheduleRow = ({ schedule, onEdit }: { schedule: MeetingRule; onEdit: (sch
 
         {temporary && isActive && (
           <Badge
-            variant='secondary'
+            variant='outline'
             className={cn(
               'rounded-md shrink-0 flex items-center gap-1.5 px-2 py-0.5 text-xs font-semibold',
               activationVariant === 'fromOnly' && 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-400',

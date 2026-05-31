@@ -48,7 +48,7 @@ export default function AddMilestoneButton({ parentMilestoneIdentifier, projectI
   } else {
     return (
       <Button
-        variant='secondary'
+        variant='ghost'
         className='w-64 justify-start bg-muted/30 text-white hover:bg-muted/40'
         onClick={() => setIsTriggered(true)}
       >

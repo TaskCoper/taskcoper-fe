@@ -100,7 +100,7 @@ export default function CheckoutPage() {
           <div className='rounded-2xl bg-card border shadow-sm p-8 text-center space-y-3 max-w-md mx-auto'>
             <p className='font-semibold'>{t('checkout.error.missingTransaction')}</p>
             <p className='text-sm text-muted-foreground'>{t('checkout.error.missingTransactionDesc')}</p>
-            <Button asChild variant='secondary'>
+            <Button asChild variant='outline'>
               <Link to='/'>{t('common.button.cancel')}</Link>
             </Button>
           </div>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
           <div className='rounded-2xl bg-card border shadow-sm p-8 text-center space-y-3 max-w-md mx-auto'>
             <p className='font-semibold'>{t('checkout.error.notFound')}</p>
             <p className='text-sm text-muted-foreground'>{t('checkout.error.notFoundDesc')}</p>
-            <Button asChild variant='secondary'>
+            <Button asChild variant='outline'>
               <Link to='/'>{t('common.button.cancel')}</Link>
             </Button>
           </div>

@@ -56,22 +56,22 @@ export default function ProjectTasksPage() {
           </div>
         ) : null}
 
-        <Card className='fixed bottom-4 left-1/2 z-10 -translate-x-1/2 p-1 flex-row items-center gap-2 rounded-lg'>
+        <Card className='fixed bottom-4 left-1/2 z-10 -translate-x-1/2 p-1 flex-row items-center gap-1 rounded-xl shadow-[inset_0_0_3px_rgba(0,0,0,0.2)]'>
           <Button
-            variant='ghost'
+            className='rounded-lg'
+            variant={mode === 'board' ? 'default' : 'ghost'}
             onClick={() => setMode('board')}
             size='sm'
-            className={mode === 'board' ? 'bg-primary/15 text-primary' : ''}
           >
             <SquareKanbanIcon />
             {t('project.views.board')}
           </Button>
 
           <Button
-            variant='ghost'
+            className='rounded-lg'
+            variant={mode === 'table' ? 'default' : 'ghost'}
             onClick={() => setMode('table')}
             size='sm'
-            className={mode === 'table' ? 'bg-primary/15 text-primary' : ''}
           >
             <TablePropertiesIcon />
             {t('project.views.table')}

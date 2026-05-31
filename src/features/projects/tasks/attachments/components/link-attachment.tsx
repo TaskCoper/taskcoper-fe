@@ -33,7 +33,7 @@ export default function LinkAttachment({
         parentMilestoneIdentifier={parentMilestoneIdentifier}
         projectIdentifier={projectIdentifier}
       >
-        <Button size='icon-sm' variant='secondary' className='size-6'>
+        <Button size='icon-sm' variant='outline' className='size-6'>
           <MoreHorizontalIcon className='size-3' />
         </Button>
       </AttachmentMenu>

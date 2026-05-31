@@ -171,7 +171,7 @@ export function DataTableFilterList<TData>({
             {t('dataTable.filter.filter')}
             {filters.length > 0 && (
               <Badge
-                variant='secondary'
+                variant='outline'
                 className='h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]'
               >
                 {filters.length}

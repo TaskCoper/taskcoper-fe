@@ -9,13 +9,23 @@ import AddParentMilestoneForm from './add-parent-milestone-form'
 
 interface AddParentMilestonePopoverProps {
   children: React.ReactNode
+  open: boolean
+  setOpen: (open: boolean) => void
   identifier: string
 }
 
-export default function AddParentMilestonePopover({ children, identifier }: AddParentMilestonePopoverProps) {
+export default function AddParentMilestonePopover({
+  children,
+  open,
+  setOpen,
+  identifier
+}: AddParentMilestonePopoverProps) {
   const { t } = useTranslation()
-  const { methods, open, setOpen, addParentMilestone, isAddingParentMilestone, recalculatePosition } =
-    useAddParentMilestone({ identifier })
+  const { methods, addParentMilestone, isAddingParentMilestone, recalculatePosition } = useAddParentMilestone({
+    identifier,
+    open,
+    setOpen
+  })
 
   const onSubmit: SubmitHandler<AddParentMilestoneFormValues> = (body) => {
     recalculatePosition()

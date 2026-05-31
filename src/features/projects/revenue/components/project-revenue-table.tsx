@@ -142,14 +142,14 @@ export default function ProjectRevenueTable({ projectIdentifier }: ProjectRevenu
         {canWrite ? (
           <>
             <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='Revenue'>
-              <Button size='sm' className='bg-emerald-600 border-2 border-emerald-400 hover:bg-emerald-700'>
+              <Button size='sm' className='bg-emerald-600 hover:bg-emerald-600'>
                 <TrendingUpIcon />
                 {t('project.addProjectRevenue.trigger.cashIn')}
               </Button>
             </AddProjectRevenueDialog>
 
             <AddProjectRevenueDialog projectIdentifier={projectIdentifier} type='Expense'>
-              <Button size='sm' className='bg-rose-600 border-2 border-rose-400 hover:bg-rose-700'>
+              <Button size='sm' className='bg-rose-600 hover:bg-rose-600'>
                 <TrendingDownIcon />
                 {t('project.addProjectRevenue.trigger.cashOut')}
               </Button>

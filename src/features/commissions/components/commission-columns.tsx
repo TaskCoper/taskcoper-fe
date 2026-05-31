@@ -88,7 +88,7 @@ export const getColumns = (): ColumnDef<CommissionRow>[] => {
         const config = getTitleConfig(title)
 
         return (
-          <Badge variant='secondary' className={cn('gap-1.5 px-2 py-0.5 font-semibold rounded-md', config.className)}>
+          <Badge variant='outline' className={cn('gap-1.5 px-2 py-0.5 font-semibold rounded-md', config.className)}>
             {config.icon}
             {label}
           </Badge>

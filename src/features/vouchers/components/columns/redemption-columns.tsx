@@ -177,7 +177,7 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
             case VoucherRedemptionStatus.Released:
               return (
                 <Badge
-                  variant='secondary'
+                  variant='outline'
                   className='bg-slate-100 text-slate-600 border-none px-2 py-0.5 text-xs font-medium rounded-sm'
                 >
                   {label}
@@ -194,7 +194,7 @@ export const getColumns = (): ColumnDef<VoucherRedemptionRow>[] => {
               )
             default:
               return (
-                <Badge variant='secondary' className='rounded-full text-[10px] uppercase tracking-wider font-bold'>
+                <Badge variant='outline' className='rounded-full text-[10px] uppercase tracking-wider font-bold'>
                   {label}
                 </Badge>
               )

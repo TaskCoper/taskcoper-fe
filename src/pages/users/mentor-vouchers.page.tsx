@@ -5,13 +5,15 @@ export default function MentorVouchersPage() {
   const { t } = useTranslation()
 
   return (
-    <div className='p-6 space-y-6'>
-      <div>
-        <p className='text-xl font-bold'>{t('voucher.page.title')}</p>
-        <p className='text-sm text-muted-foreground'>{t('voucher.page.description')}</p>
-      </div>
+    <div className='absolute inset-0 overflow-y-auto overflow-x-hidden'>
+      <div className='min-w-0 space-y-6 p-6'>
+        <div>
+          <p className='text-xl font-bold'>{t('voucher.page.title')}</p>
+          <p className='text-sm text-muted-foreground'>{t('voucher.page.description')}</p>
+        </div>
 
-      <VouchersTable />
+        <VouchersTable />
+      </div>
     </div>
   )
 }

@@ -97,8 +97,8 @@ export const SortableMilestoneTab = ({
 
   if (isEditing) {
     return (
-      <div ref={setNodeRef} style={style} className='inline-flex h-9 items-center justify-center rounded-md px-2 py-1'>
-        <Input type='text' className='h-8' {...inputProps} />
+      <div ref={setNodeRef} style={style}>
+        <Input type='text' className='h-7 px-2' {...inputProps} />
       </div>
     )
   }

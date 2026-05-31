@@ -54,7 +54,7 @@ export default function MentorPackagesTab({ userDetail }: MentorPackagesTabProps
                 <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
                   <p className='font-semibold text-primary truncate'>{pkg.name}</p>
                   <div className='flex-1' />
-                  <Badge className='rounded-sm' variant='secondary'>
+                  <Badge className='rounded-sm' variant='outline'>
                     <p className='font-semibold text-[10.5px]'>
                       {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
                     </p>

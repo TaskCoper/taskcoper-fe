@@ -45,11 +45,11 @@ export default function CalendarHeader({
           {t('common.ui.today')}
         </Button>
 
-        <div className='flex items-center gap-0.5'>
-          <Button variant='ghost' size='icon-sm' onClick={onPrev}>
+        <div className='flex items-center gap-1'>
+          <Button variant='outline' size='icon-sm' onClick={onPrev}>
             <ChevronLeftIcon />
           </Button>
-          <Button variant='ghost' size='icon-sm' onClick={onNext}>
+          <Button variant='outline' size='icon-sm' onClick={onNext}>
             <ChevronRightIcon />
           </Button>
         </div>

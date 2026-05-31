@@ -99,7 +99,7 @@ export default function AttachmentPopover({
               />
 
               <div className='space-x-2 ml-auto'>
-                <Button type='button' variant='secondary' disabled={isUploadingTaskAttachment} onClick={onClose}>
+                <Button type='button' variant='outline' disabled={isUploadingTaskAttachment} onClick={onClose}>
                   {t('common.button.cancel')}
                 </Button>
 

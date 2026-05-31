@@ -192,7 +192,7 @@ export default function ProjectPermissionsAccordion({
   const { t } = useTranslation()
 
   return (
-    <div className='rounded-md border overflow-hidden'>
+    <div className='rounded-2xl border overflow-hidden'>
       <Accordion type='multiple' className='w-full'>
         {permissions.map((permission, idx) => {
           const SectionIcon = SECTION_ICONS[permission.sectionKey]
@@ -207,7 +207,7 @@ export default function ProjectPermissionsAccordion({
               </AccordionTrigger>
 
               <AccordionContent className='pb-3'>
-                <Accordion type='multiple' className='rounded-md border'>
+                <Accordion type='multiple' className='rounded-xl border'>
                   {ACTIONS.map((action) => (
                     <PermissionActionRow
                       key={`${permission.sectionKey}-${String(action)}`}

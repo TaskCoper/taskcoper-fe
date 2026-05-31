@@ -86,6 +86,9 @@ export default function ProjectDetailLayout() {
   // control the milestones dropdown menu open state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
+  // control the parent milestone popover
+  const [isParentMilestonePopoverOpen, setIsParentMilestonePopoverOpen] = useState(false)
+
   // ref to prevent the sidebar from auto-opening multiple times
   const hasAutoOpenedRef = useRef(false)
 
@@ -206,8 +209,12 @@ export default function ProjectDetailLayout() {
             <>
               {identifier && canWrite ? (
                 <div className='shrink-0'>
-                  <AddParentMilestonePopover identifier={identifier}>
-                    <Button variant='ghost' size='icon' className='size-7'>
+                  <AddParentMilestonePopover
+                    identifier={identifier}
+                    open={isParentMilestonePopoverOpen}
+                    setOpen={setIsParentMilestonePopoverOpen}
+                  >
+                    <Button variant={isParentMilestonePopoverOpen ? 'default' : 'ghost'} size='icon' className='size-7'>
                       <PlusIcon />
                     </Button>
                   </AddParentMilestonePopover>
@@ -215,11 +222,7 @@ export default function ProjectDetailLayout() {
               ) : null}
 
               <ParentMilestonesMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen} items={items}>
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  className={cn('size-7', isDropdownOpen ? 'bg-primary/10 text-primary' : '')}
-                >
+                <Button variant={isDropdownOpen ? 'default' : 'ghost'} size='icon' className={cn('size-7')}>
                   <MenuIcon className='size-4' />
                 </Button>
               </ParentMilestonesMenu>

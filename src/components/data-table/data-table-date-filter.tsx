@@ -1,14 +1,14 @@
-import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { useDateFormat } from '@/lib/date'
 import type { Column } from '@tanstack/react-table'
 import { endOfDay, startOfDay } from 'date-fns'
-import { CalendarIcon, XCircle } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import * as React from 'react'
 import type { DateRange } from 'react-day-picker'
 import { useTranslation } from 'react-i18next'
+import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 type DateSelection = Date[] | DateRange
 
@@ -160,22 +160,14 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='border-dashed font-normal'>
-          {hasValue ? (
-            <div
-              role='button'
-              aria-label={`Clear ${title} filter`}
-              tabIndex={0}
-              onClick={onReset}
-              className='rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-            >
-              <XCircle />
-            </div>
-          ) : (
-            <CalendarIcon />
-          )}
+        <DataTableFilterTrigger
+          hasValue={Boolean(hasValue)}
+          clearLabel={`Clear ${title} filter`}
+          emptyIcon={<CalendarIcon />}
+          onClear={onReset}
+        >
           {label}
-        </Button>
+        </DataTableFilterTrigger>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
         {multiple ? (

@@ -265,7 +265,7 @@ export default function ProjectPositionTitleCombobox({
               )}
 
               {canWrite ? (
-                <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
+                <Button variant='outline' className='w-full' onClick={() => setMode('add')}>
                   {t('project.updateProjectMembers.positionTitle.createTitle')}
                 </Button>
               ) : null}

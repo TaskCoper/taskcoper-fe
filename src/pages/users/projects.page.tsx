@@ -76,7 +76,7 @@ export default function ProjectsPage() {
           ))}
 
           <CreateProjectDialog>
-            <Button variant='outline' className={`border-dashed h-24 rounded-xl ${responsiveColSpan}`}>
+            <Button variant='outline' className={`h-24 rounded-xl ring-0 border border-dashed ${responsiveColSpan}`}>
               <PlusIcon />
               {t('project.createProject.button')}
             </Button>

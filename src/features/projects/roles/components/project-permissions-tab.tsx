@@ -214,7 +214,7 @@ export default function ProjectPermissionsTab({ projectIdentifier }: ProjectPerm
             </div>
           ) : null}
 
-          <div className='rounded-md border overflow-x-auto shadow-xs'>
+          <div className='rounded-2xl border overflow-x-auto shadow-md'>
             <Table className='min-w-200 bg-card'>
               <TableHeader>
                 <TableRow className='hover:bg-transparent'>

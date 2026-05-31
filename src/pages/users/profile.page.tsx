@@ -361,7 +361,7 @@ export default function ProfilePage() {
 
                   <div className='absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover/cover:opacity-100 pointer-events-none' />
                   <div className='absolute bottom-3 right-3 pointer-events-none'>
-                    <Button variant='secondary' size='sm' asChild>
+                    <Button variant='outline' size='sm' asChild>
                       <div>
                         <CameraIcon />
                         <p>{t('user.profile.addCoverImage')}</p>

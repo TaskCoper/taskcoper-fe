@@ -86,7 +86,7 @@ export default function UpdateProjectLabelForm() {
         />
 
         <div className='space-y-4 mt-4'>
-          <Button type='button' size='sm' className='w-full' variant='secondary' onClick={() => setValue('color', '')}>
+          <Button type='button' size='sm' className='w-full' variant='outline' onClick={() => setValue('color', '')}>
             <XIcon />
             {t('task.label.removeColor')}
           </Button>
