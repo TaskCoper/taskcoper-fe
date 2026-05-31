@@ -143,7 +143,7 @@ export default function DomainMultiSelect({
           {visibleBadges.map((domain) => (
             <Badge
               key={domain.id}
-              variant='secondary'
+              variant='outline'
               className='rounded-md gap-1 pr-1 pl-2.5 py-1 text-xs font-medium max-w-45'
             >
               <span className='truncate'>{domain.name}</span>

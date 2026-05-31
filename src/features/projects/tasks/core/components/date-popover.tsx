@@ -464,7 +464,7 @@ export default function DatePopover({ children, onSubmit, onRemove, disabled = f
               {t('common.button.save')}
             </Button>
             {canDelete ? (
-              <Button className='w-full' variant='secondary' onClick={handleRemove}>
+              <Button className='w-full' variant='outline' onClick={handleRemove}>
                 {t('common.button.remove')}
               </Button>
             ) : null}

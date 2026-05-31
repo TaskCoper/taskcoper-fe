@@ -2,7 +2,7 @@ import { queryKeys } from '@/lib/query-keys'
 import { calculateNewItemPosition } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -10,10 +10,17 @@ import { useGetParentMilestones } from '../../core/hooks/use-get-parent-mileston
 import milestoneService from '../services'
 import { addParentMilestoneSchema, type AddParentMilestoneFormValues } from '../validations'
 
-export const useAddParentMilestone = ({ identifier }: { identifier: string }) => {
+export const useAddParentMilestone = ({
+  identifier,
+  open,
+  setOpen
+}: {
+  identifier: string
+  open: boolean
+  setOpen: (open: boolean) => void
+}) => {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const [open, setOpen] = useState(false)
   const { parentMilestones } = useGetParentMilestones({ identifier })
 
   const existingParentMilestones = useMemo(() => parentMilestones?.value.items || [], [parentMilestones])

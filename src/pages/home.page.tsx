@@ -114,7 +114,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         <Badge
-                          variant='secondary'
+                          variant='outline'
                           className='bg-emerald-50 text-emerald-600 text-[10px] font-medium rounded-sm'
                         >
                           {t('home.cards.taskCard.status')}

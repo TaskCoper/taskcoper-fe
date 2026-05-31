@@ -114,11 +114,7 @@ export default function PublicLayout() {
                 </Button>
 
                 <NotificationsPopover open={openNotificationsPopover} onOpenChange={setOpenNotificationsPopover}>
-                  <Button
-                    size='icon-sm'
-                    variant='ghost'
-                    className={cn('relative', openNotificationsPopover ? 'bg-primary/10 text-primary' : '')}
-                  >
+                  <Button size='icon-sm' variant={openNotificationsPopover ? 'default' : 'ghost'} className='relative'>
                     <BellIcon className='size-4 sm:size-5' />
                     {isLoadingUnreadCount ? null : unreadCount > 0 ? (
                       <div className='absolute p-1 rounded-full bg-destructive size-4 flex justify-center items-center top-0 right-0'>

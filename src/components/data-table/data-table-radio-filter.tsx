@@ -1,11 +1,9 @@
-import { cn } from '@/shared/utils'
 import type { Option } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
-import { CircleIcon, PlusCircleIcon, XCircleIcon } from 'lucide-react'
+import { PlusCircleIcon } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '../ui/badge'
-import { Button } from '../ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,7 +14,9 @@ import {
   CommandSeparator
 } from '../ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Separator } from '../ui/separator'
+import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface DataTableRadioFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -61,55 +61,40 @@ export default function DataTableRadioFilter<TData, TValue>({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='border-dashed font-normal'>
-          {selectedValue ? (
-            <div
-              role='button'
-              aria-label={`Clear ${title} filter`}
-              tabIndex={0}
-              className='rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-              onClick={onReset}
-            >
-              <XCircleIcon />
-            </div>
-          ) : (
-            <PlusCircleIcon />
-          )}
+        <DataTableFilterTrigger
+          hasValue={Boolean(selectedValue)}
+          clearLabel={`Clear ${title} filter`}
+          emptyIcon={<PlusCircleIcon />}
+          onClear={onReset}
+        >
           {title}
           {selectedValue && selectedOption && (
             <>
               <Separator orientation='vertical' className='mx-0.5 data-[orientation=vertical]:h-4' />
-              <Badge className='rounded-sm px-1.5 font-normal'>{selectedOption.label}</Badge>
+              <Badge variant='outline' className='rounded-sm px-1.5 font-normal'>
+                {selectedOption.label}
+              </Badge>
             </>
           )}
-        </Button>
+        </DataTableFilterTrigger>
       </PopoverTrigger>
       <PopoverContent className='w-50 p-0' align='start'>
         <Command>
           <CommandInput placeholder={title} />
           <CommandList className='max-h-full'>
             <CommandEmpty>{t('dataTable.filter.noResultsFound')}</CommandEmpty>
-            <CommandGroup className='max-h-[300px] scroll-py-1 overflow-y-auto overflow-x-hidden'>
-              {options.map((option) => {
-                const isSelected = selectedValue === option.value
-
-                return (
+            <RadioGroup value={selectedValue}>
+              <CommandGroup className='max-h-[300px] scroll-py-1 overflow-y-auto overflow-x-hidden'>
+                {options.map((option) => (
                   <CommandItem key={option.value} onSelect={() => onItemSelect(option)}>
-                    <div
-                      className={cn(
-                        'flex size-4 items-center justify-center rounded-full border border-primary shrink-0',
-                        isSelected ? 'bg-primary' : 'opacity-50'
-                      )}
-                    >
-                      {isSelected && <CircleIcon className='size-2 fill-primary-foreground text-primary-foreground' />}
-                    </div>
+                    <RadioGroupItem value={option.value} className='pointer-events-none shrink-0' />
                     {option.icon && <option.icon />}
                     <span className='truncate'>{option.label}</span>
                     {option.count !== undefined && <span className='ml-auto font-mono text-xs'>{option.count}</span>}
                   </CommandItem>
-                )
-              })}
-            </CommandGroup>
+                ))}
+              </CommandGroup>
+            </RadioGroup>
             {selectedValue && (
               <>
                 <CommandSeparator />

@@ -6,7 +6,7 @@ import { Outlet } from 'react-router'
 
 export default function UserWorkspaceLayout() {
   return (
-    <SidebarProvider defaultOpen={false} className='h-full min-h-0'>
+    <SidebarProvider className='h-full min-h-0'>
       <UserWorkspaceSidebar />
       <SidebarInset>
         {/* <header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>

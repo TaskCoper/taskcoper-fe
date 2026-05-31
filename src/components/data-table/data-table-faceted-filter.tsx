@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Command,
   CommandEmpty,
@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/shared/utils'
 import type { Option } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
-import { Check, PlusCircle, XCircle } from 'lucide-react'
+import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
+import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -72,37 +72,29 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='border-dashed font-normal'>
-          {selectedValues?.size > 0 ? (
-            <div
-              role='button'
-              aria-label={`Clear ${title} filter`}
-              tabIndex={0}
-              className='rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-              onClick={onReset}
-            >
-              <XCircle />
-            </div>
-          ) : (
-            <PlusCircle />
-          )}
+        <DataTableFilterTrigger
+          hasValue={selectedValues?.size > 0}
+          clearLabel={`Clear ${title} filter`}
+          emptyIcon={<PlusCircle />}
+          onClear={onReset}
+        >
           {title}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation='vertical' className='mx-0.5 data-[orientation=vertical]:h-4' />
-              <Badge variant='default' className='rounded-sm px-1 font-normal lg:hidden'>
+              <Badge variant='outline' className='rounded-sm px-1 font-normal lg:hidden'>
                 {selectedValues.size}
               </Badge>
               <div className='hidden items-center gap-1 lg:flex'>
                 {selectedValues.size > 1 ? (
-                  <Badge variant='default' className='rounded-sm px-1 font-normal'>
+                  <Badge variant='outline' className='rounded-sm px-1 font-normal'>
                     {selectedValues.size} {t('dataTable.filter.selected')}
                   </Badge>
                 ) : (
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge variant='default' key={option.value} className='rounded-sm px-1 font-normal'>
+                      <Badge variant='outline' key={option.value} className='rounded-sm px-1 font-normal'>
                         {option.label}
                       </Badge>
                     ))
@@ -110,7 +102,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               </div>
             </>
           )}
-        </Button>
+        </DataTableFilterTrigger>
       </PopoverTrigger>
       <PopoverContent className='w-60 p-0' align='start'>
         <Command>
@@ -123,14 +115,10 @@ export function DataTableFacetedFilter<TData, TValue>({
 
                 return (
                   <CommandItem key={option.value} onSelect={() => onItemSelect(option, isSelected)}>
-                    <div
-                      className={cn(
-                        'flex size-4 items-center justify-center rounded-sm border border-primary',
-                        isSelected ? 'bg-primary' : 'opacity-50 [&_svg]:invisible'
-                      )}
-                    >
-                      <Check className='text-primary-foreground' />
-                    </div>
+                    <Checkbox
+                      checked={isSelected}
+                      className='pointer-events-none data-[state=checked]:text-primary-foreground'
+                    />
                     {option.icon && <option.icon />}
                     <span className='truncate'>{option.label}</span>
                     <span className='ml-auto font-mono text-xs'>{option.count}</span>

@@ -10,6 +10,7 @@ import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { MAX_COVER_SIZE, MAX_LOGO_SIZE } from '@/shared/constants'
+import { softInsetSurfaceClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import { CameraIcon, ImageOffIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -287,7 +288,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
             <Progress value={project?.progress ?? 0} className='h-2' />
           </div>
 
-          <Card className='p-3 gap-4 rounded-lg shadow-none'>
+          <Card className={cn('p-3 gap-4', softInsetSurfaceClasses)}>
             <div>
               <p className='font-semibold'>{t('project.updateProjectGeneral.title')}</p>
               <p className='text-xs text-muted-foreground'>{t('project.updateProjectGeneral.description')}</p>
@@ -295,7 +296,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
             <UpdateProjectGeneralForm />
           </Card>
 
-          <Card className='p-3 gap-4 rounded-lg shadow-none'>
+          <Card className={cn('p-3 gap-4', softInsetSurfaceClasses)}>
             <div>
               <p className='font-semibold'>{t('project.updateProjectDomains.title')}</p>
               <p className='text-xs text-muted-foreground'>{t('project.updateProjectDomains.description')}</p>
@@ -334,7 +335,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
             </div>
           </Card>
 
-          <Card className='p-3 gap-4 rounded-lg shadow-none'>
+          <Card className={cn('p-3 gap-4', softInsetSurfaceClasses)}>
             <div>
               <p className='font-semibold'>{t('project.updateProjectTimeline.title')}</p>
               <p className='text-xs text-muted-foreground'>{t('project.updateProjectTimeline.description')}</p>
@@ -343,7 +344,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
           </Card>
 
           {isCurrentUserOwner ? (
-            <Card className='p-3 gap-4 rounded-lg shadow-none border-destructive/20'>
+            <Card className='p-3 gap-4 shadow-none border-destructive/20 rounded-2xl'>
               <div>
                 <p className='font-semibold text-destructive'>{t('project.deleteProject.dangerZone.title')}</p>
                 <p className='text-xs text-muted-foreground'>{t('project.deleteProject.dangerZone.description')}</p>

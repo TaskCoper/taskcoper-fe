@@ -1,5 +1,6 @@
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -116,8 +117,8 @@ export default function ProjectInfoPage() {
             </div>
 
             <div className='w-full'>
-              <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0'>
-                <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-xl'>
+              <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0 rounded-2xl'>
+                <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-2xl'>
                   <BookOpenIcon className='size-4 text-muted-foreground' />
                   <p className='text-sm font-semibold text-muted-foreground'>{t('project.info.readme')}</p>
                 </div>
@@ -186,9 +187,9 @@ export default function ProjectInfoPage() {
 
               <div className='flex items-center gap-2 flex-wrap'>
                 {(project?.domains ?? []).map((domain) => (
-                  <div className='rounded-sm bg-primary text-white px-2 py-1' key={domain.id}>
+                  <Badge key={domain.id}>
                     <p className='text-xs font-medium'>{domain.name}</p>
-                  </div>
+                  </Badge>
                 ))}
               </div>
             </div>

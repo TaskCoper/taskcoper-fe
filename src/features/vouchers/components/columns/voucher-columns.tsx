@@ -121,7 +121,7 @@ export const getColumns = ({ onDelete, isDeletingVoucher }: VoucherColumnsProps)
 
         if (isExpired) {
           return (
-            <Badge variant='secondary' className='mx-auto flex w-fit rounded-md'>
+            <Badge variant='outline' className='mx-auto flex w-fit rounded-md'>
               {i18next.t('voucher.column.expired')}
             </Badge>
           )

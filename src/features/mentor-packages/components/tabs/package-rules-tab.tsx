@@ -160,7 +160,7 @@ const MentorPackageRuleRow = ({ rule, mentorPackageId }: { rule: MentorPackageRu
           </div>
         ) : (
           <div className='flex items-center justify-end gap-2'>
-            <Button variant='secondary' size='sm' onClick={() => setIsEditing(true)}>
+            <Button variant='outline' size='sm' onClick={() => setIsEditing(true)}>
               {t('mentorPackageRule.item.edit')}
             </Button>
             <Button

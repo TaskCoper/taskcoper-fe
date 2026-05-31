@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
+import { softInsetSurfaceClasses } from '@/shared/effects'
 import { TrendingUp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Pie, PieChart } from 'recharts'
@@ -30,7 +31,7 @@ export default function PieChartLabel({
   const { t } = useTranslation()
 
   return (
-    <Card className='flex flex-col h-full shadow-none p-4 gap-4'>
+    <Card className={`${softInsetSurfaceClasses} flex flex-col h-full p-4 gap-4`}>
       <div className='flex items-start justify-between'>
         <div className='flex flex-col items-start pb-0'>
           <p className='font-semibold'>{title}</p>

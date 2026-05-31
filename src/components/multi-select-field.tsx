@@ -118,7 +118,7 @@ export default function MultiSelectField<T extends FieldValues>({
                   </div>
                 ) : (
                   <Badge
-                    variant='secondary'
+                    variant='outline'
                     className={cn('rounded-sm max-w-24 shrink-0', badgeClassName)}
                     key={option.value}
                   >

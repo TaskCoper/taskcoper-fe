@@ -248,7 +248,7 @@ export default function SubtaskDeadlinePopover({
               </Button>
 
               {deadline ? (
-                <Button className='w-full' variant='secondary' onClick={handleRemove}>
+                <Button className='w-full' variant='outline' onClick={handleRemove}>
                   {t('common.button.remove')}
                 </Button>
               ) : null}

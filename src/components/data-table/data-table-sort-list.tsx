@@ -120,7 +120,7 @@ export function DataTableSortList<TData>({ table, disabled, ...props }: DataTabl
             {t('dataTable.sort.sort')}
             {sorting.length > 0 && (
               <Badge
-                variant='secondary'
+                variant='outline'
                 className='h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]'
               >
                 {sorting.length}

@@ -256,7 +256,7 @@ export default function LabelPopover({
               ) : null}
 
               {canWrite ? (
-                <Button variant='secondary' className='w-full' onClick={() => setMode('add')}>
+                <Button variant='outline' className='w-full' onClick={() => setMode('add')}>
                   {t('task.label.createLabel')}
                 </Button>
               ) : null}

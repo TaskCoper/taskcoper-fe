@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
+import { softInsetSurfaceClasses } from '@/shared/effects'
 import { TrendingUp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
@@ -68,7 +69,7 @@ export default function BarChartHorizontal({
   const { t } = useTranslation()
 
   return (
-    <Card className='p-4 shadow-none gap-4 flex flex-col h-full'>
+    <Card className={`${softInsetSurfaceClasses} p-4 gap-4 flex flex-col h-full`}>
       <div className='flex items-start justify-between'>
         <div>
           <p className='font-semibold'>{title}</p>

@@ -55,8 +55,8 @@ export default function StatCard({
   const iconGradient = gradientMap[color] || gradientMap.blue
 
   return (
-    <Card className='bg-muted/20 p-1 gap-0 shadow-none'>
-      <Card className='rounded-lg p-3 gap-4'>
+    <Card className='bg-muted/50 p-1 gap-0 shadow-none rounded-2xl'>
+      <Card className='p-3 gap-4'>
         <div className={`size-7.5 shadow-xs rounded-lg flex items-center justify-center ${iconGradient}`}>{icon}</div>
 
         <div className='-space-y-0.5'>

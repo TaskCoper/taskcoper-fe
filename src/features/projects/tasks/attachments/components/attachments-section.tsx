@@ -41,7 +41,7 @@ export default function AttachmentsSection({
               projectIdentifier={projectIdentifier}
               parentMilestoneIdentifier={parentMilestoneIdentifier}
             >
-              <Button variant='secondary' size='sm'>
+              <Button variant='outline' size='sm'>
                 {t('common.button.add')}
               </Button>
             </AttachmentPopover>

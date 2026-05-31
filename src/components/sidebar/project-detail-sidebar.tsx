@@ -18,6 +18,7 @@ import { useOwnerTransferCandidates } from '@/features/projects/members/hooks/us
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import TaskCard from '@/features/projects/tasks/core/components/task-card'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { activePrimaryControlClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import {
   CalendarDaysIcon,
@@ -289,7 +290,10 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
                             children: item.title,
                             hidden: false
                           }}
-                          className={cn('px-2.5 md:px-2', activeSegment === item.url && 'bg-primary/10 text-primary')}
+                          className={cn(
+                            'hover:bg-muted-foreground/15',
+                            activeSegment === item.url && activePrimaryControlClasses
+                          )}
                         >
                           <item.icon />
                           <span>{item.title}</span>
@@ -301,8 +305,8 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
 
                 {identifier ? (
                   <Button
-                    className='mt-auto bg-destructive/10 text-destructive/90 hover:bg-destructive/15 hover:text-destructive'
-                    variant='ghost'
+                    className='mt-auto'
+                    variant='destructive'
                     size='icon-sm'
                     onClick={handleLeaveButtonClick}
                     disabled={isLeavingProject}

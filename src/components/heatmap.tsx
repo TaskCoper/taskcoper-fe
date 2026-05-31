@@ -1,6 +1,7 @@
 import { Calendar } from '@/components/ui/calendar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useDateFormat } from '@/lib/date'
+import { softInsetSurfaceClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import { subMonths } from 'date-fns'
 import React, { createContext, useContext, useMemo } from 'react'
@@ -159,7 +160,7 @@ function Heatmap<T = unknown>({ data = [], renderTooltip, onDayClick, startMonth
   return (
     <HeatmapDataContext.Provider value={{ dataMap, renderTooltip, onDayClick } as HeatmapContextValue}>
       <Card
-        className='overflow-x-auto shadow-none pt-6 pb-4'
+        className={cn('overflow-x-auto pt-6 pb-4', softInsetSurfaceClasses)}
         style={{ '--box-size': DAY_SIZE, '--box-margin': DAY_MARGIN } as React.CSSProperties}
       >
         <div className='flex flex-col gap-3 items-center'>

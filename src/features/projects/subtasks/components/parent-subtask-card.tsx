@@ -159,7 +159,7 @@ export default function ParentSubtaskCard({
             </p>
             <div className='flex-1' />
             {progress > 0 && (
-              <Button variant='secondary' size='sm' onClick={() => setToggleViewCompleted(!toggleViewCompleted)}>
+              <Button variant='outline' size='sm' onClick={() => setToggleViewCompleted(!toggleViewCompleted)}>
                 {toggleViewCompleted
                   ? t('task.subtask.hideCompletedItems')
                   : `${t('task.subtask.showCompletedItems')} (${completedCount})`}
@@ -168,7 +168,7 @@ export default function ParentSubtaskCard({
 
             {canDelete ? (
               <Button
-                variant='secondary'
+                variant='outline'
                 size='sm'
                 onClick={() => deleteSubtask({ id: subtask.id })}
                 disabled={isDeletingSubtask}
@@ -241,7 +241,7 @@ export default function ParentSubtaskCard({
                   {t('common.button.add')}
                 </Button>
                 <Button
-                  variant='secondary'
+                  variant='outline'
                   size='sm'
                   onClick={() => setEditingSubtaskId(null)}
                   disabled={isAddingTaskSubtask}
@@ -251,7 +251,7 @@ export default function ParentSubtaskCard({
               </div>
             ) : canWrite ? (
               <Button
-                variant='secondary'
+                variant='outline'
                 size='sm'
                 onClick={() => setEditingSubtaskId(subtask.id)}
                 disabled={isAddingTaskSubtask}

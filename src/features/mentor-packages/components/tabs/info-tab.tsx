@@ -83,7 +83,7 @@ function InfoTabForm({ onSubmit, onDelete, onCoverImageChange, isDeleting, isUpd
           <Button
             type='button'
             size='sm'
-            variant='secondary'
+            variant='outline'
             className='absolute bottom-3 right-3 gap-1.5 opacity-100 sm:opacity-0 sm:group-hover/cover:opacity-100 transition-opacity'
             disabled={isUploading || isUpdating}
           >

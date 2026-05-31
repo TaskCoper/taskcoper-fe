@@ -105,7 +105,7 @@ export default function UploadAttachmentForm({
           multiple
           className='w-full'
         >
-          <Button type='button' variant='secondary' className='w-full' disabled={isUploading}>
+          <Button type='button' variant='outline' className='w-full' disabled={isUploading}>
             {t('task.attachment.chooseAttachment')}
           </Button>
         </FileDropzone>

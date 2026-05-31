@@ -17,6 +17,8 @@ import {
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { formatDate, useDateFormat } from '@/lib/date'
+import { softInsetSurfaceClasses } from '@/shared/effects'
+import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { endOfDay, endOfMonth, getYear, parseISO, startOfDay, startOfMonth } from 'date-fns'
 import { CircleCheckBigIcon, LayersPlus, ListTreeIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react'
@@ -427,7 +429,7 @@ export default function ProjectPerformancePage() {
 
           {/* Bar chart */}
           <div className='w-full'>
-            <Card className='p-4 shadow-none gap-4'>
+            <Card className={cn('p-4 gap-4', softInsetSurfaceClasses)}>
               <div className='flex justify-between items-start gap-2'>
                 <div>
                   <p className='font-semibold'>{t('projectPerformance.taskStatistics')}</p>

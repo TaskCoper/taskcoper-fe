@@ -404,7 +404,7 @@ export default function MeetingDialogPage() {
                 onReschedule={() => setIsRescheduling(true)}
                 calendarPermission={meeting.calendarPermission}
               >
-                <Button variant='secondary' size='icon-sm' className='size-7'>
+                <Button variant='outline' size='icon-sm' className='size-7'>
                   <MoreHorizontalIcon />
                 </Button>
               </MeetingDetailMenu>

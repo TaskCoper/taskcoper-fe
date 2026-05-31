@@ -10,10 +10,10 @@ interface ProjectPreviewCardProps {
 export default function ProjectPreviewCard({ project }: ProjectPreviewCardProps) {
   return (
     <Link to={`/projects/${project.slug}`} className='hover:underline'>
-      <Card className='gap-0 p-0 w-full h-full'>
+      <Card className='gap-0 p-px w-full h-full border-none'>
         <div className='w-full h-4/6'>
           {project.coverImage ? (
-            <img src={project.coverImage} alt={project.name} className='w-full h-full object-cover rounded-t-xl' />
+            <img src={project.coverImage} alt={project.name} className='w-full h-full object-cover rounded-t-[12px]' />
           ) : (
             <div className='w-full h-full bg-muted rounded-t-xl flex items-center justify-center'>
               <ImageOffIcon className='text-muted-foreground/60 size-6' />

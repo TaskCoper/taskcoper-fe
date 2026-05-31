@@ -135,7 +135,7 @@ export default function VouchersTable() {
     isLoadingVoucherStatusStats
 
   return (
-    <DataTable table={table} isLoading={isLoading}>
+    <DataTable table={table} isLoading={isLoading} className='min-w-0 max-w-full overflow-hidden'>
       <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides}>
         <CreateVoucherDialog>
           <Button size='sm'>

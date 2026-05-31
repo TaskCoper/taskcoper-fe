@@ -65,7 +65,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
       {!notification.isInteract && payload ? (
         <div className='flex items-center gap-2 mt-2'>
           <Button
-            variant='secondary'
+            variant='outline'
             size='sm'
             className='h-7'
             onClick={() => onRespond(false)}

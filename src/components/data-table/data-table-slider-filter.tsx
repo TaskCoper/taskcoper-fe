@@ -6,9 +6,10 @@ import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { cn } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
-import { PlusCircle, XCircle } from 'lucide-react'
+import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
+import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface Range {
   min: number
@@ -109,9 +110,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
 
   const onReset = React.useCallback(
     (event: React.MouseEvent) => {
-      if (event.target instanceof HTMLDivElement) {
-        event.stopPropagation()
-      }
+      event.stopPropagation()
       column.setFilterValue(undefined)
     },
     [column]
@@ -120,20 +119,12 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='border-dashed font-normal'>
-          {columnFilterValue ? (
-            <div
-              role='button'
-              aria-label={t('dataTable.filter.clearSpecificFilter', { title })}
-              tabIndex={0}
-              className='rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-              onClick={onReset}
-            >
-              <XCircle />
-            </div>
-          ) : (
-            <PlusCircle />
-          )}
+        <DataTableFilterTrigger
+          hasValue={Boolean(columnFilterValue)}
+          clearLabel={t('dataTable.filter.clearSpecificFilter', { title })}
+          emptyIcon={<PlusCircle />}
+          onClear={onReset}
+        >
           <span>{title}</span>
           {columnFilterValue ? (
             <>
@@ -142,7 +133,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
               {unit ? ` ${unit}` : ''}
             </>
           ) : null}
-        </Button>
+        </DataTableFilterTrigger>
       </PopoverTrigger>
       <PopoverContent align='start' className='flex w-auto flex-col gap-4'>
         <div className='flex flex-col gap-3'>
@@ -164,7 +155,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 max={max}
                 value={range[0]?.toString()}
                 onChange={onFromInputChange}
-                className={cn('h-8 w-24', unit && 'pr-8')}
+                className={cn('h-7.5 w-24', unit && 'pr-8')}
               />
               {unit && (
                 <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>
@@ -188,7 +179,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 max={max}
                 value={range[1]?.toString()}
                 onChange={onToInputChange}
-                className={cn('h-8 w-24', unit && 'pr-8')}
+                className={cn('h-7.5 w-24', unit && 'pr-8')}
               />
               {unit && (
                 <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>

@@ -256,7 +256,7 @@ export default function ProjectRolePage() {
           <UpdateProjectRoleForm disabled={isLockedSystemDefaultRole} />
 
           {isLockedSystemDefaultRole ? null : (
-            <Card className='sticky bottom-20 z-20 rounded-md py-2 pl-4 pr-2'>
+            <Card className='sticky bottom-20 z-20 rounded-xl py-2 pl-4 pr-2'>
               <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                 <p className='text-xs font-medium'>{saveStateText}</p>
 
@@ -295,7 +295,7 @@ export default function ProjectRolePage() {
         <div className='space-y-2'>
           <p className='text-xl font-medium'>{t('project.deleteProjectRole.dangerZone.title')}</p>
 
-          <div className='rounded-md border border-destructive p-3 text-destructive-foreground'>
+          <div className='rounded-xl border border-destructive p-3 text-destructive-foreground'>
             <div className='flex items-center justify-between gap-2'>
               <div>
                 <p className='text-sm font-medium'>{t('project.deleteProjectRole.dangerZone.deleteTitle')}</p>

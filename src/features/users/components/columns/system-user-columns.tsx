@@ -193,13 +193,13 @@ export const getColumns = (): ColumnDef<User>[] => {
         return (
           <div className='flex flex-wrap gap-1'>
             {domains.slice(0, 2).map((domain) => (
-              <Badge key={domain.id} variant='secondary' className='rounded-sm py-0 px-1.5'>
+              <Badge key={domain.id} variant='outline' className='rounded-sm py-0 px-1.5'>
                 <p className='text-[11px] font-normal'>{domain.name}</p>
               </Badge>
             ))}
 
             {domains.length > 2 && (
-              <Badge variant='secondary' className='rounded-sm py-0 px-1.5'>
+              <Badge variant='outline' className='rounded-sm py-0 px-1.5'>
                 <p className='text-[11px] font-normal'>+{domains.length - 2}</p>
               </Badge>
             )}

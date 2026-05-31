@@ -126,7 +126,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
                         <div className='px-2 pt-2 pb-1 flex items-center gap-1'>
                           <p className='font-semibold text-primary truncate'>{pkg.name}</p>
                           <div className='flex-1' />
-                          <Badge className='rounded-sm' variant='secondary'>
+                          <Badge className='rounded-sm' variant='outline'>
                             <p className='font-semibold text-[10.5px]'>
                               {t('mentorPackage.card.sessionsCount', { count: pkg.totalSessions })}
                             </p>
@@ -194,7 +194,7 @@ export default function AllTab({ userDetail }: AllTabProps) {
 
               {needsCollapse && (
                 <div className='px-4 pb-4'>
-                  <Button variant='secondary' className='w-full' onClick={() => setIsExpanded(!isExpanded)}>
+                  <Button variant='outline' className='w-full' onClick={() => setIsExpanded(!isExpanded)}>
                     {isExpanded ? (
                       <>
                         <ChevronUpIcon />

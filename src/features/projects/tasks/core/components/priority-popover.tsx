@@ -104,7 +104,7 @@ export default function PriorityPopover({ children, onSubmit, onRemove, disabled
 
           <div className='flex justify-end items-center gap-2'>
             {canDelete ? (
-              <Button variant='ghost' onClick={handleRemove}>
+              <Button variant='outline' onClick={handleRemove}>
                 {t('common.button.remove')}
               </Button>
             ) : null}

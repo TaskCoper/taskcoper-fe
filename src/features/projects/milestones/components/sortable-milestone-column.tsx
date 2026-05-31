@@ -105,10 +105,11 @@ export default function SortableMilestoneColumn({
       {...(isEditing || !canMoveMilestone ? {} : { ...attributes, ...listeners })}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
-        className: 'gap-0 p-0 w-64 rounded-lg max-h-[calc(100vh-12.5rem)] overflow-hidden bg-muted cursor-pointer'
+        className:
+          'gap-0 p-0 w-64 max-h-[calc(100vh-12.5rem)] rounded-2xl overflow-hidden bg-muted border-none shadow-[0_1px_3px_rgba(0,0,0,0.1),inset_0_0_3px_rgba(0,0,0,0.4)] cursor-pointer'
       })}
     >
-      <div className='flex items-center justify-between gap-2 shrink-0 pl-3 pr-2 pt-2'>
+      <div className={cn('flex items-center justify-between gap-2 shrink-0 pr-2 pt-2', isEditing ? 'pl-2' : 'pl-4')}>
         {isEditing ? (
           <Input type='text' className='h-8 text-sm font-semibold' {...inputProps} />
         ) : (

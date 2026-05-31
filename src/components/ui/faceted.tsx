@@ -152,12 +152,12 @@ function FacetedBadgeList(props: FacetedBadgeListProps) {
   return (
     <div {...badgeListProps} className={cn('flex flex-wrap items-center gap-1', className)}>
       {values.length > max ? (
-        <Badge variant='secondary' className={cn('rounded-sm px-1 font-normal', badgeClassName)}>
+        <Badge variant='outline' className={cn('rounded-sm px-1 font-normal', badgeClassName)}>
           {t('dataTable.filter.selectedCount', { count: values.length })}
         </Badge>
       ) : (
         values.map((value) => (
-          <Badge key={value} variant='secondary' className={cn('rounded-sm px-1 font-normal', badgeClassName)}>
+          <Badge key={value} variant='outline' className={cn('rounded-sm px-1 font-normal', badgeClassName)}>
             <span className='truncate'>{getLabel(value)}</span>
           </Badge>
         ))
