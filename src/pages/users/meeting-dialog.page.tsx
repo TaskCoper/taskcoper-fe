@@ -14,7 +14,7 @@ import { useGetMeeting } from '@/features/meetings/hooks/use-get-meeting'
 import { useUpdateMeeting } from '@/features/meetings/hooks/use-update-meeting'
 import { MeetingStatus, MeetingStatusLabel, type MeetingDetail } from '@/features/meetings/types'
 import { getMeetingStatusTheme } from '@/features/meetings/utils'
-import type { UpdateMeetingFormValues } from '@/features/meetings/validations'
+import { updateMeetingSchema, type UpdateMeetingFormValues } from '@/features/meetings/validations'
 import MentorScheduleDialog from '@/features/schedules/components/mentor-schedule-dialog'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useInlineEdit } from '@/hooks/use-inline-edit'
@@ -36,10 +36,17 @@ import {
   VideoIcon,
   XCircleIcon
 } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 import type { SelectedTimeSlot } from './purchased-package.page'
+
+const MEETING_DIALOG_INSET_SHADOW_COLOR = 'rgba(0,0,0,0.6)'
+const MEETING_DIALOG_SHADOW_STYLE = {
+  '--meeting-dialog-inset-shadow-color': MEETING_DIALOG_INSET_SHADOW_COLOR
+} as CSSProperties
+const MEETING_DIALOG_HEADER_SHADOW_CLASSES =
+  'shadow-[inset_0_4px_4px_-4px_var(--meeting-dialog-inset-shadow-color),inset_4px_0_4px_-4px_var(--meeting-dialog-inset-shadow-color),inset_-4px_0_4px_-4px_var(--meeting-dialog-inset-shadow-color)]'
 
 const getTimezoneString = () => {
   const date = new Date()
@@ -98,33 +105,44 @@ function MeetingNoteAndLink({ meeting, canUpdateMeeting }: MeetingNoteAndLinkPro
   const [savedNote, setSavedNote] = useState(meeting.note ?? '')
   const [meetingLinkValue, setMeetingLinkValue] = useState(meeting.meetingLink ?? '')
 
-  const submitMeetingUpdate = useCallback(
-    (nextNote: string, nextLink: string) => {
+  const getMeetingUpdatePayload = useCallback(
+    (nextNote: string, nextLink: string): UpdateMeetingFormValues => ({
+      meetingId: meeting.id,
+      startTimeUtc: meeting.startTimeUtc,
+      endTimeUtc: meeting.endTimeUtc,
+      reason: meeting.reason ?? '',
+      note: nextNote ?? '',
+      meetingLink: normalizeMeetingLink(nextLink)
+    }),
+    [meeting]
+  )
+
+  const submitMeetingUpdatePayload = useCallback(
+    (payload: UpdateMeetingFormValues, onSuccess?: () => void) => {
       if (!canUpdateMeeting) return
 
-      const normalizedNote = nextNote ?? ''
-      const normalizedLink = normalizeMeetingLink(nextLink)
       const currentNote = meeting.note ?? ''
       const currentLink = meeting.meetingLink ?? null
 
-      if (normalizedNote === currentNote && normalizedLink === currentLink) return
-
-      const payload: UpdateMeetingFormValues = {
-        meetingId: meeting.id,
-        startTimeUtc: meeting.startTimeUtc,
-        endTimeUtc: meeting.endTimeUtc,
-        reason: meeting.reason ?? '',
-        note: normalizedNote,
-        meetingLink: normalizedLink
+      if (payload.note === currentNote && payload.meetingLink === currentLink) {
+        onSuccess?.()
+        return
       }
 
-      updateMeeting({ body: payload })
+      updateMeeting({ body: payload }, { onSuccess })
     },
     [canUpdateMeeting, meeting, updateMeeting]
   )
 
-  const debouncedUpdateMeetingLink = useDebouncedCallback((nextLink: string) => {
-    submitMeetingUpdate(savedNote, nextLink)
+  const submitMeetingUpdate = useCallback(
+    (nextNote: string, nextLink: string, onSuccess?: () => void) => {
+      submitMeetingUpdatePayload(getMeetingUpdatePayload(nextNote, nextLink), onSuccess)
+    },
+    [getMeetingUpdatePayload, submitMeetingUpdatePayload]
+  )
+
+  const debouncedUpdateMeetingLink = useDebouncedCallback((payload: UpdateMeetingFormValues) => {
+    submitMeetingUpdatePayload(payload)
   }, 3000)
 
   const {
@@ -133,10 +151,12 @@ function MeetingNoteAndLink({ meeting, canUpdateMeeting }: MeetingNoteAndLinkPro
     triggerProps: meetingLinkTriggerProps
   } = useInlineEdit({
     initialValue: meetingLinkValue,
-    allowEmpty: true,
     onSave: (nextValue) => {
-      setMeetingLinkValue(nextValue)
-      debouncedUpdateMeetingLink(nextValue)
+      const parsedPayload = updateMeetingSchema(t).safeParse(getMeetingUpdatePayload(savedNote, nextValue))
+      if (!parsedPayload.success) return
+
+      setMeetingLinkValue(parsedPayload.data.meetingLink ?? '')
+      debouncedUpdateMeetingLink(parsedPayload.data)
     }
   })
 
@@ -148,8 +168,10 @@ function MeetingNoteAndLink({ meeting, canUpdateMeeting }: MeetingNoteAndLinkPro
 
   const handleNoteSave = () => {
     if (!isNoteDirty) return
-    submitMeetingUpdate(noteValue, meetingLinkValue)
-    setSavedNote(noteValue)
+    const nextSavedNote = noteValue
+    submitMeetingUpdate(noteValue, meetingLinkValue, () => {
+      setSavedNote(nextSavedNote)
+    })
   }
 
   const handleNoteCancel = () => {
@@ -205,13 +227,13 @@ function MeetingNoteAndLink({ meeting, canUpdateMeeting }: MeetingNoteAndLinkPro
               <Button type='button' onClick={handleNoteSave} disabled={!isNoteDirty}>
                 {t('common.button.save')}
               </Button>
-              <Button type='button' variant='ghost' onClick={handleNoteCancel} disabled={!isNoteDirty}>
+              <Button type='button' variant='outline' onClick={handleNoteCancel} disabled={!isNoteDirty}>
                 {t('common.button.cancel')}
               </Button>
             </div>
           </div>
         ) : (
-          <div className='bg-muted w-full min-h-32 p-3 rounded-md'>
+          <div className='bg-muted w-full min-h-32 p-3 rounded-2xl'>
             {meeting.note ? (
               <SanitizedHtml html={meeting.note} />
             ) : (
@@ -334,11 +356,14 @@ export default function MeetingDialogPage() {
       }}
     >
       <DialogContent
-        className='min-w-6xl p-0 border-none overflow-hidden gap-0'
+        className='min-w-[95%] xl:min-w-6xl p-0 border-none overflow-hidden gap-0 rounded-3xl'
+        style={MEETING_DIALOG_SHADOW_STYLE}
         position='top-center'
         showCloseButton={false}
       >
-        <DialogHeader className='px-6 py-4 space-y-1 bg-muted'>
+        <DialogHeader
+          className={cn('px-6 py-4 space-y-1 bg-muted rounded-t-3xl', MEETING_DIALOG_HEADER_SHADOW_CLASSES)}
+        >
           <VisuallyHidden>
             <DialogDescription>
               {meeting?.projectId && meeting?.project ? `[${meeting.project.name}] - ` : null}
@@ -380,14 +405,14 @@ export default function MeetingDialogPage() {
           </DialogTitle>
 
           <div className='flex items-center gap-2'>
-            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
+            <p className='px-3 py-2 bg-foreground/10 rounded-lg text-sm font-medium backdrop-blur-sm'>
               {meeting?.startTimeUtc ? formatDate(meeting.startTimeUtc, 'dateMedium') : '-'}
             </p>
-            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
+            <p className='px-3 py-2 bg-foreground/10 rounded-lg text-sm font-medium backdrop-blur-sm'>
               {meeting?.startTimeUtc ? formatTime(meeting.startTimeUtc) : '-'}
             </p>
             <p className='text-sm font-medium px-1'>{t('meeting.detail.to')}</p>
-            <p className='px-3 py-2 bg-foreground/10 rounded-md text-sm font-medium backdrop-blur-sm'>
+            <p className='px-3 py-2 bg-foreground/10 rounded-lg text-sm font-medium backdrop-blur-sm'>
               {meeting?.endTimeUtc ? formatTime(meeting.endTimeUtc) : '-'}
             </p>
             <p className='text-sm ml-2'>{getTimezoneString()}</p>

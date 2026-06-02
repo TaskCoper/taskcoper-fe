@@ -18,12 +18,12 @@ export default function SignInDialogPage() {
 
   return (
     <div className='flex justify-center items-center min-h-screen p-4 bg-linear-to-br from-blue-600 via-cyan-400 to-green-600'>
-      <Card className='grid grid-cols-1 lg:grid-cols-12 w-full max-w-md lg:max-w-6xl h-auto lg:h-[600px] p-2 lg:p-4 shadow-xl'>
+      <Card className='grid grid-cols-1 lg:grid-cols-12 w-full max-w-md lg:max-w-6xl h-auto lg:h-[600px] p-2 lg:p-4 rounded-3xl'>
         <div className='hidden lg:block lg:col-span-7 h-full'>
           <img
             src='/images/auth-bg.jpg'
             alt={t('common.alt.authBackground')}
-            className='w-full h-full object-cover rounded-lg'
+            className='w-full h-full object-cover rounded-2xl'
           />
         </div>
 

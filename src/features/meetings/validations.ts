@@ -1,6 +1,8 @@
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
+const googleMeetLinkRegex = /^https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}\/?$/i
+
 const bookingTimeSlotSchema = (t: TFunction) =>
   z
     .object({
@@ -39,7 +41,7 @@ export const updateMeetingSchema = (t: TFunction) => {
       endTimeUtc: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }),
       reason: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
       note: z.string().max(2000, t('common.validation.maxLength.2000')).nullable(),
-      meetingLink: z.url({ message: t('common.validation.url.invalid') }).nullable()
+      meetingLink: z.string().regex(googleMeetLinkRegex, t('common.validation.url.invalid')).nullable()
     })
     .strict()
 }

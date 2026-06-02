@@ -1,41 +1,27 @@
-import { customCollisionDetection } from '@/components/dnd/collision-detection'
-import { snapCenterToCursor } from '@/components/dnd/modifiers'
-import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
-import RichTextEditor from '@/components/rich-text-editor'
-import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { Textarea } from '@/components/ui/textarea'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import LabelPopover from '@/features/projects/labels/components/label-popover'
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
-import SortableParentSubtaskCard from '@/features/projects/subtasks/components/sortable-parent-subtask-card'
-import SortableSubtaskCard from '@/features/projects/subtasks/components/sortable-subtask-card'
 import SubtaskPopover from '@/features/projects/subtasks/components/subtask-popover'
-import { useSubtaskDnd } from '@/features/projects/subtasks/hooks/use-subtask-dnd'
 import AttachmentPopover from '@/features/projects/tasks/attachments/components/attachment-popover'
 import AttachmentsSection from '@/features/projects/tasks/attachments/components/attachments-section'
 import { useGetTaskAttachments } from '@/features/projects/tasks/attachments/hooks/use-get-task-attachments'
-import CommentCard from '@/features/projects/tasks/comments/components/comment-card'
-import { useAddTaskComment } from '@/features/projects/tasks/comments/hooks/use-add-task-comment'
 import { useGetTaskComments } from '@/features/projects/tasks/comments/hooks/use-get-task-comments'
-import type { AddTaskCommentFormValues } from '@/features/projects/tasks/comments/validations'
-import BackgroundImagePopover from '@/features/projects/tasks/core/components/background-image-popover'
 import DatePopover from '@/features/projects/tasks/core/components/date-popover'
-import MoveTaskPopoverV2 from '@/features/projects/tasks/core/components/move-task-popover-v2'
 import PriorityPopover from '@/features/projects/tasks/core/components/priority-popover'
-import TaskDetailMenu from '@/features/projects/tasks/core/components/task-detail-menu'
+import TaskDialogComments from '@/features/projects/tasks/core/components/task-dialog-comments'
+import TaskDialogDescription from '@/features/projects/tasks/core/components/task-dialog-description'
+import TaskDialogHeader from '@/features/projects/tasks/core/components/task-dialog-header'
+import TaskDialogSubtasks from '@/features/projects/tasks/core/components/task-dialog-subtasks'
 import TaskPointsPopover from '@/features/projects/tasks/core/components/task-points-popover'
 import { getTaskPriorityIcon } from '@/features/projects/tasks/core/constants'
 import { useGetTask } from '@/features/projects/tasks/core/hooks/use-get-task'
-import { useToggleWatchTask } from '@/features/projects/tasks/core/hooks/use-toggle-watch-task'
 import { useUpdateTask } from '@/features/projects/tasks/core/hooks/use-update-task'
 import { TaskPriorityLabel } from '@/features/projects/tasks/core/types'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/projects/tasks/core/validations'
@@ -45,28 +31,19 @@ import { useGetTaskSubtasks } from '@/features/projects/tasks/subtasks/hooks/use
 import { useInlineEdit } from '@/hooks/use-inline-edit'
 import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback, getColorTextClass } from '@/shared/utils'
-import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
   ChevronDownIcon,
   ChevronsUpIcon,
-  ChevronUpIcon,
   ClockIcon,
-  EyeIcon,
-  ImageIcon,
-  MessageSquareText,
-  MoreHorizontalIcon,
   PaperclipIcon,
   PlusIcon,
   SquareCheckBigIcon,
   TagIcon,
-  TextAlignStartIcon,
-  UserRoundPlusIcon,
-  XIcon
+  UserRoundPlusIcon
 } from 'lucide-react'
 import { useEffect, useState, type CSSProperties } from 'react'
-import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
 
@@ -74,9 +51,7 @@ const TASK_DIALOG_INSET_SHADOW_COLOR = 'rgba(0,0,0,0.6)'
 const TASK_DIALOG_SHADOW_STYLE = {
   '--task-dialog-inset-shadow-color': TASK_DIALOG_INSET_SHADOW_COLOR
 } as CSSProperties
-const TASK_DIALOG_MILESTONE_BUTTON_CLASSES = 'bg-muted-foreground/20 hover:bg-muted-foreground/40'
 const TASK_DIALOG_MUTED_BUTTON_CLASSES = 'hover:bg-muted-foreground/15'
-const TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES = 'rounded-full'
 
 export default function TaskDialogPage() {
   const navigate = useNavigate()
@@ -97,18 +72,12 @@ export default function TaskDialogPage() {
   const canWrite = check('TASKS', 'canWrite')
   const canUpdate = check('TASKS', 'canUpdate')
 
-  const [isEditDescription, setIsEditDescription] = useState(false)
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
-  const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
-  const [descriptionElement, setDescriptionElement] = useState<HTMLDivElement | null>(null)
-  const [isEditComment, setIsEditComment] = useState(false)
   const [open, setOpen] = useState(true)
-  const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
-  const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
-  const [openBackgroundImagePopover, setOpenBackgroundImagePopover] = useState(false)
   const [currentTime] = useState(() => Date.now())
-
-  const sensors = useDndSensors()
+  const [isActionLabelPopoverOpen, setIsActionLabelPopoverOpen] = useState(false)
+  const [isFieldsLabelPopoverOpen, setIsFieldsLabelPopoverOpen] = useState(false)
+  const [isActionAssigneePopoverOpen, setIsActionAssigneePopoverOpen] = useState(false)
+  const [isFieldsAssigneePopoverOpen, setIsFieldsAssigneePopoverOpen] = useState(false)
 
   const { task, isLoadingTask } = useGetTask({ taskIdentifier })
   const { comments, isLoadingComments } = useGetTaskComments({ taskId: task?.taskId })
@@ -133,24 +102,7 @@ export default function TaskDialogPage() {
     updateTask,
     isUpdatingTask
   } = useUpdateTask({ taskId: task?.taskId, taskIdentifier, identifier, milestoneIdentifier })
-  const { reset: resetTask, control: updateTaskControl, handleSubmit: handleSubmitTask } = updateTaskMethods
-
-  const {
-    methods: addCommentMethods,
-    addTaskComment,
-    isAddingTaskComment
-  } = useAddTaskComment({ taskId: task?.taskId, identifier, milestoneIdentifier })
-  const { reset: resetComment, control: addCommentControl, handleSubmit: handleSubmitComment } = addCommentMethods
-
-  const {
-    onDragStart,
-    onDragOver,
-    onDragEnd,
-    activeParentSubtask,
-    activeChildSubtask,
-    groupedSubtasks,
-    parentSubtasksIds
-  } = useSubtaskDnd({ taskId: task?.taskId, subtasks, identifier, milestoneIdentifier })
+  const { reset: resetTask, handleSubmit: handleSubmitTask } = updateTaskMethods
 
   const {
     isEditing: isEditingName,
@@ -185,15 +137,10 @@ export default function TaskDialogPage() {
     }
   })
 
-  const { toggleWatchTask } = useToggleWatchTask({ projectIdentifier: identifier, milestoneIdentifier })
-
   const goBack = () => {
-    // Check if we're in the storage route
     if (location.pathname.includes('/storage/')) {
-      // Navigate back to storage page
       navigate(`/projects/${identifier}/storage${location.search}`)
     } else {
-      // Navigate back to milestones page
       navigate(`/projects/${identifier}/milestones/${milestoneIdentifier}${location.search}`)
     }
   }
@@ -225,42 +172,8 @@ export default function TaskDialogPage() {
     }
   }, [open, task, resetTask])
 
-  useEffect(() => {
-    if (open && task) {
-      resetComment({
-        taskId: task.taskId,
-        content: '',
-        mentionUsers: []
-      })
-    }
-  }, [open, task, resetComment])
-
-  useEffect(() => {
-    if (!descriptionElement) return
-
-    const checkHeight = () => {
-      if (descriptionElement) {
-        setShowDescriptionToggle(descriptionElement.scrollHeight > 384)
-      }
-    }
-
-    checkHeight()
-
-    const observer = new ResizeObserver(checkHeight)
-
-    observer.observe(descriptionElement)
-    return () => observer.disconnect()
-  }, [descriptionElement, task?.taskDescription, isEditDescription])
-
   const onSubmitUpdateTask: SubmitHandler<UpdateTaskFormValues> = (body) => {
     updateTask({ body })
-  }
-
-  const handleSaveDescription = () => {
-    handleSubmitTask((body) => {
-      setIsEditDescription(false)
-      updateTask({ body })
-    })()
   }
 
   const handleRemoveDate = () => {
@@ -274,16 +187,6 @@ export default function TaskDialogPage() {
       body: { ...updateTaskMethods.getValues(), priority: null }
     })
   }
-
-  const onSubmitAddComment: SubmitHandler<AddTaskCommentFormValues> = (body) => {
-    addTaskComment({ body })
-  }
-
-  // useEffect(() => {
-  //   if (task) {
-  //     document.title = `${task?.taskName} | TaskCoper`
-  //   }
-  // }, [task])
 
   if (isLoading) {
     return (
@@ -347,173 +250,23 @@ export default function TaskDialogPage() {
             </DialogHeader>
           </VisuallyHidden>
 
-          {task?.backgroundImage ? (
-            <div className='relative w-full h-44 shrink-0 group rounded-t-3xl bg-gray-300/80 shadow-[inset_0_4px_4px_-4px_var(--task-dialog-inset-shadow-color),inset_4px_0_4px_-4px_var(--task-dialog-inset-shadow-color),inset_-4px_0_4px_-4px_var(--task-dialog-inset-shadow-color)]'>
-              <img
-                src={task.backgroundImage}
-                alt={t('task.detail.backgroundImage')}
-                className='w-full h-full object-contain'
-              />
-            </div>
-          ) : null}
-
-          <div
-            className={cn(
-              'p-5 flex items-center justify-between gap-2 z-10',
-              task?.backgroundImage ? 'absolute top-0 left-0 right-0' : ''
-            )}
-          >
-            {/* {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug ? (
-              <MoveTaskPopover
-                taskIdentifier={task.taskSlug}
-                projectIdentifier={identifier}
-                milestoneIdentifier={milestoneIdentifier}
-                milestoneId={task.milestoneId}
-                taskId={task.taskId}
-              >
-                <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
-                  {task?.milestoneName}
-                  <ChevronDownIcon />
-                </Button>
-              </MoveTaskPopover>
-            ) : null} */}
-
-            {identifier && milestoneIdentifier && task?.taskId && task?.milestoneId && task?.taskSlug && canMoveTask ? (
-              <MoveTaskPopoverV2
-                projectIdentifier={identifier}
-                taskIdentifier={task.taskSlug}
-                taskId={task.taskId}
-                taskParentMilestoneSlug={task.parentMilestoneSlug}
-                taskMilestoneId={task.milestoneId}
-              >
-                <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
-                  {task?.milestoneName}
-                  <ChevronDownIcon />
-                </Button>
-              </MoveTaskPopoverV2>
-            ) : (
-              <Button size='sm' variant='outline' className={TASK_DIALOG_MILESTONE_BUTTON_CLASSES}>
-                {task?.milestoneName}
-              </Button>
-            )}
-
-            <div className='flex items-center gap-2'>
-              {isWatchingTask ? (
-                <Button
-                  className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
-                  variant='default'
-                  size='icon-sm'
-                  disabled={!canUpdate}
-                  onClick={() => {
-                    if (!task?.taskId) return
-                    toggleWatchTask({ taskId: task.taskId, isWatching: false })
-                  }}
-                >
-                  <EyeIcon />
-                </Button>
-              ) : null}
-
-              <BackgroundImagePopover
-                onSubmit={handleSubmitTask(onSubmitUpdateTask)}
-                open={openBackgroundImagePopover}
-                setOpen={setOpenBackgroundImagePopover}
-                disabled={!canUpdate}
-              >
-                <Button
-                  className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
-                  variant={openBackgroundImagePopover ? 'default' : 'outline'}
-                  size='icon-sm'
-                >
-                  <ImageIcon />
-                </Button>
-              </BackgroundImagePopover>
-
-              {task?.taskId &&
-              task?.taskSlug &&
-              task?.taskName &&
-              identifier &&
-              milestoneIdentifier &&
-              task.milestoneId ? (
-                <TaskDetailMenu
-                  projectIdentifier={identifier}
-                  parentMilestoneIdentifier={milestoneIdentifier}
-                  milestoneId={task.milestoneId}
-                  taskId={task.taskId}
-                  taskName={task.taskName}
-                  onDeleteSuccess={goBack}
-                  open={openTaskDetailMenu}
-                  setOpen={setOpenTaskDetailMenu}
-                  isWatchingTask={isWatchingTask}
-                  taskIdentifier={task.taskSlug}
-                >
-                  <Button
-                    className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
-                    variant={openTaskDetailMenu ? 'default' : 'outline'}
-                    size='icon-sm'
-                  >
-                    <MoreHorizontalIcon />
-                  </Button>
-                </TaskDetailMenu>
-              ) : null}
-
-              <Button
-                className={TASK_DIALOG_ROUND_ICON_BUTTON_CLASSES}
-                variant='outline'
-                size='icon-sm'
-                onClick={handleClose}
-              >
-                <XIcon />
-              </Button>
-            </div>
-          </div>
+          <TaskDialogHeader
+            task={task}
+            identifier={identifier}
+            milestoneIdentifier={milestoneIdentifier}
+            canMoveTask={canMoveTask}
+            canUpdate={canUpdate}
+            isWatchingTask={isWatchingTask}
+            onSubmitUpdateTask={onSubmitUpdateTask}
+            handleClose={handleClose}
+            goBack={goBack}
+          />
 
           <Separator />
 
           <div className='grid grid-cols-12 flex-1 overflow-hidden'>
             <div className='col-span-7 p-5 border-r border-border overflow-y-auto space-y-6'>
               <div className='space-y-4'>
-                {/* <div className='min-w-0 w-full'>
-                  <Breadcrumb className='w-full overflow-hidden'>
-                    <BreadcrumbList className='flex-nowrap overflow-hidden whitespace-nowrap gap-1.5!'>
-                      <BreadcrumbItem className='min-w-0 max-w-[30ch]'>
-                        <BreadcrumbLink
-                          asChild
-                          className='block text-background hover:text-background bg-indigo-600 px-1.5 py-0.5 rounded-sm'
-                        >
-                          <Link
-                            to={`/projects/${identifier}/milestones/${milestoneIdentifier}`}
-                            className='flex min-w-0 items-center gap-1.5 overflow-hidden'
-                          >
-                            <LayersIcon className='size-3 shrink-0' />
-                            <span className='truncate'>
-                              This is a very long milestone name that should be truncated
-                            </span>
-                          </Link>
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-
-                      <BreadcrumbSeparator className='shrink-0' />
-
-                      <BreadcrumbItem className='min-w-0 max-w-[40ch]'>
-                        <BreadcrumbLink
-                          asChild
-                          className='block text-foreground hover:text-foreground bg-slate-200 px-1.5 py-0.5 rounded-sm'
-                        >
-                          <Link
-                            to={`/projects/${identifier}/milestones/${milestoneIdentifier}`}
-                            className='flex min-w-0 items-center gap-1.5 overflow-hidden'
-                          >
-                            <NetworkIcon className='size-3 shrink-0' />
-                            <span className='truncate'>
-                              This is a very long milestone name that should be truncated
-                            </span>
-                          </Link>
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div> */}
-
                 {/* Task name + popovers */}
                 <div className='flex gap-1'>
                   <Checkbox
@@ -566,7 +319,8 @@ export default function TaskDialogPage() {
                         </PriorityPopover>
                       ) : null}
 
-                      {(task?.taskLabels.length ?? 0) === 0 &&
+                      {(((task?.taskLabels.length ?? 0) === 0 && !isFieldsLabelPopoverOpen) ||
+                        isActionLabelPopoverOpen) &&
                       identifier &&
                       task?.taskSlug &&
                       task?.taskId &&
@@ -578,6 +332,7 @@ export default function TaskDialogPage() {
                           parentMilestoneIdentifier={milestoneIdentifier}
                           taskLabels={task?.taskLabels ?? []}
                           disabled={!canUpdate}
+                          onOpenChange={setIsActionLabelPopoverOpen}
                         >
                           <Button variant='outline' size='sm'>
                             <TagIcon />
@@ -613,12 +368,17 @@ export default function TaskDialogPage() {
                         </SubtaskPopover>
                       ) : null}
 
-                      {assignedTaskMembers.length === 0 && identifier && task?.taskId && milestoneIdentifier ? (
+                      {((assignedTaskMembers.length === 0 && !isFieldsAssigneePopoverOpen) ||
+                        isActionAssigneePopoverOpen) &&
+                      identifier &&
+                      task?.taskId &&
+                      milestoneIdentifier ? (
                         <AssigneePopover
                           projectIdentifier={identifier}
                           taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
                           disabled={!canWrite}
+                          onOpenChange={setIsActionAssigneePopoverOpen}
                         >
                           <Button variant='outline' size='sm'>
                             <UserRoundPlusIcon />
@@ -682,7 +442,7 @@ export default function TaskDialogPage() {
                 </div>
 
                 {/* Labels section */}
-                {(task?.taskLabels.length ?? 0) > 0 ? (
+                {((task?.taskLabels.length ?? 0) > 0 && !isActionLabelPopoverOpen) || isFieldsLabelPopoverOpen ? (
                   <div className='space-y-1 max-w-full'>
                     <p className='text-sm font-semibold text-muted-foreground'>{t('task.detail.labels')}</p>
 
@@ -692,7 +452,7 @@ export default function TaskDialogPage() {
                           key={label.id}
                           className={cn(
                             label.color || 'bg-gray-200',
-                            'h-8 rounded-md flex justify-center items-center min-w-14 px-3'
+                            'h-8 rounded-lg flex justify-center items-center min-w-14 px-3'
                           )}
                         >
                           {label.name ? (
@@ -711,6 +471,7 @@ export default function TaskDialogPage() {
                           parentMilestoneIdentifier={milestoneIdentifier}
                           taskLabels={task?.taskLabels ?? []}
                           disabled={!canUpdate}
+                          onOpenChange={setIsFieldsLabelPopoverOpen}
                         >
                           <Button variant='outline' size='icon-sm'>
                             <PlusIcon />
@@ -722,7 +483,7 @@ export default function TaskDialogPage() {
                 ) : null}
 
                 {/* Assigned members section */}
-                {assignedTaskMembers.length > 0 ? (
+                {(assignedTaskMembers.length > 0 && !isActionAssigneePopoverOpen) || isFieldsAssigneePopoverOpen ? (
                   <div className='space-y-1'>
                     <p className='text-sm font-semibold text-muted-foreground'>{t('common.ui.members')}</p>
 
@@ -740,6 +501,7 @@ export default function TaskDialogPage() {
                           taskId={task.taskId}
                           parentMilestoneIdentifier={milestoneIdentifier}
                           disabled={!canWrite}
+                          onOpenChange={setIsFieldsAssigneePopoverOpen}
                         >
                           <Button className='rounded-full size-8' size='icon' variant='outline'>
                             <PlusIcon />
@@ -791,122 +553,13 @@ export default function TaskDialogPage() {
                 ) : null}
               </div>
 
-              <div className='flex gap-3'>
-                <TextAlignStartIcon className='mt-0.5 size-4' />
-                <div className='w-full space-y-4'>
-                  <div className='flex items-start justify-between'>
-                    <p className='font-semibold'>{t('common.field.description')}</p>
-                    {!isEditDescription && task?.taskDescription && canUpdate ? (
-                      <Button variant='outline' size='sm' onClick={() => setIsEditDescription(true)}>
-                        {t('common.button.edit')}
-                      </Button>
-                    ) : null}
-                  </div>
-
-                  {isEditDescription ? (
-                    <>
-                      <Controller
-                        name='description'
-                        control={updateTaskControl}
-                        render={({ field, fieldState }) => (
-                          <Field data-invalid={fieldState.invalid} className='gap-1'>
-                            <RichTextEditor
-                              isInitialFocus={true}
-                              content={field.value ?? ''}
-                              onChange={field.onChange}
-                              invalid={fieldState.invalid}
-                              error={fieldState.error}
-                              onMentionIdsChange={(ids) => {
-                                const currentMentionUsers = task?.mentionedUsers ?? []
-                                const mentionIdQueues = currentMentionUsers.reduce<Record<string, string[]>>(
-                                  (acc, user) => {
-                                    if (!acc[user.userId]) acc[user.userId] = []
-                                    acc[user.userId].push(user.id)
-                                    return acc
-                                  },
-                                  {}
-                                )
-
-                                updateTaskMethods.setValue(
-                                  'mentionUsers',
-                                  ids.map((userId) => ({
-                                    userId,
-                                    mentionId: mentionIdQueues[userId]?.shift() ?? null
-                                  })),
-                                  { shouldDirty: true }
-                                )
-                              }}
-                              projectIdentifier={identifier}
-                              mentionedUsers={task?.mentionedUsers}
-                            />
-                          </Field>
-                        )}
-                      />
-
-                      <div className='flex items-center gap-2'>
-                        <Button onClick={handleSaveDescription} disabled={isUpdatingTask}>
-                          {isUpdatingTask ? <Spinner /> : null}
-                          {t('common.button.save')}
-                        </Button>
-                        <Button
-                          variant='outline'
-                          onClick={() => {
-                            setIsEditDescription(false)
-                            resetTask()
-                          }}
-                          disabled={isUpdatingTask}
-                        >
-                          {t('common.button.cancel')}
-                        </Button>
-                      </div>
-                    </>
-                  ) : task?.taskDescription ? (
-                    <div>
-                      <div className='relative'>
-                        <div
-                          ref={setDescriptionElement}
-                          role='button'
-                          className={cn('overflow-hidden transition-all', !isDescriptionExpanded && 'max-h-96')}
-                        >
-                          <SanitizedHtml html={task.taskDescription} mentionedUsers={task.mentionedUsers} />
-                        </div>
-                        {/* Gradient overlay when collapsed - only covers the HTML area */}
-                        {showDescriptionToggle && !isDescriptionExpanded && (
-                          <div className='absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-background to-transparent pointer-events-none' />
-                        )}
-                      </div>
-
-                      {showDescriptionToggle && (
-                        <Button
-                          variant='outline'
-                          className='w-full mt-1'
-                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                        >
-                          {isDescriptionExpanded ? (
-                            <>
-                              <ChevronUpIcon className='size-4' />
-                              {t('common.ui.viewLess')}
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDownIcon className='size-4' />
-                              {t('common.ui.viewMore')}
-                            </>
-                          )}
-                        </Button>
-                      )}
-                    </div>
-                  ) : (
-                    <Textarea
-                      placeholder={t('task.description.addDescription')}
-                      className='resize-none w-full font-semibold'
-                      readOnly
-                      disabled={!canUpdate}
-                      onClick={() => canUpdate && setIsEditDescription(true)}
-                    />
-                  )}
-                </div>
-              </div>
+              <TaskDialogDescription
+                task={task}
+                canUpdate={canUpdate}
+                identifier={identifier}
+                isUpdatingTask={isUpdatingTask}
+                onSubmitUpdateTask={onSubmitUpdateTask}
+              />
 
               {/* Attachments */}
               {(attachments?.value.totalCount ?? 0) > 0 && task?.taskId && identifier && milestoneIdentifier ? (
@@ -919,136 +572,23 @@ export default function TaskDialogPage() {
               ) : null}
 
               {/* Subtasks */}
-              <DndContext
-                collisionDetection={customCollisionDetection}
-                sensors={sensors}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                onDragOver={onDragOver}
-                measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-              >
-                <SortableContext items={parentSubtasksIds} strategy={verticalListSortingStrategy}>
-                  <div className='mt-10 space-y-8 pb-6'>
-                    {groupedSubtasks?.map((subtask) => {
-                      if (task?.taskId && identifier && milestoneIdentifier) {
-                        return (
-                          <SortableParentSubtaskCard
-                            key={subtask.id}
-                            subtask={subtask}
-                            projectIdentifier={identifier}
-                            parentMilestoneIdentifier={milestoneIdentifier}
-                            taskId={task.taskId}
-                            editingSubtaskId={editingSubtaskId}
-                            setEditingSubtaskId={setEditingSubtaskId}
-                          />
-                        )
-                      }
-                      return null
-                    })}
-                  </div>
-                </SortableContext>
-
-                <DragOverlay dropAnimation={defaultDropAnimation} modifiers={[snapCenterToCursor]}>
-                  {activeParentSubtask && task?.taskId && identifier && milestoneIdentifier && (
-                    <SortableParentSubtaskCard
-                      isOverlay
-                      subtask={activeParentSubtask}
-                      projectIdentifier={identifier}
-                      parentMilestoneIdentifier={milestoneIdentifier}
-                      taskId={task.taskId}
-                      editingSubtaskId={editingSubtaskId}
-                      setEditingSubtaskId={setEditingSubtaskId}
-                    />
-                  )}
-                  {activeChildSubtask && task?.taskId && identifier && milestoneIdentifier && (
-                    <SortableSubtaskCard
-                      isOverlay
-                      subtask={activeChildSubtask}
-                      taskId={task.taskId}
-                      projectIdentifier={identifier}
-                      parentMilestoneIdentifier={milestoneIdentifier}
-                    />
-                  )}
-                </DragOverlay>
-              </DndContext>
-            </div>
-
-            <div className='col-span-5 p-5 bg-muted space-y-4 overflow-y-auto shadow-[inset_-4px_0_4px_-4px_var(--task-dialog-inset-shadow-color),inset_0_-4px_4px_-4px_var(--task-dialog-inset-shadow-color)] rounded-br-3xl'>
-              <div className='flex items-center gap-2'>
-                <MessageSquareText className='size-4' />
-                <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>
-              </div>
-
-              {isEditComment ? (
-                <div className='space-y-2'>
-                  <Controller
-                    name='content'
-                    control={addCommentControl}
-                    render={({ field }) => (
-                      <div className='[&_.prose]:min-h-32 [&_.prose]:max-h-56'>
-                        <RichTextEditor
-                          isInitialFocus={true}
-                          compact={true}
-                          content={field.value ?? ''}
-                          onChange={field.onChange}
-                          onMentionIdsChange={(ids) => {
-                            addCommentMethods.setValue(
-                              'mentionUsers',
-                              ids.map((userId) => ({ userId, mentionId: null })),
-                              { shouldDirty: true }
-                            )
-                          }}
-                          projectIdentifier={identifier}
-                        />
-                      </div>
-                    )}
-                  />
-                  <div className='flex items-center gap-2'>
-                    <Button
-                      onClick={() => {
-                        handleSubmitComment(onSubmitAddComment)()
-                        setIsEditComment(false)
-                      }}
-                      disabled={isAddingTaskComment}
-                    >
-                      {isAddingTaskComment ? <Spinner /> : null}
-                      {t('common.button.save')}
-                    </Button>
-                    <Button
-                      variant='outline'
-                      onClick={() => {
-                        setIsEditComment(false)
-                        resetComment()
-                      }}
-                      disabled={isAddingTaskComment}
-                    >
-                      {t('common.button.cancel')}
-                    </Button>
-                  </div>
-                </div>
-              ) : canWrite ? (
-                <Input
-                  placeholder={t('task.comment.addComment')}
-                  className={cn('font-semibold bg-background', !canWrite && 'cursor-not-allowed')}
-                  readOnly
-                  onClick={() => setIsEditComment(true)}
+              {task?.taskId && identifier && milestoneIdentifier ? (
+                <TaskDialogSubtasks
+                  taskId={task.taskId}
+                  identifier={identifier}
+                  milestoneIdentifier={milestoneIdentifier}
+                  subtasks={subtasks}
                 />
               ) : null}
-
-              {task?.taskId && identifier && milestoneIdentifier ? (
-                <div className='space-y-6 pb-6'>
-                  {comments?.value.items.map((comment) => (
-                    <CommentCard
-                      key={comment.commentId}
-                      comment={comment}
-                      taskId={task.taskId}
-                      projectIdentifier={identifier}
-                      parentMilestoneIdentifier={milestoneIdentifier}
-                    />
-                  ))}
-                </div>
-              ) : null}
             </div>
+
+            <TaskDialogComments
+              taskId={task?.taskId}
+              identifier={identifier}
+              milestoneIdentifier={milestoneIdentifier}
+              canWrite={canWrite}
+              comments={comments}
+            />
           </div>
         </FormProvider>
       </DialogContent>

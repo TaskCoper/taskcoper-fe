@@ -48,7 +48,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
     return (
       <div
         className={cn(
-          'flex items-center gap-1.5 rounded-sm p-1 text-xs truncate cursor-pointer',
+          'flex items-center gap-1.5 rounded-md p-1 text-xs truncate cursor-pointer',
           'border border-l-3',
           theme.block,
           'hover:scale-[1.01] transition-all',
@@ -80,7 +80,7 @@ export default function CalendarEvent({ meeting, variant = 'block', style, class
   return (
     <div
       className={cn(
-        'absolute rounded-md overflow-hidden cursor-pointer group transition-all',
+        'absolute rounded-xl overflow-hidden cursor-pointer group transition-all',
         'border border-l-3 shadow-sm',
         theme.block,
         'hover:shadow-md hover:scale-[1.01]',

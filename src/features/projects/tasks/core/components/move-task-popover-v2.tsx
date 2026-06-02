@@ -194,10 +194,10 @@ export default function MoveTaskPopoverV2({
                   <SelectTrigger className='w-full' id='parent-milestone-select'>
                     <SelectValue placeholder={t('task.moveTask.selectMilestone')} />
                   </SelectTrigger>
-                  <SelectContent className='min-w-(--radix-select-trigger-width)'>
+                  <SelectContent className='max-w-(--radix-select-trigger-width)'>
                     {parentMilestones?.value.items.map((milestone) => (
                       <SelectItem key={milestone.id} value={milestone.slug}>
-                        {milestone.name}
+                        <p className='line-clamp-1'>{milestone.name}</p>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -213,13 +213,13 @@ export default function MoveTaskPopoverV2({
                   onValueChange={setSelectedMilestoneId}
                   disabled={isLoadingChildMilestones || !hasChildMilestones}
                 >
-                  <SelectTrigger id='child-milestone-select'>
+                  <SelectTrigger id='child-milestone-select' className='w-32'>
                     <SelectValue placeholder={t('task.moveTask.selectMilestone')} />
                   </SelectTrigger>
-                  <SelectContent className='min-w-(--radix-select-trigger-width)'>
+                  <SelectContent className='w-(--radix-select-trigger-width)'>
                     {childMilestones?.value.items.map((milestone) => (
                       <SelectItem key={milestone.id} value={milestone.id}>
-                        {milestone.name}
+                        <p className='line-clamp-1'>{milestone.name}</p>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -238,7 +238,7 @@ export default function MoveTaskPopoverV2({
                   <SelectTrigger id='position-select'>
                     <SelectValue placeholder={t('task.moveTask.selectPosition')} />
                   </SelectTrigger>
-                  <SelectContent className='min-w-(--radix-select-trigger-width)'>
+                  <SelectContent className='max-w-(--radix-select-trigger-width)'>
                     {positions.map((p) => (
                       <SelectItem key={p} value={p.toString()}>
                         {p}

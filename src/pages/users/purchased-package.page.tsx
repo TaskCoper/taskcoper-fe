@@ -388,7 +388,7 @@ export default function PurchasedPackagePage() {
           {purchasedMentorPackage?.participants && purchasedMentorPackage.participants.length ? (
             <div className='space-y-2.5'>
               <p className='font-semibold'>{t('meeting.detail.participants')}</p>
-              <div className='flex flex-wrap gap-2'>
+              <div className='space-y-2'>
                 {purchasedMentorPackage.participants
                   .filter((x) => x.userId !== purchasedMentorPackage?.mentorUserId)
                   .map((participant) => (

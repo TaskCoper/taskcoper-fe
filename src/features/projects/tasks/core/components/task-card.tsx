@@ -40,6 +40,9 @@ const taskCardVariants = cva(
   }
 )
 
+const TASK_CARD_IMAGE_INSET_SHADOW_CLASSES =
+  'shadow-[inset_0_2px_2px_-2px_rgba(0,0,0,0.15),inset_2px_0_2px_-2px_rgba(0,0,0,0.15),inset_-2px_0_2px_-2px_rgba(0,0,0,0.15)]'
+
 interface TaskCardProps extends VariantProps<typeof taskCardVariants> {
   task: TaskPreview
   style?: CSSProperties
@@ -97,6 +100,9 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
         {task.backgroundImage ? (
           <div className='relative w-full h-44 shrink-0 group bg-gray-300/80'>
             <img src={task.backgroundImage} alt={t('common.alt.cover')} className='w-full h-full object-cover' />
+            <div
+              className={cn('pointer-events-none absolute inset-0 rounded-t-xl', TASK_CARD_IMAGE_INSET_SHADOW_CLASSES)}
+            />
           </div>
         ) : null}
 

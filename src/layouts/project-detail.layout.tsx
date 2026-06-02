@@ -20,6 +20,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { useProjectRouting } from '@/hooks/use-project-routing'
 import { queryKeys } from '@/lib/query-keys'
 import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-milestones.store'
+import { useSidebarUIStore } from '@/lib/zustand/sidebar-ui.store'
 import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
@@ -80,8 +81,8 @@ export default function ProjectDetailLayout() {
   // track which member avatar is being hovered for hover effects
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
-  // control the sidebar open state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { isProjectSecondSidebarOpen: isSidebarOpen, setProjectSecondSidebarOpen: setIsSidebarOpen } =
+    useSidebarUIStore()
 
   // control the milestones dropdown menu open state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -161,14 +162,14 @@ export default function ProjectDetailLayout() {
       // - tasks have finished loading
       // - there's at least one task
       // - we haven't already auto-opened before
-      if (hasSecondSidebar && !isLoading && count > 0 && !hasAutoOpenedRef.current) {
+      if (hasSecondSidebar && !isLoading && count > 0 && isSidebarOpen && !hasAutoOpenedRef.current) {
         setTimeout(() => {
           setIsSidebarOpen(true)
           hasAutoOpenedRef.current = true
         }, 300)
       }
     },
-    [hasSecondSidebar]
+    [hasSecondSidebar, isSidebarOpen, setIsSidebarOpen]
   )
 
   // reset the auto-open flag when switching routes
@@ -186,11 +187,11 @@ export default function ProjectDetailLayout() {
           '--sidebar-width-icon': '48px'
         } as React.CSSProperties
       }
-      className='w-full h-full'
+      className='w-full h-full min-h-0'
     >
       <ProjectDetailSidebar onTaskCountChange={handleTaskCountChange} />
 
-      <SidebarInset className='flex flex-col h-full overflow-hidden'>
+      <SidebarInset className='flex flex-col h-full min-h-0 overflow-hidden'>
         <header
           className={cn(
             'bg-muted/30 flex shrink-0 items-center gap-2',
@@ -306,7 +307,7 @@ export default function ProjectDetailLayout() {
           ) : null}
         </header>
 
-        <div className='flex-1 overflow-auto'>
+        <div className='flex-1 min-h-0 overflow-auto'>
           {isLoadingPermissions ? (
             <div className='flex h-full w-full items-center justify-center'>
               <Spinner className='text-muted-foreground' />

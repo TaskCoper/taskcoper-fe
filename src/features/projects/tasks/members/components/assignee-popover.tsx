@@ -20,6 +20,7 @@ interface AssigneePopoverProps {
   taskId: string
   parentMilestoneIdentifier: string
   disabled?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 // display project members and task members
@@ -32,10 +33,16 @@ export default function AssigneePopover({
   projectIdentifier,
   taskId,
   parentMilestoneIdentifier,
-  disabled = false
+  disabled = false,
+  onOpenChange
 }: AssigneePopoverProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+
+  const handleOpen = (newOpen: boolean) => {
+    setOpen(newOpen)
+    onOpenChange?.(newOpen)
+  }
 
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
@@ -91,11 +98,11 @@ export default function AssigneePopover({
   }
 
   const handleClose = () => {
-    setOpen(false)
+    handleOpen(false)
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild disabled={disabled}>
         {children}
       </PopoverTrigger>

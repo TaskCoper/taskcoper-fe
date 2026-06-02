@@ -7,7 +7,7 @@ import { XIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { sortedTaskLabelColors } from '../constants'
+import { labelPreviewInsetShadowClasses, sortedTaskLabelColors } from '../constants'
 import type { AddProjectLabelFormValues } from '../validations'
 
 export default function AddProjectLabelForm() {
@@ -24,13 +24,13 @@ export default function AddProjectLabelForm() {
 
   return (
     <div className='flex flex-col gap-4 w-full'>
-      <div className='bg-muted h-24 flex justify-center items-center'>
+      <div className={cn('bg-muted h-24 flex justify-center items-center', labelPreviewInsetShadowClasses)}>
         <div
           className={cn(
             color
               ? sortedTaskLabelColors.flatMap((col) => col.shades).find((shade) => shade.value === color)?.value
               : 'bg-gray-200',
-            'w-3/4 h-8 rounded-sm flex items-center px-3'
+            'w-3/4 h-8 rounded-lg flex items-center px-3'
           )}
         >
           {title ? (
@@ -66,7 +66,7 @@ export default function AddProjectLabelForm() {
           name='color'
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <Field data-invalid={fieldState.invalid} className='gap-2'>
               <FieldLabel htmlFor={field.name}>{t('task.label.chooseColor')}</FieldLabel>
 
               <div className='grid grid-cols-5 gap-2'>
@@ -79,7 +79,7 @@ export default function AddProjectLabelForm() {
                         className={cn(
                           shade.value,
                           shade.value === field.value ? 'ring-2 ring-primary ring-offset-2' : '',
-                          'w-full h-8 rounded cursor-pointer'
+                          'w-full h-8 rounded-lg cursor-pointer'
                         )}
                         onClick={() => field.onChange(shade.value)}
                       />

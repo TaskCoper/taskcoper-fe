@@ -1,12 +1,15 @@
 import { UserWorkspaceSidebar } from '@/components/sidebar/users/user-workspace-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Spinner } from '@/components/ui/spinner'
+import { useSidebarUIStore } from '@/lib/zustand/sidebar-ui.store'
 import { Suspense } from 'react'
 import { Outlet } from 'react-router'
 
 export default function UserWorkspaceLayout() {
+  const { isWorkspaceSidebarOpen, setWorkspaceSidebarOpen } = useSidebarUIStore()
+
   return (
-    <SidebarProvider className='h-full min-h-0'>
+    <SidebarProvider open={isWorkspaceSidebarOpen} onOpenChange={setWorkspaceSidebarOpen} className='h-full min-h-0'>
       <UserWorkspaceSidebar />
       <SidebarInset>
         {/* <header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>

@@ -87,6 +87,10 @@ export default function MeetingDetailMenu({
         : calendarPermission.extensions?.canDelete.canCancelMeeting)
     : canAction
 
+  if (!canReschedule && !canCancel) {
+    return null
+  }
+
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -133,19 +137,21 @@ export default function MeetingDetailMenu({
         ) : (
           <div className='py-2'>
             <div className='relative group'>
-              <Button
-                size='sm'
-                className='w-full justify-start gap-2 rounded-none'
-                variant='ghost'
-                disabled={!canReschedule}
-                onClick={() => {
-                  onClose()
-                  onReschedule()
-                }}
-              >
-                <CalendarClockIcon />
-                <p>{t('meeting.detail.reschedule')}</p>
-              </Button>
+              {canReschedule ? (
+                <Button
+                  size='sm'
+                  className='w-full justify-start gap-2 rounded-md'
+                  variant='ghost'
+                  onClick={() => {
+                    onClose()
+                    onReschedule()
+                  }}
+                >
+                  <CalendarClockIcon />
+                  <p>{t('meeting.detail.reschedule')}</p>
+                </Button>
+              ) : null}
+
               {isWithinHours && status === MeetingStatus.BOOKED && (
                 <div className='absolute right-2 top-1/2 -translate-y-1/2'>
                   <Tooltip>
@@ -161,16 +167,18 @@ export default function MeetingDetailMenu({
             </div>
 
             <div className='relative group'>
-              <Button
-                size='sm'
-                className='w-full justify-start gap-2 rounded-none'
-                variant='ghost'
-                disabled={!canCancel}
-                onClick={() => setIsCancelling(true)}
-              >
-                <Trash2Icon className='text-destructive' />
-                <p className='text-destructive'>{t('meeting.detail.cancel')}</p>
-              </Button>
+              {canCancel ? (
+                <Button
+                  size='sm'
+                  className='w-full justify-start gap-2 rounded-md'
+                  variant='ghost'
+                  onClick={() => setIsCancelling(true)}
+                >
+                  <Trash2Icon className='text-destructive' />
+                  <p className='text-destructive'>{t('meeting.detail.cancel')}</p>
+                </Button>
+              ) : null}
+
               {isWithinHours && status === MeetingStatus.BOOKED && (
                 <div className='absolute right-2 top-1/2 -translate-y-1/2'>
                   <Tooltip>

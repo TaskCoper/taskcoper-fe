@@ -1,4 +1,5 @@
 import type { ScheduleSlot } from '@/features/schedules/types'
+import { primaryControlShadowClasses, primaryOverlayAfterClasses, primaryOverlayBeforeClasses } from '@/shared/effects'
 import { addDays } from 'date-fns'
 import { MeetingStatus } from './types'
 
@@ -67,6 +68,16 @@ export const combineDateTimeToUtc = (date: Date, time: string) => {
   return combinedDate.toISOString()
 }
 
+const getMeetingStatusBadgeClasses = (colorClasses: string) =>
+  [
+    'group relative isolate overflow-hidden border-transparent text-white ring-0 transition duration-300 ease-[cubic-bezier(0.4,0.36,0,1)] hover:before:opacity-100',
+    primaryControlShadowClasses,
+    primaryOverlayBeforeClasses,
+    'before:opacity-50',
+    primaryOverlayAfterClasses,
+    colorClasses
+  ].join(' ')
+
 export const getMeetingStatusTheme = (status?: string) => {
   switch (status) {
     case MeetingStatus.COMPLETED:
@@ -75,7 +86,7 @@ export const getMeetingStatusTheme = (status?: string) => {
         leftBorder: 'border-l-emerald-500',
         block: 'border-emerald-400 bg-emerald-600 hover:bg-emerald-700 text-white',
         avatar: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400',
-        badge: 'bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:border-emerald-500/20 dark:text-emerald-400'
+        badge: getMeetingStatusBadgeClasses('bg-emerald-600')
       }
     // case MeetingStatus.RESCHEDULE:
     //   return {
@@ -92,7 +103,7 @@ export const getMeetingStatusTheme = (status?: string) => {
         leftBorder: 'border-l-rose-500',
         block: 'border-rose-400 bg-rose-600 hover:bg-rose-700 text-white',
         avatar: 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400',
-        badge: 'bg-rose-500/10 text-rose-700 border-rose-200 dark:border-rose-500/20 dark:text-rose-400'
+        badge: getMeetingStatusBadgeClasses('bg-rose-600')
       }
     // case MeetingStatus.FREE:
     //   return {
@@ -109,7 +120,7 @@ export const getMeetingStatusTheme = (status?: string) => {
         leftBorder: 'border-l-blue-500',
         block: 'border-blue-400 bg-blue-600 hover:bg-blue-700 text-white',
         avatar: 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
-        badge: 'bg-blue-500/10 text-blue-700 border-blue-200 dark:border-blue-500/20 dark:text-blue-400'
+        badge: getMeetingStatusBadgeClasses('bg-blue-600')
       }
   }
 }

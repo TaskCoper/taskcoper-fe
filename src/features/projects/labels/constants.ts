@@ -87,3 +87,5 @@ const taskLabelColors: TaskLabelColor[] = [
 ]
 
 export const sortedTaskLabelColors = taskLabelColors.sort((a, b) => a.baseColor.localeCompare(b.baseColor))
+export const labelPreviewInsetShadowClasses =
+  'shadow-[inset_2px_0_2px_-2px_rgba(0,0,0,0.15),inset_-2px_0_2px_-2px_rgba(0,0,0,0.15)]'

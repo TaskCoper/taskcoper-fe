@@ -94,7 +94,7 @@ export default function AttachmentMenu({
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
-        className={cn('p-0', isDeleting || isEditing ? 'w-72' : 'w-52')}
+        className={cn('p-0 rounded-xl!', isDeleting || isEditing ? 'w-72' : 'w-52')}
         side='bottom'
         align='start'
         sideOffset={8}
@@ -168,7 +168,7 @@ export default function AttachmentMenu({
             {canUpdate ? (
               <Button
                 size='sm'
-                className='w-full justify-start gap-2 rounded-none'
+                className='w-full justify-start gap-2 rounded-md'
                 variant='ghost'
                 onClick={() => setIsEditing(true)}
               >
@@ -179,7 +179,7 @@ export default function AttachmentMenu({
             {canDelete ? (
               <Button
                 size='sm'
-                className='w-full justify-start gap-2 rounded-none'
+                className='w-full justify-start gap-2 rounded-md'
                 variant='ghost'
                 onClick={() => setIsDeleting(true)}
               >

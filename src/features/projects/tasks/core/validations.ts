@@ -40,7 +40,7 @@ export const updateTaskSchema = (t: TFunction) => {
         }),
       isCompleted: z.boolean(),
       estimatedPoints: z
-        .number()
+        .int({ message: t('common.validation.number.integer') })
         .positive({ message: t('common.validation.number.positive') })
         .nullable(),
       backgroundImage: z.url({ message: t('common.validation.url.invalid') }).nullable(),

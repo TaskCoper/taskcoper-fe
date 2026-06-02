@@ -114,7 +114,7 @@ export default function TaskDetailMenu({
             {canUpdate ? (
               <Button
                 size='sm'
-                className='w-full justify-start gap-2 rounded-none'
+                className='w-full justify-start gap-2 rounded-md'
                 variant='ghost'
                 onClick={handleToggleWatchTask}
               >
@@ -134,7 +134,7 @@ export default function TaskDetailMenu({
 
             <Button
               size='sm'
-              className='w-full justify-start gap-2 rounded-none'
+              className='w-full justify-start gap-2 rounded-md'
               variant='ghost'
               onClick={handleCopyLink}
             >
@@ -145,7 +145,7 @@ export default function TaskDetailMenu({
             {canDelete ? (
               <Button
                 size='sm'
-                className='w-full justify-start gap-2 rounded-none'
+                className='w-full justify-start gap-2 rounded-md'
                 variant='ghost'
                 onClick={() => setIsDeleting(true)}
               >

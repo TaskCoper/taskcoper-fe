@@ -19,7 +19,7 @@ export default function LinkAttachment({
   projectIdentifier
 }: LinkAttachmentProps) {
   return (
-    <Card className='flex-row items-center justify-between gap-3 pl-3 pr-1.5 py-1.5 rounded-md shadow-none'>
+    <Card className='flex-row items-center justify-between gap-3 pl-3 pr-1.5 py-1.5 shadow-none'>
       <div className='flex items-center gap-2.5 min-w-0 overflow-hidden flex-1'>
         <LinkIcon className='size-3.5 shrink-0' />
         <Link to={attachment.url} target='_blank' className='text-primary underline truncate text-sm font-medium'>

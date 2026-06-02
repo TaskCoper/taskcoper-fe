@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { XIcon } from 'lucide-react'
@@ -7,6 +8,7 @@ import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { useGetMyProjectPermissions } from '../../../roles/hooks/use-get-my-project-permissions'
+import type { UpdateTaskFormValues } from '../validations'
 
 interface TaskPointsPopoverProps {
   children: React.ReactNode
@@ -45,10 +47,15 @@ interface StoryPointsPopoverContentProps {
 
 function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverContentProps) {
   const { t } = useTranslation()
-  const { watch, setValue } = useFormContext()
+  const {
+    watch,
+    setValue,
+    formState: { errors }
+  } = useFormContext<UpdateTaskFormValues>()
   const estimatedPoints = watch('estimatedPoints')
 
   const [localPoints, setLocalPoints] = useState<string>(estimatedPoints?.toString() || '')
+
   const currentAsString = estimatedPoints?.toString() ?? ''
   const hasChanged = localPoints !== currentAsString
 
@@ -58,8 +65,9 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
   const canDelete = check('TASKS', 'canDelete')
 
   const handleSave = () => {
-    const points = localPoints === '' ? null : Number(localPoints)
-    if (points !== null && isNaN(points)) return
+    if (errors.estimatedPoints) return
+
+    const points = localPoints === '' ? null : parseInt(localPoints, 10)
 
     setValue('estimatedPoints', points, {
       shouldDirty: true,
@@ -87,18 +95,23 @@ function StoryPointsPopoverContent({ onSubmit, onClose }: StoryPointsPopoverCont
         <XIcon className='size-4 absolute right-0 cursor-pointer' onClick={onClose} />
       </div>
 
-      <Input
-        type='number'
-        placeholder={t('task.detail.enterStoryPoints')}
-        autoFocus={true}
-        value={localPoints}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalPoints(e.target.value)}
-        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-          if (e.key === 'Enter') {
-            handleSave()
-          }
-        }}
-      />
+      <div className='space-y-1'>
+        <Input
+          type='number'
+          placeholder={t('task.detail.enterStoryPoints')}
+          aria-invalid={!!errors.estimatedPoints}
+          autoFocus={true}
+          value={localPoints}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalPoints(e.target.value)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+              handleSave()
+            }
+          }}
+        />
+
+        {errors.estimatedPoints && <FieldError className='text-xs' errors={[errors.estimatedPoints]} />}
+      </div>
 
       <div className='flex justify-end items-center gap-2'>
         {canDelete ? (

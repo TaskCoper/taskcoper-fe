@@ -32,6 +32,7 @@ interface LabelPopoverProps {
   parentMilestoneIdentifier: string
   taskLabels: TaskLabel[]
   disabled?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export default function LabelPopover({
@@ -41,9 +42,15 @@ export default function LabelPopover({
   taskId,
   parentMilestoneIdentifier,
   taskLabels,
-  disabled = false
+  disabled = false,
+  onOpenChange
 }: LabelPopoverProps) {
   const [open, setOpen] = useState(false)
+
+  const handleOpen = (newOpen: boolean) => {
+    setOpen(newOpen)
+    onOpenChange?.(newOpen)
+  }
   const [mode, setMode] = useState<'view' | 'edit' | 'add'>('view')
   const { t } = useTranslation()
   const [editLabel, setEditLabel] = useState<Label | null>(null)
@@ -137,7 +144,7 @@ export default function LabelPopover({
 
   const handleClose = () => {
     setMode('view')
-    setOpen(false)
+    handleOpen(false)
     setIsDeleting(false)
     setEditLabel(null)
   }
@@ -169,7 +176,7 @@ export default function LabelPopover({
   }, [open, addTaskLabelMethods, taskId])
 
   return (
-    <Popover modal open={open} onOpenChange={setOpen}>
+    <Popover modal open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild disabled={disabled}>
         {children}
       </PopoverTrigger>
@@ -234,7 +241,7 @@ export default function LabelPopover({
                         <div
                           className={cn(
                             label.color || 'bg-gray-200',
-                            'h-8 rounded-sm flex items-center px-2 flex-1 min-w-0'
+                            'h-8 rounded-lg flex items-center px-2 flex-1 min-w-0'
                           )}
                         >
                           {label.name ? (

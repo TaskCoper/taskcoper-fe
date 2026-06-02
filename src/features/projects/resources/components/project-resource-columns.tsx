@@ -106,7 +106,8 @@ export const getColumns = ({
       ),
       cell: ({ row }) => {
         const bytes = row.original.bytes
-        if (!bytes) return <p className='text-muted-foreground'>{i18next.t('projectStorage.column.noBytes')}</p>
+        if (!bytes)
+          return <p className='text-muted-foreground text-center'>{i18next.t('projectStorage.column.noBytes')}</p>
 
         return <p className='text-center'>{formatBytes(bytes)}</p>
       },

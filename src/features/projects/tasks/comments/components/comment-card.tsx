@@ -254,7 +254,7 @@ export default function CommentCard({
             </div>
           </div>
         ) : (
-          <Card className='px-3 py-2 shadow-xs rounded-lg w-full'>
+          <Card className='px-3 py-2 w-full'>
             <SanitizedHtml html={comment.content} mentionedUsers={comment.mentionedUsers} />
           </Card>
         )}
