@@ -1,85 +1,89 @@
 import type { TenantNavMainItem } from '@/lib/feature-flags/tenant-nav-items'
 import { BriefcaseIcon, MapPinIcon, NewspaperIcon, PackageIcon } from 'lucide-react'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from './routes'
 
 export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
   {
     title: 'Quản lý đơn hàng',
-    url: '/orders',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders`,
     icon: PackageIcon,
     feature: 'custom.orderManagement',
     items: [
       {
         title: 'Tổng quan',
-        url: '/orders/dashboard',
-        activePatterns: ['/orders/dashboard']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`]
       },
       {
         title: 'Danh sách đơn hàng',
-        url: '/orders',
-        activePatterns: ['/orders', '/orders/:orderId'],
-        activeExcludePatterns: ['/orders/dashboard', '/orders/customers']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders`, `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/:orderId`],
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`
+        ]
       },
       {
         title: 'Khách hàng',
-        url: '/orders/customers',
-        activePatterns: ['/orders/customers']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`]
       }
     ]
   },
   {
     title: 'Tuyển dụng',
-    url: '/recruitment',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment`,
     icon: BriefcaseIcon,
     feature: 'custom.recruitmentPortal',
     items: [
       {
         title: 'Tin tuyển dụng',
-        url: '/recruitment',
-        activePatterns: ['/recruitment'],
-        activeExcludePatterns: ['/recruitment/applicants']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment/applicants`]
       },
       {
         title: 'Ứng viên',
-        url: '/recruitment/applicants',
-        activePatterns: ['/recruitment/applicants']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment/applicants`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment/applicants`]
       }
     ]
   },
   {
     title: 'Quản lý địa chỉ',
-    url: '/addresses',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses`,
     icon: MapPinIcon,
     feature: 'custom.addressManagement',
     items: [
       {
         title: 'Địa chỉ giao hàng',
-        url: '/addresses',
-        activePatterns: ['/addresses'],
-        activeExcludePatterns: ['/addresses/zones']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`]
       },
       {
         title: 'Khu vực giao hàng',
-        url: '/addresses/zones',
-        activePatterns: ['/addresses/zones']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`]
       }
     ]
   },
   {
     title: 'Tin tức nội bộ',
-    url: '/custom-news',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news`,
     icon: NewspaperIcon,
     feature: 'custom.customNewsPage',
     items: [
       {
         title: 'Bài viết',
-        url: '/custom-news',
-        activePatterns: ['/custom-news'],
-        activeExcludePatterns: ['/custom-news/categories']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
       },
       {
         title: 'Danh mục',
-        url: '/custom-news/categories',
-        activePatterns: ['/custom-news/categories']
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
       }
     ]
   }

@@ -82,6 +82,12 @@ export default defineConfig({
         // CRITICAL: Tells the proxy to replace the backend's domain with localhost
         // in the Set-Cookie header so your browser accepts it.
         cookieDomainRewrite: 'localhost'
+      },
+      '/htm-api': {
+        target: 'https://hoatheomua-api.bentran1vn.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/htm-api/, ''),
+        cookieDomainRewrite: 'localhost'
       }
     }
   },
