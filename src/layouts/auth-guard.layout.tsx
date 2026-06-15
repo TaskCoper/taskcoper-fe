@@ -1,5 +1,5 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import { getRoleHomePath, getUserType } from '@/shared/utils'
+import { isRedirectLoop, useRoleHomePath } from '@/lib/feature-flags'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
@@ -11,6 +11,7 @@ interface AuthGuardLayoutProps {
 export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) {
   const { t } = useTranslation()
   const { me, isGettingMe, isAuthenticated, isVerificationRequired } = useGetMe()
+  const roleHomePath = useRoleHomePath()
 
   // useSyncTimezone(me)
 
@@ -44,7 +45,10 @@ export default function AuthGuardLayout({ requiresAuth }: AuthGuardLayoutProps) 
   }
 
   if (isAuthenticated && me && !isVerificationRequired && !isOnVerifyPage) {
-    return <Navigate to={getRoleHomePath(getUserType(me))} replace />
+    if (isRedirectLoop(location.pathname, roleHomePath, 'AuthGuardLayout (already authenticated)')) {
+      return null
+    }
+    return <Navigate to={roleHomePath} replace />
   }
 
   return <Outlet />

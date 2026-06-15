@@ -7,7 +7,7 @@ import { useGetMilestones } from '@/features/projects/core/hooks/use-get-milesto
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { SquareKanbanIcon, TablePropertiesIcon } from 'lucide-react'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useParams } from 'react-router'
 
@@ -79,7 +79,9 @@ export default function ProjectTasksPage() {
         </Card>
       </div>
 
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </>
   )
 }

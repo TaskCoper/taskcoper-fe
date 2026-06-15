@@ -5,7 +5,7 @@ import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import ProjectStorageTable from '@/features/projects/resources/components/project-storage-table'
 import { formatBytes } from '@/features/projects/resources/utils'
 import { DatabaseIcon, FilesIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useParams } from 'react-router'
 
@@ -66,7 +66,9 @@ export default function ProjectStoragePage() {
         {identifier ? <ProjectStorageTable projectIdentifier={identifier} /> : null}
       </div>
 
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </>
   )
 }

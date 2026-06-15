@@ -15,7 +15,7 @@ import {
   subWeeks
 } from 'date-fns'
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 import { MeetingStatus, type MeetingBooking } from '../../types'
@@ -181,7 +181,9 @@ export default function CalendarViewContainer({
         </div>
       </div>
 
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import AuthGuardLayout from '@/layouts/auth-guard.layout'
+import { FeatureFlagGuardLayout } from '@/layouts/feature-flag-guard.layout'
 import PublicLayout from '@/layouts/public.layout'
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import AuthRedirectPage from '@/pages/auth-redirect.page'
@@ -21,12 +22,22 @@ export const publicRoutes: RouteObject[] = [
     element: <PublicLayout />,
     children: [
       {
-        path: '/',
-        element: <HomePage />
+        element: <FeatureFlagGuardLayout requires='module.home' />,
+        children: [
+          {
+            path: '/',
+            element: <HomePage />
+          }
+        ]
       },
       {
-        path: '/commissions',
-        element: <CommissionsPage />
+        element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
+        children: [
+          {
+            path: '/commissions',
+            element: <CommissionsPage />
+          }
+        ]
       }
     ]
   },
