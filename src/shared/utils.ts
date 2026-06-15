@@ -11,7 +11,6 @@ import { useMilestonePreferencesStore } from '@/lib/zustand/last-active-mileston
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import type { Active, DataRef, Over } from '@dnd-kit/core'
 import { clsx, type ClassValue } from 'clsx'
-import i18next from 'i18next'
 import { twMerge } from 'tailwind-merge'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, INITIAL_POSITION, POSITION_GAP } from './constants'
 
@@ -113,7 +112,6 @@ export const calculateReorderPosition = (items: { position: number }[], newIndex
   }
 
   if ((prevItem && newPosition === prevItem.position) || (nextItem && newPosition === nextItem.position)) {
-    alert(i18next.t('common.error.rebalancePositions'))
     return prevItem.position + 0.0000000001
   }
 

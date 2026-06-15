@@ -1,7 +1,6 @@
 import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
 import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
-import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import type { Role } from '@/features/users/types'
+import { useFilteredNavItems, type GuardedNavItem } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import {
@@ -26,9 +25,7 @@ type NavItem = {
   activeExcludePatterns?: string[]
 }
 
-type NavItemConfig = NavItem & {
-  roles?: Role[]
-}
+type NavItemConfig = NavItem & GuardedNavItem
 
 type NavMainSubItemConfig = {
   titleKey: I18nKey
@@ -37,12 +34,11 @@ type NavMainSubItemConfig = {
   activeExcludePatterns?: string[]
 }
 
-type NavMainItemConfig = {
+type NavMainItemConfig = GuardedNavItem & {
   titleKey: I18nKey
   url: string
   icon: LucideIcon
   items: NavMainSubItemConfig[]
-  roles?: Role[]
 }
 
 const NAV_CONFIG: NavItemConfig[] = [
@@ -50,13 +46,15 @@ const NAV_CONFIG: NavItemConfig[] = [
     titleKey: 'project.sidebar.myProjects',
     url: '/projects',
     icon: FolderOpenIcon,
-    activePatterns: ['/projects', '/projects/:identifier/*']
+    activePatterns: ['/projects', '/projects/:identifier/*'],
+    feature: 'module.taskManagement'
   },
   {
     titleKey: 'project.sidebar.myCalendar',
     url: '/calendar',
     icon: CalendarDaysIcon,
-    activePatterns: ['/calendar', '/calendar/*']
+    activePatterns: ['/calendar', '/calendar/*'],
+    feature: 'module.meetings'
   },
   {
     titleKey: 'purchaseHistory.title',
@@ -67,24 +65,28 @@ const NAV_CONFIG: NavItemConfig[] = [
       '/purchases/:packageId',
       '/purchases/:packageId/meetings/:meetingId',
       '/requests/:requestId'
-    ]
+    ],
+    feature: 'module.mentorNetworking'
   },
   {
     titleKey: 'voucher.sidebar.vouchers',
     url: '/vouchers',
     icon: TicketPercentIcon,
-    roles: ['Mentor']
+    roles: ['Mentor'],
+    feature: 'module.mentorNetworking'
   },
   {
     titleKey: 'pageTitle.transactions',
     url: '/transactions',
-    icon: HistoryIcon
+    icon: HistoryIcon,
+    feature: 'module.mentorNetworking'
   },
   {
     titleKey: 'project.sidebar.applicationHistory',
     url: '/applications',
     icon: FileClockIcon,
-    roles: ['User']
+    roles: ['User'],
+    feature: 'module.mentorNetworking'
   }
 ]
 
@@ -94,6 +96,7 @@ const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
     url: '/packages',
     icon: VideoIcon,
     roles: ['Mentor'],
+    feature: 'module.mentorNetworking',
     items: [
       {
         titleKey: 'mentorPackage.sidebar.overview',
@@ -116,15 +119,13 @@ const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
 ]
 
 export function UserWorkspaceSidebar({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { me: user } = useGetMe()
   const { t } = useTranslation()
+  const filteredNavMain = useFilteredNavItems(NAV_MAIN_CONFIG)
+  const filteredQuickActions = useFilteredNavItems(NAV_CONFIG)
 
-  const data = React.useMemo(() => {
-    return {
-      navMain: NAV_MAIN_CONFIG.filter((item) => {
-        if (!item.roles) return true
-        return item.roles.includes(user?.role as Role)
-      }).map((item) => ({
+  const data = React.useMemo(
+    () => ({
+      navMain: filteredNavMain.map((item) => ({
         title: t(item.titleKey),
         url: item.url,
         icon: item.icon,
@@ -135,18 +136,16 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
           activeExcludePatterns: subItem.activeExcludePatterns
         }))
       })),
-      quickActions: NAV_CONFIG.filter((item) => {
-        if (!item.roles) return true
-        return item.roles.includes(user?.role as Role)
-      }).map((item) => ({
+      quickActions: filteredQuickActions.map((item) => ({
         name: t(item.titleKey),
         url: item.url,
         icon: item.icon,
         activePatterns: item.activePatterns,
         activeExcludePatterns: item.activeExcludePatterns
       }))
-    }
-  }, [t, user?.role])
+    }),
+    [t, filteredNavMain, filteredQuickActions]
+  )
 
   const sidebarClassName = cn('top-14 h-[calc(100svh-3.5rem)]', className)
 

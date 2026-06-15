@@ -5,6 +5,7 @@ import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.lay
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
 import UserWorkspaceLayout from '@/layouts/user-workspace.layout'
+import { FeatureFlagGuardLayout, TenantLandingRedirect } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -93,16 +94,26 @@ export const userRoutes: RouteObject[] = [
             element: <GoogleCallbackPage />
           },
           {
-            path: 'payments/checkout',
-            element: <CheckoutPage />
+            element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
+            children: [
+              {
+                path: 'payments/checkout',
+                element: <CheckoutPage />
+              }
+            ]
           },
 
           {
             element: <UserDefaultLayout />,
             children: [
               {
-                path: 'purchases/:packageId/feedback',
-                element: <PackageFeedbackPage />
+                element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
+                children: [
+                  {
+                    path: 'purchases/:packageId/feedback',
+                    element: <PackageFeedbackPage />
+                  }
+                ]
               },
               {
                 path: 'users/:userIdentifier',
@@ -116,51 +127,88 @@ export const userRoutes: RouteObject[] = [
                 element: <UserWorkspaceLayout />,
                 children: [
                   {
-                    path: 'projects',
-                    element: (
-                      <PageWrapper titleKey='pageTitle.projects'>
-                        <ProjectsPage />
-                      </PageWrapper>
-                    )
-                  },
-                  {
-                    path: 'transactions',
-                    element: (
-                      <PageWrapper titleKey='pageTitle.transactions'>
-                        <TransactionsPage />
-                      </PageWrapper>
-                    )
-                  },
-                  {
-                    path: 'purchases',
-                    element: <PurchaseHistoryPage />
-                  },
-                  {
-                    path: 'purchases/:packageId',
-                    element: <PurchasedPackagePage />,
+                    element: <FeatureFlagGuardLayout requires='module.taskManagement' />,
                     children: [
                       {
-                        path: 'meetings/:meetingId',
-                        element: <MeetingDialogPage />
+                        path: 'projects',
+                        element: (
+                          <PageWrapper titleKey='pageTitle.projects'>
+                            <ProjectsPage />
+                          </PageWrapper>
+                        )
                       }
                     ]
                   },
                   {
-                    path: 'calendar',
-                    element: <CalendarPage />,
+                    element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
                     children: [
                       {
-                        path: ':meetingId',
-                        element: <MeetingDialogPage />
+                        path: 'transactions',
+                        element: (
+                          <PageWrapper titleKey='pageTitle.transactions'>
+                            <TransactionsPage />
+                          </PageWrapper>
+                        )
+                      },
+                      {
+                        path: 'purchases',
+                        element: <PurchaseHistoryPage />
+                      },
+                      {
+                        path: 'purchases/:packageId',
+                        element: <PurchasedPackagePage />,
+                        children: [
+                          {
+                            path: 'meetings/:meetingId',
+                            element: <MeetingDialogPage />
+                          }
+                        ]
+                      },
+                      {
+                        element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['User']} />,
+                        children: [
+                          {
+                            path: 'applications/submit',
+                            element: <MentorApplicationPage />
+                          },
+                          { path: 'applications', element: <MentorApplicationsPage /> },
+                          { path: 'requests/:requestId', element: <PackageRequestPage /> }
+                        ]
+                      },
+                      {
+                        element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                        children: [
+                          { path: 'packages', element: <MentorPackagesPage /> },
+                          { path: 'packages/:packageId', element: <MentorPackagePage /> },
+                          { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
+                          { path: 'vouchers', element: <MentorVouchersPage /> },
+                          { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> },
+                          { path: 'requests', element: <PackageRequestsPage /> }
+                        ]
                       }
                     ]
                   },
                   {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                    element: <FeatureFlagGuardLayout requires='module.meetings' />,
                     children: [
                       {
-                        path: 'calendar/schedules',
-                        element: <SchedulesPage />
+                        path: 'calendar',
+                        element: <CalendarPage />,
+                        children: [
+                          {
+                            path: ':meetingId',
+                            element: <MeetingDialogPage />
+                          }
+                        ]
+                      },
+                      {
+                        element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                        children: [
+                          {
+                            path: 'calendar/schedules',
+                            element: <SchedulesPage />
+                          }
+                        ]
                       }
                     ]
                   },
@@ -170,165 +218,151 @@ export const userRoutes: RouteObject[] = [
                         <ComingSoonView titleKey='pageTitle.calendarComingSoon' />
                       </PageWrapper>
                     )
-                  },
-                  {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['User']} />,
-                    children: [
-                      {
-                        path: 'applications/submit',
-                        element: <MentorApplicationPage />
-                      },
-                      { path: 'applications', element: <MentorApplicationsPage /> },
-                      { path: 'requests/:requestId', element: <PackageRequestPage /> }
-                    ]
-                  },
-                  {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
-                    children: [
-                      { path: 'packages', element: <MentorPackagesPage /> },
-                      { path: 'packages/:packageId', element: <MentorPackagePage /> },
-                      { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
-                      { path: 'vouchers', element: <MentorVouchersPage /> },
-                      { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> },
-                      { path: 'requests', element: <PackageRequestsPage /> }
-                    ]
                   }
                 ]
               },
-              { path: 'packages/:packageId/book', element: <MentorPackageBookPage /> },
               {
-                path: 'projects/:identifier',
-                element: <ProjectDetailLayout />,
+                element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
+                children: [{ path: 'packages/:packageId/book', element: <MentorPackageBookPage /> }]
+              },
+              {
+                element: <FeatureFlagGuardLayout requires='module.taskManagement' />,
                 children: [
                   {
-                    index: true,
-                    element: null
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='TASKS' />,
-                    handle: { sidebarItem: 'milestones' },
+                    path: 'projects/:identifier',
+                    element: <ProjectDetailLayout />,
                     children: [
                       {
-                        path: 'milestones',
+                        index: true,
                         element: null
                       },
                       {
-                        path: 'milestones/:milestoneIdentifier',
-                        element: <ProjectTasksPage />,
+                        element: <ProjectPermissionGuardLayout sectionKey='TASKS' />,
+                        handle: { sidebarItem: 'milestones' },
                         children: [
                           {
-                            path: 'tasks/:taskIdentifier',
-                            element: <TaskDialogPage />
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='REVENUE' />,
-                    handle: { sidebarItem: 'revenue' },
-                    children: [
-                      {
-                        path: 'revenue',
-                        element: <ProjectRevenuePage />
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='OVERVIEW' />,
-                    handle: { sidebarItem: 'info' },
-                    children: [
-                      {
-                        path: 'info',
-                        element: <ProjectInfoPage />
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
-                    handle: { sidebarItem: 'calendar' },
-                    children: [
-                      {
-                        path: 'calendar',
-                        element: <ProjectCalendarPage />,
-                        children: [
+                            path: 'milestones',
+                            element: null
+                          },
                           {
-                            path: ':meetingId',
-                            element: <MeetingDialogPage />
+                            path: 'milestones/:milestoneIdentifier',
+                            element: <ProjectTasksPage />,
+                            children: [
+                              {
+                                path: 'tasks/:taskIdentifier',
+                                element: <TaskDialogPage />
+                              }
+                            ]
                           }
                         ]
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
-                    handle: { sidebarItem: 'performance' },
-                    children: [
-                      {
-                        path: 'performance',
-                        element: <ProjectPerformancePage />
-                      }
-                    ]
-                  },
-                  // {
-                  //   element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
-                  //   handle: { sidebarItem: 'chat' },
-                  //   children: [
-                  //     {
-                  //       path: 'chat',
-                  //       element: (
-                  //         <div className='w-full h-full flex justify-center items-center'>
-                  //           <p className='text-2xl font-bold'>Chat Comming Soon</p>
-                  //         </div>
-                  //       )
-                  //     }
-                  //   ]
-                  // },
-                  // {
-                  //   element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
-                  //   handle: { sidebarItem: 'note' },
-                  //   children: [
-                  //     {
-                  //       path: 'note',
-                  //       element: (
-                  //         <div className='w-full h-full flex justify-center items-center'>
-                  //           <p className='text-2xl font-bold'>Note Comming Soon</p>
-                  //         </div>
-                  //       )
-                  //     }
-                  //   ]
-                  // },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
-                    handle: { sidebarItem: 'storage' },
-                    children: [
-                      {
-                        path: 'storage',
-                        element: <ProjectStoragePage />,
-                        children: [
-                          {
-                            path: ':milestoneId/tasks/:taskId',
-                            element: <TaskDialogPage />
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    element: <ProjectPermissionGuardLayout sectionKey='SETTINGS' />,
-                    handle: { sidebarItem: 'settings' },
-                    children: [
-                      {
-                        path: 'settings',
-                        element: <ProjectSettingsPage />
                       },
                       {
-                        path: 'members/:memberIdentifier',
-                        element: <ProjectMemberPage />
+                        element: <ProjectPermissionGuardLayout sectionKey='REVENUE' />,
+                        handle: { sidebarItem: 'revenue' },
+                        children: [
+                          {
+                            path: 'revenue',
+                            element: <ProjectRevenuePage />
+                          }
+                        ]
                       },
                       {
-                        path: 'roles/:roleId',
-                        element: <ProjectRolePage />
+                        element: <ProjectPermissionGuardLayout sectionKey='OVERVIEW' />,
+                        handle: { sidebarItem: 'info' },
+                        children: [
+                          {
+                            path: 'info',
+                            element: <ProjectInfoPage />
+                          }
+                        ]
+                      },
+                      {
+                        element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
+                        handle: { sidebarItem: 'calendar' },
+                        children: [
+                          {
+                            path: 'calendar',
+                            element: <ProjectCalendarPage />,
+                            children: [
+                              {
+                                path: ':meetingId',
+                                element: <MeetingDialogPage />
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
+                        handle: { sidebarItem: 'performance' },
+                        children: [
+                          {
+                            path: 'performance',
+                            element: <ProjectPerformancePage />
+                          }
+                        ]
+                      },
+                      // {
+                      //   element: <ProjectPermissionGuardLayout sectionKey='CHAT' />,
+                      //   handle: { sidebarItem: 'chat' },
+                      //   children: [
+                      //     {
+                      //       path: 'chat',
+                      //       element: (
+                      //         <div className='w-full h-full flex justify-center items-center'>
+                      //           <p className='text-2xl font-bold'>Chat Comming Soon</p>
+                      //         </div>
+                      //       )
+                      //     }
+                      //   ]
+                      // },
+                      // {
+                      //   element: <ProjectPermissionGuardLayout sectionKey='NOTE' />,
+                      //   handle: { sidebarItem: 'note' },
+                      //   children: [
+                      //     {
+                      //       path: 'note',
+                      //       element: (
+                      //         <div className='w-full h-full flex justify-center items-center'>
+                      //           <p className='text-2xl font-bold'>Note Comming Soon</p>
+                      //         </div>
+                      //       )
+                      //     }
+                      //   ]
+                      // },
+                      {
+                        element: <ProjectPermissionGuardLayout sectionKey='STORAGE' />,
+                        handle: { sidebarItem: 'storage' },
+                        children: [
+                          {
+                            path: 'storage',
+                            element: <ProjectStoragePage />,
+                            children: [
+                              {
+                                path: ':milestoneId/tasks/:taskId',
+                                element: <TaskDialogPage />
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        element: <ProjectPermissionGuardLayout sectionKey='SETTINGS' />,
+                        handle: { sidebarItem: 'settings' },
+                        children: [
+                          {
+                            path: 'settings',
+                            element: <ProjectSettingsPage />
+                          },
+                          {
+                            path: 'members/:memberIdentifier',
+                            element: <ProjectMemberPage />
+                          },
+                          {
+                            path: 'roles/:roleId',
+                            element: <ProjectRolePage />
+                          }
+                        ]
                       }
                     ]
                   }
@@ -345,17 +379,22 @@ export const userRoutes: RouteObject[] = [
               //   )
               // },
               {
-                path: 'network',
-                element: (
-                  <PageWrapper titleKey='pageTitle.network'>
-                    <NetworkPage />
-                  </PageWrapper>
-                  // <PageWrapper titleKey='pageTitle.network'>
-                  //   <div className='w-full h-full flex justify-center items-center'>
-                  //     <p className='text-2xl font-bold'>Network Comming Soon</p>
-                  //   </div>
-                  // </PageWrapper>
-                )
+                element: <FeatureFlagGuardLayout requires='module.mentorNetworking' />,
+                children: [
+                  {
+                    path: 'network',
+                    element: (
+                      <PageWrapper titleKey='pageTitle.network'>
+                        <NetworkPage />
+                      </PageWrapper>
+                      // <PageWrapper titleKey='pageTitle.network'>
+                      //   <div className='w-full h-full flex justify-center items-center'>
+                      //     <p className='text-2xl font-bold'>Network Comming Soon</p>
+                      //   </div>
+                      // </PageWrapper>
+                    )
+                  }
+                ]
               },
               // {
               //   path: 'community',
@@ -368,14 +407,23 @@ export const userRoutes: RouteObject[] = [
               //   )
               // },
               {
-                path: 'news',
-                element: (
-                  <PageWrapper titleKey='pageTitle.news'>
-                    <NewsPage />
-                  </PageWrapper>
-                )
+                element: <FeatureFlagGuardLayout requires='module.news' />,
+                children: [
+                  {
+                    path: 'news',
+                    element: (
+                      <PageWrapper titleKey='pageTitle.news'>
+                        <NewsPage />
+                      </PageWrapper>
+                    )
+                  }
+                ]
               }
             ]
+          },
+          {
+            path: '*',
+            element: <TenantLandingRedirect />
           }
         ]
       }

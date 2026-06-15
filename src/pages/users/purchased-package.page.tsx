@@ -24,7 +24,7 @@ import {
   FolderOpenIcon,
   GraduationCapIcon
 } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useParams } from 'react-router'
 
@@ -512,7 +512,9 @@ export default function PurchasedPackagePage() {
         />
       ) : null}
 
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </div>
   )
 }

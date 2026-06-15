@@ -10,6 +10,7 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
+import { resolveFeatureCheck, useFilteredNavItems, useTenantConfig, type GuardedNavItem } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon, UsersRoundIcon } from 'lucide-react'
@@ -18,12 +19,15 @@ import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
 import logo from '/images/taskcoper.png'
 
-const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: string }[] = [
+type TopNavItem = GuardedNavItem & { id: number; label: I18nKey; icon: typeof HomeIcon; url: string }
+
+const navigations: TopNavItem[] = [
   {
     id: 100,
     label: 'header.home',
     icon: HomeIcon,
-    url: '/'
+    url: '/',
+    feature: 'module.home'
   },
   // {
   //   id: 200,
@@ -35,7 +39,8 @@ const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: str
     id: 300,
     label: 'header.expertNetwork',
     icon: UsersRoundIcon,
-    url: '/network'
+    url: '/network',
+    feature: 'module.mentorNetworking'
   },
   // {
   //   id: 400,
@@ -47,7 +52,8 @@ const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: str
     id: 500,
     label: 'header.news',
     icon: NewspaperIcon,
-    url: '/news'
+    url: '/news',
+    feature: 'module.news'
   }
 ]
 
@@ -59,6 +65,9 @@ export default function UserDefaultLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
+  const tenantConfig = useTenantConfig()
+  const visibleNavigations = useFilteredNavItems(navigations)
+  const isTaskManagementEnabled = resolveFeatureCheck(tenantConfig, 'module.taskManagement')
 
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
     enabled: !!me && !isVerificationRequired
@@ -67,7 +76,7 @@ export default function UserDefaultLayout() {
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
       <header className='flex h-14 items-center gap-3 px-4 border-b shrink-0 bg-background z-50 relative'>
-        <Link to='/' className='shrink-0'>
+        <Link to={tenantConfig.logoUrl} className='shrink-0'>
           <img src={logo} alt={t('common.alt.logo')} className='h-7 w-auto object-contain' />
         </Link>
 
@@ -86,7 +95,7 @@ export default function UserDefaultLayout() {
         ) : null}
 
         <div className='hidden lg:flex items-center gap-2'>
-          {navigations.map((navigation) => {
+          {visibleNavigations.map((navigation) => {
             const isActive = location.pathname === navigation.url
 
             return (
@@ -109,9 +118,11 @@ export default function UserDefaultLayout() {
 
         <div className='flex items-center gap-2 sm:gap-4'>
           <div className='flex items-center gap-1 sm:gap-3'>
-            <Button size='sm' asChild className='hidden lg:flex'>
-              <Link to='/projects'>{t('header.manageProjects')}</Link>
-            </Button>
+            {isTaskManagementEnabled ? (
+              <Button size='sm' asChild className='hidden lg:flex'>
+                <Link to='/projects'>{t('header.manageProjects')}</Link>
+              </Button>
+            ) : null}
 
             <Button size='icon-sm' variant='ghost' className='relative'>
               <MessageCircleIcon className='size-4 sm:size-5' />
@@ -145,7 +156,7 @@ export default function UserDefaultLayout() {
 
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-2 px-2'>
-                  {navigations.map((navigation) => {
+                  {visibleNavigations.map((navigation) => {
                     const isActive = location.pathname === navigation.url
                     return (
                       <Button
@@ -164,13 +175,17 @@ export default function UserDefaultLayout() {
                   })}
                 </div>
 
-                <Separator />
+                {isTaskManagementEnabled ? (
+                  <>
+                    <Separator />
 
-                <div className='px-2'>
-                  <Button asChild onClick={() => setOpen(false)} className='w-full'>
-                    <Link to='/projects'>{t('header.manageProjects')}</Link>
-                  </Button>
-                </div>
+                    <div className='px-2'>
+                      <Button asChild onClick={() => setOpen(false)} className='w-full'>
+                        <Link to='/projects'>{t('header.manageProjects')}</Link>
+                      </Button>
+                    </div>
+                  </>
+                ) : null}
               </div>
             </SheetContent>
           </Sheet>
