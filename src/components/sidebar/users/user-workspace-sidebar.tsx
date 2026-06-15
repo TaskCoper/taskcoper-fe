@@ -1,6 +1,6 @@
 import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
 import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
-import { useFilteredNavItems, type GuardedNavItem } from '@/lib/feature-flags'
+import { useFilteredNavItems, useTenantNavMain, type GuardedNavItem } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
 import {
@@ -122,20 +122,34 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
   const { t } = useTranslation()
   const filteredNavMain = useFilteredNavItems(NAV_MAIN_CONFIG)
   const filteredQuickActions = useFilteredNavItems(NAV_CONFIG)
+  const tenantNavMain = useTenantNavMain()
 
   const data = React.useMemo(
     () => ({
-      navMain: filteredNavMain.map((item) => ({
-        title: t(item.titleKey),
-        url: item.url,
-        icon: item.icon,
-        items: item.items.map((subItem) => ({
-          title: t(subItem.titleKey),
-          url: subItem.url,
-          activePatterns: subItem.activePatterns,
-          activeExcludePatterns: subItem.activeExcludePatterns
+      navMain: [
+        ...filteredNavMain.map((item) => ({
+          title: t(item.titleKey),
+          url: item.url,
+          icon: item.icon,
+          items: item.items.map((subItem) => ({
+            title: t(subItem.titleKey),
+            url: subItem.url,
+            activePatterns: subItem.activePatterns,
+            activeExcludePatterns: subItem.activeExcludePatterns
+          }))
+        })),
+        ...tenantNavMain.map((item) => ({
+          title: item.title,
+          url: item.url,
+          icon: item.icon,
+          items: item.items.map((subItem) => ({
+            title: subItem.title,
+            url: subItem.url,
+            activePatterns: subItem.activePatterns,
+            activeExcludePatterns: subItem.activeExcludePatterns
+          }))
         }))
-      })),
+      ],
       quickActions: filteredQuickActions.map((item) => ({
         name: t(item.titleKey),
         url: item.url,
@@ -144,7 +158,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
         activeExcludePatterns: item.activeExcludePatterns
       }))
     }),
-    [t, filteredNavMain, filteredQuickActions]
+    [t, filteredNavMain, filteredQuickActions, tenantNavMain]
   )
 
   const sidebarClassName = cn('top-14 h-[calc(100svh-3.5rem)]', className)
