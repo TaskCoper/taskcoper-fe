@@ -1,6 +1,7 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { formatDate } from '@/lib/date'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { Checkbox } from '@radix-ui/react-checkbox'
 import type { ColumnDef } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
@@ -73,7 +73,7 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       size: 100
     },
     {
-      id: 'ViewCount',
+      id: 'viewCount',
       accessorKey: 'viewCount',
       meta: {
         label: 'tenant.hoaTheoMua.articles.column.viewCount'
@@ -119,7 +119,6 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
 
         const statusColor = {
           [ArticleStatus.Published]: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-
           [ArticleStatus.Draft]: 'bg-gray-100 text-gray-800 border-gray-300'
         }[status]
 
@@ -140,7 +139,6 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
     {
       id: 'createdAt',
       accessorKey: 'createdAt',
-
       meta: {
         label: 'tenant.hoaTheoMua.articles.column.createdAt',
         variant: 'dateRange'
