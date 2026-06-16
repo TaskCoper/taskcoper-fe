@@ -2,20 +2,15 @@ import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 
-import hoaTheoMuaEn from '@/tenants/hoa-theo-mua/locales/en.json'
-import hoaTheoMuaVi from '@/tenants/hoa-theo-mua/locales/vi.json'
-
 import en from './locales/en.json'
 import vi from './locales/vi.json'
 
 const resources = {
   en: {
-    translation: en,
-    hoaTheoMua: hoaTheoMuaEn
+    translation: en
   },
   vi: {
-    translation: vi,
-    hoaTheoMua: hoaTheoMuaVi
+    translation: vi
   }
 }
 
@@ -24,8 +19,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    ns: ['translation', 'hoaTheoMua'],
+    ns: ['translation'],
     defaultNS: 'translation',
+    fallbackNS: 'translation',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false

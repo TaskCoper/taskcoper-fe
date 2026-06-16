@@ -5,9 +5,18 @@ import { DiscountType, Scope, TargetType } from './types'
 export const createVoucherSchema = (t: TFunction) => {
   return z
     .object({
-      code: z.string().min(5, t('common.validation.minLength.5')).max(25, t('common.validation.maxLength.25')),
-      name: z.string().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255')),
-      description: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
+      code: z
+        .string()
+        .min(5, t('common.validation.minLength', { min: 5 }))
+        .max(25, t('common.validation.maxLength', { max: 25 })),
+      name: z
+        .string()
+        .min(1, t('common.validation.required'))
+        .max(255, t('common.validation.maxLength', { max: 255 })),
+      description: z
+        .string()
+        .max(255, t('common.validation.maxLength', { max: 255 }))
+        .nullable(),
       discountType: z.enum(DiscountType, { message: t('common.validation.enum.invalid') }),
       discountValue: z
         .number({ error: t('common.validation.number.positive') })
@@ -66,8 +75,14 @@ export const updateVoucherSchema = (t: TFunction) => {
   return z
     .object({
       voucherId: z.uuid({ message: t('common.validation.uuid.invalid') }),
-      name: z.string().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255')),
-      description: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
+      name: z
+        .string()
+        .min(1, t('common.validation.required'))
+        .max(255, t('common.validation.maxLength', { max: 255 })),
+      description: z
+        .string()
+        .max(255, t('common.validation.maxLength', { max: 255 }))
+        .nullable(),
       startsAtUtc: z.iso.datetime({ offset: true, error: t('common.validation.date.required') }),
       endsAtUtc: z.iso.datetime({ offset: true, error: t('common.validation.date.required') }),
       isActive: z.boolean(),

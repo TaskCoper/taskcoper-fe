@@ -1,10 +1,7 @@
-import type { ParseKeys } from 'i18next'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
-type HoaTheoMuaKey = ParseKeys<'hoaTheoMua'>
-
-export function PlaceholderPage({ titleKey }: { titleKey: HoaTheoMuaKey }) {
-  const { t } = useTranslation('hoaTheoMua')
+export function PlaceholderPage({ titleKey }: { titleKey: string }) {
+  const { t } = useTenantTranslation()
 
   return (
     <div className='flex h-full w-full items-center justify-center'>
