@@ -8,11 +8,11 @@ export const addMentorPackageRuleSchema = (t: TFunction) =>
       no: z
         .number({ error: t('mentorPackageRule.validation.noRequired') })
         .int({ message: t('common.validation.number.integer') })
-        .positive(t('mentorPackageRule.validation.noPositive')),
+        .positive(t('common.validation.number.positive')),
       totalTimeSlots: z
         .number({ error: t('mentorPackageRule.validation.totalTimeSlotsRequired') })
         .int({ message: t('common.validation.number.integer') })
-        .positive(t('mentorPackageRule.validation.totalTimeSlotsPositive'))
+        .positive(t('common.validation.number.positive'))
     })
     .strict()
 
@@ -23,11 +23,11 @@ export const updateMentorPackageRuleSchema = (t: TFunction) =>
       no: z
         .number({ error: t('mentorPackageRule.validation.noRequired') })
         .int({ message: t('common.validation.number.integer') })
-        .positive(t('mentorPackageRule.validation.noPositive')),
+        .positive(t('common.validation.number.positive')),
       totalTimeSlots: z
         .number({ error: t('mentorPackageRule.validation.totalTimeSlotsRequired') })
         .int({ message: t('common.validation.number.integer') })
-        .positive(t('mentorPackageRule.validation.totalTimeSlotsPositive'))
+        .positive(t('common.validation.number.positive'))
     })
     .strict()
 

@@ -8,7 +8,10 @@ export const addProjectRevenueSchema = (t: TFunction) => {
       name: z.string().trim().min(1, t('project.addProjectRevenue.validation.name.minLength')),
       amount: z.number().min(1, t('project.addProjectRevenue.validation.amount.min')),
       type: z.enum([RevenueType.Revenue, RevenueType.Expense], { message: t('common.validation.enum.invalid') }),
-      note: z.string().trim().max(255, t('project.addProjectRevenue.validation.note.maxLength')),
+      note: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       labelIds: z.array(z.uuid({ message: t('common.validation.uuid.invalid') })),
       projectIdentifier: z.string().min(1, t('common.validation.required'))
     })
@@ -23,7 +26,10 @@ export const updateProjectRevenueSchema = (t: TFunction) => {
       name: z.string().trim().min(1, t('project.updateProjectRevenue.validation.name.minLength')),
       amount: z.number().min(1, t('project.updateProjectRevenue.validation.amount.min')),
       type: z.enum([RevenueType.Revenue, RevenueType.Expense], { message: t('common.validation.enum.invalid') }),
-      note: z.string().trim().max(255, t('project.updateProjectRevenue.validation.note.maxLength')),
+      note: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       labelIds: z.array(z.uuid({ message: t('common.validation.uuid.invalid') }))
     })
     .strict()
@@ -35,11 +41,11 @@ export const addProjectRevenueLabelSchema = (t: TFunction) => {
       projectIdentifier: z.string().min(1, t('common.validation.required')),
       name: z
         .string()
-        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal('')),
       color: z
         .string()
-        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal(''))
     })
     .strict()
@@ -48,14 +54,14 @@ export const addProjectRevenueLabelSchema = (t: TFunction) => {
 export const updateProjectRevenueLabelSchema = (t: TFunction) => {
   return z
     .object({
-      id: z.uuid({ message: t('task.label.validation.id.invalid') }),
+      id: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z
         .string()
-        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal('')),
       color: z
         .string()
-        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal('')),
       projectIdentifier: z.string().min(1, t('common.validation.required'))
     })

@@ -4,11 +4,11 @@ import z from 'zod'
 const baseSchema = (t: TFunction) =>
   z
     .object({
-      taskId: z.uuid({ message: t('task.attachment.validation.taskId.invalid') }),
-      commentId: z.uuid({ message: t('task.attachment.validation.commentId.invalid') }).nullable(),
+      taskId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+      commentId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
       name: z.string(),
-      url: z.url({ message: t('task.attachment.validation.url.invalid') }),
-      position: z.number({ message: t('task.attachment.validation.position.invalid') })
+      url: z.url({ message: t('common.validation.url.invalid') }),
+      position: z.number({ message: t('common.validation.number.invalid') })
     })
     .strict()
 
@@ -41,9 +41,9 @@ export const linkAttachmentSchema = (t: TFunction) => baseSchema(t).extend(linkF
 const updateBaseSchema = (t: TFunction) =>
   z
     .object({
-      taskId: z.uuid({ message: t('task.attachment.validation.taskId.invalid') }),
-      projectResourceId: z.uuid({ message: t('task.attachment.validation.projectResourceId.invalid') }),
-      position: z.number({ message: t('task.attachment.validation.position.invalid') })
+      taskId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+      projectResourceId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+      position: z.number({ message: t('common.validation.number.invalid') })
     })
     .strict()
 
@@ -51,7 +51,7 @@ export const updateFileAttachmentSchema = (t: TFunction) =>
   updateBaseSchema(t)
     .extend({
       name: z.string().min(1, { message: t('task.attachment.validation.name.minLength') }),
-      url: z.url({ message: t('task.attachment.validation.url.invalid') })
+      url: z.url({ message: t('common.validation.url.invalid') })
     })
     .extend(fileFieldsSchema(t).shape)
     .strict()
@@ -60,7 +60,7 @@ export const updateLinkAttachmentSchema = (t: TFunction) =>
   updateBaseSchema(t)
     .extend({
       name: z.string(),
-      url: z.url({ message: t('task.attachment.validation.url.invalid') })
+      url: z.url({ message: t('common.validation.url.invalid') })
     })
     .extend(linkFieldsSchema.shape)
     .strict()
