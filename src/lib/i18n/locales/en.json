@@ -5,6 +5,23 @@
     "logout": "Logout",
     "settings": "Settings"
   },
+  "orders": {
+    "column": {
+      "ahahaMoveOrderId": "AhaMove Order ID",
+      "ahahaMoveTrackingUrl": "AhaMove Tracking URL",
+      "nhanhOrderId": "Nhanh Order ID",
+      "nhanhTrackingUrl": "Nhanh Tracking URL",
+      "orderId": "Order ID",
+      "status": "Status"
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending"
+    },
+    "common": {
+      "noData": "No data available"
+    }
+  },
   "activities": {
     "ConvertSubTaskToTaskActivity": "converted subtask <0>{{taskName}}</0> into a task",
     "FileAddedToTaskActivity": "added an attachment to this task",
