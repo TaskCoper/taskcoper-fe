@@ -5,23 +5,6 @@
     "logout": "Đăng xuất",
     "settings": "Cài đặt"
   },
-  "orders": {
-    "column": {
-      "ahahaMoveOrderId": "Ma don AhaMove",
-      "ahahaMoveTrackingUrl": "URL theo doi AhaMove",
-      "nhanhOrderId": "Ma don Nhanh",
-      "nhanhTrackingUrl": "URL theo doi Nhanh",
-      "orderId": "Ma don hang",
-      "status": "Trang thai"
-    },
-    "status": {
-      "paid": "Đã thanh toán",
-      "pending": "Đang xử lý"
-    },
-    "common": {
-      "noData": "Không có dữ liệu"
-    }
-  },
   "activities": {
     "ConvertSubTaskToTaskActivity": "đã chuyển công việc con <0>{{taskName}}</0> thành thẻ",
     "FileAddedToTaskActivity": "đã thêm tệp đính kèm vào thẻ",
@@ -1311,6 +1294,23 @@
       "project": "Dự án",
       "system": "Hệ thống",
       "task": "Công việc"
+    }
+  },
+  "orders": {
+    "column": {
+      "ahahaMoveOrderId": "Ma don AhaMove",
+      "ahahaMoveTrackingUrl": "URL theo doi AhaMove",
+      "nhanhOrderId": "Ma don Nhanh",
+      "nhanhTrackingUrl": "URL theo doi Nhanh",
+      "orderId": "Ma don hang",
+      "status": "Trang thai"
+    },
+    "common": {
+      "noData": "Không có dữ liệu"
+    },
+    "status": {
+      "paid": "Đã thanh toán",
+      "pending": "Đang xử lý"
     }
   },
   "packageBooking": {
