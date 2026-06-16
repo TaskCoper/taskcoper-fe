@@ -66,7 +66,7 @@ export const getColumns = (): ColumnDef<OrderRow>[] => {
         const value = row.original.nhanhOrderId
 
         if (value) {
-          return <p className='w-full truncate max-w-125 xl:max-w-none'>{value}</p>
+          return <p className='mx-auto text-center w-full truncate max-w-125 xl:max-w-none'>{value}</p>
         }
 
         return (
@@ -99,7 +99,7 @@ export const getColumns = (): ColumnDef<OrderRow>[] => {
               // 'hover:underline',
               // )}
             >
-              <p className='w-full truncate max-w-125 xl:max-w-none'>{url}</p>
+              <p className='mx-auto text-center w-full truncate max-w-125 xl:max-w-none'>{url}</p>
             </Link>
           )
         }
@@ -128,7 +128,7 @@ export const getColumns = (): ColumnDef<OrderRow>[] => {
         const value = row.original.ahahaMoveOrderId
 
         if (value) {
-          return <p className='w-full truncate max-w-125 xl:max-w-none'>{value}</p>
+          return <p className=' mx-auto text-center w-full truncate max-w-125 xl:max-w-none'>{value}</p>
         }
 
         return (
@@ -161,7 +161,7 @@ export const getColumns = (): ColumnDef<OrderRow>[] => {
               // 'hover:underline',
               // )}
             >
-              <p className='w-full truncate max-w-125 xl:max-w-none'>{url}</p>
+              <p className=' mx-auto text-center w-full truncate max-w-125 xl:max-w-none'>{url}</p>
             </Link>
           )
         }
