@@ -1298,12 +1298,12 @@
   },
   "orders": {
     "column": {
-      "ahahaMoveOrderId": "Ma don AhaMove",
-      "ahahaMoveTrackingUrl": "URL theo doi AhaMove",
-      "nhanhOrderId": "Ma don Nhanh",
-      "nhanhTrackingUrl": "URL theo doi Nhanh",
-      "orderId": "Ma don hang",
-      "status": "Trang thai"
+      "ahahaMoveOrderId": "Mã đơn AhaMove",
+      "ahahaMoveTrackingUrl": "URL theo dõi AhaMove",
+      "nhanhOrderId": "Mã đơn Nhanh",
+      "nhanhTrackingUrl": "URL theo dõi Nhanh",
+      "orderId": "Mã đơn hàng",
+      "status": "Trạng thái"
     },
     "common": {
       "noData": "Không có dữ liệu"

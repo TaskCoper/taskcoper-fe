@@ -53,7 +53,7 @@ export default function OrdersListPage() {
   const isLoading = isOrdersLoading
 
   return (
-    <div>
+    <div className='p-6 space-y-4 mx-auto'>
       <DataTable table={table} isLoading={isLoading}>
         <DataTableToolbar table={table}></DataTableToolbar>
       </DataTable>
