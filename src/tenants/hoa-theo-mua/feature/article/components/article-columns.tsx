@@ -1,0 +1,205 @@
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { formatDate } from '@/lib/date'
+import { cn, getAvatarFallback } from '@/shared/utils'
+import { Checkbox } from '@radix-ui/react-checkbox'
+import type { ColumnDef } from '@tanstack/react-table'
+import i18next from 'i18next'
+import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
+import { Link } from 'react-router'
+import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../types'
+
+const ARTICLE_I18N_PREFIX = 'tenant.hoaTheoMua.articles' as const
+
+export const getColumns = (): ColumnDef<ArticleRow>[] => {
+  return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          aria-label={i18next.t(`${ARTICLE_I18N_PREFIX}.column.selectAll`)}
+          className='translate-y-0.5'
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          aria-label={i18next.t(`${ARTICLE_I18N_PREFIX}.column.selectRow`)}
+          className='translate-y-0.5'
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 30
+    },
+    {
+      id: 'title',
+      accessorKey: 'title',
+      meta: {
+        label: 'tenant.hoaTheoMua.articles.column.title',
+        placeholder: 'tenant.hoaTheoMua.articles.column.titlePlaceholder',
+        variant: 'text',
+        icon: SearchIcon
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.title' />,
+
+      cell: ({ row }) => (
+        <Link to={row.original.slug} className='flex min-w-0 items-center gap-3 hover:underline'>
+          <Avatar className='size-9 rounded-lg'>
+            <AvatarImage src={row.original.pictureUrl ?? undefined} />
+            <AvatarFallback className='rounded-lg text-xs font-medium'>
+              {getAvatarFallback(row.original.title)}
+            </AvatarFallback>
+          </Avatar>
+
+          <p className='w-full max-w-125 truncate font-medium xl:max-w-none'>{row.original.title}</p>
+        </Link>
+      ),
+
+      enableSorting: true,
+      enableHiding: false,
+      enableColumnFilter: true,
+      size: 100
+    },
+    {
+      id: 'ViewCount',
+      accessorKey: 'viewCount',
+      meta: {
+        label: 'tenant.hoaTheoMua.articles.column.viewCount'
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.viewCount' />
+      ),
+
+      cell: ({ row }) => (
+        <Link to={row.original.slug} className='hover:underline'>
+          <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none'>{row.original.viewCount}</p>
+        </Link>
+      ),
+
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 30
+    },
+    {
+      id: 'Status',
+      accessorKey: 'status',
+      meta: {
+        label: 'tenant.hoaTheoMua.articles.column.status',
+        variant: 'radio',
+        options: [
+          {
+            label: i18next.t(ArticleStatusLabel[ArticleStatus.Published]),
+            value: '1'
+          },
+          {
+            label: i18next.t(ArticleStatusLabel[ArticleStatus.Draft]),
+            value: '0'
+          }
+        ]
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.status' className='mx-auto' />
+      ),
+
+      cell: ({ row }) => {
+        const status = row.original.status
+
+        const statusColor = {
+          [ArticleStatus.Published]: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+
+          [ArticleStatus.Draft]: 'bg-gray-100 text-gray-800 border-gray-300'
+        }[status]
+
+        return (
+          <div className='flex justify-center px-1'>
+            <p className={cn('w-fit rounded-lg border px-2.5 py-1 text-xs font-medium leading-none', statusColor)}>
+              {i18next.t(ArticleStatusLabel[status])}
+            </p>
+          </div>
+        )
+      },
+
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 30
+    },
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+
+      meta: {
+        label: 'tenant.hoaTheoMua.articles.column.createdAt',
+        variant: 'dateRange'
+      },
+
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          label='tenant.hoaTheoMua.articles.column.createdAt'
+          className='mx-auto'
+        />
+      ),
+
+      cell: ({ row }) => {
+        if (row.original.createdAt) {
+          return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
+        }
+
+        return (
+          <p className='text-center text-muted-foreground'>{i18next.t(`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`)}</p>
+        )
+      },
+
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 30
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const { id, title, slug } = row.original
+
+        return (
+          <div className='flex justify-end pr-2'>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='size-8 rounded-lg p-0'>
+                  <span className='sr-only'>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.openMenu`)}</span>
+                  <MoreHorizontalIcon className='size-4' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to={row.original.slug}>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className='focus:text-destructive'
+                  onClick={() => console.log(i18next.t(`${ARTICLE_I18N_PREFIX}.action.delete`), { id, title, slug })}
+                >
+                  {i18next.t(`${ARTICLE_I18N_PREFIX}.action.delete`)}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
+      },
+      size: 30
+    }
+  ]
+}

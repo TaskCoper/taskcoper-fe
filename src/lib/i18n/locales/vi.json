@@ -2806,6 +2806,28 @@
         "listComingSoon": "Địa chỉ giao hàng — Sắp ra mắt",
         "zonesComingSoon": "Khu vực giao hàng — Sắp ra mắt"
       },
+      "articles": {
+        "action": {
+          "actions": "Hành động",
+          "delete": "Xóa",
+          "openMenu": "Mở hành động bài viết",
+          "viewDetails": "Xem chi tiết"
+        },
+        "column": {
+          "createdAt": "Ngày tạo",
+          "noCreatedAt": "Chưa có ngày tạo",
+          "selectAll": "Chọn tất cả bài viết",
+          "selectRow": "Chọn bài viết",
+          "status": "Trạng thái",
+          "title": "Tiêu đề",
+          "titlePlaceholder": "Tìm theo tiêu đề...",
+          "viewCount": "Lượt xem"
+        },
+        "status": {
+          "draft": "Bản nháp",
+          "published": "Đã xuất bản"
+        }
+      },
       "customNews": {
         "articlesComingSoon": "Bài viết — Sắp ra mắt",
         "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
