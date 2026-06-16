@@ -2800,27 +2800,6 @@
       }
     }
   },
-  "tenant": {
-    "hoaTheoMua": {
-      "addresses": {
-        "listComingSoon": "Địa chỉ giao hàng — Sắp ra mắt",
-        "zonesComingSoon": "Khu vực giao hàng — Sắp ra mắt"
-      },
-      "customNews": {
-        "articlesComingSoon": "Bài viết — Sắp ra mắt",
-        "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
-      },
-      "orders": {
-        "customersComingSoon": "Khách hàng — Sắp ra mắt",
-        "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
-        "listComingSoon": "Danh sách đơn hàng — Sắp ra mắt"
-      },
-      "recruitment": {
-        "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
-        "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
-      }
-    }
-  },
   "transactions": {
     "column": {
       "actions": "Hành động",

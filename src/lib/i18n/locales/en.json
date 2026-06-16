@@ -2817,27 +2817,6 @@
       }
     }
   },
-  "tenant": {
-    "hoaTheoMua": {
-      "addresses": {
-        "listComingSoon": "Delivery Addresses — Coming Soon",
-        "zonesComingSoon": "Delivery Zones — Coming Soon"
-      },
-      "customNews": {
-        "articlesComingSoon": "Articles — Coming Soon",
-        "categoriesComingSoon": "Categories — Coming Soon"
-      },
-      "orders": {
-        "customersComingSoon": "Customers — Coming Soon",
-        "dashboardComingSoon": "Orders Dashboard — Coming Soon",
-        "listComingSoon": "Orders List — Coming Soon"
-      },
-      "recruitment": {
-        "applicantsComingSoon": "Applicants — Coming Soon",
-        "jobsComingSoon": "Job Postings — Coming Soon"
-      }
-    }
-  },
   "transactions": {
     "column": {
       "actions": "Actions",
