@@ -16,6 +16,8 @@ const AddressesZonesPage = lazy(() => import('./pages/addresses-zones.page'))
 const NewsArticlesPage = lazy(() => import('./pages/news-articles.page'))
 const NewsCategoriesPage = lazy(() => import('./pages/news-categories.page'))
 
+const SystemConfigsPage = lazy(() => import('./pages/system-configs.page'))
+
 export const HOA_THEO_MUA_ROUTE_PREFIX = 'htm'
 
 export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
@@ -51,6 +53,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'news', element: <NewsArticlesPage /> },
           { path: 'news/categories', element: <NewsCategoriesPage /> }
         ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.systemConfigs' />,
+        children: [{ path: 'system-configs', element: <SystemConfigsPage /> }]
       }
     ]
   }

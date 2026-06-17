@@ -84,6 +84,11 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         title: 'Danh mục',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
+      },
+      {
+        title: 'Config hệ thống',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/system-configs`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-configs`]
       }
     ]
   }

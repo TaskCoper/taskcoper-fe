@@ -155,8 +155,8 @@ export const getColorTextClass = (color: string) => {
 
 export const getUserType = (user: Me | null | undefined): RoleType | null => {
   if (!user) return null
-  if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
-  if (user.role === 'Admin' && user.organizationId) return 'orgAdmin'
+  // if (user.role === 'Admin' && !user.organizationId) return 'superAdmin'
+  // if (user.role === 'Admin' && user.organizationId) return 'orgAdmin'
 
   return 'user'
 }
