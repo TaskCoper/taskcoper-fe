@@ -20,6 +20,8 @@ export function resolveTenantConfig(organizationId: string | null | undefined): 
     defaultLanding: override.defaultLanding ?? DEFAULT_TENANT_CONFIG.defaultLanding,
     logoUrl: override.logoUrl ?? DEFAULT_TENANT_CONFIG.logoUrl,
     i18nNamespace: override.i18nNamespace,
-    locales: override.locales
+    locales: override.locales,
+    navMain: override.navMain,
+    workspaceRoutes: override.workspaceRoutes
   }
 }
