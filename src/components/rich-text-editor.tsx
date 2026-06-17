@@ -20,6 +20,7 @@ import projectMemberService from '@/features/projects/members/services'
 import type { MentionUser } from '@/features/users/types'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { queryKeys } from '@/lib/query-keys'
 import { DEFAULT_PAGE_INDEX, MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
@@ -41,7 +42,6 @@ import {
 import { StarterKit } from '@tiptap/starter-kit'
 import { MoreHorizontalIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { softInsetSurfaceClasses } from '../shared/effects'
@@ -100,7 +100,7 @@ export default function RichTextEditor({
   className
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTenantTranslation()
   const { uploadFileWithToast } = useUploadFileWithToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const placeholderText: string = t(placeholder)

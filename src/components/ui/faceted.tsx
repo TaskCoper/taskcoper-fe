@@ -9,10 +9,10 @@ import {
   CommandSeparator
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 type FacetedValue<Multiple extends boolean> = Multiple extends true ? string[] : string
 
@@ -119,7 +119,7 @@ interface FacetedBadgeListProps extends React.ComponentProps<'div'> {
 }
 
 function FacetedBadgeList(props: FacetedBadgeListProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const {
     options = [],
     max = 2,

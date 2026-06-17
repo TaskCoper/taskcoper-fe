@@ -4,12 +4,12 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useDateFormat } from '@/lib/date'
 import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { Matcher } from 'react-day-picker'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 
 interface DateConstraints {
   minDate?: Date
@@ -43,7 +43,7 @@ export function DatePickerField<T extends FieldValues>({
   maxDate = new Date(new Date().getFullYear() + 10, 11, 31),
   disabled
 }: DatePickerFieldProps<T>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { formatDate } = useDateFormat()
   const [open, setOpen] = useState(false)
 

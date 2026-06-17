@@ -2,12 +2,12 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { useDateFormat } from '@/lib/date'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { Column } from '@tanstack/react-table'
 import { endOfDay, startOfDay } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import * as React from 'react'
 import type { DateRange } from 'react-day-picker'
-import { useTranslation } from 'react-i18next'
 import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 type DateSelection = Date[] | DateRange
@@ -51,7 +51,7 @@ interface DataTableDateFilterProps<TData> {
 }
 
 export function DataTableDateFilter<TData>({ column, title, multiple }: DataTableDateFilterProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { formatDate } = useDateFormat()
   const columnFilterValue = column.getFilterValue()
 

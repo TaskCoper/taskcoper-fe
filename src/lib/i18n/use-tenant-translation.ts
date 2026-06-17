@@ -2,7 +2,7 @@ import { useTenantConfig } from '@/lib/feature-flags/use-feature-flags'
 import type { TOptions } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-type TenantT = (key: string, options?: TOptions) => string
+export type TenantT = (key: string, options?: TOptions) => string
 
 // Trả về `t` theo namespace của tenant hiện tại, có fallback về namespace base `translation`.
 // Key của tenant sẽ override key base; nếu tenant thiếu key thì dùng bản dịch từ base.
