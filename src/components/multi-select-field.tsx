@@ -13,11 +13,11 @@ import { Field, FieldError as FieldErrorComponent, FieldLabel } from '@/componen
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 import { type Control, Controller, type FieldError, type FieldValues, type Path, useFormContext } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 
 interface Option {
   label: string
@@ -64,7 +64,7 @@ export default function MultiSelectField<T extends FieldValues>({
   badgeClassName,
   customBadgeRender
 }: ComboboxMultiFieldProps<T>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 

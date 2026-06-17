@@ -4,11 +4,11 @@ import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface Range {
@@ -40,7 +40,7 @@ interface DataTableSliderFilterProps<TData> {
 }
 
 export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderFilterProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const id = React.useId()
 
   const columnFilterValue = parseValuesAsNumbers(column.getFilterValue())

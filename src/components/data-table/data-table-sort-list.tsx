@@ -5,11 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sortable, SortableContent, SortableItem, SortableItemHandle, SortableOverlay } from '@/components/ui/sortable'
 import { dataTableConfig } from '@/lib/data-table/data-table'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnSort, SortDirection, Table } from '@tanstack/react-table'
 import { ArrowDownUp, ChevronsUpDown, GripVertical, Trash2 } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 const SORT_SHORTCUT_KEY = 's'
 const REMOVE_SORT_SHORTCUTS = ['backspace', 'delete']
@@ -20,7 +20,7 @@ interface DataTableSortListProps<TData> extends React.ComponentProps<typeof Popo
 }
 
 export function DataTableSortList<TData>({ table, disabled, ...props }: DataTableSortListProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const id = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
@@ -208,7 +208,7 @@ function DataTableSortItem({
   onSortUpdate,
   onSortRemove
 }: DataTableSortItemProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const fieldListboxId = `${sortItemId}-field-listbox`
   const fieldTriggerId = `${sortItemId}-field-trigger`
   const directionListboxId = `${sortItemId}-direction-listbox`
