@@ -1,9 +1,9 @@
 'use client'
 
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { type Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -180,7 +180,7 @@ export function shouldShowButton(props: { editor: Editor | null; hideWhenUnavail
  * ```
  */
 export function useCodeBlock(config?: UseCodeBlockConfig) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onToggled } = config || {}
 
   const { editor } = useTiptapEditor(providedEditor)

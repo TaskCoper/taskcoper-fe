@@ -1,10 +1,10 @@
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getColumnPinningStyle } from '@/lib/data-table/utils'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { flexRender, type Row, type Table as TanstackTable } from '@tanstack/react-table'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { Skeleton } from '../ui/skeleton'
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
@@ -25,7 +25,7 @@ export function DataTable<TData>({
   isLoading = false,
   ...props
 }: DataTableProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   return (
     <div className={cn('flex w-full flex-col gap-2.5 overflow-auto', className)} {...props}>

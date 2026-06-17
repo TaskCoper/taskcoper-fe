@@ -1,7 +1,7 @@
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/shared/utils'
@@ -32,7 +32,7 @@ function CommandDialog({
   className?: string
   showCloseButton?: boolean
 }) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const dialogTitle = title ?? t('commandDialog.title')
   const dialogDescription = description ?? t('commandDialog.description')
 

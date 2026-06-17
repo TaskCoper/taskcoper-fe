@@ -1,8 +1,8 @@
 'use client'
 
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -126,7 +126,7 @@ export function getActiveListType(editor: Editor | null, availableTypes: ListTyp
  * ```
  */
 export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const {
     editor: providedEditor,
     types = ['bulletList', 'orderedList', 'taskList'],

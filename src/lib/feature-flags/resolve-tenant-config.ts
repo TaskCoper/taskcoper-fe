@@ -18,6 +18,8 @@ export function resolveTenantConfig(organizationId: string | null | undefined): 
     modules: { ...DEFAULT_TENANT_CONFIG.modules, ...override.modules },
     custom: { ...DEFAULT_TENANT_CONFIG.custom, ...override.custom },
     defaultLanding: override.defaultLanding ?? DEFAULT_TENANT_CONFIG.defaultLanding,
-    logoUrl: override.logoUrl ?? DEFAULT_TENANT_CONFIG.logoUrl
+    logoUrl: override.logoUrl ?? DEFAULT_TENANT_CONFIG.logoUrl,
+    i18nNamespace: override.i18nNamespace,
+    locales: override.locales
   }
 }

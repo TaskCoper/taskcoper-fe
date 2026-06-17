@@ -17,5 +17,10 @@ export const hoaTheoMuaConfig: Partial<TenantConfig> = {
     customNewsPage: true
   },
   defaultLanding: '/projects',
-  logoUrl: '/projects'
+  logoUrl: '/projects',
+  i18nNamespace: 'hoaTheoMua',
+  locales: {
+    en: () => import('./locales/en.json'),
+    vi: () => import('./locales/vi.json')
+  }
 }

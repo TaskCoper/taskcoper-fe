@@ -9,14 +9,13 @@ import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { getFiltersStateParser } from '@/lib/data-table/parsers'
 import { generateId, getDefaultFilterOperator, getFilterOperators } from '@/lib/data-table/utils'
 import { formatDate } from '@/lib/date'
+import { useTenantTranslation, type TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
-import type { TFunction } from 'i18next'
 import { BadgeCheck, CalendarIcon, Check, ListFilter, Text, X } from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 const DEBOUNCE_MS = 300
 const THROTTLE_MS = 50
@@ -39,7 +38,7 @@ export function DataTableFilterMenu<TData>({
   disabled,
   ...props
 }: DataTableFilterMenuProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const id = React.useId()
 
   const columns = React.useMemo(() => {
@@ -285,7 +284,7 @@ function DataTableFilterItem<TData>({
   onFilterUpdate,
   onFilterRemove
 }: DataTableFilterItemProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   {
     const [showFieldSelector, setShowFieldSelector] = React.useState(false)
@@ -517,7 +516,7 @@ function onFilterInputRender<TData>({
   onFilterUpdate: (filterId: string, updates: Partial<Omit<ExtendedColumnFilter<TData>, 'filterId'>>) => void
   showValueSelector: boolean
   setShowValueSelector: (value: boolean) => void
-  t: TFunction<'translation'>
+  t: TenantT
 }) {
   if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') {
     return (
