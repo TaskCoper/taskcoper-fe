@@ -5,9 +5,19 @@ export const addProjectPositionTitleSchema = (t: TFunction) =>
   z
     .object({
       projectIdentifier: z.string().min(1, t('common.validation.required')),
-      name: z.string().trim().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255')),
-      description: z.string().trim().max(255, t('common.validation.maxLength.255')),
-      color: z.string().trim().max(255, t('common.validation.maxLength.255'))
+      name: z
+        .string()
+        .trim()
+        .min(1, t('common.validation.required'))
+        .max(255, t('common.validation.maxLength', { max: 255 })),
+      description: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 })),
+      color: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 }))
     })
     .strict()
 

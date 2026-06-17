@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>
-  label: I18nKey
+  label: I18nKey | string
 }
 
 export function DataTableColumnHeader<TData, TValue>({

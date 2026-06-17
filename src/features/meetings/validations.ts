@@ -28,7 +28,10 @@ export const cancelMeetingSchema = (t: TFunction) => {
   return z
     .object({
       meetingId: z.uuid({ message: t('common.validation.uuid.invalid') }),
-      reason: z.string().min(1, t('common.validation.required')).max(255, t('common.validation.maxLength.255'))
+      reason: z
+        .string()
+        .min(1, t('common.validation.required'))
+        .max(255, t('common.validation.maxLength', { max: 255 }))
     })
     .strict()
 }
@@ -39,8 +42,14 @@ export const updateMeetingSchema = (t: TFunction) => {
       meetingId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       startTimeUtc: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }),
       endTimeUtc: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }),
-      reason: z.string().max(255, t('common.validation.maxLength.255')).nullable(),
-      note: z.string().max(2000, t('common.validation.maxLength.2000')).nullable(),
+      reason: z
+        .string()
+        .max(255, t('common.validation.maxLength', { max: 255 }))
+        .nullable(),
+      note: z
+        .string()
+        .max(2000, t('common.validation.maxLength', { max: 2000 }))
+        .nullable(),
       meetingLink: z.string().regex(googleMeetLinkRegex, t('common.validation.url.invalid')).nullable()
     })
     .strict()

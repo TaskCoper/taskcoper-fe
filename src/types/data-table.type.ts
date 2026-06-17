@@ -12,8 +12,8 @@ declare module '@tanstack/react-table' {
 
   // biome-ignore lint/correctness/noUnusedVariables: TData and TValue are used in the ColumnMeta interface
   interface ColumnMeta<TData extends RowData, TValue> {
-    label?: I18nKey
-    placeholder?: I18nKey
+    label?: I18nKey | string
+    placeholder?: I18nKey | string
     variant?: FilterVariant
     options?: Option[]
     range?: [number, number]

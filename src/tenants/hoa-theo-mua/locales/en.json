@@ -1,0 +1,67 @@
+{
+  "addresses": {
+    "listComingSoon": "Delivery Addresses — Coming Soon",
+    "zonesComingSoon": "Delivery Zones — Coming Soon"
+  },
+  "customNews": {
+    "articlesComingSoon": "Articles — Coming Soon",
+    "categoriesComingSoon": "Categories — Coming Soon"
+  },
+  "orders": {
+    "customersComingSoon": "Customers — Coming Soon",
+    "dashboardComingSoon": "Orders Dashboard — Coming Soon",
+    "listComingSoon": "Orders List — Coming Soon"
+  },
+  "recruitment": {
+    "applicantsComingSoon": "Applicants — Coming Soon",
+    "jobsComingSoon": "Job Postings — Coming Soon"
+  },
+  "articles": {
+    "action": {
+      "actions": "Actions",
+      "delete": "Delete",
+      "openMenu": "Open article actions",
+      "viewDetails": "View details"
+    },
+    "column": {
+      "createdAt": "Created at",
+      "noCreatedAt": "No created date",
+      "selectAll": "Select all articles",
+      "selectRow": "Select article",
+      "status": "Status",
+      "title": "Title",
+      "titlePlaceholder": "Search by title...",
+      "viewCount": "View count"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    }
+  },
+  "tenant": {
+    "hoaTheoMua": {
+      "articles": {
+        "action": {
+          "actions": "Actions",
+          "delete": "Delete",
+          "openMenu": "Open article actions",
+          "viewDetails": "View details"
+        },
+        "column": {
+          "createdAt": "Created at",
+          "noCreatedAt": "No created date",
+          "selectAll": "Select all articles",
+          "selectRow": "Select article",
+          "status": "Status",
+          "title": "Title",
+          "titlePlaceholder": "Search by title...",
+          "viewCount": "View count"
+        },
+        "status": {
+          "draft": "Draft",
+          "published": "Published"
+        }
+      }
+    }
+  }
+}

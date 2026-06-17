@@ -1,0 +1,67 @@
+{
+  "addresses": {
+    "listComingSoon": "Địa chỉ giao hàng — Sắp ra mắt",
+    "zonesComingSoon": "Khu vực giao hàng — Sắp ra mắt"
+  },
+  "customNews": {
+    "articlesComingSoon": "Bài viết — Sắp ra mắt",
+    "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
+  },
+  "orders": {
+    "customersComingSoon": "Khách hàng — Sắp ra mắt",
+    "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
+    "listComingSoon": "Danh sách đơn hàng — Sắp ra mắt"
+  },
+  "recruitment": {
+    "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
+    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
+  },
+  "articles": {
+    "action": {
+      "actions": "Actions",
+      "delete": "Delete",
+      "openMenu": "Open article actions",
+      "viewDetails": "View details"
+    },
+    "column": {
+      "createdAt": "Created at",
+      "noCreatedAt": "No created date",
+      "selectAll": "Select all articles",
+      "selectRow": "Select article",
+      "status": "Status",
+      "title": "Title",
+      "titlePlaceholder": "Search by title...",
+      "viewCount": "View count"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    }
+  },
+  "tenant": {
+    "hoaTheoMua": {
+      "articles": {
+        "action": {
+          "actions": "Thao tác",
+          "delete": "Xoá",
+          "openMenu": "Mở menu thao tác bài viết",
+          "viewDetails": "Xem chi tiết"
+        },
+        "column": {
+          "createdAt": "Ngày tạo",
+          "noCreatedAt": "Không có ngày tạo",
+          "selectAll": "Chọn tất cả bài viết",
+          "selectRow": "Chọn bài viết",
+          "status": "Trạng thái",
+          "title": "Tiêu đề",
+          "titlePlaceholder": "Tìm theo tiêu đề...",
+          "viewCount": "Lượt xem"
+        },
+        "status": {
+          "draft": "Bản nháp",
+          "published": "Đã xuất bản"
+        }
+      }
+    }
+  }
+}

@@ -8,9 +8,9 @@ export const addParentMilestoneSchema = (t: TFunction) => {
         .string()
         .trim()
         .min(1, t('milestone.validation.milestoneName.minLength'))
-        .max(255, t('milestone.validation.milestoneName.maxLength')),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       projectIdentifier: z.string().min(1, t('common.validation.required')),
-      position: z.number({ message: t('milestone.validation.position.invalid') })
+      position: z.number({ message: t('common.validation.number.invalid') })
     })
     .strict()
 }
@@ -23,9 +23,9 @@ export const addMilestoneSchema = (t: TFunction) => {
         .string()
         .trim()
         .min(1, t('milestone.validation.milestoneName.minLength'))
-        .max(255, t('milestone.validation.milestoneName.maxLength')),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       projectIdentifier: z.string().min(1, t('common.validation.required')),
-      position: z.number({ message: t('milestone.validation.position.invalid') })
+      position: z.number({ message: t('common.validation.number.invalid') })
     })
     .strict()
 }
@@ -33,10 +33,10 @@ export const addMilestoneSchema = (t: TFunction) => {
 export const updateMilestoneSchema = (t: TFunction) => {
   return z
     .object({
-      milestoneId: z.uuid(t('milestone.validation.milestoneId.invalid')),
+      milestoneId: z.uuid(t('common.validation.uuid.invalid')),
       parentMilestoneIdentifier: z.string().nullable(),
       milestoneName: z.string().trim().min(1, t('milestone.validation.milestoneName.minLength')),
-      position: z.number({ message: t('milestone.validation.position.invalid') })
+      position: z.number({ message: t('common.validation.number.invalid') })
     })
     .strict()
 }

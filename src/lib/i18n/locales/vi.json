@@ -425,15 +425,8 @@
       "enum": {
         "invalid": "Lựa chọn không hợp lệ"
       },
-      "maxLength": {
-        "25": "Tối đa 25 ký tự",
-        "255": "Tối đa 255 ký tự",
-        "2000": "Tối đa 2000 ký tự",
-        "10000": "Tối đa 10000 ký tự"
-      },
-      "minLength": {
-        "5": "Phải có ít nhất 5 ký tự"
-      },
+      "maxLength": "Tối đa {{max}} ký tự",
+      "minLength": "Cần ít nhất {{min}} ký tự",
       "number": {
         "integer": "Phải là số nguyên",
         "invalid": "Phải là số hợp lệ",
@@ -446,10 +439,6 @@
         "dayRequired": "Ít nhất một ngày phải được chọn",
         "endTimeRequired": "Thời gian kết thúc là bắt buộc",
         "startTimeRequired": "Thời gian bắt đầu là bắt buộc"
-      },
-      "string": {
-        "max": "Không được vượt quá {{max}} ký tự",
-        "min": "Phải có ít nhất {{min}} ký tự"
       },
       "timeZone": {
         "invalid": "Múi giờ không hợp lệ"
@@ -996,11 +985,9 @@
     },
     "validation": {
       "adminNoteRequiredForRejection": "Vui lòng nhập ghi chú khi từ chối đơn ứng tuyển",
-      "descriptionMax": "Mô tả tối đa 10.000 ký tự",
       "descriptionRequired": "Mô tả là bắt buộc",
       "portfolioFilesMax": "Bạn chỉ có thể tải lên tối đa 10 tệp",
       "portfolioFilesMin": "Cần ít nhất một tệp portfolio",
-      "shortBioMax": "Tiểu sử ngắn tối đa 255 ký tự",
       "shortBioRequired": "Tiểu sử ngắn là bắt buộc",
       "titleLevelRequiredForApproval": "Vui lòng chọn cấp bậc khi duyêt đơn ứng tuyển"
     },
@@ -1106,7 +1093,6 @@
       "requests": "Yêu cầu hướng dẫn"
     },
     "validation": {
-      "descriptionMax": "Tối đa 255 ký tự",
       "nameRequired": "Yêu cầu nhập tên",
       "pricePositive": "Giá phải lớn hơn 0",
       "sessionsPositive": "Số buổi phải lớn hơn 0"
@@ -1135,9 +1121,7 @@
       "sessionTakesHours": "Buổi này kéo dài {{hours}} giờ."
     },
     "validation": {
-      "noPositive": "Số thứ tự phải > 0",
       "noRequired": "Yêu cầu nhập số thứ tự",
-      "totalTimeSlotsPositive": "Tổng số slot phải > 0",
       "totalTimeSlotsRequired": "Yêu cầu nhập tổng số slot"
     }
   },
@@ -1189,15 +1173,8 @@
       "title": "Xóa Tab"
     },
     "validation": {
-      "milestoneId": {
-        "invalid": "ID danh sách không hợp lệ"
-      },
       "milestoneName": {
-        "maxLength": "Tối đa 255 ký tự",
         "minLength": "Vui lòng nhập tên danh sách"
-      },
-      "position": {
-        "invalid": "Vị trí không hợp lệ"
       }
     }
   },
@@ -1439,7 +1416,6 @@
     "submitButton": "Gửi đánh giá",
     "title": "Đánh giá",
     "validation": {
-      "noteMax": "Ghi chú tối đa 10.000 ký tự.",
       "ratingRequired": "Vui lòng chọn mức đánh giá."
     }
   },
@@ -1492,9 +1468,6 @@
         },
         "name": {
           "minLength": "Tên giao dịch là bắt buộc"
-        },
-        "note": {
-          "maxLength": "Tối đa 255 ký tự"
         }
       }
     },
@@ -1516,11 +1489,7 @@
       },
       "title": "Vai trò mới",
       "validation": {
-        "description": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
         "name": {
-          "maxLength": "Tối đa 255 ký tự",
           "minLength": "Tên vai trò là bắt buộc"
         },
         "permissions": {
@@ -1561,19 +1530,8 @@
       },
       "title": "Dự án mới",
       "validation": {
-        "description": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
-        "endDate": {
-          "invalid": "Vui lòng chọn ngày kết thúc",
-          "mustBeGreater": "Ngày kết thúc phải lớn hơn ngày bắt đầu"
-        },
         "name": {
-          "maxLength": "Tối đa 255 ký tự",
           "minLength": "Vui lòng nhập tên dự án"
-        },
-        "startDate": {
-          "invalid": "Vui lòng chọn ngày bắt đầu"
         }
       }
     },
@@ -1652,20 +1610,8 @@
           "minLength": "Vui lòng mời ít nhất một thành viên"
         },
         "users": {
-          "avatar": {
-            "invalid": "URL avatar không hợp lệ"
-          },
-          "email": {
-            "invalid": "Địa chỉ email không hợp lệ"
-          },
           "fullName": {
             "required": "Họ tên là bắt buộc"
-          },
-          "inviteExpireDate": {
-            "invalid": "Định dạng ngày hết hạn không hợp lệ"
-          },
-          "userId": {
-            "invalid": "ID thành viên không hợp lệ"
           }
         }
       }
@@ -1755,36 +1701,8 @@
     "title": "Dự án của tôi",
     "updateProject": {
       "validation": {
-        "coverImage": {
-          "invalid": "URL ảnh bìa không hợp lệ"
-        },
-        "description": {
-          "maxLength": "Tối đa 10000 ký tự"
-        },
-        "endDate": {
-          "invalid": "Định dạng ngày kết thúc không hợp lệ"
-        },
-        "logoImage": {
-          "invalid": "URL logo không hợp lệ"
-        },
         "name": {
-          "maxLength": "Tối đa 255 ký tự",
           "minLength": "Vui lòng nhập tên dự án"
-        },
-        "projectId": {
-          "invalid": "ID dự án không hợp lệ"
-        },
-        "schoolSubject": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
-        "startDate": {
-          "invalid": "Định dạng ngày bắt đầu không hợp lệ"
-        },
-        "teamContact": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
-        "teamSize": {
-          "maxLength": "Tối đa 255 ký tự"
         }
       }
     },
@@ -1795,7 +1713,6 @@
       "title": "Lĩnh vực dự án",
       "validation": {
         "domainIds": {
-          "invalid": "Lĩnh vực không hợp lệ",
           "minLength": "Vui lòng chọn ít nhất một lĩnh vực"
         }
       }
@@ -1887,9 +1804,6 @@
         },
         "name": {
           "minLength": "Tên giao dịch là bắt buộc"
-        },
-        "note": {
-          "maxLength": "Tối đa 255 ký tự"
         }
       }
     },
@@ -2121,9 +2035,6 @@
         "title": "Bỏ thay đổi chưa lưu?"
       },
       "validation": {
-        "description": {
-          "maxLength": "Mô tả không được vượt quá 255 ký tự"
-        },
         "name": {
           "minLength": "Tên vai trò là bắt buộc"
         }
@@ -2578,29 +2489,14 @@
         "bytes": {
           "positive": "Kích thước tệp phải là số dương"
         },
-        "commentId": {
-          "invalid": "ID bình luận không hợp lệ"
-        },
         "mimeType": {
           "minLength": "Loại MIME là bắt buộc"
         },
         "name": {
           "minLength": "Tên tệp là bắt buộc"
         },
-        "position": {
-          "invalid": "Vị trí không hợp lệ"
-        },
-        "projectResourceId": {
-          "invalid": "ID tệp đính kèm không hợp lệ"
-        },
         "storageKey": {
           "minLength": "Khóa lưu trữ là bắt buộc"
-        },
-        "taskId": {
-          "invalid": "ID thẻ không hợp lệ"
-        },
-        "url": {
-          "invalid": "URL không hợp lệ"
         }
       }
     },
@@ -2635,11 +2531,7 @@
       },
       "validation": {
         "content": {
-          "maxLength": "Tối đa 10000 ký tự",
           "minLength": "Vui lòng nhập nội dung bình luận"
-        },
-        "taskId": {
-          "invalid": "ID thẻ không hợp lệ"
         }
       }
     },
@@ -2695,15 +2587,6 @@
       "findLabel": "Tìm nhãn...",
       "removeColor": "Gỡ bỏ màu",
       "validation": {
-        "color": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
-        "id": {
-          "invalid": "ID nhãn không hợp lệ"
-        },
-        "name": {
-          "maxLength": "Tối đa 255 ký tự"
-        },
         "nameOrColorRequired": "Nhãn phải có ít nhất tên hoặc màu"
       }
     },
@@ -2750,27 +2633,8 @@
         "setDeadline": "Đặt thời hạn"
       },
       "validation": {
-        "deadline": {
-          "invalid": "Thời hạn không hợp lệ"
-        },
-        "index": {
-          "invalid": "Vị trí không hợp lệ"
-        },
         "name": {
-          "maxLength": "Tối đa 255 ký tự",
           "minLength": "Vui lòng nhập tên công việc"
-        },
-        "parentId": {
-          "invalid": "ID cha không hợp lệ"
-        },
-        "subtaskId": {
-          "invalid": "ID công việc con không hợp lệ"
-        },
-        "taskId": {
-          "invalid": "ID thẻ không hợp lệ"
-        },
-        "userId": {
-          "invalid": "ID người dùng không hợp lệ"
         }
       }
     },
@@ -2779,67 +2643,8 @@
       "addList": "Thêm danh sách"
     },
     "validation": {
-      "id": {
-        "invalid": "ID thẻ không hợp lệ"
-      },
-      "milestoneId": {
-        "invalid": "Danh sách không hợp lệ"
-      },
       "name": {
-        "maxLength": "Tối đa 255 ký tự",
         "minLength": "Vui lòng nhập tên thẻ"
-      },
-      "position": {
-        "invalid": "Vị trí không hợp lệ"
-      },
-      "targetMilestoneId": {
-        "invalid": "Danh sách đích không hợp lệ"
-      },
-      "targetPosition": {
-        "invalid": "Vị trí đích không hợp lệ"
-      }
-    }
-  },
-  "tenant": {
-    "hoaTheoMua": {
-      "addresses": {
-        "listComingSoon": "Địa chỉ giao hàng — Sắp ra mắt",
-        "zonesComingSoon": "Khu vực giao hàng — Sắp ra mắt"
-      },
-      "articles": {
-        "action": {
-          "actions": "Hành động",
-          "delete": "Xóa",
-          "openMenu": "Mở hành động bài viết",
-          "viewDetails": "Xem chi tiết"
-        },
-        "column": {
-          "createdAt": "Ngày tạo",
-          "noCreatedAt": "Chưa có ngày tạo",
-          "selectAll": "Chọn tất cả bài viết",
-          "selectRow": "Chọn bài viết",
-          "status": "Trạng thái",
-          "title": "Tiêu đề",
-          "titlePlaceholder": "Tìm theo tiêu đề...",
-          "viewCount": "Lượt xem"
-        },
-        "status": {
-          "draft": "Bản nháp",
-          "published": "Đã xuất bản"
-        }
-      },
-      "customNews": {
-        "articlesComingSoon": "Bài viết — Sắp ra mắt",
-        "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
-      },
-      "orders": {
-        "customersComingSoon": "Khách hàng — Sắp ra mắt",
-        "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
-        "listComingSoon": "Danh sách đơn hàng — Sắp ra mắt"
-      },
-      "recruitment": {
-        "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
-        "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
       }
     }
   },
@@ -2992,9 +2797,6 @@
         "other": "Thông tin khác"
       }
     }
-  },
-  "validation": {
-    "mustBeNumber": "Phải là số hợp lệ"
   },
   "voucher": {
     "action": {

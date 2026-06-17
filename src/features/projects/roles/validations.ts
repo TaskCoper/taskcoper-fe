@@ -56,7 +56,10 @@ export const updateProjectRoleSchema = (t: TFunction) => {
       projectIdentifier: z.string().min(1, t('project.addProjectRole.validation.projectIdentifier.minLength')),
       roleId: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z.string().trim().min(1, t('project.updateProjectRole.validation.name.minLength')),
-      description: z.string().trim().max(255, t('project.updateProjectRole.validation.description.maxLength')),
+      description: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       isDefault: z.boolean(),
       permissions: z.array(
         z
@@ -84,8 +87,11 @@ export const addProjectRoleSchema = (t: TFunction) => {
         .string()
         .trim()
         .min(1, t('project.addProjectRole.validation.name.minLength'))
-        .max(255, t('project.addProjectRole.validation.name.maxLength')),
-      description: z.string().trim().max(255, t('project.addProjectRole.validation.description.maxLength')),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
+      description: z
+        .string()
+        .trim()
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       isDefault: z.boolean(),
       permissions: z
         .array(

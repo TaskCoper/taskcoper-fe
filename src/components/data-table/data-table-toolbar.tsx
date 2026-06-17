@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { Option } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
@@ -113,7 +114,7 @@ interface DataTableToolbarFilterProps<TData> {
 }
 
 function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToolbarFilterProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const columnMeta = column.columnDef.meta
 
   // Use override options if provided, otherwise fall back to column meta options

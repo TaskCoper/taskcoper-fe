@@ -2,6 +2,7 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
@@ -10,7 +11,9 @@ import { useGetArticles } from '../feature/article/hooks/use-get-articles'
 import type { ArticleRow } from '../feature/article/types'
 
 export default function NewsArticlesPage() {
-  const columns = useMemo(() => getColumns(), [])
+  const { t } = useTenantTranslation()
+
+  const columns = useMemo(() => getColumns({ t }), [t])
 
   const { page, limit, sorting } = useTableQueryParams({
     columns,

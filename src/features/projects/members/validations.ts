@@ -4,16 +4,14 @@ import z from 'zod'
 export const memberSchema = (t: TFunction) => {
   return z
     .object({
-      userId: z.uuid(t('project.inviteMembers.validation.users.userId.invalid')),
-      email: z.email(t('project.inviteMembers.validation.users.email.invalid')).trim(),
+      userId: z.uuid(t('common.validation.uuid.invalid')),
+      email: z.email(t('common.validation.email.invalid')).trim(),
       fullName: z.string().trim().min(1, t('project.inviteMembers.validation.users.fullName.required')),
-      avatar: z.url({ message: t('project.inviteMembers.validation.users.avatar.invalid') }).nullable(),
+      avatar: z.url({ message: t('common.validation.url.invalid') }).nullable(),
       roleIds: z
         .array(z.uuid({ message: t('common.validation.uuid.invalid') }))
         .min(1, t('common.validation.required')),
-      inviteExpireDate: z.iso
-        .datetime({ message: t('project.inviteMembers.validation.users.inviteExpireDate.invalid') })
-        .nullable()
+      inviteExpireDate: z.iso.datetime({ message: t('common.validation.date.invalid') }).nullable()
     })
     .strict()
 }

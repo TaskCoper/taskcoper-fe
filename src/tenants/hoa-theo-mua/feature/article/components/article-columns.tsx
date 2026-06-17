@@ -10,22 +10,22 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { formatDate } from '@/lib/date'
+import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import i18next from 'i18next'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../types'
 
 const ARTICLE_I18N_PREFIX = 'tenant.hoaTheoMua.articles' as const
 
-export const getColumns = (): ColumnDef<ArticleRow>[] => {
+export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
   return [
     {
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label={i18next.t(`${ARTICLE_I18N_PREFIX}.column.selectAll`)}
+          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectAll`)}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -33,7 +33,7 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label={i18next.t(`${ARTICLE_I18N_PREFIX}.column.selectRow`)}
+          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectRow`)}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -47,12 +47,14 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       id: 'title',
       accessorKey: 'title',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.title',
-        placeholder: 'tenant.hoaTheoMua.articles.column.titlePlaceholder',
+        label: t('tenant.hoaTheoMua.articles.column.title'),
+        placeholder: t('tenant.hoaTheoMua.articles.column.titlePlaceholder'),
         variant: 'text',
         icon: SearchIcon
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.title' />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label={t('tenant.hoaTheoMua.articles.column.title')} />
+      ),
 
       cell: ({ row }) => (
         <Link to={row.original.slug} className='flex min-w-0 items-center gap-3 hover:underline'>
@@ -76,10 +78,10 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       id: 'viewCount',
       accessorKey: 'viewCount',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.viewCount'
+        label: t('tenant.hoaTheoMua.articles.column.viewCount')
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.viewCount' />
+        <DataTableColumnHeader column={column} label={t('tenant.hoaTheoMua.articles.column.viewCount')} />
       ),
 
       cell: ({ row }) => (
@@ -97,21 +99,25 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       id: 'Status',
       accessorKey: 'status',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.status',
+        label: t('tenant.hoaTheoMua.articles.column.status'),
         variant: 'radio',
         options: [
           {
-            label: i18next.t(ArticleStatusLabel[ArticleStatus.Published]),
+            label: t(ArticleStatusLabel[ArticleStatus.Published]),
             value: '1'
           },
           {
-            label: i18next.t(ArticleStatusLabel[ArticleStatus.Draft]),
+            label: t(ArticleStatusLabel[ArticleStatus.Draft]),
             value: '0'
           }
         ]
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='tenant.hoaTheoMua.articles.column.status' className='mx-auto' />
+        <DataTableColumnHeader
+          column={column}
+          label={t('tenant.hoaTheoMua.articles.column.status')}
+          className='mx-auto'
+        />
       ),
 
       cell: ({ row }) => {
@@ -125,7 +131,7 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
         return (
           <div className='flex justify-center px-1'>
             <p className={cn('w-fit rounded-lg border px-2.5 py-1 text-xs font-medium leading-none', statusColor)}>
-              {i18next.t(ArticleStatusLabel[status])}
+              {t(ArticleStatusLabel[status])}
             </p>
           </div>
         )
@@ -140,14 +146,14 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
       id: 'createdAt',
       accessorKey: 'createdAt',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.createdAt',
+        label: t('tenant.hoaTheoMua.articles.column.createdAt'),
         variant: 'dateRange'
       },
 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          label='tenant.hoaTheoMua.articles.column.createdAt'
+          label={t('tenant.hoaTheoMua.articles.column.createdAt')}
           className='mx-auto'
         />
       ),
@@ -157,9 +163,7 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
           return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
         }
 
-        return (
-          <p className='text-center text-muted-foreground'>{i18next.t(`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`)}</p>
-        )
+        return <p className='text-center text-muted-foreground'>{t(`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`)}</p>
       },
 
       enableSorting: true,
@@ -177,20 +181,20 @@ export const getColumns = (): ColumnDef<ArticleRow>[] => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='ghost' className='size-8 rounded-lg p-0'>
-                  <span className='sr-only'>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.openMenu`)}</span>
+                  <span className='sr-only'>{t(`${ARTICLE_I18N_PREFIX}.action.openMenu`)}</span>
                   <MoreHorizontalIcon className='size-4' />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
-                <DropdownMenuLabel>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
+                <DropdownMenuLabel>{t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
                 <DropdownMenuItem asChild>
-                  <Link to={row.original.slug}>{i18next.t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                  <Link to={row.original.slug}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className='focus:text-destructive'
-                  onClick={() => console.log(i18next.t(`${ARTICLE_I18N_PREFIX}.action.delete`), { id, title, slug })}
+                  onClick={() => console.log(t(`${ARTICLE_I18N_PREFIX}.action.delete`), { id, title, slug })}
                 >
-                  {i18next.t(`${ARTICLE_I18N_PREFIX}.action.delete`)}
+                  {t(`${ARTICLE_I18N_PREFIX}.action.delete`)}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
