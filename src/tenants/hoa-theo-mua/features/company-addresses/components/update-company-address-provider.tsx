@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useUpdateCompanyAddress } from '../hooks/use-update-company-address'
@@ -20,6 +21,7 @@ const toFormValues = (companyAddress: CompanyAddress): UpdateCompanyAddressFormV
 })
 
 export default function UpdateCompanyAddressProvider({ companyAddress }: { companyAddress: CompanyAddress }) {
+  const { t } = useTenantTranslation()
   const { methods, updateCompanyAddress, isUpdatingCompanyAddress } = useUpdateCompanyAddress()
   const {
     formState: { isDirty }
@@ -40,15 +42,15 @@ export default function UpdateCompanyAddressProvider({ companyAddress }: { compa
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
-        <UpdateCompanyAddressForm />
+        <UpdateCompanyAddressForm companyAddress={companyAddress} />
 
         <div className='flex items-center gap-2 self-end'>
           <Button type='button' variant='outline' onClick={onReset} disabled={!isDirty || isUpdatingCompanyAddress}>
-            Hoàn tác
+            {t('companyAddress.update.reset')}
           </Button>
           <Button type='submit' disabled={!isDirty || isUpdatingCompanyAddress}>
             {isUpdatingCompanyAddress ? <Spinner /> : null}
-            Lưu thay đổi
+            {t('companyAddress.update.submit')}
           </Button>
         </div>
       </form>
