@@ -83,6 +83,8 @@ export default defineConfig({
         // in the Set-Cookie header so your browser accepts it.
         cookieDomainRewrite: 'localhost'
       }
+      // Tenants with their own backend add a proxy entry here (e.g. '/<slug>-api')
+      // and point it at the tenant's API base URL. See HOW_TO_ADD_A_TENANT.md.
     }
   },
   resolve: {

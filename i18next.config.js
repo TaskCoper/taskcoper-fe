@@ -2,7 +2,7 @@ export default {
   locales: ['en', 'vi'],
   extract: {
     input: ['src/**/*.{ts,tsx}'],
-    ignore: ['node_modules/**', 'dist/**', '**/*.d.ts'],
+    ignore: ['node_modules/**', 'dist/**', '**/*.d.ts', 'src/tenants/**'],
     output: 'src/lib/i18n/locales/{{language}}.json',
     defaultNS: false,
     removeUnusedKeys: false,
@@ -10,7 +10,7 @@ export default {
     indentation: 2
   },
   lint: {
-    ignore: ['src/lib/i18n/**'],
+    ignore: ['src/lib/i18n/**', 'src/tenants/**'],
     checkInterpolationParams: true
   },
   types: {

@@ -12,7 +12,7 @@ export const positiveNumberString = (t: TFunction, errorKey: I18nKey) =>
     if (isNaN(num)) {
       ctx.addIssue({
         code: 'custom',
-        message: t('validation.mustBeNumber')
+        message: t('common.validation.number.invalid')
       })
       return
     }
@@ -30,7 +30,6 @@ export const createMentorPackageSchema = (t: TFunction) =>
   z
     .object({
       name: z.string().min(1, t('mentorPackage.validation.nameRequired')),
-      // description: z.string().min(1).max(255, t('mentorPackage.validation.descriptionMax')),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),
       price: positiveNumberString(t, 'mentorPackage.validation.pricePositive'),
       currency: z.enum(['Vnd', 'Usd'], { message: t('common.validation.enum.invalid') }),
@@ -52,7 +51,7 @@ export const updateMentorPackageSchema = (t: TFunction) =>
         .string()
         .min(1, t('common.validation.required'))
         .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
-          message: t('mentorPackage.validation.descriptionMax')
+          message: t('common.validation.maxLength', { max: 10000 })
         }),
       coverImageUrl: z.url({ message: t('common.validation.url.invalid') }).nullable(),
       totalSessions: positiveNumberString(t, 'mentorPackage.validation.sessionsPositive'),

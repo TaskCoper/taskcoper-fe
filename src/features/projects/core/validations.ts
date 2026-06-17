@@ -7,7 +7,7 @@ export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-f
 export const domainSchema = (t: TFunction) => {
   return z
     .object({
-      id: z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')),
+      id: z.string().regex(UUID_REGEX, t('common.validation.uuid.invalid')),
       name: z.string().trim().min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
     })
     .strict()
@@ -20,12 +20,9 @@ export const createProjectSchema = (t: TFunction) => {
         .string()
         .trim()
         .min(1, t('project.createProject.validation.name.minLength'))
-        .max(255, t('project.createProject.validation.name.maxLength')),
-      // description: z.string().max(255, t('project.createProject.validation.description.maxLength')),
-      // startDate: z.iso.datetime({ message: t('project.createProject.validation.startDate.invalid') }),
-      // endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       domainIds: z
-        .array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
+        .array(z.string().regex(UUID_REGEX, t('common.validation.uuid.invalid')))
         .min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
     })
     .strict()
@@ -34,44 +31,40 @@ export const createProjectSchema = (t: TFunction) => {
 export const updateProjectSchema = (t: TFunction) => {
   return z
     .object({
-      projectId: z.uuid(t('project.updateProject.validation.projectId.invalid')),
+      projectId: z.uuid(t('common.validation.uuid.invalid')),
       name: z
         .string()
         .trim()
         .min(1, t('project.updateProject.validation.name.minLength'))
-        .max(255, t('project.updateProject.validation.name.maxLength')),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       description: z
         .string()
         .trim()
         .nullable()
         .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
-          message: t('project.updateProject.validation.description.maxLength')
+          message: t('common.validation.maxLength', { max: 10000 })
         })
         .transform((val) => (val === '' ? null : val)),
-      startDate: z.iso
-        .datetime({ offset: true, message: t('project.updateProject.validation.startDate.invalid') })
-        .nullable(),
-      endDate: z.iso
-        .datetime({ offset: true, message: t('project.updateProject.validation.endDate.invalid') })
-        .nullable(),
+      startDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
+      endDate: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable(),
       coverImage: z
-        .url({ message: t('project.updateProject.validation.coverImage.invalid') })
+        .url({ message: t('common.validation.url.invalid') })
         .trim()
         .nullable(),
       logoImage: z
-        .url({ message: t('project.updateProject.validation.logoImage.invalid') })
+        .url({ message: t('common.validation.url.invalid') })
         .trim()
         .nullable(),
       teamSize: z
         .string()
         .trim()
-        .max(255, t('project.updateProject.validation.teamSize.maxLength'))
+        .max(255, t('common.validation.maxLength', { max: 255 }))
         .nullable()
         .transform((val) => (val === '' ? null : val)),
       teamContact: z
         .string()
         .trim()
-        .max(255, t('project.updateProject.validation.teamContact.maxLength'))
+        .max(255, t('common.validation.maxLength', { max: 255 }))
         .nullable()
         .transform((val) => (val === '' ? null : val)),
       teamEmail: z
@@ -86,7 +79,7 @@ export const updateProjectSchema = (t: TFunction) => {
       schoolSubject: z
         .string()
         .trim()
-        .max(255, t('project.updateProject.validation.schoolSubject.maxLength'))
+        .max(255, t('common.validation.maxLength', { max: 255 }))
         .nullable()
         .transform((val) => (val === '' ? null : val))
     })
@@ -100,7 +93,7 @@ export const updateProjectSchema = (t: TFunction) => {
         return end > start
       },
       {
-        message: t('project.createProject.validation.endDate.mustBeGreater'),
+        message: t('common.validation.date.mustBeGreater'),
         path: ['endDate']
       }
     )

@@ -31,7 +31,7 @@ export const submitPackageFeedbackSchema = (t: TFunction) => {
       .string()
       .nullable()
       .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
-        message: t('packageFeedback.validation.noteMax')
+        message: t('common.validation.maxLength', { max: 10000 })
       }),
     metadata: feedbackMetadataSchema(t)
   })

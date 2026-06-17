@@ -7,11 +7,11 @@ export const addProjectLabelSchema = (t: TFunction) => {
       projectIdentifier: z.string().min(1, t('common.validation.required')),
       name: z
         .string()
-        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal('')),
       color: z
         .string()
-        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal(''))
     })
     .refine((data) => data.name.trim().length > 0 || data.color?.trim().length > 0, {
@@ -24,14 +24,14 @@ export const addProjectLabelSchema = (t: TFunction) => {
 export const updateProjectLabelSchema = (t: TFunction) => {
   return z
     .object({
-      id: z.uuid({ message: t('task.label.validation.id.invalid') }),
+      id: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z
         .string()
-        .max(255, { message: t('task.label.validation.name.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal('')),
       color: z
         .string()
-        .max(255, { message: t('task.label.validation.color.maxLength') })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .or(z.literal(''))
     })
     .refine((data) => data.name.trim().length > 0 || data.color?.trim().length > 0, {
