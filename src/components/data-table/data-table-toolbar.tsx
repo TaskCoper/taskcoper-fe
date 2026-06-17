@@ -6,7 +6,7 @@ import type { Option } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { DataTableDateFilter } from './data-table-date-filter'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import DataTableRadioFilter from './data-table-radio-filter'
@@ -63,7 +63,7 @@ export function DataTableToolbar<TData>({
   filterOptionOverrides,
   ...props
 }: DataTableToolbarProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const isFiltered = table.getState().columnFilters.length > 0
 
   const columns = React.useMemo(() => table.getAllColumns().filter((column) => column.getCanFilter()), [table])
@@ -113,7 +113,7 @@ interface DataTableToolbarFilterProps<TData> {
 }
 
 function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToolbarFilterProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const columnMeta = column.columnDef.meta
 
   // Use override options if provided, otherwise fall back to column meta options

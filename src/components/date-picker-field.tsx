@@ -9,7 +9,7 @@ import { CalendarIcon, XCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { Matcher } from 'react-day-picker'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 interface DateConstraints {
   minDate?: Date
@@ -43,7 +43,7 @@ export function DatePickerField<T extends FieldValues>({
   maxDate = new Date(new Date().getFullYear() + 10, 11, 31),
   disabled
 }: DatePickerFieldProps<T>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const { formatDate } = useDateFormat()
   const [open, setOpen] = useState(false)
 

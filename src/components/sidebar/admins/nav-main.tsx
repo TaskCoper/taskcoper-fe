@@ -6,7 +6,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { type LucideIcon } from 'lucide-react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router'
 
 export default function NavMain({
@@ -19,7 +19,7 @@ export default function NavMain({
   }[]
 }) {
   const location = useLocation()
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
 
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>

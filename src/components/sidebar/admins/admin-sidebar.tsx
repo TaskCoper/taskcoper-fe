@@ -14,7 +14,7 @@ import {
   PercentIcon
 } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import NavMain from './nav-main'
 import NavSecondary from './nav-secondary'
@@ -26,7 +26,7 @@ interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
   const { me, isGettingMe } = useGetMe()
   const { pathname } = useLocation()
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
 
   const navItems = React.useMemo(() => {
     return {

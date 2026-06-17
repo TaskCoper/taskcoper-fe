@@ -1,7 +1,7 @@
 import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/utils'
 
@@ -42,7 +42,7 @@ function SheetContent({
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left'
 }) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
 
   return (
     <SheetPortal>

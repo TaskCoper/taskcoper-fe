@@ -9,7 +9,7 @@ import { cn } from '@/shared/utils'
 import type { ColumnSort, SortDirection, Table } from '@tanstack/react-table'
 import { ArrowDownUp, ChevronsUpDown, GripVertical, Trash2 } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 const SORT_SHORTCUT_KEY = 's'
 const REMOVE_SORT_SHORTCUTS = ['backspace', 'delete']
@@ -20,7 +20,7 @@ interface DataTableSortListProps<TData> extends React.ComponentProps<typeof Popo
 }
 
 export function DataTableSortList<TData>({ table, disabled, ...props }: DataTableSortListProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const id = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
@@ -208,7 +208,7 @@ function DataTableSortItem({
   onSortUpdate,
   onSortRemove
 }: DataTableSortItemProps) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const fieldListboxId = `${sortItemId}-field-listbox`
   const fieldTriggerId = `${sortItemId}-field-trigger`
   const directionListboxId = `${sortItemId}-direction-listbox`

@@ -14,7 +14,7 @@ import { ListTodoIcon } from '@/components/tiptap-icons/list-todo-icon'
 
 // --- Lib ---
 import { findNodePosition, isNodeInSchema, isNodeTypeSelected, isValidPosition } from '@/shared/tiptap-utils'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 export type ListType = 'bulletList' | 'orderedList' | 'taskList'
 
@@ -236,7 +236,7 @@ export function shouldShowButton(props: {
  * ```
  */
 export function useList(config: UseListConfig) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const { editor: providedEditor, type, hideWhenUnavailable = false, onToggled } = config
 
   const { editor } = useTiptapEditor(providedEditor)

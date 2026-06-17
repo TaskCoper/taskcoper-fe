@@ -14,7 +14,7 @@ import {
   type LucideIcon
 } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { NavMain } from './nav-main'
 
 type NavItem = {
@@ -119,7 +119,7 @@ const NAV_MAIN_CONFIG: NavMainItemConfig[] = [
 ]
 
 export function UserWorkspaceSidebar({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const filteredNavMain = useFilteredNavItems(NAV_MAIN_CONFIG)
   const filteredQuickActions = useFilteredNavItems(NAV_CONFIG)
   const tenantNavMain = useTenantNavMain()

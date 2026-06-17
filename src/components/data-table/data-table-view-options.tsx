@@ -5,7 +5,7 @@ import { cn } from '@/shared/utils'
 import type { Table } from '@tanstack/react-table'
 import { Check, Settings2 } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableViewOptionsProps<TData> extends React.ComponentProps<typeof PopoverContent> {
   table: Table<TData>
@@ -13,7 +13,7 @@ interface DataTableViewOptionsProps<TData> extends React.ComponentProps<typeof P
 }
 
 export function DataTableViewOptions<TData>({ table, disabled, ...props }: DataTableViewOptionsProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
 
   const columns = React.useMemo(
     () => table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide()),

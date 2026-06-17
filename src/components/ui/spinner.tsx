@@ -1,10 +1,10 @@
 import { LoaderIcon } from 'lucide-react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/utils'
 
 function Spinner({ className, ...props }: React.ComponentProps<'svg'>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   return (
     <LoaderIcon
       role='status'

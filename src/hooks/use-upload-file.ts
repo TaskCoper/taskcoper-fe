@@ -3,7 +3,7 @@ import config from '@/shared/config'
 import { prepareFileUpload } from '@/shared/utils'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import axios, { AxiosError, type AxiosProgressEvent } from 'axios'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useGetPresignedUrl } from './use-get-presigned-url'
 
@@ -15,7 +15,7 @@ interface UploadFileVariables {
 export const useUploadFile = (
   options?: UseMutationOptions<string | undefined, AxiosError<ErrorResponse>, UploadFileVariables>
 ) => {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const { getPresignedUrlAsync } = useGetPresignedUrl()
 
   const mutation = useMutation({

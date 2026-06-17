@@ -1,21 +1,42 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { Role } from '@/features/users/types'
+import { HOA_THEO_MUA_ORG_ID } from '@/tenants/hoa-theo-mua/config'
+import { hoaTheoMuaNavMain } from '@/tenants/hoa-theo-mua/nav-items'
+import type { LucideIcon } from 'lucide-react'
 import { useMemo } from 'react'
-import type { TenantNavMainItem } from './types'
+import type { FeatureKey } from './types'
 import { resolveFeatureCheck, useTenantConfig } from './use-feature-flags'
 
-export type { TenantNavMainItem, TenantNavSubItem } from './types'
+export type TenantNavSubItem = {
+  title: string
+  url: string
+  activePatterns?: string[]
+  activeExcludePatterns?: string[]
+}
+
+export type TenantNavMainItem = {
+  title: string
+  url: string
+  icon: LucideIcon
+  items: TenantNavSubItem[]
+  roles?: Role[]
+  feature?: FeatureKey
+}
+
+// Tenant-specific NavMain sections, keyed by organizationId. The shared sidebar
+// concatenates these after the global NAV_MAIN_CONFIG, so a tenant branch only
+// touches src/tenants/<TENANT>/ to add menu entries — no edits to shared sidebar
+// files needed.
+const TENANT_NAV_MAIN: Record<string, TenantNavMainItem[]> = {
+  [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavMain
+}
 
 const EMPTY_NAV_MAIN: TenantNavMainItem[] = []
 
-// Reads tenant NavMain from the resolved tenant config (TENANT_CONFIGS[orgId].navMain).
-// The shared sidebar concatenates the result after the global NAV_MAIN_CONFIG, so
-// adding a tenant section only requires populating `navMain` in the tenant config —
-// no edits to this file or to the sidebar.
 export function useTenantNavMain(): TenantNavMainItem[] {
   const { me } = useGetMe()
   const config = useTenantConfig()
-  const items = config.navMain ?? EMPTY_NAV_MAIN
+  const items = me?.organizationId ? (TENANT_NAV_MAIN[me.organizationId] ?? EMPTY_NAV_MAIN) : EMPTY_NAV_MAIN
 
   return useMemo(
     () =>

@@ -3,7 +3,7 @@ import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRangeFilterProps<TData> extends React.ComponentProps<'div'> {
   filter: ExtendedColumnFilter<TData>
@@ -20,7 +20,7 @@ export function DataTableRangeFilter<TData>({
   className,
   ...props
 }: DataTableRangeFilterProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const meta = column.columnDef.meta
 
   const [min, max] = React.useMemo(() => {

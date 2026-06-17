@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 import type { I18nKey } from '@/lib/i18n/types'
 
@@ -9,7 +9,7 @@ interface PageWrapperProps {
 }
 
 export default function PageWrapper({ titleKey, children }: PageWrapperProps) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const title = t(titleKey)
 
   useEffect(() => {

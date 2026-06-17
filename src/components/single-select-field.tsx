@@ -16,7 +16,7 @@ import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 import { type Control, Controller, type FieldError, type FieldValues, type Path, useFormContext } from 'react-hook-form'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 
 interface Option {
   label: string
@@ -61,7 +61,7 @@ export default function SingleSelectField<T extends FieldValues>({
   triggerClassName,
   onChange
 }: SingleSelectFieldProps<T>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 

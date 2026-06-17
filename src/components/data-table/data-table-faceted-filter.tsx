@@ -15,7 +15,7 @@ import type { Option } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -31,7 +31,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   multiple
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
 
   const columnFilterValue = column?.getFilterValue()

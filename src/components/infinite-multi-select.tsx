@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/shared/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useDebouncedCallback } from 'use-debounce'
 import { Spinner } from './ui/spinner'
@@ -34,7 +34,7 @@ export default function InfiniteMultiSelect({
   isFetchingNextPage: boolean
   isLoading: boolean
 } & Omit<React.ComponentProps<typeof Button>, 'value' | 'onChange' | 'onSearch'>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState('')
 

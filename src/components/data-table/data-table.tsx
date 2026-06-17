@@ -4,7 +4,7 @@ import { getColumnPinningStyle } from '@/lib/data-table/utils'
 import { cn } from '@/shared/utils'
 import { flexRender, type Row, type Table as TanstackTable } from '@tanstack/react-table'
 import * as React from 'react'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useTranslation } from 'react-i18next'
 import { Skeleton } from '../ui/skeleton'
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
@@ -25,7 +25,7 @@ export function DataTable<TData>({
   isLoading = false,
   ...props
 }: DataTableProps<TData>) {
-  const { t } = useTenantTranslation()
+  const { t } = useTranslation()
 
   return (
     <div className={cn('flex w-full flex-col gap-2.5 overflow-auto', className)} {...props}>
