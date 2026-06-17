@@ -22,7 +22,7 @@ import { getAvatarFallback } from '@/shared/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { ChevronsUpDown, GlobeIcon, LogOut, UserRoundIcon } from 'lucide-react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 interface NavAdminProps {
   user?: Me | null
@@ -31,7 +31,7 @@ interface NavAdminProps {
 export function NavAdmin({ user }: NavAdminProps) {
   const queryClient = useQueryClient()
   const { isMobile } = useSidebar()
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTenantTranslation()
   const [language, setLanguage] = useState(i18n.language)
   const [open, setOpen] = useState(false)
 

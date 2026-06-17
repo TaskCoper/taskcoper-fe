@@ -3,7 +3,7 @@
 import { type Editor } from '@tiptap/react'
 import * as React from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 // --- Hooks ---
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -127,7 +127,7 @@ export function shouldShowButton(props: { editor: Editor | null; hideWhenUnavail
  * ```
  */
 export function useImageUpload(config?: UseImageUploadConfig) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onInserted } = config || {}
 
   const { editor } = useTiptapEditor(providedEditor)

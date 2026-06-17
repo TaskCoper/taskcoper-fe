@@ -2,7 +2,7 @@ import type { Option } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import { PlusCircleIcon } from 'lucide-react'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Badge } from '../ui/badge'
 import {
   Command,
@@ -29,7 +29,7 @@ export default function DataTableRadioFilter<TData, TValue>({
   title,
   options
 }: DataTableRadioFilterProps<TData, TValue>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const [open, setOpen] = React.useState(false)
 
   const selectedValue = column?.getFilterValue() as string | undefined

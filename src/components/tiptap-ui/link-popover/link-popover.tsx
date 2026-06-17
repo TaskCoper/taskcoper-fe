@@ -2,7 +2,7 @@
 
 import type { Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 // --- Hooks ---
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -69,7 +69,7 @@ export interface LinkPopoverProps extends Omit<ButtonProps, 'type'>, UseLinkPopo
  * Link button component for triggering the link popover
  */
 export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, children, ...props }, ref) => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   return (
     <Button
       type='button'
@@ -93,7 +93,7 @@ LinkButton.displayName = 'LinkButton'
  * Main content component for the link popover
  */
 const LinkMain: React.FC<LinkMainProps> = ({ url, setUrl, setLink, removeLink, openLink, isActive }) => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const isMobile = useIsMobile()
 
   const handleKeyDown = (event: React.KeyboardEvent) => {

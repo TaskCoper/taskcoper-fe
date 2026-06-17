@@ -32,7 +32,7 @@ import {
   WalletIcon
 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Link, useLocation, useMatches, useNavigate, useParams } from 'react-router'
 import { Button } from '../ui/button'
 
@@ -43,7 +43,7 @@ interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar>
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
   const navigate = useNavigate()
 
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { identifier } = useParams<{ identifier: string }>()
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const { confirm } = useConfirmStore()

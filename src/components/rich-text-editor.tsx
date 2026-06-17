@@ -41,7 +41,7 @@ import {
 import { StarterKit } from '@tiptap/starter-kit'
 import { MoreHorizontalIcon, PaperclipIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { softInsetSurfaceClasses } from '../shared/effects'
@@ -100,7 +100,7 @@ export default function RichTextEditor({
   className
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTenantTranslation()
   const { uploadFileWithToast } = useUploadFileWithToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const placeholderText: string = t(placeholder)

@@ -12,11 +12,11 @@ import { formatDate } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
-import type { TFunction } from 'i18next'
+import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { BadgeCheck, CalendarIcon, Check, ListFilter, Text, X } from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 const DEBOUNCE_MS = 300
 const THROTTLE_MS = 50
@@ -39,7 +39,7 @@ export function DataTableFilterMenu<TData>({
   disabled,
   ...props
 }: DataTableFilterMenuProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const id = React.useId()
 
   const columns = React.useMemo(() => {
@@ -285,7 +285,7 @@ function DataTableFilterItem<TData>({
   onFilterUpdate,
   onFilterRemove
 }: DataTableFilterItemProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   {
     const [showFieldSelector, setShowFieldSelector] = React.useState(false)
@@ -517,7 +517,7 @@ function onFilterInputRender<TData>({
   onFilterUpdate: (filterId: string, updates: Partial<Omit<ExtendedColumnFilter<TData>, 'filterId'>>) => void
   showValueSelector: boolean
   setShowValueSelector: (value: boolean) => void
-  t: TFunction<'translation'>
+  t: TenantT
 }) {
   if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') {
     return (

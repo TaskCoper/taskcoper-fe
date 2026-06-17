@@ -6,7 +6,7 @@ import { cn } from '@/shared/utils'
 import { subMonths } from 'date-fns'
 import React, { createContext, useContext, useMemo } from 'react'
 import type { Day } from 'react-day-picker'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Card } from './ui/card'
 
 const DAY_SIZE = '13.5px'
@@ -46,7 +46,7 @@ const heatmapClassNames = {
 
 function HeatmapDayButton({ day, modifiers, className, ...props }: React.ComponentProps<typeof Day>) {
   void modifiers
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { dataMap, renderTooltip, onDayClick } = useContext(HeatmapDataContext)
   const matchingData = dataMap.get(day.date.toDateString())
 
@@ -80,7 +80,7 @@ function HeatmapDayButton({ day, modifiers, className, ...props }: React.Compone
 }
 
 function HeatmapLegend() {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const legendItems = [
     { className: heatmapClassNames.zero, label: t('projectPerformance.heatmap.legendZero') },
     { className: heatmapClassNames.one, label: t('projectPerformance.heatmap.legendOneToNine') },

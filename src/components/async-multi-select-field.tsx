@@ -17,7 +17,7 @@ import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown, SearchIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useInView } from 'react-intersection-observer'
 
 // TForm: whole form values
@@ -71,7 +71,7 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
   hasNextPage,
   fetchNextPage
 }: MultiSelectComboboxFieldProps<TForm, TValue, TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
@@ -252,7 +252,7 @@ function ComboboxList<TData>({
   hasNextPage,
   fetchNextPage
 }: ComboboxListProps<TData>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { ref: sentinelRef, inView } = useInView({ threshold: 0.1 })
 
   useEffect(() => {

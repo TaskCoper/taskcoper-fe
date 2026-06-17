@@ -2,7 +2,7 @@
 
 import { type Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -59,7 +59,7 @@ export function ListDropdownMenu({
   portal = false,
   ...props
 }: ListDropdownMenuProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { editor } = useTiptapEditor(providedEditor)
   const [isOpen, setIsOpen] = React.useState(false)
 

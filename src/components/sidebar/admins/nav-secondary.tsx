@@ -11,7 +11,7 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar'
 import { ChevronRight, type LucideIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Link, useLocation } from 'react-router'
 
 export default function NavSecondary({
@@ -30,7 +30,7 @@ export default function NavSecondary({
   }[]
 }) {
   const location = useLocation()
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   return (
     <SidebarGroup>
