@@ -1,6 +1,6 @@
 import api, { type BaseResponse } from '@/lib/axios'
 import { useMutation } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { toast } from 'sonner'
 
 export interface GetPresignedUrlParams {
@@ -17,7 +17,7 @@ interface GetPresignedUrlResponse {
 }
 
 export const useGetPresignedUrl = () => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   const {
     mutate: getPresignedUrl,

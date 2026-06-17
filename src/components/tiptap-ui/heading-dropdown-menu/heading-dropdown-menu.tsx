@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 // --- Icons ---
 import { ChevronDownIcon } from '@/components/tiptap-icons/chevron-down-icon'
@@ -55,7 +55,7 @@ export const HeadingDropdownMenu = React.forwardRef<HTMLButtonElement, HeadingDr
     },
     ref
   ) => {
-    const { t } = useTranslation()
+    const { t } = useTenantTranslation()
     const { editor } = useTiptapEditor(providedEditor)
     const [isOpen, setIsOpen] = React.useState(false)
     const { isVisible, isActive, canToggle, Icon } = useHeadingDropdownMenu({

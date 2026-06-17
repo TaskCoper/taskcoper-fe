@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { useDropzone, type DropzoneOptions, type FileRejection } from 'react-dropzone'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { toast } from 'sonner'
 
 interface FileDropzoneProps extends Omit<DropzoneOptions, 'onDrop'> {
@@ -24,7 +24,7 @@ export default function FileDropzone({
   className,
   ...dropzoneProps
 }: FileDropzoneProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const [internalFile, setInternalFile] = useState<File | string | null>(defaultValue || null)
   const currentFile = value !== undefined ? value : internalFile
 

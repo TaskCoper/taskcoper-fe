@@ -7,7 +7,7 @@ import { focusNextNode, isValidPosition } from '@/shared/tiptap-utils'
 import type { NodeViewProps } from '@tiptap/react'
 import { NodeViewWrapper } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 export interface FileItem {
   /**
@@ -373,7 +373,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ fileItem, onRem
 }
 
 const DropZoneContent: React.FC<{ maxSize: number; limit: number }> = ({ maxSize, limit }) => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   return (
     <>
@@ -398,7 +398,7 @@ const DropZoneContent: React.FC<{ maxSize: number; limit: number }> = ({ maxSize
 }
 
 export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { accept, limit, maxSize } = props.node.attrs
   const inputRef = React.useRef<HTMLInputElement>(null)
   const extension = props.extension

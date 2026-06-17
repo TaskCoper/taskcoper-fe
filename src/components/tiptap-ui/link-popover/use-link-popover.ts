@@ -2,7 +2,7 @@
 
 import type { Editor } from '@tiptap/react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -238,7 +238,7 @@ export function useLinkState(props: { editor: Editor | null; hideWhenUnavailable
  * ```
  */
 export function useLinkPopover(config?: UseLinkPopoverConfig) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { editor: providedEditor, hideWhenUnavailable = false, onSetLink } = config || {}
 
   const { editor } = useTiptapEditor(providedEditor)

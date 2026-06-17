@@ -5,12 +5,15 @@ import ProjectPermissionGuardLayout from '@/layouts/project-permission-guard.lay
 import RoleGuardLayout from '@/layouts/role-guard.layout'
 import UserDefaultLayout from '@/layouts/user-default.layout'
 import UserWorkspaceLayout from '@/layouts/user-workspace.layout'
-import { FeatureFlagGuardLayout, TenantLandingRedirect } from '@/lib/feature-flags'
+import { FeatureFlagGuardLayout, TENANT_CONFIGS, TenantLandingRedirect } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
-import { hoaTheoMuaWorkspaceRoutes } from '@/tenants/hoa-theo-mua/routes'
 import { lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
+
+const tenantWorkspaceRoutes: RouteObject[] = Object.values(TENANT_CONFIGS).flatMap(
+  (config) => config.workspaceRoutes ?? []
+)
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
 const CalendarPage = lazy(() => import('@/pages/users/calendar.page'))
@@ -213,7 +216,7 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
-                  ...hoaTheoMuaWorkspaceRoutes,
+                  ...tenantWorkspaceRoutes,
                   {
                     element: (
                       <PageWrapper titleKey='pageTitle.calendar'>
