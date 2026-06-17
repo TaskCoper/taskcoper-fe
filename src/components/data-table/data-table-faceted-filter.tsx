@@ -11,11 +11,11 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { Option } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { DataTableFilterTrigger } from './data-table-filter-trigger'
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -31,7 +31,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   multiple
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const [open, setOpen] = React.useState(false)
 
   const columnFilterValue = column?.getFilterValue()

@@ -17,6 +17,7 @@ import { useLeaveProject } from '@/features/projects/members/hooks/use-leave-pro
 import { useOwnerTransferCandidates } from '@/features/projects/members/hooks/use-owner-transfer-candidates'
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import TaskCard from '@/features/projects/tasks/core/components/task-card'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { activePrimaryControlClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
@@ -32,7 +33,6 @@ import {
   WalletIcon
 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useMatches, useNavigate, useParams } from 'react-router'
 import { Button } from '../ui/button'
 
@@ -43,7 +43,7 @@ interface ProjectDetailSidebarProps extends React.ComponentProps<typeof Sidebar>
 export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: ProjectDetailSidebarProps) {
   const navigate = useNavigate()
 
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { identifier } = useParams<{ identifier: string }>()
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const { confirm } = useConfirmStore()

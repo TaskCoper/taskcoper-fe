@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMentorWidgetStore } from '@/lib/zustand/mentor-widget.store'
 import { getUserType } from '@/shared/utils'
 import { GraduationCap, XIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 
 export default function BecomeMentorWidget() {
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { pathname } = useLocation()
 
   const { me, isGettingMe } = useGetMe()

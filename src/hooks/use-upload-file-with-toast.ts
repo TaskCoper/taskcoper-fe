@@ -1,8 +1,8 @@
 import type { ErrorResponse } from '@/lib/axios'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { AxiosError } from 'axios'
 import type { ReactNode } from 'react'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useUploadFile } from './use-upload-file'
 
@@ -17,7 +17,7 @@ interface UploadFileWithToastParams {
 }
 
 export const useUploadFileWithToast = (options?: Parameters<typeof useUploadFile>[0]) => {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const uploadMutation = useUploadFile(options)
   const { uploadFileAsync } = uploadMutation
 

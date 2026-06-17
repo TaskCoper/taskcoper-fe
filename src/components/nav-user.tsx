@@ -17,11 +17,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import type { Me } from '@/features/users/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { getAvatarFallback } from '@/shared/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { GlobeIcon, LogOut, SettingsIcon, UserCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 
 interface NavUserProps {
@@ -31,7 +31,7 @@ interface NavUserProps {
 export default function NavUser({ user }: NavUserProps) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTenantTranslation()
   const [language, setLanguage] = useState(i18n.language)
   // const [open, setOpen] = useState(false)
 

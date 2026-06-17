@@ -6,10 +6,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
 import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>
@@ -22,7 +22,7 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   if (!column.getCanSort() && !column.getCanHide()) {
     return <div className={cn(className)}>{t(label)}</div>

@@ -3,6 +3,7 @@ import { TeamSwitcher } from '@/components/sidebar/admins/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import {
   AudioWaveform,
   CircleUserRound,
@@ -14,7 +15,6 @@ import {
   PercentIcon
 } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import NavMain from './nav-main'
 import NavSecondary from './nav-secondary'
@@ -26,7 +26,7 @@ interface AdminSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
   const { me, isGettingMe } = useGetMe()
   const { pathname } = useLocation()
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
 
   const navItems = React.useMemo(() => {
     return {

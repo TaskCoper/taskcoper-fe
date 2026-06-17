@@ -9,9 +9,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { ChevronsUpDown, Plus } from 'lucide-react'
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 export function TeamSwitcher({
   teams
@@ -22,7 +22,7 @@ export function TeamSwitcher({
     plan: string
   }[]
 }) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
 

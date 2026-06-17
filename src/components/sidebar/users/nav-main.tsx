@@ -11,11 +11,11 @@ import {
   SidebarMenuSubItem,
   useSidebar
 } from '@/components/ui/sidebar'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { activePrimaryControlClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import { ChevronRight, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link, matchPath, useLocation } from 'react-router'
 
 type SubItem = {
@@ -34,7 +34,7 @@ type NavItem = {
 }
 
 function NavMainItem({ item, isSubItemActive }: { item: NavItem; isSubItemActive: (subItem: SubItem) => boolean }) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { state, setOpen } = useSidebar()
   const isCollapsed = state === 'collapsed'
 
@@ -101,7 +101,7 @@ function NavMainItem({ item, isSubItemActive }: { item: NavItem; isSubItemActive
 }
 
 export function NavMain({ items }: { items: NavItem[] }) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { pathname } = useLocation()
 
   const isSubItemActive = (subItem: SubItem) => {
