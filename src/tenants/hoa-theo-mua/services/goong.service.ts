@@ -72,7 +72,7 @@ export const pickBestGeocodeResult = (inputAddress: string, response?: GeoRespon
 class GoongService {
   getLatLngFromAddress = async ({ address }: { address?: string }) => {
     const { data } = await axios.get<GeoResponse>('https://rsapi.goong.io/geocode', {
-      params: { address, api_key: 'OMVBrK1Nnz6VUUEg3BNWijhLb1ebPfVPk6rCSXer' }
+      params: { address, api_key: import.meta.env.VITE_GOONG_MAP_API_KEY }
     })
 
     return data

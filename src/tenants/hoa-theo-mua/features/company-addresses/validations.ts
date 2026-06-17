@@ -2,34 +2,19 @@ import type { TFunction } from 'i18next'
 import z from 'zod'
 
 export const createCompanyAddressSchema = (t: TFunction) => {
-  const requiredString = (max: number) =>
-    z
-      .string({ message: t('common.validation.required') })
-      .trim()
-      .min(1, t('common.validation.required'))
-      .max(max)
-
-  const requiredCode = z
-    .number({ message: t('common.validation.required') })
-    .int(t('common.validation.number.integer'))
-    .positive(t('common.validation.number.positive'))
-
   return z.object({
-    addressLine: requiredString(255),
-    ward: requiredString(100),
-    city: requiredString(100),
-    cityCode: requiredCode,
-    wardCode: requiredCode,
-    country: requiredString(100),
-    latitude: z
-      .number({ message: t('common.validation.number.invalid') })
-      .min(-90, t('common.validation.number.invalid'))
-      .max(90, t('common.validation.number.invalid')),
-    longitude: z
-      .number({ message: t('common.validation.number.invalid') })
-      .min(-180, t('common.validation.number.invalid'))
-      .max(180, t('common.validation.number.invalid')),
-    mapId: z.string().min(1, t('common.validation.required'))
+    addressLine: z
+      .string()
+      .min(1, t('common.validation.required'))
+      .max(255, t('common.validation.maxLength', { max: 255 })),
+    ward: z.string(),
+    city: z.string(),
+    cityCode: z.number({ message: t('common.validation.number.invalid') }),
+    wardCode: z.number({ message: t('common.validation.number.invalid') }),
+    country: z.string(),
+    latitude: z.number({ message: t('common.validation.number.invalid') }),
+    longitude: z.number({ message: t('common.validation.number.invalid') }),
+    mapId: z.string()
   })
 }
 

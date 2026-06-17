@@ -16,7 +16,7 @@ const defaultValues: UpdateCompanyAddressFormValues = {
   longitude: 0,
   mapId: '',
   wardCode: -1,
-  country: 'Viet Nam'
+  country: 'Việt Nam'
 }
 
 export const useUpdateCompanyAddress = () => {
@@ -31,6 +31,9 @@ export const useUpdateCompanyAddress = () => {
 
   const { mutate: updateCompanyAddress, isPending: isUpdatingCompanyAddress } = useMutation({
     mutationFn: companyAddressService.updateCompanyAddress,
+    onSuccess: (message) => {
+      toast.success(message)
+    },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail

@@ -16,7 +16,7 @@ const defaultValues: CreateCompanyAddressFormValues = {
   longitude: 0,
   mapId: '',
   wardCode: -1,
-  country: 'Viet Nam'
+  country: 'Việt Nam'
 }
 
 export const useCreateCompanyAddress = () => {
@@ -31,9 +31,9 @@ export const useCreateCompanyAddress = () => {
 
   const { mutate: createCompanyAddress, isPending: isCreatingCompanyAddress } = useMutation({
     mutationFn: companyAddressService.createCompanyAddress,
-    // onSuccess: (message) => {
-    //   toast.success(message)
-    // },
+    onSuccess: (message) => {
+      toast.success(message)
+    },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail

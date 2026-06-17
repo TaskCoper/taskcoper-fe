@@ -20,7 +20,7 @@ class CompanyAddressService {
       'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
     >
   }) => {
-    const { data } = await htmApi.post<BaseResponse<CompanyAddress>>(`/v1/${this.baseUrl}`, {
+    const { data } = await htmApi.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,
@@ -43,7 +43,7 @@ class CompanyAddressService {
       'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
     >
   }) => {
-    const { data } = await htmApi.put<BaseResponse<CompanyAddress>>(`/v1/${this.baseUrl}/${id}`, {
+    const { data } = await htmApi.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, {
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,

@@ -8,6 +8,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Spinner } from '@/components/ui/spinner'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useCreateCompanyAddress } from '../hooks/use-create-company-address'
@@ -19,6 +20,7 @@ interface CreateCompanyAddressDialogProps {
 }
 
 export default function CreateCompanyAddressDialog({ children }: CreateCompanyAddressDialogProps) {
+  const { t } = useTenantTranslation()
   const [open, setOpen] = useState(false)
 
   const { methods, createCompanyAddress, isCreatingCompanyAddress } = useCreateCompanyAddress()
@@ -52,11 +54,8 @@ export default function CreateCompanyAddressDialog({ children }: CreateCompanyAd
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent position='top-center' className='min-w-2xl' showCloseButton={false} onInteractOutside={onClose}>
         <DialogHeader>
-          <DialogTitle>Địa chỉ công ty</DialogTitle>
-          <DialogDescription>
-            Thêm điạ chỉ công ty để hiển thị trên trang thông tin công ty và sử dụng cho các mục đích khác như định vị,
-            bản đồ, v.v.
-          </DialogDescription>
+          <DialogTitle>{t('companyAddress.createDialog.title')}</DialogTitle>
+          <DialogDescription>{t('companyAddress.createDialog.description')}</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...methods}>
@@ -66,7 +65,7 @@ export default function CreateCompanyAddressDialog({ children }: CreateCompanyAd
             <div className='self-end'>
               <Button type='submit' disabled={isCreatingCompanyAddress}>
                 {isCreatingCompanyAddress ? <Spinner /> : null}
-                Thêm địa chỉ
+                {t('companyAddress.createDialog.submit')}
               </Button>
             </div>
           </form>
