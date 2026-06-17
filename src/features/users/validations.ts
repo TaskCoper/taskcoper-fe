@@ -48,7 +48,7 @@ export const updateMeSchema = (t: TFunction) => {
         .nullable()
         .transform((val) => (val === '' ? null : val)),
       wardCode: z.number().positive(t('common.validation.number.positive')).or(z.literal(-1)),
-      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid'))),
+      domainIds: z.array(z.string().regex(UUID_REGEX, t('common.validation.uuid.invalid'))),
       coverImageUrl: z.url({ message: t('common.validation.url.invalid') }).nullable(),
       timeZone: z
         .enum(Intl.supportedValuesOf('timeZone'), {

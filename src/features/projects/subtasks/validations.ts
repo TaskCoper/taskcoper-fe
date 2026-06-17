@@ -4,15 +4,15 @@ import z from 'zod'
 export const updateSubtaskSchema = (t: TFunction) => {
   return z
     .object({
-      id: z.uuid({ message: t('task.subtask.validation.taskId.invalid') }),
+      id: z.uuid({ message: t('common.validation.uuid.invalid') }),
       name: z
         .string()
         .trim()
         .min(1, { message: t('task.subtask.validation.name.minLength') })
-        .max(255, { message: t('task.subtask.validation.name.maxLength') }),
-      index: z.number({ message: t('task.subtask.validation.index.invalid') }),
-      parentId: z.uuid({ message: t('task.subtask.validation.parentId.invalid') }).nullable(),
-      deadline: z.iso.datetime({ offset: true, message: t('task.subtask.validation.deadline.invalid') }).nullable()
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) }),
+      index: z.number({ message: t('common.validation.number.invalid') }),
+      parentId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
+      deadline: z.iso.datetime({ offset: true, message: t('common.validation.date.invalid') }).nullable()
     })
     .strict()
 }
@@ -20,7 +20,7 @@ export const updateSubtaskSchema = (t: TFunction) => {
 export const updateSubtaskStatusSchema = (t: TFunction) => {
   return z
     .object({
-      id: z.uuid({ message: t('task.subtask.validation.taskId.invalid') }),
+      id: z.uuid({ message: t('common.validation.uuid.invalid') }),
       isCompleted: z.boolean({ message: t('common.validation.required') })
     })
     .strict()
@@ -29,8 +29,8 @@ export const updateSubtaskStatusSchema = (t: TFunction) => {
 export const assignMemberToSubtaskSchema = (t: TFunction) => {
   return z
     .object({
-      subtaskId: z.uuid({ message: t('task.subtask.validation.subtaskId.invalid') }),
-      userId: z.uuid({ message: t('task.subtask.validation.userId.invalid') })
+      subtaskId: z.uuid({ message: t('common.validation.uuid.invalid') }),
+      userId: z.uuid({ message: t('common.validation.uuid.invalid') })
     })
     .strict()
 }

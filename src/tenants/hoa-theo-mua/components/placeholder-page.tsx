@@ -1,8 +1,7 @@
-import type { I18nKey } from '@/lib/i18n/types'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
-export function PlaceholderPage({ titleKey }: { titleKey: I18nKey }) {
-  const { t } = useTranslation()
+export function PlaceholderPage({ titleKey }: { titleKey: string }) {
+  const { t } = useTenantTranslation()
 
   return (
     <div className='flex h-full w-full items-center justify-center'>

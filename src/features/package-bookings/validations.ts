@@ -20,8 +20,8 @@ export const requestPackageSchema = (t: TFunction) => {
     bookedByProjectId: z.uuid({ message: t('common.validation.uuid.invalid') }).nullable(),
     problemStatement: z
       .string()
-      .min(1, { message: t('common.validation.string.min', { min: 1 }) })
-      .max(20_000, { message: t('common.validation.string.max', { max: 20000 }) })
+      .min(1, { message: t('common.validation.required') })
+      .max(20_000, { message: t('common.validation.maxLength', { max: 20000 }) })
   })
 }
 
@@ -32,7 +32,7 @@ export const reviewPackageSchema = (t: TFunction) => {
       status: z.enum([PackageRequestStatus.Approved, PackageRequestStatus.Rejected]),
       mentorResponseNote: z
         .string()
-        .max(255, { message: t('common.validation.string.max', { max: 255 }) })
+        .max(255, { message: t('common.validation.maxLength', { max: 255 }) })
         .nullable()
     })
     .superRefine((value, ctx) => {

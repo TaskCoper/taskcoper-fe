@@ -427,15 +427,8 @@
       "enum": {
         "invalid": "Invalid option selected"
       },
-      "maxLength": {
-        "25": "Max 25 characters",
-        "255": "Max 255 characters",
-        "2000": "Max 2000 characters",
-        "10000": "Max 10000 characters"
-      },
-      "minLength": {
-        "5": "Must be at least 5 characters"
-      },
+      "maxLength": "Maximum {{max}} characters allowed",
+      "minLength": "Minimum {{min}} characters required",
       "number": {
         "integer": "Must be an integer",
         "invalid": "Must be a valid number",
@@ -448,10 +441,6 @@
         "dayRequired": "At least one day must be selected",
         "endTimeRequired": "End time is required",
         "startTimeRequired": "Start time is required"
-      },
-      "string": {
-        "max": "Must not exceed {{max}} characters",
-        "min": "Must be at least {{min}} characters"
       },
       "timeZone": {
         "invalid": "Invalid time zone"
@@ -1008,11 +997,9 @@
     },
     "validation": {
       "adminNoteRequiredForRejection": "Please enter a note when rejecting an application",
-      "descriptionMax": "Description must be at most 10,000 characters",
       "descriptionRequired": "Description is required",
       "portfolioFilesMax": "You can upload at most 10 files",
       "portfolioFilesMin": "At least one portfolio file is required",
-      "shortBioMax": "Short bio must be at most 255 characters",
       "shortBioRequired": "Short bio is required",
       "titleLevelRequiredForApproval": "Title level is required when approving"
     },
@@ -1118,7 +1105,6 @@
       "requests": "Mentoring Requests"
     },
     "validation": {
-      "descriptionMax": "Max 255 chars",
       "nameRequired": "Name required",
       "pricePositive": "Price must be greater than 0",
       "sessionsPositive": "Total sessions must be greater than 0"
@@ -1147,9 +1133,7 @@
       "sessionTakesHours": "This session takes {{hours}} hour(s)."
     },
     "validation": {
-      "noPositive": "Must be > 0",
       "noRequired": "Number required",
-      "totalTimeSlotsPositive": "Must be > 0",
       "totalTimeSlotsRequired": "Total slots required"
     }
   },
@@ -1201,15 +1185,8 @@
       "title": "Delete Tab"
     },
     "validation": {
-      "milestoneId": {
-        "invalid": "Invalid milestone ID"
-      },
       "milestoneName": {
-        "maxLength": "Max 255 characters",
         "minLength": "Milestone name is required"
-      },
-      "position": {
-        "invalid": "Invalid position"
       }
     }
   },
@@ -1471,7 +1448,6 @@
     "submitButton": "Submit feedback",
     "title": "Feedback",
     "validation": {
-      "noteMax": "Note must be at most 10,000 characters.",
       "ratingRequired": "Please select a rating."
     }
   },
@@ -1524,9 +1500,6 @@
         },
         "name": {
           "minLength": "Transaction name is required"
-        },
-        "note": {
-          "maxLength": "Max 255 characters"
         }
       }
     },
@@ -1548,11 +1521,7 @@
       },
       "title": "New role",
       "validation": {
-        "description": {
-          "maxLength": "Max 255 characters"
-        },
         "name": {
-          "maxLength": "Max 255 characters",
           "minLength": "Role name is required"
         },
         "permissions": {
@@ -1593,19 +1562,8 @@
       },
       "title": "New project",
       "validation": {
-        "description": {
-          "maxLength": "Max 255 characters"
-        },
-        "endDate": {
-          "invalid": "End date is required",
-          "mustBeGreater": "End date must be greater than start date"
-        },
         "name": {
-          "maxLength": "Max 255 characters",
           "minLength": "Project name is required"
-        },
-        "startDate": {
-          "invalid": "Start date is required"
         }
       }
     },
@@ -1684,20 +1642,8 @@
           "minLength": "At least one member is required"
         },
         "users": {
-          "avatar": {
-            "invalid": "Invalid avatar URL"
-          },
-          "email": {
-            "invalid": "Invalid email address"
-          },
           "fullName": {
             "required": "Full name is required"
-          },
-          "inviteExpireDate": {
-            "invalid": "Invalid expiration date format"
-          },
-          "userId": {
-            "invalid": "Invalid user ID"
           }
         }
       }
@@ -1788,36 +1734,8 @@
     "title": "My Projects",
     "updateProject": {
       "validation": {
-        "coverImage": {
-          "invalid": "Invalid cover image URL"
-        },
-        "description": {
-          "maxLength": "Max 10000 characters"
-        },
-        "endDate": {
-          "invalid": "Invalid end date format"
-        },
-        "logoImage": {
-          "invalid": "Invalid logo image URL"
-        },
         "name": {
-          "maxLength": "Max 255 characters",
           "minLength": "Project name is required"
-        },
-        "projectId": {
-          "invalid": "Invalid project ID"
-        },
-        "schoolSubject": {
-          "maxLength": "Max 255 characters"
-        },
-        "startDate": {
-          "invalid": "Invalid start date format"
-        },
-        "teamContact": {
-          "maxLength": "Max 255 characters"
-        },
-        "teamSize": {
-          "maxLength": "Max 255 characters"
         }
       }
     },
@@ -1828,7 +1746,6 @@
       "title": "Project domains",
       "validation": {
         "domainIds": {
-          "invalid": "Invalid domain",
           "minLength": "At least one domain is required"
         }
       }
@@ -1920,9 +1837,6 @@
         },
         "name": {
           "minLength": "Transaction name is required"
-        },
-        "note": {
-          "maxLength": "Max 255 characters"
         }
       }
     },
@@ -2154,9 +2068,6 @@
         "title": "Discard unsaved changes?"
       },
       "validation": {
-        "description": {
-          "maxLength": "Description must not exceed 255 characters"
-        },
         "name": {
           "minLength": "Role name is required"
         }
@@ -2612,29 +2523,14 @@
         "bytes": {
           "positive": "File size must be positive"
         },
-        "commentId": {
-          "invalid": "Invalid comment ID"
-        },
         "mimeType": {
           "minLength": "MIME type is required"
         },
         "name": {
           "minLength": "File name is required"
         },
-        "position": {
-          "invalid": "Invalid position"
-        },
-        "projectResourceId": {
-          "invalid": "Invalid attachment ID"
-        },
         "storageKey": {
           "minLength": "Storage key is required"
-        },
-        "taskId": {
-          "invalid": "Invalid task ID"
-        },
-        "url": {
-          "invalid": "Invalid URL"
         }
       }
     },
@@ -2669,11 +2565,7 @@
       },
       "validation": {
         "content": {
-          "maxLength": "Max 10000 characters",
           "minLength": "Comment content is required"
-        },
-        "taskId": {
-          "invalid": "Invalid task ID"
         }
       }
     },
@@ -2729,15 +2621,6 @@
       "findLabel": "Find label...",
       "removeColor": "Remove color",
       "validation": {
-        "color": {
-          "maxLength": "Max 255 characters"
-        },
-        "id": {
-          "invalid": "Invalid label ID"
-        },
-        "name": {
-          "maxLength": "Max 255 characters"
-        },
         "nameOrColorRequired": "Label must have at least a name or a color"
       }
     },
@@ -2784,27 +2667,8 @@
         "setDeadline": "Set deadline"
       },
       "validation": {
-        "deadline": {
-          "invalid": "task.subtask.validation.deadline.invalid"
-        },
-        "index": {
-          "invalid": "Invalid index"
-        },
         "name": {
-          "maxLength": "Max 255 characters",
           "minLength": "Subtask name is required"
-        },
-        "parentId": {
-          "invalid": "Invalid parent ID"
-        },
-        "subtaskId": {
-          "invalid": "task.subtask.validation.subtaskId.invalid"
-        },
-        "taskId": {
-          "invalid": "Invalid task ID"
-        },
-        "userId": {
-          "invalid": "task.subtask.validation.userId.invalid"
         }
       }
     },
@@ -2813,45 +2677,8 @@
       "addList": "Add list"
     },
     "validation": {
-      "id": {
-        "invalid": "Invalid task ID"
-      },
-      "milestoneId": {
-        "invalid": "Invalid milestone"
-      },
       "name": {
-        "maxLength": "Max 255 characters",
         "minLength": "Task name is required"
-      },
-      "position": {
-        "invalid": "Invalid position"
-      },
-      "targetMilestoneId": {
-        "invalid": "Invalid target milestone"
-      },
-      "targetPosition": {
-        "invalid": "Invalid target position"
-      }
-    }
-  },
-  "tenant": {
-    "hoaTheoMua": {
-      "addresses": {
-        "listComingSoon": "Delivery Addresses — Coming Soon",
-        "zonesComingSoon": "Delivery Zones — Coming Soon"
-      },
-      "customNews": {
-        "articlesComingSoon": "Articles — Coming Soon",
-        "categoriesComingSoon": "Categories — Coming Soon"
-      },
-      "orders": {
-        "customersComingSoon": "Customers — Coming Soon",
-        "dashboardComingSoon": "Orders Dashboard — Coming Soon",
-        "listComingSoon": "Orders List — Coming Soon"
-      },
-      "recruitment": {
-        "applicantsComingSoon": "Applicants — Coming Soon",
-        "jobsComingSoon": "Job Postings — Coming Soon"
       }
     }
   },
@@ -3004,9 +2831,6 @@
         "other": "Other Information"
       }
     }
-  },
-  "validation": {
-    "mustBeNumber": "Must be a valid number"
   },
   "voucher": {
     "action": {

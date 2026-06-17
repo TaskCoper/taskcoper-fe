@@ -9,12 +9,12 @@ export const submitMentorApplicationSchema = (t: TFunction) =>
       shortBio: z
         .string()
         .min(1, t('mentorApplication.validation.shortBioRequired'))
-        .max(255, t('mentorApplication.validation.shortBioMax')),
+        .max(255, t('common.validation.maxLength', { max: 255 })),
       description: z
         .string()
         .min(1, t('mentorApplication.validation.descriptionRequired'))
         .refine((value) => getPlainTextFromHtml(value).trim().length <= 10_000, {
-          message: t('mentorApplication.validation.descriptionMax')
+          message: t('common.validation.maxLength', { max: 10000 })
         }),
       portfolioFiles: z
         .array(z.instanceof(File))
