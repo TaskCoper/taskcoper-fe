@@ -23,3 +23,8 @@ export interface ArticleRow {
   createdAt: string
   updatedAt: string
 }
+
+export interface CategoryData {
+  categoryId: string
+  title: string
+}

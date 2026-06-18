@@ -7,6 +7,27 @@
     "articlesComingSoon": "Articles — Coming Soon",
     "categoriesComingSoon": "Categories — Coming Soon"
   },
+  "common": {
+    "ui": {
+      "selectOptions": "Select options..."
+    }
+  },
+  "article": {
+    "validation": {
+      "category": {
+        "required": "Select at least one category"
+      },
+      "description": {
+        "required": "Article content is required"
+      },
+      "picture": {
+        "required": "Cover image URL is required"
+      },
+      "title": {
+        "required": "Title is required"
+      }
+    }
+  },
   "orders": {
     "customersComingSoon": "Customers — Coming Soon",
     "dashboardComingSoon": "Orders Dashboard — Coming Soon",
@@ -21,7 +42,8 @@
       "actions": "Actions",
       "delete": "Delete",
       "openMenu": "Open article actions",
-      "viewDetails": "View details"
+      "viewDetails": "View details",
+      "updateDetails": "Update details"
     },
     "column": {
       "createdAt": "Created at",
@@ -36,6 +58,10 @@
     "status": {
       "draft": "Draft",
       "published": "Published"
+    },
+    "confirm": {
+      "deleteDescription": "This article will be permanently deleted and cannot be restored.",
+      "deleteTitle": "Delete article?"
     }
   },
   "tenant": {
@@ -45,7 +71,8 @@
           "actions": "Actions",
           "delete": "Delete",
           "openMenu": "Open article actions",
-          "viewDetails": "View details"
+          "viewDetails": "View details",
+          "updateDetails": "Update article"
         },
         "column": {
           "createdAt": "Created at",
@@ -56,6 +83,53 @@
           "title": "Title",
           "titlePlaceholder": "Search by title...",
           "viewCount": "View count"
+        },
+        "form": {
+          "bodyLabel": "Article content",
+          "categoriesLabel": "Categories",
+          "categoryCount": "{{count}} categories",
+          "contentDescription": "Write the headline, categories, and article body.",
+          "contentTitle": "Article content",
+          "description": "Create a news article for the Hoa Theo Mua admin workspace.",
+          "eyebrow": "News management",
+          "pictureLabel": "Cover image URL",
+          "picturePlaceholder": "https://example.com/article-cover.jpg",
+          "previewDescription": "A compact check before publishing.",
+          "previewHint": "Use a clear title and a sharp cover image for the article list.",
+          "previewImageAlt": "Article cover preview",
+          "previewTitle": "Preview",
+          "previewUntitled": "Untitled article",
+          "publishDescription": "Choose visibility and add a cover image.",
+          "publishTitle": "Publishing",
+          "statusLabel": "Status",
+          "statusPlaceholder": "Select status",
+          "submit": "Create article",
+          "title": "Add article",
+          "titleLabel": "Title",
+          "titlePlaceholder": "Enter article title",
+          "updateDescription": "Update a news article for the Hoa Theo Mua admin workspace.",
+          "updateSubmit": "Save changes",
+          "updateTitle": "Update article"
+        },
+        "detail": {
+          "articleId": "Article ID",
+          "authorId": "Author ID",
+          "categories": "{{count}} categories",
+          "categoriesLabel": "Categories",
+          "createdAt": "Created {{date}}",
+          "edit": "Edit article",
+          "missingIdDescription": "Choose an article from the news list to open its detail page.",
+          "missingIdTitle": "No article selected",
+          "notFoundDescription": "The article may have been removed or the link is no longer valid.",
+          "notFoundTitle": "Article not found",
+          "overview": "Article overview",
+          "overviewDescription": "Key publishing details for this article.",
+          "publishing": "Publishing",
+          "slug": "Slug",
+          "status": "Status",
+          "updatedAt": "Updated {{date}}",
+          "views": "{{count}} views",
+          "viewsLabel": "Views"
         },
         "status": {
           "draft": "Draft",

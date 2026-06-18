@@ -25,14 +25,14 @@ import { useInView } from 'react-intersection-observer'
 // TData: API data type
 interface MultiSelectComboboxFieldProps<TForm extends FieldValues, TValue, TData> {
   name: Path<TForm>
-  label?: I18nKey
+  label?: I18nKey | string
   control?: Control<TForm>
   items: TData[]
   isLoading?: boolean
   searchValue: string
   onSearchChange: (value: string) => void
   isRequired?: boolean
-  placeholder?: I18nKey
+  placeholder?: I18nKey | string
   displayError?: boolean
   // Get the unique ID from data (API)
   getId: (item: TData) => string

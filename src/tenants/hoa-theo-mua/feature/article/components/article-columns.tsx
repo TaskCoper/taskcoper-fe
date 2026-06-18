@@ -19,13 +19,19 @@ import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../types'
 
 const ARTICLE_I18N_PREFIX = 'tenant.hoaTheoMua.articles' as const
 
-export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
+interface GetColumnsParams {
+  t: TenantT
+  onDeleteArticle: (id: string) => void
+  isDeletingArticle?: boolean
+}
+
+export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumnsParams): ColumnDef<ArticleRow>[] => {
   return [
     {
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectAll`)}
+          aria-label={`${ARTICLE_I18N_PREFIX}.column.selectAll`}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -33,7 +39,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectRow`)}
+          aria-label={`${ARTICLE_I18N_PREFIX}.column.selectRow`}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -47,17 +53,16 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
       id: 'title',
       accessorKey: 'title',
       meta: {
-        label: t('tenant.hoaTheoMua.articles.column.title'),
-        placeholder: t('tenant.hoaTheoMua.articles.column.titlePlaceholder'),
+        label: 'tenant.hoaTheoMua.articles.column.title',
+        placeholder: 'tenant.hoaTheoMua.articles.column.titlePlaceholder',
         variant: 'text',
         icon: SearchIcon
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t('tenant.hoaTheoMua.articles.column.title')} />
+        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.title'} />
       ),
-
       cell: ({ row }) => (
-        <Link to={row.original.slug} className='flex min-w-0 items-center gap-3 hover:underline'>
+        <Link to={`/htm/news/detail?id=${row.original.id}`} className='flex min-w-0 items-center gap-3 hover:underline'>
           <Avatar className='size-9 rounded-lg'>
             <AvatarImage src={row.original.pictureUrl ?? undefined} />
             <AvatarFallback className='rounded-lg text-xs font-medium'>
@@ -78,14 +83,13 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
       id: 'viewCount',
       accessorKey: 'viewCount',
       meta: {
-        label: t('tenant.hoaTheoMua.articles.column.viewCount')
+        label: 'tenant.hoaTheoMua.articles.column.viewCount'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t('tenant.hoaTheoMua.articles.column.viewCount')} />
+        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.viewCount'} />
       ),
-
       cell: ({ row }) => (
-        <Link to={row.original.slug} className='hover:underline'>
+        <Link to={`/htm/news/detail?id=${row.original.id}`} className='hover:underline'>
           <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none'>{row.original.viewCount}</p>
         </Link>
       ),
@@ -99,27 +103,22 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
       id: 'Status',
       accessorKey: 'status',
       meta: {
-        label: t('tenant.hoaTheoMua.articles.column.status'),
+        label: 'tenant.hoaTheoMua.articles.column.status',
         variant: 'radio',
         options: [
           {
-            label: t(ArticleStatusLabel[ArticleStatus.Published]),
+            label: ArticleStatusLabel[ArticleStatus.Published],
             value: '1'
           },
           {
-            label: t(ArticleStatusLabel[ArticleStatus.Draft]),
+            label: ArticleStatusLabel[ArticleStatus.Draft],
             value: '0'
           }
         ]
       },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={t('tenant.hoaTheoMua.articles.column.status')}
-          className='mx-auto'
-        />
+        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.status'} className='mx-auto' />
       ),
-
       cell: ({ row }) => {
         const status = row.original.status
 
@@ -146,14 +145,14 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
       id: 'createdAt',
       accessorKey: 'createdAt',
       meta: {
-        label: t('tenant.hoaTheoMua.articles.column.createdAt'),
+        label: 'tenant.hoaTheoMua.articles.column.createdAt',
         variant: 'dateRange'
       },
 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          label={t('tenant.hoaTheoMua.articles.column.createdAt')}
+          label={'tenant.hoaTheoMua.articles.column.createdAt'}
           className='mx-auto'
         />
       ),
@@ -163,7 +162,36 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
           return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
         }
 
-        return <p className='text-center text-muted-foreground'>{t(`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`)}</p>
+        return <p className='text-center text-muted-foreground'>{`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`}</p>
+      },
+
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 30
+    },
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      meta: {
+        label: 'tenant.hoaTheoMua.articles.column.createdAt',
+        variant: 'dateRange'
+      },
+
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          label={'tenant.hoaTheoMua.articles.column.createdAt'}
+          className='mx-auto'
+        />
+      ),
+
+      cell: ({ row }) => {
+        if (row.original.createdAt) {
+          return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
+        }
+
+        return <p className='text-center text-muted-foreground'>{`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`}</p>
       },
 
       enableSorting: true,
@@ -174,7 +202,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id, title, slug } = row.original
+        const { id } = row.original
 
         return (
           <div className='flex justify-end pr-2'>
@@ -188,13 +216,19 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<ArticleRow>[] => {
               <DropdownMenuContent align='end'>
                 <DropdownMenuLabel>{t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
                 <DropdownMenuItem asChild>
-                  <Link to={row.original.slug}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                  <Link to={`/htm/news/detail?id=${id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className='focus:text-destructive'
-                  onClick={() => console.log(t(`${ARTICLE_I18N_PREFIX}.action.delete`), { id, title, slug })}
+                  disabled={isDeletingArticle}
+                  onClick={() => {
+                    onDeleteArticle(id)
+                  }}
                 >
                   {t(`${ARTICLE_I18N_PREFIX}.action.delete`)}
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={`/htm/news/update?id=${id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.updateDetails`)}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

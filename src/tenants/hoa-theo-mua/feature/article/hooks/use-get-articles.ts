@@ -10,6 +10,7 @@ export interface GetArticlesParams {
   keyword?: string
   status?: number
 }
+
 export const useGetArticles = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
@@ -17,8 +18,9 @@ export const useGetArticles = ({
   status
 }: GetArticlesParams = {}) => {
   const { data: articles = getDefaultPaginationResponse<ArticleRow>(), isLoading: isLoadingArticle } = useQuery({
-    queryKey: ['articels', pageIndex, pageSize, keyword, status],
+    queryKey: ['articles', pageIndex, pageSize, keyword, status],
     queryFn: () => articleService.getArticles({ pageIndex, pageSize, keyword, status })
   })
+
   return { articles, isLoadingArticle }
 }
