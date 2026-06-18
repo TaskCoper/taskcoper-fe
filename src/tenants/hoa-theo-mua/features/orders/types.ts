@@ -23,3 +23,47 @@ export interface OrderRow {
   createAt: string
   updateAt: string
 }
+
+export interface NhanhVnProduct {
+  name: string
+  code: string
+  quantity: number
+  price: number
+  image?: string
+}
+
+export interface NhanhVnOrder {
+  info: {
+    id: string
+    saleName?: string
+    trackingUrl?: string
+    createdAt?: number
+  }
+  channel?: {
+    trafficSource?: string
+  }
+  shippingAddress?: {
+    address?: string
+    location?: string
+    mobile?: string
+  }
+  products: NhanhVnProduct[]
+  carrier?: {
+    name?: string
+  }
+  payment?: {
+    transfer?: {
+      amount?: number
+    }
+  }
+}
+
+export interface NhanhVnOrdersResponse {
+  code: number
+  paginator?: {
+    totalRow: number
+    perPage: number
+    currentPage: number
+  }
+  data: NhanhVnOrder[]
+}

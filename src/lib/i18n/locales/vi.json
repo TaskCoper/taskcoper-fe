@@ -1277,13 +1277,25 @@
     "column": {
       "ahahaMoveOrderId": "Mã đơn AhaMove",
       "ahahaMoveTrackingUrl": "URL theo dõi AhaMove",
+      "amount": "Số tiền",
+      "carrier": "Vận chuyển",
+      "createdAt": "Ngày tạo đơn",
+      "mobile": "Số điện thoại",
       "nhanhOrderId": "Mã đơn Nhanh",
       "nhanhTrackingUrl": "URL theo dõi Nhanh",
       "orderId": "Mã đơn hàng",
-      "status": "Trạng thái"
+      "saleName": "Người bán",
+      "shippingAddress": "Địa chỉ giao hàng",
+      "status": "Trạng thái",
+      "trafficSource": "Nguồn"
     },
     "common": {
       "noData": "Không có dữ liệu"
+    },
+    "filter": {
+      "dateRange": "Ngày tạo đơn",
+      "reset": "Xóa bộ lọc",
+      "saleName": "Tìm theo người bán..."
     },
     "status": {
       "paid": "Đã thanh toán",

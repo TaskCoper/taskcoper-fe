@@ -504,6 +504,13 @@ export const queryKeys = {
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   },
 
+  // HTM Nhanh.vn Orders
+  htmOrdersNhanhVn: {
+    all: ['htm-orders-nhanh-vn'] as const,
+    lists: () => [...queryKeys.htmOrdersNhanhVn.all, 'list'] as const,
+    list: () => [...queryKeys.htmOrdersNhanhVn.lists()] as const
+  },
+
   // Feedbacks
   feedbacks: {
     all: ['feedbacks'] as const,
