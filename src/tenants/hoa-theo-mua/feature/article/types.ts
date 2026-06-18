@@ -1,5 +1,3 @@
-import type { I18nKey } from '@/lib/i18n/types'
-
 export const ArticleStatus = {
   Published: 'Published',
   Draft: 'Draft'
@@ -7,7 +5,7 @@ export const ArticleStatus = {
 
 export type ArticleStatus = (typeof ArticleStatus)[keyof typeof ArticleStatus]
 
-export const ArticleStatusLabel: Record<ArticleStatus, I18nKey> = {
+export const ArticleStatusLabel: Record<ArticleStatus, string> = {
   [ArticleStatus.Published]: 'tenant.hoaTheoMua.articles.status.published',
   [ArticleStatus.Draft]: 'tenant.hoaTheoMua.articles.status.draft'
 }
