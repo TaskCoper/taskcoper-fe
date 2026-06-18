@@ -90,6 +90,7 @@
           "categoryCount": "{{count}} danh mục",
           "contentDescription": "Nhập tiêu đề, danh mục và nội dung bài viết.",
           "contentTitle": "Nội dung bài viết",
+          "createSuccess": "Tạo bài viết thành công.",
           "description": "Tạo bài viết tin tức cho khu vực quản trị Hoa Theo Mùa.",
           "eyebrow": "Quản lý tin tức",
           "pictureLabel": "URL ảnh bìa",

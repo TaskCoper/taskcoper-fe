@@ -22,8 +22,9 @@ export const useDeleteArticles = ({ onDeleteSuccess }: DeleteArticlesParams = {}
       toast.success(message)
       onDeleteSuccess?.()
     },
-    onSettled: () => {
+    onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: ['articles'] })
+      queryClient.invalidateQueries({ queryKey: ['article', variables.id] })
     }
   })
 

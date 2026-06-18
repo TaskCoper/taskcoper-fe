@@ -8,8 +8,8 @@ import { formatDate } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { ArrowLeftIcon, CalendarDaysIcon, EyeIcon, FileTextIcon, ImageIcon, PencilIcon, TagsIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router'
-import { useGetArticleById } from '../feature/article/hooks/use-get-article-by-id'
+import { Link, useNavigate, useParams } from 'react-router'
+import { useGetArticle } from '../feature/article/hooks/use-get-article'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../feature/article/types'
 
 const ARTICLE_DETAIL_PREFIX = 'tenant.hoaTheoMua.articles.detail' as const
@@ -93,10 +93,10 @@ function FactRow({ label, value }: { label: string; value: ReactNode }) {
 
 export default function NewsDetailPage() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const id = searchParams.get('id') ?? ''
+  const { id } = useParams<{ id: string }>()
+
   const { t } = useTenantTranslation()
-  const { article, isError, isLoadingArticle } = useGetArticleById(id)
+  const { article, isError, isLoadingArticle } = useGetArticle(id)
 
   if (!id) {
     return (
@@ -123,7 +123,7 @@ export default function NewsDetailPage() {
   }
 
   const statusLabel = t(ArticleStatusLabel[article.status])
-  const categoryCount = article.categoryIds.length
+  const categoryCount = article.categories.length
 
   return (
     <div className='h-full overflow-y-auto'>
@@ -135,7 +135,7 @@ export default function NewsDetailPage() {
           </Button>
 
           <Button asChild size='sm'>
-            <Link to={`/htm/news/update?id=${article.id}`}>
+            <Link to={`/htm/news/${id}/update`}>
               <PencilIcon data-icon='inline-start' />
               {t(`${ARTICLE_DETAIL_PREFIX}.edit`)}
             </Link>
@@ -178,9 +178,11 @@ export default function NewsDetailPage() {
                     <CalendarDaysIcon data-icon='inline-start' />
                     {t(`${ARTICLE_DETAIL_PREFIX}.createdAt`, { date: formatDate(article.createdAt, 'dateLong') })}
                   </span>
-                  <span>
-                    {t(`${ARTICLE_DETAIL_PREFIX}.updatedAt`, { date: formatDate(article.updatedAt, 'dateLong') })}
-                  </span>
+                  {article.updatedAt ? (
+                    <span>
+                      {t(`${ARTICLE_DETAIL_PREFIX}.updatedAt`, { date: formatDate(article.updatedAt, 'dateLong') })}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 

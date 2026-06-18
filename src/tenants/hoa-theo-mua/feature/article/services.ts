@@ -5,10 +5,6 @@ import type { GetCategoryNewsParam } from './hooks/use-get-categories'
 import type { ArticleRow, CategoryData } from './types'
 import type { AddArticleForm } from './validations'
 
-export interface ArticleParams {
-  id: string
-}
-
 class ArticleService {
   private readonly baseUrl = 'news'
   getArticles = async ({ pageIndex, pageSize, keyword, status }: GetArticlesParams) => {
@@ -24,7 +20,7 @@ class ArticleService {
     return data
   }
 
-  getArticlesById = async ({ id }: ArticleParams) => {
+  getArticle = async ({ id }: { id?: string }) => {
     const { data } = await htmApi.get<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}/${id}`)
     return data
   }
@@ -37,7 +33,7 @@ class ArticleService {
       categoryIds: categories.map((x) => x.id)
     }
 
-    const { data } = await htmApi.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, payload)
+    const { data } = await htmApi.post<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}`, payload)
     return data.value
   }
 
@@ -51,7 +47,7 @@ class ArticleService {
     return data
   }
 
-  deleteArticle = async ({ id }: ArticleParams) => {
+  deleteArticle = async ({ id }: { id: string }) => {
     const { data } = await htmApi.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
@@ -60,7 +56,7 @@ class ArticleService {
   updateArticle = async ({
     id,
     body
-  }: ArticleParams & {
+  }: { id: string | undefined } & {
     body: AddArticleForm
   }) => {
     const { categories, ...rest } = body

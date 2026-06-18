@@ -2,14 +2,15 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import articleService from '../services'
 import { addArticleSchema, type AddArticleForm } from '../validations'
 
-export const useUpdateArticle = (id: string) => {
+export const useUpdateArticle = (id?: string) => {
   const queryClient = useQueryClient()
   const { t } = useTenantTranslation()
-
+  const navigate = useNavigate()
   const methods = useForm<AddArticleForm>({
     defaultValues: {
       title: '',
@@ -25,6 +26,7 @@ export const useUpdateArticle = (id: string) => {
     mutationFn: ({ body }: { body: AddArticleForm }) => articleService.updateArticle({ id, body }),
     onSuccess: (message) => {
       toast.success(message)
+      navigate(`/htm/news/${id}`)
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
@@ -32,6 +34,7 @@ export const useUpdateArticle = (id: string) => {
       })
     },
     onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['article'] })
       queryClient.invalidateQueries({ queryKey: ['articles'] })
     }
   })

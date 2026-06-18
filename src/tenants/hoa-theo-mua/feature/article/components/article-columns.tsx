@@ -7,6 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { formatDate } from '@/lib/date'
@@ -62,7 +63,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
         <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.title'} />
       ),
       cell: ({ row }) => (
-        <Link to={`/htm/news/detail?id=${row.original.id}`} className='flex min-w-0 items-center gap-3 hover:underline'>
+        <Link to={`/htm/news/${row.original.id}`} className='flex min-w-0 items-center gap-3 hover:underline'>
           <Avatar className='size-9 rounded-lg'>
             <AvatarImage src={row.original.pictureUrl ?? undefined} />
             <AvatarFallback className='rounded-lg text-xs font-medium'>
@@ -170,35 +171,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       enableColumnFilter: true,
       size: 30
     },
-    {
-      id: 'createdAt',
-      accessorKey: 'createdAt',
-      meta: {
-        label: 'tenant.hoaTheoMua.articles.column.createdAt',
-        variant: 'dateRange'
-      },
 
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={'tenant.hoaTheoMua.articles.column.createdAt'}
-          className='mx-auto'
-        />
-      ),
-
-      cell: ({ row }) => {
-        if (row.original.createdAt) {
-          return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
-        }
-
-        return <p className='text-center text-muted-foreground'>{`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`}</p>
-      },
-
-      enableSorting: true,
-      enableHiding: true,
-      enableColumnFilter: true,
-      size: 30
-    },
     {
       id: 'actions',
       cell: ({ row }) => {
@@ -215,8 +188,14 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
                 <DropdownMenuLabel>{t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to={`/htm/news/detail?id=${id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                  <Link to={`/htm/news/${row.original.id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={`/htm/news/${row.original.id}/update`}>
+                    {t(`${ARTICLE_I18N_PREFIX}.action.updateDetails`)}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className='focus:text-destructive'
@@ -226,9 +205,6 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
                   }}
                 >
                   {t(`${ARTICLE_I18N_PREFIX}.action.delete`)}
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={`/htm/news/update?id=${id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.updateDetails`)}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

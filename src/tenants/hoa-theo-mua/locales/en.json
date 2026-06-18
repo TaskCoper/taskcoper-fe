@@ -90,6 +90,7 @@
           "categoryCount": "{{count}} categories",
           "contentDescription": "Write the headline, categories, and article body.",
           "contentTitle": "Article content",
+          "createSuccess": "Article created successfully.",
           "description": "Create a news article for the Hoa Theo Mua admin workspace.",
           "eyebrow": "News management",
           "pictureLabel": "Cover image URL",

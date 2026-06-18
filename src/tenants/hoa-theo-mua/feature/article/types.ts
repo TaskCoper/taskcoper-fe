@@ -19,12 +19,19 @@ export interface ArticleRow {
   slug: string
   status: ArticleStatus
   userId: string
-  categoryIds: string[]
+  userFirstName: string
+  userLastName: string
+  categories: CategoryResponse[]
   createdAt: string
-  updatedAt: string
+  updatedAt: string | null
 }
 
 export interface CategoryData {
   categoryId: string
   title: string
+}
+
+export interface CategoryResponse {
+  categoryId: string
+  categoryName: string
 }
