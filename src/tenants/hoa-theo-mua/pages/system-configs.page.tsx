@@ -2,11 +2,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Skeleton } from '@/components/ui/skeleton'
 import { CalendarDays, ChevronDownIcon, CreditCard, Gift, Info, ShoppingBag, Truck, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { ConfigItem } from '../components/get-config-admin'
-import { configs } from '../config/config.system'
+import { useGetSystemConfigs } from '../features/config-admin-system/hooks/use-get-system-configs'
+import { ConfigItem } from '../features/config-admin-system/components/get-config-admin'
+import type { ConfigSystemItem } from '../features/config-admin-system/service'
 
 const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
   general: { label: 'Thông tin chung', icon: Info },
@@ -19,19 +21,20 @@ const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
 }
 
 export default function SystemConfigsPage() {
-  const grouped = configs.reduce<Record<string, typeof configs>>((acc, config) => {
+  const { systemConfigs, isLoadingSystemConfigs } = useGetSystemConfigs()
+
+  const grouped = systemConfigs.value.items.reduce<Record<string, ConfigSystemItem[]>>((acc, config) => {
     const group = config.value.group
     if (!acc[group]) acc[group] = []
     acc[group].push(config)
     return acc
   }, {})
 
-  const groups = Object.keys(grouped)
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
-    Object.fromEntries(groups.map((g, i) => [g, i === 0]))
-  )
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
 
   const toggle = (group: string) => setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }))
+
+  const isOpen = (group: string, index: number) => openGroups[group] ?? index === 0
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>, group: string) => {
     e.preventDefault()
@@ -39,6 +42,16 @@ export default function SystemConfigsPage() {
     console.log(`[${group}] save:`, data)
     toast.success('Lưu thành công', { description: GROUP_META[group]?.label ?? group })
   }
+
+  console.log(
+    JSON.stringify({
+      group: 'dateSettings',
+      label: 'Ngày bảo trì',
+      value: '2026-06-20',
+      inputType: 'date',
+      description: 'Ngày hệ thống bắt đầu bảo trì.'
+    })
+  )
 
   return (
     <div className='h-full overflow-y-auto'>
@@ -48,51 +61,62 @@ export default function SystemConfigsPage() {
           <p className='text-muted-foreground mt-1 text-sm'>Quản lý các cài đặt vận hành của hệ thống</p>
         </div>
 
-        <div className='space-y-3'>
-          {Object.entries(grouped).map(([group, items]) => {
-            const { label, icon: Icon } = GROUP_META[group] ?? { label: group, icon: Info }
-            const isOpen = openGroups[group]
+        {isLoadingSystemConfigs ? (
+          <div className='space-y-3'>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className='h-14 w-full rounded-xl' />
+            ))}
+          </div>
+        ) : (
+          <div className='space-y-3'>
+            {Object.entries(grouped).map(([group, items], index) => {
+              const { label, icon: Icon } = GROUP_META[group] ?? { label: group, icon: Info }
+              const open = isOpen(group, index)
 
-            return (
-              <Collapsible key={group} open={isOpen} onOpenChange={() => toggle(group)}>
-                <Card className='overflow-hidden py-0 shadow-sm'>
-                  <CollapsibleTrigger asChild>
-                    <CardHeader className='cursor-pointer select-none px-5 py-4 transition-colors hover:bg-muted/40'>
-                      <div className='flex items-center gap-3'>
-                        <div className='bg-muted flex size-8 shrink-0 items-center justify-center rounded-lg'>
-                          <Icon className='text-muted-foreground size-4' />
+              return (
+                <Collapsible key={group} open={open} onOpenChange={() => toggle(group)}>
+                  <Card className='overflow-hidden py-0 shadow-sm'>
+                    <CollapsibleTrigger asChild>
+                      <CardHeader className='cursor-pointer select-none px-5 py-4 transition-colors hover:bg-muted/40'>
+                        <div className='flex items-center gap-3'>
+                          <div className='bg-muted flex size-8 shrink-0 items-center justify-center rounded-lg'>
+                            <Icon className='text-muted-foreground size-4' />
+                          </div>
+                          <span className='flex-1 text-sm font-semibold'>{label}</span>
+                          <Badge
+                            variant='secondary'
+                            className='rounded-full px-2 py-0 text-xs font-normal tabular-nums'
+                          >
+                            {items.length}
+                          </Badge>
+                          <ChevronDownIcon
+                            className='text-muted-foreground size-4 shrink-0 transition-transform duration-200 data-[state=open]:rotate-180'
+                            data-state={open ? 'open' : 'closed'}
+                          />
                         </div>
-                        <span className='flex-1 text-sm font-semibold'>{label}</span>
-                        <Badge variant='secondary' className='rounded-full px-2 py-0 text-xs font-normal tabular-nums'>
-                          {items.length}
-                        </Badge>
-                        <ChevronDownIcon
-                          className='text-muted-foreground size-4 shrink-0 transition-transform duration-200 data-[state=open]:rotate-180'
-                          data-state={isOpen ? 'open' : 'closed'}
-                        />
-                      </div>
-                    </CardHeader>
-                  </CollapsibleTrigger>
+                      </CardHeader>
+                    </CollapsibleTrigger>
 
-                  <CollapsibleContent className='overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'>
-                    <form onSubmit={(e) => handleSave(e, group)}>
-                      <CardContent className='px-5 pt-1 pb-2'>
-                        {items.map((config) => (
-                          <ConfigItem key={config.key} config={config} />
-                        ))}
-                      </CardContent>
-                      <CardFooter className='border-t px-5 py-3'>
-                        <Button type='submit' size='sm' className='ml-auto'>
-                          Lưu thay đổi
-                        </Button>
-                      </CardFooter>
-                    </form>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
-            )
-          })}
-        </div>
+                    <CollapsibleContent className='overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'>
+                      <form onSubmit={(e) => handleSave(e, group)}>
+                        <CardContent className='px-5 pt-1 pb-2'>
+                          {items.map((config) => (
+                            <ConfigItem key={config.key} config={config} />
+                          ))}
+                        </CardContent>
+                        <CardFooter className='border-t px-5 py-3'>
+                          <Button type='submit' size='sm' className='ml-auto'>
+                            Lưu thay đổi
+                          </Button>
+                        </CardFooter>
+                      </form>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )

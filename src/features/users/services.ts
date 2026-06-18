@@ -9,6 +9,7 @@ import type {
   UpdateMeFormValues,
   VerifyCodeFormValues
 } from './validations'
+import htmApi from '@/tenants/hoa-theo-mua/lib/api'
 
 class UserService {
   private readonly baseUrl = 'users'
@@ -19,8 +20,8 @@ class UserService {
   }
 
   signIn = async ({ body }: { body: SignInFormValues }) => {
-    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
-      `/v1/${this.baseUrl}/login`,
+    const { data } = await htmApi.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+      `/v1/auth/sign-in`,
       body
     )
 
@@ -51,7 +52,7 @@ class UserService {
   }
 
   getMe = async () => {
-    const { data } = await api.get<BaseResponse<Me>>(`/v1/${this.baseUrl}/me`)
+    const { data } = await htmApi.get<BaseResponse<Me>>(`/v1/auth/me`)
 
     return data.value
   }

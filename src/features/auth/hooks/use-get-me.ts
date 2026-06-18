@@ -30,8 +30,13 @@ export const useGetMe = ({ enabled = true }: UseGetMeOptions = {}) => {
     enabled
   })
 
+  const newMe = {
+    ...me,
+    organizationId: 'b7438510-a0f7-4bea-b652-b787c01294e5'
+  }
+
   return {
-    me,
+    me: newMe,
     isGettingMe,
     isAuthenticated: !!me && !isError,
     isVerificationRequired: !!me && me.isEmailVerified === false
