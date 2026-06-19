@@ -8,14 +8,14 @@ import type { FeatureKey } from './types'
 import { resolveFeatureCheck, useTenantConfig } from './use-feature-flags'
 
 export type TenantNavSubItem = {
-  title: string
+  titleKey: string
   url: string
   activePatterns?: string[]
   activeExcludePatterns?: string[]
 }
 
 export type TenantNavMainItem = {
-  title: string
+  titleKey: string
   url: string
   icon: LucideIcon
   items: TenantNavSubItem[]

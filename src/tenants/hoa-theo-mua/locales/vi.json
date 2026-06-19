@@ -21,6 +21,30 @@
     "articlesComingSoon": "Bài viết — Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
   },
+  "navigation": {
+    "orders": {
+      "title": "Quản lý đơn hàng",
+      "dashboard": "Tổng quan",
+      "list": "Danh sách đơn hàng",
+      "customers": "Khách hàng"
+    },
+    "recruitment": {
+      "title": "Tuyển dụng",
+      "jobs": "Tin tuyển dụng",
+      "create": "Tạo tuyển dụng",
+      "applicants": "Ứng viên"
+    },
+    "addresses": {
+      "title": "Quản lý địa chỉ",
+      "list": "Địa chỉ giao hàng",
+      "zones": "Khu vực giao hàng"
+    },
+    "news": {
+      "title": "Tin tức nội bộ",
+      "articles": "Bài viết",
+      "categories": "Danh mục"
+    }
+  },
   "orders": {
     "customersComingSoon": "Khách hàng — Sắp ra mắt",
     "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
@@ -32,6 +56,9 @@
     "jobs": {
       "title": "Tin tuyển dụng",
       "description": "Quản lý và theo dõi các vị trí đang tuyển dụng.",
+      "action": {
+        "create": "Tạo mới"
+      },
       "column": {
         "title": "Vị trí",
         "enterTitle": "Tìm theo tên vị trí...",
@@ -67,6 +94,81 @@
         "successDescription": "Liên kết tin tuyển dụng đã được sao chép vào bộ nhớ tạm.",
         "error": "Không thể sao chép",
         "errorDescription": "Vui lòng thử lại."
+      },
+      "form": {
+        "step": {
+          "details": { "label": "Thông tin chung", "description": "Thông tin cơ bản" },
+          "jobDescription": { "label": "Mô tả công việc", "description": "Vai trò và trách nhiệm" },
+          "experience": { "label": "Kinh nghiệm", "description": "Kỹ năng và kinh nghiệm" },
+          "salary": { "label": "Mức lương", "description": "Chi tiết lương thưởng" },
+          "review": { "label": "Xem lại & Đăng", "description": "Xem lại và hoàn tất" }
+        },
+        "action": {
+          "continue": "Tiếp tục",
+          "publish": "Đăng tuyển"
+        },
+        "review": {
+          "title": "Xem lại tin tuyển dụng",
+          "description": "Kiểm tra lại các thông tin bên dưới trước khi đăng tuyển.",
+          "experienceRange": "{{min}} - {{max}} năm"
+        },
+        "validation": {
+          "experience": {
+            "maxLessThanMin": "Số năm kinh nghiệm tối đa phải lớn hơn hoặc bằng số năm kinh nghiệm tối thiểu"
+          },
+          "salary": {
+            "maxLessThanMin": "Mức lương tối đa phải lớn hơn hoặc bằng mức lương tối thiểu"
+          }
+        },
+        "field": {
+          "title": {
+            "placeholder": "Nhập tiêu đề công việc..."
+          },
+          "description": {
+            "label": "Mô tả",
+            "placeholder": "Mô tả chi tiết vị trí tuyển dụng..."
+          },
+          "location": {
+            "placeholder": "VD: Hà Nội, TP.HCM, Từ xa..."
+          },
+          "experience": {
+            "label": "Kinh nghiệm (năm)",
+            "description": "Thiết lập số năm kinh nghiệm yêu cầu cho vị trí này.",
+            "min": "Tối thiểu",
+            "max": "Tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "5"
+          },
+          "level": {
+            "label": "Cấp độ",
+            "intern": "Thực tập sinh",
+            "fresher": "Fresher",
+            "junior": "Junior",
+            "senior": "Senior",
+            "lead": "Lead / Chuyên gia"
+          },
+          "salary": {
+            "description": "Xác định mức lương cho vị trí này.",
+            "min": "Lương tối thiểu",
+            "max": "Lương tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "0",
+            "negotiable": "Lương thỏa thuận",
+            "negotiableDescription": "Ẩn mức lương và hiển thị thỏa thuận với ứng viên"
+          },
+          "avatarUrl": {
+            "label": "Ảnh đại diện",
+            "placeholder": "https://..."
+          },
+          "coverImageUrl": {
+            "label": "Ảnh bìa",
+            "placeholder": "https://..."
+          },
+          "openings": {
+            "label": "Số lượng tuyển",
+            "placeholder": "1"
+          }
+        }
       }
     }
   }

@@ -65,7 +65,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<JobDescription>[] =
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label='systemUsers.column.selectAll'
+          aria-label={t('systemUsers.column.selectAll')}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -73,7 +73,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<JobDescription>[] =
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label='systemUsers.column.selectRow'
+          aria-label={t('systemUsers.column.selectRow')}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}

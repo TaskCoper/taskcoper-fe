@@ -1,11 +1,15 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
+import { PlusCircleIcon } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
+import { Link } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getColumns } from '../features/job-descriptions/components/job-description-columns'
 import { useGetJobDescriptions } from '../features/job-descriptions/hooks/use-get-job-descriptions'
 import type { JobDescription } from '../features/job-descriptions/types'
@@ -68,7 +72,14 @@ export default function RecruitmentJobsPage() {
       </div>
 
       <DataTable table={table} isLoading={isLoading}>
-        <DataTableToolbar table={table}></DataTableToolbar>
+        <DataTableToolbar table={table}>
+          <Button asChild size='sm'>
+            <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/recruitment/create`}>
+              <PlusCircleIcon />
+              {t('recruitment.jobs.action.create')}
+            </Link>
+          </Button>
+        </DataTableToolbar>
       </DataTable>
     </div>
   )

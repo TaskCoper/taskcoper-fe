@@ -139,11 +139,11 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
           }))
         })),
         ...tenantNavMain.map((item) => ({
-          title: item.title,
+          title: t(item.titleKey),
           url: item.url,
           icon: item.icon,
           items: item.items.map((subItem) => ({
-            title: subItem.title,
+            title: t(subItem.titleKey),
             url: subItem.url,
             activePatterns: subItem.activePatterns,
             activeExcludePatterns: subItem.activeExcludePatterns
