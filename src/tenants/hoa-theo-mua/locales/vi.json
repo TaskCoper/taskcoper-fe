@@ -21,6 +21,42 @@
     "articlesComingSoon": "Bài viết — Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
   },
+  "common": {
+    "button": {
+      "back": "Quay lại",
+      "cancel": "Hủy",
+      "delete": "Xóa"
+    },
+    "ui": {
+      "selectOptions": "Chọn nhiều tùy chọn..."
+    },
+    "validation": {
+      "maxLength": "Tối đa {{max}} ký tự",
+      "number": {
+        "integer": "Phải là số nguyên",
+        "invalid": "Phải là số hợp lệ"
+      },
+      "url": {
+        "invalid": "URL không hợp lệ"
+      }
+    }
+  },
+  "article": {
+    "validation": {
+      "category": {
+        "required": "Vui lòng chọn ít nhất một danh mục"
+      },
+      "description": {
+        "required": "Nội dung bài viết là bắt buộc"
+      },
+      "picture": {
+        "required": "URL ảnh bìa là bắt buộc"
+      },
+      "title": {
+        "required": "Tiêu đề là bắt buộc"
+      }
+    }
+  },
   "orders": {
     "customersComingSoon": "Khách hàng — Sắp ra mắt",
     "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
@@ -29,5 +65,90 @@
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
     "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
+  },
+  "articles": {
+    "action": {
+      "actions": "Thao tác",
+      "delete": "Xoá",
+      "openMenu": "Mở menu thao tác bài viết",
+      "viewDetails": "Xem chi tiết",
+      "updateDetails": "Cập nhật bài viết"
+    },
+    "column": {
+      "createdAt": "Ngày tạo",
+      "noCreatedAt": "Không có ngày tạo",
+      "selectAll": "Chọn tất cả bài viết",
+      "selectRow": "Chọn bài viết",
+      "status": "Trạng thái",
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Tìm theo tiêu đề...",
+      "viewCount": "Lượt xem"
+    },
+    "confirm": {
+      "deleteDescription": "Bài viết này sẽ bị xóa vĩnh viễn và không thể khôi phục.",
+      "deleteTitle": "Xóa bài viết?"
+    },
+    "detail": {
+      "aboutAuthor": "Về tác giả",
+      "articleId": "ID bài viết",
+      "authorFallbackDescription": "Tác giả của bài viết này.",
+      "authorId": "ID tác giả",
+      "authorProfile": "Thông tin tác giả",
+      "authorProfileDescription": "Thông tin người viết của bài viết này.",
+      "categories": "{{count}} danh mục",
+      "categoriesLabel": "Danh mục",
+      "createdAt": "Tạo ngày {{date}}",
+      "createdAtLabel": "Ngày tạo",
+      "edit": "Chỉnh sửa bài viết",
+      "missingIdDescription": "Chọn một bài viết trong danh sách tin tức để mở trang chi tiết.",
+      "missingIdTitle": "Chưa chọn bài viết",
+      "notFoundDescription": "Bài viết có thể đã bị xoá hoặc đường dẫn không còn hợp lệ.",
+      "notFoundTitle": "Không tìm thấy bài viết",
+      "overview": "Tổng quan bài viết",
+      "overviewDescription": "Thông tin xuất bản chính của bài viết này.",
+      "publishing": "Xuất bản",
+      "slug": "Slug",
+      "status": "Trạng thái",
+      "updatedAt": "Cập nhật ngày {{date}}",
+      "updatedAtLabel": "Ngày cập nhật",
+      "unknownAuthor": "Không rõ tác giả",
+      "views": "{{count}} lượt xem",
+      "viewsLabel": "Lượt xem"
+    },
+    "form": {
+      "bodyLabel": "Nội dung bài viết",
+      "categoriesLabel": "Danh mục",
+      "categoryCount": "{{count}} danh mục",
+      "contentDescription": "Nhập tiêu đề, danh mục và nội dung bài viết.",
+      "contentTitle": "Nội dung bài viết",
+      "createSuccess": "Tạo bài viết thành công.",
+      "description": "Tạo bài viết tin tức cho khu vực quản trị Hoa Theo Mùa.",
+      "eyebrow": "Quản lý tin tức",
+      "pictureLabel": "URL ảnh bìa",
+      "picturePlaceholder": "https://example.com/article-cover.jpg",
+      "previewDescription": "Kiểm tra nhanh trước khi đăng.",
+      "previewHint": "Tiêu đề rõ ràng và ảnh bìa sắc nét giúp bài viết nổi bật trong danh sách.",
+      "previewImageAlt": "Ảnh xem trước của bài viết",
+      "previewTitle": "Xem trước",
+      "previewUntitled": "Bài viết chưa có tiêu đề",
+      "publishDescription": "Chọn trạng thái hiển thị và thêm ảnh bìa.",
+      "publishTitle": "Xuất bản",
+      "statusLabel": "Trạng thái",
+      "statusPlaceholder": "Chọn trạng thái",
+      "submit": "Tạo bài viết",
+      "title": "Thêm bài viết",
+      "titleLabel": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề bài viết",
+      "updateDescription": "Cập nhật bài viết tin tức cho khu vực quản trị Hoa Theo Mùa.",
+      "updateSubmit": "Lưu thay đổi",
+      "updateTitle": "Cập nhật bài viết"
+    },
+    "status": {
+      "draft": "Bản nháp",
+      "published": "Đã xuất bản"
+    }
+  },
+  "error": {
+    "somethingWentWrong": "Đã có lỗi xảy ra"
   }
 }

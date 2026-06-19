@@ -75,15 +75,23 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
     feature: 'custom.customNewsPage',
     items: [
       {
-        title: 'Bài viết',
+        title: 'Danh sách bài viết',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`],
-        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/`],
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`
+        ]
       },
       {
         title: 'Danh mục',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
+      },
+      {
+        title: 'Viết bài',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`]
       }
     ]
   }
