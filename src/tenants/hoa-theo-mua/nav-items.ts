@@ -1,5 +1,5 @@
-import type { TenantNavMainItem } from '@/lib/feature-flags/tenant-nav-items'
-import { BriefcaseIcon, MapPinIcon, NewspaperIcon, PackageIcon } from 'lucide-react'
+import type { TenantNavMainItem, TenantNavQuickActionItem } from '@/lib/feature-flags/tenant-nav-items'
+import { BriefcaseIcon, MapPinIcon, NewspaperIcon, PackageIcon, SettingsIcon } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
 export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
@@ -91,5 +91,15 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
       }
     ]
+  }
+]
+
+export const hoaTheoMuaNavQuickActions: TenantNavQuickActionItem[] = [
+  {
+    titleKey: 'Config hệ thống',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`,
+    icon: SettingsIcon,
+    activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`],
+    feature: 'module.taskManagement'
   }
 ]

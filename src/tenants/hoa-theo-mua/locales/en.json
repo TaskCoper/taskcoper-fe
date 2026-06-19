@@ -83,6 +83,13 @@
         "open": "Open",
         "closed": "Closed"
       },
+      "level": {
+        "intern": "Intern",
+        "fresher": "Fresher",
+        "junior": "Junior",
+        "senior": "Senior",
+        "lead": "Lead / Expert"
+      },
       "actions": {
         "openMenu": "Open menu",
         "actions": "Actions",
@@ -94,6 +101,22 @@
         "successDescription": "Job posting link copied to clipboard.",
         "error": "Couldn't copy link",
         "errorDescription": "Please try again."
+      },
+      "detail": {
+        "coverImageAlt": "{{title}} cover image",
+        "logoImageAlt": "{{title}} logo image",
+        "description": "Description",
+        "general": "General",
+        "generalDescription": "Quick facts about this role.",
+        "level": "Level",
+        "experience": "Experience",
+        "experienceRange": "{{min}} - {{max}} years",
+        "salary": "Salary",
+        "salaryDescription": "Compensation range for this role.",
+        "timeline": "Timeline",
+        "timelineDescription": "When this posting was created and last updated.",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated"
       },
       "form": {
         "step": {

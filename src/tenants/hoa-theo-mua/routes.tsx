@@ -9,6 +9,7 @@ const OrdersListPage = lazy(() => import('./pages/orders-list.page'))
 const OrdersCustomersPage = lazy(() => import('./pages/orders-customers.page'))
 
 const RecruitmentJobsPage = lazy(() => import('./pages/recruitment-jobs.page'))
+const RecruitmentJobPage = lazy(() => import('./pages/recruitment-job.page'))
 const RecruitmentJobCreatePage = lazy(() => import('./pages/recruitment-job-create.page'))
 const RecruitmentApplicantsPage = lazy(() => import('./pages/recruitment-applicants.page'))
 
@@ -36,7 +37,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         children: [
           { path: 'recruitment', element: <RecruitmentJobsPage /> },
           { path: 'recruitment/create', element: <RecruitmentJobCreatePage /> },
-          { path: 'recruitment/applicants', element: <RecruitmentApplicantsPage /> }
+          { path: 'recruitment/applicants', element: <RecruitmentApplicantsPage /> },
+          { path: 'recruitment/:id', element: <RecruitmentJobPage /> }
         ]
       },
       {

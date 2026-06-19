@@ -1,6 +1,11 @@
 import { NavQuickActions } from '@/components/sidebar/users/nav-quick-actions'
 import { Sidebar, SidebarContent, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
-import { useFilteredNavItems, useTenantNavMain, type GuardedNavItem } from '@/lib/feature-flags'
+import {
+  useFilteredNavItems,
+  useTenantNavMain,
+  useTenantNavQuickActions,
+  type GuardedNavItem
+} from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
@@ -123,6 +128,7 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
   const filteredNavMain = useFilteredNavItems(NAV_MAIN_CONFIG)
   const filteredQuickActions = useFilteredNavItems(NAV_CONFIG)
   const tenantNavMain = useTenantNavMain()
+  const tenantNavQuickActions = useTenantNavQuickActions()
 
   const data = React.useMemo(
     () => ({
@@ -150,15 +156,24 @@ export function UserWorkspaceSidebar({ className, ...props }: React.ComponentPro
           }))
         }))
       ],
-      quickActions: filteredQuickActions.map((item) => ({
-        name: t(item.titleKey),
-        url: item.url,
-        icon: item.icon,
-        activePatterns: item.activePatterns,
-        activeExcludePatterns: item.activeExcludePatterns
-      }))
+      quickActions: [
+        ...filteredQuickActions.map((item) => ({
+          name: t(item.titleKey),
+          url: item.url,
+          icon: item.icon,
+          activePatterns: item.activePatterns,
+          activeExcludePatterns: item.activeExcludePatterns
+        })),
+        ...tenantNavQuickActions.map((item) => ({
+          name: t(item.titleKey),
+          url: item.url,
+          icon: item.icon,
+          activePatterns: item.activePatterns,
+          activeExcludePatterns: item.activeExcludePatterns
+        }))
+      ]
     }),
-    [t, filteredNavMain, filteredQuickActions, tenantNavMain]
+    [t, filteredNavMain, filteredQuickActions, tenantNavMain, tenantNavQuickActions]
   )
 
   const sidebarClassName = cn('top-14 h-[calc(100svh-3.5rem)]', className)

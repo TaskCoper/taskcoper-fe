@@ -1,7 +1,7 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import htmApi from '../../lib/api'
 import type { JobDescriptionsParams } from './hooks/use-get-job-descriptions'
-import type { JobDescription } from './types'
+import type { JobDescription, JobDescriptionDetail } from './types'
 import type { CreateJobDescriptionFormValues } from './validations'
 
 class JobDescriptionService {
@@ -45,6 +45,12 @@ class JobDescriptionService {
       salaryMin: Number(body.salaryMin),
       salaryMax: Number(body.salaryMax)
     })
+
+    return data.value
+  }
+
+  getJobDescription = async ({ id }: { id?: string }) => {
+    const { data } = await htmApi.get<BaseResponse<JobDescriptionDetail>>(`v1/${this.baseUrl}/${id}`)
 
     return data.value
   }
