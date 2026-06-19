@@ -2,10 +2,10 @@ export interface NewsCategoryRow {
   categoryId: string
   title: string
   userId: string
-  parentId: string
-  parent: NewsCategoryRow
+  parentId: string | null
+  parent: NewsCategoryRow | null
   children: NewsCategoryRow[]
-  count: number
+  count: number | null
 }
 export interface GetCategoryParams {
   pageIndex?: number
