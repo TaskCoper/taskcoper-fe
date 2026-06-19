@@ -89,3 +89,10 @@ export interface GetOrdersNhanhVnParams {
   size?: number
   nextCursor?: { id: number }
 }
+
+export type ShippingLocationType = 'CITY' | 'WARD'
+
+export interface ShippingLocation {
+  id: number
+  name: string
+}
