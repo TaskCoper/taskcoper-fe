@@ -11,15 +11,17 @@ import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { getColumns } from '../features/article/components/article-columns'
-import { useDeleteArticles } from '../features/article/hooks/use-delete-articles'
+import { useDeleteArticle } from '../features/article/hooks/use-delete-article'
 import { useGetArticles } from '../features/article/hooks/use-get-articles'
 import type { ArticleRow } from '../features/article/types'
 
 export default function NewsArticlesPage() {
   const { t } = useTenantTranslation()
-  const { deleteArticle, isDeletingArticle } = useDeleteArticles()
+  const { deleteArticle, isDeletingArticle } = useDeleteArticle()
   const { confirm } = useConfirmStore()
+
   const navigate = useNavigate()
+
   const onNavigate = () => {
     navigate('/htm/news/add')
   }
@@ -33,6 +35,7 @@ export default function NewsArticlesPage() {
         cancelText: t('common.button.cancel'),
         variant: 'destructive'
       })
+
       if (!confirmed) return
 
       deleteArticle({ id: id })
@@ -55,7 +58,8 @@ export default function NewsArticlesPage() {
 
   const [statusFilter] = useQueryState('articles_Status', parseAsInteger)
   const statusLine = statusFilter ?? undefined
-  const { articles, isLoadingArticle } = useGetArticles({
+
+  const { articles, isLoadingArticles } = useGetArticles({
     pageIndex: page,
     pageSize: limit,
     keyword: title,
@@ -70,7 +74,6 @@ export default function NewsArticlesPage() {
       sorting: (sorting ?? []) as ExtendedColumnSort<ArticleRow>[],
       columnPinning: { right: ['actions'] }
     },
-
     getRowId: ({ id }) => id,
     shallow: false,
     clearOnDefault: true,
@@ -83,7 +86,7 @@ export default function NewsArticlesPage() {
     filterPrefix: 'articles'
   })
 
-  const isLoading = isLoadingArticle
+  const isLoading = isLoadingArticles
 
   return (
     <div className='space-y-4'>

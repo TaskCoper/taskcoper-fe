@@ -9,7 +9,7 @@ export interface GetCategoryNewsParam {
   pageSize?: number
 }
 
-export const useGetCategoryNew = ({
+export const useGetCategoryNews = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE
 }: GetCategoryNewsParam = {}) => {

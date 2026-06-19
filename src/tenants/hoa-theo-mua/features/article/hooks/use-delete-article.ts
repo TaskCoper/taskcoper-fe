@@ -7,7 +7,7 @@ interface DeleteArticlesParams {
   onDeleteSuccess?: () => void
 }
 
-export const useDeleteArticles = ({ onDeleteSuccess }: DeleteArticlesParams = {}) => {
+export const useDeleteArticle = ({ onDeleteSuccess }: DeleteArticlesParams = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTenantTranslation()
 

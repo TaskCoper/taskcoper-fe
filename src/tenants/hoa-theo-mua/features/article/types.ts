@@ -9,7 +9,9 @@ export const ArticleStatusLabel: Record<ArticleStatus, string> = {
   [ArticleStatus.Published]: 'articles.status.published',
   [ArticleStatus.Draft]: 'articles.status.draft'
 }
+
 export type ArticleStatusLabel = (typeof ArticleStatusLabel)[ArticleStatus]
+
 export interface ArticleRow {
   id: string
   title: string
@@ -33,6 +35,7 @@ export interface CategoryResponse {
   categoryId: string
   categoryName: string
 }
+
 export interface UserResponse {
   userId: string
   email: string

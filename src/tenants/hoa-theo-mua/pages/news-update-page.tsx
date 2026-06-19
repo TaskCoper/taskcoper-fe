@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react'
 import { Controller, FormProvider, useFieldArray } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
 import { useGetArticle } from '../features/article/hooks/use-get-article'
-import { useGetCategoryNew } from '../features/article/hooks/use-get-categories'
+import { useGetCategoryNews } from '../features/article/hooks/use-get-category-news'
 import { useUpdateArticle } from '../features/article/hooks/use-update-article'
 import { ArticleStatus, type CategoryResponse } from '../features/article/types'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
@@ -50,7 +50,7 @@ export default function NewsUpdatePage() {
   const { t } = useTenantTranslation()
   const { article } = useGetArticle(id)
   const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.id)
-  const { categoryNews, isLoadingCategory } = useGetCategoryNew()
+  const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
 
   const { fields, remove, replace } = useFieldArray({

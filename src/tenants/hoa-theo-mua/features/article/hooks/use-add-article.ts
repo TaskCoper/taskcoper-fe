@@ -11,8 +11,9 @@ const ARTICLE_FORM_PREFIX = 'articles.form' as const
 
 export const useAddArticle = () => {
   const queryClient = useQueryClient()
-  const { t } = useTenantTranslation()
   const navigate = useNavigate()
+  const { t } = useTenantTranslation()
+
   const methods = useForm<AddArticleForm>({
     defaultValues: {
       title: '',

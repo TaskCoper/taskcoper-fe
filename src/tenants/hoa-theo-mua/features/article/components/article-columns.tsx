@@ -95,7 +95,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       size: 30
     },
     {
-      id: 'Status',
+      id: 'status',
       accessorKey: 'status',
       meta: {
         label: `${ARTICLE_I18N_PREFIX}.column.status`,

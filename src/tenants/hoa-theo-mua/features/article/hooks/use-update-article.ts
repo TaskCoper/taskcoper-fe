@@ -9,8 +9,9 @@ import { addArticleSchema, type AddArticleForm } from '../validations'
 
 export const useUpdateArticle = (id?: string) => {
   const queryClient = useQueryClient()
-  const { t } = useTenantTranslation()
   const navigate = useNavigate()
+  const { t } = useTenantTranslation()
+
   const methods = useForm<AddArticleForm>({
     defaultValues: {
       title: '',

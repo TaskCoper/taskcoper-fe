@@ -21,8 +21,8 @@ import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, XIcon } from
 import { useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { useAddArticle } from '../features/article/hooks/use-add-articles'
-import { useGetCategoryNew } from '../features/article/hooks/use-get-categories'
+import { useAddArticle } from '../features/article/hooks/use-add-article'
+import { useGetCategoryNews } from '../features/article/hooks/use-get-category-news'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
 
 const ARTICLE_FORM_PREFIX = 'articles.form' as const
@@ -38,7 +38,7 @@ export default function NewsAddPage() {
 
   const { t } = useTenantTranslation()
   const { methods, addArticle, isAddingArticle } = useAddArticle()
-  const { categoryNews, isLoadingCategory } = useGetCategoryNew()
+  const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
 
   const { fields, remove, replace } = useFieldArray({
@@ -141,6 +141,7 @@ export default function NewsAddPage() {
                 ))}
               </div>
             </div>
+
             <Controller
               name='description'
               control={methods.control}

@@ -17,10 +17,10 @@ export const useGetArticles = ({
   keyword,
   status
 }: GetArticlesParams = {}) => {
-  const { data: articles = getDefaultPaginationResponse<ArticleRow>(), isLoading: isLoadingArticle } = useQuery({
+  const { data: articles = getDefaultPaginationResponse<ArticleRow>(), isLoading: isLoadingArticles } = useQuery({
     queryKey: ['articles', pageIndex, pageSize, keyword, status],
     queryFn: () => articleService.getArticles({ pageIndex, pageSize, keyword, status })
   })
 
-  return { articles, isLoadingArticle }
+  return { articles, isLoadingArticles }
 }

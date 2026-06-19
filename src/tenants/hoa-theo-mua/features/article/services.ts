@@ -1,12 +1,13 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import htmApi from '@/tenants/hoa-theo-mua/lib/api'
 import type { GetArticlesParams } from './hooks/use-get-articles'
-import type { GetCategoryNewsParam } from './hooks/use-get-categories'
+import type { GetCategoryNewsParam } from './hooks/use-get-category-news'
 import type { ArticleRow, CategoryData } from './types'
 import type { AddArticleForm } from './validations'
 
 class ArticleService {
   private readonly baseUrl = 'news'
+
   getArticles = async ({ pageIndex, pageSize, keyword, status }: GetArticlesParams) => {
     const { data } = await htmApi.get<BasePaginationResponse<ArticleRow>>(`v1/${this.baseUrl}`, {
       params: {
@@ -70,5 +71,6 @@ class ArticleService {
     return data.value
   }
 }
+
 const articleService = new ArticleService()
 export default articleService

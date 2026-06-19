@@ -11,20 +11,14 @@ export const addArticleSchema = (t: TenantT) => {
         .trim()
         .min(1, { message: t('article.validation.title.required') })
         .max(255, { message: t('common.validation.maxLength', { max: 255 }) }),
-
       description: z
         .string()
         .trim()
         .min(1, { message: t('article.validation.description.required') }),
-
-      pictureUrl: z
-        .url({ message: t('common.validation.url.invalid') })
-        .min(1, { message: t('article.validation.picture.required') }),
-
+      pictureUrl: z.url({ message: t('common.validation.url.invalid') }),
       status: z
         .number({ message: t('common.validation.number.invalid') })
         .int({ message: t('common.validation.number.integer') }),
-
       categories: z.array(categoryFormItem()).min(1, { message: t('article.validation.category.required') })
     })
     .strict()
