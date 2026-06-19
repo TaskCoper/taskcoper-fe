@@ -1,5 +1,6 @@
 import SanitizedHtml from '@/components/sanitized-html'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -16,13 +17,17 @@ import {
   GraduationCapIcon,
   ImageOffIcon,
   MapPinIcon,
+  PencilIcon,
   TrendingUpIcon,
   UsersIcon
 } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { FormProvider } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import EditJobDescriptionForm from '../features/job-descriptions/components/edit-job-description-form'
 import { useGetJobDescription } from '../features/job-descriptions/hooks/use-get-job-description'
+import { useUpdateJobDescription } from '../features/job-descriptions/hooks/use-update-job-description'
 import {
   EmploymentTypeLabel,
   JobDescriptionLevelLabel,
@@ -35,8 +40,15 @@ export default function RecruitmentJobPage() {
   const { i18n } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const { formatDate } = useDateFormat()
+  const [isEditing, setIsEditing] = useState(false)
 
   const { jobDescription, isGettingJobDescription } = useGetJobDescription({ id })
+
+  const { methods, updateJobDescription, isUpdating } = useUpdateJobDescription({
+    id,
+    jobDescription,
+    onSuccess: () => setIsEditing(false)
+  })
 
   const moneyFormatter = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
     style: 'currency',
@@ -109,166 +121,187 @@ export default function RecruitmentJobPage() {
 
   return (
     <div className='absolute inset-0 overflow-y-auto'>
-      <div className='grid grid-cols-1 lg:grid-cols-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
-        <div className='col-span-1 lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 lg:gap-8'>
-          {/* Left column */}
-          <div className='col-span-1 lg:col-span-8'>
-            <div className='relative h-48 sm:h-52'>
-              <div className='size-full group/cover relative'>
-                {jobDescription?.coverImageUrl ? (
-                  <img
-                    src={jobDescription.coverImageUrl}
-                    alt={t('recruitment.jobs.detail.coverImageAlt', { title: jobDescription.title })}
-                    className='size-full object-cover rounded-2xl shadow-sm border border-border'
-                  />
-                ) : (
-                  <div className='size-full rounded-2xl bg-muted flex items-center justify-center'>
-                    <ImageOffIcon className='size-10 text-muted-foreground' />
-                  </div>
-                )}
-              </div>
-
-              <div className='absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl bg-muted shadow-sm'>
-                {jobDescription?.avatarUrl ? (
-                  <img
-                    src={jobDescription.avatarUrl}
-                    alt={t('recruitment.jobs.detail.logoImageAlt', { title: jobDescription.title })}
-                    className='size-full object-cover rounded-xl shadow-sm border border-border'
-                  />
-                ) : (
-                  <div className='size-full flex items-center justify-center'>
-                    <ImageOffIcon className='size-8 text-muted-foreground' />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className='mt-16 mb-8 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4'>
-              <div className='lg:px-6 w-full'>
-                <h1 className='text-2xl sm:text-3xl font-semibold wrap-break-word'>{jobDescription?.title}</h1>
-              </div>
-
-              <div className='w-full'>
-                <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0 rounded-2xl'>
-                  <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-2xl'>
-                    <BookOpenIcon className='size-4 text-muted-foreground' />
-                    <p className='text-sm font-semibold text-muted-foreground'>
-                      {t('recruitment.jobs.detail.description')}
-                    </p>
-                  </div>
-                  <Separator />
-                  <div className='p-4'>
-                    {jobDescription?.description ? (
-                      <SanitizedHtml html={jobDescription.description} />
-                    ) : (
-                      <p className='text-xs text-muted-foreground text-center'>{t('common.ui.noDescription')}</p>
-                    )}
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </div>
-
-          <div className='col-span-1 lg:col-span-4 space-y-6'>
-            <div className='space-y-2'>
-              <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
-                <div>
-                  <p className='font-semibold'>{t('recruitment.jobs.column.status')}</p>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20'>
+        {isEditing ? (
+          <FormProvider {...methods}>
+            <EditJobDescriptionForm
+              onSubmit={(data) => updateJobDescription(data)}
+              onCancel={() => setIsEditing(false)}
+              isLoading={isUpdating}
+            />
+          </FormProvider>
+        ) : (
+          <div className='grid grid-cols-1 lg:grid-cols-12 lg:gap-8'>
+            {/* Left column */}
+            <div className='col-span-1 lg:col-span-8'>
+              <div className='relative h-48 sm:h-52'>
+                <div className='size-full group/cover relative'>
+                  {jobDescription?.coverImageUrl ? (
+                    <img
+                      src={jobDescription.coverImageUrl}
+                      alt={t('recruitment.jobs.detail.coverImageAlt', { title: jobDescription.title })}
+                      className='size-full object-cover rounded-2xl shadow-sm border border-border'
+                    />
+                  ) : (
+                    <div className='size-full rounded-2xl bg-muted flex items-center justify-center'>
+                      <ImageOffIcon className='size-10 text-muted-foreground' />
+                    </div>
+                  )}
                 </div>
+
+                <div className='absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl bg-muted shadow-sm'>
+                  {jobDescription?.avatarUrl ? (
+                    <img
+                      src={jobDescription.avatarUrl}
+                      alt={t('recruitment.jobs.detail.logoImageAlt', { title: jobDescription.title })}
+                      className='size-full object-cover rounded-xl shadow-sm border border-border'
+                    />
+                  ) : (
+                    <div className='size-full flex items-center justify-center'>
+                      <ImageOffIcon className='size-8 text-muted-foreground' />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className='mt-16 mb-8 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4'>
+                <div className='lg:px-6 w-full'>
+                  <h1 className='text-2xl sm:text-3xl font-semibold wrap-break-word'>{jobDescription?.title}</h1>
+                </div>
+
+                <div className='w-full'>
+                  <Card className='w-full text-sm sm:text-base text-left p-0 shadow-none gap-0 rounded-2xl'>
+                    <div className='px-3 py-2 flex items-center gap-2 bg-muted/60 rounded-t-2xl'>
+                      <BookOpenIcon className='size-4 text-muted-foreground' />
+                      <p className='text-sm font-semibold text-muted-foreground'>
+                        {t('recruitment.jobs.detail.description')}
+                      </p>
+                    </div>
+                    <Separator />
+                    <div className='p-4'>
+                      {jobDescription?.description ? (
+                        <SanitizedHtml html={jobDescription.description} />
+                      ) : (
+                        <p className='text-xs text-muted-foreground text-center'>{t('common.ui.noDescription')}</p>
+                      )}
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </div>
+
+            <div className='col-span-1 lg:col-span-4 space-y-6'>
+              <div className='space-y-2'>
+                <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
+                  <div>
+                    <p className='font-semibold'>{t('recruitment.jobs.column.status')}</p>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    {jobDescription ? (
+                      <Badge
+                        variant='outline'
+                        className={cn(
+                          'gap-1',
+                          isOpen
+                            ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                            : 'text-rose-700 bg-rose-50 border-rose-200'
+                        )}
+                      >
+                        {isOpen ? (
+                          <CircleCheckBigIcon className='size-3 text-emerald-500' />
+                        ) : (
+                          <BanIcon className='size-3 text-rose-500' />
+                        )}
+                        {t(JobDescriptionStatusLabel[jobDescription.status])}
+                      </Badge>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+              <Separator />
+              <div className='space-y-6'>
+                <div className='space-y-2'>
+                  <div className='flex items-start justify-between gap-2'>
+                    <div>
+                      <p className='font-semibold'>{t('recruitment.jobs.detail.salary')}</p>
+                      <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.salaryDescription')}</p>
+                    </div>
+                  </div>
+
+                  <Card className='p-4 border-dashed shadow-none flex-row items-center gap-3'>
+                    <CoinsIcon className='size-5 text-primary' />
+                    <p className='font-bold text-primary'>{formatSalary()}</p>
+                  </Card>
+                </div>
+
+                <Separator />
+                <div className='space-y-2'>
+                  <div className='flex items-start justify-between gap-2'>
+                    <div>
+                      <p className='font-semibold'>{t('recruitment.jobs.detail.general')}</p>
+                      <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.generalDescription')}</p>
+                    </div>
+                  </div>
+
+                  <div className='space-y-3 mt-4'>
+                    {generalItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className='flex items-center justify-between hover:bg-muted/40 transition-colors group'
+                      >
+                        <div className='flex items-center gap-2.5 text-muted-foreground'>
+                          <item.icon className='size-4' />
+                          <p className='text-xs font-medium'>{item.label}</p>
+                        </div>
+
+                        <p className='text-xs font-semibold max-w-[70%] truncate' title={String(item.value)}>
+                          {item.value ?? <span className='text-muted-foreground/40'>-</span>}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+                <div className='space-y-2'>
+                  <div className='flex items-start justify-between gap-2'>
+                    <div>
+                      <p className='font-semibold'>{t('recruitment.jobs.detail.timeline')}</p>
+                      <p className='text-xs text-muted-foreground'>
+                        {t('recruitment.jobs.detail.timelineDescription')}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Card className='p-4 border-dashed shadow-none flex-row items-center justify-between gap-4'>
+                    <div>
+                      <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.createdAt')}</p>
+                      <p className='font-bold text-primary'>
+                        {jobDescription?.createdAt ? formatDate(jobDescription.createdAt, 'dateMedium') : 'N/A'}
+                      </p>
+                    </div>
+
+                    <ChevronsRightIcon className='size-5 text-muted-foreground' />
+
+                    <div>
+                      <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.updatedAt')}</p>
+                      <p className='font-bold text-primary'>
+                        {jobDescription?.updatedAt ? formatDate(jobDescription.updatedAt, 'dateMedium') : 'N/A'}
+                      </p>
+                    </div>
+                  </Card>
+                </div>
+
                 {jobDescription ? (
-                  <Badge
-                    variant='outline'
-                    className={cn(
-                      'gap-1',
-                      isOpen
-                        ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
-                        : 'text-rose-700 bg-rose-50 border-rose-200'
-                    )}
-                  >
-                    {isOpen ? (
-                      <CircleCheckBigIcon className='size-3 text-emerald-500' />
-                    ) : (
-                      <BanIcon className='size-3 text-rose-500' />
-                    )}
-                    {t(JobDescriptionStatusLabel[jobDescription.status])}
-                  </Badge>
+                  <Button variant='outline' size='sm' onClick={() => setIsEditing(true)} className='w-full'>
+                    <PencilIcon />
+                    {t('common.button.edit')}
+                  </Button>
                 ) : null}
               </div>
             </div>
-            <Separator />
-            <div className='space-y-6'>
-              <div className='space-y-2'>
-                <div className='flex items-start justify-between gap-2'>
-                  <div>
-                    <p className='font-semibold'>{t('recruitment.jobs.detail.salary')}</p>
-                    <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.salaryDescription')}</p>
-                  </div>
-                </div>
-
-                <Card className='p-4 border-dashed shadow-none flex-row items-center gap-3'>
-                  <CoinsIcon className='size-5 text-primary' />
-                  <p className='font-bold text-primary'>{formatSalary()}</p>
-                </Card>
-              </div>
-
-              <Separator />
-              <div className='space-y-2'>
-                <div className='flex items-start justify-between gap-2'>
-                  <div>
-                    <p className='font-semibold'>{t('recruitment.jobs.detail.general')}</p>
-                    <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.generalDescription')}</p>
-                  </div>
-                </div>
-
-                <div className='space-y-3 mt-4'>
-                  {generalItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className='flex items-center justify-between hover:bg-muted/40 transition-colors group'
-                    >
-                      <div className='flex items-center gap-2.5 text-muted-foreground'>
-                        <item.icon className='size-4' />
-                        <p className='text-xs font-medium'>{item.label}</p>
-                      </div>
-
-                      <p className='text-xs font-semibold max-w-[70%] truncate' title={String(item.value)}>
-                        {item.value ?? <span className='text-muted-foreground/40'>-</span>}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-              <div className='space-y-2'>
-                <div className='flex items-start justify-between gap-2'>
-                  <div>
-                    <p className='font-semibold'>{t('recruitment.jobs.detail.timeline')}</p>
-                    <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.timelineDescription')}</p>
-                  </div>
-                </div>
-
-                <Card className='p-4 border-dashed shadow-none flex-row items-center justify-between gap-4'>
-                  <div>
-                    <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.createdAt')}</p>
-                    <p className='font-bold text-primary'>
-                      {jobDescription?.createdAt ? formatDate(jobDescription.createdAt, 'dateMedium') : 'N/A'}
-                    </p>
-                  </div>
-
-                  <ChevronsRightIcon className='size-5 text-muted-foreground' />
-
-                  <div>
-                    <p className='text-xs text-muted-foreground'>{t('recruitment.jobs.detail.updatedAt')}</p>
-                    <p className='font-bold text-primary'>
-                      {jobDescription?.updatedAt ? formatDate(jobDescription.updatedAt, 'dateMedium') : 'N/A'}
-                    </p>
-                  </div>
-                </Card>
-              </div>
-            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
