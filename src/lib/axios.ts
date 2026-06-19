@@ -106,7 +106,7 @@ const onRefreshed = (error: AxiosError | null = null) => {
 
 export const createApiClient = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
-    baseURL: `${baseURL}/api`,
+    baseURL: `${baseURL}`,
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -202,6 +202,6 @@ export const createApiClient = (baseURL: string): AxiosInstance => {
   return instance
 }
 
-export const api = createApiClient(config.baseURL)
+export const api = createApiClient(`${config.baseURL}/api`)
 
 export default api
