@@ -9,9 +9,10 @@ import { Switch } from '@/components/ui/switch'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
+import { useTranslation } from 'react-i18next'
 import type { ConfigSystemItem } from '../types'
 
-type Props = {
+interface ConfigRendererProps {
   config: ConfigSystemItem
 }
 
@@ -36,7 +37,8 @@ function fmt(date?: Date) {
   return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
-function DateRangePicker({ config }: Props) {
+function DateRangePicker({ config }: ConfigRendererProps) {
+  const { t } = useTranslation()
   const meta = config.value as DateRangeMeta
   const raw = meta.value as { from?: unknown; to?: unknown }
   const [range, setRange] = useState<DateRange | undefined>({
@@ -48,7 +50,7 @@ function DateRangePicker({ config }: Props) {
     ? range.to
       ? `${fmt(range.from)} - ${fmt(range.to)}`
       : `${fmt(range.from)} - ...`
-    : 'Chọn khoảng thời gian'
+    : t('systemConfigs.render.dateRangePlaceholder')
 
   return (
     <Popover>
@@ -67,7 +69,8 @@ function DateRangePicker({ config }: Props) {
   )
 }
 
-export function ConfigRenderer({ config }: Props) {
+export default function ConfigRenderer({ config }: ConfigRendererProps) {
+  const { t } = useTranslation()
   const meta = config.value
 
   switch (meta.inputType) {
@@ -130,9 +133,21 @@ export function ConfigRenderer({ config }: Props) {
       const m = meta as AddressMeta
       return (
         <div className='flex w-64 flex-col gap-2'>
-          <Input name={`${config.key}.city`} defaultValue={m.value?.city} placeholder='Thành phố' />
-          <Input name={`${config.key}.ward`} defaultValue={m.value?.ward} placeholder='Phường/Xã' />
-          <Input name={`${config.key}.street`} defaultValue={m.value?.street} placeholder='Địa chỉ' />
+          <Input
+            name={`${config.key}.city`}
+            defaultValue={m.value?.city}
+            placeholder={t('systemConfigs.render.addressCity')}
+          />
+          <Input
+            name={`${config.key}.ward`}
+            defaultValue={m.value?.ward}
+            placeholder={t('systemConfigs.render.addressWard')}
+          />
+          <Input
+            name={`${config.key}.street`}
+            defaultValue={m.value?.street}
+            placeholder={t('systemConfigs.render.addressStreet')}
+          />
         </div>
       )
     }

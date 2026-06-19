@@ -5,23 +5,25 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Skeleton } from '@/components/ui/skeleton'
 import { CalendarDays, ChevronDownIcon, CreditCard, Gift, Info, Settings2, ShoppingBag, Truck, Zap } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { AddConfigSheet } from '../features/config-admin-system/components/add-config-sheet'
-import { ConfigItem } from '../features/config-admin-system/components/get-config-admin'
-import { useGetSystemConfigs } from '../features/config-admin-system/hooks/use-get-system-configs'
-import type { ConfigSystemItem } from '../features/config-admin-system/service'
+import AddConfigSheet from '../features/configs/components/add-config-sheet'
+import ConfigItem from '../features/configs/components/get-config-admin'
+import { useGetSystemConfigs } from '../features/configs/hooks/use-get-system-configs'
+import type { ConfigSystemItem } from '../features/configs/types'
 
-const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
-  general: { label: 'Thông tin chung', icon: Info },
-  shipping: { label: 'Vận chuyển', icon: Truck },
-  payment: { label: 'Thanh toán', icon: CreditCard },
-  order: { label: 'Đơn hàng', icon: ShoppingBag },
-  reward: { label: 'Tích điểm', icon: Gift },
-  feature: { label: 'Cấu hình tính năng', icon: Zap },
-  dateSettings: { label: 'Cấu hình thời gian', icon: CalendarDays }
+const GROUP_ICONS: Record<string, React.ElementType> = {
+  general: Info,
+  shipping: Truck,
+  payment: CreditCard,
+  order: ShoppingBag,
+  reward: Gift,
+  feature: Zap,
+  dateSettings: CalendarDays
 }
 
 export default function SystemConfigsPage() {
+  const { t } = useTranslation()
   const { systemConfigs, isLoadingSystemConfigs } = useGetSystemConfigs()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -44,7 +46,9 @@ export default function SystemConfigsPage() {
     e.preventDefault()
     const data = Object.fromEntries(new FormData(e.currentTarget))
     console.log(`[${group}] save:`, data)
-    toast.success('Lưu thành công', { description: GROUP_META[group]?.label ?? group })
+    toast.success(t('systemConfigs.saveSuccess'), {
+      description: t(`systemConfigs.groups.${group}`, { defaultValue: group })
+    })
   }
 
   return (
@@ -52,12 +56,12 @@ export default function SystemConfigsPage() {
       <div className='mx-auto max-w-3xl p-6'>
         <div className='mb-7 flex items-start justify-between gap-4'>
           <div>
-            <h1 className='text-xl font-semibold'>Cấu hình hệ thống</h1>
-            <p className='text-muted-foreground mt-1 text-sm'>Quản lý các cài đặt vận hành của hệ thống</p>
+            <h1 className='text-xl font-semibold'>{t('systemConfigs.title')}</h1>
+            <p className='text-muted-foreground mt-1 text-sm'>{t('systemConfigs.subtitle')}</p>
           </div>
           <Button variant='outline' size='sm' className='shrink-0 gap-1.5' onClick={() => setSheetOpen(true)}>
             <Settings2 className='size-4' />
-            Quản lý cấu hình
+            {t('systemConfigs.manageButton')}
             {inactiveCount > 0 && (
               <Badge variant='secondary' className='rounded-full px-1.5 py-0 text-xs font-normal tabular-nums'>
                 {inactiveCount}
@@ -75,7 +79,8 @@ export default function SystemConfigsPage() {
         ) : (
           <div className='space-y-3'>
             {Object.entries(grouped).map(([group, items], index) => {
-              const { label, icon: Icon } = GROUP_META[group] ?? { label: group, icon: Info }
+              const Icon = GROUP_ICONS[group] ?? Info
+              const label = t(`systemConfigs.groups.${group}`, { defaultValue: group })
               const open = isOpen(group, index)
 
               return (
@@ -111,7 +116,7 @@ export default function SystemConfigsPage() {
                         </CardContent>
                         <CardFooter className='border-t px-5 py-3'>
                           <Button type='submit' size='sm' className='ml-auto'>
-                            Lưu thay đổi
+                            {t('systemConfigs.saveChanges')}
                           </Button>
                         </CardFooter>
                       </form>

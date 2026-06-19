@@ -4,26 +4,28 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Switch } from '@/components/ui/switch'
 import { CalendarDays, CreditCard, Gift, Info, ShoppingBag, Truck, Zap } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useToggleConfigActive } from '../hooks/use-toggle-config-active'
-import type { ConfigSystemItem } from '../service'
+import type { ConfigSystemItem } from '../types'
 
-const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
-  general: { label: 'Thông tin chung', icon: Info },
-  shipping: { label: 'Vận chuyển', icon: Truck },
-  payment: { label: 'Thanh toán', icon: CreditCard },
-  order: { label: 'Đơn hàng', icon: ShoppingBag },
-  reward: { label: 'Tích điểm', icon: Gift },
-  feature: { label: 'Cấu hình tính năng', icon: Zap },
-  dateSettings: { label: 'Cấu hình thời gian', icon: CalendarDays }
+const GROUP_ICONS: Record<string, React.ElementType> = {
+  general: Info,
+  shipping: Truck,
+  payment: CreditCard,
+  order: ShoppingBag,
+  reward: Gift,
+  feature: Zap,
+  dateSettings: CalendarDays
 }
 
-type Props = {
+interface AddConfigSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   configs: ConfigSystemItem[]
 }
 
-export function AddConfigSheet({ open, onOpenChange, configs }: Props) {
+export default function AddConfigSheet({ open, onOpenChange, configs }: AddConfigSheetProps) {
+  const { t } = useTranslation()
   const { mutate: toggleActive, isPending } = useToggleConfigActive()
 
   const grouped = configs.reduce<Record<string, ConfigSystemItem[]>>((acc, config) => {
@@ -40,20 +42,21 @@ export function AddConfigSheet({ open, onOpenChange, configs }: Props) {
       <SheetContent className='flex w-[440px] flex-col gap-0 overflow-hidden p-0 sm:max-w-[440px]'>
         <SheetHeader className='border-b px-6 py-5'>
           <div className='flex items-center gap-3'>
-            <SheetTitle className='flex-1 text-base'>Quản lý cấu hình hiển thị</SheetTitle>
+            <SheetTitle className='flex-1 text-base'>{t('systemConfigs.sheet.title')}</SheetTitle>
             {inactiveCount > 0 && (
               <Badge variant='secondary' className='rounded-full text-xs font-normal'>
-                {inactiveCount} đang ẩn
+                {t('systemConfigs.sheet.hiddenCount', { count: inactiveCount })}
               </Badge>
             )}
           </div>
-          <SheetDescription>Bật để hiển thị cấu hình trên màn hình chính, tắt để ẩn đi.</SheetDescription>
+          <SheetDescription>{t('systemConfigs.sheet.description')}</SheetDescription>
         </SheetHeader>
 
         <div className='flex-1 overflow-y-auto'>
           <div className='space-y-5 px-6 py-5'>
             {Object.entries(grouped).map(([group, items]) => {
-              const { label, icon: Icon } = GROUP_META[group] ?? { label: group, icon: Info }
+              const Icon = GROUP_ICONS[group] ?? Info
+              const label = t(`systemConfigs.groups.${group}`, { defaultValue: group })
 
               return (
                 <div key={group}>

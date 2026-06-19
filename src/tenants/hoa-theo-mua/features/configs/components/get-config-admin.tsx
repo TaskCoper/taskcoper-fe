@@ -1,13 +1,13 @@
 import { FieldDescription, FieldTitle } from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
 import type { ConfigSystemItem } from '../types'
-import { ConfigRenderer } from './config-render'
+import ConfigRenderer from './config-render'
 
-type Props = {
+interface ConfigItemProps {
   config: ConfigSystemItem
 }
 
-export function ConfigItem({ config }: Props) {
+export default function ConfigItem({ config }: ConfigItemProps) {
   const meta = config.value
   const isWide = meta.inputType === 'switch-group' || meta.inputType === 'address'
 

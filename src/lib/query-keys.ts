@@ -504,13 +504,6 @@ export const queryKeys = {
       [...queryKeys.vouchers.detail(voucherId), 'redemptions', pageIndex, pageSize, sortBy, searchTerm] as const
   },
 
-  // HTM System Configs
-  htmSystemConfigs: {
-    all: ['htm-system-configs'] as const,
-    lists: () => [...queryKeys.htmSystemConfigs.all, 'list'] as const,
-    list: () => [...queryKeys.htmSystemConfigs.lists()] as const
-  },
-
   // Feedbacks
   feedbacks: {
     all: ['feedbacks'] as const,
