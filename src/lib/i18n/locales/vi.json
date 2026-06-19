@@ -1280,6 +1280,7 @@
       "amount": "Số tiền",
       "carrier": "Vận chuyển",
       "createdAt": "Ngày tạo đơn",
+      "depot": "Kho hàng",
       "mobile": "Số điện thoại",
       "nhanhOrderId": "Mã đơn Nhanh",
       "nhanhTrackingUrl": "URL theo dõi Nhanh",
@@ -1287,8 +1288,7 @@
       "saleName": "Người bán",
       "shippingAddress": "Địa chỉ giao hàng",
       "status": "Trạng thái",
-      "trafficSource": "Nguồn",
-      "depot": "Kho hàng"
+      "trafficSource": "Nguồn"
     },
     "common": {
       "noData": "Không có dữ liệu"

@@ -1295,6 +1295,7 @@
       "amount": "Amount",
       "carrier": "Carrier",
       "createdAt": "Order Date",
+      "depot": "Depot",
       "mobile": "Phone",
       "nhanhOrderId": "Nhanh Order ID",
       "nhanhTrackingUrl": "Nhanh Tracking URL",
@@ -1302,8 +1303,7 @@
       "saleName": "Sale Name",
       "shippingAddress": "Shipping Address",
       "status": "Status",
-      "trafficSource": "Traffic Source",
-      "depot": "Depot"
+      "trafficSource": "Traffic Source"
     },
     "common": {
       "noData": "No data available"
