@@ -10,10 +10,10 @@ import { CirclePlus } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
-import { getColumns } from '../feature/article/components/article-columns'
-import { useDeleteArticles } from '../feature/article/hooks/use-delete-articles'
-import { useGetArticles } from '../feature/article/hooks/use-get-articles'
-import type { ArticleRow } from '../feature/article/types'
+import { getColumns } from '../features/article/components/article-columns'
+import { useDeleteArticles } from '../features/article/hooks/use-delete-articles'
+import { useGetArticles } from '../features/article/hooks/use-get-articles'
+import type { ArticleRow } from '../features/article/types'
 
 export default function NewsArticlesPage() {
   const { t } = useTenantTranslation()

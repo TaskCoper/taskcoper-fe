@@ -11,8 +11,8 @@ import { getAvatarFallback } from '@/shared/utils'
 import { ArrowLeftIcon, FileTextIcon, ImageIcon, PencilIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { useGetArticle } from '../feature/article/hooks/use-get-article'
-import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../feature/article/types'
+import { useGetArticle } from '../features/article/hooks/use-get-article'
+import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../features/article/types'
 
 const ARTICLE_DETAIL_PREFIX = 'tenant.hoaTheoMua.articles.detail' as const
 

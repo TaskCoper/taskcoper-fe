@@ -21,11 +21,11 @@ import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, XIcon } from
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, useFieldArray } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
-import { useGetArticle } from '../feature/article/hooks/use-get-article'
-import { useGetCategoryNew } from '../feature/article/hooks/use-get-categories'
-import { useUpdateArticle } from '../feature/article/hooks/use-update-article'
-import { ArticleStatus, type CategoryResponse } from '../feature/article/types'
-import type { AddArticleForm, CategoryFormItem } from '../feature/article/validations'
+import { useGetArticle } from '../features/article/hooks/use-get-article'
+import { useGetCategoryNew } from '../features/article/hooks/use-get-categories'
+import { useUpdateArticle } from '../features/article/hooks/use-update-article'
+import { ArticleStatus, type CategoryResponse } from '../features/article/types'
+import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
 
 const ARTICLE_FORM_PREFIX = 'tenant.hoaTheoMua.articles.form' as const
 const ARTICLE_STATUS_PREFIX = 'tenant.hoaTheoMua.articles.status' as const

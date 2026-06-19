@@ -3,6 +3,20 @@
     "listComingSoon": "Delivery Addresses — Coming Soon",
     "zonesComingSoon": "Delivery Zones — Coming Soon"
   },
+  "companyAddress": {
+    "title": "Company Address",
+    "description": "This information is used to contact your company and as a pickup location.",
+    "createButton": "Add company address",
+    "createDialog": {
+      "title": "Company Address",
+      "description": "Add a company address so it shows on the company info page and can be used elsewhere — geolocation, maps, etc.",
+      "submit": "Add address"
+    },
+    "update": {
+      "submit": "Update address",
+      "reset": "Undo"
+    }
+  },
   "customNews": {
     "articlesComingSoon": "Articles — Coming Soon",
     "categoriesComingSoon": "Categories — Coming Soon"

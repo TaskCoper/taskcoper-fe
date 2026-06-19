@@ -3,6 +3,20 @@
     "listComingSoon": "Địa chỉ giao hàng — Sắp ra mắt",
     "zonesComingSoon": "Khu vực giao hàng — Sắp ra mắt"
   },
+  "companyAddress": {
+    "title": "Địa chỉ công ty",
+    "description": "Thông tin này sẽ được sử dụng để liên hệ với công ty của bạn, cũng như là điểm lấy hàng.",
+    "createButton": "Thêm địa chỉ công ty",
+    "createDialog": {
+      "title": "Địa chỉ công ty",
+      "description": "Thêm điạ chỉ công ty để hiển thị trên trang thông tin công ty và sử dụng cho các mục đích khác như định vị, bản đồ, v.v.",
+      "submit": "Thêm địa chỉ"
+    },
+    "update": {
+      "submit": "Cập nhật địa chỉ",
+      "reset": "Hoàn tác"
+    }
+  },
   "customNews": {
     "articlesComingSoon": "Bài viết — Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"

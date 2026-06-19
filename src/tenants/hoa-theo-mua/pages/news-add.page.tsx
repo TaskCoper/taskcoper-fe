@@ -21,9 +21,9 @@ import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, XIcon } from
 import { useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { useAddArticle } from '../feature/article/hooks/use-add-articles'
-import { useGetCategoryNew } from '../feature/article/hooks/use-get-categories'
-import type { AddArticleForm, CategoryFormItem } from '../feature/article/validations'
+import { useAddArticle } from '../features/article/hooks/use-add-articles'
+import { useGetCategoryNew } from '../features/article/hooks/use-get-categories'
+import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
 
 const ARTICLE_FORM_PREFIX = 'tenant.hoaTheoMua.articles.form' as const
 const ARTICLE_STATUS_PREFIX = 'tenant.hoaTheoMua.articles.status' as const
