@@ -53,6 +53,37 @@
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
     "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt",
+    "applicants": {
+      "title": "Ứng viên",
+      "description": "Xem và quản lý tất cả các đơn ứng tuyển đã nhận.",
+      "column": {
+        "applicant": "Ứng viên",
+        "searchApplicant": "Tìm theo tên...",
+        "jobPosting": "Vị trí ứng tuyển",
+        "phone": "Số điện thoại",
+        "noPhone": "Chưa có SĐT",
+        "status": "Trạng thái",
+        "appliedAt": "Ngày ứng tuyển"
+      },
+      "status": {
+        "read": "Đã đọc",
+        "unread": "Mới"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewApplication": "Xem đơn ứng tuyển",
+        "markAsRead": "Đánh dấu đã đọc"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "jobPosting": "Vị trí ứng tuyển",
+        "coverLetter": "Thư xin việc",
+        "attachments": "Tệp đính kèm",
+        "attachment": "Tệp đính kèm {{index}}"
+      }
+    },
     "jobs": {
       "title": "Tin tuyển dụng",
       "description": "Quản lý và theo dõi các vị trí đang tuyển dụng.",

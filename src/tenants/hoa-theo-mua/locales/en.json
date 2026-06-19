@@ -53,6 +53,37 @@
   "recruitment": {
     "applicantsComingSoon": "Applicants — Coming Soon",
     "jobsComingSoon": "Job Postings — Coming Soon",
+    "applicants": {
+      "title": "Applicants",
+      "description": "Review and manage all received job applications.",
+      "column": {
+        "applicant": "Applicant",
+        "searchApplicant": "Search by name...",
+        "jobPosting": "Job posting",
+        "phone": "Phone",
+        "noPhone": "No phone",
+        "status": "Status",
+        "appliedAt": "Applied at"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "New"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewApplication": "View application",
+        "markAsRead": "Mark as read"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Phone",
+        "jobPosting": "Job posting",
+        "coverLetter": "Cover letter",
+        "attachments": "Attachments",
+        "attachment": "Attachment {{index}}"
+      }
+    },
     "jobs": {
       "title": "Job postings",
       "description": "Browse and manage your open job postings.",
