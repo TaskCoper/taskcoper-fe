@@ -82,6 +82,12 @@ class JobDescriptionService {
 
     return data.value
   }
+
+  deleteJobDescription = async ({ id }: { id: string }) => {
+    const { data } = await htmApi.delete<BaseResponse<string>>(`v1/${this.baseUrl}/${id}`)
+
+    return data.value
+  }
 }
 
 const jobDescriptionService = new JobDescriptionService()

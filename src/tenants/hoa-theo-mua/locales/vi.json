@@ -94,7 +94,13 @@
         "openMenu": "Mở menu",
         "actions": "Hành động",
         "viewDetails": "Xem chi tiết",
-        "copyLink": "Sao chép liên kết"
+        "copyLink": "Sao chép liên kết",
+        "delete": "Xóa"
+      },
+      "delete": {
+        "title": "Xóa tin tuyển dụng",
+        "description": "Bạn có chắc chắn muốn xóa \"{{title}}\" không? Hành động này không thể hoàn tác.",
+        "success": "Đã xóa tin tuyển dụng"
       },
       "copyLink": {
         "success": "Đã sao chép",

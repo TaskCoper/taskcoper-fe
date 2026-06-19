@@ -59,7 +59,13 @@ const formatSalary = (
   return t('recruitment.jobs.salary.undisclosed')
 }
 
-export const getColumns = ({ t }: { t: TenantT }): ColumnDef<JobDescription>[] => {
+export const getColumns = ({
+  t,
+  onDeleteJob
+}: {
+  t: TenantT
+  onDeleteJob?: (id: string, title: string) => void
+}): ColumnDef<JobDescription>[] => {
   return [
     {
       id: 'select',
@@ -274,7 +280,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<JobDescription>[] =
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id } = row.original
+        const { id, title } = row.original
 
         return (
           <DropdownMenu>
@@ -308,6 +314,11 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<JobDescription>[] =
               <DropdownMenuItem asChild>
                 <Link to={id}>{t('recruitment.jobs.actions.viewDetails')}</Link>
               </DropdownMenuItem>
+              {onDeleteJob ? (
+                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteJob(id, title)}>
+                  {t('recruitment.jobs.actions.delete')}
+                </DropdownMenuItem>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         )

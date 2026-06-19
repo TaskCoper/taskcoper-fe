@@ -94,7 +94,13 @@
         "openMenu": "Open menu",
         "actions": "Actions",
         "viewDetails": "View details",
-        "copyLink": "Copy link"
+        "copyLink": "Copy link",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Delete job posting",
+        "description": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "success": "Job posting deleted"
       },
       "copyLink": {
         "success": "Link copied",

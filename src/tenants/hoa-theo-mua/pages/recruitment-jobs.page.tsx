@@ -4,20 +4,37 @@ import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { PlusCircleIcon } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getColumns } from '../features/job-descriptions/components/job-description-columns'
+import { useDeleteJobDescription } from '../features/job-descriptions/hooks/use-delete-job-description'
 import { useGetJobDescriptions } from '../features/job-descriptions/hooks/use-get-job-descriptions'
 import type { JobDescription } from '../features/job-descriptions/types'
 
 export default function RecruitmentJobsPage() {
   const { t } = useTenantTranslation()
+  const { confirm } = useConfirmStore()
+  const { deleteJobDescription } = useDeleteJobDescription()
 
-  const columns = useMemo(() => getColumns({ t }), [t])
+  const handleDeleteJob = useCallback(
+    async (id: string, title: string) => {
+      const confirmed = await confirm({
+        title: t('recruitment.jobs.delete.title'),
+        description: t('recruitment.jobs.delete.description', { title }),
+        variant: 'destructive'
+      })
+
+      if (confirmed) deleteJobDescription({ id })
+    },
+    [confirm, deleteJobDescription, t]
+  )
+
+  const columns = useMemo(() => getColumns({ t, onDeleteJob: handleDeleteJob }), [t, handleDeleteJob])
   const { page, limit, sorting } = useTableQueryParams({
     columns,
     prefix: 'job_descriptions'
