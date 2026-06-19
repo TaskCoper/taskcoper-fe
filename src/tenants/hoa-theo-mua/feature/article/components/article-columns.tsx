@@ -104,15 +104,15 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       id: 'Status',
       accessorKey: 'status',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.status',
+        label: `${ARTICLE_I18N_PREFIX}.column.status`,
         variant: 'radio',
         options: [
           {
-            label: ArticleStatusLabel[ArticleStatus.Published],
+            label: t(ArticleStatusLabel[ArticleStatus.Published]),
             value: '1'
           },
           {
-            label: ArticleStatusLabel[ArticleStatus.Draft],
+            label: t(ArticleStatusLabel[ArticleStatus.Draft]),
             value: '0'
           }
         ]
@@ -145,10 +145,6 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
     {
       id: 'createdAt',
       accessorKey: 'createdAt',
-      meta: {
-        label: 'tenant.hoaTheoMua.articles.column.createdAt',
-        variant: 'dateRange'
-      },
 
       header: ({ column }) => (
         <DataTableColumnHeader

@@ -42,7 +42,8 @@
       "actions": "Actions",
       "delete": "Delete",
       "openMenu": "Open article actions",
-      "viewDetails": "View details"
+      "viewDetails": "View details",
+      "updateDetails": "Cập nhật bài viết"
     },
     "column": {
       "createdAt": "Created at",
@@ -113,11 +114,16 @@
           "updateTitle": "Cập nhật bài viết"
         },
         "detail": {
+          "aboutAuthor": "Về tác giả",
           "articleId": "ID bài viết",
+          "authorFallbackDescription": "Tác giả của bài viết này.",
           "authorId": "ID tác giả",
+          "authorProfile": "Thông tin tác giả",
+          "authorProfileDescription": "Thông tin người viết của bài viết này.",
           "categories": "{{count}} danh mục",
           "categoriesLabel": "Danh mục",
           "createdAt": "Tạo ngày {{date}}",
+          "createdAtLabel": "Ngày tạo",
           "edit": "Chỉnh sửa bài viết",
           "missingIdDescription": "Chọn một bài viết trong danh sách tin tức để mở trang chi tiết.",
           "missingIdTitle": "Chưa chọn bài viết",
@@ -129,6 +135,8 @@
           "slug": "Slug",
           "status": "Trạng thái",
           "updatedAt": "Cập nhật ngày {{date}}",
+          "updatedAtLabel": "Ngày cập nhật",
+          "unknownAuthor": "Không rõ tác giả",
           "views": "{{count}} lượt xem",
           "viewsLabel": "Lượt xem"
         },

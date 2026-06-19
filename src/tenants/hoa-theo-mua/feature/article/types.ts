@@ -16,11 +16,9 @@ export interface ArticleRow {
   description: string
   viewCount: number
   pictureUrl: string | null
-  slug: string
+  slug: string | null
   status: ArticleStatus
-  userId: string
-  userFirstName: string
-  userLastName: string
+  user: UserResponse
   categories: CategoryResponse[]
   createdAt: string
   updatedAt: string | null
@@ -34,4 +32,11 @@ export interface CategoryData {
 export interface CategoryResponse {
   categoryId: string
   categoryName: string
+}
+export interface UserResponse {
+  userId: string
+  email: string
+  userAvatar: string | null
+  userFirstName: string
+  userLastName: string
 }

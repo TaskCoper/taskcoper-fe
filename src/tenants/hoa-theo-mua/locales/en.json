@@ -113,11 +113,16 @@
           "updateTitle": "Update article"
         },
         "detail": {
+          "aboutAuthor": "About the author",
           "articleId": "Article ID",
+          "authorFallbackDescription": "Author of this article.",
           "authorId": "Author ID",
+          "authorProfile": "Author profile",
+          "authorProfileDescription": "Writer information for this article.",
           "categories": "{{count}} categories",
           "categoriesLabel": "Categories",
           "createdAt": "Created {{date}}",
+          "createdAtLabel": "Created",
           "edit": "Edit article",
           "missingIdDescription": "Choose an article from the news list to open its detail page.",
           "missingIdTitle": "No article selected",
@@ -129,8 +134,11 @@
           "slug": "Slug",
           "status": "Status",
           "updatedAt": "Updated {{date}}",
+          "updatedAtLabel": "Updated",
+          "unknownAuthor": "Unknown author",
           "views": "{{count}} views",
-          "viewsLabel": "Views"
+          "viewsLabel": "Views",
+          "update": "U"
         },
         "status": {
           "draft": "Draft",

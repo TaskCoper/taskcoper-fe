@@ -1,4 +1,5 @@
 import SanitizedHtml from '@/components/sanitized-html'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -6,13 +7,35 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDate } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { ArrowLeftIcon, CalendarDaysIcon, EyeIcon, FileTextIcon, ImageIcon, PencilIcon, TagsIcon } from 'lucide-react'
+import { getAvatarFallback } from '@/shared/utils'
+import { ArrowLeftIcon, FileTextIcon, ImageIcon, PencilIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useGetArticle } from '../feature/article/hooks/use-get-article'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../feature/article/types'
 
 const ARTICLE_DETAIL_PREFIX = 'tenant.hoaTheoMua.articles.detail' as const
+
+const ARTICLE_CONTENT_CLASS_NAME = [
+  'mx-auto w-full max-w-4xl overflow-visible',
+  'text-base leading-8 text-slate-800 md:text-lg',
+  '[&_p]:my-5 [&_p]:text-base [&_p]:leading-8 [&_p]:text-slate-800 md:[&_p]:text-lg',
+  '[&_h1]:mb-5 [&_h1]:mt-10 [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:leading-tight',
+  '[&_h2]:mb-4 [&_h2]:mt-9 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:leading-tight',
+  '[&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:leading-snug',
+  '[&_h4]:mb-3 [&_h4]:mt-7 [&_h4]:text-lg [&_h4]:font-semibold',
+  '[&_h5]:mb-2 [&_h5]:mt-6 [&_h5]:text-base [&_h5]:font-semibold',
+  '[&_h6]:mb-2 [&_h6]:mt-6 [&_h6]:text-sm [&_h6]:font-semibold [&_h6]:uppercase [&_h6]:text-muted-foreground',
+  '[&_ul]:my-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6',
+  '[&_ol]:my-5 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6',
+  '[&_li]:pl-1 [&_li]:leading-8',
+  '[&_blockquote]:my-7 [&_blockquote]:border-l-4 [&_blockquote]:border-[#0b66e4] [&_blockquote]:bg-muted/50 [&_blockquote]:py-3 [&_blockquote]:pl-5 [&_blockquote]:pr-4 [&_blockquote]:italic',
+  '[&_pre]:my-7 [&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:border [&_pre]:bg-muted [&_pre]:p-4 [&_pre]:text-sm',
+  '[&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em]',
+  '[&_pre_code]:bg-transparent [&_pre_code]:p-0',
+  '[&_img]:mx-auto [&_img]:my-8 [&_img]:block [&_img]:h-auto [&_img]:w-full [&_img]:max-w-full [&_img]:rounded-xl [&_img]:object-cover',
+  '[&_a]:text-[#0b66e4] [&_a]:underline-offset-4 [&_a:hover]:underline'
+].join(' ')
 
 const getStatusClassName = (status: ArticleRow['status']) => {
   if (status === ArticleStatus.Published) {
@@ -23,33 +46,31 @@ const getStatusClassName = (status: ArticleRow['status']) => {
 }
 
 function DetailShell({ children }: { children: ReactNode }) {
-  return (
-    <div className='min-h-full overflow-y-auto bg-background'>
-      <div className='mx-auto flex w-full max-w-7xl flex-col gap-5 p-4 md:p-6'>{children}</div>
-    </div>
-  )
+  return <div className='min-h-full overflow-y-auto bg-background'>{children}</div>
 }
 
 function DetailState({ title, description, actionLabel }: { title: string; description: string; actionLabel: string }) {
   return (
     <DetailShell>
-      <Card className='mx-auto w-full max-w-2xl overflow-hidden rounded-xl border-dashed'>
-        <CardHeader className='items-center text-center'>
-          <div className='flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground'>
-            <FileTextIcon data-icon='inline-start' />
-          </div>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent className='flex justify-center'>
-          <Button asChild variant='outline'>
-            <Link to='/htm/news'>
-              <ArrowLeftIcon data-icon='inline-start' />
-              {actionLabel}
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <div className='mx-auto flex min-h-full w-full max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8'>
+        <Card className='mx-auto w-full max-w-2xl overflow-hidden rounded-xl border-dashed'>
+          <CardHeader className='items-center text-center'>
+            <div className='flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground'>
+              <FileTextIcon data-icon='inline-start' />
+            </div>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </CardHeader>
+          <CardContent className='flex justify-center'>
+            <Button asChild variant='outline'>
+              <Link to='/htm/news'>
+                <ArrowLeftIcon data-icon='inline-start' />
+                {actionLabel}
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </DetailShell>
   )
 }
@@ -57,37 +78,121 @@ function DetailState({ title, description, actionLabel }: { title: string; descr
 function NewsDetailSkeleton() {
   return (
     <DetailShell>
-      <div className='flex items-center justify-between gap-3'>
-        <Skeleton className='h-9 w-28 rounded-lg' />
-        <Skeleton className='h-9 w-24 rounded-lg' />
-      </div>
-
-      <div className='grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]'>
-        <div className='flex flex-col gap-5'>
-          <Skeleton className='aspect-[16/9] w-full rounded-2xl' />
-          <div className='rounded-xl border bg-card p-5 md:p-7'>
-            <Skeleton className='mb-4 h-7 w-32 rounded-full' />
-            <Skeleton className='mb-3 h-10 w-4/5 rounded-lg' />
-            <Skeleton className='mb-8 h-5 w-2/3 rounded-lg' />
-            <div className='flex flex-col gap-3'>
-              <Skeleton className='h-5 w-full rounded-lg' />
-              <Skeleton className='h-5 w-11/12 rounded-lg' />
-              <Skeleton className='h-5 w-10/12 rounded-lg' />
-            </div>
-          </div>
+      <div className='mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 pt-6 pb-10 sm:px-6 lg:grid-cols-12 lg:px-8'>
+        <div className='lg:col-span-12'>
+          <Skeleton className='h-9 w-28 rounded-lg' />
         </div>
-        <Skeleton className='h-96 rounded-xl' />
+
+        <div className='lg:col-span-8'>
+          <Skeleton className='h-48 rounded-2xl sm:h-52' />
+          <div className='my-8 space-y-4'>
+            <Skeleton className='h-9 w-4/5 max-w-2xl rounded-lg' />
+            <Skeleton className='h-5 w-72 rounded-lg' />
+          </div>
+          <Skeleton className='h-80 rounded-2xl' />
+          <Skeleton className='mt-6 h-36 rounded-2xl' />
+        </div>
+
+        <div className='space-y-6 lg:col-span-4'>
+          <Skeleton className='h-10 w-full rounded-lg' />
+          <Skeleton className='h-24 w-full rounded-lg' />
+          <Skeleton className='h-28 w-full rounded-lg' />
+          <Skeleton className='h-28 w-full rounded-lg' />
+          <Skeleton className='h-32 w-full rounded-lg' />
+          <Skeleton className='h-56 w-full rounded-2xl' />
+        </div>
       </div>
     </DetailShell>
   )
 }
 
-function FactRow({ label, value }: { label: string; value: ReactNode }) {
+function SidebarSection({
+  title,
+  description,
+  children
+}: {
+  title: string
+  description?: string
+  children: ReactNode
+}) {
   return (
-    <div className='grid grid-cols-[120px_minmax(0,1fr)] items-start gap-3 text-sm'>
-      <p className='text-muted-foreground'>{label}</p>
-      <div className='min-w-0 font-medium'>{value}</div>
+    <div className='space-y-2'>
+      <div className='flex items-start justify-between gap-2'>
+        <div>
+          <p className='font-semibold'>{title}</p>
+          {description ? <p className='text-xs text-muted-foreground'>{description}</p> : null}
+        </div>
+      </div>
+
+      {children}
     </div>
+  )
+}
+
+function MetadataRow({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className='flex items-center justify-between gap-3 rounded-md py-1 transition-colors hover:bg-muted/40'>
+      <p className='text-xs font-medium text-muted-foreground'>{label}</p>
+      <div
+        className='max-w-[70%] truncate text-right text-xs font-semibold'
+        title={typeof value === 'string' ? value : undefined}
+      >
+        {value}
+      </div>
+    </div>
+  )
+}
+
+function AuthorAvatar({
+  name,
+  avatarUrl,
+  className,
+  fallbackClassName = 'text-sm'
+}: {
+  name: string
+  avatarUrl?: string | null
+  className: string
+  fallbackClassName?: string
+}) {
+  return (
+    <Avatar className={className}>
+      <AvatarImage src={avatarUrl ?? undefined} alt={name} />
+      <AvatarFallback className={`${fallbackClassName} font-semibold`}>{getAvatarFallback(name)}</AvatarFallback>
+    </Avatar>
+  )
+}
+
+function AuthorProfileCard({
+  title,
+  description,
+  name,
+  email,
+  avatarUrl
+}: {
+  title: string
+  description: string
+  name: string
+  email?: string
+  avatarUrl?: string | null
+}) {
+  return (
+    <Card className='rounded-2xl shadow-none'>
+      <CardHeader className='gap-1 pb-3'>
+        <CardTitle className='text-base'>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent className='flex flex-col items-center gap-4 text-center'>
+        <AuthorAvatar name={name} avatarUrl={avatarUrl} className='size-16 ring-2 ring-background' />
+        <div className='min-w-0 space-y-1'>
+          <p className='truncate text-base font-semibold'>{name}</p>
+          {email ? (
+            <a className='block truncate text-sm text-muted-foreground hover:text-foreground' href={`mailto:${email}`}>
+              {email}
+            </a>
+          ) : null}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -123,115 +228,141 @@ export default function NewsDetailPage() {
   }
 
   const statusLabel = t(ArticleStatusLabel[article.status])
-  const categoryCount = article.categories.length
+  const authorEmail = article.user.email.trim()
+  const authorFullName = `${article.user.userFirstName} ${article.user.userLastName}`.trim()
+  const authorName = authorFullName || authorEmail || t(`${ARTICLE_DETAIL_PREFIX}.unknownAuthor`)
+  const authorAvatarUrl = article.user.userAvatar
 
   return (
     <div className='h-full overflow-y-auto'>
       <DetailShell>
-        <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-          <Button type='button' variant='outline' size='sm' onClick={() => navigate('/htm/news')}>
-            <ArrowLeftIcon data-icon='inline-start' />
-            {t('common.button.back')}
-          </Button>
+        <article className='mx-auto grid max-w-7xl grid-cols-1 px-4 pt-8 pb-20 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8'>
+          <div className='col-span-1 mb-4 flex items-center justify-between gap-3 lg:col-span-12'>
+            <Button
+              type='button'
+              variant='ghost'
+              size='sm'
+              onClick={() => navigate('/htm/news')}
+              className='w-fit px-0 text-muted-foreground hover:bg-transparent hover:text-foreground'
+            >
+              <ArrowLeftIcon data-icon='inline-start' />
+              {t('common.button.back')}
+            </Button>
+          </div>
 
-          <Button asChild size='sm'>
-            <Link to={`/htm/news/${id}/update`}>
-              <PencilIcon data-icon='inline-start' />
-              {t(`${ARTICLE_DETAIL_PREFIX}.edit`)}
-            </Link>
-          </Button>
-        </div>
+          <div className='col-span-1 lg:col-span-8'>
+            <div className='relative h-48 sm:h-52'>
+              <div className='relative size-full'>
+                {article.pictureUrl ? (
+                  <img
+                    src={article.pictureUrl}
+                    alt={article.title}
+                    className='size-full rounded-2xl border border-border object-cover shadow-sm'
+                  />
+                ) : (
+                  <div className='flex size-full items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
+                    <ImageIcon className='size-10' />
+                  </div>
+                )}
+              </div>
+            </div>
 
-        <div className='grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]'>
-          <main className='flex min-w-0 flex-col gap-5'>
-            <section className='overflow-hidden rounded-2xl border bg-card'>
-              {article.pictureUrl ? (
-                <img src={article.pictureUrl} alt={article.title} className='aspect-[16/9] w-full object-cover' />
-              ) : (
-                <div className='flex aspect-[16/9] w-full items-center justify-center bg-muted text-muted-foreground'>
-                  <ImageIcon className='size-10' />
-                </div>
-              )}
-            </section>
+            <div className='my-8 flex flex-col items-center space-y-3 text-center lg:items-start lg:text-left'>
+              <div className='w-full lg:px-6'>
+                <h1 className='wrap-break-word text-2xl font-semibold tracking-tight sm:text-3xl'>{article.title}</h1>
+              </div>
 
-            <article className='rounded-xl border bg-card p-5 md:p-8'>
-              <div className='flex flex-wrap items-center gap-2'>
-                <Badge variant='outline' className={getStatusClassName(article.status)}>
-                  {statusLabel}
-                </Badge>
-                <Badge variant='secondary' className='gap-1'>
-                  <EyeIcon data-icon='inline-start' />
+              <div className='w-full lg:px-6'>
+                <p className='text-xs text-muted-foreground'>
+                  {formatDate(article.createdAt, 'dateLong')} •{' '}
                   {t(`${ARTICLE_DETAIL_PREFIX}.views`, { count: article.viewCount })}
-                </Badge>
-                <Badge variant='outline' className='gap-1'>
-                  <TagsIcon data-icon='inline-start' />
-                  {t(`${ARTICLE_DETAIL_PREFIX}.categories`, { count: categoryCount })}
-                </Badge>
+                </p>
               </div>
+            </div>
 
-              <div className='mt-5 flex flex-col gap-4'>
-                <h1 className='max-w-4xl text-3xl font-semibold leading-tight tracking-tight md:text-5xl'>
-                  {article.title}
-                </h1>
-                <div className='flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground'>
-                  <span className='inline-flex items-center gap-1.5'>
-                    <CalendarDaysIcon data-icon='inline-start' />
-                    {t(`${ARTICLE_DETAIL_PREFIX}.createdAt`, { date: formatDate(article.createdAt, 'dateLong') })}
-                  </span>
-                  {article.updatedAt ? (
-                    <span>
-                      {t(`${ARTICLE_DETAIL_PREFIX}.updatedAt`, { date: formatDate(article.updatedAt, 'dateLong') })}
-                    </span>
-                  ) : null}
-                </div>
+            <Card className='w-full gap-0 rounded-2xl p-0 text-left text-sm shadow-none sm:text-base'>
+              <div className='flex items-center gap-2 rounded-t-2xl bg-muted/60 px-3 py-2'>
+                <FileTextIcon className='size-4 text-muted-foreground' />
+                <p className='text-sm font-semibold text-muted-foreground'>{t(`${ARTICLE_DETAIL_PREFIX}.overview`)}</p>
               </div>
-
-              <Separator className='my-7' />
-
-              <SanitizedHtml html={article.description} as='section' className='max-w-none overflow-visible' />
-            </article>
-          </main>
-
-          <aside className='flex flex-col gap-5 lg:sticky lg:top-4 lg:self-start'>
-            <Card className='rounded-xl'>
-              <CardHeader>
-                <CardTitle className='text-base'>{t(`${ARTICLE_DETAIL_PREFIX}.overview`)}</CardTitle>
-                <CardDescription>{t(`${ARTICLE_DETAIL_PREFIX}.overviewDescription`)}</CardDescription>
-              </CardHeader>
-              <CardContent className='flex flex-col gap-4'>
-                <FactRow
-                  label={t(`${ARTICLE_DETAIL_PREFIX}.articleId`)}
-                  value={<span className='break-all'>{article.id}</span>}
-                />
-                <FactRow
-                  label={t(`${ARTICLE_DETAIL_PREFIX}.slug`)}
-                  value={<span className='break-all'>{article.slug}</span>}
-                />
-                <FactRow
-                  label={t(`${ARTICLE_DETAIL_PREFIX}.authorId`)}
-                  value={<span className='break-all'>{article.userId}</span>}
-                />
-                <FactRow label={t(`${ARTICLE_DETAIL_PREFIX}.status`)} value={statusLabel} />
-              </CardContent>
+              <Separator />
+              <div className='p-4'>
+                <SanitizedHtml html={article.description} as='section' className={ARTICLE_CONTENT_CLASS_NAME} />
+              </div>
             </Card>
+          </div>
 
-            <Card className='rounded-xl'>
-              <CardHeader>
-                <CardTitle className='text-base'>{t(`${ARTICLE_DETAIL_PREFIX}.publishing`)}</CardTitle>
-              </CardHeader>
-              <CardContent className='grid grid-cols-2 gap-3'>
-                <div className='rounded-lg border bg-muted/40 p-3'>
-                  <p className='text-xs text-muted-foreground'>{t(`${ARTICLE_DETAIL_PREFIX}.viewsLabel`)}</p>
-                  <p className='mt-1 text-2xl font-semibold tabular-nums'>{article.viewCount}</p>
+          <aside className='col-span-1 mt-8 space-y-6 lg:col-span-4 lg:mt-0'>
+            <Button asChild className='w-full justify-center' aria-label={t(`${ARTICLE_DETAIL_PREFIX}.edit`)}>
+              <Link to={`/htm/news/${id}/update`}>
+                {t('tenant.hoaTheoMua.articles.action.updateDetails')}
+                <PencilIcon className='size-4' />
+              </Link>
+            </Button>
+
+            <AuthorProfileCard
+              title={t(`${ARTICLE_DETAIL_PREFIX}.aboutAuthor`)}
+              description={t(`${ARTICLE_DETAIL_PREFIX}.authorFallbackDescription`)}
+              name={authorName}
+              email={authorEmail || undefined}
+              avatarUrl={authorAvatarUrl}
+            />
+
+            <SidebarSection
+              title={t(`${ARTICLE_DETAIL_PREFIX}.publishing`)}
+              description={t(`${ARTICLE_DETAIL_PREFIX}.overviewDescription`)}
+            >
+              <div className='mt-4 space-y-3'>
+                <div className='flex items-center justify-between gap-3'>
+                  <p className='text-xs font-medium text-muted-foreground'>{t(`${ARTICLE_DETAIL_PREFIX}.status`)}</p>
+                  <Badge variant='outline' className={getStatusClassName(article.status)}>
+                    {statusLabel}
+                  </Badge>
                 </div>
-                <div className='rounded-lg border bg-muted/40 p-3'>
-                  <p className='text-xs text-muted-foreground'>{t(`${ARTICLE_DETAIL_PREFIX}.categoriesLabel`)}</p>
-                  <p className='mt-1 text-2xl font-semibold tabular-nums'>{categoryCount}</p>
-                </div>
-              </CardContent>
-            </Card>
+                <MetadataRow
+                  label={t(`${ARTICLE_DETAIL_PREFIX}.viewsLabel`)}
+                  value={t(`${ARTICLE_DETAIL_PREFIX}.views`, { count: article.viewCount })}
+                />
+              </div>
+            </SidebarSection>
+
+            <Separator />
+
+            <SidebarSection title={t(`${ARTICLE_DETAIL_PREFIX}.categoriesLabel`)}>
+              <div className='mt-4 flex flex-wrap gap-2'>
+                {article.categories.map((category) => (
+                  <Badge
+                    key={category.categoryId}
+                    variant='secondary'
+                    className='max-w-full whitespace-normal break-words'
+                  >
+                    {category.categoryName}
+                  </Badge>
+                ))}
+              </div>
+            </SidebarSection>
+            <Separator />
+
+            <SidebarSection title={t(`${ARTICLE_DETAIL_PREFIX}.overview`)}>
+              <div className='mt-4 space-y-3'>
+                <MetadataRow
+                  label={t(`${ARTICLE_DETAIL_PREFIX}.createdAtLabel`)}
+                  value={formatDate(article.createdAt, 'dateLong')}
+                />
+                <MetadataRow
+                  label={t(`${ARTICLE_DETAIL_PREFIX}.updatedAtLabel`)}
+                  value={
+                    article.updatedAt ? (
+                      formatDate(article.updatedAt, 'dateLong')
+                    ) : (
+                      <span className='text-muted-foreground/40'>-</span>
+                    )
+                  }
+                />
+              </div>
+            </SidebarSection>
           </aside>
-        </div>
+        </article>
       </DetailShell>
     </div>
   )
