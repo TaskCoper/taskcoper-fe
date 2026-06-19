@@ -28,6 +28,46 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
-    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
+    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt",
+    "jobs": {
+      "title": "Tin tuyển dụng",
+      "description": "Quản lý và theo dõi các vị trí đang tuyển dụng.",
+      "column": {
+        "title": "Vị trí",
+        "enterTitle": "Tìm theo tên vị trí...",
+        "location": "Địa điểm",
+        "employmentType": "Hình thức",
+        "salary": "Lương",
+        "openings": "Số lượng",
+        "status": "Trạng thái",
+        "noLocation": "Chưa có địa điểm"
+      },
+      "salary": {
+        "negotiable": "Thỏa thuận",
+        "from": "Từ {{amount}}",
+        "upTo": "Đến {{amount}}",
+        "undisclosed": "Không công khai"
+      },
+      "employmentType": {
+        "fullTime": "Toàn thời gian",
+        "partTime": "Bán thời gian"
+      },
+      "status": {
+        "open": "Đang tuyển",
+        "closed": "Đã đóng"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewDetails": "Xem chi tiết",
+        "copyLink": "Sao chép liên kết"
+      },
+      "copyLink": {
+        "success": "Đã sao chép",
+        "successDescription": "Liên kết tin tuyển dụng đã được sao chép vào bộ nhớ tạm.",
+        "error": "Không thể sao chép",
+        "errorDescription": "Vui lòng thử lại."
+      }
+    }
   }
 }

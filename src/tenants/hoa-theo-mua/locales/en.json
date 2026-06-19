@@ -28,6 +28,46 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Applicants — Coming Soon",
-    "jobsComingSoon": "Job Postings — Coming Soon"
+    "jobsComingSoon": "Job Postings — Coming Soon",
+    "jobs": {
+      "title": "Job postings",
+      "description": "Browse and manage your open job postings.",
+      "column": {
+        "title": "Position",
+        "enterTitle": "Search by title...",
+        "location": "Location",
+        "employmentType": "Type",
+        "salary": "Salary",
+        "openings": "Openings",
+        "status": "Status",
+        "noLocation": "No location"
+      },
+      "salary": {
+        "negotiable": "Negotiable",
+        "from": "From {{amount}}",
+        "upTo": "Up to {{amount}}",
+        "undisclosed": "Not disclosed"
+      },
+      "employmentType": {
+        "fullTime": "Full-time",
+        "partTime": "Part-time"
+      },
+      "status": {
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewDetails": "View details",
+        "copyLink": "Copy link"
+      },
+      "copyLink": {
+        "success": "Link copied",
+        "successDescription": "Job posting link copied to clipboard.",
+        "error": "Couldn't copy link",
+        "errorDescription": "Please try again."
+      }
+    }
   }
 }
