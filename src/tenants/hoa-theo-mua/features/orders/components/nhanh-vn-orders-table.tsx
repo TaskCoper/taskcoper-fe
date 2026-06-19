@@ -11,9 +11,9 @@ interface NhanhVnOrdersTableProps {
 }
 
 export function NhanhVnOrdersTable({ orders, isLoading }: NhanhVnOrdersTableProps) {
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
 
-  const toggleRow = (id: string) => {
+  const toggleRow = (id: number) => {
     setExpandedRows((prev) => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id)

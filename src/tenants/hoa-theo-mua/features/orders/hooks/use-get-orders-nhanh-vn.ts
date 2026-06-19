@@ -11,7 +11,12 @@ export const useGetOrdersNhanhVn = (params?: GetOrdersNhanhVnParams) => {
         filters: {
           createdAtFrom: params?.createdAtFrom,
           createdAtTo: params?.createdAtTo,
-          saleName: params?.saleName
+          ids: params?.ids,
+          depotIds: params?.depotIds
+        },
+        paginator: {
+          size: params?.size ?? 10,
+          ...(params?.nextCursor ? { next: params.nextCursor } : {})
         },
         dataOptions: {}
       }),
@@ -20,6 +25,7 @@ export const useGetOrdersNhanhVn = (params?: GetOrdersNhanhVnParams) => {
 
   return {
     nhanhVnOrders: nhanhVnOrdersResponse?.data ?? [],
+    paginator: nhanhVnOrdersResponse?.paginator,
     isLoadingNhanhVnOrders
   }
 }

@@ -25,6 +25,9 @@ i18n
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false
+    },
+    react: {
+      bindI18n: 'languageChanged loaded added'
     }
   })
 

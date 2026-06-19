@@ -80,7 +80,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
                 href={trackingUrl}
                 target='_blank'
                 rel='noreferrer'
-                className='font-mono text-xs text-blue-600 dark:text-blue-400 hover:underline'
+                className='font-mono text-xs text-black-600 dark:text-black-400 hover:underline'
               >
                 {id}
               </a>
@@ -125,7 +125,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         const value = row.original.channel?.trafficSource
         return value ? (
           <div className='flex justify-center'>
-            <span className='text-xs bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60 px-2 py-0.5 rounded-full'>
+            <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>
               {value}
             </span>
           </div>
@@ -249,13 +249,17 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
     },
     {
       id: 'depot',
-      accessorFn: (row) => row.depot?.name,
+      accessorFn: (row) => row.info.depotId,
       meta: { label: 'orders.column.depot' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
       cell: ({ row }) => {
-        const value = row.original.depot?.name
+        const value = row.original.info.depotId
         return value ? (
-          <p className='text-center'>{value}</p>
+          <div className='flex justify-center'>
+            <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>
+              {value}
+            </span>
+          </div>
         ) : (
           <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
             {i18next.t('orders.common.noData')}

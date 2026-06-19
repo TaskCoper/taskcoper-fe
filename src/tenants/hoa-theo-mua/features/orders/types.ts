@@ -34,7 +34,8 @@ export interface NhanhVnProduct {
 
 export interface NhanhVnOrder {
   info: {
-    id: string
+    id: number
+    depotId?: number
     saleName?: string
     trackingUrl?: string
     createdAt?: number
@@ -56,18 +57,12 @@ export interface NhanhVnOrder {
       amount?: number
     }
   }
-  depot?: {
-    id?: number
-    name?: string
-  }
 }
 
 export interface NhanhVnOrdersResponse {
   code: number
   paginator?: {
-    totalRow: number
-    perPage: number
-    currentPage: number
+    next?: { id: number }
   }
   data: NhanhVnOrder[]
 }
@@ -78,14 +73,19 @@ export interface NhanhVnOrdersRequest {
     createdAtTo?: number
     ids?: number[]
     depotIds?: number[]
-    saleName?: string
   }
-  paginator?: { size?: number }
+  paginator?: {
+    size?: number
+    next?: { id: number }
+  }
   dataOptions?: Record<string, unknown>
 }
 
 export interface GetOrdersNhanhVnParams {
   createdAtFrom?: number
   createdAtTo?: number
-  saleName?: string
+  ids?: number[]
+  depotIds?: number[]
+  size?: number
+  nextCursor?: { id: number }
 }
