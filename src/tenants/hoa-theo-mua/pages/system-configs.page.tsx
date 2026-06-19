@@ -10,7 +10,60 @@ import { toast } from 'sonner'
 import AddConfigSheet from '../features/configs/components/add-config-sheet'
 import ConfigItem from '../features/configs/components/get-config-admin'
 import { useGetSystemConfigs } from '../features/configs/hooks/use-get-system-configs'
+import { useUpdateConfig } from '../features/configs/hooks/use-update-config'
 import type { ConfigSystemItem } from '../features/configs/types'
+
+function extractConfigValue(config: ConfigSystemItem, formData: FormData): unknown {
+  const { inputType } = config.value
+  const key = config.key
+
+  switch (inputType) {
+    case 'text':
+    case 'date':
+      return formData.get(key) as string
+
+    case 'number':
+    case 'currency':
+    case 'percentage': {
+      const raw = formData.get(key) as string | null
+      return raw !== null ? Number(raw) : null
+    }
+
+    case 'select': {
+      const raw = formData.get(key) as string | null
+      if (raw === null) return null
+      const num = Number(raw)
+      return Number.isNaN(num) ? raw : num
+    }
+
+    case 'address':
+      return {
+        city: formData.get(`${key}.city`),
+        ward: formData.get(`${key}.ward`),
+        street: formData.get(`${key}.street`)
+      }
+
+    case 'dateRange':
+      return {
+        from: formData.get(`${key}.from`),
+        to: formData.get(`${key}.to`)
+      }
+
+    case 'checkbox':
+      return formData.getAll(key)
+
+    case 'switch-group': {
+      type SwitchItem = { key: string; label: string; description?: string; value: boolean }
+      return ((config.value.items as SwitchItem[]) ?? []).map((item) => ({
+        ...item,
+        value: formData.get(`${key}.${item.key}`) === 'true'
+      }))
+    }
+
+    default:
+      return formData.get(key)
+  }
+}
 
 const GROUP_ICONS: Record<string, React.ElementType> = {
   general: Info,
@@ -25,8 +78,10 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
 export default function SystemConfigsPage() {
   const { t } = useTranslation()
   const { systemConfigs, isLoadingSystemConfigs } = useGetSystemConfigs()
+  const { mutateAsync: updateConfig } = useUpdateConfig()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [savingGroup, setSavingGroup] = useState<string | null>(null)
 
   const allItems = systemConfigs.value.items
   const activeItems = allItems.filter((config) => config.value.isActive !== false)
@@ -42,13 +97,24 @@ export default function SystemConfigsPage() {
   const toggle = (group: string) => setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }))
   const isOpen = (group: string, index: number) => openGroups[group] ?? index === 0
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>, group: string) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>, group: string) => {
     e.preventDefault()
-    const data = Object.fromEntries(new FormData(e.currentTarget))
-    console.log(`[${group}] save:`, data)
-    toast.success(t('systemConfigs.saveSuccess'), {
-      description: t(`systemConfigs.groups.${group}`, { defaultValue: group })
-    })
+    const formData = new FormData(e.currentTarget)
+    const items = grouped[group] ?? []
+
+    setSavingGroup(group)
+    try {
+      await Promise.all(
+        items.map((config) => updateConfig({ key: config.key, value: extractConfigValue(config, formData) }))
+      )
+      toast.success(t('systemConfigs.saveSuccess'), {
+        description: t(`systemConfigs.groups.${group}`, { defaultValue: group })
+      })
+    } catch {
+      toast.error(t('systemConfigs.saveError'))
+    } finally {
+      setSavingGroup(null)
+    }
   }
 
   return (
@@ -115,8 +181,8 @@ export default function SystemConfigsPage() {
                           ))}
                         </CardContent>
                         <CardFooter className='border-t px-5 py-3'>
-                          <Button type='submit' size='sm' className='ml-auto'>
-                            {t('systemConfigs.saveChanges')}
+                          <Button type='submit' size='sm' className='ml-auto' disabled={savingGroup === group}>
+                            {savingGroup === group ? t('systemConfigs.saving') : t('systemConfigs.saveChanges')}
                           </Button>
                         </CardFooter>
                       </form>

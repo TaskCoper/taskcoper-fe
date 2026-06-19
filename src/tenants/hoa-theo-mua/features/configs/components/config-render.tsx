@@ -37,6 +37,31 @@ function fmt(date?: Date) {
   return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+function SwitchGroupRenderer({ config }: ConfigRendererProps) {
+  const m = config.value as SwitchMeta
+  const [items, setItems] = useState(m.items ?? [])
+
+  return (
+    <div className='space-y-4'>
+      {items.map((item) => (
+        <div key={item.key} className='flex items-center justify-between'>
+          <div>
+            <div className='font-medium'>{item.label}</div>
+            {item.description && <div className='text-muted-foreground text-sm'>{item.description}</div>}
+          </div>
+          <input type='hidden' name={`${config.key}.${item.key}`} value={String(item.value)} />
+          <Switch
+            checked={item.value}
+            onCheckedChange={(checked) =>
+              setItems((prev) => prev.map((it) => (it.key === item.key ? { ...it, value: checked } : it)))
+            }
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function DateRangePicker({ config }: ConfigRendererProps) {
   const { t } = useTranslation()
   const meta = config.value as DateRangeMeta
@@ -173,22 +198,8 @@ export default function ConfigRenderer({ config }: ConfigRendererProps) {
       )
     }
 
-    case 'switch-group': {
-      const m = meta as SwitchMeta
-      return (
-        <div className='space-y-4'>
-          {m.items?.map((item) => (
-            <div key={item.key} className='flex items-center justify-between'>
-              <div>
-                <div className='font-medium'>{item.label}</div>
-                {item.description && <div className='text-muted-foreground text-sm'>{item.description}</div>}
-              </div>
-              <Switch defaultChecked={item.value} />
-            </div>
-          ))}
-        </div>
-      )
-    }
+    case 'switch-group':
+      return <SwitchGroupRenderer config={config} />
 
     case 'date': {
       const m = meta as DateMeta

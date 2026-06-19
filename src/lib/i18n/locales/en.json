@@ -2425,7 +2425,9 @@
       "dateRangePlaceholder": "Select date range"
     },
     "saveChanges": "Save changes",
+    "saveError": "Failed to save, please try again.",
     "saveSuccess": "Saved successfully",
+    "saving": "Saving...",
     "sheet": {
       "description": "Enable to show on the main screen, disable to hide.",
       "hiddenCount": "{{count}} hidden",

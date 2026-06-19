@@ -14,6 +14,11 @@ class ConfigSystemService {
     const { data } = await htmApi.patch<BaseResponse<ConfigSystemItem>>(`/v1/${this.baseUrl}/${key}`, { isActive })
     return data.value
   }
+
+  updateConfig = async ({ key, value }: { key: string; value: unknown }) => {
+    const { data } = await htmApi.put<BaseResponse<ConfigSystemItem>>(`/v1/${this.baseUrl}/${key}`, { value })
+    return data.value
+  }
 }
 
 const configSystemService = new ConfigSystemService()
