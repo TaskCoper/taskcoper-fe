@@ -91,7 +91,7 @@ export default function NewsArticlesPage() {
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={onNavigate}>
             <CirclePlus className='size-3' />
-            {t('tenant.hoaTheoMua.articles.form.title')}
+            {t('articles.form.title')}
           </Button>
         </DataTableToolbar>
       </DataTable>

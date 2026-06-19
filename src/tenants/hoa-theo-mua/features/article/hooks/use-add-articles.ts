@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import articleService from '../services'
 import { addArticleSchema, type AddArticleForm } from '../validations'
 
-const ARTICLE_FORM_PREFIX = 'tenant.hoaTheoMua.articles.form' as const
+const ARTICLE_FORM_PREFIX = 'articles.form' as const
 
 export const useAddArticle = () => {
   const queryClient = useQueryClient()

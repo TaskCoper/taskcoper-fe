@@ -25,8 +25,8 @@ import { useAddArticle } from '../features/article/hooks/use-add-articles'
 import { useGetCategoryNew } from '../features/article/hooks/use-get-categories'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
 
-const ARTICLE_FORM_PREFIX = 'tenant.hoaTheoMua.articles.form' as const
-const ARTICLE_STATUS_PREFIX = 'tenant.hoaTheoMua.articles.status' as const
+const ARTICLE_FORM_PREFIX = 'articles.form' as const
+const ARTICLE_STATUS_PREFIX = 'articles.status' as const
 
 interface ComboboxCategoryItem {
   id: string
@@ -128,7 +128,6 @@ export default function NewsAddPage() {
                 renderOption={(category) => (
                   <div className='flex min-w-0 flex-col'>
                     <p className='truncate text-sm font-medium'>{category.name}</p>
-                    <p className='truncate text-xs text-muted-foreground'>{category.id}</p>
                   </div>
                 )}
               />

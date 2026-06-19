@@ -14,7 +14,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import { useGetArticle } from '../features/article/hooks/use-get-article'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../features/article/types'
 
-const ARTICLE_DETAIL_PREFIX = 'tenant.hoaTheoMua.articles.detail' as const
+const ARTICLE_DETAIL_PREFIX = 'articles.detail' as const
 
 const ARTICLE_CONTENT_CLASS_NAME = [
   'mx-auto w-full max-w-4xl overflow-visible',
@@ -295,7 +295,7 @@ export default function NewsDetailPage() {
           <aside className='col-span-1 mt-8 space-y-6 lg:col-span-4 lg:mt-0'>
             <Button asChild className='w-full justify-center' aria-label={t(`${ARTICLE_DETAIL_PREFIX}.edit`)}>
               <Link to={`/htm/news/${id}/update`}>
-                {t('tenant.hoaTheoMua.articles.action.updateDetails')}
+                {t('articles.action.updateDetails')}
                 <PencilIcon className='size-4' />
               </Link>
             </Button>

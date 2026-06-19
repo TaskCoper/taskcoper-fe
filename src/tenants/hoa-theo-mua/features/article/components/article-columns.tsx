@@ -18,7 +18,7 @@ import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../types'
 
-const ARTICLE_I18N_PREFIX = 'tenant.hoaTheoMua.articles' as const
+const ARTICLE_I18N_PREFIX = 'articles' as const
 
 interface GetColumnsParams {
   t: TenantT
@@ -32,7 +32,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label={`${ARTICLE_I18N_PREFIX}.column.selectAll`}
+          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectAll`)}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -40,7 +40,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label={`${ARTICLE_I18N_PREFIX}.column.selectRow`}
+          aria-label={t(`${ARTICLE_I18N_PREFIX}.column.selectRow`)}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -54,14 +54,12 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       id: 'title',
       accessorKey: 'title',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.title',
-        placeholder: 'tenant.hoaTheoMua.articles.column.titlePlaceholder',
+        label: 'articles.column.title',
+        placeholder: 'articles.column.titlePlaceholder',
         variant: 'text',
         icon: SearchIcon
       },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.title'} />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} label={'articles.column.title'} />,
       cell: ({ row }) => (
         <Link to={`/htm/news/${row.original.id}`} className='flex min-w-0 items-center gap-3 hover:underline'>
           <Avatar className='size-9 rounded-lg'>
@@ -74,8 +72,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
           <p className='w-full max-w-125 truncate font-medium xl:max-w-none'>{row.original.title}</p>
         </Link>
       ),
-
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: false,
       enableColumnFilter: true,
       size: 100
@@ -84,18 +81,15 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       id: 'viewCount',
       accessorKey: 'viewCount',
       meta: {
-        label: 'tenant.hoaTheoMua.articles.column.viewCount'
+        label: 'articles.column.viewCount'
       },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.viewCount'} />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} label={'articles.column.viewCount'} />,
       cell: ({ row }) => (
         <Link to={`/htm/news/detail?id=${row.original.id}`} className='hover:underline'>
           <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none'>{row.original.viewCount}</p>
         </Link>
       ),
-
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
       size: 30
@@ -118,7 +112,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
         ]
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={'tenant.hoaTheoMua.articles.column.status'} className='mx-auto' />
+        <DataTableColumnHeader column={column} label={'articles.column.status'} className='mx-auto' />
       ),
       cell: ({ row }) => {
         const status = row.original.status
@@ -136,8 +130,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
           </div>
         )
       },
-
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
       size: 30
@@ -145,24 +138,20 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
     {
       id: 'createdAt',
       accessorKey: 'createdAt',
-
+      meta: {
+        label: 'articles.column.createdAt'
+      },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={'tenant.hoaTheoMua.articles.column.createdAt'}
-          className='mx-auto'
-        />
+        <DataTableColumnHeader column={column} label={'articles.column.createdAt'} className='mx-auto' />
       ),
-
       cell: ({ row }) => {
         if (row.original.createdAt) {
           return <p className='text-center text-sm tabular-nums'>{formatDate(row.original.createdAt, 'dateLong')}</p>
         }
 
-        return <p className='text-center text-muted-foreground'>{`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`}</p>
+        return <p className='text-center text-muted-foreground'>{t(`${ARTICLE_I18N_PREFIX}.column.noCreatedAt`)}</p>
       },
-
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
       size: 30

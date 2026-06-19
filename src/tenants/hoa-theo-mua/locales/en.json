@@ -22,8 +22,23 @@
     "categoriesComingSoon": "Categories — Coming Soon"
   },
   "common": {
+    "button": {
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
     "ui": {
       "selectOptions": "Select options..."
+    },
+    "validation": {
+      "maxLength": "Maximum {{max}} characters allowed",
+      "number": {
+        "integer": "Must be an integer",
+        "invalid": "Must be a valid number"
+      },
+      "url": {
+        "invalid": "Invalid URL"
+      }
     }
   },
   "article": {
@@ -57,7 +72,7 @@
       "delete": "Delete",
       "openMenu": "Open article actions",
       "viewDetails": "View details",
-      "updateDetails": "Update details"
+      "updateDetails": "Update article"
     },
     "column": {
       "createdAt": "Created at",
@@ -69,96 +84,71 @@
       "titlePlaceholder": "Search by title...",
       "viewCount": "View count"
     },
-    "status": {
-      "draft": "Draft",
-      "published": "Published"
-    },
     "confirm": {
       "deleteDescription": "This article will be permanently deleted and cannot be restored.",
       "deleteTitle": "Delete article?"
+    },
+    "detail": {
+      "aboutAuthor": "About the author",
+      "articleId": "Article ID",
+      "authorFallbackDescription": "Author of this article.",
+      "authorId": "Author ID",
+      "authorProfile": "Author profile",
+      "authorProfileDescription": "Writer information for this article.",
+      "categories": "{{count}} categories",
+      "categoriesLabel": "Categories",
+      "createdAt": "Created {{date}}",
+      "createdAtLabel": "Created",
+      "edit": "Edit article",
+      "missingIdDescription": "Choose an article from the news list to open its detail page.",
+      "missingIdTitle": "No article selected",
+      "notFoundDescription": "The article may have been removed or the link is no longer valid.",
+      "notFoundTitle": "Article not found",
+      "overview": "Article overview",
+      "overviewDescription": "Key publishing details for this article.",
+      "publishing": "Publishing",
+      "slug": "Slug",
+      "status": "Status",
+      "updatedAt": "Updated {{date}}",
+      "updatedAtLabel": "Updated",
+      "unknownAuthor": "Unknown author",
+      "views": "{{count}} views",
+      "viewsLabel": "Views"
+    },
+    "form": {
+      "bodyLabel": "Article content",
+      "categoriesLabel": "Categories",
+      "categoryCount": "{{count}} categories",
+      "contentDescription": "Write the headline, categories, and article body.",
+      "contentTitle": "Article content",
+      "createSuccess": "Article created successfully.",
+      "description": "Create a news article for the Hoa Theo Mua admin workspace.",
+      "eyebrow": "News management",
+      "pictureLabel": "Cover image URL",
+      "picturePlaceholder": "https://example.com/article-cover.jpg",
+      "previewDescription": "A compact check before publishing.",
+      "previewHint": "Use a clear title and a sharp cover image for the article list.",
+      "previewImageAlt": "Article cover preview",
+      "previewTitle": "Preview",
+      "previewUntitled": "Untitled article",
+      "publishDescription": "Choose visibility and add a cover image.",
+      "publishTitle": "Publishing",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select status",
+      "submit": "Create article",
+      "title": "Add article",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter article title",
+      "updateDescription": "Update a news article for the Hoa Theo Mua admin workspace.",
+      "updateSubmit": "Save changes",
+      "updateTitle": "Update article"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
     }
   },
-  "tenant": {
-    "hoaTheoMua": {
-      "articles": {
-        "action": {
-          "actions": "Actions",
-          "delete": "Delete",
-          "openMenu": "Open article actions",
-          "viewDetails": "View details",
-          "updateDetails": "Update article"
-        },
-        "column": {
-          "createdAt": "Created at",
-          "noCreatedAt": "No created date",
-          "selectAll": "Select all articles",
-          "selectRow": "Select article",
-          "status": "Status",
-          "title": "Title",
-          "titlePlaceholder": "Search by title...",
-          "viewCount": "View count"
-        },
-        "form": {
-          "bodyLabel": "Article content",
-          "categoriesLabel": "Categories",
-          "categoryCount": "{{count}} categories",
-          "contentDescription": "Write the headline, categories, and article body.",
-          "contentTitle": "Article content",
-          "createSuccess": "Article created successfully.",
-          "description": "Create a news article for the Hoa Theo Mua admin workspace.",
-          "eyebrow": "News management",
-          "pictureLabel": "Cover image URL",
-          "picturePlaceholder": "https://example.com/article-cover.jpg",
-          "previewDescription": "A compact check before publishing.",
-          "previewHint": "Use a clear title and a sharp cover image for the article list.",
-          "previewImageAlt": "Article cover preview",
-          "previewTitle": "Preview",
-          "previewUntitled": "Untitled article",
-          "publishDescription": "Choose visibility and add a cover image.",
-          "publishTitle": "Publishing",
-          "statusLabel": "Status",
-          "statusPlaceholder": "Select status",
-          "submit": "Create article",
-          "title": "Add article",
-          "titleLabel": "Title",
-          "titlePlaceholder": "Enter article title",
-          "updateDescription": "Update a news article for the Hoa Theo Mua admin workspace.",
-          "updateSubmit": "Save changes",
-          "updateTitle": "Update article"
-        },
-        "detail": {
-          "aboutAuthor": "About the author",
-          "articleId": "Article ID",
-          "authorFallbackDescription": "Author of this article.",
-          "authorId": "Author ID",
-          "authorProfile": "Author profile",
-          "authorProfileDescription": "Writer information for this article.",
-          "categories": "{{count}} categories",
-          "categoriesLabel": "Categories",
-          "createdAt": "Created {{date}}",
-          "createdAtLabel": "Created",
-          "edit": "Edit article",
-          "missingIdDescription": "Choose an article from the news list to open its detail page.",
-          "missingIdTitle": "No article selected",
-          "notFoundDescription": "The article may have been removed or the link is no longer valid.",
-          "notFoundTitle": "Article not found",
-          "overview": "Article overview",
-          "overviewDescription": "Key publishing details for this article.",
-          "publishing": "Publishing",
-          "slug": "Slug",
-          "status": "Status",
-          "updatedAt": "Updated {{date}}",
-          "updatedAtLabel": "Updated",
-          "unknownAuthor": "Unknown author",
-          "views": "{{count}} views",
-          "viewsLabel": "Views",
-          "update": "U"
-        },
-        "status": {
-          "draft": "Draft",
-          "published": "Published"
-        }
-      }
-    }
+  "error": {
+    "somethingWentWrong": "Something went wrong"
   }
 }
