@@ -19,6 +19,7 @@ export const configs = [
         maxLength: 200
       },
       isEditable: true,
+      isActive: true,
       order: 1
     }
   },
@@ -39,6 +40,7 @@ export const configs = [
         required: true
       },
       isEditable: true,
+      isActive: true,
       order: 2
     }
   },
@@ -58,6 +60,7 @@ export const configs = [
         max: 1
       },
       isEditable: true,
+      isActive: true,
       order: 3
     }
   },
@@ -75,6 +78,7 @@ export const configs = [
         min: 0
       },
       isEditable: true,
+      isActive: true,
       order: 4
     }
   },
@@ -92,6 +96,7 @@ export const configs = [
         min: 0
       },
       isEditable: true,
+      isActive: true,
       order: 5
     }
   },
@@ -110,6 +115,7 @@ export const configs = [
         max: 100
       },
       isEditable: true,
+      isActive: true,
       order: 6
     }
   },
@@ -128,6 +134,7 @@ export const configs = [
         max: 1440
       },
       isEditable: true,
+      isActive: true,
       order: 7
     }
   },
@@ -146,6 +153,7 @@ export const configs = [
         max: 1
       },
       isEditable: true,
+      isActive: true,
       order: 8
     }
   },
@@ -163,6 +171,7 @@ export const configs = [
         min: 0
       },
       isEditable: true,
+      isActive: true,
       order: 9
     }
   },
@@ -182,6 +191,7 @@ export const configs = [
         pattern: '^[0-9+\\s-]+$'
       },
       isEditable: true,
+      isActive: true,
       order: 10
     }
   },
@@ -197,7 +207,8 @@ export const configs = [
         { label: 'Ahamove', value: 'ahamove' },
         { label: 'Grab', value: 'grab' },
         { label: 'Be', value: 'be' }
-      ]
+      ],
+      isActive: true
     }
   },
   {
@@ -256,7 +267,8 @@ export const configs = [
           description: 'Đơn hàng sẽ tự động được xác nhận sau khi tạo.',
           value: false
         }
-      ]
+      ],
+      isActive: true
     }
   },
   {
@@ -266,17 +278,19 @@ export const configs = [
       description: 'Ngày hệ thống bắt đầu bảo trì.',
       group: 'dateSettings',
       inputType: 'date',
-      value: '2026-06-20'
+      value: '2026-06-20',
+      isActive: false
     }
   },
   {
     key: 'rewardPointExpiredAt',
     value: {
       label: 'Ngày hết hạn điểm thưởng',
-      description: 'Ngày hết hạn điểm thưởng.',
+      description: 'Ngày hết hạn điểm thưởng của toàn hệ thống.',
       group: 'dateSettings',
       inputType: 'date',
-      value: '2026-12-31'
+      value: '2026-12-31',
+      isActive: false
     }
   },
   {
@@ -289,30 +303,8 @@ export const configs = [
       value: {
         from: new Date('2026-06-01'),
         to: new Date('2026-07-10')
-      } satisfies DateRange
+      } satisfies DateRange,
+      isActive: false
     }
   }
 ]
-
-// Địa chỉ lấy hàng mặc định - 13A Đào Duy Anh, Phường 9, Phú Nhuận, Hồ Chí Minh
-// Thông tin dịch vụ ahamove
-// [
-//   {
-//     "_id": "SGN-BIKE",
-//     "requests": [
-//       {
-//         "_id": "SGN-BIKE-SMS"
-//       },
-//       {
-//         "_id": "SGN-BIKE-D2D"
-//       },
-//       {
-//         "_id": "SGN-BIKE-FRAGILE"
-//       },
-//       {
-//         "_id": "SGN-BIKE-BULKY",
-//         "tier_code": "TIER_2"
-//       }
-//     ]
-//   }
-// ]

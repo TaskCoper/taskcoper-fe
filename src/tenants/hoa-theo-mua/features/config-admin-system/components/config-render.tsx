@@ -9,10 +9,10 @@ import { Switch } from '@/components/ui/switch'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
-import type { configs } from '../config.system'
+import type { ConfigSystemItem } from '../types'
 
 type Props = {
-  config: (typeof configs)[number]
+  config: ConfigSystemItem
 }
 
 type AddressMeta = { value: { city?: string; ward?: string; street?: string } }
@@ -24,6 +24,13 @@ type DateMeta = { value: string }
 type DateRangeMeta = { value: DateRange }
 type TextMeta = { value: string; placeholder?: string }
 
+function parseAsDate(value: unknown): Date | undefined {
+  if (value instanceof Date) return value
+  if (typeof value !== 'string') return undefined
+  const d = new Date(value)
+  return Number.isNaN(d.getTime()) ? undefined : d
+}
+
 function fmt(date?: Date) {
   if (!date) return '...'
   return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -31,7 +38,11 @@ function fmt(date?: Date) {
 
 function DateRangePicker({ config }: Props) {
   const meta = config.value as DateRangeMeta
-  const [range, setRange] = useState<DateRange | undefined>(meta.value)
+  const raw = meta.value as { from?: unknown; to?: unknown }
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: parseAsDate(raw?.from),
+    to: parseAsDate(raw?.to)
+  })
 
   const label = range?.from
     ? range.to

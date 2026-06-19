@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CalendarDays, ChevronDownIcon, CreditCard, Gift, Info, ShoppingBag, Truck, Zap } from 'lucide-react'
+import { CalendarDays, ChevronDownIcon, CreditCard, Gift, Info, Settings2, ShoppingBag, Truck, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useGetSystemConfigs } from '../features/config-admin-system/hooks/use-get-system-configs'
+import { AddConfigSheet } from '../features/config-admin-system/components/add-config-sheet'
 import { ConfigItem } from '../features/config-admin-system/components/get-config-admin'
+import { useGetSystemConfigs } from '../features/config-admin-system/hooks/use-get-system-configs'
 import type { ConfigSystemItem } from '../features/config-admin-system/service'
 
 const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
@@ -22,18 +23,21 @@ const GROUP_META: Record<string, { label: string; icon: React.ElementType }> = {
 
 export default function SystemConfigsPage() {
   const { systemConfigs, isLoadingSystemConfigs } = useGetSystemConfigs()
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
+  const [sheetOpen, setSheetOpen] = useState(false)
 
-  const grouped = systemConfigs.value.items.reduce<Record<string, ConfigSystemItem[]>>((acc, config) => {
+  const allItems = systemConfigs.value.items
+  const activeItems = allItems.filter((config) => config.value.isActive !== false)
+  const inactiveCount = allItems.length - activeItems.length
+
+  const grouped = activeItems.reduce<Record<string, ConfigSystemItem[]>>((acc, config) => {
     const group = config.value.group
     if (!acc[group]) acc[group] = []
     acc[group].push(config)
     return acc
   }, {})
 
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
-
   const toggle = (group: string) => setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }))
-
   const isOpen = (group: string, index: number) => openGroups[group] ?? index === 0
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>, group: string) => {
@@ -43,22 +47,23 @@ export default function SystemConfigsPage() {
     toast.success('Lưu thành công', { description: GROUP_META[group]?.label ?? group })
   }
 
-  console.log(
-    JSON.stringify({
-      group: 'dateSettings',
-      label: 'Ngày bảo trì',
-      value: '2026-06-20',
-      inputType: 'date',
-      description: 'Ngày hệ thống bắt đầu bảo trì.'
-    })
-  )
-
   return (
     <div className='h-full overflow-y-auto'>
       <div className='mx-auto max-w-3xl p-6'>
-        <div className='mb-7'>
-          <h1 className='text-xl font-semibold'>Cấu hình hệ thống</h1>
-          <p className='text-muted-foreground mt-1 text-sm'>Quản lý các cài đặt vận hành của hệ thống</p>
+        <div className='mb-7 flex items-start justify-between gap-4'>
+          <div>
+            <h1 className='text-xl font-semibold'>Cấu hình hệ thống</h1>
+            <p className='text-muted-foreground mt-1 text-sm'>Quản lý các cài đặt vận hành của hệ thống</p>
+          </div>
+          <Button variant='outline' size='sm' className='shrink-0 gap-1.5' onClick={() => setSheetOpen(true)}>
+            <Settings2 className='size-4' />
+            Quản lý cấu hình
+            {inactiveCount > 0 && (
+              <Badge variant='secondary' className='rounded-full px-1.5 py-0 text-xs font-normal tabular-nums'>
+                {inactiveCount}
+              </Badge>
+            )}
+          </Button>
         </div>
 
         {isLoadingSystemConfigs ? (
@@ -118,6 +123,8 @@ export default function SystemConfigsPage() {
           </div>
         )}
       </div>
+
+      <AddConfigSheet open={sheetOpen} onOpenChange={setSheetOpen} configs={allItems} />
     </div>
   )
 }

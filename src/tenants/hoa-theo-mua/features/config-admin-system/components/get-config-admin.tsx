@@ -1,10 +1,10 @@
 import { FieldDescription, FieldTitle } from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
-import type { configs } from '../config.system'
+import type { ConfigSystemItem } from '../types'
 import { ConfigRenderer } from './config-render'
 
 type Props = {
-  config: (typeof configs)[number]
+  config: ConfigSystemItem
 }
 
 export function ConfigItem({ config }: Props) {

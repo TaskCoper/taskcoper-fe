@@ -21,7 +21,7 @@ class UserService {
 
   signIn = async ({ body }: { body: SignInFormValues }) => {
     const { data } = await htmApi.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
-      `/v1/${this.baseUrl}/login`,
+      `/v1/auth/sign-in`,
       body
     )
 
@@ -52,7 +52,7 @@ class UserService {
   }
 
   getMe = async () => {
-    const { data } = await htmApi.get<BaseResponse<Me>>(`/v1/${this.baseUrl}/me`)
+    const { data } = await htmApi.get<BaseResponse<Me>>(`/v1/auth/me`)
 
     return data.value
   }
