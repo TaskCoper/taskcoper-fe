@@ -508,7 +508,7 @@ export const queryKeys = {
   htmOrdersNhanhVn: {
     all: ['htm-orders-nhanh-vn'] as const,
     lists: () => [...queryKeys.htmOrdersNhanhVn.all, 'list'] as const,
-    list: () => [...queryKeys.htmOrdersNhanhVn.lists()] as const
+    list: (params?: object) => [...queryKeys.htmOrdersNhanhVn.lists(), params] as const
   },
 
   // Feedbacks

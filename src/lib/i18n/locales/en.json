@@ -1302,7 +1302,8 @@
       "saleName": "Sale Name",
       "shippingAddress": "Shipping Address",
       "status": "Status",
-      "trafficSource": "Traffic Source"
+      "trafficSource": "Traffic Source",
+      "depot": "Depot"
     },
     "common": {
       "noData": "No data available"

@@ -37,7 +37,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: false,
       enableHiding: false,
       enableColumnFilter: false,
-      size: 30
+      size: 40
     },
     {
       id: 'expand',
@@ -58,7 +58,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: false,
       enableHiding: false,
       enableColumnFilter: false,
-      size: 30
+      size: 40
     },
     {
       id: 'id',
@@ -92,7 +92,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 80
+      size: 130
     },
     {
       id: 'saleName',
@@ -112,7 +112,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 80
+      size: 150
     },
     {
       id: 'trafficSource',
@@ -136,7 +136,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 80
+      size: 150
     },
     {
       id: 'shippingAddress',
@@ -157,7 +157,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 120
+      size: 240
     },
     {
       id: 'mobile',
@@ -179,7 +179,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 60
+      size: 130
     },
     {
       id: 'carrier',
@@ -201,7 +201,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 60
+      size: 150
     },
     {
       id: 'amount',
@@ -223,7 +223,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 70
+      size: 120
     },
     {
       id: 'createdAt',
@@ -245,7 +245,27 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       enableSorting: true,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 80
+      size: 150
+    },
+    {
+      id: 'depot',
+      accessorFn: (row) => row.depot?.name,
+      meta: { label: 'orders.column.depot' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
+      cell: ({ row }) => {
+        const value = row.original.depot?.name
+        return value ? (
+          <p className='text-center'>{value}</p>
+        ) : (
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
+            {i18next.t('orders.common.noData')}
+          </p>
+        )
+      },
+      enableSorting: true,
+      enableHiding: true,
+      enableColumnFilter: false,
+      size: 120
     },
     {
       id: 'actions',

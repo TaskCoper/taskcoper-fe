@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 import { endOfDay, startOfDay } from 'date-fns'
+import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
 import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
@@ -78,35 +80,43 @@ export default function OrdersListPage() {
 
   const { page, limit, sorting } = useTableQueryParams({ columns, prefix: 'orders' })
 
-  const { nhanhVnOrders, isLoadingNhanhVnOrders } = useGetOrdersNhanhVn()
+  const [saleNameFilter, setSaleNameFilter] = useQueryState(
+    'saleName',
+    parseAsString.withDefault('').withOptions({ shallow: true, clearOnDefault: true })
+  )
+  const [saleNameInput, setSaleNameInput] = useState(saleNameFilter)
 
-  const [saleNameFilter, setSaleNameFilter] = useState('')
-  const [dateRange, setDateRange] = useState<DateRange>({ from: undefined, to: undefined })
+  const [dateFrom, setDateFrom] = useQueryState('dateFrom', parseAsInteger.withOptions({ shallow: true }))
+  const [dateTo, setDateTo] = useQueryState('dateTo', parseAsInteger.withOptions({ shallow: true }))
 
-  const hasFilters = saleNameFilter !== '' || dateRange.from != null || dateRange.to != null
+  const dateRange: DateRange = {
+    from: dateFrom ? new Date(dateFrom * 1000) : undefined,
+    to: dateTo ? new Date(dateTo * 1000) : undefined
+  }
 
-  const filteredOrders = useMemo(() => {
-    return nhanhVnOrders.filter((order) => {
-      if (saleNameFilter) {
-        const name = (order.info.saleName ?? '').toLowerCase()
-        if (!name.includes(saleNameFilter.toLowerCase())) return false
-      }
-      if (dateRange.from || dateRange.to) {
-        if (!order.info.createdAt) return false
-        const d = new Date(order.info.createdAt * 1000)
-        if (dateRange.from && d < startOfDay(dateRange.from)) return false
-        if (dateRange.to && d > endOfDay(dateRange.to)) return false
-      }
-      return true
-    })
-  }, [nhanhVnOrders, saleNameFilter, dateRange])
+  const hasFilters = saleNameFilter !== '' || dateFrom != null || dateTo != null
 
-  const pagedData = useMemo(() => filteredOrders.slice((page - 1) * limit, page * limit), [filteredOrders, page, limit])
+  const debouncedSetSaleName = useDebouncedCallback((value: string) => {
+    setSaleNameFilter(value || null)
+  }, 300)
+
+  const handleSaleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSaleNameInput(e.target.value)
+    debouncedSetSaleName(e.target.value)
+  }
+
+  const { nhanhVnOrders, isLoadingNhanhVnOrders } = useGetOrdersNhanhVn({
+    createdAtFrom: dateFrom ?? undefined,
+    createdAtTo: dateTo ?? undefined,
+    saleName: saleNameFilter || undefined
+  })
+
+  const pagedData = useMemo(() => nhanhVnOrders.slice((page - 1) * limit, page * limit), [nhanhVnOrders, page, limit])
 
   const { table } = useDataTable({
     data: pagedData,
     columns,
-    pageCount: Math.max(1, Math.ceil(filteredOrders.length / limit)),
+    pageCount: Math.max(1, Math.ceil(nhanhVnOrders.length / limit)),
     initialState: {
       sorting: (sorting ?? []) as ExtendedColumnSort<NhanhVnOrder>[],
       columnPinning: { right: ['actions'] }
@@ -122,8 +132,8 @@ export default function OrdersListPage() {
   })
 
   return (
-    <div className='h-full overflow-y-auto'>
-      <div className='p-6 space-y-4 mx-auto'>
+    <div className='h-full overflow-auto'>
+      <div className='p-6 space-y-4' style={{ minWidth: table.getTotalSize() + 48 }}>
         <DataTable
           table={table}
           isLoading={isLoadingNhanhVnOrders}
@@ -135,8 +145,8 @@ export default function OrdersListPage() {
                 <UserIcon className='pointer-events-none absolute inset-y-0 left-3 flex size-4 translate-y-1/2 items-center text-muted-foreground' />
                 <Input
                   placeholder={t('orders.filter.saleName')}
-                  value={saleNameFilter}
-                  onChange={(e) => setSaleNameFilter(e.target.value)}
+                  value={saleNameInput}
+                  onChange={handleSaleNameChange}
                   className='h-7.5 min-w-60 pl-9'
                   spellCheck={false}
                 />
@@ -153,7 +163,8 @@ export default function OrdersListPage() {
                         className='ml-1 rounded-full hover:text-destructive'
                         onClick={(e) => {
                           e.stopPropagation()
-                          setDateRange({ from: undefined, to: undefined })
+                          setDateFrom(null)
+                          setDateTo(null)
                         }}
                       >
                         <X className='size-3' />
@@ -167,7 +178,10 @@ export default function OrdersListPage() {
                     captionLayout='dropdown'
                     mode='range'
                     selected={dateRange}
-                    onSelect={(range) => setDateRange(range ?? { from: undefined, to: undefined })}
+                    onSelect={(range) => {
+                      setDateFrom(range?.from ? Math.floor(startOfDay(range.from).getTime() / 1000) : null)
+                      setDateTo(range?.to ? Math.floor(endOfDay(range.to).getTime() / 1000) : null)
+                    }}
                   />
                 </PopoverContent>
               </Popover>
@@ -178,8 +192,10 @@ export default function OrdersListPage() {
                   size='sm'
                   className='h-7.5 border-dashed'
                   onClick={() => {
-                    setSaleNameFilter('')
-                    setDateRange({ from: undefined, to: undefined })
+                    setSaleNameInput('')
+                    setSaleNameFilter(null)
+                    setDateFrom(null)
+                    setDateTo(null)
                   }}
                 >
                   <X className='size-4' />

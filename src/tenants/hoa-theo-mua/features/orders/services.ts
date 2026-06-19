@@ -1,6 +1,6 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 import htmApi from '../../lib/api'
-import type { NhanhVnOrdersResponse, OrderRow } from './types'
+import type { NhanhVnOrdersRequest, NhanhVnOrdersResponse, OrderRow } from './types'
 import type { GetOrdersParams } from './hooks/use-get-orders'
 
 class OrderService {
@@ -17,8 +17,8 @@ class OrderService {
     return data
   }
 
-  getOrdersNhanhVn = async () => {
-    const { data } = await htmApi.get<NhanhVnOrdersResponse>(`v1/${this.baseNhanhUrl}`)
+  getOrdersNhanhVn = async (body?: NhanhVnOrdersRequest) => {
+    const { data } = await htmApi.post<NhanhVnOrdersResponse>(`v1/${this.baseNhanhUrl}`, body)
     return data
   }
 }

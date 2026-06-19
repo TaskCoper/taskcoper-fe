@@ -56,6 +56,10 @@ export interface NhanhVnOrder {
       amount?: number
     }
   }
+  depot?: {
+    id?: number
+    name?: string
+  }
 }
 
 export interface NhanhVnOrdersResponse {
@@ -66,4 +70,22 @@ export interface NhanhVnOrdersResponse {
     currentPage: number
   }
   data: NhanhVnOrder[]
+}
+
+export interface NhanhVnOrdersRequest {
+  filters?: {
+    createdAtFrom?: number
+    createdAtTo?: number
+    ids?: number[]
+    depotIds?: number[]
+    saleName?: string
+  }
+  paginator?: { size?: number }
+  dataOptions?: Record<string, unknown>
+}
+
+export interface GetOrdersNhanhVnParams {
+  createdAtFrom?: number
+  createdAtTo?: number
+  saleName?: string
 }
