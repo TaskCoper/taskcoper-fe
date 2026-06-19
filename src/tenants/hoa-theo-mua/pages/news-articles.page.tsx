@@ -56,7 +56,7 @@ export default function NewsArticlesPage() {
   const [titleFilter] = useQueryState('articles_title', parseAsString)
   const title = titleFilter ?? undefined
 
-  const [statusFilter] = useQueryState('articles_Status', parseAsInteger)
+  const [statusFilter] = useQueryState('articles_status', parseAsInteger)
   const statusLine = statusFilter ?? undefined
 
   const { articles, isLoadingArticles } = useGetArticles({
