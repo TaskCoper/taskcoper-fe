@@ -19,6 +19,9 @@ const AddressesZonesPage = lazy(() => import('./pages/addresses-zones.page'))
 
 const NewsArticlesPage = lazy(() => import('./pages/news-articles.page'))
 const NewsCategoriesPage = lazy(() => import('./pages/news-categories.page'))
+const NewsAddPage = lazy(() => import('./pages/news-add.page'))
+const NewsUpdatePage = lazy(() => import('./pages/news-update-page'))
+const NewsDetailPage = lazy(() => import('./pages/news-detail.page'))
 
 export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
   {
@@ -54,7 +57,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         element: <FeatureFlagGuardLayout requires='custom.customNewsPage' />,
         children: [
           { path: 'news', element: <NewsArticlesPage /> },
-          { path: 'news/categories', element: <NewsCategoriesPage /> }
+          { path: 'news/categories', element: <NewsCategoriesPage /> },
+          { path: 'news/add', element: <NewsAddPage /> },
+          { path: 'news/:id/update', element: <NewsUpdatePage /> },
+          { path: 'news/:id', element: <NewsDetailPage /> }
         ]
       }
     ]

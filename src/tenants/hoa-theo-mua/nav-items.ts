@@ -82,13 +82,21 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
       {
         titleKey: 'navigation.news.articles',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`],
-        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/`],
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`
+        ]
       },
       {
         titleKey: 'navigation.news.categories',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/categories`]
+      },
+      {
+        titleKey: 'navigation.news.add',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`]
       }
     ]
   }

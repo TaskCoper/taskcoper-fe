@@ -12,7 +12,6 @@ import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff, X } from 'lucide-react'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>
-  // label: I18nKey
   label: string
 }
 
