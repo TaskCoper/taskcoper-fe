@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Switch } from '@/components/ui/switch'
 import { CalendarDays, CreditCard, Gift, Info, ShoppingBag, Truck, Zap } from 'lucide-react'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useToggleConfigActive } from '../hooks/use-toggle-config-active'
 import type { ConfigSystemItem } from '../types'
 
@@ -25,7 +25,7 @@ interface AddConfigSheetProps {
 }
 
 export default function AddConfigSheet({ open, onOpenChange, configs }: AddConfigSheetProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const { mutate: toggleActive, isPending } = useToggleConfigActive()
 
   const grouped = configs.reduce<Record<string, ConfigSystemItem[]>>((acc, config) => {

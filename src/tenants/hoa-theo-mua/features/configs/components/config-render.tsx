@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
-import { useTranslation } from 'react-i18next'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { ConfigSystemItem } from '../types'
 
 interface ConfigRendererProps {
@@ -63,7 +63,7 @@ function SwitchGroupRenderer({ config }: ConfigRendererProps) {
 }
 
 function DateRangePicker({ config }: ConfigRendererProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const meta = config.value as DateRangeMeta
   const raw = meta.value as { from?: unknown; to?: unknown }
   const [range, setRange] = useState<DateRange | undefined>({
@@ -95,7 +95,7 @@ function DateRangePicker({ config }: ConfigRendererProps) {
 }
 
 export default function ConfigRenderer({ config }: ConfigRendererProps) {
-  const { t } = useTranslation()
+  const { t } = useTenantTranslation()
   const meta = config.value
 
   switch (meta.inputType) {

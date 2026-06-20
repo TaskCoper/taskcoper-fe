@@ -2420,35 +2420,6 @@
       "description": "Cập nhật thông tin lịch của bạn."
     }
   },
-  "systemConfigs": {
-    "groups": {
-      "dateSettings": "Cấu hình thời gian",
-      "feature": "Cấu hình tính năng",
-      "general": "Thông tin chung",
-      "order": "Đơn hàng",
-      "payment": "Thanh toán",
-      "reward": "Tích điểm",
-      "shipping": "Vận chuyển"
-    },
-    "manageButton": "Quản lý cấu hình",
-    "render": {
-      "addressCity": "Thành phố",
-      "addressStreet": "Địa chỉ",
-      "addressWard": "Phường/Xã",
-      "dateRangePlaceholder": "Chọn khoảng thời gian"
-    },
-    "saveChanges": "Lưu thay đổi",
-    "saveError": "Lưu thất bại, vui lòng thử lại.",
-    "saveSuccess": "Lưu thành công",
-    "saving": "Đang lưu...",
-    "sheet": {
-      "description": "Bật để hiển thị cấu hình trên màn hình chính, tắt để ẩn đi.",
-      "hiddenCount": "{{count}} đang ẩn",
-      "title": "Quản lý cấu hình hiển thị"
-    },
-    "subtitle": "Quản lý các cài đặt vận hành của hệ thống",
-    "title": "Cấu hình hệ thống"
-  },
   "systemProjects": {
     "actions": {
       "actions": "Thao tác",
