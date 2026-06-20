@@ -1,10 +1,6 @@
-import type { ColumnDef } from '@tanstack/react-table'
-import type { NhanhVnOrder } from '../types'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-import i18next from 'i18next'
-import { formatDateTime } from '@/lib/date'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
+import { formatDateTime } from '@/lib/date'
+import type { ColumnDef } from '@tanstack/react-table'
+import i18next from 'i18next'
+import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
+import type { NhanhVnOrder } from '../types'
 
 export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
   return [
@@ -87,6 +87,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
             </div>
           )
         }
+
         return <p className='text-center font-mono text-xs'>{id}</p>
       },
       enableSorting: true,
@@ -103,6 +104,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.info.saleName
+
         return value ? (
           <p className='mx-auto text-center'>{value}</p>
         ) : (
@@ -123,6 +125,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.channel?.trafficSource
+
         return value ? (
           <div className='flex justify-center'>
             <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>
@@ -145,14 +148,19 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.shippingAddress' />,
       cell: ({ row }) => {
         const { address, location } = row.original.shippingAddress ?? {}
-        return address ? (
-          <div className='max-w-52'>
-            <p className='truncate'>{address}</p>
-            {location && <p className='text-xs text-muted-foreground truncate'>{location}</p>}
-          </div>
-        ) : (
-          <p className='text-muted-foreground/70 italic text-sm select-none'>{i18next.t('orders.common.noData')}</p>
-        )
+
+        if (address) {
+          return (
+            <div className='max-w-52'>
+              <p className='truncate'>{address}</p>
+              {location && <p className='text-xs text-muted-foreground truncate'>{location}</p>}
+            </div>
+          )
+        } else {
+          return (
+            <p className='text-muted-foreground/70 italic text-sm select-none'>{i18next.t('orders.common.noData')}</p>
+          )
+        }
       },
       enableSorting: true,
       enableHiding: true,
@@ -168,6 +176,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.shippingAddress?.mobile
+
         return value ? (
           <p className='text-center'>{value}</p>
         ) : (
@@ -190,6 +199,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.carrier?.name
+
         return value ? (
           <p className='text-center'>{value}</p>
         ) : (
@@ -212,6 +222,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.payment?.transfer?.amount
+
         return value != null ? (
           <p className='text-center font-medium'>{value.toLocaleString('vi-VN')} ₫</p>
         ) : (
@@ -234,6 +245,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => {
         const value = row.original.info.createdAt
+
         return value ? (
           <p className='text-center whitespace-nowrap'>{formatDateTime(value * 1000, 'dateTimeShort')}</p>
         ) : (
@@ -254,6 +266,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
       cell: ({ row }) => {
         const value = row.original.info.depotId
+
         return value ? (
           <div className='flex justify-center'>
             <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>

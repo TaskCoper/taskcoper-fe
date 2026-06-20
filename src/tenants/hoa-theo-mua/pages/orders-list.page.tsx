@@ -1,23 +1,23 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import type { DateRange } from 'react-day-picker'
-import { endOfDay, startOfDay } from 'date-fns'
-import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
-import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
-import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { useDataTable } from '@/hooks/use-data-table'
-import type { ExtendedColumnSort } from '@/types/data-table.type'
-import type { NhanhVnOrder } from '../features/orders/types'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
-import { PackageIcon, CalendarIcon, X } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useDataTable } from '@/hooks/use-data-table'
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
+import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { formatDateTime } from '@/lib/date'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import type { ExtendedColumnSort } from '@/types/data-table.type'
+import { endOfDay, startOfDay } from 'date-fns'
+import { CalendarIcon, PackageIcon, X } from 'lucide-react'
+import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { DateRange } from 'react-day-picker'
+import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
+import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
+import type { NhanhVnOrder } from '../features/orders/types'
 
 function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
   const products = row.original.products ?? []
@@ -64,9 +64,13 @@ function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
 }
 
 function DateRangeLabel({ range, placeholder }: { range: DateRange; placeholder: string }) {
-  if (!range.from && !range.to) return <span className='text-muted-foreground'>{placeholder}</span>
+  if (!range.from && !range.to) {
+    return <span className='text-muted-foreground'>{placeholder}</span>
+  }
+
   const from = range.from ? formatDateTime(range.from, 'dateShort') : '...'
   const to = range.to ? formatDateTime(range.to, 'dateShort') : '...'
+
   return (
     <span>
       {from} – {to}
@@ -76,10 +80,12 @@ function DateRangeLabel({ range, placeholder }: { range: DateRange; placeholder:
 
 function parseIdsInput(str: string | null): number[] | undefined {
   if (!str) return undefined
+
   const ids = str
     .split(',')
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => !isNaN(n))
+
   return ids.length > 0 ? ids : undefined
 }
 

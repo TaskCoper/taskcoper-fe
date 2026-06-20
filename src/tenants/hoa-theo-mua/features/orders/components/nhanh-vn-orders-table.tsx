@@ -1,9 +1,9 @@
-import { Fragment, useState } from 'react'
-import type { NhanhVnOrder } from '../types'
-import { ChevronDownIcon, ChevronRightIcon, PackageIcon } from 'lucide-react'
-import { cn } from '@/shared/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDateTime } from '@/lib/date'
+import { cn } from '@/shared/utils'
+import { ChevronDownIcon, ChevronRightIcon, PackageIcon } from 'lucide-react'
+import { Fragment, useState } from 'react'
+import type { NhanhVnOrder } from '../types'
 
 interface NhanhVnOrdersTableProps {
   orders: NhanhVnOrder[]

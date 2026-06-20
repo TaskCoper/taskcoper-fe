@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { queryKeys } from '@/lib/query-keys'
 import orderService from '../services'
 import type { GetOrdersNhanhVnParams } from '../types'
 
 export const useGetOrdersNhanhVn = (params?: GetOrdersNhanhVnParams) => {
   const { data: nhanhVnOrdersResponse, isLoading: isLoadingNhanhVnOrders } = useQuery({
-    queryKey: queryKeys.htmOrdersNhanhVn.list(params),
+    queryKey: ['htm-orders-nhanh-vn', 'list', params],
     queryFn: () =>
       orderService.getOrdersNhanhVn({
         filters: {

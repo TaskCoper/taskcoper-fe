@@ -27,7 +27,7 @@ i18n
       escapeValue: false
     },
     react: {
-      bindI18n: 'languageChanged loaded added'
+      bindI18nStore: 'added'
     }
   })
 
