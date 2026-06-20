@@ -57,7 +57,7 @@ export function DataTable<TData>({
                   {table.getVisibleLeafColumns().map((column) => (
                     <TableCell
                       key={column.id}
-                      style={getColumnPinningStyle({ column })}
+                      style={{ ...getColumnPinningStyle({ column }), width: column.getSize() }}
                       className={rowIndex % 2 !== 0 ? 'bg-muted' : ''}
                     >
                       <Skeleton className='h-5 w-full' />
@@ -73,7 +73,8 @@ export function DataTable<TData>({
                       <TableCell
                         key={cell.id}
                         style={{
-                          ...getColumnPinningStyle({ column: cell.column })
+                          ...getColumnPinningStyle({ column: cell.column }),
+                          width: cell.column.getSize()
                         }}
                         className={index % 2 !== 0 ? 'bg-muted!' : ''}
                       >

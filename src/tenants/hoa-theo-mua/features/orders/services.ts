@@ -1,5 +1,5 @@
 import htmApi from '../../lib/api'
-import type { ShippingLocation, ShippingLocationType } from './types'
+import type { NhanhVnOrdersRequest, NhanhVnOrdersResponse, ShippingLocation, ShippingLocationType } from './types'
 
 interface GetOrderShippingLocationsBody {
   locationVersion: 'v2'
@@ -8,7 +8,13 @@ interface GetOrderShippingLocationsBody {
 }
 
 class OrderService {
-  private readonly baseUrl = 'orders'
+  private readonly baseUrl = 'orders/nhanh-vn'
+
+  getOrdersNhanhVn = async (body?: NhanhVnOrdersRequest) => {
+    const { data } = await htmApi.post<NhanhVnOrdersResponse>(`v1/${this.baseUrl}`, body)
+
+    return data
+  }
 
   getOrderShippingLocations = async (body: GetOrderShippingLocationsBody) => {
     const { data } = await htmApi.post<{ code: number; data: ShippingLocation[] }>(
