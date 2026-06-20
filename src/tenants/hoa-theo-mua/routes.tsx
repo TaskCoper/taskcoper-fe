@@ -67,7 +67,7 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
       },
       {
         element: <FeatureFlagGuardLayout requires='custom.systemConfigs' />,
-        children: [{ path: 'system-configs', element: <SystemConfigsPage /> }]
+        children: [{ path: 'configs', element: <SystemConfigsPage /> }]
       }
     ]
   }

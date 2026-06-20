@@ -4,7 +4,7 @@ import type { ConfigRecord, ConfigRecordValue, ConfigSystemItem } from './types'
 
 class ConfigSystemService {
   private readonly legacyUrl = 'v1/config'
-  private readonly baseUrl = 'api/v1/config'
+  private readonly baseUrl = 'v1/config'
 
   // ─── Legacy endpoints (kept for existing components) ──────────────────────
 

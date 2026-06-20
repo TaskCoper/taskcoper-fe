@@ -7,7 +7,7 @@ import { RefreshCwIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import ConfigKeyEditor from '../features/configs/components/config-key-editor'
-import { buildPayload } from '../features/configs/config-utils'
+import { buildPayload, normalizeConfigRecord } from '../features/configs/config-utils'
 import { useCreateConfig } from '../features/configs/hooks/use-create-config'
 import { useDeleteConfig } from '../features/configs/hooks/use-delete-config'
 import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
@@ -128,10 +128,10 @@ export default function SystemConfigsPage() {
   const filtered = q
     ? allConfigs.filter(
         (c) =>
-          c.key.toLowerCase().includes(q) ||
-          c.value.label.toLowerCase().includes(q) ||
-          c.value.group.toLowerCase().includes(q) ||
-          (c.value.description ?? '').toLowerCase().includes(q)
+          (c.key ?? '').toLowerCase().includes(q) ||
+          (c.value?.label ?? '').toLowerCase().includes(q) ||
+          (c.value?.group ?? '').toLowerCase().includes(q) ||
+          (c.value?.description ?? '').toLowerCase().includes(q)
       )
     : allConfigs
 
@@ -153,7 +153,7 @@ export default function SystemConfigsPage() {
 
   const handleSelect = (config: ConfigRecord) => {
     setSelectedId(config.id)
-    setDraft(JSON.parse(JSON.stringify(config)))
+    setDraft(normalizeConfigRecord(JSON.parse(JSON.stringify(config))))
   }
 
   const handleNewKey = () => {
@@ -182,12 +182,12 @@ export default function SystemConfigsPage() {
         setLocalNewConfigs((prev) => prev.filter((c) => c.id !== draft.id))
         if (result) {
           setSelectedId(result.id)
-          setDraft(result)
+          setDraft(normalizeConfigRecord(result))
         }
         toast.success(t('configKeys.toast.created'))
       } else {
         const result = await updateConfig({ id: draft.id, body: payload })
-        if (result) setDraft(result)
+        if (result) setDraft(normalizeConfigRecord(result))
         toast.success(t('configKeys.toast.updated'))
       }
     } catch {

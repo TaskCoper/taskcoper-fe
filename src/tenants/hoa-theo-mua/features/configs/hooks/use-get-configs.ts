@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
+import { normalizeConfigRecord } from '../config-utils'
 import configSystemService from '../services'
-import type { ConfigRecord } from '../types'
 
 export const CONFIG_RECORDS_QUERY_KEY = ['htm-config-records']
 
@@ -12,7 +12,7 @@ export const useGetConfigs = () => {
   })
 
   return {
-    configs: (data?.value?.items ?? []) as ConfigRecord[],
+    configs: (data?.value?.items ?? []).map(normalizeConfigRecord),
     totalCount: data?.value?.totalCount ?? 0,
     isLoadingConfigs: isLoading,
     refetchConfigs: refetch

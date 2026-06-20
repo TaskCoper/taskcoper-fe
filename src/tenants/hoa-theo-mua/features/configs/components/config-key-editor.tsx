@@ -147,11 +147,13 @@ function ValueEditor({ type, value, options, switches, onChange }: ValueEditorPr
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {options.map((o) => (
-              <SelectItem key={o.value} value={o.value}>
-                {o.label}
-              </SelectItem>
-            ))}
+            {options
+              .filter((o) => o.value !== '')
+              .map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       )
@@ -549,6 +551,7 @@ export default function ConfigKeyEditor({
   const groupListId = useId()
 
   const { key, userId, value: draftValue } = draft
+  if (!draftValue) return null
   const { group, label, description, inputType, value, required, active, validations, options, switches } = draftValue
 
   const update = (patch: Partial<ConfigRecordValue>) => onChange({ ...draft, value: { ...draftValue, ...patch } })
@@ -606,12 +609,12 @@ export default function ConfigKeyEditor({
             <div className='flex flex-wrap gap-2'>
               <span className='bg-muted rounded-md px-2 py-1 font-mono text-[11px]'>
                 <span className='text-muted-foreground'>{t('configKeys.editor.metaId')}</span>
-                {draft.id.slice(0, 8)}…
+                {draft.id?.slice(0, 8)}…
               </span>
               {userId && (
                 <span className='bg-muted rounded-md px-2 py-1 font-mono text-[11px]'>
                   <span className='text-muted-foreground'>{t('configKeys.editor.metaUserId')}</span>
-                  {userId.slice(0, 8)}…
+                  {userId?.slice(0, 8)}…
                 </span>
               )}
             </div>
@@ -718,7 +721,7 @@ export default function ConfigKeyEditor({
           {/* Validations */}
           <ValidationsEditor
             type={inputType}
-            validations={validations ?? []}
+            validations={Array.isArray(validations) ? validations : []}
             onChange={(v) => update({ validations: v })}
           />
 

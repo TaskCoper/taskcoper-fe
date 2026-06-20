@@ -1,5 +1,24 @@
 import type { ConfigRecord, ConfigRecordValue } from './types'
 
+export function normalizeConfigRecord(record: ConfigRecord): ConfigRecord {
+  let v = record.value as unknown
+  if (typeof v === 'string') {
+    try {
+      v = JSON.parse(v)
+    } catch {
+      v = {}
+    }
+  }
+  const val = (v ?? {}) as ConfigRecordValue
+  return {
+    ...record,
+    value: {
+      ...val,
+      validations: Array.isArray(val.validations) ? val.validations : []
+    }
+  }
+}
+
 export function buildPayload(draft: ConfigRecord): { key: string; value: ConfigRecordValue } {
   const { group, label, description, inputType, value, required, active, validations, options, switches } = draft.value
 
