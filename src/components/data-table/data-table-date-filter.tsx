@@ -165,6 +165,7 @@ export function DataTableDateFilter<TData>({ column, title, multiple }: DataTabl
           clearLabel={`Clear ${title} filter`}
           emptyIcon={<CalendarIcon />}
           onClear={onReset}
+          className='pl-2 pr-1'
         >
           {label}
         </DataTableFilterTrigger>

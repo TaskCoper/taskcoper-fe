@@ -77,6 +77,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           clearLabel={`Clear ${title} filter`}
           emptyIcon={<PlusCircle />}
           onClear={onReset}
+          className='pl-2 pr-1'
         >
           {title}
           {selectedValues?.size > 0 && (

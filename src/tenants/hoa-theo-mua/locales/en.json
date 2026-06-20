@@ -21,6 +21,31 @@
     "articlesComingSoon": "Articles — Coming Soon",
     "categoriesComingSoon": "Categories — Coming Soon"
   },
+  "navigation": {
+    "orders": {
+      "title": "Order management",
+      "dashboard": "Dashboard",
+      "list": "Order list",
+      "customers": "Customers"
+    },
+    "recruitment": {
+      "title": "Recruitment",
+      "jobs": "Job postings",
+      "create": "Create job posting",
+      "applicants": "Applicants"
+    },
+    "addresses": {
+      "title": "Address management",
+      "list": "Delivery addresses",
+      "zones": "Delivery zones"
+    },
+    "news": {
+      "title": "Internal news",
+      "articles": "Articles",
+      "categories": "Categories",
+      "add": "Write article"
+    }
+  },
   "common": {
     "button": {
       "back": "Back",
@@ -64,7 +89,185 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Applicants — Coming Soon",
-    "jobsComingSoon": "Job Postings — Coming Soon"
+    "jobsComingSoon": "Job Postings — Coming Soon",
+    "applicants": {
+      "title": "Applicants",
+      "description": "Review and manage all received job applications.",
+      "column": {
+        "applicant": "Applicant",
+        "searchApplicant": "Search by name...",
+        "jobPosting": "Job posting",
+        "phone": "Phone",
+        "noPhone": "No phone",
+        "status": "Status",
+        "appliedAt": "Applied at"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "New"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewApplication": "View application",
+        "markAsRead": "Mark as read"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Phone",
+        "jobPosting": "Job posting",
+        "coverLetter": "Cover letter",
+        "attachments": "Attachments",
+        "attachment": "Attachment {{index}}"
+      }
+    },
+    "jobs": {
+      "title": "Job postings",
+      "description": "Browse and manage your open job postings.",
+      "action": {
+        "create": "Create"
+      },
+      "column": {
+        "title": "Position",
+        "enterTitle": "Search by title...",
+        "location": "Location",
+        "employmentType": "Type",
+        "salary": "Salary",
+        "openings": "Openings",
+        "status": "Status",
+        "noLocation": "No location"
+      },
+      "salary": {
+        "negotiable": "Negotiable",
+        "from": "From {{amount}}",
+        "upTo": "Up to {{amount}}",
+        "undisclosed": "Not disclosed"
+      },
+      "employmentType": {
+        "fullTime": "Full-time",
+        "partTime": "Part-time"
+      },
+      "status": {
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "level": {
+        "intern": "Intern",
+        "fresher": "Fresher",
+        "junior": "Junior",
+        "senior": "Senior",
+        "lead": "Lead / Expert"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewDetails": "View details",
+        "copyLink": "Copy link",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Delete job posting",
+        "description": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "success": "Job posting deleted"
+      },
+      "copyLink": {
+        "success": "Link copied",
+        "successDescription": "Job posting link copied to clipboard.",
+        "error": "Couldn't copy link",
+        "errorDescription": "Please try again."
+      },
+      "detail": {
+        "coverImageAlt": "{{title}} cover image",
+        "logoImageAlt": "{{title}} logo image",
+        "description": "Description",
+        "general": "General",
+        "generalDescription": "Quick facts about this role.",
+        "level": "Level",
+        "experience": "Experience",
+        "experienceRange": "{{min}} - {{max}} years",
+        "salary": "Salary",
+        "salaryDescription": "Compensation range for this role.",
+        "timeline": "Timeline",
+        "timelineDescription": "When this posting was created and last updated.",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated"
+      },
+      "form": {
+        "step": {
+          "details": { "label": "Job Details", "description": "Basic information" },
+          "jobDescription": { "label": "Job Description", "description": "Role and responsibilities" },
+          "experience": { "label": "Experience", "description": "Skills and experience" },
+          "salary": { "label": "Salary", "description": "Compensation details" },
+          "review": { "label": "Review & Publish", "description": "Review and finalize" }
+        },
+        "action": {
+          "continue": "Continue",
+          "publish": "Publish Job"
+        },
+        "review": {
+          "title": "Review your job posting",
+          "description": "Please review all details below before publishing.",
+          "experienceRange": "{{min}} - {{max}} years"
+        },
+        "validation": {
+          "experience": {
+            "maxLessThanMin": "Maximum experience must be greater than or equal to minimum experience"
+          },
+          "salary": {
+            "maxLessThanMin": "Maximum salary must be greater than or equal to minimum salary"
+          }
+        },
+        "field": {
+          "title": {
+            "placeholder": "Enter job title..."
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Describe the role in detail..."
+          },
+          "location": {
+            "placeholder": "E.g. Hanoi, Ho Chi Minh City, Remote..."
+          },
+          "experience": {
+            "label": "Experience (years)",
+            "description": "Set the required experience range for this role.",
+            "min": "Minimum",
+            "max": "Maximum",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "5"
+          },
+          "level": {
+            "label": "Level",
+            "intern": "Intern",
+            "fresher": "Fresher",
+            "junior": "Junior",
+            "senior": "Senior",
+            "lead": "Lead / Expert"
+          },
+          "salary": {
+            "description": "Specify the salary range for this position.",
+            "min": "Minimum salary",
+            "max": "Maximum salary",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "0",
+            "negotiable": "Negotiable salary",
+            "negotiableDescription": "Hide the salary range and show 'Negotiable' to applicants"
+          },
+          "avatarUrl": {
+            "label": "Avatar image",
+            "placeholder": "https://..."
+          },
+          "coverImageUrl": {
+            "label": "Cover image",
+            "placeholder": "https://..."
+          },
+          "openings": {
+            "label": "Openings",
+            "placeholder": "1"
+          }
+        }
+      }
+    }
   },
   "articles": {
     "action": {

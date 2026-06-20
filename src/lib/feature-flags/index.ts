@@ -2,7 +2,13 @@ export { FeatureFlagGuardLayout, TenantLandingRedirect } from '@/layouts/feature
 export { DEFAULT_TENANT_CONFIG } from './default.config'
 export { isRedirectLoop } from './redirect-loop'
 export { resolveTenantConfig } from './resolve-tenant-config'
-export { useTenantNavMain, type TenantNavMainItem, type TenantNavSubItem } from './tenant-nav-items'
+export {
+  useTenantNavMain,
+  useTenantNavQuickActions,
+  type TenantNavMainItem,
+  type TenantNavQuickActionItem,
+  type TenantNavSubItem
+} from './tenant-nav-items'
 export { TENANT_CONFIGS } from './tenants.config'
 export type { FeatureKey, ModuleKey, TenantConfig } from './types'
 export {

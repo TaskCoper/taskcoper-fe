@@ -1,6 +1,7 @@
 import type { TenantConfig } from '@/lib/feature-flags/types'
 
 export const HOA_THEO_MUA_ORG_ID = 'b7438510-a0f7-4bea-b652-b787c01294e5'
+export const HOA_THEO_MUA_ROUTE_PREFIX = 'htm'
 
 export const hoaTheoMuaConfig: Partial<TenantConfig> = {
   modules: {
