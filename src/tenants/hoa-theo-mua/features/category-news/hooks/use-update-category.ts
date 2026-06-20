@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
+import newsCategoryService from '../services'
+import { addCategorySchema, type AddCategoryFormValues } from '../validations'
 import { getErrorDescription, getResponseMessage } from './error-description'
-import newsCategoryService from '../service'
-import { addCategorySchema, type AddCategoryFormValues } from '../validation'
 
 const ARTICLE_CATEGORY_FORM_PREFIX = 'articleCategories.form' as const
 

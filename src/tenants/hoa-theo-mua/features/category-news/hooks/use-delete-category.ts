@@ -1,7 +1,7 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import newsCategoryService from '../service'
+import newsCategoryService from '../services'
 import { getErrorDescription, getResponseMessage } from './error-description'
 
 const ARTICLE_CATEGORY_FORM_PREFIX = 'articleCategories.form' as const

@@ -1,8 +1,8 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
-import newsCategoryService from '../service'
-import type { GetCategoryParams, NewsCategoryRow } from '../type'
+import newsCategoryService from '../services'
+import type { GetCategoryParams, NewsCategoryRow } from '../types'
 
 export const useGetCategories = ({
   pageIndex = DEFAULT_PAGE_INDEX,

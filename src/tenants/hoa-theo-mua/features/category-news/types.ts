@@ -7,6 +7,7 @@ export interface NewsCategoryRow {
   children: NewsCategoryRow[]
   count: number | null
 }
+
 export interface GetCategoryParams {
   pageIndex?: number
   pageSize?: number

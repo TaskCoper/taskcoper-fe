@@ -1,7 +1,7 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import htmApi from '../../lib/api'
-import type { GetCategoryParams, NewsCategoryRow } from './type'
-import type { AddCategoryFormValues } from './validation'
+import type { GetCategoryParams, NewsCategoryRow } from './types'
+import type { AddCategoryFormValues } from './validations'
 
 type MessageResponse = string | { message?: string }
 

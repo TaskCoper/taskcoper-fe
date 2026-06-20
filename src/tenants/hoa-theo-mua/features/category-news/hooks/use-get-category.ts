@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import newsCategoryService from '../service'
+import newsCategoryService from '../services'
 
 export const useGetCategory = (id?: string) => {
   const {

@@ -10,14 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import type { I18nKey } from '@/lib/i18n/types'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
-import type { NewsCategoryRow } from '../type'
+import type { NewsCategoryRow } from '../types'
 
 const ARTICLE_CATEGORY_I18N_PREFIX = 'articleCategories' as const
-const tenantI18nKey = (key: string) => key as I18nKey
 
 interface GetColumnsParams {
   t: TenantT
@@ -60,9 +58,8 @@ export const getColumns = ({
     {
       id: 'title',
       accessorKey: 'title',
-
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.title`)} />
+        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.title`)} />
       ),
       cell: ({ row }) => {
         const title = row.original.title?.trim()
@@ -90,10 +87,10 @@ export const getColumns = ({
       id: 'parent',
       accessorKey: 'parent',
       meta: {
-        label: tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
+        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
+        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
       ),
       cell: ({ row }) => {
         const parentTitle = row.original.parent?.title?.trim()
@@ -116,13 +113,10 @@ export const getColumns = ({
       id: 'children',
       accessorKey: 'children',
       meta: {
-        label: tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)
+        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)
       },
       header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)}
-        />
+        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)} />
       ),
       cell: ({ row }) => {
         const children = row.original.children ?? []
@@ -157,12 +151,12 @@ export const getColumns = ({
       id: 'count',
       accessorKey: 'count',
       meta: {
-        label: tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.count`)
+        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.count`)
       },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          label={tenantI18nKey(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.count`)}
+          label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.count`)}
           className='mx-auto'
         />
       ),

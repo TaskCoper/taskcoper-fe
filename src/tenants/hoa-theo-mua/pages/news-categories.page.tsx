@@ -26,8 +26,8 @@ import { useAddCategory } from '../features/category-news/hooks/use-add-category
 import { useDeleteCategory } from '../features/category-news/hooks/use-delete-category'
 import { useGetCategories } from '../features/category-news/hooks/use-get-categories'
 import { useUpdateCategory } from '../features/category-news/hooks/use-update-category'
-import type { NewsCategoryRow } from '../features/category-news/type'
-import type { AddCategoryFormValues } from '../features/category-news/validation'
+import type { NewsCategoryRow } from '../features/category-news/types'
+import type { AddCategoryFormValues } from '../features/category-news/validations'
 
 const ARTICLE_CATEGORY_FORM_PREFIX = 'articleCategories.form' as const
 const NONE_PARENT_VALUE = '__none__'
