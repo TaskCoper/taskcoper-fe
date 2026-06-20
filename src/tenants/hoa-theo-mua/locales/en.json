@@ -3,6 +3,52 @@
     "listComingSoon": "Delivery Addresses — Coming Soon",
     "zonesComingSoon": "Delivery Zones — Coming Soon"
   },
+  "articleCategories": {
+    "page": {
+      "title": "News categories",
+      "description": "Organize parent and child categories used for publishing news content."
+    },
+    "action": {
+      "actions": "Actions",
+      "delete": "Delete",
+      "openMenu": "Open menu",
+      "update": "Update"
+    },
+    "column": {
+      "children": "Children",
+      "count": "Count",
+      "noChildren": "No children",
+      "noParent": "No parent",
+      "noTitle": "Untitled category",
+      "parent": "Parent",
+      "selectAll": "Select all categories",
+      "selectRow": "Select category",
+      "title": "Title",
+      "titlePlaceholder": "Search category title..."
+    },
+    "form": {
+      "createDescription": "Create a news category for the Hoa Theo Mua workspace.",
+      "createSuccess": "Category created successfully.",
+      "createError": "Category created fail. Due to",
+      "createSubmit": "Create category",
+      "createTitle": "Add category",
+      "deleteSuccess": "Category deleted successfully.",
+      "deleteError": "Category fail to delete. Due to ",
+      "noParent": "No parent category",
+      "parentLabel": "Parent category",
+      "parentPlaceholder": "Select a parent category",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter category title",
+      "updateDescription": "Update this news category.",
+      "updateSubmit": "Update category",
+      "updateSuccess": "Category updated successfully.",
+      "updateTitle": "Update category"
+    },
+    "confirm": {
+      "deleteDescription": "This action cannot be undone. The selected category will be deleted.",
+      "deleteTitle": "Delete category?"
+    }
+  },
   "companyAddress": {
     "title": "Company Address",
     "description": "This information is used to contact your company and as a pickup location.",
