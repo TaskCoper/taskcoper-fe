@@ -90,7 +90,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
 
         return <p className='text-center font-mono text-xs'>{id}</p>
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 130
@@ -111,7 +111,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           <p className='mx-auto text-center text-muted-foreground/70 italic'>{i18next.t('orders.common.noData')}</p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 150
@@ -136,7 +136,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           <p className='mx-auto text-center text-muted-foreground/70 italic'>{i18next.t('orders.common.noData')}</p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 150
@@ -162,7 +162,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           )
         }
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 240
@@ -185,7 +185,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           </p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 130
@@ -208,7 +208,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           </p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 150
@@ -231,7 +231,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           </p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 120
@@ -254,7 +254,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           </p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 150
@@ -279,7 +279,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
           </p>
         )
       },
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
       size: 120

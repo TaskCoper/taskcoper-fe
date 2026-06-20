@@ -77,14 +77,14 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://taskcoper-ecommerce-api.bentran1vn.com',
+        target: 'https://taskcoper-api.bentran1vn.com',
         changeOrigin: true,
         // CRITICAL: Tells the proxy to replace the backend's domain with localhost
         // in the Set-Cookie header so your browser accepts it.
         cookieDomainRewrite: 'localhost'
       },
       '/htm-api': {
-        target: 'https://hoatheomua-ecommerce-api.bentran1vn.com',
+        target: 'https://hoatheomua-api.bentran1vn.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/htm-api/, ''),
         cookieDomainRewrite: 'localhost'

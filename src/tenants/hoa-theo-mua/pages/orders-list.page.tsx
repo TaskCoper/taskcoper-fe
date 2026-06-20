@@ -185,6 +185,28 @@ export default function OrdersListPage() {
         >
           <div className='flex w-full items-center justify-between gap-2 p-1'>
             <div className='flex flex-wrap items-center gap-2'>
+              <Input
+                placeholder='Mã đơn hàng (123, 456...)'
+                value={idsInput}
+                onChange={(e) => {
+                  setIdsInput(e.target.value)
+                  debouncedSetIds(e.target.value)
+                }}
+                className='h-7.5 w-52'
+                spellCheck={false}
+              />
+
+              <Input
+                placeholder='Mã kho (1, 2...)'
+                value={depotIdsInput}
+                onChange={(e) => {
+                  setDepotIdsInput(e.target.value)
+                  debouncedSetDepotIds(e.target.value)
+                }}
+                className='h-7.5 w-36'
+                spellCheck={false}
+              />
+
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant='outline' size='sm' className='h-7.5 gap-2 border-dashed text-sm font-normal'>
@@ -218,28 +240,6 @@ export default function OrdersListPage() {
                   />
                 </PopoverContent>
               </Popover>
-
-              <Input
-                placeholder='Mã đơn hàng (123, 456...)'
-                value={idsInput}
-                onChange={(e) => {
-                  setIdsInput(e.target.value)
-                  debouncedSetIds(e.target.value)
-                }}
-                className='h-7.5 w-52'
-                spellCheck={false}
-              />
-
-              <Input
-                placeholder='Mã kho (1, 2...)'
-                value={depotIdsInput}
-                onChange={(e) => {
-                  setDepotIdsInput(e.target.value)
-                  debouncedSetDepotIds(e.target.value)
-                }}
-                className='h-7.5 w-36'
-                spellCheck={false}
-              />
 
               {hasFilters && (
                 <Button
