@@ -67,6 +67,67 @@
     "articlesComingSoon": "Articles — Coming Soon",
     "categoriesComingSoon": "Categories — Coming Soon"
   },
+  "navigation": {
+    "orders": {
+      "title": "Order management",
+      "dashboard": "Dashboard",
+      "list": "Order list",
+      "customers": "Customers"
+    },
+    "recruitment": {
+      "title": "Recruitment",
+      "jobs": "Job postings",
+      "create": "Create job posting",
+      "applicants": "Applicants"
+    },
+    "addresses": {
+      "title": "Address management",
+      "list": "Delivery addresses",
+      "zones": "Delivery zones"
+    },
+    "news": {
+      "title": "Internal news",
+      "articles": "Articles",
+      "categories": "Categories",
+      "add": "Write article"
+    }
+  },
+  "common": {
+    "button": {
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "ui": {
+      "selectOptions": "Select options..."
+    },
+    "validation": {
+      "maxLength": "Maximum {{max}} characters allowed",
+      "number": {
+        "integer": "Must be an integer",
+        "invalid": "Must be a valid number"
+      },
+      "url": {
+        "invalid": "Invalid URL"
+      }
+    }
+  },
+  "article": {
+    "validation": {
+      "category": {
+        "required": "Select at least one category"
+      },
+      "description": {
+        "required": "Article content is required"
+      },
+      "picture": {
+        "required": "Cover image URL is required"
+      },
+      "title": {
+        "required": "Title is required"
+      }
+    }
+  },
   "orders": {
     "customersComingSoon": "Customers — Coming Soon",
     "dashboardComingSoon": "Orders Dashboard — Coming Soon",
@@ -74,6 +135,269 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Applicants — Coming Soon",
-    "jobsComingSoon": "Job Postings — Coming Soon"
+    "jobsComingSoon": "Job Postings — Coming Soon",
+    "applicants": {
+      "title": "Applicants",
+      "description": "Review and manage all received job applications.",
+      "column": {
+        "applicant": "Applicant",
+        "searchApplicant": "Search by name...",
+        "jobPosting": "Job posting",
+        "phone": "Phone",
+        "noPhone": "No phone",
+        "status": "Status",
+        "appliedAt": "Applied at"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "New"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewApplication": "View application",
+        "markAsRead": "Mark as read"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Phone",
+        "jobPosting": "Job posting",
+        "coverLetter": "Cover letter",
+        "attachments": "Attachments",
+        "attachment": "Attachment {{index}}"
+      }
+    },
+    "jobs": {
+      "title": "Job postings",
+      "description": "Browse and manage your open job postings.",
+      "action": {
+        "create": "Create"
+      },
+      "column": {
+        "title": "Position",
+        "enterTitle": "Search by title...",
+        "location": "Location",
+        "employmentType": "Type",
+        "salary": "Salary",
+        "openings": "Openings",
+        "status": "Status",
+        "noLocation": "No location"
+      },
+      "salary": {
+        "negotiable": "Negotiable",
+        "from": "From {{amount}}",
+        "upTo": "Up to {{amount}}",
+        "undisclosed": "Not disclosed"
+      },
+      "employmentType": {
+        "fullTime": "Full-time",
+        "partTime": "Part-time"
+      },
+      "status": {
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "level": {
+        "intern": "Intern",
+        "fresher": "Fresher",
+        "junior": "Junior",
+        "senior": "Senior",
+        "lead": "Lead / Expert"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "viewDetails": "View details",
+        "copyLink": "Copy link",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Delete job posting",
+        "description": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "success": "Job posting deleted"
+      },
+      "copyLink": {
+        "success": "Link copied",
+        "successDescription": "Job posting link copied to clipboard.",
+        "error": "Couldn't copy link",
+        "errorDescription": "Please try again."
+      },
+      "detail": {
+        "coverImageAlt": "{{title}} cover image",
+        "logoImageAlt": "{{title}} logo image",
+        "description": "Description",
+        "general": "General",
+        "generalDescription": "Quick facts about this role.",
+        "level": "Level",
+        "experience": "Experience",
+        "experienceRange": "{{min}} - {{max}} years",
+        "salary": "Salary",
+        "salaryDescription": "Compensation range for this role.",
+        "timeline": "Timeline",
+        "timelineDescription": "When this posting was created and last updated.",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated"
+      },
+      "form": {
+        "step": {
+          "details": { "label": "Job Details", "description": "Basic information" },
+          "jobDescription": { "label": "Job Description", "description": "Role and responsibilities" },
+          "experience": { "label": "Experience", "description": "Skills and experience" },
+          "salary": { "label": "Salary", "description": "Compensation details" },
+          "review": { "label": "Review & Publish", "description": "Review and finalize" }
+        },
+        "action": {
+          "continue": "Continue",
+          "publish": "Publish Job"
+        },
+        "review": {
+          "title": "Review your job posting",
+          "description": "Please review all details below before publishing.",
+          "experienceRange": "{{min}} - {{max}} years"
+        },
+        "validation": {
+          "experience": {
+            "maxLessThanMin": "Maximum experience must be greater than or equal to minimum experience"
+          },
+          "salary": {
+            "maxLessThanMin": "Maximum salary must be greater than or equal to minimum salary"
+          }
+        },
+        "field": {
+          "title": {
+            "placeholder": "Enter job title..."
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Describe the role in detail..."
+          },
+          "location": {
+            "placeholder": "E.g. Hanoi, Ho Chi Minh City, Remote..."
+          },
+          "experience": {
+            "label": "Experience (years)",
+            "description": "Set the required experience range for this role.",
+            "min": "Minimum",
+            "max": "Maximum",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "5"
+          },
+          "level": {
+            "label": "Level",
+            "intern": "Intern",
+            "fresher": "Fresher",
+            "junior": "Junior",
+            "senior": "Senior",
+            "lead": "Lead / Expert"
+          },
+          "salary": {
+            "description": "Specify the salary range for this position.",
+            "min": "Minimum salary",
+            "max": "Maximum salary",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "0",
+            "negotiable": "Negotiable salary",
+            "negotiableDescription": "Hide the salary range and show 'Negotiable' to applicants"
+          },
+          "avatarUrl": {
+            "label": "Avatar image",
+            "placeholder": "https://..."
+          },
+          "coverImageUrl": {
+            "label": "Cover image",
+            "placeholder": "https://..."
+          },
+          "openings": {
+            "label": "Openings",
+            "placeholder": "1"
+          }
+        }
+      }
+    }
+  },
+  "articles": {
+    "action": {
+      "actions": "Actions",
+      "delete": "Delete",
+      "openMenu": "Open article actions",
+      "viewDetails": "View details",
+      "updateDetails": "Update article"
+    },
+    "column": {
+      "createdAt": "Created at",
+      "noCreatedAt": "No created date",
+      "selectAll": "Select all articles",
+      "selectRow": "Select article",
+      "status": "Status",
+      "title": "Title",
+      "titlePlaceholder": "Search by title...",
+      "viewCount": "View count"
+    },
+    "confirm": {
+      "deleteDescription": "This article will be permanently deleted and cannot be restored.",
+      "deleteTitle": "Delete article?"
+    },
+    "detail": {
+      "aboutAuthor": "About the author",
+      "articleId": "Article ID",
+      "authorFallbackDescription": "Author of this article.",
+      "authorId": "Author ID",
+      "authorProfile": "Author profile",
+      "authorProfileDescription": "Writer information for this article.",
+      "categories": "{{count}} categories",
+      "categoriesLabel": "Categories",
+      "createdAt": "Created {{date}}",
+      "createdAtLabel": "Created",
+      "edit": "Edit article",
+      "missingIdDescription": "Choose an article from the news list to open its detail page.",
+      "missingIdTitle": "No article selected",
+      "notFoundDescription": "The article may have been removed or the link is no longer valid.",
+      "notFoundTitle": "Article not found",
+      "overview": "Article overview",
+      "overviewDescription": "Key publishing details for this article.",
+      "publishing": "Publishing",
+      "slug": "Slug",
+      "status": "Status",
+      "updatedAt": "Updated {{date}}",
+      "updatedAtLabel": "Updated",
+      "unknownAuthor": "Unknown author",
+      "views": "{{count}} views",
+      "viewsLabel": "Views"
+    },
+    "form": {
+      "bodyLabel": "Article content",
+      "categoriesLabel": "Categories",
+      "categoryCount": "{{count}} categories",
+      "contentDescription": "Write the headline, categories, and article body.",
+      "contentTitle": "Article content",
+      "createSuccess": "Article created successfully.",
+      "description": "Create a news article for the Hoa Theo Mua admin workspace.",
+      "eyebrow": "News management",
+      "pictureLabel": "Cover image URL",
+      "picturePlaceholder": "https://example.com/article-cover.jpg",
+      "previewDescription": "A compact check before publishing.",
+      "previewHint": "Use a clear title and a sharp cover image for the article list.",
+      "previewImageAlt": "Article cover preview",
+      "previewTitle": "Preview",
+      "previewUntitled": "Untitled article",
+      "publishDescription": "Choose visibility and add a cover image.",
+      "publishTitle": "Publishing",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select status",
+      "submit": "Create article",
+      "title": "Add article",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter article title",
+      "updateDescription": "Update a news article for the Hoa Theo Mua admin workspace.",
+      "updateSubmit": "Save changes",
+      "updateTitle": "Update article"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    }
+  },
+  "error": {
+    "somethingWentWrong": "Something went wrong"
   }
 }

@@ -12,7 +12,6 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
 import { useMediaQuery } from '@/hooks/use-media-query'
-import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronsUpDown, SearchIcon } from 'lucide-react'
@@ -25,14 +24,14 @@ import { useInView } from 'react-intersection-observer'
 // TData: API data type
 interface MultiSelectComboboxFieldProps<TForm extends FieldValues, TValue, TData> {
   name: Path<TForm>
-  label?: I18nKey
+  label?: string
   control?: Control<TForm>
   items: TData[]
   isLoading?: boolean
   searchValue: string
   onSearchChange: (value: string) => void
   isRequired?: boolean
-  placeholder?: I18nKey
+  placeholder?: string
   displayError?: boolean
   // Get the unique ID from data (API)
   getId: (item: TData) => string

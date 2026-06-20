@@ -66,6 +66,7 @@ export default function DataTableRadioFilter<TData, TValue>({
           clearLabel={`Clear ${title} filter`}
           emptyIcon={<PlusCircleIcon />}
           onClear={onReset}
+          className='pl-2 pr-1'
         >
           {title}
           {selectedValue && selectedOption && (

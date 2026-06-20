@@ -67,6 +67,67 @@
     "articlesComingSoon": "Bài viết — Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
   },
+  "navigation": {
+    "orders": {
+      "title": "Quản lý đơn hàng",
+      "dashboard": "Tổng quan",
+      "list": "Danh sách đơn hàng",
+      "customers": "Khách hàng"
+    },
+    "recruitment": {
+      "title": "Tuyển dụng",
+      "jobs": "Tin tuyển dụng",
+      "create": "Tạo tuyển dụng",
+      "applicants": "Ứng viên"
+    },
+    "addresses": {
+      "title": "Quản lý địa chỉ",
+      "list": "Địa chỉ giao hàng",
+      "zones": "Khu vực giao hàng"
+    },
+    "news": {
+      "title": "Tin tức nội bộ",
+      "articles": "Bài viết",
+      "categories": "Danh mục",
+      "add": "Viết bài"
+    }
+  },
+  "common": {
+    "button": {
+      "back": "Quay lại",
+      "cancel": "Hủy",
+      "delete": "Xóa"
+    },
+    "ui": {
+      "selectOptions": "Chọn nhiều tùy chọn..."
+    },
+    "validation": {
+      "maxLength": "Tối đa {{max}} ký tự",
+      "number": {
+        "integer": "Phải là số nguyên",
+        "invalid": "Phải là số hợp lệ"
+      },
+      "url": {
+        "invalid": "URL không hợp lệ"
+      }
+    }
+  },
+  "article": {
+    "validation": {
+      "category": {
+        "required": "Vui lòng chọn ít nhất một danh mục"
+      },
+      "description": {
+        "required": "Nội dung bài viết là bắt buộc"
+      },
+      "picture": {
+        "required": "URL ảnh bìa là bắt buộc"
+      },
+      "title": {
+        "required": "Tiêu đề là bắt buộc"
+      }
+    }
+  },
   "orders": {
     "customersComingSoon": "Khách hàng — Sắp ra mắt",
     "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
@@ -74,6 +135,269 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
-    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
+    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt",
+    "applicants": {
+      "title": "Ứng viên",
+      "description": "Xem và quản lý tất cả các đơn ứng tuyển đã nhận.",
+      "column": {
+        "applicant": "Ứng viên",
+        "searchApplicant": "Tìm theo tên...",
+        "jobPosting": "Vị trí ứng tuyển",
+        "phone": "Số điện thoại",
+        "noPhone": "Chưa có SĐT",
+        "status": "Trạng thái",
+        "appliedAt": "Ngày ứng tuyển"
+      },
+      "status": {
+        "read": "Đã đọc",
+        "unread": "Mới"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewApplication": "Xem đơn ứng tuyển",
+        "markAsRead": "Đánh dấu đã đọc"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "jobPosting": "Vị trí ứng tuyển",
+        "coverLetter": "Thư xin việc",
+        "attachments": "Tệp đính kèm",
+        "attachment": "Tệp đính kèm {{index}}"
+      }
+    },
+    "jobs": {
+      "title": "Tin tuyển dụng",
+      "description": "Quản lý và theo dõi các vị trí đang tuyển dụng.",
+      "action": {
+        "create": "Tạo mới"
+      },
+      "column": {
+        "title": "Vị trí",
+        "enterTitle": "Tìm theo tên vị trí...",
+        "location": "Địa điểm",
+        "employmentType": "Hình thức",
+        "salary": "Lương",
+        "openings": "Số lượng",
+        "status": "Trạng thái",
+        "noLocation": "Chưa có địa điểm"
+      },
+      "salary": {
+        "negotiable": "Thỏa thuận",
+        "from": "Từ {{amount}}",
+        "upTo": "Đến {{amount}}",
+        "undisclosed": "Không công khai"
+      },
+      "employmentType": {
+        "fullTime": "Toàn thời gian",
+        "partTime": "Bán thời gian"
+      },
+      "status": {
+        "open": "Đang tuyển",
+        "closed": "Đã đóng"
+      },
+      "level": {
+        "intern": "Thực tập sinh",
+        "fresher": "Fresher",
+        "junior": "Junior",
+        "senior": "Senior",
+        "lead": "Lead / Chuyên gia"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewDetails": "Xem chi tiết",
+        "copyLink": "Sao chép liên kết",
+        "delete": "Xóa"
+      },
+      "delete": {
+        "title": "Xóa tin tuyển dụng",
+        "description": "Bạn có chắc chắn muốn xóa \"{{title}}\" không? Hành động này không thể hoàn tác.",
+        "success": "Đã xóa tin tuyển dụng"
+      },
+      "copyLink": {
+        "success": "Đã sao chép",
+        "successDescription": "Liên kết tin tuyển dụng đã được sao chép vào bộ nhớ tạm.",
+        "error": "Không thể sao chép",
+        "errorDescription": "Vui lòng thử lại."
+      },
+      "detail": {
+        "coverImageAlt": "Ảnh bìa {{title}}",
+        "logoImageAlt": "Ảnh đại diện {{title}}",
+        "description": "Mô tả",
+        "general": "Thông tin chung",
+        "generalDescription": "Tóm tắt nhanh về vị trí này.",
+        "level": "Cấp độ",
+        "experience": "Kinh nghiệm",
+        "experienceRange": "{{min}} - {{max}} năm",
+        "salary": "Mức lương",
+        "salaryDescription": "Mức lương cho vị trí này.",
+        "timeline": "Thời gian",
+        "timelineDescription": "Thời điểm tạo và cập nhật tin tuyển dụng.",
+        "createdAt": "Đã tạo lúc",
+        "updatedAt": "Cập nhật lần cuối"
+      },
+      "form": {
+        "step": {
+          "details": { "label": "Thông tin chung", "description": "Thông tin cơ bản" },
+          "jobDescription": { "label": "Mô tả công việc", "description": "Vai trò và trách nhiệm" },
+          "experience": { "label": "Kinh nghiệm", "description": "Kỹ năng và kinh nghiệm" },
+          "salary": { "label": "Mức lương", "description": "Chi tiết lương thưởng" },
+          "review": { "label": "Xem lại & Đăng", "description": "Xem lại và hoàn tất" }
+        },
+        "action": {
+          "continue": "Tiếp tục",
+          "publish": "Đăng tuyển"
+        },
+        "review": {
+          "title": "Xem lại tin tuyển dụng",
+          "description": "Kiểm tra lại các thông tin bên dưới trước khi đăng tuyển.",
+          "experienceRange": "{{min}} - {{max}} năm"
+        },
+        "validation": {
+          "experience": {
+            "maxLessThanMin": "Số năm kinh nghiệm tối đa phải lớn hơn hoặc bằng số năm kinh nghiệm tối thiểu"
+          },
+          "salary": {
+            "maxLessThanMin": "Mức lương tối đa phải lớn hơn hoặc bằng mức lương tối thiểu"
+          }
+        },
+        "field": {
+          "title": {
+            "placeholder": "Nhập tiêu đề công việc..."
+          },
+          "description": {
+            "label": "Mô tả",
+            "placeholder": "Mô tả chi tiết vị trí tuyển dụng..."
+          },
+          "location": {
+            "placeholder": "VD: Hà Nội, TP.HCM, Từ xa..."
+          },
+          "experience": {
+            "label": "Kinh nghiệm (năm)",
+            "description": "Thiết lập số năm kinh nghiệm yêu cầu cho vị trí này.",
+            "min": "Tối thiểu",
+            "max": "Tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "5"
+          },
+          "level": {
+            "label": "Cấp độ",
+            "intern": "Thực tập sinh",
+            "fresher": "Fresher",
+            "junior": "Junior",
+            "senior": "Senior",
+            "lead": "Lead / Chuyên gia"
+          },
+          "salary": {
+            "description": "Xác định mức lương cho vị trí này.",
+            "min": "Lương tối thiểu",
+            "max": "Lương tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "0",
+            "negotiable": "Lương thỏa thuận",
+            "negotiableDescription": "Ẩn mức lương và hiển thị thỏa thuận với ứng viên"
+          },
+          "avatarUrl": {
+            "label": "Ảnh đại diện",
+            "placeholder": "https://..."
+          },
+          "coverImageUrl": {
+            "label": "Ảnh bìa",
+            "placeholder": "https://..."
+          },
+          "openings": {
+            "label": "Số lượng tuyển",
+            "placeholder": "1"
+          }
+        }
+      }
+    }
+  },
+  "articles": {
+    "action": {
+      "actions": "Thao tác",
+      "delete": "Xoá",
+      "openMenu": "Mở menu thao tác bài viết",
+      "viewDetails": "Xem chi tiết",
+      "updateDetails": "Cập nhật bài viết"
+    },
+    "column": {
+      "createdAt": "Ngày tạo",
+      "noCreatedAt": "Không có ngày tạo",
+      "selectAll": "Chọn tất cả bài viết",
+      "selectRow": "Chọn bài viết",
+      "status": "Trạng thái",
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Tìm theo tiêu đề...",
+      "viewCount": "Lượt xem"
+    },
+    "confirm": {
+      "deleteDescription": "Bài viết này sẽ bị xóa vĩnh viễn và không thể khôi phục.",
+      "deleteTitle": "Xóa bài viết?"
+    },
+    "detail": {
+      "aboutAuthor": "Về tác giả",
+      "articleId": "ID bài viết",
+      "authorFallbackDescription": "Tác giả của bài viết này.",
+      "authorId": "ID tác giả",
+      "authorProfile": "Thông tin tác giả",
+      "authorProfileDescription": "Thông tin người viết của bài viết này.",
+      "categories": "{{count}} danh mục",
+      "categoriesLabel": "Danh mục",
+      "createdAt": "Tạo ngày {{date}}",
+      "createdAtLabel": "Ngày tạo",
+      "edit": "Chỉnh sửa bài viết",
+      "missingIdDescription": "Chọn một bài viết trong danh sách tin tức để mở trang chi tiết.",
+      "missingIdTitle": "Chưa chọn bài viết",
+      "notFoundDescription": "Bài viết có thể đã bị xoá hoặc đường dẫn không còn hợp lệ.",
+      "notFoundTitle": "Không tìm thấy bài viết",
+      "overview": "Tổng quan bài viết",
+      "overviewDescription": "Thông tin xuất bản chính của bài viết này.",
+      "publishing": "Xuất bản",
+      "slug": "Slug",
+      "status": "Trạng thái",
+      "updatedAt": "Cập nhật ngày {{date}}",
+      "updatedAtLabel": "Ngày cập nhật",
+      "unknownAuthor": "Không rõ tác giả",
+      "views": "{{count}} lượt xem",
+      "viewsLabel": "Lượt xem"
+    },
+    "form": {
+      "bodyLabel": "Nội dung bài viết",
+      "categoriesLabel": "Danh mục",
+      "categoryCount": "{{count}} danh mục",
+      "contentDescription": "Nhập tiêu đề, danh mục và nội dung bài viết.",
+      "contentTitle": "Nội dung bài viết",
+      "createSuccess": "Tạo bài viết thành công.",
+      "description": "Tạo bài viết tin tức cho khu vực quản trị Hoa Theo Mùa.",
+      "eyebrow": "Quản lý tin tức",
+      "pictureLabel": "URL ảnh bìa",
+      "picturePlaceholder": "https://example.com/article-cover.jpg",
+      "previewDescription": "Kiểm tra nhanh trước khi đăng.",
+      "previewHint": "Tiêu đề rõ ràng và ảnh bìa sắc nét giúp bài viết nổi bật trong danh sách.",
+      "previewImageAlt": "Ảnh xem trước của bài viết",
+      "previewTitle": "Xem trước",
+      "previewUntitled": "Bài viết chưa có tiêu đề",
+      "publishDescription": "Chọn trạng thái hiển thị và thêm ảnh bìa.",
+      "publishTitle": "Xuất bản",
+      "statusLabel": "Trạng thái",
+      "statusPlaceholder": "Chọn trạng thái",
+      "submit": "Tạo bài viết",
+      "title": "Thêm bài viết",
+      "titleLabel": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề bài viết",
+      "updateDescription": "Cập nhật bài viết tin tức cho khu vực quản trị Hoa Theo Mùa.",
+      "updateSubmit": "Lưu thay đổi",
+      "updateTitle": "Cập nhật bài viết"
+    },
+    "status": {
+      "draft": "Bản nháp",
+      "published": "Đã xuất bản"
+    }
+  },
+  "error": {
+    "somethingWentWrong": "Đã có lỗi xảy ra"
   }
 }
