@@ -124,6 +124,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
           clearLabel={t('dataTable.filter.clearSpecificFilter', { title })}
           emptyIcon={<PlusCircle />}
           onClear={onReset}
+          className='pl-2 pr-1'
         >
           <span>{title}</span>
           {columnFilterValue ? (

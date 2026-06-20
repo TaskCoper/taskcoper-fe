@@ -92,7 +92,7 @@ export function DataTableToolbar<TData>({
             aria-label={t('dataTable.filter.resetFilters')}
             variant='destructive'
             size='sm'
-            className='border-dashed'
+            className='ring-[0.5px]'
             onClick={onReset}
           >
             <X />

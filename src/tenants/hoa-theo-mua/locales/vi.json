@@ -21,6 +21,31 @@
     "articlesComingSoon": "Bài viết — Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết — Sắp ra mắt"
   },
+  "navigation": {
+    "orders": {
+      "title": "Quản lý đơn hàng",
+      "dashboard": "Tổng quan",
+      "list": "Danh sách đơn hàng",
+      "customers": "Khách hàng"
+    },
+    "recruitment": {
+      "title": "Tuyển dụng",
+      "jobs": "Tin tuyển dụng",
+      "create": "Tạo tuyển dụng",
+      "applicants": "Ứng viên"
+    },
+    "addresses": {
+      "title": "Quản lý địa chỉ",
+      "list": "Địa chỉ giao hàng",
+      "zones": "Khu vực giao hàng"
+    },
+    "news": {
+      "title": "Tin tức nội bộ",
+      "articles": "Bài viết",
+      "categories": "Danh mục",
+      "add": "Viết bài"
+    }
+  },
   "common": {
     "button": {
       "back": "Quay lại",
@@ -64,7 +89,185 @@
   },
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
-    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt"
+    "jobsComingSoon": "Tin tuyển dụng — Sắp ra mắt",
+    "applicants": {
+      "title": "Ứng viên",
+      "description": "Xem và quản lý tất cả các đơn ứng tuyển đã nhận.",
+      "column": {
+        "applicant": "Ứng viên",
+        "searchApplicant": "Tìm theo tên...",
+        "jobPosting": "Vị trí ứng tuyển",
+        "phone": "Số điện thoại",
+        "noPhone": "Chưa có SĐT",
+        "status": "Trạng thái",
+        "appliedAt": "Ngày ứng tuyển"
+      },
+      "status": {
+        "read": "Đã đọc",
+        "unread": "Mới"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewApplication": "Xem đơn ứng tuyển",
+        "markAsRead": "Đánh dấu đã đọc"
+      },
+      "detail": {
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "jobPosting": "Vị trí ứng tuyển",
+        "coverLetter": "Thư xin việc",
+        "attachments": "Tệp đính kèm",
+        "attachment": "Tệp đính kèm {{index}}"
+      }
+    },
+    "jobs": {
+      "title": "Tin tuyển dụng",
+      "description": "Quản lý và theo dõi các vị trí đang tuyển dụng.",
+      "action": {
+        "create": "Tạo mới"
+      },
+      "column": {
+        "title": "Vị trí",
+        "enterTitle": "Tìm theo tên vị trí...",
+        "location": "Địa điểm",
+        "employmentType": "Hình thức",
+        "salary": "Lương",
+        "openings": "Số lượng",
+        "status": "Trạng thái",
+        "noLocation": "Chưa có địa điểm"
+      },
+      "salary": {
+        "negotiable": "Thỏa thuận",
+        "from": "Từ {{amount}}",
+        "upTo": "Đến {{amount}}",
+        "undisclosed": "Không công khai"
+      },
+      "employmentType": {
+        "fullTime": "Toàn thời gian",
+        "partTime": "Bán thời gian"
+      },
+      "status": {
+        "open": "Đang tuyển",
+        "closed": "Đã đóng"
+      },
+      "level": {
+        "intern": "Thực tập sinh",
+        "fresher": "Fresher",
+        "junior": "Junior",
+        "senior": "Senior",
+        "lead": "Lead / Chuyên gia"
+      },
+      "actions": {
+        "openMenu": "Mở menu",
+        "actions": "Hành động",
+        "viewDetails": "Xem chi tiết",
+        "copyLink": "Sao chép liên kết",
+        "delete": "Xóa"
+      },
+      "delete": {
+        "title": "Xóa tin tuyển dụng",
+        "description": "Bạn có chắc chắn muốn xóa \"{{title}}\" không? Hành động này không thể hoàn tác.",
+        "success": "Đã xóa tin tuyển dụng"
+      },
+      "copyLink": {
+        "success": "Đã sao chép",
+        "successDescription": "Liên kết tin tuyển dụng đã được sao chép vào bộ nhớ tạm.",
+        "error": "Không thể sao chép",
+        "errorDescription": "Vui lòng thử lại."
+      },
+      "detail": {
+        "coverImageAlt": "Ảnh bìa {{title}}",
+        "logoImageAlt": "Ảnh đại diện {{title}}",
+        "description": "Mô tả",
+        "general": "Thông tin chung",
+        "generalDescription": "Tóm tắt nhanh về vị trí này.",
+        "level": "Cấp độ",
+        "experience": "Kinh nghiệm",
+        "experienceRange": "{{min}} - {{max}} năm",
+        "salary": "Mức lương",
+        "salaryDescription": "Mức lương cho vị trí này.",
+        "timeline": "Thời gian",
+        "timelineDescription": "Thời điểm tạo và cập nhật tin tuyển dụng.",
+        "createdAt": "Đã tạo lúc",
+        "updatedAt": "Cập nhật lần cuối"
+      },
+      "form": {
+        "step": {
+          "details": { "label": "Thông tin chung", "description": "Thông tin cơ bản" },
+          "jobDescription": { "label": "Mô tả công việc", "description": "Vai trò và trách nhiệm" },
+          "experience": { "label": "Kinh nghiệm", "description": "Kỹ năng và kinh nghiệm" },
+          "salary": { "label": "Mức lương", "description": "Chi tiết lương thưởng" },
+          "review": { "label": "Xem lại & Đăng", "description": "Xem lại và hoàn tất" }
+        },
+        "action": {
+          "continue": "Tiếp tục",
+          "publish": "Đăng tuyển"
+        },
+        "review": {
+          "title": "Xem lại tin tuyển dụng",
+          "description": "Kiểm tra lại các thông tin bên dưới trước khi đăng tuyển.",
+          "experienceRange": "{{min}} - {{max}} năm"
+        },
+        "validation": {
+          "experience": {
+            "maxLessThanMin": "Số năm kinh nghiệm tối đa phải lớn hơn hoặc bằng số năm kinh nghiệm tối thiểu"
+          },
+          "salary": {
+            "maxLessThanMin": "Mức lương tối đa phải lớn hơn hoặc bằng mức lương tối thiểu"
+          }
+        },
+        "field": {
+          "title": {
+            "placeholder": "Nhập tiêu đề công việc..."
+          },
+          "description": {
+            "label": "Mô tả",
+            "placeholder": "Mô tả chi tiết vị trí tuyển dụng..."
+          },
+          "location": {
+            "placeholder": "VD: Hà Nội, TP.HCM, Từ xa..."
+          },
+          "experience": {
+            "label": "Kinh nghiệm (năm)",
+            "description": "Thiết lập số năm kinh nghiệm yêu cầu cho vị trí này.",
+            "min": "Tối thiểu",
+            "max": "Tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "5"
+          },
+          "level": {
+            "label": "Cấp độ",
+            "intern": "Thực tập sinh",
+            "fresher": "Fresher",
+            "junior": "Junior",
+            "senior": "Senior",
+            "lead": "Lead / Chuyên gia"
+          },
+          "salary": {
+            "description": "Xác định mức lương cho vị trí này.",
+            "min": "Lương tối thiểu",
+            "max": "Lương tối đa",
+            "minPlaceholder": "0",
+            "maxPlaceholder": "0",
+            "negotiable": "Lương thỏa thuận",
+            "negotiableDescription": "Ẩn mức lương và hiển thị thỏa thuận với ứng viên"
+          },
+          "avatarUrl": {
+            "label": "Ảnh đại diện",
+            "placeholder": "https://..."
+          },
+          "coverImageUrl": {
+            "label": "Ảnh bìa",
+            "placeholder": "https://..."
+          },
+          "openings": {
+            "label": "Số lượng tuyển",
+            "placeholder": "1"
+          }
+        }
+      }
+    }
   },
   "articles": {
     "action": {
