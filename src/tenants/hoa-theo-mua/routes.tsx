@@ -23,6 +23,8 @@ const NewsAddPage = lazy(() => import('./pages/news-add.page'))
 const NewsUpdatePage = lazy(() => import('./pages/news-update-page'))
 const NewsDetailPage = lazy(() => import('./pages/news-detail.page'))
 
+const SystemConfigsPage = lazy(() => import('./pages/system-configs.page'))
+
 export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
   {
     path: HOA_THEO_MUA_ROUTE_PREFIX,
@@ -62,6 +64,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'news/:id/update', element: <NewsUpdatePage /> },
           { path: 'news/:id', element: <NewsDetailPage /> }
         ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.systemConfigs' />,
+        children: [{ path: 'configs', element: <SystemConfigsPage /> }]
       }
     ]
   }

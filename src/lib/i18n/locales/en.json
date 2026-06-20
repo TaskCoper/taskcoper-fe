@@ -2437,6 +2437,35 @@
       "description": "Update your schedule information."
     }
   },
+  "systemConfigs": {
+    "groups": {
+      "dateSettings": "Date settings",
+      "feature": "Feature settings",
+      "general": "General",
+      "order": "Orders",
+      "payment": "Payment",
+      "reward": "Rewards",
+      "shipping": "Shipping"
+    },
+    "manageButton": "Manage configurations",
+    "render": {
+      "addressCity": "City",
+      "addressStreet": "Street address",
+      "addressWard": "Ward/Commune",
+      "dateRangePlaceholder": "Select date range"
+    },
+    "saveChanges": "Save changes",
+    "saveError": "Failed to save, please try again.",
+    "saveSuccess": "Saved successfully",
+    "saving": "Saving...",
+    "sheet": {
+      "description": "Enable to show on the main screen, disable to hide.",
+      "hiddenCount": "{{count}} hidden",
+      "title": "Manage display configurations"
+    },
+    "subtitle": "Manage system operation settings",
+    "title": "System Configurations"
+  },
   "systemProjects": {
     "actions": {
       "actions": "Actions",

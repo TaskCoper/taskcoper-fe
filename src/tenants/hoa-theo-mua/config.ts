@@ -15,7 +15,8 @@ export const hoaTheoMuaConfig: Partial<TenantConfig> = {
     orderManagement: true,
     recruitmentPortal: true,
     addressManagement: true,
-    customNewsPage: true
+    customNewsPage: true,
+    systemConfigs: true
   },
   defaultLanding: '/projects',
   logoUrl: '/projects',
