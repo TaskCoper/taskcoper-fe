@@ -1288,6 +1288,36 @@
       "task": "Tasks"
     }
   },
+  "orders": {
+    "column": {
+      "ahahaMoveOrderId": "AhaMove Order ID",
+      "ahahaMoveTrackingUrl": "AhaMove Tracking URL",
+      "amount": "Amount",
+      "carrier": "Carrier",
+      "createdAt": "Order Date",
+      "depot": "Depot",
+      "mobile": "Phone",
+      "nhanhOrderId": "Nhanh Order ID",
+      "nhanhTrackingUrl": "Nhanh Tracking URL",
+      "orderId": "Order ID",
+      "saleName": "Sale Name",
+      "shippingAddress": "Shipping Address",
+      "status": "Status",
+      "trafficSource": "Traffic Source"
+    },
+    "common": {
+      "noData": "No data available"
+    },
+    "filter": {
+      "dateRange": "Order Date",
+      "reset": "Reset filters",
+      "saleName": "Search by sale name..."
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending"
+    }
+  },
   "packageBooking": {
     "bookPackage": {
       "discount": "Discount",
