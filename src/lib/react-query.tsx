@@ -32,6 +32,10 @@ export default function ReactQueryProvider({ children }: { children: React.React
                 return false
               }
 
+              if (error.response?.status === 502) {
+                return false
+              }
+
               return true
             },
             refetchOnWindowFocus: false,

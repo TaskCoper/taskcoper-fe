@@ -18,8 +18,11 @@ import type { DateRange } from 'react-day-picker'
 import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
 import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
 import type { NhanhVnOrder } from '../features/orders/types'
+import { vndFormatter } from '../features/orders/utils'
 
 function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
+  const { t } = useTenantTranslation()
+
   const products = row.original.products ?? []
   if (!products.length) return null
 
@@ -28,12 +31,12 @@ function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
       <table className='w-full text-xs'>
         <thead>
           <tr className='text-muted-foreground'>
-            <th className='text-left py-1.5 px-2 font-medium w-10'>Ảnh</th>
-            <th className='text-left py-1.5 px-2 font-medium'>Tên sản phẩm</th>
-            <th className='text-left py-1.5 px-2 font-medium'>Mã SP</th>
-            <th className='text-right py-1.5 px-2 font-medium'>SL</th>
-            <th className='text-right py-1.5 px-2 font-medium'>Đơn giá</th>
-            <th className='text-right py-1.5 px-2 font-medium'>Thành tiền</th>
+            <th className='text-left py-1.5 px-2 font-medium w-10'>{t('orders.productTable.image')}</th>
+            <th className='text-left py-1.5 px-2 font-medium'>{t('orders.productTable.name')}</th>
+            <th className='text-left py-1.5 px-2 font-medium'>{t('orders.productTable.sku')}</th>
+            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.quantity')}</th>
+            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.unitPrice')}</th>
+            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.total')}</th>
           </tr>
         </thead>
         <tbody className='divide-y divide-border'>
@@ -51,9 +54,11 @@ function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
               <td className='py-2 px-2 font-medium'>{product.name}</td>
               <td className='py-2 px-2 font-mono text-muted-foreground'>{product.code}</td>
               <td className='py-2 px-2 text-right'>{product.quantity}</td>
-              <td className='py-2 px-2 text-right'>{product.price?.toLocaleString('vi-VN')} ₫</td>
+              <td className='py-2 px-2 text-right'>
+                {product.price != null ? vndFormatter.format(product.price) : null}
+              </td>
               <td className='py-2 px-2 text-right font-medium'>
-                {((product.price ?? 0) * (product.quantity ?? 0)).toLocaleString('vi-VN')} ₫
+                {vndFormatter.format((product.price ?? 0) * (product.quantity ?? 0))}
               </td>
             </tr>
           ))}
@@ -91,7 +96,7 @@ function parseIdsInput(str: string | null): number[] | undefined {
 
 export default function OrdersListPage() {
   const { t } = useTenantTranslation()
-  const columns = useMemo(() => getNhanhVnColumns(), [])
+  const columns = useMemo(() => getNhanhVnColumns({ t }), [t])
 
   const { page, limit, sorting } = useTableQueryParams({ columns, prefix: 'orders' })
   const [, setPageUrl] = useQueryState('orders_page', parseAsInteger.withOptions({ shallow: true }))
@@ -158,7 +163,7 @@ export default function OrdersListPage() {
   const pageCount = paginator?.next ? page + 1 : page
 
   const { table } = useDataTable({
-    data: nhanhVnOrders,
+    data: nhanhVnOrders ?? [],
     columns,
     pageCount,
     initialState: {
@@ -178,6 +183,13 @@ export default function OrdersListPage() {
   return (
     <div className='h-full overflow-auto'>
       <div className='p-6 space-y-4' style={{ minWidth: table.getTotalSize() + 48 }}>
+        <div className='flex justify-between items-center gap-4'>
+          <div>
+            <p className='text-2xl font-bold'>{t('orders.list.title')}</p>
+            <p className='text-sm text-muted-foreground'>{t('orders.list.description')}</p>
+          </div>
+        </div>
+
         <DataTable
           table={table}
           isLoading={isLoadingNhanhVnOrders}
@@ -186,7 +198,7 @@ export default function OrdersListPage() {
           <div className='flex w-full items-center justify-between gap-2 p-1'>
             <div className='flex flex-wrap items-center gap-2'>
               <Input
-                placeholder='Mã đơn hàng (123, 456...)'
+                placeholder={t('orders.filter.orderIdsPlaceholder')}
                 value={idsInput}
                 onChange={(e) => {
                   setIdsInput(e.target.value)
@@ -197,7 +209,7 @@ export default function OrdersListPage() {
               />
 
               <Input
-                placeholder='Mã kho (1, 2...)'
+                placeholder={t('orders.filter.depotIdsPlaceholder')}
                 value={depotIdsInput}
                 onChange={(e) => {
                   setDepotIdsInput(e.target.value)

@@ -9,18 +9,19 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { formatDateTime } from '@/lib/date'
+import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import i18next from 'i18next'
 import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { NhanhVnOrder } from '../types'
+import { vndFormatter } from '../utils'
 
-export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
+export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder>[] => {
   return [
     {
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          aria-label='systemUsers.column.selectAll'
+          aria-label={t('orders.column.selectAll')}
           className='translate-y-0.5'
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -28,7 +29,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label='systemUsers.column.selectRow'
+          aria-label={t('orders.column.selectRow')}
           className='translate-y-0.5'
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -49,7 +50,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
             size='icon'
             className='size-6'
             onClick={() => row.toggleExpanded()}
-            aria-label={row.getIsExpanded() ? 'Thu gọn' : 'Xem sản phẩm'}
+            aria-label={t(row.getIsExpanded() ? 'orders.action.collapseProducts' : 'orders.action.showProducts')}
           >
             {row.getIsExpanded() ? <ChevronDownIcon className='size-4' /> : <ChevronRightIcon className='size-4' />}
           </Button>
@@ -108,7 +109,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         return value ? (
           <p className='mx-auto text-center'>{value}</p>
         ) : (
-          <p className='mx-auto text-center text-muted-foreground/70 italic'>{i18next.t('orders.common.noData')}</p>
+          <p className='mx-auto text-center text-muted-foreground/70 italic'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -133,7 +134,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
             </span>
           </div>
         ) : (
-          <p className='mx-auto text-center text-muted-foreground/70 italic'>{i18next.t('orders.common.noData')}</p>
+          <p className='mx-auto text-center text-muted-foreground/70 italic'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -157,9 +158,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
             </div>
           )
         } else {
-          return (
-            <p className='text-muted-foreground/70 italic text-sm select-none'>{i18next.t('orders.common.noData')}</p>
-          )
+          return <p className='text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         }
       },
       enableSorting: false,
@@ -180,9 +179,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         return value ? (
           <p className='text-center'>{value}</p>
         ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
-            {i18next.t('orders.common.noData')}
-          </p>
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -203,9 +200,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         return value ? (
           <p className='text-center'>{value}</p>
         ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
-            {i18next.t('orders.common.noData')}
-          </p>
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -224,11 +219,9 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         const value = row.original.payment?.transfer?.amount
 
         return value != null ? (
-          <p className='text-center font-medium'>{value.toLocaleString('vi-VN')} ₫</p>
+          <p className='text-center font-medium'>{vndFormatter.format(value)}</p>
         ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
-            {i18next.t('orders.common.noData')}
-          </p>
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -249,9 +242,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         return value ? (
           <p className='text-center whitespace-nowrap'>{formatDateTime(value * 1000, 'dateTimeShort')}</p>
         ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
-            {i18next.t('orders.common.noData')}
-          </p>
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -274,9 +265,7 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
             </span>
           </div>
         ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>
-            {i18next.t('orders.common.noData')}
-          </p>
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
         )
       },
       enableSorting: false,
@@ -290,16 +279,16 @@ export const getNhanhVnColumns = (): ColumnDef<NhanhVnOrder>[] => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='size-8 p-0'>
-              <span className='sr-only'>{i18next.t('systemProjects.actions.openMenu')}</span>
+              <span className='sr-only'>{t('orders.action.openMenu')}</span>
               <MoreHorizontalIcon className='size-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>{i18next.t('systemProjects.actions.actions')}</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('orders.action.actions')}</DropdownMenuLabel>
             {row.original.info.trackingUrl && (
               <DropdownMenuItem asChild>
                 <a href={row.original.info.trackingUrl} target='_blank' rel='noreferrer'>
-                  {i18next.t('task.column.viewDetails')}
+                  {t('orders.action.viewDetails')}
                 </a>
               </DropdownMenuItem>
             )}

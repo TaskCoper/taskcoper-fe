@@ -51,10 +51,12 @@ export default function NewsAddPage() {
   const description = methods.watch('description')
   const status = methods.watch('status')
 
-  const categoryItems: ComboboxCategoryItem[] = categoryNews.value.items.map((u) => ({
-    id: u.categoryId,
-    name: u.title
-  }))
+  const categoryItems: ComboboxCategoryItem[] = categoryNews.value.items.flatMap((category) =>
+    (category.children ?? []).map((child) => ({
+      id: child.categoryId,
+      name: child.title
+    }))
+  )
 
   const onSubmit: SubmitHandler<AddArticleForm> = (body) => {
     addArticle({ body })
@@ -132,11 +134,13 @@ export default function NewsAddPage() {
                 )}
               />
 
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 mt-1'>
                 {fields.map((field, index) => (
                   <Badge key={field.id}>
                     {field.name}
-                    <XIcon className='size-3 cursor-pointer' onClick={() => remove(index)} />
+                    <button type='button' onClick={() => remove(index)} className='cursor-pointer'>
+                      <XIcon className='size-3' />
+                    </button>
                   </Badge>
                 ))}
               </div>

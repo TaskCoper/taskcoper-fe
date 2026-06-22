@@ -90,7 +90,8 @@
       "articles": "Bài viết",
       "categories": "Danh mục",
       "add": "Viết bài"
-    }
+    },
+    "systemConfigs": "Cấu hình hệ thống"
   },
   "common": {
     "button": {
@@ -131,7 +132,50 @@
   "orders": {
     "customersComingSoon": "Khách hàng — Sắp ra mắt",
     "dashboardComingSoon": "Tổng quan đơn hàng — Sắp ra mắt",
-    "listComingSoon": "Danh sách đơn hàng — Sắp ra mắt"
+    "listComingSoon": "Danh sách đơn hàng — Sắp ra mắt",
+    "list": {
+      "title": "Đơn hàng",
+      "description": "Xem và quản lý các đơn hàng Nhanh.vn đã đồng bộ vào Hoa Theo Mùa."
+    },
+    "action": {
+      "actions": "Thao tác",
+      "collapseProducts": "Thu gọn sản phẩm",
+      "openMenu": "Mở menu thao tác đơn hàng",
+      "showProducts": "Xem sản phẩm",
+      "viewDetails": "Xem chi tiết"
+    },
+    "column": {
+      "amount": "Số tiền",
+      "carrier": "Đơn vị vận chuyển",
+      "createdAt": "Ngày đặt hàng",
+      "depot": "Kho",
+      "mobile": "Số điện thoại",
+      "nhanhOrderId": "Mã đơn Nhanh",
+      "saleName": "Nhân viên bán hàng",
+      "selectAll": "Chọn tất cả đơn hàng",
+      "selectRow": "Chọn đơn hàng",
+      "shippingAddress": "Địa chỉ giao hàng",
+      "trafficSource": "Nguồn truy cập"
+    },
+    "common": {
+      "noData": "Không có dữ liệu",
+      "noDataShort": "—",
+      "noOrders": "Không có đơn hàng nào"
+    },
+    "filter": {
+      "dateRange": "Ngày đặt hàng",
+      "depotIdsPlaceholder": "Mã kho (1, 2...)",
+      "orderIdsPlaceholder": "Mã đơn hàng (123, 456...)",
+      "reset": "Xóa bộ lọc"
+    },
+    "productTable": {
+      "image": "Ảnh",
+      "name": "Tên sản phẩm",
+      "quantity": "SL",
+      "sku": "Mã SP",
+      "total": "Thành tiền",
+      "unitPrice": "Đơn giá"
+    }
   },
   "recruitment": {
     "applicantsComingSoon": "Ứng viên — Sắp ra mắt",
@@ -316,6 +360,10 @@
     }
   },
   "articles": {
+    "page": {
+      "title": "Bài viết",
+      "description": "Tạo, xem và quản lý các bài viết tin tức được xuất bản bởi Hoa Theo Mùa."
+    },
     "action": {
       "actions": "Thao tác",
       "delete": "Xoá",

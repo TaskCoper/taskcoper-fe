@@ -9,11 +9,11 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
     icon: PackageIcon,
     feature: 'custom.orderManagement',
     items: [
-      {
-        titleKey: 'navigation.orders.dashboard',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`]
-      },
+      // {
+      //   titleKey: 'navigation.orders.dashboard',
+      //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
+      //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`]
+      // },
       {
         titleKey: 'navigation.orders.list',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders`,
@@ -22,12 +22,12 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
           `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
           `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`
         ]
-      },
-      {
-        titleKey: 'navigation.orders.customers',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`]
       }
+      // {
+      //   titleKey: 'navigation.orders.customers',
+      //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`,
+      //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`]
+      // }
     ]
   },
   {
@@ -65,12 +65,12 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses`],
         activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`]
-      },
-      {
-        titleKey: 'navigation.addresses.zones',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`]
       }
+      // {
+      //   titleKey: 'navigation.addresses.zones',
+      //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`,
+      //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/addresses/zones`]
+      // }
     ]
   },
   {
@@ -104,7 +104,7 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
 
 export const hoaTheoMuaNavQuickActions: TenantNavQuickActionItem[] = [
   {
-    titleKey: 'Config hệ thống',
+    titleKey: 'navigation.systemConfigs',
     url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`,
     icon: SettingsIcon,
     activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`],

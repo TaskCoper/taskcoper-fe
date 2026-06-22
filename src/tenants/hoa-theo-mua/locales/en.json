@@ -90,7 +90,8 @@
       "articles": "Articles",
       "categories": "Categories",
       "add": "Write article"
-    }
+    },
+    "systemConfigs": "System configurations"
   },
   "common": {
     "button": {
@@ -131,7 +132,50 @@
   "orders": {
     "customersComingSoon": "Customers — Coming Soon",
     "dashboardComingSoon": "Orders Dashboard — Coming Soon",
-    "listComingSoon": "Orders List — Coming Soon"
+    "listComingSoon": "Orders List — Coming Soon",
+    "list": {
+      "title": "Orders",
+      "description": "Review and manage Nhanh.vn orders synced into Hoa Theo Mua."
+    },
+    "action": {
+      "actions": "Actions",
+      "collapseProducts": "Collapse products",
+      "openMenu": "Open order actions",
+      "showProducts": "View products",
+      "viewDetails": "View details"
+    },
+    "column": {
+      "amount": "Amount",
+      "carrier": "Carrier",
+      "createdAt": "Order date",
+      "depot": "Depot",
+      "mobile": "Phone",
+      "nhanhOrderId": "Nhanh order ID",
+      "saleName": "Sale name",
+      "selectAll": "Select all orders",
+      "selectRow": "Select order",
+      "shippingAddress": "Shipping address",
+      "trafficSource": "Traffic source"
+    },
+    "common": {
+      "noData": "No data",
+      "noDataShort": "—",
+      "noOrders": "No orders found"
+    },
+    "filter": {
+      "dateRange": "Order date",
+      "depotIdsPlaceholder": "Depot IDs (1, 2...)",
+      "orderIdsPlaceholder": "Order IDs (123, 456...)",
+      "reset": "Reset filters"
+    },
+    "productTable": {
+      "image": "Image",
+      "name": "Product name",
+      "quantity": "Qty",
+      "sku": "SKU",
+      "total": "Total",
+      "unitPrice": "Unit price"
+    }
   },
   "recruitment": {
     "applicantsComingSoon": "Applicants — Coming Soon",
@@ -316,6 +360,10 @@
     }
   },
   "articles": {
+    "page": {
+      "title": "Articles",
+      "description": "Create, review, and manage news articles published by Hoa Theo Mua."
+    },
     "action": {
       "actions": "Actions",
       "delete": "Delete",

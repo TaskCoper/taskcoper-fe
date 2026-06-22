@@ -282,16 +282,15 @@ export default function NewsCategoriesPage() {
   )
 
   return (
-    <div className='space-y-4 p-4 max-w-7xl mx-auto'>
-      <DataTable table={table} isLoading={isLoadingCategories} className='p-4'>
-        <div className='space-y-1'>
-          <h1 className='text-xl font-semibold tracking-tight text-foreground sm:text-2xl'>
-            {t('articleCategories.page.title')}
-          </h1>
-          <h2 className='max-w-2xl text-sm leading-6 text-muted-foreground'>
-            {t('articleCategories.page.description')}
-          </h2>
+    <div className='space-y-6 p-6'>
+      <div className='flex justify-between items-center gap-4'>
+        <div>
+          <p className='text-2xl font-bold'>{t('articleCategories.page.title')}</p>
+          <p className='text-sm text-muted-foreground'>{t('articleCategories.page.description')}</p>
         </div>
+      </div>
+
+      <DataTable table={table} isLoading={isLoadingCategories}>
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={() => setIsAddDialogOpen(true)}>
             <CirclePlus className='size-3' />

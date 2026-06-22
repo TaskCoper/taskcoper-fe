@@ -23,8 +23,8 @@ export const useGetOrdersNhanhVn = (params?: GetOrdersNhanhVnParams) => {
   })
 
   return {
-    nhanhVnOrders: nhanhVnOrdersResponse?.data ?? [],
-    paginator: nhanhVnOrdersResponse?.paginator,
+    nhanhVnOrders: nhanhVnOrdersResponse?.value.items,
+    paginator: { next: { id: 0 } },
     isLoadingNhanhVnOrders
   }
 }

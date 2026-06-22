@@ -89,8 +89,15 @@ export default function NewsArticlesPage() {
   const isLoading = isLoadingArticles
 
   return (
-    <div className='space-y-4'>
-      <DataTable table={table} isLoading={isLoading} className='p-4'>
+    <div className='space-y-6 p-6'>
+      <div className='flex justify-between items-center gap-4'>
+        <div>
+          <p className='text-2xl font-bold'>{t('articles.page.title')}</p>
+          <p className='text-sm text-muted-foreground'>{t('articles.page.description')}</p>
+        </div>
+      </div>
+
+      <DataTable table={table} isLoading={isLoading}>
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={onNavigate}>
             <CirclePlus className='size-3' />

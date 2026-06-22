@@ -59,14 +59,6 @@ export interface NhanhVnOrder {
   }
 }
 
-export interface NhanhVnOrdersResponse {
-  code: number
-  paginator?: {
-    next?: { id: number }
-  }
-  data: NhanhVnOrder[]
-}
-
 export interface NhanhVnOrdersRequest {
   filters?: {
     createdAtFrom?: number

@@ -29,6 +29,7 @@ export interface ArticleRow {
 export interface CategoryData {
   categoryId: string
   title: string
+  children?: CategoryData[]
 }
 
 export interface CategoryResponse {

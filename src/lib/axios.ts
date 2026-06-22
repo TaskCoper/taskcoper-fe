@@ -151,7 +151,10 @@ export const createApiClient = (baseURL: string): AxiosInstance => {
       const messageCode = (error.response?.data as ErrorResponse)?.messageCode
 
       const isExpiredAccessToken =
-        status === 401 && (messageCode === 'ExpiredAccessToken' || messageCode === 'MissingAccessToken')
+        status === 401 &&
+        (messageCode === 'ExpiredAccessToken' ||
+          messageCode === 'MissingAccessToken' ||
+          messageCode === 'InvalidAccessToken')
       const isRefreshRequest = originalRequest.url?.includes('/users/refresh_token')
 
       if (!originalRequest || !isExpiredAccessToken || isRefreshRequest) {
