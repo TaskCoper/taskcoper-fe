@@ -164,8 +164,8 @@
     },
     "filter": {
       "dateRange": "Order date",
-      "depotIdsPlaceholder": "Depot IDs (1, 2...)",
-      "orderIdsPlaceholder": "Order IDs (123, 456...)",
+      "depotIdsPlaceholder": "Depot IDs",
+      "orderIdsPlaceholder": "Order IDs",
       "reset": "Reset filters"
     },
     "productTable": {

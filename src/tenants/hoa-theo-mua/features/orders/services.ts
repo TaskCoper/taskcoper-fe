@@ -1,6 +1,6 @@
-import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import type { BaseResponse } from '@/lib/axios'
 import htmApi from '../../lib/api'
-import type { NhanhVnOrder, NhanhVnOrdersRequest, ShippingLocation, ShippingLocationType } from './types'
+import type { NhanhVnOrdersRequest, NhanhVnOrdersResponse, ShippingLocation, ShippingLocationType } from './types'
 
 interface GetOrderShippingLocationsBody {
   locationVersion: 'v2'
@@ -13,7 +13,7 @@ class OrderService {
   private readonly baseOrderUrl = 'orders'
 
   getOrdersNhanhVn = async (body?: NhanhVnOrdersRequest) => {
-    const { data } = await htmApi.post<BasePaginationResponse<NhanhVnOrder>>(`v1/${this.baseUrl}`, body)
+    const { data } = await htmApi.post<NhanhVnOrdersResponse>(`v1/${this.baseUrl}`, body)
 
     return data
   }
