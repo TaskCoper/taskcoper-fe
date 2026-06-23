@@ -1,0 +1,436 @@
+import { DatePickerField } from '@/components/date-picker-field'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { Plus, Trash2 } from 'lucide-react'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
+import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
+
+const RULE_KEYS = ['minLength', 'maxLength', 'min', 'max', 'pattern', 'email', 'url', 'integer'] as const
+type RuleKey = (typeof RULE_KEYS)[number]
+
+const BOOLEAN_RULES: RuleKey[] = ['email', 'url', 'integer']
+
+const AVAILABLE_VALIDATIONS: Partial<Record<InputType, RuleKey[]>> = {
+  [InputType.text]: ['minLength', 'maxLength', 'pattern', 'email', 'url'],
+  [InputType.textarea]: ['minLength', 'maxLength', 'pattern'],
+  [InputType.number]: ['min', 'max', 'integer'],
+  [InputType.image]: ['url']
+}
+
+const getRuleKey = (item: Record<string, unknown>): RuleKey | undefined => RULE_KEYS.find((k) => k in item)
+
+export default function CreateConfigForm() {
+  const { t } = useTenantTranslation()
+  const {
+    control,
+    register,
+    watch,
+    setValue,
+    formState: { errors }
+  } = useFormContext<CreateConfigFormInput, unknown, CreateConfigFormValues>()
+
+  const inputType = (watch('value.inputType') ?? InputType.text) as InputType
+  const availableRules = AVAILABLE_VALIDATIONS[inputType] ?? []
+
+  const {
+    fields: optionFields,
+    append: appendOption,
+    remove: removeOption
+  } = useFieldArray({
+    control,
+    name: 'value.options'
+  })
+
+  const {
+    fields: validationFields,
+    append: appendValidation,
+    remove: removeValidation
+  } = useFieldArray({
+    control,
+    name: 'value.validations'
+  })
+
+  const watchedValidations = (watch('value.validations') ?? []) as Array<Record<string, unknown>>
+  const watchedOptions = (watch('value.options') ?? []) as InputOption[]
+
+  const handleInputTypeChange = (newType: string) => {
+    setValue('value.inputType', newType as InputType)
+    setValue('value.value', undefined)
+    setValue('value.validations', [])
+    if (newType !== InputType.select) setValue('value.options', [])
+  }
+
+  const handleRemoveOption = (index: number) => {
+    const removed = watchedOptions[index]
+    removeOption(index)
+    const currentDefault = watch('value.value')
+    if (removed !== undefined && currentDefault != null && String(currentDefault) === String(removed.value)) {
+      setValue('value.value', undefined)
+    }
+  }
+
+  const addValidationRule = (ruleKey: RuleKey) => {
+    const initial: Record<RuleKey, ValidationRule> = {
+      minLength: { minLength: 0 },
+      maxLength: { maxLength: 100 },
+      min: { min: 0 },
+      max: { max: 100 },
+      pattern: { pattern: '' },
+      email: { email: true as const },
+      url: { url: true as const },
+      integer: { integer: true as const }
+    }
+    appendValidation(initial[ruleKey])
+  }
+
+  const defaultValueNode = (() => {
+    switch (inputType) {
+      case InputType.boolean:
+      case InputType.switch:
+        return (
+          <Controller
+            name='value.value'
+            control={control}
+            render={({ field }) => (
+              <div className='flex items-center gap-2'>
+                <Switch id='default-value' checked={!!field.value} onCheckedChange={field.onChange} />
+                <label htmlFor='default-value' className='cursor-pointer select-none text-sm'>
+                  {field.value ? 'true' : 'false'}
+                </label>
+              </div>
+            )}
+          />
+        )
+      case InputType.number:
+        return <Input type='number' {...register('value.value', { valueAsNumber: true })} placeholder='0' />
+      case InputType.date:
+        return (
+          <DatePickerField
+            control={control}
+            name='value.value'
+            label={'configsPage.dialog.defaultValueField' as I18nKey}
+            placeholder={'configsPage.dialog.selectDefaultPlaceholder' as I18nKey}
+            isRequired={false}
+          />
+        )
+      case InputType.textarea:
+        return <Textarea rows={3} {...register('value.value')} />
+      case InputType.json:
+      case InputType.address:
+        return <Textarea rows={4} placeholder='{}' {...register('value.value')} />
+      case InputType.select:
+        return null
+      default:
+        return <Input {...register('value.value')} />
+    }
+  })()
+
+  return (
+    <div className='space-y-4'>
+      {/* Key + Group */}
+      <div className='grid grid-cols-2 gap-3'>
+        <Controller
+          name='key'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel htmlFor='cfg-key'>
+                {t('configsPage.dialog.keyField')}
+                <span className='font-semibold text-destructive'>*</span>
+              </FieldLabel>
+              <Input
+                {...field}
+                id='cfg-key'
+                placeholder={t('configsPage.dialog.keyPlaceholder')}
+                aria-invalid={fieldState.invalid}
+                onChange={(e) => {
+                  field.onChange(e)
+                  const prefix = e.target.value.split('.')[0]
+                  if (prefix) setValue('value.group', prefix)
+                }}
+              />
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
+        <Controller
+          name='value.group'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel htmlFor='cfg-group'>
+                {t('configsPage.dialog.groupField')}
+                <span className='font-semibold text-destructive'>*</span>
+              </FieldLabel>
+              <Input {...field} id='cfg-group' aria-invalid={fieldState.invalid} />
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
+      </div>
+
+      {/* Label */}
+      <Controller
+        name='value.label'
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <FieldLabel htmlFor='cfg-label'>
+              {t('configsPage.dialog.labelField')}
+              <span className='font-semibold text-destructive'>*</span>
+            </FieldLabel>
+            <Input
+              {...field}
+              id='cfg-label'
+              placeholder={t('configsPage.dialog.labelPlaceholder')}
+              aria-invalid={fieldState.invalid}
+            />
+            <div className='min-h-4'>
+              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+            </div>
+          </Field>
+        )}
+      />
+
+      {/* Input Type + Required */}
+      <div className='grid grid-cols-2 gap-3'>
+        <Controller
+          name='value.inputType'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1'>
+              <FieldLabel>{t('configsPage.dialog.inputTypeField')}</FieldLabel>
+              <Select value={field.value} onValueChange={handleInputTypeChange}>
+                <SelectTrigger aria-invalid={fieldState.invalid}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(InputType).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {InputTypeLabel[type]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          )}
+        />
+        <Controller
+          name='value.required'
+          control={control}
+          render={({ field }) => (
+            <Field className='gap-1'>
+              <FieldLabel>{t('configsPage.dialog.requiredField')}</FieldLabel>
+              <div className='flex h-9 items-center gap-2'>
+                <Checkbox id='cfg-required' checked={field.value} onCheckedChange={field.onChange} />
+                <label htmlFor='cfg-required' className='cursor-pointer select-none text-sm text-muted-foreground'>
+                  {t('configsPage.dialog.requiredDesc')}
+                </label>
+              </div>
+            </Field>
+          )}
+        />
+      </div>
+
+      {/* Default Value */}
+      {defaultValueNode &&
+        (inputType === InputType.date ? (
+          defaultValueNode
+        ) : (
+          <FieldGroup className='gap-1'>
+            <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
+            {defaultValueNode}
+            {errors.value?.value && <FieldError className='text-xs' errors={[errors.value.value as never]} />}
+          </FieldGroup>
+        ))}
+
+      {/* Description */}
+      <Controller
+        name='value.description'
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <FieldLabel htmlFor='cfg-desc'>{t('configsPage.dialog.descriptionField')}</FieldLabel>
+            <Textarea
+              {...field}
+              id='cfg-desc'
+              placeholder={t('configsPage.dialog.descriptionPlaceholder')}
+              aria-invalid={fieldState.invalid}
+              rows={2}
+            />
+            <div className='min-h-4'>
+              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+            </div>
+          </Field>
+        )}
+      />
+
+      {/* Options + Default Value — select only */}
+      {inputType === InputType.select && (
+        <>
+          <Separator />
+          <FieldGroup className='gap-2'>
+            <div className='flex items-center justify-between'>
+              <FieldLabel className='font-semibold'>{t('configsPage.dialog.optionsSection')}</FieldLabel>
+              <Button type='button' variant='ghost' size='sm' onClick={() => appendOption({ label: '', value: '' })}>
+                <Plus className='size-3.5' />
+                {t('configsPage.dialog.addOption')}
+              </Button>
+            </div>
+            {optionFields.map((optField, index) => (
+              <div key={optField.id} className='flex items-center gap-2'>
+                <Input
+                  {...register(`value.options.${index}.label`)}
+                  placeholder={t('configsPage.dialog.optionLabelPlaceholder')}
+                  className='flex-1'
+                />
+                <Input
+                  {...register(`value.options.${index}.value`)}
+                  placeholder={t('configsPage.dialog.optionValuePlaceholder')}
+                  className='flex-1'
+                />
+                <Button
+                  type='button'
+                  variant='ghost'
+                  size='icon'
+                  className='size-9 shrink-0 text-muted-foreground hover:text-destructive'
+                  onClick={() => handleRemoveOption(index)}
+                >
+                  <Trash2 className='size-3.5' />
+                </Button>
+              </div>
+            ))}
+          </FieldGroup>
+
+          <FieldGroup className='gap-1'>
+            <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
+            <Controller
+              name='value.value'
+              control={control}
+              render={({ field }) => {
+                const validOptions = watchedOptions.filter(
+                  (opt) => opt.value !== undefined && opt.value !== null && String(opt.value).length > 0
+                )
+                const currentValue = field.value != null && field.value !== '' ? String(field.value) : ''
+                return (
+                  <div className='flex items-center gap-2'>
+                    <Select
+                      value={currentValue}
+                      onValueChange={(val) => {
+                        const matched = validOptions.find((o) => String(o.value) === val)
+                        field.onChange(matched?.value ?? val)
+                      }}
+                      disabled={validOptions.length === 0}
+                    >
+                      <SelectTrigger className='flex-1'>
+                        <SelectValue placeholder={t('configsPage.dialog.selectDefaultPlaceholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {validOptions.map((opt, i) => (
+                          <SelectItem key={`${i}-${String(opt.value)}`} value={String(opt.value)}>
+                            {opt.label || String(opt.value)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {currentValue && (
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='icon'
+                        className='size-9 shrink-0 text-muted-foreground hover:text-destructive'
+                        onClick={() => field.onChange(undefined)}
+                      >
+                        <Trash2 className='size-3.5' />
+                      </Button>
+                    )}
+                  </div>
+                )
+              }}
+            />
+            {errors.value?.value && <FieldError className='text-xs' errors={[errors.value.value as never]} />}
+          </FieldGroup>
+        </>
+      )}
+
+      {/* Validations */}
+      {availableRules.length > 0 && (
+        <>
+          <Separator />
+          <FieldGroup className='gap-2'>
+            <div className='flex items-center justify-between'>
+              <FieldLabel className='font-semibold'>{t('configsPage.dialog.validationsSection')}</FieldLabel>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button type='button' variant='ghost' size='sm'>
+                    <Plus className='size-3.5' />
+                    {t('configsPage.dialog.addRule')}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end'>
+                  {availableRules
+                    .filter((rk) => !watchedValidations.some((v) => rk in v))
+                    .map((rk) => (
+                      <DropdownMenuItem key={rk} onClick={() => addValidationRule(rk)}>
+                        {t(`configsPage.dialog.validationRules.${rk}`)}
+                      </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            {validationFields.map((valField, index) => {
+              const ruleKey = getRuleKey(watchedValidations[index] ?? {})
+              if (!ruleKey) return null
+              const isBool = BOOLEAN_RULES.includes(ruleKey)
+
+              return (
+                <div key={valField.id} className='flex items-center gap-2'>
+                  <span className='w-28 shrink-0 text-sm text-muted-foreground'>
+                    {t(`configsPage.dialog.validationRules.${ruleKey}`)}
+                  </span>
+                  {isBool ? (
+                    <span className='flex-1 text-xs text-muted-foreground'>
+                      {t('configsPage.dialog.alwaysApplied')}
+                    </span>
+                  ) : (
+                    <Input
+                      type={ruleKey === 'pattern' ? 'text' : 'number'}
+                      className='flex-1'
+                      {...register(
+                        `value.validations.${index}.${ruleKey}`,
+                        ruleKey !== 'pattern' ? { valueAsNumber: true } : undefined
+                      )}
+                    />
+                  )}
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    className='size-8 shrink-0 text-muted-foreground hover:text-destructive'
+                    onClick={() => removeValidation(index)}
+                  >
+                    <Trash2 className='size-3.5' />
+                  </Button>
+                </div>
+              )
+            })}
+          </FieldGroup>
+        </>
+      )}
+    </div>
+  )
+}

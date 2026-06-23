@@ -1,20 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { normalizeConfigRecord } from '../config-utils'
-import configSystemService from '../services'
-
-export const CONFIG_RECORDS_QUERY_KEY = ['htm-config-records']
+import configService from '../services'
 
 export const useGetConfigs = () => {
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: [...CONFIG_RECORDS_QUERY_KEY, 'list'],
-    queryFn: () => configSystemService.getConfigRecords({ pageSize: 100 }),
-    throwOnError: false
+  const { data: configs, isLoading: isGettingConfigs } = useQuery({
+    queryKey: ['configs'],
+    queryFn: configService.getConfigs
   })
 
-  return {
-    configs: (data?.value?.items ?? []).map(normalizeConfigRecord),
-    totalCount: data?.value?.totalCount ?? 0,
-    isLoadingConfigs: isLoading,
-    refetchConfigs: refetch
-  }
+  return { configs, isGettingConfigs }
 }

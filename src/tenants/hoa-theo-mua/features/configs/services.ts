@@ -1,46 +1,35 @@
-import { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BaseResponse } from '@/lib/axios'
 import htmApi from '../../lib/api'
-import type { ConfigRecord, ConfigRecordValue, ConfigSystemItem } from './types'
+import type { Config } from './types'
+import type { CreateConfigFormValues } from './validations'
 
-class ConfigSystemService {
-  private readonly legacyUrl = 'v1/config'
-  private readonly baseUrl = 'v1/config'
-
-  // ─── Legacy endpoints (kept for existing components) ──────────────────────
+class ConfigService {
+  private readonly baseUrl = 'configs'
 
   getConfigs = async () => {
-    const { data } = await htmApi.get<BasePaginationResponse<ConfigSystemItem>>(`/${this.legacyUrl}`)
-    return data
-  }
+    const { data } = await htmApi.get<BaseResponse<Config[]>>(`v1/${this.baseUrl}`)
 
-  updateConfigActive = async ({ key, isActive }: { key: string; isActive: boolean }) => {
-    const { data } = await htmApi.patch<BaseResponse<ConfigSystemItem>>(`/${this.legacyUrl}/${key}`, { isActive })
     return data.value
   }
 
-  // ─── New CRUD endpoints ───────────────────────────────────────────────────
+  createConfig = async ({ body }: { body: CreateConfigFormValues }) => {
+    const { data } = await htmApi.post<BaseResponse<Config>>(`v1/${this.baseUrl}`, body)
 
-  getConfigRecords = async (params: { pageIndex?: number; pageSize?: number } = {}) => {
-    const { data } = await htmApi.get<BasePaginationResponse<ConfigRecord>>(`/${this.baseUrl}`, {
-      params: { pageIndex: params.pageIndex ?? 1, pageSize: params.pageSize ?? 100 }
-    })
-    return data
-  }
-
-  createConfigRecord = async (body: { key: string; value: ConfigRecordValue }) => {
-    const { data } = await htmApi.post<BaseResponse<ConfigRecord>>(`/${this.baseUrl}`, body)
     return data.value
   }
 
-  updateConfigRecord = async ({ id, body }: { id: string; body: { key: string; value: ConfigRecordValue } }) => {
-    const { data } = await htmApi.put<BaseResponse<ConfigRecord>>(`/${this.baseUrl}/${id}`, body)
+  updateConfig = async ({ id, body }: { id: string; body: CreateConfigFormValues }) => {
+    const { data } = await htmApi.put<BaseResponse<Config>>(`v1/${this.baseUrl}/${id}`, body)
+
     return data.value
   }
 
-  deleteConfigRecord = async ({ id }: { id: string }) => {
-    await htmApi.delete(`/${this.baseUrl}/${id}`)
+  deleteConfig = async ({ id }: { id: string }) => {
+    const { data } = await htmApi.delete<BaseResponse<Config>>(`v1/${this.baseUrl}/${id}`)
+
+    return data.value
   }
 }
 
-const configSystemService = new ConfigSystemService()
-export default configSystemService
+const configService = new ConfigService()
+export default configService

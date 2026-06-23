@@ -560,5 +560,93 @@
       "minDays": "Min days",
       "maxDays": "Max days"
     }
+  },
+  "configsPage": {
+    "dialog": {
+      "createTitle": "Add field",
+      "editTitle": "Edit field",
+      "delete": "Delete",
+      "keyField": "Key",
+      "keyPlaceholder": "e.g. general.api_key",
+      "groupField": "Group",
+      "labelField": "Label",
+      "labelPlaceholder": "Display name",
+      "inputTypeField": "Input type",
+      "defaultValueField": "Default value",
+      "descriptionField": "Description",
+      "descriptionPlaceholder": "Optional description",
+      "requiredField": "Required",
+      "requiredDesc": "This field must have a value",
+      "optionsSection": "Options",
+      "addOption": "Add option",
+      "optionLabelPlaceholder": "Label",
+      "optionValuePlaceholder": "Value",
+      "selectDefaultPlaceholder": "Pick a default value",
+      "validationsSection": "Validations",
+      "addRule": "Add rule",
+      "noValidations": "No validation rules for this type",
+      "alwaysApplied": "— always applied",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "validationRules": {
+        "minLength": "Min length",
+        "maxLength": "Max length",
+        "min": "Min value",
+        "max": "Max value",
+        "pattern": "Pattern (regex)",
+        "email": "Email format",
+        "url": "URL format",
+        "integer": "Integer only"
+      }
+    },
+    "breadcrumb": "Manage Configuration",
+    "fallbackTitle": "Configurations",
+    "country": {
+      "label": "Country",
+      "all": "All Countries",
+      "vn": "Vietnam",
+      "us": "United States"
+    },
+    "confirm": {
+      "deleteTitle": "Delete field?",
+      "deleteDescription": "This field will be permanently deleted and cannot be recovered.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "addSection": "Add New Section",
+    "cloneSection": "Clone Section",
+    "deleteSection": "Delete section",
+    "emptySection": "No fields in this section.",
+    "emptyPage": "No configurations found. Add a section to get started.",
+    "dragAndDrop": "Drag and drop",
+    "showField": "Show field",
+    "hideField": "Hide field",
+    "card": {
+      "editDefinition": "Edit definition",
+      "save": "Save",
+      "saving": "Saving...",
+      "required": "Required",
+      "hints": {
+        "minLength": "Min {{n}} chars",
+        "maxLength": "Max {{n}} chars",
+        "min": "Min {{n}}",
+        "max": "Max {{n}}",
+        "email": "Email",
+        "url": "URL",
+        "integer": "Integer",
+        "pattern": "Regex"
+      }
+    },
+    "palette": {
+      "singleLineText": "Single line text",
+      "multiLineText": "Multi line text",
+      "checkbox": "Checkbox",
+      "dropdown": "Dropdown",
+      "image": "Image",
+      "toggleButton": "Toggle button",
+      "dateAndTime": "Date and Time",
+      "address": "Address"
+    }
   }
 }

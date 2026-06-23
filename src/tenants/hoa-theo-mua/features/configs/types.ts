@@ -1,77 +1,77 @@
-export type ConfigInputType =
-  | 'text'
-  | 'number'
-  | 'currency'
-  | 'percentage'
-  | 'select'
-  | 'address'
-  | 'checkbox'
-  | 'switch-group'
-  | 'date'
-  | 'dateRange'
+export const InputType = {
+  text: 'text',
+  textarea: 'textarea',
+  number: 'number',
+  boolean: 'boolean',
+  switch: 'switch',
+  date: 'date',
+  select: 'select',
+  json: 'json',
+  image: 'image',
+  address: 'address'
+} as const
 
-// Legacy type — kept for backward compat with existing components
-export type ConfigSystemItem = {
-  key: string
-  value: {
-    label: string
-    description?: string
-    group: string
-    inputType: ConfigInputType
-    value: unknown
-    isActive?: boolean
-    isEditable?: boolean
-    order?: number
-    unit?: string
-    placeholder?: string
-    options?: Array<{ label: string; value: string | number }>
-    items?: unknown[]
-    validations?: {
-      required?: boolean
-      min?: number
-      max?: number
-      minLength?: number
-      maxLength?: number
-      pattern?: string
-    }
-  }
-}
+export type InputType = (typeof InputType)[keyof typeof InputType]
 
-// ─── Dynamic config key types ───────────────────────────────────────────────
+export const InputTypeLabel: Record<InputType, string> = {
+  [InputType.text]: 'Text',
+  [InputType.textarea]: 'Textarea',
+  [InputType.number]: 'Number',
+  [InputType.boolean]: 'Boolean',
+  [InputType.switch]: 'Switch',
+  [InputType.date]: 'Date',
+  [InputType.select]: 'Select',
+  [InputType.json]: 'JSON',
+  [InputType.image]: 'Image',
+  [InputType.address]: 'Address'
+} as const
 
-export type ConfigValidationRule = Record<string, string | number | boolean>
+export type InputTypeLabel = (typeof InputTypeLabel)[keyof typeof InputTypeLabel]
 
-export type ConfigOption = { label: string; value: string }
+export type ValidationRule =
+  | { minLength: number }
+  | { maxLength: number }
+  | { min: number }
+  | { max: number }
+  | { pattern: string } // regex source, vd "^[a-z]+$"
+  | { enum: Array<string | number> }
+  | { email: true }
+  | { url: true }
+  | { integer: true }
 
-export type ConfigSwitch = { key: string; label: string }
-
-export type AddressValue = {
-  street?: string
-  city?: string
-  state?: string
-  zip?: string
-  country?: string
-}
-
-export type DateRangeValue = { from?: string; to?: string }
-
-export type ConfigRecordValue = {
+export interface ConfigDefinition {
   group: string
   label: string
-  description?: string
-  inputType: ConfigInputType
+  inputType: InputType
   value: unknown
-  required?: boolean
-  active?: boolean
-  validations?: ConfigValidationRule[]
-  options?: ConfigOption[]
-  switches?: ConfigSwitch[]
+  description?: string
+  required: boolean
+  options?: InputOption[]
+  validations: ValidationRule[]
 }
 
-export type ConfigRecord = {
+export interface InputOption {
+  label: string
+  value: string | number
+}
+
+export interface Config {
   id: string
   key: string
+  value: ConfigDefinition
   userId: string
-  value: ConfigRecordValue
-  _isNew?: boolean
+}
+
+// Tailwind color classes per input type — used for type badges across components
+export const INPUT_TYPE_COLOR: Record<InputType, string> = {
+  [InputType.text]: 'text-red-500 bg-red-50',
+  [InputType.textarea]: 'text-blue-500 bg-blue-50',
+  [InputType.number]: 'text-green-500 bg-green-50',
+  [InputType.boolean]: 'text-yellow-500 bg-yellow-50',
+  [InputType.switch]: 'text-purple-500 bg-purple-50',
+  [InputType.date]: 'text-sky-500 bg-sky-50',
+  [InputType.select]: 'text-indigo-500 bg-indigo-50',
+  [InputType.json]: 'text-gray-500 bg-gray-50',
+  [InputType.image]: 'text-sky-500 bg-sky-50',
+  [InputType.address]: 'text-red-500 bg-red-50'
 }

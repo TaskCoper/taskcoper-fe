@@ -560,5 +560,93 @@
       "minDays": "Số ngày tối thiểu",
       "maxDays": "Số ngày tối đa"
     }
+  },
+  "configsPage": {
+    "dialog": {
+      "createTitle": "Thêm trường",
+      "editTitle": "Chỉnh sửa trường",
+      "delete": "Xóa",
+      "keyField": "Khóa",
+      "keyPlaceholder": "vd. general.api_key",
+      "groupField": "Nhóm",
+      "labelField": "Nhãn",
+      "labelPlaceholder": "Tên hiển thị",
+      "inputTypeField": "Loại đầu vào",
+      "defaultValueField": "Giá trị mặc định",
+      "descriptionField": "Mô tả",
+      "descriptionPlaceholder": "Mô tả tùy chọn",
+      "requiredField": "Bắt buộc",
+      "requiredDesc": "Trường này phải có giá trị",
+      "optionsSection": "Tùy chọn",
+      "addOption": "Thêm tùy chọn",
+      "optionLabelPlaceholder": "Nhãn",
+      "optionValuePlaceholder": "Giá trị",
+      "selectDefaultPlaceholder": "Chọn giá trị mặc định",
+      "validationsSection": "Kiểm tra dữ liệu",
+      "addRule": "Thêm quy tắc",
+      "noValidations": "Không có quy tắc kiểm tra cho loại này",
+      "alwaysApplied": "— luôn áp dụng",
+      "cancel": "Hủy",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu...",
+      "validationRules": {
+        "minLength": "Độ dài tối thiểu",
+        "maxLength": "Độ dài tối đa",
+        "min": "Giá trị tối thiểu",
+        "max": "Giá trị tối đa",
+        "pattern": "Mẫu (regex)",
+        "email": "Định dạng email",
+        "url": "Định dạng URL",
+        "integer": "Số nguyên"
+      }
+    },
+    "breadcrumb": "Quản lý cấu hình",
+    "fallbackTitle": "Cấu hình",
+    "country": {
+      "label": "Quốc gia",
+      "all": "Tất cả quốc gia",
+      "vn": "Việt Nam",
+      "us": "Hoa Kỳ"
+    },
+    "confirm": {
+      "deleteTitle": "Xóa trường?",
+      "deleteDescription": "Trường này sẽ bị xóa vĩnh viễn và không thể khôi phục.",
+      "deleteConfirm": "Xóa",
+      "deleteCancel": "Hủy"
+    },
+    "addSection": "Thêm nhóm mới",
+    "cloneSection": "Nhân bản nhóm",
+    "deleteSection": "Xóa nhóm",
+    "emptySection": "Chưa có trường nào trong nhóm này.",
+    "emptyPage": "Chưa có cấu hình nào. Hãy thêm nhóm để bắt đầu.",
+    "dragAndDrop": "Kéo và thả",
+    "showField": "Hiện trường",
+    "hideField": "Ẩn trường",
+    "card": {
+      "editDefinition": "Chỉnh sửa định nghĩa",
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "required": "Bắt buộc",
+      "hints": {
+        "minLength": "Tối thiểu {{n}} ký tự",
+        "maxLength": "Tối đa {{n}} ký tự",
+        "min": "Tối thiểu {{n}}",
+        "max": "Tối đa {{n}}",
+        "email": "Email",
+        "url": "URL",
+        "integer": "Số nguyên",
+        "pattern": "Regex"
+      }
+    },
+    "palette": {
+      "singleLineText": "Văn bản một dòng",
+      "multiLineText": "Văn bản nhiều dòng",
+      "checkbox": "Hộp kiểm",
+      "dropdown": "Danh sách thả xuống",
+      "image": "Hình ảnh",
+      "toggleButton": "Nút bật/tắt",
+      "dateAndTime": "Ngày và giờ",
+      "address": "Địa chỉ"
+    }
   }
 }
