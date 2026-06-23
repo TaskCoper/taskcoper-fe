@@ -1,14 +1,15 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectPermission, ProjectRoleDetail, ProjectRoleItem, ProjectRoleTemplate } from './types'
 import type { AddProjectRoleFormValues, UpdateProjectRoleFormValues } from './validations'
 
-class ProjectRoleService {
+class ProjectRoleService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getMyProjectPermissions = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BaseResponse<ProjectPermission>>(
+    const { data } = await this.get<BaseResponse<ProjectPermission>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/permissions/me`
     )
 
@@ -17,7 +18,7 @@ class ProjectRoleService {
 
   getProjectRoles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<ProjectRoleItem>()
-    const { data } = await api.get<BasePaginationResponse<ProjectRoleItem>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectRoleItem>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/roles`
     )
 
@@ -26,7 +27,7 @@ class ProjectRoleService {
 
   getProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier?: string; roleId?: string }) => {
     if (!projectIdentifier || !roleId) return null
-    const { data } = await api.get<BaseResponse<ProjectRoleDetail>>(
+    const { data } = await this.get<BaseResponse<ProjectRoleDetail>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}/permissions`
     )
 
@@ -34,7 +35,7 @@ class ProjectRoleService {
   }
 
   addProjectRole = async ({ body }: { body: AddProjectRoleFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/roles`, {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/roles`, {
       ...body,
       permissions: body.permissions.map((per) => ({
         ...per,
@@ -46,7 +47,7 @@ class ProjectRoleService {
   }
 
   updateProjectRole = async ({ body }: { body: UpdateProjectRoleFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
+    const { data } = await this.put<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/roles/${body.roleId}`,
       {
         ...body,
@@ -61,13 +62,13 @@ class ProjectRoleService {
   }
 
   deleteProjectRole = async ({ projectIdentifier, roleId }: { projectIdentifier: string; roleId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/roles/${roleId}`)
 
     return data.value
   }
 
   getProjectRoleTemplates = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
-    const { data } = await api.get<BasePaginationResponse<ProjectRoleTemplate>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectRoleTemplate>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/roles/template`
     )
 

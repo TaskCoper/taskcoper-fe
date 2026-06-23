@@ -1,4 +1,5 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { GetProjectRevenueParams } from './hooks/use-get-project-revenue'
 import type { Revenue, RevenueLabel } from './types'
@@ -9,7 +10,7 @@ import type {
   UpdateProjectRevenueLabelFormValues
 } from './validations'
 
-class ProjectRevenueService {
+class ProjectRevenueService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectRevenue = async ({
@@ -24,7 +25,7 @@ class ProjectRevenueService {
     endDate
   }: GetProjectRevenueParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<Revenue>>(
+    const { data } = await this.get<BasePaginationResponse<Revenue>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues`,
       {
         params: {
@@ -44,7 +45,7 @@ class ProjectRevenueService {
   }
 
   addProjectRevenue = async ({ body }: { body: AddProjectRevenueFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues`,
       body
     )
@@ -53,7 +54,7 @@ class ProjectRevenueService {
   }
 
   updateProjectRevenue = async ({ body }: { body: UpdateProjectRevenueFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
+    const { data } = await this.put<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/${body.projectTransactionId}`,
       body
     )
@@ -62,7 +63,7 @@ class ProjectRevenueService {
   }
 
   deleteProjectRevenue = async ({ projectIdentifier, revenueId }: { projectIdentifier: string; revenueId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/${revenueId}`
     )
 
@@ -71,7 +72,7 @@ class ProjectRevenueService {
 
   getProjectRevenueLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<RevenueLabel>()
-    const { data } = await api.get<BasePaginationResponse<RevenueLabel>>(
+    const { data } = await this.get<BasePaginationResponse<RevenueLabel>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels`
     )
 
@@ -79,7 +80,7 @@ class ProjectRevenueService {
   }
 
   addProjectRevenueLabel = async ({ body }: { body: AddProjectRevenueLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels`,
       body
     )
@@ -88,7 +89,7 @@ class ProjectRevenueService {
   }
 
   updateProjectRevenueLabel = async ({ body }: { body: UpdateProjectRevenueLabelFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
+    const { data } = await this.put<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/revenues/labels/${body.id}`,
       body
     )
@@ -103,7 +104,7 @@ class ProjectRevenueService {
     projectIdentifier: string
     labelId: string
   }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/labels/${labelId}`
     )
 

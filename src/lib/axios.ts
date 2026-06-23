@@ -59,7 +59,10 @@ const isPublicRoutePath = (pathname: string) => {
   return PUBLIC_ROUTE_PATHS.has(normalizedPathname)
 }
 
-const refreshAccessToken = async (refreshTokenUrl: string, expiredRefreshTokenCode: string): Promise<boolean> => {
+const refreshAccessToken = async (
+  refreshTokenUrl: string,
+  expiredRefreshTokenCodes: readonly string[]
+): Promise<boolean> => {
   try {
     await axios.post(
       refreshTokenUrl,
@@ -77,7 +80,7 @@ const refreshAccessToken = async (refreshTokenUrl: string, expiredRefreshTokenCo
     const error = err as AxiosError<ErrorResponse>
 
     // If refresh token is invalid
-    if (error.response?.data?.messageCode === expiredRefreshTokenCode) {
+    if (error.response?.data?.messageCode && expiredRefreshTokenCodes.includes(error.response.data.messageCode)) {
       clearAllUserPreferences()
       const isOnPublicRoute = isPublicRoutePath(window.location.pathname)
 
@@ -107,12 +110,12 @@ const onRefreshed = (error: AxiosError | null = null) => {
 interface CreateApiClientOptions {
   refreshTokenPath: string
   expiredAccessTokenCodes: readonly string[]
-  expiredRefreshTokenCode: string
+  expiredRefreshTokenCodes: readonly string[]
 }
 
 export const createApiClient = (
   baseURL: string,
-  { refreshTokenPath, expiredAccessTokenCodes, expiredRefreshTokenCode }: CreateApiClientOptions
+  { refreshTokenPath, expiredAccessTokenCodes, expiredRefreshTokenCodes }: CreateApiClientOptions
 ): AxiosInstance => {
   const refreshTokenUrl = `${baseURL}${refreshTokenPath}`
 
@@ -191,7 +194,7 @@ export const createApiClient = (
 
       isRefreshing = true
 
-      const isRefreshSuccessful = await refreshAccessToken(refreshTokenUrl, expiredRefreshTokenCode)
+      const isRefreshSuccessful = await refreshAccessToken(refreshTokenUrl, expiredRefreshTokenCodes)
 
       isRefreshing = false
 
@@ -212,10 +215,17 @@ export const createApiClient = (
   return instance
 }
 
-export const api = createApiClient(`${config.baseURL}/api`, {
-  refreshTokenPath: '/v1/users/refresh_token',
-  expiredAccessTokenCodes: ['ExpiredAccessToken', 'MissingAccessToken', 'InvalidAccessToken'],
-  expiredRefreshTokenCode: 'InvalidRefreshToken'
+export const api = createApiClient(`${config.baseURL}`, {
+  refreshTokenPath: '/taskcoper-api/v1/users/refresh_token',
+  expiredAccessTokenCodes: [
+    'ExpiredAccessToken',
+    'MissingAccessToken',
+    'InvalidAccessToken',
+    'EXPIRED_ACCESS_TOKEN',
+    'MISSING_ACCESS_TOKEN',
+    'INVALID_ACCESS_TOKEN'
+  ],
+  expiredRefreshTokenCodes: ['InvalidRefreshToken', 'EXPIRED_REFRESH_TOKEN']
 })
 
 export default api

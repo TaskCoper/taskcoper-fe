@@ -9,9 +9,10 @@ import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
-import { resolveFeatureCheck, useFilteredNavItems, useTenantConfig, type GuardedNavItem } from '@/lib/feature-flags'
+import { resolveFeatureCheck, useFilteredNavItems, type GuardedNavItem } from '@/lib/feature-flags'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
+import { hoaTheoMuaConfig } from '@/tenants/hoa-theo-mua/config'
 import {
   BellIcon,
   BellRingIcon,
@@ -44,7 +45,8 @@ export default function PublicLayout() {
 
   const { me, isVerificationRequired, isGettingMe } = useGetMe()
   const { org } = useGetOrg({ orgId: me?.organizationId })
-  const tenantConfig = useTenantConfig()
+  // const tenantConfig = useTenantConfig()
+  const tenantConfig = hoaTheoMuaConfig
   const visibleNavigations = useFilteredNavItems(navigations)
   const isTaskManagementEnabled = resolveFeatureCheck(tenantConfig, 'module.taskManagement')
 

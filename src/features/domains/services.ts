@@ -1,12 +1,13 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetDomainsParams } from './hooks/use-get-domains'
 import type { Domain, DomainStats } from './types'
 
-class DomainService {
+class DomainService extends BaseService {
   private readonly baseUrl = 'domains'
 
   getDomains = async ({ searchTerm, pageIndex, pageSize }: GetDomainsParams) => {
-    const { data } = await api.get<BasePaginationResponse<Domain>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<Domain>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -18,7 +19,7 @@ class DomainService {
   }
 
   getDomainStats = async () => {
-    const { data } = await api.get<BaseResponse<DomainStats[]>>(`/v1/${this.baseUrl}/statistic`)
+    const { data } = await this.get<BaseResponse<DomainStats[]>>(`/v1/${this.baseUrl}/statistic`)
 
     return data.value
   }

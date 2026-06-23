@@ -1,16 +1,17 @@
-import api, { type BaseResponse } from '@/lib/axios'
+import type { BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetProjectHeatmapParams } from './hooks/use-get-project-heatmap'
 import type { GetProjectOnTimeCompletersParams } from './hooks/use-get-project-on-time-completers'
 import type { GetProjectTaskStatsParams } from './hooks/use-get-project-task-stats'
 import type { GetProjectTopContributorsParams } from './hooks/use-get-project-top-contributors'
 import type { ProjectHeatmap, ProjectTaskStats, ProjectTopContributor } from './types'
 
-class EfficiencyService {
+class EfficiencyService extends BaseService {
   private readonly baseUrl = 'efficiency'
 
   getProjectHeatmap = async ({ projectId, from, to }: GetProjectHeatmapParams) => {
     if (!projectId) return null
-    const { data } = await api.get<BaseResponse<ProjectHeatmap[]>>(`/v1/${this.baseUrl}/${projectId}/heatmap`, {
+    const { data } = await this.get<BaseResponse<ProjectHeatmap[]>>(`/v1/${this.baseUrl}/${projectId}/heatmap`, {
       params: {
         from,
         to
@@ -28,7 +29,7 @@ class EfficiencyService {
     isViewInMonth,
     userId
   }: GetProjectTaskStatsParams) => {
-    const { data } = await api.get<BaseResponse<ProjectTaskStats[]>>(
+    const { data } = await this.get<BaseResponse<ProjectTaskStats[]>>(
       `/v1/${this.baseUrl}/${projectId}/statistics/tasks`,
       {
         params: {
@@ -46,7 +47,7 @@ class EfficiencyService {
 
   getTopContributors = async ({ projectId, from, to }: GetProjectTopContributorsParams) => {
     if (!projectId) return null
-    const { data } = await api.get<BaseResponse<ProjectTopContributor[]>>(
+    const { data } = await this.get<BaseResponse<ProjectTopContributor[]>>(
       `/v1/${this.baseUrl}/${projectId}/top-contributors`,
       {
         params: {
@@ -61,7 +62,7 @@ class EfficiencyService {
 
   getOnTimeCompleters = async ({ projectId, from, to }: GetProjectOnTimeCompletersParams) => {
     if (!projectId) return null
-    const { data } = await api.get<BaseResponse<ProjectTopContributor[]>>(
+    const { data } = await this.get<BaseResponse<ProjectTopContributor[]>>(
       `/v1/${this.baseUrl}/${projectId}/top-contributors/on-deadline`,
       {
         params: {

@@ -1,5 +1,5 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
-import htmApi from '../../lib/api'
+import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { JobDescriptionsParams } from './hooks/use-get-job-descriptions'
 import type { JobDescription, JobDescriptionDetail } from './types'
 import type { CreateJobDescriptionFormValues } from './validations'
@@ -37,7 +37,7 @@ const toApiBody = (body: CreateJobDescriptionFormValues): JobDescriptionBody => 
   salaryMax: Number(body.salaryMax)
 })
 
-class JobDescriptionService {
+class JobDescriptionService extends BaseService {
   private readonly baseUrl = 'job-descriptions'
 
   getJobDescriptions = async ({
@@ -50,7 +50,7 @@ class JobDescriptionService {
     salaryMin,
     salaryMax
   }: JobDescriptionsParams) => {
-    const { data } = await htmApi.get<BasePaginationResponse<JobDescription>>(`v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<JobDescription>>(`/v1/${this.baseUrl}`, {
       params: {
         page,
         pageSize,
@@ -67,24 +67,24 @@ class JobDescriptionService {
   }
 
   createJobDescription = async ({ body }: { body: CreateJobDescriptionFormValues }) => {
-    const { data } = await htmApi.post<BaseResponse<string>>(`v1/${this.baseUrl}`, toApiBody(body))
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, toApiBody(body))
     return data.value
   }
 
   getJobDescription = async ({ id }: { id?: string }) => {
-    const { data } = await htmApi.get<BaseResponse<JobDescriptionDetail>>(`v1/${this.baseUrl}/${id}`)
+    const { data } = await this.get<BaseResponse<JobDescriptionDetail>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
   }
 
   updateJobDescription = async ({ id, body }: { id: string; body: CreateJobDescriptionFormValues }) => {
-    const { data } = await htmApi.put<BaseResponse<string>>(`v1/${this.baseUrl}/${id}`, toApiBody(body))
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, toApiBody(body))
 
     return data.value
   }
 
   deleteJobDescription = async ({ id }: { id: string }) => {
-    const { data } = await htmApi.delete<BaseResponse<string>>(`v1/${this.baseUrl}/${id}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
   }

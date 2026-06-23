@@ -1,11 +1,12 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetMilestonesParams } from './hooks/use-get-milestones'
 import type { GetMyProjectsParams } from './hooks/use-get-my-projects'
 import type { GetProjectsParams } from './hooks/use-get-projects'
 import type { MilestoneWithTasks, ParentMilestone, Project, ProjectPreview, SystemProject, TaskPreview } from './types'
 import type { CreateProjectFormValues, UpdateProjectFormValues } from './validations'
 
-class ProjectService {
+class ProjectService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjects = async ({
@@ -18,7 +19,7 @@ class ProjectService {
     domainId,
     sortBy
   }: GetProjectsParams) => {
-    const { data } = await api.get<BasePaginationResponse<SystemProject>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<SystemProject>>(`/v1/${this.baseUrl}`, {
       params: {
         searchTerm,
         pageIndex,
@@ -36,13 +37,13 @@ class ProjectService {
 
   getProject = async ({ identifier }: { identifier?: string }) => {
     if (!identifier) return null
-    const { data } = await api.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${identifier}`)
+    const { data } = await this.get<BaseResponse<Project>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data.value
   }
 
   getMyProjects = async ({ userId, status, searchTerm, pageIndex, pageSize }: GetMyProjectsParams) => {
-    const { data } = await api.get<BasePaginationResponse<ProjectPreview>>(`/v1/${this.baseUrl}/user`, {
+    const { data } = await this.get<BasePaginationResponse<ProjectPreview>>(`/v1/${this.baseUrl}/user`, {
       params: {
         userId,
         status,
@@ -56,25 +57,25 @@ class ProjectService {
   }
 
   createProject = async ({ body }: { body: CreateProjectFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   updateProject = async ({ body }: { body: Omit<UpdateProjectFormValues, 'domainIds'> & { domainIds: string[] } }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectId}`, body)
 
     return data.value
   }
 
   deleteProject = async ({ projectIdentifier }: { projectIdentifier: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}`)
 
     return data.value
   }
 
   getProjectsForPackage = async () => {
-    const { data } = await api.get<
+    const { data } = await this.get<
       BasePaginationResponse<Pick<Project, 'id' | 'slug' | 'name' | 'logoImage' | 'coverImage'>>
     >(`/v1/${this.baseUrl}/me/bookable-for-mentor-package`)
 
@@ -83,7 +84,7 @@ class ProjectService {
 
   getMyAssignedTasks = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
     if (!projectIdentifier || !userId) return null
-    const { data } = await api.get<BasePaginationResponse<TaskPreview>>(
+    const { data } = await this.get<BasePaginationResponse<TaskPreview>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/tasks`
     )
 
@@ -92,7 +93,7 @@ class ProjectService {
 
   getParentMilestones = async ({ identifier }: { identifier?: string }) => {
     if (!identifier) return null
-    const { data } = await api.get<BasePaginationResponse<ParentMilestone>>(
+    const { data } = await this.get<BasePaginationResponse<ParentMilestone>>(
       `/v1/${this.baseUrl}/${identifier}/milestones/parents`
     )
 
@@ -101,7 +102,7 @@ class ProjectService {
 
   getMilestones = async ({ projectIdentifier, parentMilestoneIdentifier }: GetMilestonesParams) => {
     if (!projectIdentifier || !parentMilestoneIdentifier) return null
-    const { data } = await api.get<BaseResponse<MilestoneWithTasks>>(
+    const { data } = await this.get<BaseResponse<MilestoneWithTasks>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/milestones/${parentMilestoneIdentifier}`
     )
 
