@@ -1,24 +1,25 @@
 import { DataTable } from '@/components/data-table/data-table'
-import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
-import { useTableQueryParams } from '@/hooks/use-table-query-params'
-import { formatDateTime } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import type { ExtendedColumnSort } from '@/types/data-table.type'
-import { endOfDay, startOfDay } from 'date-fns'
-import { CalendarIcon, PackageIcon, X } from 'lucide-react'
-import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import type { DateRange } from 'react-day-picker'
+import { PackageIcon } from 'lucide-react'
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
+import { useEffect, useMemo, useRef } from 'react'
 import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
 import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
 import type { NhanhVnOrder } from '../features/orders/types'
 import { vndFormatter } from '../features/orders/utils'
+
+function parseIdsInput(str: string | null): number[] | undefined {
+  if (!str) return undefined
+
+  const ids = str
+    .split(',')
+    .map((s) => parseInt(s.trim(), 10))
+    .filter((n) => !isNaN(n))
+
+  return ids.length > 0 ? ids : undefined
+}
 
 function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
   const { t } = useTenantTranslation()
@@ -68,57 +69,26 @@ function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
   )
 }
 
-function DateRangeLabel({ range, placeholder }: { range: DateRange; placeholder: string }) {
-  if (!range.from && !range.to) {
-    return <span className='text-muted-foreground'>{placeholder}</span>
-  }
-
-  const from = range.from ? formatDateTime(range.from, 'dateShort') : '...'
-  const to = range.to ? formatDateTime(range.to, 'dateShort') : '...'
-
-  return (
-    <span>
-      {from} – {to}
-    </span>
-  )
-}
-
-function parseIdsInput(str: string | null): number[] | undefined {
-  if (!str) return undefined
-
-  const ids = str
-    .split(',')
-    .map((s) => parseInt(s.trim(), 10))
-    .filter((n) => !isNaN(n))
-
-  return ids.length > 0 ? ids : undefined
-}
-
 export default function OrdersListPage() {
   const { t } = useTenantTranslation()
   const columns = useMemo(() => getNhanhVnColumns({ t }), [t])
 
-  const { page, limit, sorting } = useTableQueryParams({ columns, prefix: 'orders' })
-  const [, setPageUrl] = useQueryState('orders_page', parseAsInteger.withOptions({ shallow: true }))
+  // Read filter/pagination values directly from URL.
+  // Keys match what useDataTable writes with filterPrefix='orders'.
+  const [idFilter] = useQueryState('orders_id', parseAsString.withOptions({ shallow: true }))
+  const [depotFilter] = useQueryState('orders_depot', parseAsString.withOptions({ shallow: true }))
+  const [createdAtFilter] = useQueryState(
+    'orders_createdAt',
+    parseAsArrayOf(parseAsString, ',').withOptions({ shallow: true })
+  )
+  const [pageUrl, setPageUrl] = useQueryState('orders_page', parseAsInteger.withOptions({ shallow: true }))
+  const [perPageUrl] = useQueryState('orders_perPage', parseAsInteger.withOptions({ shallow: true }))
 
-  const [dateFrom, setDateFrom] = useQueryState('dateFrom', parseAsInteger.withOptions({ shallow: true }))
-  const [dateTo, setDateTo] = useQueryState('dateTo', parseAsInteger.withOptions({ shallow: true }))
+  const page = pageUrl ?? 1
+  const pageSize = perPageUrl ?? 10
 
-  const [idsFilter, setIdsFilter] = useQueryState('orderIds', parseAsString.withOptions({ shallow: true }))
-  const [idsInput, setIdsInput] = useState(idsFilter ?? '')
-
-  const [depotIdsFilter, setDepotIdsFilter] = useQueryState('depotIds', parseAsString.withOptions({ shallow: true }))
-  const [depotIdsInput, setDepotIdsInput] = useState(depotIdsFilter ?? '')
-
-  const dateRange: DateRange = {
-    from: dateFrom ? new Date(dateFrom * 1000) : undefined,
-    to: dateTo ? new Date(dateTo * 1000) : undefined
-  }
-
-  const hasFilters = dateFrom != null || dateTo != null || !!idsFilter || !!depotIdsFilter
-
-  const debouncedSetIds = useDebouncedCallback((value: string) => setIdsFilter(value || null), 300)
-  const debouncedSetDepotIds = useDebouncedCallback((value: string) => setDepotIdsFilter(value || null), 300)
+  const dateFrom = createdAtFilter?.[0] ? Math.floor(new Date(createdAtFilter[0]).getTime() / 1000) : undefined
+  const dateTo = createdAtFilter?.[1] ? Math.floor(new Date(createdAtFilter[1]).getTime() / 1000) : undefined
 
   // cursor cache: always-current ref so useMemo can read it synchronously without stale-closure issues
   const cursorByPage = useRef<Record<number, { id: number } | undefined>>({})
@@ -133,18 +103,17 @@ export default function OrdersListPage() {
     cursorByPage.current = {}
     void setPageUrl(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFrom, dateTo, idsFilter, depotIdsFilter, limit])
+  }, [idFilter, depotFilter, createdAtFilter?.[0], createdAtFilter?.[1], pageSize])
 
   const { nhanhVnOrders, paginator, isLoadingNhanhVnOrders } = useGetOrdersNhanhVn({
-    createdAtFrom: dateFrom ?? undefined,
-    createdAtTo: dateTo ?? undefined,
-    ids: parseIdsInput(idsFilter),
-    depotIds: parseIdsInput(depotIdsFilter),
-    size: limit,
+    createdAtFrom: dateFrom,
+    createdAtTo: dateTo,
+    ids: parseIdsInput(idFilter),
+    depotIds: parseIdsInput(depotFilter),
+    size: pageSize,
     nextCursor: currentCursor
   })
 
-  // store next cursor into the ref as soon as it arrives (triggers no extra re-render)
   const nextCursorId = paginator?.next?.id
   useEffect(() => {
     if (nextCursorId !== undefined) {
@@ -152,7 +121,6 @@ export default function OrdersListPage() {
     }
   }, [nextCursorId, page])
 
-  // if page > 1 but cursor is missing (e.g. after hard refresh), reset to page 1
   useEffect(() => {
     if (page > 1 && currentCursor === undefined) {
       cursorByPage.current = {}
@@ -167,12 +135,12 @@ export default function OrdersListPage() {
     columns,
     pageCount,
     initialState: {
-      sorting: (sorting ?? []) as ExtendedColumnSort<NhanhVnOrder>[],
       columnPinning: { right: ['actions'] }
     },
     getRowId: (row) => String(row.info.id),
     shallow: true,
     clearOnDefault: true,
+    filterPrefix: 'orders',
     queryKeys: {
       page: 'orders_page',
       perPage: 'orders_perPage',
@@ -195,85 +163,7 @@ export default function OrdersListPage() {
           isLoading={isLoadingNhanhVnOrders}
           renderSubComponent={({ row }) => <NhanhVnProductsSubRow row={row} />}
         >
-          <div className='flex w-full items-center justify-between gap-2 p-1'>
-            <div className='flex flex-wrap items-center gap-2'>
-              <Input
-                placeholder={t('orders.filter.orderIdsPlaceholder')}
-                value={idsInput}
-                onChange={(e) => {
-                  setIdsInput(e.target.value)
-                  debouncedSetIds(e.target.value)
-                }}
-                className='h-7.5 w-52'
-                spellCheck={false}
-              />
-
-              <Input
-                placeholder={t('orders.filter.depotIdsPlaceholder')}
-                value={depotIdsInput}
-                onChange={(e) => {
-                  setDepotIdsInput(e.target.value)
-                  debouncedSetDepotIds(e.target.value)
-                }}
-                className='h-7.5 w-36'
-                spellCheck={false}
-              />
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant='outline' size='sm' className='h-7.5 gap-2 border-dashed text-sm font-normal'>
-                    <CalendarIcon className='size-4' />
-                    <DateRangeLabel range={dateRange} placeholder={t('orders.filter.dateRange')} />
-                    {(dateRange.from || dateRange.to) && (
-                      <span
-                        role='button'
-                        className='ml-1 rounded-full hover:text-destructive'
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setDateFrom(null)
-                          setDateTo(null)
-                        }}
-                      >
-                        <X className='size-3' />
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    autoFocus
-                    captionLayout='dropdown'
-                    mode='range'
-                    selected={dateRange}
-                    onSelect={(range) => {
-                      setDateFrom(range?.from ? Math.floor(startOfDay(range.from).getTime() / 1000) : null)
-                      setDateTo(range?.to ? Math.floor(endOfDay(range.to).getTime() / 1000) : null)
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-
-              {hasFilters && (
-                <Button
-                  variant='destructive'
-                  size='sm'
-                  className='h-7.5 border-dashed'
-                  onClick={() => {
-                    setDateFrom(null)
-                    setDateTo(null)
-                    setIdsInput('')
-                    void setIdsFilter(null)
-                    setDepotIdsInput('')
-                    void setDepotIdsFilter(null)
-                  }}
-                >
-                  <X className='size-4' />
-                  {t('orders.filter.reset')}
-                </Button>
-              )}
-            </div>
-            <DataTableViewOptions table={table} align='end' />
-          </div>
+          <DataTableToolbar table={table} />
         </DataTable>
       </div>
     </div>

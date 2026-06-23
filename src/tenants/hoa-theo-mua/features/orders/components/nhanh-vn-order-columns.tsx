@@ -67,6 +67,7 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       meta: {
         label: 'orders.column.nhanhOrderId',
         variant: 'text',
+        placeholder: 'orders.filter.orderIdsPlaceholder',
         icon: SearchIcon
       },
       header: ({ column }) => (
@@ -93,7 +94,7 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       },
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 130
     },
     {
@@ -247,13 +248,13 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       },
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 150
     },
     {
       id: 'depot',
       accessorFn: (row) => row.info.depotId,
-      meta: { label: 'orders.column.depot' },
+      meta: { label: 'orders.column.depot', variant: 'text', placeholder: 'orders.filter.depotIdsPlaceholder' },
       header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
       cell: ({ row }) => {
         const value = row.original.info.depotId
@@ -270,7 +271,7 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       },
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 120
     },
     {
