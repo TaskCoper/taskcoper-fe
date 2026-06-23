@@ -231,6 +231,34 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       size: 120
     },
     {
+      id: 'depot',
+      accessorFn: (row) => row.info.depotId,
+      meta: {
+        label: 'orders.column.depot',
+        variant: 'text',
+        placeholder: 'orders.filter.depotIdsPlaceholder',
+        icon: SearchIcon
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
+      cell: ({ row }) => {
+        const value = row.original.info.depotId
+
+        return value ? (
+          <div className='flex justify-center'>
+            <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>
+              {value}
+            </span>
+          </div>
+        ) : (
+          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
+        )
+      },
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 120
+    },
+    {
       id: 'createdAt',
       accessorFn: (row) => row.info.createdAt,
       meta: { label: 'orders.column.createdAt', variant: 'dateRange' },
@@ -250,29 +278,6 @@ export const getNhanhVnColumns = ({ t }: { t: TenantT }): ColumnDef<NhanhVnOrder
       enableHiding: true,
       enableColumnFilter: true,
       size: 150
-    },
-    {
-      id: 'depot',
-      accessorFn: (row) => row.info.depotId,
-      meta: { label: 'orders.column.depot', variant: 'text', placeholder: 'orders.filter.depotIdsPlaceholder' },
-      header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.depot' className='mx-auto' />,
-      cell: ({ row }) => {
-        const value = row.original.info.depotId
-
-        return value ? (
-          <div className='flex justify-center'>
-            <span className='text-xs bg-blue-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border border-green-200 dark:border-green-800/60 px-2 py-0.5 rounded-full'>
-              {value}
-            </span>
-          </div>
-        ) : (
-          <p className='text-center text-muted-foreground/70 italic text-sm select-none'>{t('orders.common.noData')}</p>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      enableColumnFilter: true,
-      size: 120
     },
     {
       id: 'actions',

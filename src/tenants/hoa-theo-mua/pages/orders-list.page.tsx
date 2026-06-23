@@ -2,13 +2,11 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { PackageIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useEffect, useMemo, useRef } from 'react'
 import { getNhanhVnColumns } from '../features/orders/components/nhanh-vn-order-columns'
+import { NhanhVnProductsSubRow } from '../features/orders/components/nhanh-vn-products-sub-row'
 import { useGetOrdersNhanhVn } from '../features/orders/hooks/use-get-orders-nhanh-vn'
-import type { NhanhVnOrder } from '../features/orders/types'
-import { vndFormatter } from '../features/orders/utils'
 
 function parseIdsInput(str: string | null): number[] | undefined {
   if (!str) return undefined
@@ -19,54 +17,6 @@ function parseIdsInput(str: string | null): number[] | undefined {
     .filter((n) => !isNaN(n))
 
   return ids.length > 0 ? ids : undefined
-}
-
-function NhanhVnProductsSubRow({ row }: { row: { original: NhanhVnOrder } }) {
-  const { t } = useTenantTranslation()
-
-  const products = row.original.products ?? []
-  if (!products.length) return null
-
-  return (
-    <div className='px-4 py-3'>
-      <table className='w-full text-xs'>
-        <thead>
-          <tr className='text-muted-foreground'>
-            <th className='text-left py-1.5 px-2 font-medium w-10'>{t('orders.productTable.image')}</th>
-            <th className='text-left py-1.5 px-2 font-medium'>{t('orders.productTable.name')}</th>
-            <th className='text-left py-1.5 px-2 font-medium'>{t('orders.productTable.sku')}</th>
-            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.quantity')}</th>
-            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.unitPrice')}</th>
-            <th className='text-right py-1.5 px-2 font-medium'>{t('orders.productTable.total')}</th>
-          </tr>
-        </thead>
-        <tbody className='divide-y divide-border'>
-          {products.map((product, idx) => (
-            <tr key={idx} className='hover:bg-background/60'>
-              <td className='py-2 px-2'>
-                {product.image ? (
-                  <img src={product.image} alt={product.name} className='size-9 object-cover rounded border' />
-                ) : (
-                  <div className='size-9 rounded border bg-muted flex items-center justify-center'>
-                    <PackageIcon className='size-4 text-muted-foreground/40' />
-                  </div>
-                )}
-              </td>
-              <td className='py-2 px-2 font-medium'>{product.name}</td>
-              <td className='py-2 px-2 font-mono text-muted-foreground'>{product.code}</td>
-              <td className='py-2 px-2 text-right'>{product.quantity}</td>
-              <td className='py-2 px-2 text-right'>
-                {product.price != null ? vndFormatter.format(product.price) : null}
-              </td>
-              <td className='py-2 px-2 text-right font-medium'>
-                {vndFormatter.format((product.price ?? 0) * (product.quantity ?? 0))}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
 }
 
 export default function OrdersListPage() {
