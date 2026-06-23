@@ -1,4 +1,5 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { GetMentorPackageBookingsParams } from './hooks/use-get-mentor-package-bookings'
 import type { GetMentorPackageStatisticsParams } from './hooks/use-get-mentor-package-statistics'
@@ -17,17 +18,17 @@ import type {
 } from './types'
 import type { CreateMentorPackageFormValues, UpdateMentorPackageFormValues } from './validations'
 
-class MentorPackageService {
+class MentorPackageService extends BaseService {
   private readonly baseUrl = 'mentor-packages'
 
   createMentorPackage = async ({ body }: { body: CreateMentorPackageFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   getMyMentorPackages = async ({ searchTerm, pageIndex, pageSize, sortBy, isPin }: GetMyMentorPackagesParams) => {
-    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`, {
+    const { data } = await this.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/me`, {
       params: { searchTerm, pageIndex, pageSize, sortBy, isPin }
     })
 
@@ -36,7 +37,7 @@ class MentorPackageService {
 
   getMentorPackages = async ({ mentorId, isPin }: GetMentorPackagesParams) => {
     if (!mentorId) return getDefaultPaginationResponse<MentorPackage>()
-    const { data } = await api.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/mentor/${mentorId}`, {
+    const { data } = await this.get<BasePaginationResponse<MentorPackage>>(`/v1/${this.baseUrl}/mentor/${mentorId}`, {
       params: { isPin }
     })
 
@@ -44,7 +45,7 @@ class MentorPackageService {
   }
 
   getPurchasedMentorPackages = async ({ mode, isNeedFeedback }: GetPurchasedMentorPackagesParams) => {
-    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`, {
+    const { data } = await this.get<BasePaginationResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me`, {
       params: { mode, isNeedFeedback }
     })
 
@@ -53,14 +54,14 @@ class MentorPackageService {
 
   getPurchasedMentorPackage = async ({ packageId }: { packageId?: string }) => {
     if (!packageId) return null
-    const { data } = await api.get<BaseResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me/${packageId}`)
+    const { data } = await this.get<BaseResponse<PurchasedMentorPackage>>(`/v1/${this.baseUrl}/users/me/${packageId}`)
 
     return data.value
   }
 
   getProjectPurchasedMentorPackages = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<PurchasedMentorPackage>()
-    const { data } = await api.get<BasePaginationResponse<PurchasedMentorPackage>>(
+    const { data } = await this.get<BasePaginationResponse<PurchasedMentorPackage>>(
       `/v1/${this.baseUrl}/projects/${projectIdentifier}`
     )
 
@@ -69,26 +70,26 @@ class MentorPackageService {
 
   getMentorPackage = async ({ packageId }: { packageId?: string }) => {
     if (!packageId) return null
-    const { data } = await api.get<BaseResponse<MentorPackageDetail>>(`/v1/${this.baseUrl}/${packageId}`)
+    const { data } = await this.get<BaseResponse<MentorPackageDetail>>(`/v1/${this.baseUrl}/${packageId}`)
 
     return data.value
   }
 
   updateMentorPackage = async ({ body }: { body: UpdateMentorPackageFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   deleteMentorPackage = async ({ mentorPackageId }: { mentorPackageId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${mentorPackageId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${mentorPackageId}`)
 
     return data.value
   }
 
   getMentorPackageStatistics = async ({ mentorPackageId, startTime, endTime }: GetMentorPackageStatisticsParams) => {
     if (!mentorPackageId) return null
-    const { data } = await api.get<BaseResponse<MentorPackageStatistics>>(
+    const { data } = await this.get<BaseResponse<MentorPackageStatistics>>(
       `/v1/${this.baseUrl}/${mentorPackageId}/statistics`,
       { params: { startTime, endTime } }
     )
@@ -97,7 +98,7 @@ class MentorPackageService {
   }
 
   getMentorPackagePinStatistics = async () => {
-    const { data } = await api.get<BasePaginationResponse<MentorPackagePinStatistic>>(
+    const { data } = await this.get<BasePaginationResponse<MentorPackagePinStatistic>>(
       `/v1/${this.baseUrl}/pin/statistic`
     )
 
@@ -112,7 +113,7 @@ class MentorPackageService {
     sortBy
   }: GetMentorPackageBookingsParams) => {
     if (!mentorPackageId) return getDefaultPaginationResponse<MentorPackageBooking>()
-    const { data } = await api.get<BasePaginationResponse<MentorPackageBooking>>(
+    const { data } = await this.get<BasePaginationResponse<MentorPackageBooking>>(
       `/v1/${this.baseUrl}/${mentorPackageId}/bookings`,
       { params: { status, pageIndex, pageSize, sortBy } }
     )
@@ -121,7 +122,7 @@ class MentorPackageService {
   }
 
   getMentorPackagesStatistics = async ({ startTime, endTime }: GetMentorPackagesStatisticsParams) => {
-    const { data } = await api.get<BaseResponse<MentorPackagesStatistics>>(`/v1/${this.baseUrl}/me/statistics`, {
+    const { data } = await this.get<BaseResponse<MentorPackagesStatistics>>(`/v1/${this.baseUrl}/me/statistics`, {
       params: { startTime, endTime }
     })
 

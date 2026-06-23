@@ -1,13 +1,14 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { Label } from './types'
 import type { AddProjectLabelFormValues, UpdateProjectLabelFormValues } from './validations'
 
-class ProjectLabelService {
+class ProjectLabelService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectLabels = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<Label>>(
+    const { data } = await this.get<BasePaginationResponse<Label>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/task-labels`
     )
 
@@ -15,7 +16,7 @@ class ProjectLabelService {
   }
 
   addProjectLabel = async ({ body }: { body: AddProjectLabelFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/task-labels`,
       body
     )
@@ -24,13 +25,13 @@ class ProjectLabelService {
   }
 
   updateProjectLabel = async ({ body }: { body: UpdateProjectLabelFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${body.id}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${body.id}`, body)
 
     return data.value
   }
 
   deleteProjectLabel = async ({ labelId }: { labelId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${labelId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/task-labels/${labelId}`)
 
     return data.value
   }

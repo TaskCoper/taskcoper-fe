@@ -1,13 +1,14 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetMyTransactionsParams } from './hooks/use-get-my-transactions'
 import type { Transaction, TransactionRow, TransactionStatusStats, TransactionTypeStats } from './types'
 
-class TransactionService {
+class TransactionService extends BaseService {
   private readonly baseUrl = 'transactions'
 
   getTransaction = async ({ transactionId }: { transactionId?: string }) => {
     if (!transactionId) return null
-    const { data } = await api.get<BaseResponse<Transaction>>(`/v1/${this.baseUrl}/${transactionId}`)
+    const { data } = await this.get<BaseResponse<Transaction>>(`/v1/${this.baseUrl}/${transactionId}`)
 
     return data.value
   }
@@ -22,7 +23,7 @@ class TransactionService {
     createdFrom,
     createdTo
   }: GetMyTransactionsParams) => {
-    const { data } = await api.get<BasePaginationResponse<TransactionRow>>(`/v1/${this.baseUrl}/me`, {
+    const { data } = await this.get<BasePaginationResponse<TransactionRow>>(`/v1/${this.baseUrl}/me`, {
       params: { pageIndex, pageSize, status, type, sortBy, searchTerm, createdFrom, createdTo }
     })
 
@@ -30,7 +31,7 @@ class TransactionService {
   }
 
   getTransactionStatusStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<TransactionStatusStats>>(
+    const { data } = await this.get<BasePaginationResponse<TransactionStatusStats>>(
       `/v1/${this.baseUrl}/me/statistics/status`
     )
 
@@ -38,7 +39,7 @@ class TransactionService {
   }
 
   getTransactionTypeStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<TransactionTypeStats>>(
+    const { data } = await this.get<BasePaginationResponse<TransactionTypeStats>>(
       `/v1/${this.baseUrl}/me/statistics/type`
     )
 
@@ -47,7 +48,7 @@ class TransactionService {
 
   getTransactionStatus = async ({ transactionId }: { transactionId?: string }) => {
     if (!transactionId) return null
-    const { data } = await api.get<
+    const { data } = await this.get<
       BaseResponse<Pick<Transaction, 'transactionId' | 'targetModel' | 'targetModelId' | 'status' | 'paidAt'>>
     >(`/v1/${this.baseUrl}/${transactionId}/status`)
 

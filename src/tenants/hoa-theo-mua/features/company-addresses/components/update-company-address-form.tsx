@@ -2,9 +2,10 @@ import { ComboboxField } from '@/components/combobox-field'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
 import { useGetLatLng } from '../../../hooks/use-get-lat-lng'
@@ -13,7 +14,8 @@ import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-loc
 import { useUpdateCompanyAddress } from '../hooks/use-update-company-address'
 import type { CompanyAddress } from '../types'
 import type { UpdateCompanyAddressFormValues } from '../validations'
-import CompanyAddressMap from './company-address-map'
+
+const CompanyAddressMap = lazy(() => import('./company-address-map'))
 
 interface UpdateCompanyAddressFormProps {
   companyAddress: CompanyAddress
@@ -209,7 +211,9 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
           />
         </div>
 
-        <CompanyAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />
+        <Suspense fallback={<Skeleton className='h-80 w-full rounded-xl' />}>
+          <CompanyAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />
+        </Suspense>
 
         <div className='flex items-center justify-end gap-2 mt-2'>
           <Button

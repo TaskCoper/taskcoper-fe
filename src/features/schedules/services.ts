@@ -1,14 +1,15 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetMySchedulesParams } from './hooks/use-get-my-schedules'
 import type { GetScheduleParams } from './hooks/use-get-schedule'
 import type { MeetingRule, ScheduleSlot } from './types'
 import type { CreateSchedulesFormValues, UpdateScheduleFormValues } from './validations'
 
-class ScheduleService {
+class ScheduleService extends BaseService {
   private readonly baseUrl = 'meeting-rules'
 
   getMySchedules = async ({ isActive }: GetMySchedulesParams) => {
-    const { data } = await api.get<BasePaginationResponse<MeetingRule>>(`/v1/${this.baseUrl}/me`, {
+    const { data } = await this.get<BasePaginationResponse<MeetingRule>>(`/v1/${this.baseUrl}/me`, {
       params: {
         isActive
       }
@@ -18,7 +19,7 @@ class ScheduleService {
   }
 
   getSchedule = async ({ userId, activeFrom, activeTo }: GetScheduleParams) => {
-    const { data } = await api.get<BasePaginationResponse<ScheduleSlot>>(`/v1/${this.baseUrl}/users/${userId}`, {
+    const { data } = await this.get<BasePaginationResponse<ScheduleSlot>>(`/v1/${this.baseUrl}/users/${userId}`, {
       params: {
         activeFrom,
         activeTo
@@ -29,19 +30,19 @@ class ScheduleService {
   }
 
   createSchedules = async ({ body }: { body: CreateSchedulesFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/batch`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/batch`, body)
 
     return data.value
   }
 
   deleteSchedule = async ({ id }: { id: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
   }
 
   updateSchedule = async ({ id, body }: { id: string; body: UpdateScheduleFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, body)
 
     return data.value
   }

@@ -1,11 +1,11 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { Role } from '@/features/users/types'
-import { HOA_THEO_MUA_ORG_ID } from '@/tenants/hoa-theo-mua/config'
+import { hoaTheoMuaConfig } from '@/tenants/hoa-theo-mua/config'
 import { hoaTheoMuaNavMain, hoaTheoMuaNavQuickActions } from '@/tenants/hoa-theo-mua/nav-items'
 import type { LucideIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import type { FeatureKey } from './types'
-import { resolveFeatureCheck, useTenantConfig } from './use-feature-flags'
+import { resolveFeatureCheck } from './use-feature-flags'
 
 export type TenantNavSubItem = {
   titleKey: string
@@ -37,21 +37,24 @@ export type TenantNavQuickActionItem = {
 // concatenates these after the global NAV_MAIN_CONFIG, so a tenant branch only
 // touches src/tenants/<TENANT>/ to add menu entries — no edits to shared sidebar
 // files needed.
-const TENANT_NAV_MAIN: Record<string, TenantNavMainItem[]> = {
-  [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavMain
-}
+// const TENANT_NAV_MAIN: Record<string, TenantNavMainItem[]> = {
+//   [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavMain
+// }
 
-const TENANT_NAV_QUICK_ACTIONS: Record<string, TenantNavQuickActionItem[]> = {
-  [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavQuickActions
-}
+// const TENANT_NAV_QUICK_ACTIONS: Record<string, TenantNavQuickActionItem[]> = {
+//   [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavQuickActions
+// }
 
-const EMPTY_NAV_MAIN: TenantNavMainItem[] = []
-const EMPTY_NAV_QUICK_ACTIONS: TenantNavQuickActionItem[] = []
+// const EMPTY_NAV_MAIN: TenantNavMainItem[] = []
+// const EMPTY_NAV_QUICK_ACTIONS: TenantNavQuickActionItem[] = []
 
 export function useTenantNavMain(): TenantNavMainItem[] {
   const { me } = useGetMe()
-  const config = useTenantConfig()
-  const items = me?.organizationId ? (TENANT_NAV_MAIN[me.organizationId] ?? EMPTY_NAV_MAIN) : EMPTY_NAV_MAIN
+  // const config = useTenantConfig()
+  // const items = me?.organizationId ? (TENANT_NAV_MAIN[me.organizationId] ?? EMPTY_NAV_MAIN) : EMPTY_NAV_MAIN
+
+  const config = hoaTheoMuaConfig
+  const items = hoaTheoMuaNavMain
 
   return useMemo(
     () =>
@@ -66,10 +69,13 @@ export function useTenantNavMain(): TenantNavMainItem[] {
 
 export function useTenantNavQuickActions(): TenantNavQuickActionItem[] {
   const { me } = useGetMe()
-  const config = useTenantConfig()
-  const items = me?.organizationId
-    ? (TENANT_NAV_QUICK_ACTIONS[me.organizationId] ?? EMPTY_NAV_QUICK_ACTIONS)
-    : EMPTY_NAV_QUICK_ACTIONS
+  // const config = useTenantConfig()
+  // const items = me?.organizationId
+  //   ? (TENANT_NAV_QUICK_ACTIONS[me.organizationId] ?? EMPTY_NAV_QUICK_ACTIONS)
+  //   : EMPTY_NAV_QUICK_ACTIONS
+
+  const config = hoaTheoMuaConfig
+  const items = hoaTheoMuaNavQuickActions
 
   return useMemo(
     () =>

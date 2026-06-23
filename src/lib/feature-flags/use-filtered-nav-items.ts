@@ -1,8 +1,9 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import type { Role } from '@/features/users/types'
+import { hoaTheoMuaConfig } from '@/tenants/hoa-theo-mua/config'
 import { useMemo } from 'react'
 import type { FeatureKey } from './types'
-import { resolveFeatureCheck, useTenantConfig } from './use-feature-flags'
+import { resolveFeatureCheck } from './use-feature-flags'
 
 export type GuardedNavItem = {
   roles?: Role[]
@@ -13,7 +14,8 @@ export type GuardedNavItem = {
 // Single source of truth for nav visibility — keep top-nav and sidebar in sync.
 export function useFilteredNavItems<T extends GuardedNavItem>(items: T[]): T[] {
   const { me } = useGetMe()
-  const config = useTenantConfig()
+  // const config = useTenantConfig()
+  const config = hoaTheoMuaConfig
 
   return useMemo(
     () =>

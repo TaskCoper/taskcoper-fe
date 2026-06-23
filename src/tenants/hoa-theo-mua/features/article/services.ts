@@ -1,15 +1,15 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
-import htmApi from '@/tenants/hoa-theo-mua/lib/api'
+import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { GetArticlesParams } from './hooks/use-get-articles'
 import type { GetCategoryNewsParam } from './hooks/use-get-category-news'
 import type { ArticleRow, CategoryData } from './types'
 import type { AddArticleForm } from './validations'
 
-class ArticleService {
+class ArticleService extends BaseService {
   private readonly baseUrl = 'news'
 
   getArticles = async ({ pageIndex, pageSize, keyword, status }: GetArticlesParams) => {
-    const { data } = await htmApi.get<BasePaginationResponse<ArticleRow>>(`v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<ArticleRow>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -22,7 +22,8 @@ class ArticleService {
   }
 
   getArticle = async ({ id }: { id?: string }) => {
-    const { data } = await htmApi.get<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}/${id}`)
+    const { data } = await this.get<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}/${id}`)
+
     return data
   }
 
@@ -34,22 +35,24 @@ class ArticleService {
       categoryIds: categories.map((x) => x.id)
     }
 
-    const { data } = await htmApi.post<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}`, payload)
+    const { data } = await this.post<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}`, payload)
+
     return data.value
   }
 
   getCategoryNews = async ({ pageIndex, pageSize }: GetCategoryNewsParam) => {
-    const { data } = await htmApi.get<BasePaginationResponse<CategoryData>>(`v1/category-news`, {
+    const { data } = await this.get<BasePaginationResponse<CategoryData>>(`/v1/category-news`, {
       params: {
         pageIndex,
         pageSize
       }
     })
+
     return data
   }
 
   deleteArticle = async ({ id }: { id: string }) => {
-    const { data } = await htmApi.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
   }
@@ -67,7 +70,8 @@ class ArticleService {
       categoryIds: categories.map((x) => x.id)
     }
 
-    const { data } = await htmApi.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, payload)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, payload)
+
     return data.value
   }
 }

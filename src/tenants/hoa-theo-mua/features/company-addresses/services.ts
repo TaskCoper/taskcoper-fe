@@ -1,13 +1,13 @@
 import type { BaseResponse } from '@/lib/axios'
-import htmApi from '../../lib/api'
+import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { CompanyAddress } from './types'
 import type { CreateCompanyAddressFormValues, UpdateCompanyAddressFormValues } from './validations'
 
-class CompanyAddressService {
+class CompanyAddressService extends BaseService {
   private readonly baseUrl = 'company-addresses'
 
   getCompanyAddress = async () => {
-    const { data } = await htmApi.get<BaseResponse<CompanyAddress | null>>(`/v1/${this.baseUrl}`)
+    const { data } = await this.get<BaseResponse<CompanyAddress | null>>(`/v1/${this.baseUrl}`)
 
     return data.value
   }
@@ -20,7 +20,7 @@ class CompanyAddressService {
       'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
     >
   }) => {
-    const { data } = await htmApi.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,
@@ -43,7 +43,7 @@ class CompanyAddressService {
       'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
     >
   }) => {
-    const { data } = await htmApi.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, {
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,
