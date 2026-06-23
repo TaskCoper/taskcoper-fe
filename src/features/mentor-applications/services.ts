@@ -1,19 +1,20 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetMyMentorApplicationsParams } from './hooks/use-get-my-mentor-applications'
 import type { Application, SubmitMentorApplicationBody } from './types'
 import type { ReviewMentorApplicationFormValues } from './validations'
 
-class MentorApplication {
+class MentorApplication extends BaseService {
   private readonly baseUrl = 'mentor-applications'
 
   submitMentorApplication = async ({ body }: { body: SubmitMentorApplicationBody }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   getMyMentorApplications = async ({ status, sortBy }: GetMyMentorApplicationsParams) => {
-    const { data } = await api.get<BasePaginationResponse<Application>>(`/v1/${this.baseUrl}/me`, {
+    const { data } = await this.get<BasePaginationResponse<Application>>(`/v1/${this.baseUrl}/me`, {
       params: {
         status,
         sortBy
@@ -24,7 +25,7 @@ class MentorApplication {
   }
 
   getMentorApplications = async ({ status, sortBy }: GetMyMentorApplicationsParams) => {
-    const { data } = await api.get<BasePaginationResponse<Application>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<Application>>(`/v1/${this.baseUrl}`, {
       params: {
         status,
         sortBy
@@ -35,7 +36,7 @@ class MentorApplication {
   }
 
   reviewMentorApplication = async ({ body }: { body: ReviewMentorApplicationFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.applicationId}/review`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.applicationId}/review`, body)
 
     return data.value
   }

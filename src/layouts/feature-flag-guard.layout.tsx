@@ -1,9 +1,12 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { hoaTheoMuaConfig } from '@/tenants/hoa-theo-mua/config'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { isRedirectLoop } from '../lib/feature-flags/redirect-loop'
 import type { FeatureKey } from '../lib/feature-flags/types'
-import { resolveFeatureCheck, useTenantConfig } from '../lib/feature-flags/use-feature-flags'
+// TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+// import { resolveFeatureCheck, useTenantConfig } from '../lib/feature-flags/use-feature-flags'
+import { resolveFeatureCheck } from '../lib/feature-flags/use-feature-flags'
 import logo from '/images/taskcoper.png'
 
 // Block render until `useGetMe` resolves. Otherwise the default (all-on) config
@@ -21,7 +24,9 @@ function TenantConfigLoading() {
 
 export function FeatureFlagGuardLayout({ requires }: { requires: FeatureKey }) {
   const { isGettingMe } = useGetMe()
-  const config = useTenantConfig()
+  // TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+  // const config = useTenantConfig()
+  const config = hoaTheoMuaConfig
   const location = useLocation()
 
   if (isGettingMe) return <TenantConfigLoading />
@@ -39,7 +44,9 @@ export function FeatureFlagGuardLayout({ requires }: { requires: FeatureKey }) {
 
 export function TenantLandingRedirect() {
   const { isGettingMe } = useGetMe()
-  const config = useTenantConfig()
+  // TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+  // const config = useTenantConfig()
+  const config = hoaTheoMuaConfig
   const location = useLocation()
 
   if (isGettingMe) return <TenantConfigLoading />

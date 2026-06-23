@@ -1,4 +1,5 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetVoucherRedemptionsParams } from './hooks/use-get-voucher-redemptions'
 import type { GetVouchersParams } from './hooks/use-get-vouchers'
 import type {
@@ -11,11 +12,11 @@ import type {
 } from './types'
 import type { AddVoucherTargetsFormValues, CreateVoucherFormValues, UpdateVoucherFormValues } from './validations'
 
-class VoucherService {
+class VoucherService extends BaseService {
   private readonly baseUrl = 'vouchers'
 
   createVoucher = async ({ body }: { body: CreateVoucherFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
@@ -33,7 +34,7 @@ class VoucherService {
     startTime,
     endTime
   }: GetVouchersParams) => {
-    const { data } = await api.get<BasePaginationResponse<VoucherRow>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<VoucherRow>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -54,7 +55,7 @@ class VoucherService {
 
   getVoucher = async ({ voucherId }: { voucherId?: string }) => {
     if (!voucherId) return null
-    const { data } = await api.get<BaseResponse<VoucherRow>>(`/v1/${this.baseUrl}/${voucherId}`)
+    const { data } = await this.get<BaseResponse<VoucherRow>>(`/v1/${this.baseUrl}/${voucherId}`)
 
     return data.value
   }
@@ -67,7 +68,7 @@ class VoucherService {
     searchTerm
   }: GetVoucherRedemptionsParams) => {
     if (!voucherId) return null
-    const { data } = await api.get<BasePaginationResponse<VoucherRedemptionRow>>(
+    const { data } = await this.get<BasePaginationResponse<VoucherRedemptionRow>>(
       `/v1/${this.baseUrl}/${voucherId}/redemptions`,
       { params: { pageIndex, pageSize, sortBy, searchTerm } }
     )
@@ -77,7 +78,7 @@ class VoucherService {
 
   getVoucherByCode = async ({ voucherCode }: { voucherCode?: string }) => {
     if (!voucherCode) return null
-    const { data } = await api.get<
+    const { data } = await this.get<
       BaseResponse<
         Pick<VoucherRow, 'id' | 'code' | 'name' | 'discountType' | 'discountValue' | 'startsAtUtc' | 'endsAtUtc'> & {
           usedStatus: 'High' | 'Medium' | 'Low'
@@ -89,7 +90,7 @@ class VoucherService {
   }
 
   updateVoucherTargetStatus = async ({ body }: { body: { isActive: boolean; targetId: string } }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/targets/${body.targetId}/status`, {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/targets/${body.targetId}/status`, {
       isActive: body.isActive
     })
 
@@ -97,19 +98,19 @@ class VoucherService {
   }
 
   updateVoucher = async ({ body }: { body: UpdateVoucherFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.voucherId}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.voucherId}`, body)
 
     return data.value
   }
 
   deleteVoucher = async ({ voucherId }: { voucherId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${voucherId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${voucherId}`)
 
     return data.value
   }
 
   addVoucherTargets = async ({ body }: { body: AddVoucherTargetsFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.voucherId}/targets`,
       body.targets.map(({ targetId, targetType }) => ({ targetType, targetId }))
     )
@@ -118,31 +119,33 @@ class VoucherService {
   }
 
   deleteVoucherTarget = async ({ voucherId, targetId }: { voucherId: string; targetId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${voucherId}/targets/${targetId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${voucherId}/targets/${targetId}`)
 
     return data.value
   }
 
   getVoucherScopeStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<VoucherScopeStats>>(`/v1/${this.baseUrl}/statistics/scope`)
+    const { data } = await this.get<BasePaginationResponse<VoucherScopeStats>>(`/v1/${this.baseUrl}/statistics/scope`)
 
     return data.value.items
   }
 
   getVoucherTypeStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<VoucherTypeStats>>(`/v1/${this.baseUrl}/statistics/type`)
+    const { data } = await this.get<BasePaginationResponse<VoucherTypeStats>>(`/v1/${this.baseUrl}/statistics/type`)
 
     return data.value.items
   }
 
   getVoucherTargetStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<VoucherTargetStats>>(`/v1/${this.baseUrl}/statistics/targets`)
+    const { data } = await this.get<BasePaginationResponse<VoucherTargetStats>>(
+      `/v1/${this.baseUrl}/statistics/targets`
+    )
 
     return data.value.items
   }
 
   getVoucherStatusStats = async () => {
-    const { data } = await api.get<BasePaginationResponse<VoucherStatusStats>>(`/v1/${this.baseUrl}/statistics/status`)
+    const { data } = await this.get<BasePaginationResponse<VoucherStatusStats>>(`/v1/${this.baseUrl}/statistics/status`)
 
     return data.value.items
   }
