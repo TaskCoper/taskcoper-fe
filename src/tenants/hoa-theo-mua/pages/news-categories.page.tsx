@@ -19,9 +19,11 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { CirclePlus, SaveIcon } from 'lucide-react'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler, type UseFormReturn } from 'react-hook-form'
 import { getColumns } from '../features/category-news/components/article-category-column'
+import { CategoryChildrenTable } from '../features/category-news/components/category-children-table'
 import { useAddCategory } from '../features/category-news/hooks/use-add-category'
 import { useDeleteCategory } from '../features/category-news/hooks/use-delete-category'
 import { useGetCategories } from '../features/category-news/hooks/use-get-categories'
@@ -173,33 +175,43 @@ export default function NewsCategoriesPage() {
   const { methods: updateMethods, updateCategory, isUpdatingCategory } = useUpdateCategory(editingCategory?.categoryId)
   const { deleteCategory, isDeletingCategory } = useDeleteCategory()
 
+  const handleOpenUpdateCategory = useCallback(
+    (category: NewsCategoryRow) => {
+      setEditingCategory(category)
+      updateMethods.reset({
+        title: category.title ?? '',
+        parentId: category.parentId ?? undefined
+      })
+    },
+    [updateMethods]
+  )
+
+  const handleDeleteCategory = useCallback(
+    async (id: string) => {
+      const confirmed = await confirm({
+        title: t('articleCategories.confirm.deleteTitle'),
+        description: t('articleCategories.confirm.deleteDescription'),
+        confirmText: t('common.button.delete'),
+        cancelText: t('common.button.cancel'),
+        variant: 'destructive'
+      })
+      if (!confirmed) return
+
+      deleteCategory({ id })
+    },
+    [confirm, deleteCategory, t]
+  )
+
   const columns = useMemo(
     () =>
       getColumns({
         t,
-        onUpdateCategory: (category) => {
-          setEditingCategory(category)
-          updateMethods.reset({
-            title: category.title ?? '',
-            parentId: category.parentId ?? undefined
-          })
-        },
-        onDeleteCategory: async (id) => {
-          const confirmed = await confirm({
-            title: t('articleCategories.confirm.deleteTitle'),
-            description: t('articleCategories.confirm.deleteDescription'),
-            confirmText: t('common.button.delete'),
-            cancelText: t('common.button.cancel'),
-            variant: 'destructive'
-          })
-          if (!confirmed) return
-
-          deleteCategory({ id })
-        },
+        onUpdateCategory: handleOpenUpdateCategory,
+        onDeleteCategory: handleDeleteCategory,
         isUpdatingCategory,
         isDeletingCategory
       }),
-    [confirm, deleteCategory, isDeletingCategory, isUpdatingCategory, t, updateMethods]
+    [handleDeleteCategory, handleOpenUpdateCategory, isDeletingCategory, isUpdatingCategory, t]
   )
 
   const { page, limit, sorting } = useTableQueryParams({
@@ -207,12 +219,17 @@ export default function NewsCategoriesPage() {
     prefix: 'articleCategories'
   })
 
+  const [titleFilter] = useQueryState('articleCategories_title', parseAsString)
+  const title = titleFilter ?? undefined
+
   const { categories, isLoadingCategories } = useGetCategories({
     pageIndex: page,
-    pageSize: limit
+    pageSize: limit,
+    keyword: title
   })
 
-  const categoryRows = useMemo(() => flattenCategoryRows(categories.value.items), [categories.value.items])
+  const categoryRows = categories.value.items
+  const categoryItems = useMemo(() => flattenCategoryRows(categories.value.items), [categories.value.items])
 
   const { table } = useDataTable({
     data: categoryRows,
@@ -232,8 +249,6 @@ export default function NewsCategoriesPage() {
     },
     filterPrefix: 'articleCategories'
   })
-
-  const categoryItems = categoryRows
 
   const handleAddDialogOpenChange = useCallback(
     (open: boolean) => {
@@ -290,7 +305,19 @@ export default function NewsCategoriesPage() {
         </div>
       </div>
 
-      <DataTable table={table} isLoading={isLoadingCategories}>
+      <DataTable
+        table={table}
+        isLoading={isLoadingCategories}
+        renderSubComponent={({ row }) => (
+          <CategoryChildrenTable
+            row={row}
+            isUpdatingCategory={isUpdatingCategory}
+            isDeletingCategory={isDeletingCategory}
+            onUpdateCategory={handleOpenUpdateCategory}
+            onDeleteCategory={handleDeleteCategory}
+          />
+        )}
+      >
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={() => setIsAddDialogOpen(true)}>
             <CirclePlus className='size-3' />

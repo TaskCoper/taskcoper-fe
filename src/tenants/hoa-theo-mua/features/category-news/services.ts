@@ -13,11 +13,12 @@ const getCategoryPayload = ({ parentId, ...rest }: AddCategoryFormValues) => ({
 class NewsCategory {
   private readonly baseUrl = 'category-news'
 
-  getNewsCategories = async ({ pageIndex, pageSize }: GetCategoryParams) => {
+  getNewsCategories = async ({ pageIndex, pageSize, keyword }: GetCategoryParams) => {
     const { data } = await htmApi.get<BasePaginationResponse<NewsCategoryRow>>(`v1/${this.baseUrl}`, {
       params: {
         pageIndex,
-        pageSize
+        pageSize,
+        keyword
       }
     })
     return data
