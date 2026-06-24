@@ -83,10 +83,12 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       meta: {
         label: 'articles.column.viewCount'
       },
-      header: ({ column }) => <DataTableColumnHeader column={column} label={'articles.column.viewCount'} />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label={'articles.column.viewCount'} className='flex mx-auto' />
+      ),
       cell: ({ row }) => (
         <Link to={`/htm/news/detail?id=${row.original.id}`} className='hover:underline'>
-          <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none'>{row.original.viewCount}</p>
+          <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none text-center'>{row.original.viewCount}</p>
         </Link>
       ),
       enableSorting: false,

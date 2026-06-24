@@ -9,17 +9,28 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
-import { CirclePlus, SaveIcon } from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
+import type { Row } from '@tanstack/react-table'
+import { CirclePlus, MoreHorizontalIcon, SaveIcon } from 'lucide-react'
+import { parseAsString, useQueryState } from 'nuqs'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler, type UseFormReturn } from 'react-hook-form'
 import { getColumns } from '../features/category-news/components/article-category-column'
 import { useAddCategory } from '../features/category-news/hooks/use-add-category'
@@ -71,7 +82,9 @@ function CategoryFormDialog({
   onSubmit
 }: CategoryFormDialogProps) {
   const { t } = useTenantTranslation()
-  const parentOptions = categories.filter((category) => category.categoryId !== excludedCategoryId)
+  const parentOptions = categories.filter(
+    (category) => category.categoryId !== excludedCategoryId && category.parentId == null
+  )
   const isCreateMode = mode === 'create'
 
   return (
@@ -162,6 +175,174 @@ function CategoryFormDialog({
   )
 }
 
+interface CategoryChildrenTableProps {
+  row: Row<NewsCategoryRow>
+  isUpdatingCategory?: boolean
+  isDeletingCategory?: boolean
+  onUpdateCategory: (category: NewsCategoryRow) => void
+  onDeleteCategory: (id: string) => void
+}
+
+function CategoryChildrenTable({
+  row,
+  isUpdatingCategory,
+  isDeletingCategory,
+  onUpdateCategory,
+  onDeleteCategory
+}: CategoryChildrenTableProps) {
+  const { t } = useTenantTranslation()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [columnWidths, setColumnWidths] = useState<number[]>([])
+  const children = row.original.children ?? []
+  const visibleCells = row.getVisibleCells()
+  const columnCount = visibleCells.length
+
+  useLayoutEffect(() => {
+    const subComponentRow = containerRef.current?.closest('tr')
+    const parentRow = subComponentRow?.previousElementSibling
+
+    if (!(parentRow instanceof HTMLTableRowElement)) return
+
+    const syncColumnWidths = () => {
+      const widths = Array.from(parentRow.cells)
+        .slice(0, columnCount)
+        .map((cell) => cell.getBoundingClientRect().width)
+
+      if (widths.length !== columnCount) return
+
+      setColumnWidths((currentWidths) => {
+        const hasChanged =
+          currentWidths.length !== widths.length ||
+          widths.some((width, index) => Math.round(width) !== Math.round(currentWidths[index] ?? 0))
+
+        return hasChanged ? widths : currentWidths
+      })
+    }
+
+    syncColumnWidths()
+
+    const resizeObserver = new ResizeObserver(syncColumnWidths)
+    resizeObserver.observe(parentRow)
+    Array.from(parentRow.cells).forEach((cell) => resizeObserver.observe(cell))
+    window.addEventListener('resize', syncColumnWidths)
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', syncColumnWidths)
+    }
+  }, [columnCount])
+
+  return (
+    <div
+      ref={containerRef}
+      className="
+    py-0
+    bg-background
+    relative
+    before:absolute
+    before:left-0
+    before:top-0
+    before:h-full
+    before:w-1
+    before:bg-primary
+    before:content-['']
+  "
+    >
+      <div className='overflow-hidden'>
+        <Table className='table-fixed'>
+          <colgroup>
+            {visibleCells.map((cell, index) => (
+              <col key={cell.id} style={{ width: columnWidths[index] ?? cell.column.getSize() }} />
+            ))}
+          </colgroup>
+          <TableBody>
+            {children.length ? (
+              children.map((child) => {
+                const title = child.title?.trim()
+
+                return (
+                  <TableRow
+                    key={child.categoryId}
+                    className='border-primary-200/60 bg-primary-50/70 hover:bg-primary-100/80'
+                  >
+                    {visibleCells.map((cell) => {
+                      const columnId = cell.column.id
+
+                      if (columnId === 'title') {
+                        return (
+                          <TableCell
+                            key={`${child.categoryId}-${columnId}`}
+                            className='bg-transparent py-2 font-medium'
+                          >
+                            {title || t('articleCategories.column.noTitle')}
+                          </TableCell>
+                        )
+                      }
+
+                      if (columnId === 'count') {
+                        return (
+                          <TableCell
+                            key={`${child.categoryId}-${columnId}`}
+                            className='bg-transparent py-2 text-center text-sm tabular-nums text-muted-foreground'
+                          >
+                            {child.count ?? 0}
+                          </TableCell>
+                        )
+                      }
+
+                      if (columnId === 'actions') {
+                        return (
+                          <TableCell key={`${child.categoryId}-${columnId}`} className='bg-transparent py-2'>
+                            <div className='flex justify-end pr-2'>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant='ghost' className='size-8 rounded-lg p-0'>
+                                    <span className='sr-only'>{t('articleCategories.action.openMenu')}</span>
+                                    <MoreHorizontalIcon className='size-4' />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align='end'>
+                                  <DropdownMenuLabel>{t('articleCategories.action.actions')}</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    disabled={isUpdatingCategory}
+                                    onClick={() => onUpdateCategory(child)}
+                                  >
+                                    {t('articleCategories.action.update')}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    className='focus:text-destructive'
+                                    disabled={isDeletingCategory}
+                                    onClick={() => onDeleteCategory(child.categoryId)}
+                                  >
+                                    {t('articleCategories.action.delete')}
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </TableCell>
+                        )
+                      }
+
+                      return <TableCell key={`${child.categoryId}-${columnId}`} className='bg-transparent py-2' />
+                    })}
+                  </TableRow>
+                )
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={visibleCells.length} className='h-16 text-center text-muted-foreground'>
+                  {t('articleCategories.column.noChildren')}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+}
+
 export default function NewsCategoriesPage() {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
@@ -173,33 +354,43 @@ export default function NewsCategoriesPage() {
   const { methods: updateMethods, updateCategory, isUpdatingCategory } = useUpdateCategory(editingCategory?.categoryId)
   const { deleteCategory, isDeletingCategory } = useDeleteCategory()
 
+  const handleOpenUpdateCategory = useCallback(
+    (category: NewsCategoryRow) => {
+      setEditingCategory(category)
+      updateMethods.reset({
+        title: category.title ?? '',
+        parentId: category.parentId ?? undefined
+      })
+    },
+    [updateMethods]
+  )
+
+  const handleDeleteCategory = useCallback(
+    async (id: string) => {
+      const confirmed = await confirm({
+        title: t('articleCategories.confirm.deleteTitle'),
+        description: t('articleCategories.confirm.deleteDescription'),
+        confirmText: t('common.button.delete'),
+        cancelText: t('common.button.cancel'),
+        variant: 'destructive'
+      })
+      if (!confirmed) return
+
+      deleteCategory({ id })
+    },
+    [confirm, deleteCategory, t]
+  )
+
   const columns = useMemo(
     () =>
       getColumns({
         t,
-        onUpdateCategory: (category) => {
-          setEditingCategory(category)
-          updateMethods.reset({
-            title: category.title ?? '',
-            parentId: category.parentId ?? undefined
-          })
-        },
-        onDeleteCategory: async (id) => {
-          const confirmed = await confirm({
-            title: t('articleCategories.confirm.deleteTitle'),
-            description: t('articleCategories.confirm.deleteDescription'),
-            confirmText: t('common.button.delete'),
-            cancelText: t('common.button.cancel'),
-            variant: 'destructive'
-          })
-          if (!confirmed) return
-
-          deleteCategory({ id })
-        },
+        onUpdateCategory: handleOpenUpdateCategory,
+        onDeleteCategory: handleDeleteCategory,
         isUpdatingCategory,
         isDeletingCategory
       }),
-    [confirm, deleteCategory, isDeletingCategory, isUpdatingCategory, t, updateMethods]
+    [handleDeleteCategory, handleOpenUpdateCategory, isDeletingCategory, isUpdatingCategory, t]
   )
 
   const { page, limit, sorting } = useTableQueryParams({
@@ -207,12 +398,17 @@ export default function NewsCategoriesPage() {
     prefix: 'articleCategories'
   })
 
+  const [titleFilter] = useQueryState('articleCategories_title', parseAsString)
+  const title = titleFilter ?? undefined
+
   const { categories, isLoadingCategories } = useGetCategories({
     pageIndex: page,
-    pageSize: limit
+    pageSize: limit,
+    keyword: title
   })
 
-  const categoryRows = useMemo(() => flattenCategoryRows(categories.value.items), [categories.value.items])
+  const categoryRows = categories.value.items
+  const categoryItems = useMemo(() => flattenCategoryRows(categories.value.items), [categories.value.items])
 
   const { table } = useDataTable({
     data: categoryRows,
@@ -232,8 +428,6 @@ export default function NewsCategoriesPage() {
     },
     filterPrefix: 'articleCategories'
   })
-
-  const categoryItems = categoryRows
 
   const handleAddDialogOpenChange = useCallback(
     (open: boolean) => {
@@ -283,14 +477,24 @@ export default function NewsCategoriesPage() {
 
   return (
     <div className='space-y-6 p-6'>
-      <div className='flex justify-between items-center gap-4'>
-        <div>
-          <p className='text-2xl font-bold'>{t('articleCategories.page.title')}</p>
-          <p className='text-sm text-muted-foreground'>{t('articleCategories.page.description')}</p>
-        </div>
+      <div>
+        <p className='text-2xl font-bold'>{t('articleCategories.page.title')}</p>
+        <p className='text-sm text-muted-foreground'>{t('articleCategories.page.description')}</p>
       </div>
 
-      <DataTable table={table} isLoading={isLoadingCategories}>
+      <DataTable
+        table={table}
+        isLoading={isLoadingCategories}
+        renderSubComponent={({ row }) => (
+          <CategoryChildrenTable
+            row={row}
+            isUpdatingCategory={isUpdatingCategory}
+            isDeletingCategory={isDeletingCategory}
+            onUpdateCategory={handleOpenUpdateCategory}
+            onDeleteCategory={handleDeleteCategory}
+          />
+        )}
+      >
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={() => setIsAddDialogOpen(true)}>
             <CirclePlus className='size-3' />

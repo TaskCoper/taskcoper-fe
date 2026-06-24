@@ -11,4 +11,5 @@ export interface NewsCategoryRow {
 export interface GetCategoryParams {
   pageIndex?: number
   pageSize?: number
+  keyword?: string
 }

@@ -22,7 +22,6 @@ import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { activePrimaryControlClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import {
-  CalendarDaysIcon,
   GaugeIcon,
   HardDriveIcon,
   InfoIcon,
@@ -157,13 +156,13 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
           hasSecondSidebar: false,
           sectionKey: 'PERFORMANCE'
         },
-        {
-          title: t('project.sidebar.calendar'),
-          url: 'calendar',
-          icon: CalendarDaysIcon,
-          hasSecondSidebar: false,
-          sectionKey: 'CALENDAR'
-        },
+        // {
+        //   title: t('project.sidebar.calendar'),
+        //   url: 'calendar',
+        //   icon: CalendarDaysIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'CALENDAR'
+        // },
         // {
         //   title: t('project.sidebar.chat'),
         //   url: 'chat',

@@ -1,5 +1,4 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -12,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontalIcon } from 'lucide-react'
+import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { NewsCategoryRow } from '../types'
 
 const ARTICLE_CATEGORY_I18N_PREFIX = 'articleCategories' as const
@@ -33,6 +32,34 @@ export const getColumns = ({
   isDeletingCategory
 }: GetColumnsParams): ColumnDef<NewsCategoryRow>[] => {
   return [
+    {
+      id: 'expander',
+      header: () => null,
+      cell: ({ row }) => {
+        const hasChildren = !!row.original.children?.length
+
+        return (
+          <Button
+            variant='ghost'
+            size='icon-sm'
+            className='transition-transform '
+            disabled={!hasChildren}
+            onClick={() => row.toggleExpanded()}
+          >
+            {row.getIsExpanded() ? (
+              <ChevronDownIcon />
+            ) : (
+              <ChevronRightIcon className={hasChildren ? 'text-muted-foreground' : 'text-muted-foreground/30'} />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: false,
+      enableHiding: false,
+      size: 5,
+      minSize: 5,
+      maxSize: 5
+    },
     {
       id: 'select',
       header: ({ table }) => (
@@ -58,6 +85,12 @@ export const getColumns = ({
     {
       id: 'title',
       accessorKey: 'title',
+      meta: {
+        label: 'articles.column.title',
+        placeholder: 'articles.column.titlePlaceholder',
+        variant: 'text',
+        icon: SearchIcon
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.title`)} />
       ),
@@ -83,70 +116,32 @@ export const getColumns = ({
       enableColumnFilter: true,
       size: 100
     },
-    {
-      id: 'parent',
-      accessorKey: 'parent',
-      meta: {
-        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
-      ),
-      cell: ({ row }) => {
-        const parentTitle = row.original.parent?.title?.trim()
+    // {
+    //   id: 'parent',
+    //   accessorKey: 'parent',
+    //   meta: {
+    //     label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
+    //   },
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
+    //   ),
+    //   cell: ({ row }) => {
+    //     const parentTitle = row.original.parent?.title?.trim()
 
-        if (!parentTitle) {
-          return <p className='text-sm text-muted-foreground'>{t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.noParent`)}</p>
-        }
+    //     if (!parentTitle) {
+    //       return <p className='text-sm text-muted-foreground'>{t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.noParent`)}</p>
+    //     }
 
-        return (
-          <p className='w-full max-w-80 truncate text-sm font-medium' title={parentTitle}>
-            {parentTitle}
-          </p>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      size: 30
-    },
-    {
-      id: 'children',
-      accessorKey: 'children',
-      meta: {
-        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.children`)} />
-      ),
-      cell: ({ row }) => {
-        const children = row.original.children ?? []
-
-        if (!children.length) {
-          return (
-            <p className='text-sm text-muted-foreground'>{t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.noChildren`)}</p>
-          )
-        }
-
-        return (
-          <div className='flex max-w-100 flex-wrap gap-1.5'>
-            {children.slice(0, 3).map((child) => (
-              <Badge key={child.categoryId} variant='outline' className='max-w-full rounded-md font-normal'>
-                <span className='truncate'>{child.title}</span>
-              </Badge>
-            ))}
-
-            {children.length > 3 ? (
-              <Badge variant='secondary' className='rounded-md'>
-                +{children.length - 3}
-              </Badge>
-            ) : null}
-          </div>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      size: 30
-    },
+    //     return (
+    //       <p className='w-full max-w-80 truncate text-sm font-medium' title={parentTitle}>
+    //         {parentTitle}
+    //       </p>
+    //     )
+    //   },
+    //   enableSorting: false,
+    //   enableHiding: true,
+    //   size: 30
+    // },
     {
       id: 'count',
       accessorKey: 'count',

@@ -6,12 +6,13 @@ import type { GetCategoryParams, NewsCategoryRow } from '../types'
 
 export const useGetCategories = ({
   pageIndex = DEFAULT_PAGE_INDEX,
-  pageSize = DEFAULT_PAGE_SIZE
+  pageSize = DEFAULT_PAGE_SIZE,
+  keyword = ''
 }: GetCategoryParams = {}) => {
   const { data: categories = getDefaultPaginationResponse<NewsCategoryRow>(), isLoading: isLoadingCategories } =
     useQuery({
-      queryKey: ['categoriesNews', pageIndex, pageSize],
-      queryFn: () => newsCategoryService.getNewsCategories({ pageIndex, pageSize })
+      queryKey: ['categoriesNews', pageIndex, pageSize, keyword],
+      queryFn: () => newsCategoryService.getNewsCategories({ pageIndex, pageSize, keyword })
     })
 
   return { categories, isLoadingCategories }
