@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { NewsCategoryRow } from '../types'
@@ -43,20 +42,14 @@ export const getColumns = ({
           <Button
             variant='ghost'
             size='icon-sm'
-            className={cn(
-              'rounded-xl border border-transparent transition-all duration-200',
-              hasChildren && 'bg-accent/5 text-foreground hover:border-border/60 hover:bg-accent/10',
-              !hasChildren && 'text-muted-foreground/40 hover:bg-transparent'
-            )}
+            className='transition-transform '
             disabled={!hasChildren}
             onClick={() => row.toggleExpanded()}
           >
             {row.getIsExpanded() ? (
-              <ChevronDownIcon className='size-4' />
+              <ChevronDownIcon />
             ) : (
-              <ChevronRightIcon
-                className={cn('size-4', hasChildren ? 'text-muted-foreground' : 'text-muted-foreground/30')}
-              />
+              <ChevronRightIcon className={hasChildren ? 'text-muted-foreground' : 'text-muted-foreground/30'} />
             )}
           </Button>
         )
@@ -113,24 +106,9 @@ export const getColumns = ({
         }
 
         return (
-          <div className='flex min-w-0 items-center gap-3'>
-            <span
-              className={cn(
-                'inline-flex h-8 w-1 shrink-0 rounded-full bg-transparent transition-colors',
-                row.original.children?.length ? 'bg-accent/65' : 'bg-border/70'
-              )}
-            />
-            <div className='min-w-0'>
-              <p className='w-full max-w-125 truncate font-semibold tracking-[-0.01em] xl:max-w-none' title={title}>
-                {title}
-              </p>
-              <p className='text-xs text-muted-foreground'>
-                {row.original.children?.length
-                  ? `${row.original.children.length} subcategories`
-                  : 'Standalone category'}
-              </p>
-            </div>
-          </div>
+          <p className='w-full max-w-125 truncate font-medium xl:max-w-none' title={title}>
+            {title}
+          </p>
         )
       },
       enableSorting: false,
@@ -138,36 +116,32 @@ export const getColumns = ({
       enableColumnFilter: true,
       size: 100
     },
-    {
-      id: 'parent',
-      accessorKey: 'parent',
-      meta: {
-        label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
-      ),
-      cell: ({ row }) => {
-        const parentTitle = row.original.parent?.title?.trim()
+    // {
+    //   id: 'parent',
+    //   accessorKey: 'parent',
+    //   meta: {
+    //     label: t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)
+    //   },
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} label={t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.parent`)} />
+    //   ),
+    //   cell: ({ row }) => {
+    //     const parentTitle = row.original.parent?.title?.trim()
 
-        if (!parentTitle) {
-          return (
-            <span className='inline-flex rounded-full border border-dashed border-border/80 px-2.5 py-1 text-xs text-muted-foreground'>
-              {t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.noParent`)}
-            </span>
-          )
-        }
+    //     if (!parentTitle) {
+    //       return <p className='text-sm text-muted-foreground'>{t(`${ARTICLE_CATEGORY_I18N_PREFIX}.column.noParent`)}</p>
+    //     }
 
-        return (
-          <p className='w-full max-w-80 truncate text-sm font-medium text-foreground/80' title={parentTitle}>
-            {parentTitle}
-          </p>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      size: 30
-    },
+    //     return (
+    //       <p className='w-full max-w-80 truncate text-sm font-medium' title={parentTitle}>
+    //         {parentTitle}
+    //       </p>
+    //     )
+    //   },
+    //   enableSorting: false,
+    //   enableHiding: true,
+    //   size: 30
+    // },
     {
       id: 'count',
       accessorKey: 'count',
@@ -182,9 +156,7 @@ export const getColumns = ({
         />
       ),
       cell: ({ row }) => (
-        <p className='text-center text-sm font-medium tabular-nums tracking-[-0.01em] text-foreground/75'>
-          {row.original.count ?? 0}
-        </p>
+        <p className='text-center text-sm tabular-nums text-muted-foreground'>{row.original.count ?? 0}</p>
       ),
       enableSorting: false,
       enableHiding: true,
@@ -199,7 +171,7 @@ export const getColumns = ({
           <div className='flex justify-end pr-2'>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant='ghost' className='size-8 rounded-xl p-0 hover:bg-accent/10'>
+                <Button variant='ghost' className='size-8 rounded-lg p-0'>
                   <span className='sr-only'>{t(`${ARTICLE_CATEGORY_I18N_PREFIX}.action.openMenu`)}</span>
                   <MoreHorizontalIcon className='size-4' />
                 </Button>
