@@ -100,7 +100,7 @@ export default function OrdersListPage() {
 
   return (
     <div className='h-full overflow-auto'>
-      <div className='p-6 space-y-4' style={{ minWidth: table.getTotalSize() + 48 }}>
+      <div className='p-6 space-y-6'>
         <div className='flex justify-between items-center gap-4'>
           <div>
             <p className='text-2xl font-bold'>{t('orders.list.title')}</p>
