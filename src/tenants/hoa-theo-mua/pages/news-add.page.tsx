@@ -69,7 +69,7 @@ export default function NewsAddPage() {
   const statusLabel = status === 1 ? t(`${ARTICLE_STATUS_PREFIX}.published`) : t(`${ARTICLE_STATUS_PREFIX}.draft`)
 
   return (
-    <div className='h-full overflow-y-auto flex flex-col gap-4 p-4 max-w-5xl mx-auto'>
+    <div className='h-full overflow-y-auto flex flex-col gap-4 p-6 max-w-5xl mx-auto'>
       <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
         <div>
           <p className='text-2xl font-bold'>{t(`${ARTICLE_FORM_PREFIX}.title`)}</p>

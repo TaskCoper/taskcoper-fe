@@ -477,11 +477,9 @@ export default function NewsCategoriesPage() {
 
   return (
     <div className='space-y-6 p-6'>
-      <div className='flex justify-between items-center gap-4'>
-        <div>
-          <p className='text-2xl font-bold'>{t('articleCategories.page.title')}</p>
-          <p className='text-sm text-muted-foreground'>{t('articleCategories.page.description')}</p>
-        </div>
+      <div>
+        <p className='text-2xl font-bold'>{t('articleCategories.page.title')}</p>
+        <p className='text-sm text-muted-foreground'>{t('articleCategories.page.description')}</p>
       </div>
 
       <DataTable
