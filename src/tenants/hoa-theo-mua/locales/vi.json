@@ -164,8 +164,8 @@
     },
     "filter": {
       "dateRange": "Ngày đặt hàng",
-      "depotIdsPlaceholder": "Mã kho (1, 2...)",
-      "orderIdsPlaceholder": "Mã đơn hàng (123, 456...)",
+      "depotIdsPlaceholder": "Mã kho hàng",
+      "orderIdsPlaceholder": "Mã đơn hàng",
       "reset": "Xóa bộ lọc"
     },
     "productTable": {

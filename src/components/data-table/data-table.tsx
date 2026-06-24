@@ -82,10 +82,17 @@ export function DataTable<TData>({
                       </TableCell>
                     ))}
                   </TableRow>
-                  {row.getIsExpanded() && renderSubComponent && (
-                    <TableRow>
+                  {renderSubComponent && (
+                    <TableRow className={cn(!row.getIsExpanded() && 'border-b-0')}>
                       <TableCell colSpan={row.getVisibleCells().length} className='bg-muted/50 p-0'>
-                        {renderSubComponent({ row })}
+                        <div
+                          className={cn(
+                            'grid transition-[grid-template-rows] duration-200 ease-in-out',
+                            row.getIsExpanded() ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                          )}
+                        >
+                          <div className='overflow-hidden'>{renderSubComponent({ row })}</div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
