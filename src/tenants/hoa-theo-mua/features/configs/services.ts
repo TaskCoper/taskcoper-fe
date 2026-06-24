@@ -1,31 +1,31 @@
 import type { BaseResponse } from '@/lib/axios'
-import htmApi from '../../lib/api'
+import { BaseService } from '../../services/base.service'
 import type { Config } from './types'
 import type { CreateConfigFormValues } from './validations'
 
-class ConfigService {
+class ConfigService extends BaseService {
   private readonly baseUrl = 'configs'
 
   getConfigs = async () => {
-    const { data } = await htmApi.get<BaseResponse<Config[]>>(`v1/${this.baseUrl}`)
+    const { data } = await this.get<BaseResponse<Config[]>>(`/v1/${this.baseUrl}`)
 
     return data.value
   }
 
   createConfig = async ({ body }: { body: CreateConfigFormValues }) => {
-    const { data } = await htmApi.post<BaseResponse<Config>>(`v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<Config>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   updateConfig = async ({ id, body }: { id: string; body: CreateConfigFormValues }) => {
-    const { data } = await htmApi.put<BaseResponse<Config>>(`v1/${this.baseUrl}/${id}`, body)
+    const { data } = await this.put<BaseResponse<Config>>(`/v1/${this.baseUrl}/${id}`, body)
 
     return data.value
   }
 
   deleteConfig = async ({ id }: { id: string }) => {
-    const { data } = await htmApi.delete<BaseResponse<Config>>(`v1/${this.baseUrl}/${id}`)
+    const { data } = await this.delete<BaseResponse<Config>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
   }

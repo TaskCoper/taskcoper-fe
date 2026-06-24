@@ -1,4 +1,5 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetProjectLabelStatsParams } from './hooks/use-get-project-label-stats'
 import type { GetProjectPriorityStatsParams } from './hooks/use-get-project-priority-stats'
 import type {
@@ -14,12 +15,12 @@ import type {
   TaskStatusStats
 } from './types'
 
-class ProjectAnalyticService {
+class ProjectAnalyticService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectLabelStats = async ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectLabelStats>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectLabelStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/task-labels/statistic`,
       {
         params: {
@@ -33,7 +34,7 @@ class ProjectAnalyticService {
 
   getTaskStatusStats = async ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<TaskStatusStats>>(
+    const { data } = await this.get<BasePaginationResponse<TaskStatusStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/tasks-status/statistic`,
       {
         params: {
@@ -47,7 +48,7 @@ class ProjectAnalyticService {
 
   getProjectMemberStats = async ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectLabelStatsParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectMemberStats>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectMemberStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members-tasks/statistic`,
       {
         params: {
@@ -61,7 +62,7 @@ class ProjectAnalyticService {
 
   getProjectResourceStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BaseResponse<ProjectResourceStats>>(
+    const { data } = await this.get<BaseResponse<ProjectResourceStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/resources/statistic`
     )
 
@@ -70,7 +71,7 @@ class ProjectAnalyticService {
 
   getProjectMimeTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectMimeTypeStats>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectMimeTypeStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/resources/mime-types/statistic`
     )
 
@@ -79,7 +80,7 @@ class ProjectAnalyticService {
 
   getProjectResourceMemberStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectResourceMemberStats>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectResourceMemberStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/resources/members/statistic`
     )
 
@@ -88,7 +89,7 @@ class ProjectAnalyticService {
 
   getProjectPriorityStats = async ({ projectIdentifier, parentMilestoneIdentifier }: GetProjectPriorityStatsParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectPriorityStats>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectPriorityStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/tasks-priority/statistic`,
       {
         params: {
@@ -102,7 +103,7 @@ class ProjectAnalyticService {
 
   getProjectRevenueStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BaseResponse<RevenueStats>>(
+    const { data } = await this.get<BaseResponse<RevenueStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/health-check`
     )
 
@@ -111,7 +112,7 @@ class ProjectAnalyticService {
 
   getProjectRevenueLabelStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<RevenueLabelStats>>(
+    const { data } = await this.get<BasePaginationResponse<RevenueLabelStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/labels`
     )
 
@@ -120,7 +121,7 @@ class ProjectAnalyticService {
 
   getProjectRevenueTypeStats = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<RevenueTypeStats>>(
+    const { data } = await this.get<BasePaginationResponse<RevenueTypeStats>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/revenues/statistics/types`
     )
 

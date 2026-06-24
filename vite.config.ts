@@ -76,17 +76,18 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
-        target: 'https://taskcoper-api.bentran1vn.com',
+      '/taskcoper-api': {
+        target: 'https://hoatheomua-api.bentran1vn.com',
         changeOrigin: true,
         // CRITICAL: Tells the proxy to replace the backend's domain with localhost
         // in the Set-Cookie header so your browser accepts it.
         cookieDomainRewrite: 'localhost'
       },
-      '/htm-api': {
-        target: 'https://hoatheomua-ecommerce-api.bentran1vn.com',
+      '/ecommerce-api': {
+        target: 'https://hoatheomua-api.bentran1vn.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/htm-api/, ''),
+        // CRITICAL: Tells the proxy to replace the backend's domain with localhost
+        // in the Set-Cookie header so your browser accepts it.
         cookieDomainRewrite: 'localhost'
       }
     }
@@ -102,6 +103,6 @@ export default defineConfig({
         manualChunks
       }
     },
-    chunkSizeWarningLimit: 650
+    chunkSizeWarningLimit: 800
   }
 })

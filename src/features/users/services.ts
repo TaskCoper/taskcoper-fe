@@ -1,4 +1,5 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '../../services/base.service'
 import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '../auth/validations'
 import type { GetUsersParams } from './hooks/use-get-users'
 import type { Me, User, UserDetail } from './types'
@@ -10,17 +11,17 @@ import type {
   VerifyCodeFormValues
 } from './validations'
 
-class UserService {
+class UserService extends BaseService {
   private readonly baseUrl = 'users'
 
   signUp = async ({ body }: { body: SignUpFormValues }) => {
-    const { data } = await api.post(`/v1/${this.baseUrl}/register`, body)
+    const { data } = await this.post(`/v1/${this.baseUrl}/register`, body)
     return data
   }
 
   signIn = async ({ body }: { body: SignInFormValues }) => {
-    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
-      `/v1/auth/sign-in`,
+    const { data } = await this.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+      `/v1/${this.baseUrl}/login`,
       body
     )
 
@@ -28,13 +29,13 @@ class UserService {
   }
 
   signOut = async ({ email }: { email: string }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/logout`, { email })
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/logout`, { email })
 
     return data.value
   }
 
   resendCode = async ({ email }: { email: string }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/resend_verify_account_code?email=${email}`
     )
 
@@ -42,7 +43,7 @@ class UserService {
   }
 
   verifyEmail = async ({ body }: { body: VerifyEmailFormValues }) => {
-    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+    const { data } = await this.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
       `/v1/${this.baseUrl}/verify_account`,
       body
     )
@@ -51,21 +52,20 @@ class UserService {
   }
 
   getMe = async () => {
-    // const { data } = await api.get<BaseResponse<Me>>(`/v1/${this.baseUrl}/me`)
-    const { data } = await api.get<BaseResponse<Me>>(`/v1/auth/me`)
+    const { data } = await this.get<BaseResponse<Me>>(`/v1/${this.baseUrl}/me`)
 
     return data.value
   }
 
   getUser = async ({ userIdentifier }: { userIdentifier?: string }) => {
     if (!userIdentifier) return null
-    const { data } = await api.get<BaseResponse<UserDetail>>(`/v1/${this.baseUrl}/${userIdentifier}`)
+    const { data } = await this.get<BaseResponse<UserDetail>>(`/v1/${this.baseUrl}/${userIdentifier}`)
 
     return data.value
   }
 
   updateMe = async ({ body }: { body: Omit<UpdateMeFormValues, 'cityCode' | 'wardCode'> }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
 
     return data.value
   }
@@ -83,31 +83,31 @@ class UserService {
       timeZone,
       domainIds: me.domains.map((d: { id: string }) => d.id)
     }
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/me`, body)
 
     return data.value
   }
 
   changePassword = async ({ body }: { body: ChangePasswordFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
 
     return data.value
   }
 
   resetPassword = async ({ body }: { body: ResetPasswordFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/change_password`, body)
 
     return data.value
   }
 
   forgotPassword = async ({ body }: { body: ForgotPasswordFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/forgot_password`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/forgot_password`, body)
 
     return data.value
   }
 
   verifyForgotPasswordCode = async ({ body }: { body: VerifyCodeFormValues }) => {
-    const { data } = await api.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
+    const { data } = await this.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(
       `/v1/${this.baseUrl}/verify_change_password_code`,
       body
     )
@@ -116,7 +116,7 @@ class UserService {
   }
 
   getUsers = async ({ searchTerm, pageIndex, pageSize, sortBy, organizationId, domainId, roles }: GetUsersParams) => {
-    const { data } = await api.get<BasePaginationResponse<User>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<User>>(`/v1/${this.baseUrl}`, {
       params: {
         searchTerm,
         pageIndex,

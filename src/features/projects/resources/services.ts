@@ -1,9 +1,10 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetProjectResourcesParams } from './hooks/use-get-project-resources'
 import type { ProjectResource } from './types'
 import type { UploadProjectAttachmentFormValues } from './validations'
 
-class ProjectResourceService {
+class ProjectResourceService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectResources = async ({
@@ -18,7 +19,7 @@ class ProjectResourceService {
     memberIds
   }: GetProjectResourcesParams) => {
     if (!projectIdentifier) return null
-    const { data } = await api.get<BasePaginationResponse<ProjectResource>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectResource>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/resources`,
       {
         params: {
@@ -38,7 +39,7 @@ class ProjectResourceService {
   }
 
   uploadProjectResource = async ({ body }: { body: UploadProjectAttachmentFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/resources`,
       body
     )
@@ -53,7 +54,7 @@ class ProjectResourceService {
     projectIdentifier: string
     resourceId: string
   }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/resources/${resourceId}`
     )
 

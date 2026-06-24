@@ -1,9 +1,10 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetTasksParams } from './hooks/use-get-tasks'
 import type { TaskDetail, TaskRow } from './types'
 import type { AddTaskFormValues, MoveTaskFormValues, UpdateTaskFormValues } from './validations'
 
-class TaskService {
+class TaskService extends BaseService {
   private readonly baseUrl = 'tasks'
 
   // for table view
@@ -23,7 +24,7 @@ class TaskService {
     isWatchingTask,
     projectIdentifier
   }: GetTasksParams) => {
-    const { data } = await api.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<TaskRow>>(`/v1/${this.baseUrl}`, {
       params: {
         parentMilestoneIdentifier,
         pageIndex,
@@ -49,25 +50,25 @@ class TaskService {
 
   getTask = async ({ taskIdentifier }: { taskIdentifier?: string }) => {
     if (!taskIdentifier) return null
-    const { data } = await api.get<BaseResponse<TaskDetail>>(`/v1/${this.baseUrl}/${taskIdentifier}`)
+    const { data } = await this.get<BaseResponse<TaskDetail>>(`/v1/${this.baseUrl}/${taskIdentifier}`)
 
     return data.value
   }
 
   addTask = async ({ body }: { body: AddTaskFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, body)
 
     return data.value
   }
 
   moveTask = async ({ body }: { body: MoveTaskFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}/move`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}/move`, body)
 
     return data.value
   }
 
   deleteTask = async ({ taskIdentifier }: { taskIdentifier: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskIdentifier}`, {
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskIdentifier}`, {
       data: {
         id: taskIdentifier
       }
@@ -77,19 +78,19 @@ class TaskService {
   }
 
   updateTask = async ({ body }: { body: UpdateTaskFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.id}`, body)
 
     return data.value
   }
 
   updateTaskStatus = async ({ id, isCompleted }: { id: string; isCompleted: boolean }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/mark`, { id, isCompleted })
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/mark`, { id, isCompleted })
 
     return data.value
   }
 
   toggleWatchTask = async ({ taskId, isWatching }: { taskId: string; isWatching: boolean }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/watch`, {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${taskId}/watch`, {
       id: taskId,
       isWatching
     })

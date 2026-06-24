@@ -1,14 +1,15 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMemberPositionTitle, ProjectPositionTitle } from './types'
 import type { AddProjectPositionTitleFormValues, UpdateProjectPositionTitleFormValues } from './validations'
 
-class ProjectPositionTitleService {
+class ProjectPositionTitleService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectPositionTitles = async ({ projectIdentifier }: { projectIdentifier?: string }) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<ProjectPositionTitle>()
-    const { data } = await api.get<BasePaginationResponse<ProjectPositionTitle>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectPositionTitle>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/position-titles`
     )
 
@@ -16,7 +17,7 @@ class ProjectPositionTitleService {
   }
 
   addProjectPositionTitle = async ({ body }: { body: AddProjectPositionTitleFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles`,
       body
     )
@@ -25,7 +26,7 @@ class ProjectPositionTitleService {
   }
 
   updateProjectPositionTitle = async ({ body }: { body: UpdateProjectPositionTitleFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(
+    const { data } = await this.put<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${body.projectIdentifier}/position-titles/${body.titleId}`,
       body
     )
@@ -40,7 +41,7 @@ class ProjectPositionTitleService {
     projectIdentifier: string
     titleId: string
   }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}`
     )
     return data.value
@@ -55,7 +56,7 @@ class ProjectPositionTitleService {
     titleId: string
     userId: string
   }) => {
-    const { data } = await api.post<BaseResponse<string>>(
+    const { data } = await this.post<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members`,
       {
         userId,
@@ -76,7 +77,7 @@ class ProjectPositionTitleService {
     titleId: string
     userId: string
   }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/position-titles/${titleId}/members/${userId}`
     )
 
@@ -91,7 +92,7 @@ class ProjectPositionTitleService {
     userId?: string
   }) => {
     if (!projectIdentifier || !userId) return getDefaultPaginationResponse<ProjectMemberPositionTitle>()
-    const { data } = await api.get<BasePaginationResponse<ProjectMemberPositionTitle>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectMemberPositionTitle>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/position-titles`
     )
 

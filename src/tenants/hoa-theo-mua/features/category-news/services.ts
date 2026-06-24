@@ -1,5 +1,5 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
-import htmApi from '../../lib/api'
+import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { GetCategoryParams, NewsCategoryRow } from './types'
 import type { AddCategoryFormValues } from './validations'
 
@@ -10,11 +10,11 @@ const getCategoryPayload = ({ parentId, ...rest }: AddCategoryFormValues) => ({
   ...(parentId ? { parentId } : {})
 })
 
-class NewsCategory {
+class NewsCategory extends BaseService {
   private readonly baseUrl = 'category-news'
 
   getNewsCategories = async ({ pageIndex, pageSize }: GetCategoryParams) => {
-    const { data } = await htmApi.get<BasePaginationResponse<NewsCategoryRow>>(`v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<NewsCategoryRow>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize
@@ -24,17 +24,17 @@ class NewsCategory {
   }
 
   getNewsCategory = async ({ id }: { id?: string }) => {
-    const { data } = await htmApi.get<BaseResponse<NewsCategoryRow>>(`v1/${this.baseUrl}/${id}`)
+    const { data } = await this.get<BaseResponse<NewsCategoryRow>>(`/v1/${this.baseUrl}/${id}`)
     return data
   }
 
   addNewsCategory = async ({ body }: { body: AddCategoryFormValues }) => {
-    const { data } = await htmApi.post<BaseResponse<NewsCategoryRow>>(`/v1/${this.baseUrl}`, getCategoryPayload(body))
+    const { data } = await this.post<BaseResponse<NewsCategoryRow>>(`/v1/${this.baseUrl}`, getCategoryPayload(body))
     return data.value
   }
 
   deleteNewsCategory = async ({ id }: { id: string }) => {
-    const { data } = await htmApi.delete<BaseResponse<MessageResponse>>(`v1/${this.baseUrl}/${id}`)
+    const { data } = await this.delete<BaseResponse<MessageResponse>>(`/v1/${this.baseUrl}/${id}`)
     return data.value
   }
 
@@ -44,7 +44,7 @@ class NewsCategory {
   }: { id: string | undefined } & {
     body: AddCategoryFormValues
   }) => {
-    const { data } = await htmApi.put<BaseResponse<MessageResponse>>(
+    const { data } = await this.put<BaseResponse<MessageResponse>>(
       `/v1/${this.baseUrl}/${id}`,
       getCategoryPayload(body)
     )

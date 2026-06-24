@@ -1,13 +1,14 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetCommissionsParams } from './hooks/use-get-commissions'
 import type { CommissionRow } from './types'
 import type { CreateCommissionFormValues, UpdateCommissionFormValues } from './validations'
 
-class CommissionService {
+class CommissionService extends BaseService {
   private readonly baseUrl = 'commissions'
 
   createCommission = async ({ body }: { body: CreateCommissionFormValues }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
       ...body,
       rate: body.rate / 100
     })
@@ -24,7 +25,7 @@ class CommissionService {
     maxAmount,
     sortBy
   }: GetCommissionsParams) => {
-    const { data } = await api.get<BasePaginationResponse<CommissionRow>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<CommissionRow>>(`/v1/${this.baseUrl}`, {
       params: {
         page,
         limit,
@@ -40,13 +41,13 @@ class CommissionService {
   }
 
   getPublicCommissions = async () => {
-    const { data } = await api.get<BasePaginationResponse<CommissionRow>>(`/v1/${this.baseUrl}/public`)
+    const { data } = await this.get<BasePaginationResponse<CommissionRow>>(`/v1/${this.baseUrl}/public`)
 
     return data
   }
 
   updateCommission = async ({ body }: { body: UpdateCommissionFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
       ...body,
       rate: body.rate / 100
     })
@@ -55,7 +56,7 @@ class CommissionService {
   }
 
   deleteCommission = async ({ commissionId }: { commissionId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${commissionId}`)
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${commissionId}`)
 
     return data.value
   }

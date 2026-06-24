@@ -1,23 +1,27 @@
-import { api, type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '../core/types'
 import type { GetProjectMemberRequestsParams } from './hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from './hooks/use-get-project-members'
 import type { InviteMembersPayload, ProjectMemberDetail, ProjectMemberRequest } from './types'
 
-class ProjectMemberService {
+class ProjectMemberService extends BaseService {
   private readonly baseUrl = 'projects'
 
   getProjectMembers = async ({ identifier, searchTerm, pageIndex, pageSize, excludeIds }: GetProjectMembersParams) => {
     if (!identifier) return getDefaultPaginationResponse<ProjectMember>()
-    const { data } = await api.get<BasePaginationResponse<ProjectMember>>(`/v1/${this.baseUrl}/${identifier}/members`, {
-      params: {
-        searchTerm,
-        pageIndex,
-        pageSize,
-        excludeIds
+    const { data } = await this.get<BasePaginationResponse<ProjectMember>>(
+      `/v1/${this.baseUrl}/${identifier}/members`,
+      {
+        params: {
+          searchTerm,
+          pageIndex,
+          pageSize,
+          excludeIds
+        }
       }
-    })
+    )
 
     return data
   }
@@ -30,7 +34,7 @@ class ProjectMemberService {
     projectIdentifier
   }: GetProjectMemberRequestsParams) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<ProjectMemberRequest>()
-    const { data } = await api.get<BasePaginationResponse<ProjectMemberRequest>>(
+    const { data } = await this.get<BasePaginationResponse<ProjectMemberRequest>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/pending`,
       {
         params: {
@@ -47,7 +51,7 @@ class ProjectMemberService {
 
   getProjectMember = async ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) => {
     if (!projectIdentifier || !userId) return null
-    const { data } = await api.get<BaseResponse<ProjectMemberDetail>>(
+    const { data } = await this.get<BaseResponse<ProjectMemberDetail>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}`
     )
 
@@ -55,7 +59,7 @@ class ProjectMemberService {
   }
 
   inviteMembers = async ({ body }: { body: InviteMembersPayload }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/invite`, body)
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.projectIdentifier}/invite`, body)
 
     return data.value
   }
@@ -69,7 +73,7 @@ class ProjectMemberService {
     notificationId: string
     isAccepted: boolean
   }) => {
-    const { data } = await api.get<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/response-invite`, {
+    const { data } = await this.get<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectId}/response-invite`, {
       params: {
         notificationId,
         isAccepted
@@ -88,7 +92,7 @@ class ProjectMemberService {
     userId: string
     roleIds: string[]
   }) => {
-    const { data } = await api.put<BaseResponse<string>>(
+    const { data } = await this.put<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/roles`,
       {
         projectIdentifier,
@@ -101,7 +105,7 @@ class ProjectMemberService {
   }
 
   deleteProjectMember = async ({ identifier, userId }: { identifier: string; userId: string }) => {
-    const { data } = await api.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}/members`, {
       data: {
         identifier,
         userId
@@ -118,7 +122,7 @@ class ProjectMemberService {
     projectIdentifier: string
     projectManagementId: string
   }) => {
-    const { data } = await api.delete<BaseResponse<string>>(
+    const { data } = await this.delete<BaseResponse<string>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/invites/${projectManagementId}`
     )
 
@@ -132,7 +136,7 @@ class ProjectMemberService {
     projectIdentifier: string
     newOwnerUserId: string | null
   }) => {
-    const { data } = await api.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/members/leave`, {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${projectIdentifier}/members/leave`, {
       newOwnerUserId
     })
 

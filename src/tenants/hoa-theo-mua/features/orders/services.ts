@@ -1,5 +1,6 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
-import htmApi from '../../lib/api'
+import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
+
 import type { NhanhVnOrder, NhanhVnOrdersRequest, ShippingLocation, ShippingLocationType } from './types'
 
 interface GetOrderShippingLocationsBody {
@@ -8,19 +9,18 @@ interface GetOrderShippingLocationsBody {
   parentId?: number
 }
 
-class OrderService {
-  private readonly baseUrl = 'orders/nhanh-vn'
-  private readonly baseOrderUrl = 'orders'
+class OrderService extends BaseService {
+  private readonly baseUrl = 'orders'
 
   getOrdersNhanhVn = async (body?: NhanhVnOrdersRequest) => {
-    const { data } = await htmApi.post<BasePaginationResponse<NhanhVnOrder>>(`v1/${this.baseUrl}`, body)
+    const { data } = await this.post<BasePaginationResponse<NhanhVnOrder>>(`/v1/${this.baseUrl}/nhanh-vn`, body)
 
     return data
   }
 
   getOrderShippingLocations = async (body: GetOrderShippingLocationsBody) => {
-    const { data } = await htmApi.post<BaseResponse<{ code: number; data: ShippingLocation[] }>>(
-      `v1/${this.baseOrderUrl}/shipping-location`,
+    const { data } = await this.post<BaseResponse<{ code: number; data: ShippingLocation[] }>>(
+      `/v1/${this.baseUrl}/shipping-location`,
       body
     )
 

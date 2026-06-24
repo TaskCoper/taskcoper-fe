@@ -1,13 +1,14 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import { BaseService } from '@/services/base.service'
 import type { GetMentorsParams } from './hooks/use-get-mentors'
 import type { Mentor } from './types'
 import type { UpdateMentorProfileFormValues } from './validations'
 
-class MentorService {
+class MentorService extends BaseService {
   private readonly baseUrl = 'mentors'
 
   getMentors = async ({ pageIndex, pageSize, domainIds, searchTerm, rating, sortBy }: GetMentorsParams) => {
-    const { data } = await api.get<BasePaginationResponse<Mentor>>(`/v1/${this.baseUrl}`, {
+    const { data } = await this.get<BasePaginationResponse<Mentor>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -22,7 +23,7 @@ class MentorService {
   }
 
   updateMentorProfile = async ({ body }: { body: UpdateMentorProfileFormValues }) => {
-    const { data } = await api.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.userIdentifier}`, body)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${body.userIdentifier}`, body)
 
     return data.value
   }
