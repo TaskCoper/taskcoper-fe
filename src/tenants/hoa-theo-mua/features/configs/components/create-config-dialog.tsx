@@ -1,42 +1,42 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
+import { Switch } from '@/components/ui/switch'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { SaveIcon } from 'lucide-react'
 import { useEffect } from 'react'
-import { FormProvider, type SubmitHandler } from 'react-hook-form'
+import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useCreateConfig } from '../hooks/use-create-config'
-import type { InputType } from '../types'
-import type { CreateConfigFormValues } from '../validations'
+import { defaultConfigFormValues, type CreateConfigFormInput, type CreateConfigFormValues } from '../validations'
 import CreateConfigForm from './create-config-form'
 
 interface CreateConfigDialogProps {
   open: boolean
   onClose: () => void
-  initialInputType?: InputType
-  initialGroup?: string
+  initialValues?: Partial<CreateConfigFormInput>
+  lockedFields?: { key?: boolean; options?: boolean }
 }
 
-export default function CreateConfigDialog({ open, onClose, initialInputType, initialGroup }: CreateConfigDialogProps) {
+const mergeInitialValues = (initial?: Partial<CreateConfigFormInput>): CreateConfigFormInput => ({
+  ...defaultConfigFormValues,
+  ...initial,
+  key: initial?.key ?? defaultConfigFormValues.key,
+  value: {
+    ...defaultConfigFormValues.value,
+    ...initial?.value
+  }
+})
+
+export default function CreateConfigDialog({ open, onClose, initialValues, lockedFields }: CreateConfigDialogProps) {
   const { t } = useTenantTranslation()
   const { methods, createConfig, isCreatingConfig } = useCreateConfig()
 
   useEffect(() => {
     if (open) {
-      methods.reset({
-        key: initialGroup ? `${initialGroup}.` : '',
-        value: {
-          group: initialGroup ?? '',
-          label: '',
-          inputType: initialInputType ?? 'text',
-          value: undefined,
-          required: false,
-          options: [],
-          validations: []
-        }
-      })
+      methods.reset(mergeInitialValues(initialValues))
     }
-  }, [open, initialInputType, initialGroup, methods])
+  }, [open, initialValues, methods])
 
   const onSubmit: SubmitHandler<CreateConfigFormValues> = (body) => {
     createConfig({ body }, { onSuccess: onClose })
@@ -44,7 +44,7 @@ export default function CreateConfigDialog({ open, onClose, initialInputType, in
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className='flex max-h-[85vh] max-w-xl flex-col gap-0 p-0'>
+      <DialogContent position='top-center' className='flex max-w-xl flex-col gap-0 p-0' showCloseButton={false}>
         <DialogHeader className='px-6 pt-6 pb-4'>
           <DialogTitle>{t('configsPage.dialog.createTitle')}</DialogTitle>
         </DialogHeader>
@@ -52,12 +52,38 @@ export default function CreateConfigDialog({ open, onClose, initialInputType, in
         <div className='flex-1 overflow-y-auto px-6'>
           <FormProvider {...methods}>
             <form id='create-config-form' onSubmit={methods.handleSubmit(onSubmit)} className='pb-4'>
-              <CreateConfigForm />
+              <CreateConfigForm lockedFields={lockedFields} />
+
+              <Controller
+                name='isPublic'
+                control={methods.control}
+                render={({ field, fieldState }) => (
+                  <Field
+                    orientation='horizontal'
+                    data-invalid={fieldState.invalid}
+                    className='p-3 bg-muted/50 rounded-xl border border-dashed flex justify-between mt-2'
+                  >
+                    <FieldContent className='gap-0'>
+                      <FieldLabel htmlFor={field.name}>{t('configsPage.dialog.isPublicField')}</FieldLabel>
+                      <FieldDescription className='text-xs'>
+                        {t('configsPage.dialog.isPublicDescription')}
+                      </FieldDescription>
+                    </FieldContent>
+                    <Switch
+                      id={field.name}
+                      name={field.name}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      aria-invalid={fieldState.invalid}
+                    />
+                  </Field>
+                )}
+              />
             </form>
           </FormProvider>
         </div>
 
-        <DialogFooter className='border-t px-6 py-4'>
+        <DialogFooter className='pb-6 px-6'>
           <Button type='button' variant='outline' disabled={isCreatingConfig} onClick={onClose}>
             {t('configsPage.dialog.cancel')}
           </Button>

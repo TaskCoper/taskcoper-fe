@@ -573,19 +573,24 @@
       "labelPlaceholder": "Display name",
       "inputTypeField": "Input type",
       "defaultValueField": "Default value",
+      "defaultValuesField": "Default values",
+      "keyLockedHint": "Key is fixed for this config",
+      "optionsLockedHint": "{{count}} options are managed by the live API",
       "descriptionField": "Description",
       "descriptionPlaceholder": "Optional description",
       "requiredField": "Required",
       "requiredDesc": "This field must have a value",
+      "isPublicField": "Public",
       "optionsSection": "Options",
       "addOption": "Add option",
       "optionLabelPlaceholder": "Label",
       "optionValuePlaceholder": "Value",
       "selectDefaultPlaceholder": "Pick a default value",
+      "selectDefaultsPlaceholder": "Pick default values",
       "validationsSection": "Validations",
       "addRule": "Add rule",
       "noValidations": "No validation rules for this type",
-      "alwaysApplied": "— always applied",
+      "alwaysApplied": "always applied",
       "cancel": "Cancel",
       "save": "Save changes",
       "saving": "Saving...",
@@ -627,6 +632,7 @@
       "save": "Save",
       "saving": "Saving...",
       "required": "Required",
+      "multiSelectPlaceholder": "Pick options...",
       "hints": {
         "minLength": "Min {{n}} chars",
         "maxLength": "Max {{n}} chars",
@@ -643,10 +649,37 @@
       "multiLineText": "Multi line text",
       "checkbox": "Checkbox",
       "dropdown": "Dropdown",
+      "multiSelect": "Multi-select",
       "image": "Image",
       "toggleButton": "Toggle button",
       "dateAndTime": "Date and Time",
-      "address": "Address"
+      "address": "Address",
+      "defaultDepot": "Default depot",
+      "orderTags": "Order tags"
+    },
+    "lockedPalette": {
+      "title": "Async-backed"
+    },
+    "ahamovePalette": {
+      "title": "Ahamove Shipping Request",
+      "empty": "No shipping requests available"
+    },
+    "ahamoveDialog": {
+      "title": "Add Ahamove special request",
+      "labelField": "Display label",
+      "labelRequired": "Label is required",
+      "descriptionField": "Description",
+      "numField": "Quantity (num)",
+      "numHelp": "How many times this request is applied per order. Usually 1.",
+      "tierField": "Pricing tier",
+      "tierPlaceholder": "Pick a tier",
+      "tierRequired": "Tier is required",
+      "tierHelp": "The tier_code sent to Ahamove. Each tier maps to a different price (see codes in the dropdown).",
+      "nameField": "Item name",
+      "nameHelp": "Sent as the name of this special-request line.",
+      "priceField": "Price (VND)",
+      "priceHelp": "Declared item value in Vietnamese đồng. Used by Ahamove for compensation.",
+      "jsonPreview": "JSON preview"
     }
   }
 }

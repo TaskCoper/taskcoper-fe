@@ -1,305 +1,75 @@
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Textarea } from '@/components/ui/textarea'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  AlignJustify,
   AlignLeft,
   Calendar,
   CheckCircle2,
   ChevronDown,
-  Code2,
-  EyeOff,
-  Hash,
   ImageIcon,
+  ListChecks,
   MapPin,
   MoreVertical,
-  Pencil,
   Plus,
-  SaveIcon,
+  Tags,
   ToggleLeft,
-  Type
+  Truck,
+  Type,
+  Warehouse
 } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
+import ConfigFieldRow from '../features/configs/components/config-field-row'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
 import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
-import configService from '../features/configs/services'
-import type { Config, ConfigDefinition } from '../features/configs/types'
-import { INPUT_TYPE_COLOR, InputType } from '../features/configs/types'
-import type { CreateConfigFormValues } from '../features/configs/validations'
-import { buildValueValidator } from '../features/configs/validations'
+import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
+import type { Config, InputOption } from '../features/configs/types'
+import { InputType } from '../features/configs/types'
+import type { CreateConfigFormInput } from '../features/configs/validations'
+import { useGetAhamoveService } from '../hooks/use-get-ahamove-service'
+import { useGetDepots } from '../hooks/use-get-depots'
+import { useGetOrderTags } from '../hooks/use-get-order-tags'
+import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
-// ─── constants ────────────────────────────────────────────────────────────────
-
-const INPUT_TYPE_ICON: Record<InputType, React.ReactNode> = {
-  [InputType.text]: <Type className='size-3' />,
-  [InputType.textarea]: <AlignJustify className='size-3' />,
-  [InputType.number]: <Hash className='size-3' />,
-  [InputType.boolean]: <CheckCircle2 className='size-3' />,
-  [InputType.switch]: <ToggleLeft className='size-3' />,
-  [InputType.date]: <Calendar className='size-3' />,
-  [InputType.select]: <ChevronDown className='size-3' />,
-  [InputType.json]: <Code2 className='size-3' />,
-  [InputType.image]: <ImageIcon className='size-3' />,
-  [InputType.address]: <MapPin className='size-3' />
-}
-
-type InlineHint = { key: string; label: string }
-
-const getValidationHints = (
-  def: ConfigDefinition,
-  t: (key: string, opts?: Record<string, unknown>) => string
-): InlineHint[] =>
-  def.validations.flatMap((rule): InlineHint[] => {
-    if ('minLength' in rule)
-      return [{ key: 'minLength', label: t('configsPage.card.hints.minLength', { n: rule.minLength }) }]
-    if ('maxLength' in rule)
-      return [{ key: 'maxLength', label: t('configsPage.card.hints.maxLength', { n: rule.maxLength }) }]
-    if ('min' in rule) return [{ key: 'min', label: t('configsPage.card.hints.min', { n: rule.min }) }]
-    if ('max' in rule) return [{ key: 'max', label: t('configsPage.card.hints.max', { n: rule.max }) }]
-    if ('email' in rule) return [{ key: 'email', label: t('configsPage.card.hints.email') }]
-    if ('url' in rule) return [{ key: 'url', label: t('configsPage.card.hints.url') }]
-    if ('integer' in rule) return [{ key: 'integer', label: t('configsPage.card.hints.integer') }]
-    if ('pattern' in rule) return [{ key: 'pattern', label: t('configsPage.card.hints.pattern') }]
-    return []
-  })
-
-// ─── ConfigFieldRow ───────────────────────────────────────────────────────────
-
-interface ConfigFieldRowProps {
-  config: Config
-  hidden: boolean
-  showFieldLabel: string
-  hideFieldLabel: string
-  onToggleHidden: () => void
-  onEdit: () => void
-}
-
-type InlineForm = { value: unknown }
-
-function ConfigFieldRow({
-  config,
-  hidden,
-  showFieldLabel,
-  hideFieldLabel,
-  onToggleHidden,
-  onEdit
-}: ConfigFieldRowProps) {
-  const { t } = useTenantTranslation()
-  const queryClient = useQueryClient()
-
-  const form = useForm<InlineForm>({ defaultValues: { value: config.value.value } })
-  const isDirty = form.formState.isDirty
-  const { errors } = form.formState
-
-  const { mutate: saveValue, isPending: isSavingValue } = useMutation({
-    mutationFn: (value: unknown) =>
-      configService.updateConfig({
-        id: config.id,
-        body: { key: config.key, value: { ...config.value, value } } as CreateConfigFormValues
-      }),
-    onSuccess: (_, saved) => {
-      toast.success(t('configKeys.toast.updated'))
-      form.reset({ value: saved })
-    },
-    onError: () => toast.error(t('configKeys.toast.error')),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
-  })
-
-  const onSave = form.handleSubmit(({ value }) => {
-    const validator = buildValueValidator(config.value)
-    const result = validator.safeParse(value)
-    if (!result.success) {
-      form.setError('value', { type: 'manual', message: result.error.issues[0]?.message ?? 'Invalid' })
-      return
-    }
-    saveValue(result.data)
-  })
-
-  const colorClass = INPUT_TYPE_COLOR[config.value.inputType] ?? 'text-gray-500 bg-gray-50'
-  const icon = INPUT_TYPE_ICON[config.value.inputType]
-  const hints = getValidationHints(config.value, t)
-  const isBooleanLike = config.value.inputType === InputType.boolean || config.value.inputType === InputType.switch
-
-  const valueInput = (() => {
-    switch (config.value.inputType) {
-      case InputType.boolean:
-      case InputType.switch:
-        return (
-          <Controller
-            name='value'
-            control={form.control}
-            render={({ field }) => (
-              <div className='flex items-center gap-2'>
-                <Switch
-                  id={`val-${config.id}`}
-                  checked={!!field.value}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked)
-                    saveValue(checked)
-                  }}
-                  disabled={isSavingValue}
-                />
-                <label
-                  htmlFor={`val-${config.id}`}
-                  className='cursor-pointer select-none text-sm text-muted-foreground'
-                >
-                  {field.value ? 'true' : 'false'}
-                </label>
-                {isSavingValue && <Spinner className='size-3.5' />}
-              </div>
-            )}
-          />
-        )
-      case InputType.number:
-        return (
-          <Input
-            type='number'
-            className='h-8 text-sm'
-            {...form.register('value', { valueAsNumber: true })}
-            aria-invalid={!!errors.value}
-          />
-        )
-      case InputType.date:
-        return <Input type='date' className='h-8 text-sm' {...form.register('value')} aria-invalid={!!errors.value} />
-      case InputType.textarea:
-        return (
-          <Textarea
-            rows={2}
-            className='resize-none text-sm'
-            {...form.register('value')}
-            aria-invalid={!!errors.value}
-          />
-        )
-      case InputType.json:
-      case InputType.address:
-        return (
-          <Textarea
-            rows={3}
-            placeholder='{}'
-            className='resize-none font-mono text-xs'
-            {...form.register('value')}
-            aria-invalid={!!errors.value}
-          />
-        )
-      case InputType.select: {
-        const options = config.value.options ?? []
-        return (
-          <Controller
-            name='value'
-            control={form.control}
-            render={({ field }) => (
-              <Select
-                value={String(field.value ?? '')}
-                onValueChange={(val) => {
-                  const matched = options.find((o) => String(o.value) === val)
-                  field.onChange(matched?.value ?? val)
-                }}
-              >
-                <SelectTrigger className='h-8 text-sm' aria-invalid={!!errors.value}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((opt) => (
-                    <SelectItem key={String(opt.value)} value={String(opt.value)}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        )
-      }
-      default:
-        return <Input className='h-8 text-sm' {...form.register('value')} aria-invalid={!!errors.value} />
-    }
-  })()
-
-  const showHintsRow = config.value.required || hints.length > 0 || !!errors.value
-
-  return (
-    <Card className={cn('p-3 rounded-xl gap-0', hidden && 'opacity-50')}>
-      {/* Header */}
-      <div className='flex items-center gap-2 mb-2'>
-        <span className={cn('flex size-5 shrink-0 items-center justify-center rounded text-xs font-bold', colorClass)}>
-          {icon}
-        </span>
-        <span className='flex-1 truncate text-sm font-medium'>{config.value.label}</span>
-        {config.value.required && <span className='text-xs font-semibold text-destructive'>*</span>}
-        <Button
-          variant='ghost'
-          size='icon'
-          className='size-7'
-          title={hidden ? showFieldLabel : hideFieldLabel}
-          onClick={onToggleHidden}
-        >
-          <EyeOff className={cn('size-3.5', hidden ? 'text-muted-foreground/40' : 'text-muted-foreground')} />
-        </Button>
-        <Button
-          variant='ghost'
-          size='icon'
-          className='size-7'
-          title={t('configsPage.card.editDefinition')}
-          onClick={onEdit}
-        >
-          <Pencil className='size-3.5 text-muted-foreground' />
-        </Button>
-      </div>
-
-      {/* Value input row */}
-      <div className='flex items-start gap-2 pl-6'>
-        <div className='flex-1 min-w-0'>{valueInput}</div>
-        {!isBooleanLike && isDirty && (
-          <Button size='sm' className='h-8 shrink-0' disabled={isSavingValue} onClick={onSave}>
-            {isSavingValue ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
-            {isSavingValue ? t('configsPage.card.saving') : t('configsPage.card.save')}
-          </Button>
-        )}
-      </div>
-
-      {/* Hints + error */}
-      {showHintsRow && (
-        <div className='mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 pl-6'>
-          {config.value.required && (
-            <span className='text-xs text-muted-foreground'>{t('configsPage.card.required')}</span>
-          )}
-          {hints.map((hint) => (
-            <span key={hint.key} className='text-xs text-muted-foreground'>
-              {hint.label}
-            </span>
-          ))}
-          {errors.value?.message && <span className='text-xs text-destructive'>{errors.value.message as string}</span>}
-        </div>
-      )}
-    </Card>
-  )
-}
-
-// ─── ConfigsPage ──────────────────────────────────────────────────────────────
+type LockedFields = { key?: boolean; options?: boolean }
 
 export default function ConfigsPage() {
-  const { t } = useTenantTranslation()
+  const { t, i18n } = useTenantTranslation()
   const { configs, isGettingConfigs } = useGetConfigs()
-  const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set())
+  const { depots } = useGetDepots()
+  const { orderTags } = useGetOrderTags()
+  const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
 
   const [createOpen, setCreateOpen] = useState(false)
-  const [createInitialType, setCreateInitialType] = useState<InputType>(InputType.text)
+  const [createInitialValues, setCreateInitialValues] = useState<Partial<CreateConfigFormInput>>()
+  const [createLockedFields, setCreateLockedFields] = useState<LockedFields | undefined>()
+  const [selectedAhamoveRequest, setSelectedAhamoveRequest] = useState<AhamoveServiceRequest | null>(null)
+  const [editOpen, setEditOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<Config | null>(null)
 
-  const fieldPalette = useMemo(
+  const depotOptions = useMemo<InputOption[]>(
+    () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
+    [depots]
+  )
+
+  const orderTagOptions = useMemo<InputOption[]>(
+    () => orderTags.map((tag) => ({ label: tag.name, value: tag.id })),
+    [orderTags]
+  )
+
+  const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
+    () => ({
+      [LOCKED_ASYNC_CONFIG_KEYS.defaultDepot]: depotOptions,
+      [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions
+    }),
+    [depotOptions, orderTagOptions]
+  )
+
+  const genericPalette = useMemo(
     () => [
       {
         label: t('configsPage.palette.singleLineText'),
@@ -328,6 +98,13 @@ export default function ConfigsPage() {
         icon: <ChevronDown className='size-4' />,
         color: 'text-indigo-600',
         bg: 'bg-indigo-50'
+      },
+      {
+        label: t('configsPage.palette.multiSelect'),
+        inputType: InputType.multiSelect,
+        icon: <ListChecks className='size-4' />,
+        color: 'text-pink-600',
+        bg: 'bg-pink-50'
       },
       {
         label: t('configsPage.palette.image'),
@@ -361,6 +138,32 @@ export default function ConfigsPage() {
     [t]
   )
 
+  const lockedPalette = useMemo(
+    () => [
+      {
+        key: LOCKED_ASYNC_CONFIG_KEYS.defaultDepot,
+        label: t('configsPage.palette.defaultDepot'),
+        inputType: InputType.select,
+        icon: <Warehouse className='size-4' />,
+        color: 'text-emerald-600',
+        bg: 'bg-emerald-50',
+        options: depotOptions,
+        defaultValue: undefined as unknown
+      },
+      {
+        key: LOCKED_ASYNC_CONFIG_KEYS.orderTags,
+        label: t('configsPage.palette.orderTags'),
+        inputType: InputType.multiSelect,
+        icon: <Tags className='size-4' />,
+        color: 'text-amber-600',
+        bg: 'bg-amber-50',
+        options: orderTagOptions,
+        defaultValue: [] as unknown
+      }
+    ],
+    [depotOptions, orderTagOptions, t]
+  )
+
   const groups = useMemo(() => {
     if (!configs) return []
     const seen = new Set<string>()
@@ -387,26 +190,65 @@ export default function ConfigsPage() {
     }, {})
   }, [configs])
 
-  const toggleHidden = (id: string) => {
-    setHiddenIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
-  const openCreate = useCallback((inputType: InputType) => {
-    setCreateInitialType(inputType)
+  const openCreate = useCallback((initial: Partial<CreateConfigFormInput>, locked?: LockedFields) => {
+    setCreateInitialValues(initial)
+    setCreateLockedFields(locked)
     setCreateOpen(true)
   }, [])
 
+  const openStaticPaletteCreate = useCallback(
+    (inputType: InputType, options?: InputOption[]) => {
+      openCreate({
+        key: currentGroup ? `${currentGroup}.` : '',
+        value: {
+          group: currentGroup,
+          label: '',
+          inputType,
+          value: inputType === InputType.multiSelect ? [] : undefined,
+          required: false,
+          options: options ?? [],
+          validations: []
+        }
+      })
+    },
+    [openCreate, currentGroup]
+  )
+
+  const openLockedPaletteCreate = useCallback(
+    (item: { key: string; label: string; inputType: InputType; options: InputOption[]; defaultValue: unknown }) => {
+      const existing = configs?.find((c) => c.key === item.key)
+      if (existing) {
+        setEditingConfig(existing)
+        setEditOpen(true)
+        return
+      }
+      const [group] = item.key.split('.')
+      openCreate(
+        {
+          key: item.key,
+          value: {
+            group,
+            label: item.label,
+            inputType: item.inputType,
+            value: item.defaultValue,
+            required: false,
+            options: item.options,
+            validations: []
+          }
+        },
+        { key: true, options: true }
+      )
+    },
+    [configs, openCreate]
+  )
+
   const openEdit = useCallback((config: Config) => {
     setEditingConfig(config)
+    setEditOpen(true)
   }, [])
 
   const closeEdit = useCallback(() => {
-    setEditingConfig(null)
+    setEditOpen(false)
   }, [])
 
   return (
@@ -435,7 +277,7 @@ export default function ConfigsPage() {
           </div>
         ) : (
           <Tabs value={currentGroup} onValueChange={(v) => setActiveGroup(v)} className='flex flex-col gap-0'>
-            <div className='flex items-center border-b'>
+            <div className='flex items-center'>
               <TabsList className='h-auto gap-0 rounded-none bg-transparent p-0'>
                 {groups.map((group) => (
                   <TabsTrigger
@@ -453,8 +295,8 @@ export default function ConfigsPage() {
                 <Button
                   variant='ghost'
                   size='sm'
-                  className='text-muted-foreground ml-2'
-                  onClick={() => openCreate(InputType.text)}
+                  className='text-muted-foreground first:ml-0 ml-2'
+                  onClick={() => openStaticPaletteCreate(InputType.text)}
                 >
                   <Plus className='size-3.5' />
                   {t('configsPage.addSection')}
@@ -477,20 +319,12 @@ export default function ConfigsPage() {
             </div>
 
             {groups.map((group) => (
-              <TabsContent key={group} value={group} className='mt-3 space-y-2'>
+              <TabsContent key={group} value={group} className='mt-3 space-y-4'>
                 {(groupedConfigs[group] ?? []).length === 0 ? (
                   <p className='py-8 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
                 ) : (
                   (groupedConfigs[group] ?? []).map((config) => (
-                    <ConfigFieldRow
-                      key={config.id}
-                      config={config}
-                      hidden={hiddenIds.has(config.id)}
-                      showFieldLabel={t('configsPage.showField')}
-                      hideFieldLabel={t('configsPage.hideField')}
-                      onToggleHidden={() => toggleHidden(config.id)}
-                      onEdit={() => openEdit(config)}
-                    />
+                    <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
                   ))
                 )}
               </TabsContent>
@@ -504,14 +338,14 @@ export default function ConfigsPage() {
       </div>
 
       {/* Right sidebar — field palette */}
-      <div className='w-56 shrink-0 border-l p-2'>
+      <div className='w-80 shrink-0 overflow-y-auto border-l p-2'>
         <div className='space-y-2'>
-          {fieldPalette.map((item) => (
+          {genericPalette.map((item) => (
             <button
               key={item.label}
               type='button'
-              className='flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
-              onClick={() => openCreate(item.inputType)}
+              className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
+              onClick={() => openStaticPaletteCreate(item.inputType)}
             >
               <span className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', item.bg, item.color)}>
                 {item.icon}
@@ -520,16 +354,97 @@ export default function ConfigsPage() {
             </button>
           ))}
         </div>
+
+        <div className='mt-4 border-t pt-3'>
+          <div className='mb-2 px-2 text-sm font-medium'>{t('configsPage.lockedPalette.title')}</div>
+          <div className='space-y-2'>
+            {lockedPalette.map((item) => (
+              <button
+                key={item.key}
+                type='button'
+                className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
+                onClick={() => openLockedPaletteCreate(item)}
+              >
+                <span
+                  className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', item.bg, item.color)}
+                >
+                  {item.icon}
+                </span>
+                <span className='truncate'>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className='mt-4 border-t pt-3'>
+          <div className='mb-2 px-2 text-sm font-medium'>{t('configsPage.ahamovePalette.title')}</div>
+
+          {isGettingAhamoveService ? (
+            <div className='space-y-2'>
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className='h-8 w-full' />
+              ))}
+            </div>
+          ) : ahamoveRequests.length === 0 ? (
+            <p className='px-2 text-xs text-muted-foreground'>{t('configsPage.ahamovePalette.empty')}</p>
+          ) : (
+            <div className='space-y-2'>
+              {ahamoveRequests.map((request) => {
+                const label =
+                  (i18n.language?.toLowerCase().startsWith('vi') ? request.name_vi_vn : request.name_en_us) ||
+                  request.name ||
+                  request._id
+
+                return (
+                  <button
+                    key={request._id}
+                    type='button'
+                    className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
+                    onClick={() => setSelectedAhamoveRequest(request)}
+                    title={label}
+                  >
+                    <span className='flex size-6 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-600'>
+                      {request.icon_url ? (
+                        <img
+                          src={request.icon_url}
+                          alt=''
+                          className='size-4 object-contain'
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none'
+                          }}
+                        />
+                      ) : (
+                        <Truck className='size-4' />
+                      )}
+                    </span>
+                    <span className='truncate'>{label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       <CreateConfigDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        initialInputType={createInitialType}
-        initialGroup={currentGroup}
+        initialValues={createInitialValues}
+        lockedFields={createLockedFields}
       />
 
-      <UpdateConfigDialog open={editingConfig !== null} config={editingConfig} onClose={closeEdit} />
+      <AhamoveCreateConfigDialog
+        open={selectedAhamoveRequest !== null}
+        request={selectedAhamoveRequest}
+        onClose={() => setSelectedAhamoveRequest(null)}
+      />
+
+      <UpdateConfigDialog
+        open={editOpen}
+        config={editingConfig}
+        onClose={closeEdit}
+        liveOptionsByKey={liveOptionsByKey}
+      />
     </div>
   )
 }

@@ -573,19 +573,24 @@
       "labelPlaceholder": "Tên hiển thị",
       "inputTypeField": "Loại đầu vào",
       "defaultValueField": "Giá trị mặc định",
+      "defaultValuesField": "Giá trị mặc định",
+      "keyLockedHint": "Khóa cấu hình này được khóa cố định",
+      "optionsLockedHint": "{{count}} lựa chọn được quản lý bởi API",
       "descriptionField": "Mô tả",
       "descriptionPlaceholder": "Mô tả tùy chọn",
       "requiredField": "Bắt buộc",
       "requiredDesc": "Trường này phải có giá trị",
+      "isPublicField": "Công khai",
       "optionsSection": "Tùy chọn",
       "addOption": "Thêm tùy chọn",
       "optionLabelPlaceholder": "Nhãn",
       "optionValuePlaceholder": "Giá trị",
       "selectDefaultPlaceholder": "Chọn giá trị mặc định",
+      "selectDefaultsPlaceholder": "Chọn các giá trị mặc định",
       "validationsSection": "Kiểm tra dữ liệu",
       "addRule": "Thêm quy tắc",
       "noValidations": "Không có quy tắc kiểm tra cho loại này",
-      "alwaysApplied": "— luôn áp dụng",
+      "alwaysApplied": "luôn áp dụng",
       "cancel": "Hủy",
       "save": "Lưu thay đổi",
       "saving": "Đang lưu...",
@@ -627,6 +632,7 @@
       "save": "Lưu",
       "saving": "Đang lưu...",
       "required": "Bắt buộc",
+      "multiSelectPlaceholder": "Chọn các lựa chọn...",
       "hints": {
         "minLength": "Tối thiểu {{n}} ký tự",
         "maxLength": "Tối đa {{n}} ký tự",
@@ -643,10 +649,37 @@
       "multiLineText": "Văn bản nhiều dòng",
       "checkbox": "Hộp kiểm",
       "dropdown": "Danh sách thả xuống",
+      "multiSelect": "Chọn nhiều",
       "image": "Hình ảnh",
       "toggleButton": "Nút bật/tắt",
       "dateAndTime": "Ngày và giờ",
-      "address": "Địa chỉ"
+      "address": "Địa chỉ",
+      "defaultDepot": "Kho mặc định",
+      "orderTags": "Nhãn đơn hàng"
+    },
+    "lockedPalette": {
+      "title": "Nguồn API"
+    },
+    "ahamovePalette": {
+      "title": "Yêu cầu giao hàng Ahamove",
+      "empty": "Chưa có yêu cầu giao hàng khả dụng"
+    },
+    "ahamoveDialog": {
+      "title": "Thêm yêu cầu đặc biệt Ahamove",
+      "labelField": "Nhãn hiển thị",
+      "labelRequired": "Vui lòng nhập nhãn",
+      "descriptionField": "Mô tả",
+      "numField": "Số lượng (num)",
+      "numHelp": "Số lần yêu cầu này được áp dụng cho mỗi đơn. Thường là 1.",
+      "tierField": "Mức giá (tier)",
+      "tierPlaceholder": "Chọn một mức giá",
+      "tierRequired": "Vui lòng chọn mức giá",
+      "tierHelp": "Mã tier_code gửi cho Ahamove. Mỗi tier ứng với một mức giá khác nhau (xem mã trong danh sách).",
+      "nameField": "Tên mặt hàng",
+      "nameHelp": "Gửi làm tên của dòng yêu cầu đặc biệt này.",
+      "priceField": "Giá (VNĐ)",
+      "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
+      "jsonPreview": "Bản xem trước JSON"
     }
   }
 }

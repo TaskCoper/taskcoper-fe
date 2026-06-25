@@ -21,7 +21,6 @@ export const useUpdateConfig = (configId?: string) => {
   })
 
   const { mutate: updateConfig, isPending: isUpdatingConfig } = useMutation({
-    // configId is always set when this mutate is called — callers gate on config !== null
     mutationFn: ({ body }: { body: CreateConfigFormValues }) => configService.updateConfig({ id: configId!, body }),
     onSuccess: () => {
       toast.success(t('configKeys.toast.updated'))

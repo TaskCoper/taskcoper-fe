@@ -1,0 +1,258 @@
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Spinner } from '@/components/ui/spinner'
+import { Textarea } from '@/components/ui/textarea'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { SaveIcon } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
+import { Controller, useForm, useWatch, type SubmitHandler } from 'react-hook-form'
+import type { AhamoveServiceRequest } from '../../../types/ahamove.type'
+import {
+  buildAhamovePayload,
+  defaultAhamoveInput,
+  localizedAhamoveDescription,
+  localizedAhamoveName,
+  localizedTierName,
+  normalizeAhamoveKey,
+  type AhamovePayloadInput
+} from '../ahamove-palette'
+import { useCreateConfig } from '../hooks/use-create-config'
+import { InputType } from '../types'
+import type { CreateConfigFormValues } from '../validations'
+
+interface AhamoveCreateConfigDialogProps {
+  open: boolean
+  onClose: () => void
+  request: AhamoveServiceRequest | null
+}
+
+interface AhamoveFormValues {
+  label: string
+  description: string
+  num: number
+  tier_code: string
+  name: string
+  price: number
+}
+
+const safeNumber = (value: unknown): number | undefined => {
+  const n = Number(value)
+  return Number.isFinite(n) ? n : undefined
+}
+
+export default function AhamoveCreateConfigDialog({ open, onClose, request }: AhamoveCreateConfigDialogProps) {
+  const { t, i18n } = useTenantTranslation()
+  const locale = i18n.language
+  const { createConfig, isCreatingConfig } = useCreateConfig()
+
+  const defaults = useMemo<AhamoveFormValues>(() => {
+    if (!request) {
+      return { label: '', description: '', num: 1, tier_code: '', name: '', price: 0 }
+    }
+    const d = defaultAhamoveInput(request)
+
+    return {
+      label: localizedAhamoveName(request, locale),
+      description: localizedAhamoveDescription(request, locale) ?? '',
+      num: d.num ?? 1,
+      tier_code: d.tier_code ?? '',
+      name: d.name || localizedAhamoveName(request, locale),
+      price: d.price ?? 0
+    }
+  }, [request, locale])
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<AhamoveFormValues>({ defaultValues: defaults })
+
+  useEffect(() => {
+    if (open) reset(defaults)
+  }, [open, defaults, reset])
+
+  const num = useWatch({ control, name: 'num' })
+  const tier_code = useWatch({ control, name: 'tier_code' })
+  const name = useWatch({ control, name: 'name' })
+  const price = useWatch({ control, name: 'price' })
+
+  const previewPayload = useMemo(() => {
+    if (!request) return {}
+    const input: AhamovePayloadInput = {
+      num: safeNumber(num),
+      tier_code: tier_code || undefined,
+      name: name || undefined,
+      price: safeNumber(price)
+    }
+    return buildAhamovePayload(request, input)
+  }, [request, num, tier_code, name, price])
+
+  const jsonPreview = useMemo(() => JSON.stringify(previewPayload, null, 2), [previewPayload])
+
+  const onSubmit: SubmitHandler<AhamoveFormValues> = (values) => {
+    if (!request) return
+    const body: CreateConfigFormValues = {
+      key: `ahamove.shipping.${normalizeAhamoveKey(request._id)}`,
+      isPublic: false,
+      value: {
+        group: 'ahamove',
+        label: values.label.trim() || localizedAhamoveName(request, locale),
+        inputType: InputType.json,
+        description: values.description.trim() || undefined,
+        required: false,
+        options: [],
+        validations: [],
+        value: jsonPreview
+      }
+    }
+    createConfig({ body }, { onSuccess: onClose })
+  }
+
+  const requestType = request?.type ?? null
+  const requestName = request ? localizedAhamoveName(request, locale) : ''
+  const keyPreview = request ? `ahamove.shipping.${normalizeAhamoveKey(request._id)}` : ''
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent position='top-center' className='flex max-w-xl flex-col gap-0 p-0' showCloseButton={false}>
+        <DialogHeader className='px-6 pt-6 pb-4'>
+          <DialogTitle>
+            {t('configsPage.ahamoveDialog.title')}
+            {requestName ? ` - ${requestName}` : ''}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className='flex-1 overflow-y-auto px-6 pb-4'>
+          <form id='ahamove-create-config-form' onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
+            {/* Identifier — read-only summary */}
+            <div className='flex items-center justify-between rounded-md bg-muted/50 p-3 text-xs'>
+              <span className='truncate font-mono text-muted-foreground'>{keyPreview}</span>
+              {requestType && (
+                <span className='ml-2 shrink-0 rounded bg-background px-2 py-0.5 font-medium uppercase tracking-wide'>
+                  {requestType}
+                </span>
+              )}
+            </div>
+
+            {/* Label */}
+            <Controller
+              name='label'
+              control={control}
+              rules={{ required: t('configsPage.ahamoveDialog.labelRequired') }}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-1'>
+                  <FieldLabel htmlFor='ahamove-label'>
+                    {t('configsPage.ahamoveDialog.labelField')}
+                    <span className='font-semibold text-destructive'>*</span>
+                  </FieldLabel>
+                  <Input id='ahamove-label' {...field} aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && fieldState.error?.message && (
+                    <FieldError className='text-xs' errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* Description */}
+            <Field className='gap-1'>
+              <FieldLabel htmlFor='ahamove-description'>{t('configsPage.ahamoveDialog.descriptionField')}</FieldLabel>
+              <Textarea id='ahamove-description' rows={2} {...register('description')} />
+            </Field>
+
+            {/* Type-specific fields */}
+            {requestType === 'BOOLEAN' && (
+              <Field className='gap-1'>
+                <FieldLabel htmlFor='ahamove-num'>{t('configsPage.ahamoveDialog.numField')}</FieldLabel>
+                <Input
+                  id='ahamove-num'
+                  type='number'
+                  min={1}
+                  step={1}
+                  {...register('num', { valueAsNumber: true, min: 1 })}
+                  aria-invalid={!!errors.num}
+                />
+                <FieldDescription>{t('configsPage.ahamoveDialog.numHelp')}</FieldDescription>
+              </Field>
+            )}
+
+            {requestType === 'TIER' && (
+              <Controller
+                name='tier_code'
+                control={control}
+                rules={{ required: t('configsPage.ahamoveDialog.tierRequired') }}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className='gap-1'>
+                    <FieldLabel>
+                      {t('configsPage.ahamoveDialog.tierField')}
+                      <span className='font-semibold text-destructive'>*</span>
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger aria-invalid={fieldState.invalid}>
+                        <SelectValue placeholder={t('configsPage.ahamoveDialog.tierPlaceholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(request?.tier_list ?? []).map((tier) => (
+                          <SelectItem key={tier.code} value={tier.code}>
+                            {tier.code} - {localizedTierName(tier, locale)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FieldDescription>{t('configsPage.ahamoveDialog.tierHelp')}</FieldDescription>
+                    {fieldState.invalid && fieldState.error?.message && (
+                      <FieldError className='text-xs' errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            )}
+
+            {(requestType === 'INPUT' || requestType === 'PER_UNIT') && (
+              <>
+                <Field className='gap-1'>
+                  <FieldLabel htmlFor='ahamove-name'>{t('configsPage.ahamoveDialog.nameField')}</FieldLabel>
+                  <Input id='ahamove-name' {...register('name')} />
+                  <FieldDescription>{t('configsPage.ahamoveDialog.nameHelp')}</FieldDescription>
+                </Field>
+                <Field className='gap-1'>
+                  <FieldLabel htmlFor='ahamove-price'>{t('configsPage.ahamoveDialog.priceField')}</FieldLabel>
+                  <Input
+                    id='ahamove-price'
+                    type='number'
+                    min={0}
+                    step={1000}
+                    {...register('price', { valueAsNumber: true, min: 0 })}
+                  />
+                  <FieldDescription>{t('configsPage.ahamoveDialog.priceHelp')}</FieldDescription>
+                </Field>
+              </>
+            )}
+
+            {/* JSON Preview */}
+            <Field className='gap-1 pt-2'>
+              <FieldLabel>{t('configsPage.ahamoveDialog.jsonPreview')}</FieldLabel>
+              <pre className='overflow-x-auto rounded-md border bg-muted p-3 font-mono text-xs leading-relaxed text-foreground'>
+                {jsonPreview}
+              </pre>
+            </Field>
+          </form>
+        </div>
+
+        <DialogFooter className='pb-6 px-6'>
+          <Button type='button' variant='outline' disabled={isCreatingConfig} onClick={onClose}>
+            {t('configsPage.dialog.cancel')}
+          </Button>
+          <Button type='submit' form='ahamove-create-config-form' disabled={isCreatingConfig || !request}>
+            {isCreatingConfig ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
+            {isCreatingConfig ? t('configsPage.dialog.saving') : t('configsPage.dialog.save')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}

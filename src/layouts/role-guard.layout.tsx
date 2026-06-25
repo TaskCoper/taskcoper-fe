@@ -1,7 +1,12 @@
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
+import { useSignOut } from '@/features/auth/hooks/use-sign-out'
+import { Role } from '@/features/users/types'
 import { isRedirectLoop, useRoleHomePath } from '@/lib/feature-flags'
 import { getRoleHomePath, getUserType } from '@/shared/utils'
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Navigate, Outlet, useLocation } from 'react-router'
+import { toast } from 'sonner'
 
 export type RoleType = 'user' | 'orgAdmin' | 'superAdmin'
 
@@ -11,12 +16,34 @@ interface RoleGuardLayoutProps {
 }
 
 export default function RoleGuardLayout({ allowedRoles, allowedUserRoles }: RoleGuardLayoutProps) {
+  const { t } = useTranslation()
   const { me, isGettingMe } = useGetMe()
   const userType = getUserType(me)
   const userHomePath = useRoleHomePath()
   const location = useLocation()
+  const { signOut } = useSignOut()
+  const hasSignedOutRef = useRef(false)
 
-  if (isGettingMe) return null
+  const isNonAdmin = !!me && me.role !== Role.Admin
+
+  useEffect(() => {
+    if (!isNonAdmin || !me || hasSignedOutRef.current) {
+      return
+    }
+
+    hasSignedOutRef.current = true
+    toast.error(t('auth.signIn.adminOnly'))
+
+    signOut({ email: me.email })
+  }, [isNonAdmin, me, signOut, t])
+
+  if (isGettingMe) {
+    return null
+  }
+
+  if (isNonAdmin) {
+    return null
+  }
 
   if (userType && !allowedRoles.includes(userType)) {
     const roleHome = getRoleHomePath(userType)
@@ -29,6 +56,7 @@ export default function RoleGuardLayout({ allowedRoles, allowedUserRoles }: Role
     ) {
       return null
     }
+
     return <Navigate to={roleHome} replace />
   }
 
@@ -42,6 +70,7 @@ export default function RoleGuardLayout({ allowedRoles, allowedUserRoles }: Role
     ) {
       return null
     }
+
     return <Navigate to={userHomePath} replace />
   }
 

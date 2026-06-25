@@ -90,6 +90,10 @@ export default function MultiSelectField<T extends FieldValues>({
       .map((value) => optionMap.get(value))
       .filter((option): option is Option => Boolean(option))
 
+    const MAX_VISIBLE_BADGES = 3
+    const visibleOptions = selectedOptions.slice(0, MAX_VISIBLE_BADGES)
+    const hiddenCount = selectedOptions.length - visibleOptions.length
+
     const TriggerButton = (
       <Button
         variant='outline'
@@ -98,20 +102,16 @@ export default function MultiSelectField<T extends FieldValues>({
         aria-invalid={fieldInvalid}
         disabled={disabled}
         className={cn(
-          'justify-between font-normal py-2 h-8 px-1! w-fit max-w-full overflow-hidden gap-1',
+          'h-auto min-h-9 w-fit max-w-full justify-between gap-1 p-1! font-normal',
           fieldValues.length === 0 && 'text-muted-foreground',
           fieldInvalid && 'border-destructive focus-visible:ring-destructive',
           triggerClassName
         )}
       >
-        <div className='flex flex-nowrap items-center gap-1 flex-1 min-w-0 max-w-full overflow-hidden whitespace-nowrap'>
+        <div className='flex flex-1 min-w-0 max-w-full flex-nowrap items-center gap-1.5 overflow-hidden whitespace-nowrap p-0.5'>
           {fieldValues.length > 0 ? (
-            fieldValues.length > 100 ? (
-              <p className='truncate px-1'>
-                {fieldValues.length} {t('common.ui.selected')}
-              </p>
-            ) : (
-              selectedOptions.map((option) =>
+            <>
+              {visibleOptions.map((option) =>
                 customBadgeRender ? (
                   <div key={option.value} className='max-w-full shrink-0'>
                     {customBadgeRender(option)}
@@ -122,11 +122,16 @@ export default function MultiSelectField<T extends FieldValues>({
                     className={cn('rounded-sm max-w-24 shrink-0', badgeClassName)}
                     key={option.value}
                   >
-                    <span className='truncate max-w-24 block'>{option.label}</span>
+                    <span className='block max-w-24 truncate'>{option.label}</span>
                   </Badge>
                 )
-              )
-            )
+              )}
+              {hiddenCount > 0 && (
+                <Badge variant='outline' className='rounded-sm shrink-0 text-muted-foreground'>
+                  {t('common.ui.more', { count: hiddenCount })}
+                </Badge>
+              )}
+            </>
           ) : (
             <span className='truncate px-2'>{t(placeholder)}</span>
           )}

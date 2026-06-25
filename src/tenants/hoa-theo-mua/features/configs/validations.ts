@@ -32,6 +32,7 @@ export const configDefinitionSchema = z
       'switch',
       'date',
       'select',
+      'multiSelect',
       'json',
       'image',
       'address'
@@ -42,8 +43,8 @@ export const configDefinitionSchema = z
     options: z.array(inputOptionSchema).optional(),
     validations: z.array(validationRuleSchema).default([])
   })
-  .refine((d) => d.inputType !== 'select' || (d.options?.length ?? 0) > 0, {
-    message: "inputType 'select' phải có ít nhất 1 option",
+  .refine((d) => (d.inputType !== 'select' && d.inputType !== 'multiSelect') || (d.options?.length ?? 0) > 0, {
+    message: "inputType 'select' hoặc 'multiSelect' phải có ít nhất 1 option",
     path: ['options']
   })
 
@@ -119,6 +120,15 @@ export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
       break
     }
 
+    case 'multiSelect': {
+      // value is an array; each element must match one of option.value
+      const values = (def.options ?? []).map((o) => o.value)
+      let arr = z.array(literalUnion(values))
+      if (def.required) arr = arr.min(1, 'Bắt buộc chọn ít nhất 1 giá trị')
+      base = arr
+      break
+    }
+
     case 'json':
     case 'address':
       base = z.unknown()
@@ -160,6 +170,7 @@ export const validateConfigValue = (
 export const configExportSchema = z
   .object({
     key: z.string().max(200).regex(KEY_REGEX_STRICT, 'Key sai format group.sub_key'),
+    isPublic: z.boolean(),
     value: configDefinitionSchema
   })
   .refine((c) => c.value.group === c.key.split('.')[0], {
@@ -179,9 +190,9 @@ export const configExportSchema = z
 export type CreateConfigFormInput = z.input<typeof configExportSchema>
 export type CreateConfigFormValues = z.output<typeof configExportSchema>
 
-// Shared blank state for both create and update forms
 export const defaultConfigFormValues: CreateConfigFormInput = {
   key: '',
+  isPublic: false,
   value: {
     group: '',
     label: '',
@@ -192,8 +203,6 @@ export const defaultConfigFormValues: CreateConfigFormInput = {
     validations: []
   }
 }
-
-// ─── Import / export helpers (for future JSON import/export feature) ──────────
 
 export const assertKeyGroupConsistent = (key: string, group: string): void => {
   const prefix = key.split('.')[0]
@@ -228,6 +237,7 @@ export function inputTypeToValueType(inputType: InputType): 'string' | 'number' 
       return 'date'
     case 'json':
     case 'address':
+    case 'multiSelect':
       return 'json'
     case 'image':
       return 'string'

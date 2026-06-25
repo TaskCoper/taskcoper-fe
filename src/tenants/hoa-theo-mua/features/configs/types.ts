@@ -6,6 +6,7 @@ export const InputType = {
   switch: 'switch',
   date: 'date',
   select: 'select',
+  multiSelect: 'multiSelect',
   json: 'json',
   image: 'image',
   address: 'address'
@@ -21,6 +22,7 @@ export const InputTypeLabel: Record<InputType, string> = {
   [InputType.switch]: 'Switch',
   [InputType.date]: 'Date',
   [InputType.select]: 'Select',
+  [InputType.multiSelect]: 'Multi-Select',
   [InputType.json]: 'JSON',
   [InputType.image]: 'Image',
   [InputType.address]: 'Address'
@@ -58,11 +60,11 @@ export interface InputOption {
 export interface Config {
   id: string
   key: string
+  isPublic: boolean
   value: ConfigDefinition
   userId: string
 }
 
-// Tailwind color classes per input type — used for type badges across components
 export const INPUT_TYPE_COLOR: Record<InputType, string> = {
   [InputType.text]: 'text-red-500 bg-red-50',
   [InputType.textarea]: 'text-blue-500 bg-blue-50',
@@ -71,6 +73,7 @@ export const INPUT_TYPE_COLOR: Record<InputType, string> = {
   [InputType.switch]: 'text-purple-500 bg-purple-50',
   [InputType.date]: 'text-sky-500 bg-sky-50',
   [InputType.select]: 'text-indigo-500 bg-indigo-50',
+  [InputType.multiSelect]: 'text-pink-500 bg-pink-50',
   [InputType.json]: 'text-gray-500 bg-gray-50',
   [InputType.image]: 'text-sky-500 bg-sky-50',
   [InputType.address]: 'text-red-500 bg-red-50'
