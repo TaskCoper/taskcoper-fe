@@ -560,5 +560,126 @@
       "minDays": "Min days",
       "maxDays": "Max days"
     }
+  },
+  "configsPage": {
+    "dialog": {
+      "createTitle": "Add field",
+      "editTitle": "Edit field",
+      "delete": "Delete",
+      "keyField": "Key",
+      "keyPlaceholder": "e.g. general.api_key",
+      "groupField": "Group",
+      "labelField": "Label",
+      "labelPlaceholder": "Display name",
+      "inputTypeField": "Input type",
+      "defaultValueField": "Default value",
+      "defaultValuesField": "Default values",
+      "keyLockedHint": "Key is fixed for this config",
+      "optionsLockedHint": "{{count}} options are managed by the live API",
+      "descriptionField": "Description",
+      "descriptionPlaceholder": "Optional description",
+      "requiredField": "Required",
+      "requiredDesc": "This field must have a value",
+      "isPublicField": "Public",
+      "optionsSection": "Options",
+      "addOption": "Add option",
+      "optionLabelPlaceholder": "Label",
+      "optionValuePlaceholder": "Value",
+      "selectDefaultPlaceholder": "Pick a default value",
+      "selectDefaultsPlaceholder": "Pick default values",
+      "validationsSection": "Validations",
+      "addRule": "Add rule",
+      "noValidations": "No validation rules for this type",
+      "alwaysApplied": "always applied",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "validationRules": {
+        "minLength": "Min length",
+        "maxLength": "Max length",
+        "min": "Min value",
+        "max": "Max value",
+        "pattern": "Pattern (regex)",
+        "email": "Email format",
+        "url": "URL format",
+        "integer": "Integer only"
+      }
+    },
+    "breadcrumb": "Manage Configuration",
+    "fallbackTitle": "Configurations",
+    "country": {
+      "label": "Country",
+      "all": "All Countries",
+      "vn": "Vietnam",
+      "us": "United States"
+    },
+    "confirm": {
+      "deleteTitle": "Delete field?",
+      "deleteDescription": "This field will be permanently deleted and cannot be recovered.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "addSection": "Add New Section",
+    "cloneSection": "Clone Section",
+    "deleteSection": "Delete section",
+    "emptySection": "No fields in this section.",
+    "emptyPage": "No configurations found. Add a section to get started.",
+    "dragAndDrop": "Drag and drop",
+    "showField": "Show field",
+    "hideField": "Hide field",
+    "card": {
+      "editDefinition": "Edit definition",
+      "save": "Save",
+      "saving": "Saving...",
+      "required": "Required",
+      "multiSelectPlaceholder": "Pick options...",
+      "hints": {
+        "minLength": "Min {{n}} chars",
+        "maxLength": "Max {{n}} chars",
+        "min": "Min {{n}}",
+        "max": "Max {{n}}",
+        "email": "Email",
+        "url": "URL",
+        "integer": "Integer",
+        "pattern": "Regex"
+      }
+    },
+    "palette": {
+      "singleLineText": "Single line text",
+      "multiLineText": "Multi line text",
+      "checkbox": "Checkbox",
+      "dropdown": "Dropdown",
+      "multiSelect": "Multi-select",
+      "image": "Image",
+      "toggleButton": "Toggle button",
+      "dateAndTime": "Date and Time",
+      "address": "Address",
+      "defaultDepot": "Default depot",
+      "orderTags": "Order tags"
+    },
+    "lockedPalette": {
+      "title": "Async-backed"
+    },
+    "ahamovePalette": {
+      "title": "Ahamove Shipping Request",
+      "empty": "No shipping requests available"
+    },
+    "ahamoveDialog": {
+      "title": "Add Ahamove special request",
+      "labelField": "Display label",
+      "labelRequired": "Label is required",
+      "descriptionField": "Description",
+      "numField": "Quantity (num)",
+      "numHelp": "How many times this request is applied per order. Usually 1.",
+      "tierField": "Pricing tier",
+      "tierPlaceholder": "Pick a tier",
+      "tierRequired": "Tier is required",
+      "tierHelp": "The tier_code sent to Ahamove. Each tier maps to a different price (see codes in the dropdown).",
+      "nameField": "Item name",
+      "nameHelp": "Sent as the name of this special-request line.",
+      "priceField": "Price (VND)",
+      "priceHelp": "Declared item value in Vietnamese đồng. Used by Ahamove for compensation.",
+      "jsonPreview": "JSON preview"
+    }
   }
 }

@@ -1,14 +1,24 @@
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import configSystemService from '../services'
-import { CONFIG_RECORDS_QUERY_KEY } from './use-get-configs'
+import { toast } from 'sonner'
+import configService from '../services'
 
 export const useDeleteConfig = () => {
   const queryClient = useQueryClient()
+  const { t } = useTenantTranslation()
 
-  return useMutation({
-    mutationFn: ({ id }: { id: string }) => configSystemService.deleteConfigRecord({ id }),
+  const { mutate: deleteConfig, isPending: isDeletingConfig } = useMutation({
+    mutationFn: configService.deleteConfig,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CONFIG_RECORDS_QUERY_KEY })
+      toast.success(t('configKeys.toast.deleted'))
+    },
+    onError: () => {
+      toast.error(t('configKeys.toast.error'))
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['configs'] })
     }
   })
+
+  return { deleteConfig, isDeletingConfig }
 }

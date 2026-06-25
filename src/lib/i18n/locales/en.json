@@ -97,6 +97,7 @@
       "title": "Create New Password"
     },
     "signIn": {
+      "adminOnly": "Only administrators can sign in.",
       "button": "Let's go!",
       "description": "Sign in to your account to continue",
       "forgotPassword": "Forgot password?",

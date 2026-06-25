@@ -23,7 +23,7 @@ const NewsAddPage = lazy(() => import('./pages/news-add.page'))
 const NewsUpdatePage = lazy(() => import('./pages/news-update-page'))
 const NewsDetailPage = lazy(() => import('./pages/news-detail.page'))
 
-const SystemConfigsPage = lazy(() => import('./pages/system-configs.page'))
+const SystemConfigsPage = lazy(() => import('./pages/configs.page'))
 
 export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
   {

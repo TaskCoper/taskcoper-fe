@@ -1,16 +1,37 @@
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import configSystemService from '../services'
-import type { ConfigRecordValue } from '../types'
-import { CONFIG_RECORDS_QUERY_KEY } from './use-get-configs'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import configService from '../services'
+import {
+  configExportSchema,
+  defaultConfigFormValues,
+  type CreateConfigFormInput,
+  type CreateConfigFormValues
+} from '../validations'
 
-export const useUpdateConfig = () => {
+export const useUpdateConfig = (configId?: string) => {
   const queryClient = useQueryClient()
+  const { t } = useTenantTranslation()
 
-  return useMutation({
-    mutationFn: ({ id, body }: { id: string; body: { key: string; value: ConfigRecordValue } }) =>
-      configSystemService.updateConfigRecord({ id, body }),
+  const methods = useForm<CreateConfigFormInput, unknown, CreateConfigFormValues>({
+    defaultValues: defaultConfigFormValues,
+    resolver: zodResolver(configExportSchema)
+  })
+
+  const { mutate: updateConfig, isPending: isUpdatingConfig } = useMutation({
+    mutationFn: ({ body }: { body: CreateConfigFormValues }) => configService.updateConfig({ id: configId!, body }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CONFIG_RECORDS_QUERY_KEY })
+      toast.success(t('configKeys.toast.updated'))
+    },
+    onError: () => {
+      toast.error(t('configKeys.toast.error'))
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['configs'] })
     }
   })
+
+  return { methods, updateConfig, isUpdatingConfig }
 }

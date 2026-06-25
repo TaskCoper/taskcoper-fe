@@ -97,6 +97,7 @@
       "title": "Tạo mật khẩu mới"
     },
     "signIn": {
+      "adminOnly": "Chỉ quản trị viên mới có thể đăng nhập.",
       "button": "Vào thôi!",
       "description": "Đăng nhập để tiếp tục sử dụng tài khoản của bạn",
       "forgotPassword": "Quên mật khẩu?",
