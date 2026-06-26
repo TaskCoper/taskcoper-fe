@@ -241,13 +241,6 @@
         "open": "Open",
         "closed": "Closed"
       },
-      "level": {
-        "intern": "Intern",
-        "fresher": "Fresher",
-        "junior": "Junior",
-        "senior": "Senior",
-        "lead": "Lead / Expert"
-      },
       "actions": {
         "openMenu": "Open menu",
         "actions": "Actions",
@@ -272,7 +265,6 @@
         "description": "Description",
         "general": "General",
         "generalDescription": "Quick facts about this role.",
-        "level": "Level",
         "experience": "Experience",
         "experienceRange": "{{min}} - {{max}} years",
         "salary": "Salary",
@@ -325,14 +317,6 @@
             "max": "Maximum",
             "minPlaceholder": "0",
             "maxPlaceholder": "5"
-          },
-          "level": {
-            "label": "Level",
-            "intern": "Intern",
-            "fresher": "Fresher",
-            "junior": "Junior",
-            "senior": "Senior",
-            "lead": "Lead / Expert"
           },
           "salary": {
             "description": "Specify the salary range for this position.",
@@ -581,6 +565,7 @@
       "requiredField": "Required",
       "requiredDesc": "This field must have a value",
       "isPublicField": "Public",
+      "isPublicDescription": "Expose this config to client-side consumers",
       "optionsSection": "Options",
       "addOption": "Add option",
       "optionLabelPlaceholder": "Label",

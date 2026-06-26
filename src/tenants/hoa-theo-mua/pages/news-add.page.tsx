@@ -16,9 +16,11 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
-import { useState } from 'react'
+import { cn } from '@/shared/utils'
+import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, UploadIcon, XIcon } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { useAddArticle } from '../features/article/hooks/use-add-article'
@@ -40,6 +42,8 @@ export default function NewsAddPage() {
   const { methods, addArticle, isAddingArticle } = useAddArticle()
   const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
+  const pictureFileInputRef = useRef<HTMLInputElement>(null)
 
   const { fields, remove, replace } = useFieldArray({
     control: methods.control,
@@ -206,16 +210,53 @@ export default function NewsAddPage() {
                     control={methods.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid} className='gap-1'>
-                        <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                        <FieldLabel className='gap-0.5'>
                           {t(`${ARTICLE_FORM_PREFIX}.pictureLabel`)}
                           <span className='font-semibold text-destructive'>*</span>
                         </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          placeholder={t(`${ARTICLE_FORM_PREFIX}.picturePlaceholder`)}
-                          aria-invalid={fieldState.invalid}
+                        <input
+                          type='file'
+                          accept='image/*'
+                          className='hidden'
+                          ref={pictureFileInputRef}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            e.target.value = ''
+                            const url = await uploadFileWithToast({ file, showSuccessToast: false })
+                            if (url) field.onChange(url)
+                          }}
                         />
+                        <button
+                          type='button'
+                          className={cn(
+                            'relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed transition-colors',
+                            fieldState.invalid ? 'border-destructive' : 'border-border',
+                            field.value ? 'aspect-video p-0' : 'h-24 hover:bg-muted/50'
+                          )}
+                          onClick={() => pictureFileInputRef.current?.click()}
+                          disabled={isUploading}
+                        >
+                          {field.value ? (
+                            <>
+                              <img src={field.value} alt='' className='size-full object-cover' />
+                              <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
+                                {isUploading ? (
+                                  <Spinner className='size-5 text-white' />
+                                ) : (
+                                  <UploadIcon className='size-5 text-white' />
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <div className='flex flex-col items-center gap-1 text-muted-foreground'>
+                              {isUploading ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
+                              <span className='text-xs'>
+                                {isUploading ? t('common.ui.uploading') : t('common.button.upload')}
+                              </span>
+                            </div>
+                          )}
+                        </button>
                         <div className='min-h-4'>
                           {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                         </div>
@@ -279,7 +320,7 @@ export default function NewsAddPage() {
                     </div>
                   </DialogContent>
                 </Dialog>
-                <Button type='submit' disabled={isAddingArticle}>
+                <Button type='submit' disabled={isAddingArticle || isUploading}>
                   {isAddingArticle ? <Spinner data-icon='inline-start' /> : <SendIcon data-icon='inline-start' />}
                   {t(`${ARTICLE_FORM_PREFIX}.submit`)}
                 </Button>

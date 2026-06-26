@@ -8,9 +8,12 @@ import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { ImageOffIcon } from 'lucide-react'
+import { cn } from '@/shared/utils'
+import { ImageOffIcon, UploadIcon } from 'lucide-react'
+import { useRef } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
@@ -38,6 +41,11 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
   const avatarUrl = useWatch({ control, name: 'avatarUrl' })
   const coverImageUrl = useWatch({ control, name: 'coverImageUrl' })
   const salaryNegotiable = useWatch({ control, name: 'salaryNegotiable' })
+
+  const { uploadFileWithToast: uploadAvatar, isUploading: isUploadingAvatar } = useUploadFileWithToast()
+  const { uploadFileWithToast: uploadCover, isUploading: isUploadingCover } = useUploadFileWithToast()
+  const avatarFileInputRef = useRef<HTMLInputElement>(null)
+  const coverFileInputRef = useRef<HTMLInputElement>(null)
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-12 lg:gap-8'>
@@ -74,63 +82,93 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
 
           <div className='grid grid-cols-2 gap-4'>
             <div className='space-y-2'>
-              <div className='h-20 border border-border rounded-xl overflow-hidden'>
-                <ImagePreview src={avatarUrl ?? ''} alt='Avatar preview' />
-              </div>
               <Controller
                 name='avatarUrl'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className='gap-1'>
-                    <FieldLabel htmlFor={field.name} className='gap-0.5 text-xs'>
-                      {t('recruitment.jobs.form.field.avatarUrl.label')}
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      value={field.value ?? ''}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      placeholder={t('recruitment.jobs.form.field.avatarUrl.placeholder')}
-                      autoComplete='off'
-                      spellCheck={false}
-                      className='text-xs h-8'
-                      onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+                  <>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      ref={avatarFileInputRef}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        e.target.value = ''
+                        const url = await uploadAvatar({ file, showSuccessToast: false })
+                        if (url) field.onChange(url)
+                      }}
                     />
-                    <div className='min-h-4'>
-                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    <div
+                      className={cn(
+                        'relative h-20 border rounded-xl overflow-hidden cursor-pointer group',
+                        fieldState.invalid ? 'border-destructive' : 'border-border'
+                      )}
+                      onClick={() => avatarFileInputRef.current?.click()}
+                    >
+                      <ImagePreview src={avatarUrl ?? ''} alt='Avatar preview' />
+                      <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity'>
+                        {isUploadingAvatar ? (
+                          <Spinner className='size-4 text-white' />
+                        ) : (
+                          <UploadIcon className='size-4 text-white' />
+                        )}
+                      </div>
                     </div>
-                  </Field>
+                    <Field data-invalid={fieldState.invalid} className='gap-0.5'>
+                      <FieldLabel className='gap-0.5 text-xs'>
+                        {t('recruitment.jobs.form.field.avatarUrl.label')}
+                      </FieldLabel>
+                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    </Field>
+                  </>
                 )}
               />
             </div>
 
             <div className='space-y-2'>
-              <div className='h-20 border border-border rounded-xl overflow-hidden'>
-                <ImagePreview src={coverImageUrl ?? ''} alt='Cover preview' />
-              </div>
               <Controller
                 name='coverImageUrl'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className='gap-1'>
-                    <FieldLabel htmlFor={field.name} className='gap-0.5 text-xs'>
-                      {t('recruitment.jobs.form.field.coverImageUrl.label')}
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      value={field.value ?? ''}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      placeholder={t('recruitment.jobs.form.field.coverImageUrl.placeholder')}
-                      autoComplete='off'
-                      spellCheck={false}
-                      className='text-xs h-8'
-                      onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+                  <>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      ref={coverFileInputRef}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        e.target.value = ''
+                        const url = await uploadCover({ file, showSuccessToast: false })
+                        if (url) field.onChange(url)
+                      }}
                     />
-                    <div className='min-h-4'>
-                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    <div
+                      className={cn(
+                        'relative h-20 border rounded-xl overflow-hidden cursor-pointer group',
+                        fieldState.invalid ? 'border-destructive' : 'border-border'
+                      )}
+                      onClick={() => coverFileInputRef.current?.click()}
+                    >
+                      <ImagePreview src={coverImageUrl ?? ''} alt='Cover preview' />
+                      <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity'>
+                        {isUploadingCover ? (
+                          <Spinner className='size-4 text-white' />
+                        ) : (
+                          <UploadIcon className='size-4 text-white' />
+                        )}
+                      </div>
                     </div>
-                  </Field>
+                    <Field data-invalid={fieldState.invalid} className='gap-0.5'>
+                      <FieldLabel className='gap-0.5 text-xs'>
+                        {t('recruitment.jobs.form.field.coverImageUrl.label')}
+                      </FieldLabel>
+                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    </Field>
+                  </>
                 )}
               />
             </div>
@@ -296,54 +334,27 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
             )}
           />
 
-          <div className='grid grid-cols-2 gap-3'>
-            <Controller
-              name='employmentType'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='gap-1'>
-                  <FieldLabel htmlFor={field.name} className='gap-0.5 text-xs'>
-                    {t('recruitment.jobs.column.employmentType')}
-                  </FieldLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} size='sm'>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='0'>{t('recruitment.jobs.employmentType.fullTime')}</SelectItem>
-                      <SelectItem value='1'>{t('recruitment.jobs.employmentType.partTime')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name='level'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='gap-1'>
-                  <FieldLabel htmlFor={field.name} className='gap-0.5 text-xs'>
-                    {t('recruitment.jobs.form.field.level.label')}
-                  </FieldLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} size='sm'>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='0'>{t('recruitment.jobs.form.field.level.intern')}</SelectItem>
-                      <SelectItem value='1'>{t('recruitment.jobs.form.field.level.fresher')}</SelectItem>
-                      <SelectItem value='2'>{t('recruitment.jobs.form.field.level.junior')}</SelectItem>
-                      <SelectItem value='3'>{t('recruitment.jobs.form.field.level.senior')}</SelectItem>
-                      <SelectItem value='4'>{t('recruitment.jobs.form.field.level.lead')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          </div>
+          <Controller
+            name='employmentType'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-1'>
+                <FieldLabel htmlFor={field.name} className='gap-0.5 text-xs'>
+                  {t('recruitment.jobs.column.employmentType')}
+                </FieldLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} size='sm'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='0'>{t('recruitment.jobs.employmentType.fullTime')}</SelectItem>
+                    <SelectItem value='1'>{t('recruitment.jobs.employmentType.partTime')}</SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
 
           <Controller
             name='openings'

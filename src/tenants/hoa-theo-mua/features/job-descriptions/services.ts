@@ -6,16 +6,8 @@ import type { CreateJobDescriptionFormValues } from './validations'
 
 type JobDescriptionBody = Omit<
   CreateJobDescriptionFormValues,
-  | 'level'
-  | 'employmentType'
-  | 'status'
-  | 'openings'
-  | 'minExperienceYears'
-  | 'maxExperienceYears'
-  | 'salaryMin'
-  | 'salaryMax'
+  'employmentType' | 'status' | 'openings' | 'minExperienceYears' | 'maxExperienceYears' | 'salaryMin' | 'salaryMax'
 > & {
-  level: number
   employmentType: number
   status: number
   openings: number
@@ -27,7 +19,6 @@ type JobDescriptionBody = Omit<
 
 const toApiBody = (body: CreateJobDescriptionFormValues): JobDescriptionBody => ({
   ...body,
-  level: Number(body.level),
   employmentType: Number(body.employmentType),
   status: Number(body.status),
   openings: Number(body.openings),

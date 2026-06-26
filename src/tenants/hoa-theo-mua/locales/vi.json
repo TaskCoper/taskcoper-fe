@@ -241,13 +241,6 @@
         "open": "Đang tuyển",
         "closed": "Đã đóng"
       },
-      "level": {
-        "intern": "Thực tập sinh",
-        "fresher": "Fresher",
-        "junior": "Junior",
-        "senior": "Senior",
-        "lead": "Lead / Chuyên gia"
-      },
       "actions": {
         "openMenu": "Mở menu",
         "actions": "Hành động",
@@ -272,7 +265,6 @@
         "description": "Mô tả",
         "general": "Thông tin chung",
         "generalDescription": "Tóm tắt nhanh về vị trí này.",
-        "level": "Cấp độ",
         "experience": "Kinh nghiệm",
         "experienceRange": "{{min}} - {{max}} năm",
         "salary": "Mức lương",
@@ -325,14 +317,6 @@
             "max": "Tối đa",
             "minPlaceholder": "0",
             "maxPlaceholder": "5"
-          },
-          "level": {
-            "label": "Cấp độ",
-            "intern": "Thực tập sinh",
-            "fresher": "Fresher",
-            "junior": "Junior",
-            "senior": "Senior",
-            "lead": "Lead / Chuyên gia"
           },
           "salary": {
             "description": "Xác định mức lương cho vị trí này.",
@@ -581,6 +565,7 @@
       "requiredField": "Bắt buộc",
       "requiredDesc": "Trường này phải có giá trị",
       "isPublicField": "Công khai",
+      "isPublicDescription": "Hiển thị cấu hình này cho phía client",
       "optionsSection": "Tùy chọn",
       "addOption": "Thêm tùy chọn",
       "optionLabelPlaceholder": "Nhãn",

@@ -14,7 +14,6 @@ import {
   ChevronsRightIcon,
   CircleCheckBigIcon,
   CoinsIcon,
-  GraduationCapIcon,
   ImageOffIcon,
   MapPinIcon,
   PencilIcon,
@@ -30,7 +29,6 @@ import { useGetJobDescription } from '../features/job-descriptions/hooks/use-get
 import { useUpdateJobDescription } from '../features/job-descriptions/hooks/use-update-job-description'
 import {
   EmploymentTypeLabel,
-  JobDescriptionLevelLabel,
   JobDescriptionStatus,
   JobDescriptionStatusLabel
 } from '../features/job-descriptions/types'
@@ -78,11 +76,6 @@ export default function RecruitmentJobPage() {
       label: t('recruitment.jobs.column.employmentType'),
       value: jobDescription ? t(EmploymentTypeLabel[jobDescription.employmentType]) : null,
       icon: BriefcaseIcon
-    },
-    {
-      label: t('recruitment.jobs.detail.level'),
-      value: jobDescription ? t(JobDescriptionLevelLabel[jobDescription.level]) : null,
-      icon: GraduationCapIcon
     },
     {
       label: t('recruitment.jobs.detail.experience'),

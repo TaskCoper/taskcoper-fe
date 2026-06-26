@@ -12,7 +12,6 @@ import { createJobDescriptionSchema, type CreateJobDescriptionFormValues } from 
 const defaultValues: DefaultValues<CreateJobDescriptionFormValues> = {
   title: '',
   location: '',
-  level: '0',
   employmentType: '0',
   salaryNegotiable: false,
   description: '',

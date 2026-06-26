@@ -27,7 +27,6 @@ export const createJobDescriptionSchema = (t: TenantT) =>
       coverImageUrl: z.url({ message: t('common.validation.url.invalid') }),
       minExperienceYears: numericString(t),
       maxExperienceYears: numericString(t, { positive: true }),
-      level: z.enum(['0', '1', '2', '3', '4'], { message: t('common.validation.enum.invalid') }),
       employmentType: z.enum(['0', '1'], { message: t('common.validation.enum.invalid') }),
       salaryMin: numericString(t),
       salaryMax: numericString(t, { positive: true }),

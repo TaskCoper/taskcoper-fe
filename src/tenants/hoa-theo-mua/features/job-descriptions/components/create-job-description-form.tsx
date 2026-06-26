@@ -7,11 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CheckIcon, Circle } from 'lucide-react'
-import { useState } from 'react'
+import { CheckIcon, Circle, ImageIcon, UploadIcon } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
@@ -49,7 +50,7 @@ const STEPS = [
 ] as const
 
 const STEP_FIELDS: (keyof CreateJobDescriptionFormValues)[][] = [
-  ['title', 'location', 'openings', 'employmentType', 'level', 'status'],
+  ['title', 'location', 'openings', 'employmentType', 'status'],
   ['avatarUrl', 'coverImageUrl', 'description'],
   ['minExperienceYears', 'maxExperienceYears'],
   ['salaryMin', 'salaryMax', 'salaryNegotiable'],
@@ -168,7 +169,7 @@ function StepDetails() {
         />
       </div>
 
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-2 gap-4'>
         <Controller
           name='employmentType'
           control={control}
@@ -186,35 +187,6 @@ function StepDetails() {
                 <SelectContent>
                   <SelectItem value='0'>{t('recruitment.jobs.employmentType.fullTime')}</SelectItem>
                   <SelectItem value='1'>{t('recruitment.jobs.employmentType.partTime')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className='min-h-4'>
-                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-              </div>
-            </Field>
-          )}
-        />
-
-        <Controller
-          name='level'
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-1'>
-              <FieldLabel htmlFor={field.name} className='gap-0.5'>
-                {t('recruitment.jobs.form.field.level.label')}
-                <span className='text-destructive font-semibold'>*</span>
-              </FieldLabel>
-
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} size='sm'>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='0'>{t('recruitment.jobs.form.field.level.intern')}</SelectItem>
-                  <SelectItem value='1'>{t('recruitment.jobs.form.field.level.fresher')}</SelectItem>
-                  <SelectItem value='2'>{t('recruitment.jobs.form.field.level.junior')}</SelectItem>
-                  <SelectItem value='3'>{t('recruitment.jobs.form.field.level.senior')}</SelectItem>
-                  <SelectItem value='4'>{t('recruitment.jobs.form.field.level.lead')}</SelectItem>
                 </SelectContent>
               </Select>
               <div className='min-h-4'>
@@ -257,6 +229,10 @@ function StepDetails() {
 function StepJobDescription() {
   const { t } = useTenantTranslation()
   const { control } = useFormContext<CreateJobDescriptionFormValues>()
+  const { uploadFileWithToast: uploadAvatar, isUploading: isUploadingAvatar } = useUploadFileWithToast()
+  const { uploadFileWithToast: uploadCover, isUploading: isUploadingCover } = useUploadFileWithToast()
+  const avatarFileInputRef = useRef<HTMLInputElement>(null)
+  const coverFileInputRef = useRef<HTMLInputElement>(null)
 
   return (
     <div className='space-y-4'>
@@ -266,20 +242,53 @@ function StepJobDescription() {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1'>
-              <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              <FieldLabel className='gap-0.5'>
                 {t('recruitment.jobs.form.field.avatarUrl.label')}
                 <span className='text-destructive font-semibold'>*</span>
               </FieldLabel>
-              <Input
-                {...field}
-                value={field.value ?? ''}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={t('recruitment.jobs.form.field.avatarUrl.placeholder')}
-                autoComplete='off'
-                spellCheck={false}
-                onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+              <input
+                type='file'
+                accept='image/*'
+                className='hidden'
+                ref={avatarFileInputRef}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  e.target.value = ''
+                  const url = await uploadAvatar({ file, showSuccessToast: false })
+                  if (url) field.onChange(url)
+                }}
               />
+              <button
+                type='button'
+                className={cn(
+                  'relative flex h-28 w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border transition-colors',
+                  fieldState.invalid ? 'border-destructive' : 'border-border',
+                  !field.value && 'hover:bg-muted/50'
+                )}
+                onClick={() => avatarFileInputRef.current?.click()}
+                disabled={isUploadingAvatar}
+              >
+                {field.value ? (
+                  <>
+                    <img src={field.value} alt='' className='size-full object-cover' />
+                    <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
+                      {isUploadingAvatar ? (
+                        <Spinner className='size-5 text-white' />
+                      ) : (
+                        <UploadIcon className='size-5 text-white' />
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className='flex flex-col items-center gap-1 text-muted-foreground'>
+                    {isUploadingAvatar ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
+                    <span className='text-xs'>
+                      {isUploadingAvatar ? t('common.ui.uploading') : t('common.button.upload')}
+                    </span>
+                  </div>
+                )}
+              </button>
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
@@ -292,20 +301,53 @@ function StepJobDescription() {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className='gap-1'>
-              <FieldLabel htmlFor={field.name} className='gap-0.5'>
+              <FieldLabel className='gap-0.5'>
                 {t('recruitment.jobs.form.field.coverImageUrl.label')}
                 <span className='text-destructive font-semibold'>*</span>
               </FieldLabel>
-              <Input
-                {...field}
-                value={field.value ?? ''}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={t('recruitment.jobs.form.field.coverImageUrl.placeholder')}
-                autoComplete='off'
-                spellCheck={false}
-                onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+              <input
+                type='file'
+                accept='image/*'
+                className='hidden'
+                ref={coverFileInputRef}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  e.target.value = ''
+                  const url = await uploadCover({ file, showSuccessToast: false })
+                  if (url) field.onChange(url)
+                }}
               />
+              <button
+                type='button'
+                className={cn(
+                  'relative flex h-28 w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border transition-colors',
+                  fieldState.invalid ? 'border-destructive' : 'border-border',
+                  !field.value && 'hover:bg-muted/50'
+                )}
+                onClick={() => coverFileInputRef.current?.click()}
+                disabled={isUploadingCover}
+              >
+                {field.value ? (
+                  <>
+                    <img src={field.value} alt='' className='size-full object-cover' />
+                    <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
+                      {isUploadingCover ? (
+                        <Spinner className='size-5 text-white' />
+                      ) : (
+                        <UploadIcon className='size-5 text-white' />
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className='flex flex-col items-center gap-1 text-muted-foreground'>
+                    {isUploadingCover ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
+                    <span className='text-xs'>
+                      {isUploadingCover ? t('common.ui.uploading') : t('common.button.upload')}
+                    </span>
+                  </div>
+                )}
+              </button>
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
@@ -505,14 +547,6 @@ function StepReview() {
   const { t } = useTenantTranslation()
   const values = useWatch<CreateJobDescriptionFormValues>()
 
-  const levelLabels: Record<string, string> = {
-    '0': t('recruitment.jobs.form.field.level.intern'),
-    '1': t('recruitment.jobs.form.field.level.fresher'),
-    '2': t('recruitment.jobs.form.field.level.junior'),
-    '3': t('recruitment.jobs.form.field.level.senior'),
-    '4': t('recruitment.jobs.form.field.level.lead')
-  }
-
   const employmentTypeLabels: Record<string, string> = {
     '0': t('recruitment.jobs.employmentType.fullTime'),
     '1': t('recruitment.jobs.employmentType.partTime')
@@ -537,10 +571,6 @@ function StepReview() {
         <ReviewRow
           label={t('recruitment.jobs.column.employmentType')}
           value={values.employmentType ? employmentTypeLabels[values.employmentType] : null}
-        />
-        <ReviewRow
-          label={t('recruitment.jobs.form.field.level.label')}
-          value={values.level ? levelLabels[values.level] : null}
         />
         <ReviewRow
           label={t('recruitment.jobs.column.status')}

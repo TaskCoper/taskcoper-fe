@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
@@ -23,8 +24,10 @@ import {
   PencilIcon,
   SaveIcon,
   ToggleLeftIcon,
-  TypeIcon
+  TypeIcon,
+  UploadIcon
 } from 'lucide-react'
+import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import configService from '../services'
@@ -88,6 +91,8 @@ const getValidationHints = (
 export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
+  const { uploadFileWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
+  const imageFileInputRef = useRef<HTMLInputElement>(null)
 
   const initialValue =
     config.value.inputType === InputType.multiSelect
@@ -243,6 +248,46 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       }
+      case InputType.image:
+        return (
+          <Controller
+            name='value'
+            control={form.control}
+            render={({ field }) => (
+              <div className='flex items-center gap-2'>
+                <input
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  ref={imageFileInputRef}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    e.target.value = ''
+                    const url = await uploadFileWithToast({ file, showSuccessToast: false })
+                    if (url) field.onChange(url)
+                  }}
+                />
+                {field.value ? (
+                  <div className='h-8 w-8 shrink-0 overflow-hidden rounded border'>
+                    <img src={String(field.value)} alt='' className='size-full object-cover' />
+                  </div>
+                ) : null}
+                <Button
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  className={cn('h-8 flex-1 text-xs', !!errors.value && 'border-destructive')}
+                  onClick={() => imageFileInputRef.current?.click()}
+                  disabled={isUploadingImage}
+                >
+                  {isUploadingImage ? <Spinner data-icon='inline-start' /> : <UploadIcon data-icon='inline-start' />}
+                  {isUploadingImage ? t('common.ui.uploading') : t('common.button.upload')}
+                </Button>
+              </div>
+            )}
+          />
+        )
       default:
         return <Input className='h-8 text-sm' {...form.register('value')} aria-invalid={!!errors.value} />
     }

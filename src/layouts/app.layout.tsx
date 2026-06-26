@@ -1,5 +1,4 @@
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import BecomeMentorWidget from '@/components/mentor/become-mentor-widget'
 import ReactQueryProvider from '@/lib/react-query'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 import { Outlet } from 'react-router'
@@ -12,7 +11,7 @@ export default function AppLayout() {
         <Outlet />
         <Toaster position='top-right' />
         <ConfirmDialog />
-        <BecomeMentorWidget />
+        {/* <BecomeMentorWidget /> */}
       </ReactQueryProvider>
     </NuqsAdapter>
   )

@@ -16,9 +16,11 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { cn } from '@/shared/utils'
+import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, UploadIcon, XIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, useFieldArray } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
 import { useGetArticle } from '../features/article/hooks/use-get-article'
@@ -52,6 +54,8 @@ export default function NewsUpdatePage() {
   const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.id)
   const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
+  const pictureFileInputRef = useRef<HTMLInputElement>(null)
 
   const { fields, remove, replace } = useFieldArray({
     control: methods.control,
@@ -87,7 +91,7 @@ export default function NewsUpdatePage() {
   }
 
   const statusLabel = status === 1 ? t(`${ARTICLE_STATUS_PREFIX}.published`) : t(`${ARTICLE_STATUS_PREFIX}.draft`)
-  const isSubmitDisabled = isUpdatingArticle || !id
+  const isSubmitDisabled = isUpdatingArticle || !id || isUploading
 
   return (
     <div className='h-full overflow-y-auto flex flex-col gap-4 p-4 max-w-5xl mx-auto'>
@@ -231,16 +235,53 @@ export default function NewsUpdatePage() {
                     control={methods.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid} className='gap-1'>
-                        <FieldLabel htmlFor={field.name} className='gap-0.5'>
+                        <FieldLabel className='gap-0.5'>
                           {t(`${ARTICLE_FORM_PREFIX}.pictureLabel`)}
                           <span className='font-semibold text-destructive'>*</span>
                         </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          placeholder={t(`${ARTICLE_FORM_PREFIX}.picturePlaceholder`)}
-                          aria-invalid={fieldState.invalid}
+                        <input
+                          type='file'
+                          accept='image/*'
+                          className='hidden'
+                          ref={pictureFileInputRef}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            e.target.value = ''
+                            const url = await uploadFileWithToast({ file, showSuccessToast: false })
+                            if (url) field.onChange(url)
+                          }}
                         />
+                        <button
+                          type='button'
+                          className={cn(
+                            'relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed transition-colors',
+                            fieldState.invalid ? 'border-destructive' : 'border-border',
+                            field.value ? 'aspect-video p-0' : 'h-24 hover:bg-muted/50'
+                          )}
+                          onClick={() => pictureFileInputRef.current?.click()}
+                          disabled={isUploading}
+                        >
+                          {field.value ? (
+                            <>
+                              <img src={field.value} alt='' className='size-full object-cover' />
+                              <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
+                                {isUploading ? (
+                                  <Spinner className='size-5 text-white' />
+                                ) : (
+                                  <UploadIcon className='size-5 text-white' />
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <div className='flex flex-col items-center gap-1 text-muted-foreground'>
+                              {isUploading ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
+                              <span className='text-xs'>
+                                {isUploading ? t('common.ui.uploading') : t('common.button.upload')}
+                              </span>
+                            </div>
+                          )}
+                        </button>
                         <div className='min-h-4'>
                           {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                         </div>

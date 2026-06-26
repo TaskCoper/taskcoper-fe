@@ -26,26 +26,6 @@ export const JobDescriptionStatusLabel: Record<JobDescriptionStatus, string> = {
 
 export type JobDescriptionStatusLabel = (typeof JobDescriptionStatusLabel)[JobDescriptionStatus]
 
-export const JobDescriptionLevel = {
-  intern: 'intern',
-  fresher: 'fresher',
-  junior: 'junior',
-  middle: 'middle',
-  senior: 'senior'
-} as const
-
-export type JobDescriptionLevel = (typeof JobDescriptionLevel)[keyof typeof JobDescriptionLevel]
-
-export const JobDescriptionLevelLabel: Record<JobDescriptionLevel, string> = {
-  [JobDescriptionLevel.intern]: 'recruitment.jobs.level.intern',
-  [JobDescriptionLevel.fresher]: 'recruitment.jobs.level.fresher',
-  [JobDescriptionLevel.junior]: 'recruitment.jobs.level.junior',
-  [JobDescriptionLevel.middle]: 'recruitment.jobs.level.middle',
-  [JobDescriptionLevel.senior]: 'recruitment.jobs.level.senior'
-}
-
-export type JobDescriptionLevelLabel = (typeof JobDescriptionLevelLabel)[JobDescriptionLevel]
-
 export interface JobDescription {
   id: string
   slug: string
@@ -64,7 +44,6 @@ export interface JobDescriptionDetail extends JobDescription {
   coverImageUrl: string | null
   minExperienceYears: number
   maxExperienceYears: number
-  level: JobDescriptionLevel
   description: string
   createdAt: string
   updatedAt: string

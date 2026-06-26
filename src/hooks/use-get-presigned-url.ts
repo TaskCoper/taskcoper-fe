@@ -25,7 +25,7 @@ export const useGetPresignedUrl = () => {
     isPending: isGettingPresignedUrl
   } = useMutation({
     mutationFn: async ({ key, contentType }: GetPresignedUrlParams) => {
-      const { data } = await api.get<BaseResponse<GetPresignedUrlResponse>>('/v1/storages/presigned-url', {
+      const { data } = await api.get<BaseResponse<GetPresignedUrlResponse>>('taskcoper-api/v1/storages/presigned-url', {
         params: {
           key,
           contentType

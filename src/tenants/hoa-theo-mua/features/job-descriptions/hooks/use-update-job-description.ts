@@ -18,15 +18,6 @@ const STATUS_MAP: Record<string, CreateJobDescriptionFormValues['status']> = {
   closed: '1'
 }
 
-const LEVEL_MAP: Record<string, CreateJobDescriptionFormValues['level']> = {
-  intern: '0',
-  fresher: '1',
-  junior: '2',
-  middle: '3',
-  senior: '3',
-  lead: '4'
-}
-
 const toFormValues = (job: JobDescriptionDetail): CreateJobDescriptionFormValues => ({
   title: job.title,
   location: job.location,
@@ -34,7 +25,6 @@ const toFormValues = (job: JobDescriptionDetail): CreateJobDescriptionFormValues
   coverImageUrl: job.coverImageUrl ?? '',
   minExperienceYears: String(job.minExperienceYears),
   maxExperienceYears: String(job.maxExperienceYears),
-  level: LEVEL_MAP[job.level] ?? '0',
   employmentType: EMPLOYMENT_TYPE_MAP[job.employmentType] ?? '0',
   salaryMin: String(job.salaryMin),
   salaryMax: String(job.salaryMax),
