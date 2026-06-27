@@ -17,6 +17,8 @@ import {
   CheckCircle2Icon,
   ChevronDownIcon,
   Code2Icon,
+  ExternalLinkIcon,
+  FileIcon,
   HashIcon,
   ImageIcon,
   ListChecksIcon,
@@ -50,6 +52,7 @@ const INPUT_TYPE_ICON: Record<InputType, React.ReactNode> = {
   [InputType.multiSelect]: <ListChecksIcon className='size-3' />,
   [InputType.json]: <Code2Icon className='size-3' />,
   [InputType.image]: <ImageIcon className='size-3' />,
+  [InputType.file]: <FileIcon className='size-3' />,
   [InputType.address]: <MapPinIcon className='size-3' />
 }
 
@@ -88,11 +91,31 @@ const getValidationHints = (
     return []
   })
 
+const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
+
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
+
+const getUrlExtension = (url: string): string => {
+  const path = url.split('?')[0].split('#')[0]
+  const last = path.split('/').pop() ?? ''
+  const dot = last.lastIndexOf('.')
+  return dot >= 0 ? last.slice(dot + 1).toLowerCase() : ''
+}
+
+const isImageUrl = (url: string): boolean => IMAGE_EXTENSIONS.has(getUrlExtension(url))
+
+const getFilenameFromUrl = (url: string): string => {
+  const path = url.split('?')[0].split('#')[0]
+  return decodeURIComponent(path.split('/').pop() ?? url)
+}
+
 export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
-  const { uploadFileWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
+  const { uploadFileWithToast: uploadImageWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
+  const { uploadFileWithToast: uploadFileWithToastFn, isUploading: isUploadingFile } = useUploadFileWithToast()
   const imageFileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const initialValue =
     config.value.inputType === InputType.multiSelect
@@ -105,11 +128,14 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
   const { errors } = form.formState
 
   const { mutate: saveValue, isPending: isSavingValue } = useMutation({
-    mutationFn: (value: unknown) =>
-      configService.updateConfig({
+    mutationFn: (value: unknown) => {
+      const group = getGroupFromKey(config.key) || config.value.group
+
+      return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, isPublic: false, value: { ...config.value, value } }
-      }),
+        body: { key: config.key, group, isPublic: false, value: { ...config.value, group, value } }
+      })
+    },
     onSuccess: (_, saved) => {
       toast.success(t('configKeys.toast.updated'))
       form.reset({ value: saved })
@@ -264,7 +290,7 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
                     const file = e.target.files?.[0]
                     if (!file) return
                     e.target.value = ''
-                    const url = await uploadFileWithToast({ file, showSuccessToast: false })
+                    const url = await uploadImageWithToast({ file, showSuccessToast: false })
                     if (url) field.onChange(url)
                   }}
                 />
@@ -286,6 +312,100 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
                 </Button>
               </div>
             )}
+          />
+        )
+      case InputType.file:
+        return (
+          <Controller
+            name='value'
+            control={form.control}
+            render={({ field }) => {
+              const url = field.value ? String(field.value) : ''
+              const isImage = url ? isImageUrl(url) : false
+              const filename = url ? getFilenameFromUrl(url) : ''
+              const ext = url ? getUrlExtension(url) : ''
+
+              return (
+                <div className='flex items-center gap-2'>
+                  <input
+                    type='file'
+                    className='hidden'
+                    ref={fileInputRef}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      e.target.value = ''
+                      const uploadedUrl = await uploadFileWithToastFn({ file, showSuccessToast: false })
+                      if (uploadedUrl) field.onChange(uploadedUrl)
+                    }}
+                  />
+
+                  {url ? (
+                    <Card
+                      className={cn(
+                        'flex-row h-9 min-w-0 flex-1 items-center gap-2 shadow-none border bg-muted/30 py-1 pl-1.5 pr-2',
+                        !!errors.value && 'border-destructive'
+                      )}
+                    >
+                      {isImage ? (
+                        <div className='size-6 shrink-0 overflow-hidden rounded-md'>
+                          <img src={url} alt='' className='size-full object-cover' />
+                        </div>
+                      ) : (
+                        <div className='flex size-6 shrink-0 items-center justify-center rounded bg-background'>
+                          <FileIcon className='size-3.5 text-muted-foreground' />
+                        </div>
+                      )}
+                      <div className='flex min-w-0 flex-1 items-center gap-1.5'>
+                        <span className='truncate text-xs font-medium' title={filename}>
+                          {filename}
+                        </span>
+                        {ext && (
+                          <span className='shrink-0 rounded bg-muted px-1 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground'>
+                            {ext}
+                          </span>
+                        )}
+                      </div>
+                      <a
+                        href={url}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='shrink-0 text-muted-foreground transition-colors hover:text-foreground'
+                        title={t('common.button.open')}
+                      >
+                        <ExternalLinkIcon className='size-3.5' />
+                      </a>
+                    </Card>
+                  ) : (
+                    <div
+                      className={cn(
+                        'flex h-9 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-dashed bg-muted/10 px-2.5 text-xs text-muted-foreground',
+                        !!errors.value && 'border-destructive text-destructive'
+                      )}
+                    >
+                      <FileIcon className='size-3.5 shrink-0' />
+                      <span className='truncate'>{t('configsPage.card.noFile')}</span>
+                    </div>
+                  )}
+
+                  <Button
+                    type='button'
+                    variant='outline'
+                    size='sm'
+                    className='h-8 shrink-0 text-xs'
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingFile}
+                  >
+                    {isUploadingFile ? <Spinner data-icon='inline-start' /> : <UploadIcon data-icon='inline-start' />}
+                    {isUploadingFile
+                      ? t('common.ui.uploading')
+                      : url
+                        ? t('common.button.replace')
+                        : t('common.button.upload')}
+                  </Button>
+                </div>
+              )
+            }}
           />
         )
       default:

@@ -99,6 +99,7 @@ export default function AhamoveCreateConfigDialog({ open, onClose, request }: Ah
     const body: CreateConfigFormValues = {
       key: `ahamove.shipping.${normalizeAhamoveKey(request._id)}`,
       isPublic: false,
+      group: 'ahamove',
       value: {
         group: 'ahamove',
         label: values.label.trim() || localizedAhamoveName(request, locale),

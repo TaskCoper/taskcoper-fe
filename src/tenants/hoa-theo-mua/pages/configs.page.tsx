@@ -9,7 +9,7 @@ import {
   Calendar,
   CheckCircle2,
   ChevronDown,
-  ImageIcon,
+  FileIcon,
   ListChecks,
   MapPin,
   MoreVertical,
@@ -107,11 +107,11 @@ export default function ConfigsPage() {
         bg: 'bg-pink-50'
       },
       {
-        label: t('configsPage.palette.image'),
-        inputType: InputType.image,
-        icon: <ImageIcon className='size-4' />,
-        color: 'text-sky-500',
-        bg: 'bg-sky-50'
+        label: t('configsPage.palette.file'),
+        inputType: InputType.file,
+        icon: <FileIcon className='size-4' />,
+        color: 'text-orange-500',
+        bg: 'bg-orange-50'
       },
       {
         label: t('configsPage.palette.toggleButton'),
@@ -253,7 +253,7 @@ export default function ConfigsPage() {
 
   return (
     <div className='flex h-full min-h-0'>
-      <div className='flex min-w-0 flex-1 flex-col gap-4 p-6'>
+      <div className='flex flex-col gap-4 p-6 w-6xl mx-auto'>
         <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <span>{t('configsPage.breadcrumb')}</span>
           <ChevronDown className='size-3.5 -rotate-90' />

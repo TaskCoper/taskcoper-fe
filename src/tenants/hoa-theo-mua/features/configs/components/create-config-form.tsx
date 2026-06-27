@@ -1,6 +1,7 @@
 import { DatePickerField } from '@/components/date-picker-field'
 import MultiSelectField from '@/components/multi-select-field'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -10,10 +11,30 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { Plus, Trash2 } from 'lucide-react'
+import { cn } from '@/shared/utils'
+import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
+
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
+
+const getUrlExtension = (url: string): string => {
+  const path = url.split('?')[0].split('#')[0]
+  const last = path.split('/').pop() ?? ''
+  const dot = last.lastIndexOf('.')
+  return dot >= 0 ? last.slice(dot + 1).toLowerCase() : ''
+}
+
+const isImageLike = (url: string, mime?: string): boolean =>
+  (mime?.startsWith('image/') ?? false) || IMAGE_EXTENSIONS.has(getUrlExtension(url))
+
+const getDisplayName = (url: string, fallback?: string): string => {
+  if (fallback) return fallback
+  const path = url.split('?')[0].split('#')[0]
+  return decodeURIComponent(path.split('/').pop() ?? url)
+}
 
 const RULE_KEYS = ['minLength', 'maxLength', 'min', 'max', 'pattern', 'email', 'url', 'integer'] as const
 type RuleKey = (typeof RULE_KEYS)[number]
@@ -24,19 +45,34 @@ const AVAILABLE_VALIDATIONS: Partial<Record<InputType, RuleKey[]>> = {
   [InputType.text]: ['minLength', 'maxLength', 'pattern', 'email', 'url'],
   [InputType.textarea]: ['minLength', 'maxLength', 'pattern'],
   [InputType.number]: ['min', 'max', 'integer'],
-  [InputType.image]: ['url']
+  [InputType.image]: ['url'],
+  [InputType.file]: ['url']
 }
 
 const getRuleKey = (item: Record<string, unknown>): RuleKey | undefined => RULE_KEYS.find((k) => k in item)
 
+const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
+
 export interface CreateConfigFormProps {
   lockedFields?: { key?: boolean; options?: boolean }
+  onPendingFileChange?: (file: File | null) => void
 }
 
-export default function CreateConfigForm({ lockedFields }: CreateConfigFormProps = {}) {
+export default function CreateConfigForm({ lockedFields, onPendingFileChange }: CreateConfigFormProps = {}) {
   const { t } = useTenantTranslation()
   const lockKey = !!lockedFields?.key
   const lockOptions = !!lockedFields?.options
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pendingFileMeta, setPendingFileMeta] = useState<{ previewUrl: string; name: string; mime: string } | null>(
+    null
+  )
+
+  useEffect(() => {
+    return () => {
+      if (pendingFileMeta?.previewUrl) URL.revokeObjectURL(pendingFileMeta.previewUrl)
+    }
+  }, [pendingFileMeta?.previewUrl])
+
   const {
     control,
     register,
@@ -138,6 +174,91 @@ export default function CreateConfigForm({ lockedFields }: CreateConfigFormProps
       case InputType.select:
       case InputType.multiSelect:
         return null
+      case InputType.file:
+        return (
+          <Controller
+            name='value.value'
+            control={control}
+            render={({ field, fieldState }) => {
+              const stored = field.value ? String(field.value) : ''
+              const hasPending = !!pendingFileMeta
+              const previewSrc = hasPending ? pendingFileMeta!.previewUrl : stored
+              const displayName = hasPending ? pendingFileMeta!.name : stored ? getDisplayName(stored) : ''
+              const isImage = hasPending
+                ? isImageLike(pendingFileMeta!.previewUrl, pendingFileMeta!.mime)
+                : stored
+                  ? isImageLike(stored)
+                  : false
+
+              return (
+                <div className='space-y-3'>
+                  {previewSrc ? (
+                    isImage ? (
+                      <div className='w-full h-auto shrink-0 overflow-hidden rounded-2xl shadow border border-border'>
+                        <img src={previewSrc} alt='' className='size-full object-cover' />
+                      </div>
+                    ) : (
+                      <div className='flex items-center gap-1'>
+                        <Card className='flex-1 flex-row items-center gap-1.5 p-2 rounded-lg' title={displayName}>
+                          <FileIcon className='size-3.5 shrink-0' />
+                          <span className='max-w-40 truncate text-sm'>{displayName}</span>
+                        </Card>
+
+                        {(previewSrc || hasPending) && (
+                          <Button
+                            type='button'
+                            variant='ghost'
+                            size='icon'
+                            className='size-9 shrink-0 text-muted-foreground hover:text-destructive'
+                            onClick={() => {
+                              if (pendingFileMeta?.previewUrl) URL.revokeObjectURL(pendingFileMeta.previewUrl)
+                              setPendingFileMeta(null)
+                              onPendingFileChange?.(null)
+                              field.onChange(undefined)
+                            }}
+                          >
+                            <Trash2 className='size-3.5' />
+                          </Button>
+                        )}
+                      </div>
+                    )
+                  ) : null}
+
+                  <div className='flex items-center gap-2'>
+                    <input
+                      type='file'
+                      className='hidden'
+                      ref={fileInputRef}
+                      onChange={(e) => {
+                        const picked = e.target.files?.[0]
+                        e.target.value = ''
+                        if (!picked) return
+                        if (pendingFileMeta?.previewUrl) URL.revokeObjectURL(pendingFileMeta.previewUrl)
+                        const previewUrl = URL.createObjectURL(picked)
+                        setPendingFileMeta({ previewUrl, name: picked.name, mime: picked.type })
+                        onPendingFileChange?.(picked)
+                        // Set a non-empty marker so `required` validation passes; the dialog
+                        // replaces it with the uploaded URL on submit.
+                        field.onChange(previewUrl)
+                      }}
+                    />
+
+                    <Button
+                      type='button'
+                      variant='outline'
+                      size='sm'
+                      className={cn('flex-1 text-xs', fieldState.invalid && 'border-destructive')}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <UploadIcon data-icon='inline-start' />
+                      {previewSrc ? t('configsPage.dialog.replaceFile') : t('configsPage.dialog.chooseFile')}
+                    </Button>
+                  </div>
+                </div>
+              )
+            }}
+          />
+        )
       default:
         return <Input {...register('value.value')} />
     }
@@ -165,8 +286,9 @@ export default function CreateConfigForm({ lockedFields }: CreateConfigFormProps
                 onChange={(e) => {
                   if (lockKey) return
                   field.onChange(e)
-                  const prefix = e.target.value.split('.')[0]
-                  if (prefix) setValue('value.group', prefix)
+                  const group = getGroupFromKey(e.target.value)
+                  setValue('group', group)
+                  setValue('value.group', group)
                 }}
               />
               <div className='min-h-4'>
@@ -189,9 +311,9 @@ export default function CreateConfigForm({ lockedFields }: CreateConfigFormProps
                 {t('configsPage.dialog.groupField')}
                 <span className='font-semibold text-destructive'>*</span>
               </FieldLabel>
-              <Input {...field} id='cfg-group' aria-invalid={fieldState.invalid} disabled={lockKey} />
+              <Input {...field} id='cfg-group' aria-invalid={fieldState.invalid} disabled />
               <div className='min-h-4'>
-                {!lockKey && fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
             </Field>
           )}

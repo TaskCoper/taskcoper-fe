@@ -35,6 +35,7 @@ export const configDefinitionSchema = z
       'multiSelect',
       'json',
       'image',
+      'file',
       'address'
     ]),
     value: z.unknown(),
@@ -134,7 +135,8 @@ export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
       base = z.unknown()
       break
 
-    case 'image': {
+    case 'image':
+    case 'file': {
       let s = applyStringRules(z.string(), def.validations)
       if (def.required) s = s.min(1, 'Bắt buộc nhập')
       base = s
@@ -171,7 +173,8 @@ export const configExportSchema = z
   .object({
     key: z.string().max(200).regex(KEY_REGEX_STRICT, 'Key sai format group.sub_key'),
     isPublic: z.boolean(),
-    value: configDefinitionSchema
+    value: configDefinitionSchema,
+    group: z.string().min(2).max(100)
   })
   .refine((c) => c.value.group === c.key.split('.')[0], {
     message: 'value.group phải khớp prefix của key',
@@ -193,6 +196,7 @@ export type CreateConfigFormValues = z.output<typeof configExportSchema>
 export const defaultConfigFormValues: CreateConfigFormInput = {
   key: '',
   isPublic: false,
+  group: '',
   value: {
     group: '',
     label: '',
@@ -240,6 +244,7 @@ export function inputTypeToValueType(inputType: InputType): 'string' | 'number' 
     case 'multiSelect':
       return 'json'
     case 'image':
+    case 'file':
       return 'string'
     default:
       return 'string' // text, textarea, select

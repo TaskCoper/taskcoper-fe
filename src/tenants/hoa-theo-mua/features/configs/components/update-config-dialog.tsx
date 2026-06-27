@@ -3,15 +3,16 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { SaveIcon, Trash2 } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useDeleteConfig } from '../hooks/use-delete-config'
 import { useUpdateConfig } from '../hooks/use-update-config'
 import { isLockedAsyncConfigKey } from '../locked-config-keys'
-import type { Config } from '../types'
+import { InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
 import UpdateConfigForm from './update-config-form'
 
@@ -22,30 +23,64 @@ interface UpdateConfigDialogProps {
   liveOptionsByKey?: Record<string, { label: string; value: string | number }[]>
 }
 
+const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
+
 export default function UpdateConfigDialog({ open, config, onClose, liveOptionsByKey }: UpdateConfigDialogProps) {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
   const { methods, updateConfig, isUpdatingConfig } = useUpdateConfig(config?.id)
   const { deleteConfig, isDeletingConfig } = useDeleteConfig()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
 
   const isLocked = isLockedAsyncConfigKey(config?.key)
 
   useEffect(() => {
     if (open && config) {
       const liveOptions = config.key ? liveOptionsByKey?.[config.key] : undefined
+      const group = getGroupFromKey(config.key) || config.value.group
       methods.reset({
         key: config.key,
+        group,
         isPublic: config.isPublic ?? false,
         value: {
           ...(config.value as CreateConfigFormValues['value']),
+          group,
           options: liveOptions ?? (config.value as CreateConfigFormValues['value']).options
         }
       })
     }
   }, [open, config, methods, liveOptionsByKey])
 
-  const onSubmit: SubmitHandler<CreateConfigFormValues> = (body) => {
-    updateConfig({ body }, { onSuccess: onClose })
+  const handleClose = () => {
+    setPendingFile(null)
+    onClose()
+  }
+
+  const onSubmit: SubmitHandler<CreateConfigFormValues> = async (body) => {
+    const group = getGroupFromKey(body.key) || body.value.group
+    let resolvedValue = body.value.value
+
+    if (pendingFile && body.value.inputType === InputType.file) {
+      const url = await uploadFileWithToast({ file: pendingFile, showSuccessToast: false })
+      if (!url) return
+      resolvedValue = url
+    }
+
+    updateConfig(
+      {
+        body: {
+          ...body,
+          group,
+          value: {
+            ...body.value,
+            group,
+            value: resolvedValue
+          }
+        }
+      },
+      { onSuccess: handleClose }
+    )
   }
 
   const handleDelete = async () => {
@@ -58,13 +93,13 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
       variant: 'destructive'
     })
     if (!confirmed) return
-    deleteConfig({ id: config.id }, { onSuccess: onClose })
+    deleteConfig({ id: config.id }, { onSuccess: handleClose })
   }
 
-  const isSubmitting = isUpdatingConfig || isDeletingConfig
+  const isSubmitting = isUpdatingConfig || isDeletingConfig || isUploading
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+    <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
       <DialogContent position='top-center' className='flex max-w-xl flex-col gap-0 p-0'>
         <DialogHeader className='px-6 pt-6 pb-4'>
           <DialogTitle>{t('configsPage.dialog.editTitle')}</DialogTitle>
@@ -73,7 +108,10 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
         <div className='flex-1 overflow-y-auto px-6'>
           <FormProvider {...methods}>
             <form id='update-config-form' onSubmit={methods.handleSubmit(onSubmit)} className='pb-4'>
-              <UpdateConfigForm lockedFields={isLocked ? { key: true, options: true } : undefined} />
+              <UpdateConfigForm
+                lockedFields={isLocked ? { key: true, options: true } : undefined}
+                onPendingFileChange={setPendingFile}
+              />
               <Controller
                 name='isPublic'
                 control={methods.control}
@@ -114,7 +152,7 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
             <Trash2 className='size-3.5' />
             {t('configsPage.dialog.delete')}
           </Button>
-          <Button type='button' variant='outline' disabled={isSubmitting} onClick={onClose}>
+          <Button type='button' variant='outline' disabled={isSubmitting} onClick={handleClose}>
             {t('configsPage.dialog.cancel')}
           </Button>
           <Button type='submit' form='update-config-form' disabled={isSubmitting}>
