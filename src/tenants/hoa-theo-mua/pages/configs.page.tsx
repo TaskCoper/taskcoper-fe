@@ -4,29 +4,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import {
-  AlignLeft,
-  Calendar,
-  CheckCircle2,
-  ChevronDown,
-  FileIcon,
-  ListChecks,
-  MapPin,
-  MoreVertical,
-  Plus,
-  Tags,
-  ToggleLeft,
-  Truck,
-  Type,
-  Warehouse
-} from 'lucide-react'
+import { ChevronDown, MoreVertical, Plus } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
+import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
+import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
+import OccasionsCollectionDialog from '../features/configs/components/occasions-collection-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
+import { FEEDBACKS_COLLECTION_KEY } from '../features/configs/feedbacks-palette'
 import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
+import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
 import type { Config, InputOption } from '../features/configs/types'
 import { InputType } from '../features/configs/types'
 import type { CreateConfigFormInput } from '../features/configs/validations'
@@ -36,6 +26,14 @@ import { useGetOrderTags } from '../hooks/use-get-order-tags'
 import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
 type LockedFields = { key?: boolean; options?: boolean }
+
+interface LockedPaletteItem {
+  key: string
+  label: string
+  inputType: InputType
+  options: InputOption[]
+  defaultValue: unknown
+}
 
 export default function ConfigsPage() {
   const { t, i18n } = useTenantTranslation()
@@ -50,6 +48,8 @@ export default function ConfigsPage() {
   const [selectedAhamoveRequest, setSelectedAhamoveRequest] = useState<AhamoveServiceRequest | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<Config | null>(null)
+  const [occasionsDialogOpen, setOccasionsDialogOpen] = useState(false)
+  const [feedbacksDialogOpen, setFeedbacksDialogOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
     () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
@@ -67,101 +67,6 @@ export default function ConfigsPage() {
       [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions
     }),
     [depotOptions, orderTagOptions]
-  )
-
-  const genericPalette = useMemo(
-    () => [
-      {
-        label: t('configsPage.palette.singleLineText'),
-        inputType: InputType.text,
-        icon: <Type className='size-4' />,
-        color: 'text-red-500',
-        bg: 'bg-red-50'
-      },
-      {
-        label: t('configsPage.palette.multiLineText'),
-        inputType: InputType.textarea,
-        icon: <AlignLeft className='size-4' />,
-        color: 'text-blue-500',
-        bg: 'bg-blue-50'
-      },
-      {
-        label: t('configsPage.palette.checkbox'),
-        inputType: InputType.boolean,
-        icon: <CheckCircle2 className='size-4' />,
-        color: 'text-yellow-500',
-        bg: 'bg-yellow-50'
-      },
-      {
-        label: t('configsPage.palette.dropdown'),
-        inputType: InputType.select,
-        icon: <ChevronDown className='size-4' />,
-        color: 'text-indigo-600',
-        bg: 'bg-indigo-50'
-      },
-      {
-        label: t('configsPage.palette.multiSelect'),
-        inputType: InputType.multiSelect,
-        icon: <ListChecks className='size-4' />,
-        color: 'text-pink-600',
-        bg: 'bg-pink-50'
-      },
-      {
-        label: t('configsPage.palette.file'),
-        inputType: InputType.file,
-        icon: <FileIcon className='size-4' />,
-        color: 'text-orange-500',
-        bg: 'bg-orange-50'
-      },
-      {
-        label: t('configsPage.palette.toggleButton'),
-        inputType: InputType.switch,
-        icon: <ToggleLeft className='size-4' />,
-        color: 'text-purple-500',
-        bg: 'bg-purple-50'
-      },
-      {
-        label: t('configsPage.palette.dateAndTime'),
-        inputType: InputType.date,
-        icon: <Calendar className='size-4' />,
-        color: 'text-blue-500',
-        bg: 'bg-blue-50'
-      },
-      {
-        label: t('configsPage.palette.address'),
-        inputType: InputType.address,
-        icon: <MapPin className='size-4' />,
-        color: 'text-red-500',
-        bg: 'bg-red-50'
-      }
-    ],
-    [t]
-  )
-
-  const lockedPalette = useMemo(
-    () => [
-      {
-        key: LOCKED_ASYNC_CONFIG_KEYS.defaultDepot,
-        label: t('configsPage.palette.defaultDepot'),
-        inputType: InputType.select,
-        icon: <Warehouse className='size-4' />,
-        color: 'text-emerald-600',
-        bg: 'bg-emerald-50',
-        options: depotOptions,
-        defaultValue: undefined as unknown
-      },
-      {
-        key: LOCKED_ASYNC_CONFIG_KEYS.orderTags,
-        label: t('configsPage.palette.orderTags'),
-        inputType: InputType.multiSelect,
-        icon: <Tags className='size-4' />,
-        color: 'text-amber-600',
-        bg: 'bg-amber-50',
-        options: orderTagOptions,
-        defaultValue: [] as unknown
-      }
-    ],
-    [depotOptions, orderTagOptions, t]
   )
 
   const groups = useMemo(() => {
@@ -215,7 +120,7 @@ export default function ConfigsPage() {
   )
 
   const openLockedPaletteCreate = useCallback(
-    (item: { key: string; label: string; inputType: InputType; options: InputOption[]; defaultValue: unknown }) => {
+    (item: LockedPaletteItem) => {
       const existing = configs?.find((c) => c.key === item.key)
       if (existing) {
         setEditingConfig(existing)
@@ -242,7 +147,18 @@ export default function ConfigsPage() {
     [configs, openCreate]
   )
 
+  const occasionsConfig = useMemo(() => configs?.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null, [configs])
+  const feedbacksConfig = useMemo(() => configs?.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null, [configs])
+
   const openEdit = useCallback((config: Config) => {
+    if (config.key === OCCASIONS_COLLECTION_KEY) {
+      setOccasionsDialogOpen(true)
+      return
+    }
+    if (config.key === FEEDBACKS_COLLECTION_KEY) {
+      setFeedbacksDialogOpen(true)
+      return
+    }
     setEditingConfig(config)
     setEditOpen(true)
   }, [])
@@ -257,7 +173,7 @@ export default function ConfigsPage() {
         <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <span>{t('configsPage.breadcrumb')}</span>
           <ChevronDown className='size-3.5 -rotate-90' />
-          <span className='capitalize'>{currentGroup || '—'}</span>
+          <span className='capitalize'>{currentGroup || '-'}</span>
         </nav>
 
         <div className='flex items-start justify-between'>
@@ -337,94 +253,20 @@ export default function ConfigsPage() {
         )}
       </div>
 
-      {/* Right sidebar — field palette */}
-      <div className='w-80 shrink-0 overflow-y-auto border-l p-2'>
-        <div className='space-y-2'>
-          {genericPalette.map((item) => (
-            <button
-              key={item.label}
-              type='button'
-              className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
-              onClick={() => openStaticPaletteCreate(item.inputType)}
-            >
-              <span className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', item.bg, item.color)}>
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className='mt-4 border-t pt-3'>
-          <div className='mb-2 px-2 text-sm font-medium'>{t('configsPage.lockedPalette.title')}</div>
-          <div className='space-y-2'>
-            {lockedPalette.map((item) => (
-              <button
-                key={item.key}
-                type='button'
-                className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
-                onClick={() => openLockedPaletteCreate(item)}
-              >
-                <span
-                  className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', item.bg, item.color)}
-                >
-                  {item.icon}
-                </span>
-                <span className='truncate'>{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className='mt-4 border-t pt-3'>
-          <div className='mb-2 px-2 text-sm font-medium'>{t('configsPage.ahamovePalette.title')}</div>
-
-          {isGettingAhamoveService ? (
-            <div className='space-y-2'>
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className='h-8 w-full' />
-              ))}
-            </div>
-          ) : ahamoveRequests.length === 0 ? (
-            <p className='px-2 text-xs text-muted-foreground'>{t('configsPage.ahamovePalette.empty')}</p>
-          ) : (
-            <div className='space-y-2'>
-              {ahamoveRequests.map((request) => {
-                const label =
-                  (i18n.language?.toLowerCase().startsWith('vi') ? request.name_vi_vn : request.name_en_us) ||
-                  request.name ||
-                  request._id
-
-                return (
-                  <button
-                    key={request._id}
-                    type='button'
-                    className='flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
-                    onClick={() => setSelectedAhamoveRequest(request)}
-                    title={label}
-                  >
-                    <span className='flex size-6 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-600'>
-                      {request.icon_url ? (
-                        <img
-                          src={request.icon_url}
-                          alt=''
-                          className='size-4 object-contain'
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none'
-                          }}
-                        />
-                      ) : (
-                        <Truck className='size-4' />
-                      )}
-                    </span>
-                    <span className='truncate'>{label}</span>
-                  </button>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      </div>
+      <ConfigPaletteSidebar
+        depotOptions={depotOptions}
+        orderTagOptions={orderTagOptions}
+        occasionsConfig={occasionsConfig}
+        feedbacksConfig={feedbacksConfig}
+        ahamoveRequests={ahamoveRequests}
+        isGettingAhamoveService={isGettingAhamoveService}
+        language={i18n.language}
+        onCreateStatic={openStaticPaletteCreate}
+        onCreateLocked={openLockedPaletteCreate}
+        onOpenOccasions={() => setOccasionsDialogOpen(true)}
+        onOpenFeedbacks={() => setFeedbacksDialogOpen(true)}
+        onSelectAhamove={setSelectedAhamoveRequest}
+      />
 
       <CreateConfigDialog
         open={createOpen}
@@ -444,6 +286,18 @@ export default function ConfigsPage() {
         config={editingConfig}
         onClose={closeEdit}
         liveOptionsByKey={liveOptionsByKey}
+      />
+
+      <OccasionsCollectionDialog
+        open={occasionsDialogOpen}
+        onClose={() => setOccasionsDialogOpen(false)}
+        existingConfig={occasionsConfig}
+      />
+
+      <FeedbacksCollectionDialog
+        open={feedbacksDialogOpen}
+        onClose={() => setFeedbacksDialogOpen(false)}
+        existingConfig={feedbacksConfig}
       />
     </div>
   )

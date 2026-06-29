@@ -621,6 +621,10 @@
       "required": "Bắt buộc",
       "noFile": "Chưa có tệp",
       "multiSelectPlaceholder": "Chọn các lựa chọn...",
+      "public": "Công khai",
+      "publicTooltip": "Cho phép client truy cập config này",
+      "complexValue": "Giá trị phức hợp",
+      "openEditor": "Mở trình chỉnh sửa",
       "hints": {
         "minLength": "Tối thiểu {{n}} ký tự",
         "maxLength": "Tối đa {{n}} ký tự",
@@ -633,6 +637,7 @@
       }
     },
     "palette": {
+      "title": "Trường dữ liệu",
       "singleLineText": "Văn bản một dòng",
       "multiLineText": "Văn bản nhiều dòng",
       "checkbox": "Hộp kiểm",
@@ -648,9 +653,153 @@
     "lockedPalette": {
       "title": "Nguồn API"
     },
+    "customPalette": {
+      "title": "Bảng tuỳ chỉnh"
+    },
     "ahamovePalette": {
       "title": "Yêu cầu giao hàng Ahamove",
       "empty": "Chưa có yêu cầu giao hàng khả dụng"
+    },
+    "occasionsPalette": {
+      "title": "Mục bộ sưu tập theo dịp",
+      "openEditor": "Mở trình soạn thảo",
+      "emptyHint": "Chưa có thẻ dịp nào - bấm để bắt đầu",
+      "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
+    },
+    "feedbacksPalette": {
+      "title": "Feedback khách hàng",
+      "openEditor": "Mở trình soạn thảo",
+      "emptyHint": "Chưa có feedback nào - bấm để bắt đầu",
+      "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
+    },
+    "occasionsDialog": {
+      "title": "Bộ sưu tập theo dịp",
+      "subtitle": "Thêm bao nhiêu thẻ dịp tuỳ ý. Mỗi thẻ có 1 đường dẫn riêng và lọc theo danh mục sản phẩm.",
+      "configLabel": "Bộ sưu tập dịp tặng",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "English"
+      },
+      "section": {
+        "title": "Phần đầu mục",
+        "subtitle": "Tiêu đề và mô tả hiển thị trên đầu khu vực.",
+        "enabled": "Hiển thị",
+        "titleField": "Tiêu đề",
+        "titlePlaceholder": "vd: Bộ sưu tập theo dịp",
+        "descriptionField": "Mô tả ngắn",
+        "descriptionPlaceholder": "Một câu giới thiệu ngắn cho khu vực"
+      },
+      "cards": {
+        "title": "Danh sách thẻ dịp",
+        "subtitle": "{{count}} thẻ. Kéo thứ tự bằng nút mũi tên ở cuối hàng.",
+        "add": "Thêm thẻ dịp",
+        "empty": "Chưa có thẻ nào. Bấm \"Thêm thẻ dịp\" để bắt đầu."
+      },
+      "card": {
+        "untitled": "Thẻ #{{index}} (chưa đặt tên)",
+        "noSlug": "(chưa có đường dẫn)",
+        "disabled": "Đang ẩn",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xoá thẻ",
+        "image": "Ảnh thẻ",
+        "uploadImage": "Tải ảnh lên",
+        "replaceImage": "Đổi ảnh",
+        "badgeField": "Tên dịp (thẻ nhỏ)",
+        "badgePlaceholder": "vd: Sinh nhật",
+        "nameField": "Tên bộ sưu tập",
+        "namePlaceholder": "vd: Hoa sinh nhật",
+        "descriptionField": "Mô tả ngắn",
+        "descriptionPlaceholder": "Câu mô tả hiện dưới tên thẻ",
+        "slugField": "Đường dẫn (URL)",
+        "slugHelp": "Tạo tự động từ tên. Chỉ dùng chữ thường, số, gạch ngang.",
+        "accentField": "Màu nền thẻ",
+        "categoryIdsField": "Danh mục sản phẩm áp dụng",
+        "categoryIdsPlaceholder": "Nhập ID rồi nhấn Enter",
+        "categoryIdsHelp": "ID danh mục từ catalog. Có thể dán nhiều ID cách nhau bằng dấu phẩy."
+      },
+      "errors": {
+        "sectionTitleRequired": "Vui lòng nhập tiêu đề mục (VI).",
+        "slugRequired": "Thẻ #{{index}}: thiếu đường dẫn.",
+        "slugInvalid": "Thẻ #{{index}}: đường dẫn chỉ được dùng chữ thường, số, gạch ngang.",
+        "slugDuplicate": "Đường dẫn \"{{slug}}\" đã được dùng cho thẻ khác.",
+        "nameRequired": "Thẻ #{{index}}: thiếu tên bộ sưu tập (VI).",
+        "imageRequired": "Thẻ #{{index}}: vui lòng chọn ảnh."
+      }
+    },
+    "feedbacksDialog": {
+      "title": "Feedback khách hàng",
+      "subtitle": "Chọn tối đa 6 feedback nổi bật. Ưu tiên feedback thật từ Zalo, Messenger, Facebook hoặc Google — placeholder phải được thay bằng feedback thật trước khi launch.",
+      "configLabel": "Feedback khách hàng",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "English"
+      },
+      "section": {
+        "title": "Phần đầu mục",
+        "subtitle": "Tiêu đề và mô tả hiển thị trên đầu danh sách feedback.",
+        "enabled": "Hiển thị",
+        "titleField": "Tiêu đề",
+        "titlePlaceholder": "vd: Khách hàng nói gì về chúng tôi",
+        "descriptionField": "Mô tả ngắn",
+        "descriptionPlaceholder": "Một câu giới thiệu ngắn cho mục feedback"
+      },
+      "items": {
+        "title": "Danh sách feedback",
+        "subtitle": "{{count}} feedback. Sắp xếp lại bằng nút mũi tên.",
+        "add": "Thêm feedback",
+        "empty": "Chưa có feedback nào. Bấm \"Thêm feedback\" để bắt đầu.",
+        "featuredCount": "{{count}} / {{max}} nổi bật",
+        "overLimit": "Chỉ tối đa {{max}} feedback có thể được chọn nổi bật. Hãy bỏ chọn bớt trước khi lưu."
+      },
+      "item": {
+        "untitled": "Feedback #{{index}} (chưa có tên)",
+        "noMeta": "(chưa có khu vực / loại hoa)",
+        "demoBadge": "DEMO",
+        "featuredBadge": "Nổi bật",
+        "featuredToggle": "Nổi bật",
+        "placeholderToggle": "Đánh dấu là placeholder (nội dung demo)",
+        "placeholderHelp": "Dùng khi đang dựng layout. Feedback thật từ Zalo / Messenger / Facebook / Google phải thay thế placeholder trước khi launch chính thức.",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xoá feedback",
+        "image": "Ảnh sản phẩm",
+        "imageHelp": "Tuỳ chọn. Ảnh chụp bó hoa đã giao cho khách.",
+        "uploadImage": "Tải ảnh lên",
+        "replaceImage": "Đổi ảnh",
+        "nameField": "Tên khách hàng",
+        "namePlaceholder": "vd: Linh N. hoặc A. Linh",
+        "nameHelp": "Tên đầy đủ hoặc viết tắt — tuỳ theo mức khách muốn lộ.",
+        "areaField": "Khu vực (tuỳ chọn)",
+        "areaPlaceholder": "vd: Hà Nội, Cầu Giấy",
+        "flowerTypeField": "Loại hoa / dịp mua (tuỳ chọn)",
+        "flowerTypePlaceholder": "vd: Hoa sinh nhật",
+        "postDateField": "Ngày đăng",
+        "postDatePlaceholder": "Chọn ngày",
+        "ratingField": "Đánh giá",
+        "ratingValue": "{{value}} / 5",
+        "ratingEmpty": "Chưa đánh giá",
+        "ratingHelp": "Số sao hiển thị cùng feedback. Khớp với điểm khách đã cho (Google/Facebook) hoặc để trống nếu review từ chat.",
+        "contentField": "Nội dung feedback",
+        "contentPlaceholder": "Dán nguyên văn lời khách hàng chia sẻ.",
+        "contentHelp": "Giữ nguyên văn. Không sửa giọng văn hay tự dựng câu trích.",
+        "sourceField": "Nguồn",
+        "sourceUrlField": "Link nguồn (tuỳ chọn)",
+        "source": {
+          "zalo": "Chat Zalo",
+          "messenger": "Chat Messenger",
+          "facebook": "Review Facebook",
+          "google": "Review Google",
+          "other": "Khác"
+        }
+      },
+      "errors": {
+        "sectionTitleRequired": "Vui lòng nhập tiêu đề mục (VI).",
+        "tooManyFeatured": "Chỉ tối đa {{max}} feedback được chọn nổi bật.",
+        "nameRequired": "Feedback #{{index}}: thiếu tên khách hàng.",
+        "contentRequired": "Feedback #{{index}}: thiếu nội dung (VI).",
+        "postDateRequired": "Feedback #{{index}}: thiếu ngày đăng."
+      }
     },
     "ahamoveDialog": {
       "title": "Thêm yêu cầu đặc biệt Ahamove",

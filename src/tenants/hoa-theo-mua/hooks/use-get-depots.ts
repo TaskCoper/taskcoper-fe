@@ -4,7 +4,8 @@ import nhanhVNService from '../services/nhanhvn.service'
 export const useGetDepots = () => {
   const { data: depots = [], isLoading: isLoadingDepots } = useQuery({
     queryKey: ['depots'],
-    queryFn: nhanhVNService.getDepots
+    queryFn: nhanhVNService.getDepots,
+    enabled: false
   })
 
   return { depots, isLoadingDepots }

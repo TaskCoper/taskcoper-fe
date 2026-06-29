@@ -65,6 +65,7 @@ export interface Config {
   isPublic: boolean
   value: ConfigDefinition
   userId: string
+  group: string
 }
 
 export const INPUT_TYPE_COLOR: Record<InputType, string> = {

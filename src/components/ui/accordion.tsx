@@ -20,12 +20,16 @@ function AccordionItem({ className, ...props }: React.ComponentProps<typeof Acco
 
 function AccordionTrigger({
   className,
+  headerClassName,
   children,
   displayIcon = true,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & { displayIcon?: boolean }) {
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
+  displayIcon?: boolean
+  headerClassName?: string
+}) {
   return (
-    <AccordionPrimitive.Header className='flex'>
+    <AccordionPrimitive.Header className={cn('flex', headerClassName)}>
       <AccordionPrimitive.Trigger
         data-slot='accordion-trigger'
         className={cn(

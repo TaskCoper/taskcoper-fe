@@ -2,6 +2,7 @@ import MultiSelectField from '@/components/multi-select-field'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
@@ -133,13 +134,27 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
 
       return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, group, isPublic: false, value: { ...config.value, group, value } }
+        body: { key: config.key, group, isPublic: config.isPublic, value: { ...config.value, group, value } }
       })
     },
     onSuccess: (_, saved) => {
       toast.success(t('configKeys.toast.updated'))
       form.reset({ value: saved })
     },
+    onError: () => toast.error(t('configKeys.toast.error')),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
+  })
+
+  const { mutate: togglePublic, isPending: isTogglingPublic } = useMutation({
+    mutationFn: (isPublic: boolean) => {
+      const group = getGroupFromKey(config.key) || config.value.group
+
+      return configService.updateConfig({
+        id: config.id,
+        body: { key: config.key, group, isPublic, value: { ...config.value, group } }
+      })
+    },
+    onSuccess: () => toast.success(t('configKeys.toast.updated')),
     onError: () => toast.error(t('configKeys.toast.error')),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
@@ -210,6 +225,16 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       case InputType.json:
+        return (
+          <div
+            className={cn(
+              'flex h-9 items-center gap-2 rounded-md border border-dashed bg-muted/30 px-2.5 text-xs text-muted-foreground'
+            )}
+          >
+            <Code2Icon className='size-3.5 shrink-0' />
+            <span className='flex-1 truncate'>{t('configsPage.card.complexValue')}</span>
+          </div>
+        )
       case InputType.address:
         return (
           <Textarea
@@ -426,6 +451,20 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           <span className='truncate text-sm font-medium'>{config.value.label}</span>
           {config.value.required && <span className='text-xs font-semibold text-destructive'>*</span>}
         </div>
+
+        <Label
+          htmlFor={`pub-${config.id}`}
+          className='flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground'
+          title={t('configsPage.card.publicTooltip')}
+        >
+          {t('configsPage.card.public')}
+          <Switch
+            id={`pub-${config.id}`}
+            checked={config.isPublic}
+            onCheckedChange={(checked) => togglePublic(checked)}
+            disabled={isTogglingPublic}
+          />
+        </Label>
 
         <Button
           variant='ghost'

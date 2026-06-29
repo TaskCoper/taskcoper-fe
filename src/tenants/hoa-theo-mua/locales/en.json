@@ -621,6 +621,10 @@
       "required": "Required",
       "noFile": "No file uploaded",
       "multiSelectPlaceholder": "Pick options...",
+      "public": "Public",
+      "publicTooltip": "Expose this config to client-side consumers",
+      "complexValue": "Complex value",
+      "openEditor": "Open editor",
       "hints": {
         "minLength": "Min {{n}} chars",
         "maxLength": "Max {{n}} chars",
@@ -633,6 +637,7 @@
       }
     },
     "palette": {
+      "title": "Fields",
       "singleLineText": "Single line text",
       "multiLineText": "Multi line text",
       "checkbox": "Checkbox",
@@ -648,9 +653,153 @@
     "lockedPalette": {
       "title": "Async-backed"
     },
+    "customPalette": {
+      "title": "Custom palettes"
+    },
     "ahamovePalette": {
       "title": "Ahamove Shipping Request",
       "empty": "No shipping requests available"
+    },
+    "occasionsPalette": {
+      "title": "Occasions collection",
+      "openEditor": "Open editor",
+      "emptyHint": "No occasion cards yet - click to start",
+      "existsHint": "Configured - click to view & edit"
+    },
+    "feedbacksPalette": {
+      "title": "Customer feedbacks",
+      "openEditor": "Open editor",
+      "emptyHint": "No feedbacks yet - click to start",
+      "existsHint": "Configured - click to view & edit"
+    },
+    "occasionsDialog": {
+      "title": "Occasions collection",
+      "subtitle": "Add as many occasion cards as you like. Each card has its own URL and filters by product categories.",
+      "configLabel": "Occasions collection",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "Section header",
+        "subtitle": "Title and description shown above the cards.",
+        "enabled": "Visible",
+        "titleField": "Title",
+        "titlePlaceholder": "e.g. Shop by occasion",
+        "descriptionField": "Short description",
+        "descriptionPlaceholder": "A short intro for the section"
+      },
+      "cards": {
+        "title": "Occasion cards",
+        "subtitle": "{{count}} card(s). Use the arrow buttons to reorder.",
+        "add": "Add card",
+        "empty": "No cards yet. Click \"Add card\" to begin."
+      },
+      "card": {
+        "untitled": "Card #{{index}} (no name)",
+        "noSlug": "(no URL yet)",
+        "disabled": "Hidden",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove card",
+        "image": "Card image",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "badgeField": "Occasion badge",
+        "badgePlaceholder": "e.g. Birthday",
+        "nameField": "Collection name",
+        "namePlaceholder": "e.g. Birthday flowers",
+        "descriptionField": "Short description",
+        "descriptionPlaceholder": "One line shown under the title",
+        "slugField": "URL slug",
+        "slugHelp": "Auto-generated from the name. Lowercase letters, digits, hyphens only.",
+        "accentField": "Accent color",
+        "categoryIdsField": "Filter by product categories",
+        "categoryIdsPlaceholder": "Type an ID and press Enter",
+        "categoryIdsHelp": "Category IDs from the catalog. Paste comma-separated IDs to add several."
+      },
+      "errors": {
+        "sectionTitleRequired": "Please enter a section title (VI).",
+        "slugRequired": "Card #{{index}}: URL slug is required.",
+        "slugInvalid": "Card #{{index}}: slug may only contain lowercase letters, digits, hyphens.",
+        "slugDuplicate": "Slug \"{{slug}}\" is already used by another card.",
+        "nameRequired": "Card #{{index}}: collection name (VI) is required.",
+        "imageRequired": "Card #{{index}}: please select an image."
+      }
+    },
+    "feedbacksDialog": {
+      "title": "Customer feedbacks",
+      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google — placeholders must be replaced before launch.",
+      "configLabel": "Customer feedbacks",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "Section header",
+        "subtitle": "Title and description shown above the feedback list.",
+        "enabled": "Visible",
+        "titleField": "Title",
+        "titlePlaceholder": "e.g. What customers say",
+        "descriptionField": "Short description",
+        "descriptionPlaceholder": "A short intro for the feedback section"
+      },
+      "items": {
+        "title": "Feedback entries",
+        "subtitle": "{{count}} entry/entries. Reorder with the arrow buttons.",
+        "add": "Add feedback",
+        "empty": "No feedbacks yet. Click \"Add feedback\" to begin.",
+        "featuredCount": "{{count}} / {{max}} featured",
+        "overLimit": "Only {{max}} feedbacks can be featured at once. Unfeature some entries before saving."
+      },
+      "item": {
+        "untitled": "Feedback #{{index}} (no name)",
+        "noMeta": "(no area / flower type)",
+        "demoBadge": "DEMO",
+        "featuredBadge": "Featured",
+        "featuredToggle": "Featured",
+        "placeholderToggle": "Mark as placeholder (demo content)",
+        "placeholderHelp": "Use this while building the layout. Real reviews from Zalo / Messenger / Facebook / Google must replace placeholders before launch.",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove feedback",
+        "image": "Product image",
+        "imageHelp": "Optional. Photo of the delivered arrangement.",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "nameField": "Customer name",
+        "namePlaceholder": "e.g. Linh N. or A. Linh",
+        "nameHelp": "Full name or initials — match what the customer is comfortable sharing.",
+        "areaField": "Area (optional)",
+        "areaPlaceholder": "e.g. Hanoi, Cau Giay",
+        "flowerTypeField": "Flower type / occasion (optional)",
+        "flowerTypePlaceholder": "e.g. Birthday roses",
+        "postDateField": "Post date",
+        "postDatePlaceholder": "Pick a date",
+        "ratingField": "Rating",
+        "ratingValue": "{{value}} / 5",
+        "ratingEmpty": "Not rated",
+        "ratingHelp": "Star rating shown alongside the testimonial. Match what the customer originally gave (Google/Facebook) or leave empty for chat-only reviews.",
+        "contentField": "Feedback content",
+        "contentPlaceholder": "Paste the customer's words exactly as shared.",
+        "contentHelp": "Keep verbatim. Do not edit tone or invent quotes.",
+        "sourceField": "Source",
+        "sourceUrlField": "Source URL (optional)",
+        "source": {
+          "zalo": "Zalo chat",
+          "messenger": "Messenger chat",
+          "facebook": "Facebook review",
+          "google": "Google review",
+          "other": "Other"
+        }
+      },
+      "errors": {
+        "sectionTitleRequired": "Please enter a section title (VI).",
+        "tooManyFeatured": "Only {{max}} feedbacks can be featured at once.",
+        "nameRequired": "Feedback #{{index}}: customer name is required.",
+        "contentRequired": "Feedback #{{index}}: content (VI) is required.",
+        "postDateRequired": "Feedback #{{index}}: post date is required."
+      }
     },
     "ahamoveDialog": {
       "title": "Add Ahamove special request",
