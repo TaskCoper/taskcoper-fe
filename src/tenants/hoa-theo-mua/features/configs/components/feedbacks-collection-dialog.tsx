@@ -46,7 +46,7 @@ import {
   type FeedbackSource
 } from '../feedbacks-palette'
 import configService from '../services'
-import { InputType, type Config } from '../types'
+import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
 
 interface Props {
@@ -221,6 +221,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
         key: FEEDBACKS_COLLECTION_KEY,
         isPublic: true,
         group: FEEDBACKS_GROUP,
+        kind: ConfigKind.content,
         value: {
           group: FEEDBACKS_GROUP,
           label: t('configsPage.feedbacksDialog.configLabel'),

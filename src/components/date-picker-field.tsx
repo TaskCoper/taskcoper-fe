@@ -85,7 +85,7 @@ export function DatePickerField<T extends FieldValues>({
                 aria-invalid={fieldState.invalid}
                 disabled={isDisabled}
                 className={cn(
-                  'w-full justify-between px-3 text-left font-normal',
+                  'w-full justify-between px-3 text-left font-normal h-8',
                   !field.value && 'text-muted-foreground',
                   fieldState.invalid && 'border-destructive focus-visible:ring-destructive'
                 )}

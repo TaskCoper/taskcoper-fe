@@ -1,7 +1,10 @@
+import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
-import { InputType, type ConfigDefinition, type ValidationRule } from './types'
+import { FEEDBACK_SOURCES, MAX_FEATURED_FEEDBACKS } from './feedbacks-palette'
+import { ConfigKind, InputType, type ConfigDefinition, type ValidationRule } from './types'
 
 const KEY_REGEX_STRICT = /^[a-z][a-z0-9]*(_[a-z0-9]+)*(\.[a-z][a-z0-9]*(_[a-z0-9]+)*)+$/
+const SLUG_REGEX = /^[a-z0-9][a-z0-9-]*$/
 
 const validationRuleSchema = z.union([
   z.object({ minLength: z.number().int().min(0) }),
@@ -174,7 +177,8 @@ export const configExportSchema = z
     key: z.string().max(200).regex(KEY_REGEX_STRICT, 'Key sai format group.sub_key'),
     isPublic: z.boolean(),
     value: configDefinitionSchema,
-    group: z.string().min(2).max(100)
+    group: z.string().min(2).max(100),
+    kind: z.enum(ConfigKind)
   })
   .refine((c) => c.value.group === c.key.split('.')[0], {
     message: 'value.group phải khớp prefix của key',
@@ -185,7 +189,7 @@ export const configExportSchema = z
     const result = buildValueValidator(def).safeParse(def.value)
     if (!result.success) {
       for (const issue of result.error.issues) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: issue.message, path: ['value', 'value'] })
+        ctx.addIssue({ code: 'custom', message: issue.message, path: ['value', 'value'] })
       }
     }
   })
@@ -197,6 +201,7 @@ export const defaultConfigFormValues: CreateConfigFormInput = {
   key: '',
   isPublic: false,
   group: '',
+  kind: ConfigKind.content,
   value: {
     group: '',
     label: '',
@@ -229,6 +234,222 @@ export const toExportBundle = (items: Array<{ key: string; def: ConfigDefinition
 export const fromExportJson = (json: unknown): CreateConfigFormValues => {
   return configExportSchema.parse(json) as CreateConfigFormValues
 }
+
+const localizedTextSchema = z.object({
+  vi: z.string(),
+  en: z.string()
+})
+
+const occasionCampaignFormSchema = z.object({
+  _uid: z.string(),
+  id: z.string(),
+  campaignName: localizedTextSchema,
+  skuPrefix: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  categoryIds: z.array(z.string()),
+  badge: localizedTextSchema,
+  enabled: z.boolean()
+})
+
+const occasionCardFormSchema = z.object({
+  _uid: z.string(),
+  id: z.string(),
+  image: z.string(),
+  badge: localizedTextSchema,
+  name: localizedTextSchema,
+  description: localizedTextSchema,
+  categoryIds: z.array(z.string()),
+  enabled: z.boolean(),
+  campaigns: z.array(occasionCampaignFormSchema)
+})
+
+export const occasionsCollectionFormSchema = (t: TenantT) =>
+  z
+    .object({
+      section: z.object({
+        title: localizedTextSchema,
+        description: localizedTextSchema,
+        enabled: z.boolean()
+      }),
+      cards: z.array(occasionCardFormSchema)
+    })
+    .superRefine((data, ctx) => {
+      if (!data.section.title.vi.trim()) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.occasionsDialog.errors.sectionTitleRequired'),
+          path: ['section', 'title', 'vi']
+        })
+      }
+
+      const seenSlugs = new Set<string>()
+      data.cards.forEach((card, i) => {
+        const slug = card.id.trim()
+        if (!slug) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.occasionsDialog.errors.slugRequired', { index: i + 1 }),
+            path: ['cards', i, 'id']
+          })
+        } else if (!SLUG_REGEX.test(slug)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.occasionsDialog.errors.slugInvalid', { index: i + 1 }),
+            path: ['cards', i, 'id']
+          })
+        } else if (seenSlugs.has(slug)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.occasionsDialog.errors.slugDuplicate', { slug }),
+            path: ['cards', i, 'id']
+          })
+        }
+        if (slug) seenSlugs.add(slug)
+
+        if (!card.name.vi.trim()) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.occasionsDialog.errors.nameRequired', { index: i + 1 }),
+            path: ['cards', i, 'name', 'vi']
+          })
+        }
+
+        const seenCampaignIds = new Set<string>()
+        card.campaigns.forEach((ca, j) => {
+          const cid = ca.id.trim()
+          const ctxArgs = { cardIndex: i + 1, index: j + 1 }
+          if (!cid) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignIdRequired', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'id']
+            })
+          } else if (!SLUG_REGEX.test(cid)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignIdInvalid', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'id']
+            })
+          } else if (seenCampaignIds.has(cid)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignIdDuplicate', { ...ctxArgs, id: cid }),
+              path: ['cards', i, 'campaigns', j, 'id']
+            })
+          }
+          if (cid) seenCampaignIds.add(cid)
+
+          if (!ca.campaignName.vi.trim()) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignNameRequired', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'campaignName', 'vi']
+            })
+          }
+          if (!ca.skuPrefix.trim()) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignSkuRequired', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'skuPrefix']
+            })
+          }
+          if (!ca.startDate) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignDatesRequired', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'startDate']
+            })
+          }
+          if (!ca.endDate) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignDatesRequired', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'endDate']
+            })
+          } else if (ca.startDate && ca.startDate > ca.endDate) {
+            ctx.addIssue({
+              code: 'custom',
+              message: t('configsPage.occasionsDialog.errors.campaignDatesInvalid', ctxArgs),
+              path: ['cards', i, 'campaigns', j, 'endDate']
+            })
+          }
+        })
+      })
+    })
+
+export type OccasionsCollectionFormValues = z.infer<ReturnType<typeof occasionsCollectionFormSchema>>
+
+const feedbackItemFormSchema = z.object({
+  _uid: z.string(),
+  id: z.string(),
+  customerName: z.string(),
+  area: z.string(),
+  content: localizedTextSchema,
+  flowerType: z.string(),
+  image: z.string(),
+  postDate: z.string(),
+  rating: z.number().optional(),
+  featured: z.boolean(),
+  isPlaceholder: z.boolean(),
+  source: z.enum(FEEDBACK_SOURCES),
+  sourceUrl: z.string()
+})
+
+export const feedbacksCollectionFormSchema = (t: TenantT) =>
+  z
+    .object({
+      section: z.object({
+        title: localizedTextSchema,
+        description: localizedTextSchema,
+        enabled: z.boolean()
+      }),
+      items: z.array(feedbackItemFormSchema)
+    })
+    .superRefine((data, ctx) => {
+      if (!data.section.title.vi.trim()) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.feedbacksDialog.errors.sectionTitleRequired'),
+          path: ['section', 'title', 'vi']
+        })
+      }
+
+      const featuredCount = data.items.filter((i) => i.featured).length
+      if (featuredCount > MAX_FEATURED_FEEDBACKS) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.feedbacksDialog.errors.tooManyFeatured', { max: MAX_FEATURED_FEEDBACKS }),
+          path: ['items']
+        })
+      }
+
+      data.items.forEach((item, i) => {
+        if (!item.customerName.trim()) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.feedbacksDialog.errors.nameRequired', { index: i + 1 }),
+            path: ['items', i, 'customerName']
+          })
+        }
+        if (!item.content.vi.trim()) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.feedbacksDialog.errors.contentRequired', { index: i + 1 }),
+            path: ['items', i, 'content', 'vi']
+          })
+        }
+        if (!item.postDate.trim()) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.feedbacksDialog.errors.postDateRequired', { index: i + 1 }),
+            path: ['items', i, 'postDate']
+          })
+        }
+      })
+    })
+
+export type FeedbacksCollectionFormValues = z.infer<ReturnType<typeof feedbacksCollectionFormSchema>>
 
 export function inputTypeToValueType(inputType: InputType): 'string' | 'number' | 'boolean' | 'json' | 'date' {
   switch (inputType) {

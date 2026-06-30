@@ -11,12 +11,13 @@ import {
   type CreateConfigFormValues
 } from '../validations'
 
-export const useUpdateConfig = (configId?: string) => {
+export const useUpdateConfig = (configId?: string, values?: CreateConfigFormInput) => {
   const queryClient = useQueryClient()
   const { t } = useTenantTranslation()
 
   const methods = useForm<CreateConfigFormInput, unknown, CreateConfigFormValues>({
     defaultValues: defaultConfigFormValues,
+    values,
     resolver: zodResolver(configExportSchema)
   })
 

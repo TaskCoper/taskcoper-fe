@@ -11,6 +11,7 @@ import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AlignJustifyIcon,
@@ -30,9 +31,10 @@ import {
   TypeIcon,
   UploadIcon
 } from 'lucide-react'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import z from 'zod'
 import configService from '../services'
 import { INPUT_TYPE_COLOR, InputType, type Config, type ConfigDefinition } from '../types'
 import { buildValueValidator } from '../validations'
@@ -124,7 +126,8 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
         ? config.value.value
         : []
       : config.value.value
-  const form = useForm<InlineForm>({ defaultValues: { value: initialValue } })
+  const resolver = useMemo(() => zodResolver(z.object({ value: buildValueValidator(config.value) })), [config.value])
+  const form = useForm<InlineForm>({ defaultValues: { value: initialValue }, resolver })
   const isDirty = form.formState.isDirty
   const { errors } = form.formState
 
@@ -134,7 +137,13 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
 
       return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, group, isPublic: config.isPublic, value: { ...config.value, group, value } }
+        body: {
+          key: config.key,
+          group,
+          kind: config.kind,
+          isPublic: config.isPublic,
+          value: { ...config.value, group, value }
+        }
       })
     },
     onSuccess: (_, saved) => {
@@ -151,7 +160,7 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
 
       return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, group, isPublic, value: { ...config.value, group } }
+        body: { key: config.key, group, kind: config.kind, isPublic, value: { ...config.value, group } }
       })
     },
     onSuccess: () => toast.success(t('configKeys.toast.updated')),
@@ -159,15 +168,7 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
 
-  const onSave = form.handleSubmit(({ value }) => {
-    const validator = buildValueValidator(config.value)
-    const result = validator.safeParse(value)
-    if (!result.success) {
-      form.setError('value', { type: 'manual', message: result.error.issues[0]?.message ?? 'Invalid' })
-      return
-    }
-    saveValue(result.data)
-  })
+  const onSave = form.handleSubmit(({ value }) => saveValue(value))
 
   const colorClass = INPUT_TYPE_COLOR[config.value.inputType] ?? 'text-gray-500 bg-gray-50'
   const icon = INPUT_TYPE_ICON[config.value.inputType]

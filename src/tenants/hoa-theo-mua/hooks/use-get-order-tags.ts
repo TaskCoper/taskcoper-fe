@@ -4,8 +4,7 @@ import nhanhVNService from '../services/nhanhvn.service'
 export const useGetOrderTags = () => {
   const { data: orderTags = [], isLoading: isLoadingOrderTags } = useQuery({
     queryKey: ['order-tags'],
-    queryFn: nhanhVNService.getOrderTags,
-    enabled: false
+    queryFn: nhanhVNService.getOrderTags
   })
 
   return { orderTags, isLoadingOrderTags }

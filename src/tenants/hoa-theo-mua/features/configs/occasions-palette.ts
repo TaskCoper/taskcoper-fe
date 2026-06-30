@@ -6,6 +6,23 @@ export interface LocalizedText {
   en: string
 }
 
+export interface OccasionCampaign {
+  // Slug unique within the parent card, e.g. 'thang-2-valentine'.
+  id: string
+  // Used for SEO <title>/meta and SKU naming — not for the on-card label, which stays fixed.
+  campaignName: LocalizedText
+  // SKU pattern matched against the catalog, e.g. 'MH02-VAL'.
+  skuPrefix: string
+  // ISO YYYY-MM-DD, inclusive on both ends.
+  startDate: string
+  endDate: string
+  // When the campaign is active, these override the parent card's categoryIds.
+  categoryIds: string[]
+  // Optional badge override (e.g. 'Valentine' instead of 'Đặc biệt'). Empty → falls back to card.badge.
+  badge: LocalizedText
+  enabled: boolean
+}
+
 export interface OccasionCard {
   id: string
   image: string
@@ -14,6 +31,8 @@ export interface OccasionCard {
   description: LocalizedText
   categoryIds: string[]
   enabled: boolean
+  // Seasonal rotations under the card. Empty for non-seasonal cards.
+  campaigns: OccasionCampaign[]
 }
 
 export interface OccasionCollection {
@@ -43,6 +62,18 @@ export const defaultOccasionCard = (): OccasionCard => ({
   name: emptyLocalizedText(),
   description: emptyLocalizedText(),
   categoryIds: [],
+  enabled: true,
+  campaigns: []
+})
+
+export const defaultOccasionCampaign = (): OccasionCampaign => ({
+  id: '',
+  campaignName: emptyLocalizedText(),
+  skuPrefix: '',
+  startDate: '',
+  endDate: '',
+  categoryIds: [],
+  badge: emptyLocalizedText(),
   enabled: true
 })
 
@@ -74,7 +105,20 @@ export const parseOccasionCollection = (raw: unknown): OccasionCollection => {
       badge: { vi: c?.badge?.vi ?? '', en: c?.badge?.en ?? '' },
       name: { vi: c?.name?.vi ?? '', en: c?.name?.en ?? '' },
       description: { vi: c?.description?.vi ?? '', en: c?.description?.en ?? '' },
-      categoryIds: Array.isArray(c?.categoryIds) ? c.categoryIds.map(String) : []
+      categoryIds: Array.isArray(c?.categoryIds) ? c.categoryIds.map(String) : [],
+      campaigns: Array.isArray((c as Partial<OccasionCard>)?.campaigns)
+        ? ((c as OccasionCard).campaigns as Partial<OccasionCampaign>[]).map((ca) => ({
+            ...defaultOccasionCampaign(),
+            ...ca,
+            campaignName: { vi: ca?.campaignName?.vi ?? '', en: ca?.campaignName?.en ?? '' },
+            badge: { vi: ca?.badge?.vi ?? '', en: ca?.badge?.en ?? '' },
+            categoryIds: Array.isArray(ca?.categoryIds) ? ca.categoryIds.map(String) : [],
+            skuPrefix: typeof ca?.skuPrefix === 'string' ? ca.skuPrefix : '',
+            startDate: typeof ca?.startDate === 'string' ? ca.startDate : '',
+            endDate: typeof ca?.endDate === 'string' ? ca.endDate : '',
+            enabled: ca?.enabled ?? true
+          }))
+        : []
     }))
   }
 }

@@ -20,7 +20,9 @@ class OrderService extends BaseService {
   getOrderShippingLocations = async (body: GetOrderShippingLocationsBody) => {
     const { data } = await this.post<BaseResponse<{ code: number; data: ShippingLocation[] }>>(
       `/v1/${this.baseUrl}/shipping-location`,
-      body
+      {
+        filters: body
+      }
     )
 
     return data.value.data

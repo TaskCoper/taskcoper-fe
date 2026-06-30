@@ -433,6 +433,11 @@
     "somethingWentWrong": "Something went wrong"
   },
   "systemConfigs": {
+    "kind": {
+      "content": "Content",
+      "setting": "Setting",
+      "secret": "Secret"
+    },
     "groups": {
       "dateSettings": "Date settings",
       "feature": "Feature settings",
@@ -680,6 +685,20 @@
         "vi": "Vietnamese",
         "en": "English"
       },
+      "stats": {
+        "cards": "Cards",
+        "cardsSub": "{{count}} visible",
+        "campaigns": "Campaigns",
+        "campaignsSub": "{{count}} active now"
+      },
+      "detail": {
+        "emptyTitle": "No card selected",
+        "emptyBody": "Pick a card on the left to edit its details and campaigns, or add a new one.",
+        "tabs": {
+          "details": "Details",
+          "campaigns": "Campaigns"
+        }
+      },
       "section": {
         "title": "Section header",
         "subtitle": "Title and description shown above the cards.",
@@ -699,6 +718,7 @@
         "untitled": "Card #{{index}} (no name)",
         "noSlug": "(no URL yet)",
         "disabled": "Hidden",
+        "enabledToggle": "Visible on storefront",
         "moveUp": "Move up",
         "moveDown": "Move down",
         "remove": "Remove card",
@@ -718,13 +738,41 @@
         "categoryIdsPlaceholder": "Type an ID and press Enter",
         "categoryIdsHelp": "Category IDs from the catalog. Paste comma-separated IDs to add several."
       },
+      "campaigns": {
+        "title": "Seasonal campaigns",
+        "subtitle": "The card name stays fixed on the storefront. Each campaign sets the SEO/SKU naming for a holiday; whichever campaign brackets today overrides the card's categories & badge.",
+        "add": "Add campaign",
+        "empty": "No campaigns yet - the card will always use its default name and categories.",
+        "untitled": "Campaign #{{index}} (no name)",
+        "remove": "Remove campaign",
+        "activeNow": "Active now",
+        "noDates": "No dates set",
+        "idField": "Campaign ID",
+        "campaignNameField": "Campaign name (SEO / SKU)",
+        "campaignNamePlaceholder": "e.g. Mùa Hoa Tháng 2 - Valentine",
+        "skuPrefixField": "SKU prefix",
+        "skuPrefixPlaceholder": "e.g. MH02-VAL",
+        "startDateField": "Start",
+        "endDateField": "End",
+        "badgeOverrideField": "Badge override (optional)",
+        "badgeOverridePlaceholder": "e.g. Valentine",
+        "categoryIdsField": "Categories override (optional)",
+        "categoryIdsHelp": "While the campaign is active, these categories replace the card's. Leave empty to keep the card's defaults."
+      },
       "errors": {
         "sectionTitleRequired": "Please enter a section title (VI).",
         "slugRequired": "Card #{{index}}: URL slug is required.",
         "slugInvalid": "Card #{{index}}: slug may only contain lowercase letters, digits, hyphens.",
         "slugDuplicate": "Slug \"{{slug}}\" is already used by another card.",
         "nameRequired": "Card #{{index}}: collection name (VI) is required.",
-        "imageRequired": "Card #{{index}}: please select an image."
+        "imageRequired": "Card #{{index}}: please select an image.",
+        "campaignIdRequired": "Card #{{cardIndex}}, campaign #{{index}}: ID is required.",
+        "campaignIdInvalid": "Card #{{cardIndex}}, campaign #{{index}}: ID may only contain lowercase letters, digits, hyphens.",
+        "campaignIdDuplicate": "Card #{{cardIndex}}: campaign ID \"{{id}}\" is already used.",
+        "campaignNameRequired": "Card #{{cardIndex}}, campaign #{{index}}: campaign name (VI) is required.",
+        "campaignSkuRequired": "Card #{{cardIndex}}, campaign #{{index}}: SKU prefix is required.",
+        "campaignDatesRequired": "Card #{{cardIndex}}, campaign #{{index}}: start and end dates are required.",
+        "campaignDatesInvalid": "Card #{{cardIndex}}, campaign #{{index}}: start date must be on or before end date."
       }
     },
     "feedbacksDialog": {
@@ -734,6 +782,15 @@
       "locale": {
         "vi": "Vietnamese",
         "en": "English"
+      },
+      "stats": {
+        "total": "Feedbacks",
+        "featured": "Featured",
+        "placeholders": "Placeholders"
+      },
+      "detail": {
+        "emptyTitle": "No feedback selected",
+        "emptyBody": "Pick a feedback on the left to edit, or add a new one."
       },
       "section": {
         "title": "Section header",
@@ -769,7 +826,7 @@
         "replaceImage": "Replace image",
         "nameField": "Customer name",
         "namePlaceholder": "e.g. Linh N. or A. Linh",
-        "nameHelp": "Full name or initials — match what the customer is comfortable sharing.",
+        "nameHelp": "Full name or initials - match what the customer is comfortable sharing.",
         "areaField": "Area (optional)",
         "areaPlaceholder": "e.g. Hanoi, Cau Giay",
         "flowerTypeField": "Flower type / occasion (optional)",

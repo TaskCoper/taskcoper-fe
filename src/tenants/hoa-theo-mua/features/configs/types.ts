@@ -32,6 +32,22 @@ export const InputTypeLabel: Record<InputType, string> = {
 
 export type InputTypeLabel = (typeof InputTypeLabel)[keyof typeof InputTypeLabel]
 
+export const ConfigKind = {
+  secret: 'secret',
+  content: 'content',
+  setting: 'setting'
+} as const
+
+export type ConfigKind = (typeof ConfigKind)[keyof typeof ConfigKind]
+
+export const ConfigKindLabel: Record<ConfigKind, string> = {
+  [ConfigKind.secret]: 'systemConfigs.kind.secret',
+  [ConfigKind.content]: 'systemConfigs.kind.content',
+  [ConfigKind.setting]: 'systemConfigs.kind.setting'
+} as const
+
+export type ConfigKindLabel = (typeof ConfigKindLabel)[keyof typeof ConfigKindLabel]
+
 export type ValidationRule =
   | { minLength: number }
   | { maxLength: number }
@@ -64,6 +80,7 @@ export interface Config {
   key: string
   isPublic: boolean
   value: ConfigDefinition
+  kind: ConfigKind
   userId: string
   group: string
 }

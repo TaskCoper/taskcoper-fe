@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ChevronDown, MoreVertical, Plus } from 'lucide-react'
+import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
+import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
+import { normalizeAhamoveKey } from '../features/configs/ahamove-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
@@ -18,7 +19,7 @@ import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
 import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
 import type { Config, InputOption } from '../features/configs/types'
-import { InputType } from '../features/configs/types'
+import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
 import type { CreateConfigFormInput } from '../features/configs/validations'
 import { useGetAhamoveService } from '../hooks/use-get-ahamove-service'
 import { useGetDepots } from '../hooks/use-get-depots'
@@ -35,6 +36,36 @@ interface LockedPaletteItem {
   defaultValue: unknown
 }
 
+const KIND_ORDER: ConfigKind[] = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret]
+
+const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
+  if (raw && typeof raw === 'object') return raw as Record<string, unknown>
+  if (typeof raw !== 'string') return null
+  try {
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+const KIND_VISUALS: Record<
+  ConfigKind,
+  {
+    Icon: ComponentType<SVGProps<SVGSVGElement>>
+  }
+> = {
+  [ConfigKind.content]: {
+    Icon: FileText
+  },
+  [ConfigKind.setting]: {
+    Icon: Settings2
+  },
+  [ConfigKind.secret]: {
+    Icon: KeyRound
+  }
+}
+
 export default function ConfigsPage() {
   const { t, i18n } = useTenantTranslation()
   const { configs, isGettingConfigs } = useGetConfigs()
@@ -46,6 +77,7 @@ export default function ConfigsPage() {
   const [createInitialValues, setCreateInitialValues] = useState<Partial<CreateConfigFormInput>>()
   const [createLockedFields, setCreateLockedFields] = useState<LockedFields | undefined>()
   const [selectedAhamoveRequest, setSelectedAhamoveRequest] = useState<AhamoveServiceRequest | null>(null)
+  const [editingAhamoveConfig, setEditingAhamoveConfig] = useState<Config | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<Config | null>(null)
   const [occasionsDialogOpen, setOccasionsDialogOpen] = useState(false)
@@ -69,31 +101,57 @@ export default function ConfigsPage() {
     [depotOptions, orderTagOptions]
   )
 
+  const configsByKind = useMemo(() => {
+    const map: Record<ConfigKind, Config[]> = {
+      [ConfigKind.content]: [],
+      [ConfigKind.setting]: [],
+      [ConfigKind.secret]: []
+    }
+
+    if (!configs) return map
+
+    for (const config of configs) {
+      const bucket = map[config.kind] ?? map[ConfigKind.content]
+      bucket.push(config)
+    }
+
+    return map
+  }, [configs])
+
+  const availableKinds = useMemo(() => KIND_ORDER.filter((kind) => configsByKind[kind].length > 0), [configsByKind])
+
+  const [activeKind, setActiveKind] = useState<ConfigKind>()
+  const currentKind =
+    activeKind && availableKinds.includes(activeKind) ? activeKind : (availableKinds[0] ?? ConfigKind.content)
+
   const groups = useMemo(() => {
-    if (!configs) return []
+    const kindConfigs = configsByKind[currentKind] ?? []
     const seen = new Set<string>()
     const result: string[] = []
-    for (const config of configs) {
+
+    for (const config of kindConfigs) {
       if (!seen.has(config.value.group)) {
         seen.add(config.value.group)
         result.push(config.value.group)
       }
     }
+
     return result
-  }, [configs])
+  }, [configsByKind, currentKind])
 
   const [activeGroup, setActiveGroup] = useState<string>()
-  const currentGroup = activeGroup ?? groups[0] ?? ''
+  const currentGroup = activeGroup && groups.includes(activeGroup) ? activeGroup : (groups[0] ?? '')
 
   const groupedConfigs = useMemo(() => {
-    if (!configs) return {} as Record<string, Config[]>
-    return configs.reduce<Record<string, Config[]>>((acc, config) => {
+    const kindConfigs = configsByKind[currentKind] ?? []
+
+    return kindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
       const g = config.value.group
       if (!acc[g]) acc[g] = []
       acc[g].push(config)
       return acc
     }, {})
-  }, [configs])
+  }, [configsByKind, currentKind])
 
   const openCreate = useCallback((initial: Partial<CreateConfigFormInput>, locked?: LockedFields) => {
     setCreateInitialValues(initial)
@@ -105,6 +163,7 @@ export default function ConfigsPage() {
     (inputType: InputType, options?: InputOption[]) => {
       openCreate({
         key: currentGroup ? `${currentGroup}.` : '',
+        kind: currentKind,
         value: {
           group: currentGroup,
           label: '',
@@ -116,7 +175,7 @@ export default function ConfigsPage() {
         }
       })
     },
-    [openCreate, currentGroup]
+    [openCreate, currentGroup, currentKind]
   )
 
   const openLockedPaletteCreate = useCallback(
@@ -131,6 +190,7 @@ export default function ConfigsPage() {
       openCreate(
         {
           key: item.key,
+          kind: ConfigKind.setting,
           value: {
             group,
             label: item.label,
@@ -150,18 +210,44 @@ export default function ConfigsPage() {
   const occasionsConfig = useMemo(() => configs?.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null, [configs])
   const feedbacksConfig = useMemo(() => configs?.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null, [configs])
 
-  const openEdit = useCallback((config: Config) => {
-    if (config.key === OCCASIONS_COLLECTION_KEY) {
-      setOccasionsDialogOpen(true)
-      return
-    }
-    if (config.key === FEEDBACKS_COLLECTION_KEY) {
-      setFeedbacksDialogOpen(true)
-      return
-    }
-    setEditingConfig(config)
-    setEditOpen(true)
-  }, [])
+  const findAhamoveRequestForConfig = useCallback(
+    (config: Config): AhamoveServiceRequest | null => {
+      const raw = config.value.value
+      const parsed = typeof raw === 'string' ? safeJsonParse(raw) : (raw as Record<string, unknown> | null)
+      const storedId = typeof parsed?._id === 'string' ? parsed._id : null
+      if (storedId) {
+        const byId = ahamoveRequests.find((r) => r._id === storedId)
+        if (byId) return byId
+      }
+      const suffix = config.key.replace(/^ahamove\.shipping\./, '')
+      return ahamoveRequests.find((r) => normalizeAhamoveKey(r._id) === suffix) ?? null
+    },
+    [ahamoveRequests]
+  )
+
+  const openEdit = useCallback(
+    (config: Config) => {
+      if (config.key === OCCASIONS_COLLECTION_KEY) {
+        setOccasionsDialogOpen(true)
+        return
+      }
+      if (config.key === FEEDBACKS_COLLECTION_KEY) {
+        setFeedbacksDialogOpen(true)
+        return
+      }
+      if (config.key.startsWith('ahamove.shipping.')) {
+        const match = findAhamoveRequestForConfig(config)
+        if (match) {
+          setEditingAhamoveConfig(config)
+          setSelectedAhamoveRequest(match)
+          return
+        }
+      }
+      setEditingConfig(config)
+      setEditOpen(true)
+    },
+    [findAhamoveRequestForConfig]
+  )
 
   const closeEdit = useCallback(() => {
     setEditOpen(false)
@@ -173,15 +259,26 @@ export default function ConfigsPage() {
         <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <span>{t('configsPage.breadcrumb')}</span>
           <ChevronDown className='size-3.5 -rotate-90' />
-          <span className='capitalize'>{currentGroup || '-'}</span>
+          <span>{t(`systemConfigs.kind.${currentKind}`)}</span>
+          {currentGroup && (
+            <>
+              <ChevronDown className='size-3.5 -rotate-90' />
+              <span className='capitalize'>{currentGroup}</span>
+            </>
+          )}
         </nav>
 
         <div className='flex items-start justify-between'>
-          <h1 className='text-2xl font-bold capitalize'>{currentGroup || t('configsPage.fallbackTitle')}</h1>
+          <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
         </div>
 
         {isGettingConfigs ? (
-          <div className='space-y-2'>
+          <div className='space-y-3'>
+            <div className='flex gap-2'>
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className='h-9 w-28 rounded-full' />
+              ))}
+            </div>
             <div className='flex gap-4 border-b pb-2'>
               {[1, 2, 3].map((i) => (
                 <Skeleton key={i} className='h-8 w-28' />
@@ -191,65 +288,75 @@ export default function ConfigsPage() {
               <Skeleton key={i} className='h-20 w-full' />
             ))}
           </div>
+        ) : availableKinds.length === 0 ? (
+          <div className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptyPage')}</div>
         ) : (
-          <Tabs value={currentGroup} onValueChange={(v) => setActiveGroup(v)} className='flex flex-col gap-0'>
-            <div className='flex items-center'>
-              <TabsList className='h-auto gap-0 rounded-none bg-transparent p-0'>
-                {groups.map((group) => (
-                  <TabsTrigger
-                    key={group}
-                    value={group}
-                    className={cn(
-                      'relative h-9 rounded-none border-b-2 border-b-transparent px-4 text-sm font-medium capitalize text-muted-foreground shadow-none transition-none',
-                      'data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none'
-                    )}
+          <div className='flex flex-col gap-4'>
+            <div className='flex flex-wrap items-center gap-2'>
+              {availableKinds.map((kind) => {
+                const isActive = kind === currentKind
+                const visuals = KIND_VISUALS[kind]
+
+                return (
+                  <Button
+                    key={kind}
+                    type='button'
+                    onClick={() => setActiveKind(kind)}
+                    variant={isActive ? 'default' : 'outline'}
+                    size='sm'
                   >
-                    {group}
-                  </TabsTrigger>
-                ))}
-
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  className='text-muted-foreground first:ml-0 ml-2'
-                  onClick={() => openStaticPaletteCreate(InputType.text)}
-                >
-                  <Plus className='size-3.5' />
-                  {t('configsPage.addSection')}
-                </Button>
-              </TabsList>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='ghost' size='icon' className='ml-auto size-8 shrink-0'>
-                    <MoreVertical className='size-4' />
+                    <visuals.Icon />
+                    <p>{t(ConfigKindLabel[kind])}</p>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuItem>{t('configsPage.cloneSection')}</DropdownMenuItem>
-                  <DropdownMenuItem className='text-destructive focus:text-destructive'>
-                    {t('configsPage.deleteSection')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                )
+              })}
             </div>
 
-            {groups.map((group) => (
-              <TabsContent key={group} value={group} className='mt-3 space-y-4'>
-                {(groupedConfigs[group] ?? []).length === 0 ? (
-                  <p className='py-8 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
-                ) : (
-                  (groupedConfigs[group] ?? []).map((config) => (
-                    <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
-                  ))
-                )}
-              </TabsContent>
-            ))}
+            <Tabs value={currentGroup} onValueChange={(v) => setActiveGroup(v)} className='flex flex-col gap-0'>
+              <div className='border-b'>
+                <TabsList className='h-auto gap-0 rounded-none bg-transparent p-0'>
+                  {groups.map((group) => (
+                    <TabsTrigger
+                      key={group}
+                      value={group}
+                      className={cn(
+                        'relative h-9 rounded-none border-b-2 border-b-transparent px-4 text-sm font-medium capitalize text-muted-foreground shadow-none transition-none',
+                        'data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none'
+                      )}
+                    >
+                      {group}
+                    </TabsTrigger>
+                  ))}
 
-            {groups.length === 0 && (
-              <div className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptyPage')}</div>
-            )}
-          </Tabs>
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    className='text-muted-foreground first:ml-0 ml-2'
+                    onClick={() => openStaticPaletteCreate(InputType.text)}
+                  >
+                    <Plus className='size-3.5' />
+                    {t('configsPage.addSection')}
+                  </Button>
+                </TabsList>
+              </div>
+
+              {groups.length === 0 ? (
+                <p className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
+              ) : (
+                groups.map((group) => (
+                  <TabsContent key={group} value={group} className='mt-3 space-y-4'>
+                    {(groupedConfigs[group] ?? []).length === 0 ? (
+                      <p className='py-8 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
+                    ) : (
+                      (groupedConfigs[group] ?? []).map((config) => (
+                        <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
+                      ))
+                    )}
+                  </TabsContent>
+                ))
+              )}
+            </Tabs>
+          </div>
         )}
       </div>
 
@@ -265,7 +372,10 @@ export default function ConfigsPage() {
         onCreateLocked={openLockedPaletteCreate}
         onOpenOccasions={() => setOccasionsDialogOpen(true)}
         onOpenFeedbacks={() => setFeedbacksDialogOpen(true)}
-        onSelectAhamove={setSelectedAhamoveRequest}
+        onSelectAhamove={(request) => {
+          setEditingAhamoveConfig(null)
+          setSelectedAhamoveRequest(request)
+        }}
       />
 
       <CreateConfigDialog
@@ -278,7 +388,11 @@ export default function ConfigsPage() {
       <AhamoveCreateConfigDialog
         open={selectedAhamoveRequest !== null}
         request={selectedAhamoveRequest}
-        onClose={() => setSelectedAhamoveRequest(null)}
+        existingConfig={editingAhamoveConfig}
+        onClose={() => {
+          setSelectedAhamoveRequest(null)
+          setEditingAhamoveConfig(null)
+        }}
       />
 
       <UpdateConfigDialog

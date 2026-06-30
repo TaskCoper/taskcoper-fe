@@ -12,6 +12,12 @@ class ConfigService extends BaseService {
     return data.value
   }
 
+  getConfig = async ({ id }: { id: string }) => {
+    const { data } = await this.get<BaseResponse<Config>>(`/v1/${this.baseUrl}/${id}`)
+
+    return data.value
+  }
+
   createConfig = async ({ body }: { body: CreateConfigFormValues }) => {
     const { data } = await this.post<BaseResponse<Config>>(`/v1/${this.baseUrl}`, body)
 

@@ -20,13 +20,15 @@ import {
   type AhamovePayloadInput
 } from '../ahamove-palette'
 import { useCreateConfig } from '../hooks/use-create-config'
-import { InputType } from '../types'
+import { useUpdateConfig } from '../hooks/use-update-config'
+import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
 
 interface AhamoveCreateConfigDialogProps {
   open: boolean
   onClose: () => void
   request: AhamoveServiceRequest | null
+  existingConfig?: Config | null
 }
 
 interface AhamoveFormValues {
@@ -43,26 +45,48 @@ const safeNumber = (value: unknown): number | undefined => {
   return Number.isFinite(n) ? n : undefined
 }
 
-export default function AhamoveCreateConfigDialog({ open, onClose, request }: AhamoveCreateConfigDialogProps) {
+const parseStoredPayload = (raw: unknown): Record<string, unknown> | null => {
+  if (raw && typeof raw === 'object') return raw as Record<string, unknown>
+  if (typeof raw !== 'string') return null
+  try {
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+export default function AhamoveCreateConfigDialog({
+  open,
+  onClose,
+  request,
+  existingConfig
+}: AhamoveCreateConfigDialogProps) {
   const { t, i18n } = useTenantTranslation()
   const locale = i18n.language
+  const isEdit = !!existingConfig
   const { createConfig, isCreatingConfig } = useCreateConfig()
+  const { updateConfig, isUpdatingConfig } = useUpdateConfig(existingConfig?.id)
 
   const defaults = useMemo<AhamoveFormValues>(() => {
     if (!request) {
       return { label: '', description: '', num: 1, tier_code: '', name: '', price: 0 }
     }
     const d = defaultAhamoveInput(request)
+    const stored = existingConfig ? parseStoredPayload(existingConfig.value.value) : null
+    const storedLabel = existingConfig?.value.label
+    const storedDescription = existingConfig?.value.description
 
     return {
-      label: localizedAhamoveName(request, locale),
-      description: localizedAhamoveDescription(request, locale) ?? '',
-      num: d.num ?? 1,
-      tier_code: d.tier_code ?? '',
-      name: d.name || localizedAhamoveName(request, locale),
-      price: d.price ?? 0
+      label: storedLabel || localizedAhamoveName(request, locale),
+      description: storedDescription ?? localizedAhamoveDescription(request, locale) ?? '',
+      num: safeNumber(stored?.num) ?? d.num ?? 1,
+      tier_code: (typeof stored?.tier_code === 'string' ? stored.tier_code : undefined) ?? d.tier_code ?? '',
+      name:
+        (typeof stored?.name === 'string' ? stored.name : undefined) ?? d.name ?? localizedAhamoveName(request, locale),
+      price: safeNumber(stored?.price) ?? d.price ?? 0
     }
-  }, [request, locale])
+  }, [request, locale, existingConfig])
 
   const {
     control,
@@ -97,9 +121,10 @@ export default function AhamoveCreateConfigDialog({ open, onClose, request }: Ah
   const onSubmit: SubmitHandler<AhamoveFormValues> = (values) => {
     if (!request) return
     const body: CreateConfigFormValues = {
-      key: `ahamove.shipping.${normalizeAhamoveKey(request._id)}`,
-      isPublic: false,
+      key: existingConfig?.key ?? `ahamove.shipping.${normalizeAhamoveKey(request._id)}`,
+      isPublic: existingConfig?.isPublic ?? false,
       group: 'ahamove',
+      kind: ConfigKind.setting,
       value: {
         group: 'ahamove',
         label: values.label.trim() || localizedAhamoveName(request, locale),
@@ -111,12 +136,17 @@ export default function AhamoveCreateConfigDialog({ open, onClose, request }: Ah
         value: jsonPreview
       }
     }
-    createConfig({ body }, { onSuccess: onClose })
+    if (isEdit) {
+      updateConfig({ body }, { onSuccess: onClose })
+    } else {
+      createConfig({ body }, { onSuccess: onClose })
+    }
   }
 
   const requestType = request?.type ?? null
   const requestName = request ? localizedAhamoveName(request, locale) : ''
-  const keyPreview = request ? `ahamove.shipping.${normalizeAhamoveKey(request._id)}` : ''
+  const keyPreview = existingConfig?.key ?? (request ? `ahamove.shipping.${normalizeAhamoveKey(request._id)}` : '')
+  const isSubmitting = isEdit ? isUpdatingConfig : isCreatingConfig
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -245,12 +275,12 @@ export default function AhamoveCreateConfigDialog({ open, onClose, request }: Ah
         </div>
 
         <DialogFooter className='pb-6 px-6'>
-          <Button type='button' variant='outline' disabled={isCreatingConfig} onClick={onClose}>
+          <Button type='button' variant='outline' disabled={isSubmitting} onClick={onClose}>
             {t('configsPage.dialog.cancel')}
           </Button>
-          <Button type='submit' form='ahamove-create-config-form' disabled={isCreatingConfig || !request}>
-            {isCreatingConfig ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
-            {isCreatingConfig ? t('configsPage.dialog.saving') : t('configsPage.dialog.save')}
+          <Button type='submit' form='ahamove-create-config-form' disabled={isSubmitting || !request}>
+            {isSubmitting ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
+            {isSubmitting ? t('configsPage.dialog.saving') : t('configsPage.dialog.save')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -433,6 +433,11 @@
     "somethingWentWrong": "Đã có lỗi xảy ra"
   },
   "systemConfigs": {
+    "kind": {
+      "content": "Nội dung",
+      "setting": "Cài đặt",
+      "secret": "Bí mật"
+    },
     "groups": {
       "dateSettings": "Cấu hình thời gian",
       "feature": "Cấu hình tính năng",
@@ -680,6 +685,20 @@
         "vi": "Tiếng Việt",
         "en": "English"
       },
+      "stats": {
+        "cards": "Thẻ dịp",
+        "cardsSub": "{{count}} đang hiển thị",
+        "campaigns": "Chiến dịch",
+        "campaignsSub": "{{count}} đang chạy"
+      },
+      "detail": {
+        "emptyTitle": "Chưa chọn thẻ nào",
+        "emptyBody": "Chọn một thẻ ở bên trái để chỉnh sửa chi tiết & chiến dịch, hoặc thêm thẻ mới.",
+        "tabs": {
+          "details": "Chi tiết",
+          "campaigns": "Chiến dịch"
+        }
+      },
       "section": {
         "title": "Phần đầu mục",
         "subtitle": "Tiêu đề và mô tả hiển thị trên đầu khu vực.",
@@ -699,6 +718,7 @@
         "untitled": "Thẻ #{{index}} (chưa đặt tên)",
         "noSlug": "(chưa có đường dẫn)",
         "disabled": "Đang ẩn",
+        "enabledToggle": "Hiển thị trên website",
         "moveUp": "Di chuyển lên",
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá thẻ",
@@ -718,13 +738,41 @@
         "categoryIdsPlaceholder": "Nhập ID rồi nhấn Enter",
         "categoryIdsHelp": "ID danh mục từ catalog. Có thể dán nhiều ID cách nhau bằng dấu phẩy."
       },
+      "campaigns": {
+        "title": "Chiến dịch theo mùa",
+        "subtitle": "Tên thẻ giữ cố định trên web. Mỗi chiến dịch đặt tên SEO/SKU theo dịp lễ; chiến dịch nào trong khoảng ngày hôm nay sẽ thay danh mục & badge của thẻ.",
+        "add": "Thêm chiến dịch",
+        "empty": "Chưa có chiến dịch nào - thẻ sẽ luôn dùng tên & danh mục mặc định.",
+        "untitled": "Chiến dịch #{{index}} (chưa đặt tên)",
+        "remove": "Xoá chiến dịch",
+        "activeNow": "Đang chạy",
+        "noDates": "Chưa đặt ngày",
+        "idField": "ID chiến dịch",
+        "campaignNameField": "Tên chiến dịch (SEO / SKU)",
+        "campaignNamePlaceholder": "vd: Mùa Hoa Tháng 2 - Valentine",
+        "skuPrefixField": "Tiền tố SKU",
+        "skuPrefixPlaceholder": "vd: MH02-VAL",
+        "startDateField": "Bắt đầu",
+        "endDateField": "Kết thúc",
+        "badgeOverrideField": "Badge thay thế (tuỳ chọn)",
+        "badgeOverridePlaceholder": "vd: Valentine",
+        "categoryIdsField": "Danh mục thay thế (tuỳ chọn)",
+        "categoryIdsHelp": "Khi chiến dịch đang chạy, danh mục này dùng thay danh mục thẻ. Bỏ trống để giữ nguyên."
+      },
       "errors": {
         "sectionTitleRequired": "Vui lòng nhập tiêu đề mục (VI).",
         "slugRequired": "Thẻ #{{index}}: thiếu đường dẫn.",
         "slugInvalid": "Thẻ #{{index}}: đường dẫn chỉ được dùng chữ thường, số, gạch ngang.",
         "slugDuplicate": "Đường dẫn \"{{slug}}\" đã được dùng cho thẻ khác.",
         "nameRequired": "Thẻ #{{index}}: thiếu tên bộ sưu tập (VI).",
-        "imageRequired": "Thẻ #{{index}}: vui lòng chọn ảnh."
+        "imageRequired": "Thẻ #{{index}}: vui lòng chọn ảnh.",
+        "campaignIdRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu ID.",
+        "campaignIdInvalid": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: ID chỉ được dùng chữ thường, số, gạch ngang.",
+        "campaignIdDuplicate": "Thẻ #{{cardIndex}}: ID chiến dịch \"{{id}}\" đã được dùng.",
+        "campaignNameRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu tên chiến dịch (VI).",
+        "campaignSkuRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu tiền tố SKU.",
+        "campaignDatesRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu ngày bắt đầu hoặc kết thúc.",
+        "campaignDatesInvalid": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: ngày bắt đầu phải trước (hoặc bằng) ngày kết thúc."
       }
     },
     "feedbacksDialog": {
@@ -734,6 +782,15 @@
       "locale": {
         "vi": "Tiếng Việt",
         "en": "English"
+      },
+      "stats": {
+        "total": "Feedback",
+        "featured": "Nổi bật",
+        "placeholders": "Placeholder"
+      },
+      "detail": {
+        "emptyTitle": "Chưa chọn feedback",
+        "emptyBody": "Chọn một feedback ở bên trái để chỉnh sửa, hoặc thêm feedback mới."
       },
       "section": {
         "title": "Phần đầu mục",
@@ -769,7 +826,7 @@
         "replaceImage": "Đổi ảnh",
         "nameField": "Tên khách hàng",
         "namePlaceholder": "vd: Linh N. hoặc A. Linh",
-        "nameHelp": "Tên đầy đủ hoặc viết tắt — tuỳ theo mức khách muốn lộ.",
+        "nameHelp": "Tên đầy đủ hoặc viết tắt - tuỳ theo mức khách muốn lộ.",
         "areaField": "Khu vực (tuỳ chọn)",
         "areaPlaceholder": "vd: Hà Nội, Cầu Giấy",
         "flowerTypeField": "Loại hoa / dịp mua (tuỳ chọn)",
