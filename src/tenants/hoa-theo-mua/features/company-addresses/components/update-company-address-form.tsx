@@ -2,6 +2,7 @@ import { ComboboxField } from '@/components/combobox-field'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
@@ -70,6 +71,9 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     const matchedWard = wards.find((ward) => ward.name === companyAddress.ward)
 
     reset({
+      fullName: companyAddress.fullName,
+      phone: companyAddress.phone,
+      remarks: companyAddress.remarks,
       addressLine: companyAddress.addressLine,
       city: companyAddress.city,
       ward: companyAddress.ward,
@@ -122,6 +126,54 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col space-y-2'>
+        <div className='flex items-start gap-4'>
+          <Controller
+            name='fullName'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-1 flex-1'>
+                <FieldLabel htmlFor={field.name}>{t('companyAddress.field.fullName.label')}</FieldLabel>
+                <Input
+                  {...field}
+                  value={field.value ?? ''}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder={t('companyAddress.field.fullName.placeholder')}
+                  autoComplete='off'
+                  spellCheck={false}
+                />
+                <div className='min-h-4'>
+                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                </div>
+              </Field>
+            )}
+          />
+
+          <Controller
+            name='phone'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-1 flex-1'>
+                <FieldLabel htmlFor={field.name}>{t('companyAddress.field.phoneNumber.label')}</FieldLabel>
+                <Input
+                  {...field}
+                  type='tel'
+                  value={field.value ?? ''}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder={t('companyAddress.field.phoneNumber.placeholder')}
+                  autoComplete='off'
+                  spellCheck={false}
+                  inputMode='numeric'
+                />
+                <div className='min-h-4'>
+                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                </div>
+              </Field>
+            )}
+          />
+        </div>
+
         <Controller
           name='addressLine'
           control={control}
@@ -210,6 +262,39 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
             modal
           />
         </div>
+
+        <Controller
+          name='remarks'
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='gap-1 w-full'>
+              <FieldLabel htmlFor={field.name} className='gap-1 items-baseline'>
+                {t('companyAddress.field.remarks.label')}
+                <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
+              </FieldLabel>
+              <InputGroup>
+                <InputGroupTextarea
+                  {...field}
+                  id={field.name}
+                  value={field.value ?? ''}
+                  placeholder={t('companyAddress.field.remarks.placeholder')}
+                  rows={4}
+                  className='min-h-20 resize-none wrap-break-word'
+                  aria-invalid={fieldState.invalid}
+                  maxLength={255}
+                />
+                <InputGroupAddon align='block-end'>
+                  <InputGroupText className='tabular-nums text-xs'>
+                    {(field.value ?? '').length}/255 {t('common.ui.characters')}
+                  </InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              <div className='min-h-4'>
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </div>
+            </Field>
+          )}
+        />
 
         <Suspense fallback={<Skeleton className='h-80 w-full rounded-xl' />}>
           <CompanyAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />

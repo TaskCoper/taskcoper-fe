@@ -61,6 +61,25 @@
     "update": {
       "submit": "Cập nhật địa chỉ",
       "reset": "Hoàn tác"
+    },
+    "field": {
+      "fullName": {
+        "label": "Họ và tên người liên hệ",
+        "placeholder": "vd: Nguyễn Văn A"
+      },
+      "phoneNumber": {
+        "label": "Số điện thoại",
+        "placeholder": "vd: 0901234567"
+      },
+      "remarks": {
+        "label": "Ghi chú",
+        "placeholder": "Ghi chú nội bộ về địa chỉ này (giờ mở cửa, hướng dẫn lấy hàng, v.v.)"
+      }
+    },
+    "validation": {
+      "phoneNumber": {
+        "invalid": "Số điện thoại phải bắt đầu bằng 0 và có 10 hoặc 11 chữ số."
+      }
     }
   },
   "customNews": {
@@ -671,6 +690,12 @@
       "emptyHint": "Chưa có thẻ dịp nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
+    "mainlinePalette": {
+      "title": "Bộ sưu tập chính",
+      "openEditor": "Mở trình soạn thảo",
+      "emptyHint": "Chưa có thẻ sản phẩm nào - bấm để bắt đầu",
+      "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
+    },
     "feedbacksPalette": {
       "title": "Feedback khách hàng",
       "openEditor": "Mở trình soạn thảo",
@@ -680,7 +705,7 @@
     "occasionsDialog": {
       "title": "Bộ sưu tập theo dịp",
       "subtitle": "Thêm bao nhiêu thẻ dịp tuỳ ý. Mỗi thẻ có 1 đường dẫn riêng và lọc theo danh mục sản phẩm.",
-      "configLabel": "Bộ sưu tập dịp tặng",
+      "configLabel": "Bộ sưu tập theo dịp",
       "locale": {
         "vi": "Tiếng Việt",
         "en": "English"
@@ -773,6 +798,60 @@
         "campaignSkuRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu tiền tố SKU.",
         "campaignDatesRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu ngày bắt đầu hoặc kết thúc.",
         "campaignDatesInvalid": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: ngày bắt đầu phải trước (hoặc bằng) ngày kết thúc."
+      }
+    },
+    "mainlineDialog": {
+      "title": "Bộ sưu tập chính",
+      "subtitle": "Danh sách thẻ sản phẩm luôn hiển thị trên trang chủ. Mỗi thẻ có đường dẫn riêng và lọc theo danh mục sản phẩm.",
+      "configLabel": "Bộ sưu tập chính",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "English"
+      },
+      "section": {
+        "title": "Phần đầu mục",
+        "subtitle": "Tiêu đề và mô tả hiển thị trên đầu khu vực.",
+        "enabled": "Hiển thị",
+        "titleField": "Tiêu đề",
+        "titlePlaceholder": "vd: Bộ sưu tập nổi bật",
+        "descriptionField": "Mô tả ngắn",
+        "descriptionPlaceholder": "Một câu giới thiệu ngắn cho khu vực"
+      },
+      "cards": {
+        "title": "Danh sách thẻ sản phẩm",
+        "subtitle": "{{count}} thẻ. Kéo thứ tự bằng nút mũi tên ở cuối hàng.",
+        "add": "Thêm thẻ sản phẩm",
+        "empty": "Chưa có thẻ nào. Bấm \"Thêm thẻ sản phẩm\" để bắt đầu."
+      },
+      "card": {
+        "untitled": "Thẻ #{{index}} (chưa đặt tên)",
+        "noSlug": "(chưa có đường dẫn)",
+        "disabled": "Đang ẩn",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xoá thẻ",
+        "image": "Ảnh thẻ",
+        "uploadImage": "Tải ảnh lên",
+        "replaceImage": "Đổi ảnh",
+        "badgeField": "Nhãn thẻ",
+        "badgePlaceholder": "vd: Bán chạy",
+        "nameField": "Tên bộ sưu tập",
+        "namePlaceholder": "vd: Hoa cưới",
+        "descriptionField": "Mô tả ngắn",
+        "descriptionPlaceholder": "Câu mô tả hiện dưới tên thẻ",
+        "slugField": "Đường dẫn (URL)",
+        "slugHelp": "Tạo tự động từ tên. Chỉ dùng chữ thường, số, gạch ngang.",
+        "categoryIdsField": "Danh mục sản phẩm áp dụng",
+        "categoryIdsPlaceholder": "Nhập ID rồi nhấn Enter",
+        "categoryIdsHelp": "ID danh mục từ catalog. Có thể dán nhiều ID cách nhau bằng dấu phẩy."
+      },
+      "errors": {
+        "sectionTitleRequired": "Vui lòng nhập tiêu đề mục (VI).",
+        "slugRequired": "Thẻ #{{index}}: thiếu đường dẫn.",
+        "slugInvalid": "Thẻ #{{index}}: đường dẫn chỉ được dùng chữ thường, số, gạch ngang.",
+        "slugDuplicate": "Đường dẫn \"{{slug}}\" đã được dùng cho thẻ khác.",
+        "nameRequired": "Thẻ #{{index}}: thiếu tên bộ sưu tập (VI).",
+        "imageRequired": "Thẻ #{{index}}: vui lòng chọn ảnh."
       }
     },
     "feedbacksDialog": {

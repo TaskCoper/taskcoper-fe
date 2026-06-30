@@ -41,24 +41,26 @@ export default function AddressesListPage() {
   const { companyAddress, isLoadingCompanyAddress } = useGetCompanyAddress()
 
   return (
-    <div className='p-6 w-2xl mx-auto space-y-6'>
-      <div>
-        <p className='text-2xl font-bold'>{t('companyAddress.title')}</p>
-        <p className='text-sm text-muted-foreground'>{t('companyAddress.description')}</p>
-      </div>
+    <div className='inset-0 absolute overflow-auto'>
+      <div className='p-6 w-2xl mx-auto space-y-6'>
+        <div>
+          <p className='text-2xl font-bold'>{t('companyAddress.title')}</p>
+          <p className='text-sm text-muted-foreground'>{t('companyAddress.description')}</p>
+        </div>
 
-      {isLoadingCompanyAddress ? (
-        <AddressFormSkeleton />
-      ) : companyAddress ? (
-        <UpdateCompanyAddressForm companyAddress={companyAddress} />
-      ) : (
-        <CreateCompanyAddressDialog>
-          <Button size='sm'>
-            <PlusCircle />
-            {t('companyAddress.createButton')}
-          </Button>
-        </CreateCompanyAddressDialog>
-      )}
+        {isLoadingCompanyAddress ? (
+          <AddressFormSkeleton />
+        ) : companyAddress ? (
+          <UpdateCompanyAddressForm companyAddress={companyAddress} />
+        ) : (
+          <CreateCompanyAddressDialog>
+            <Button size='sm'>
+              <PlusCircle />
+              {t('companyAddress.createButton')}
+            </Button>
+          </CreateCompanyAddressDialog>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,8 +1,19 @@
 import type { TFunction } from 'i18next'
 import z from 'zod'
 
+const VN_PHONE_REGEX = /^0\d{9,10}$/
+
 export const createCompanyAddressSchema = (t: TFunction) => {
   return z.object({
+    fullName: z
+      .string()
+      .min(2, t('common.validation.minLength', { min: 2 }))
+      .max(255, t('common.validation.maxLength', { max: 255 })),
+    phone: z
+      .string()
+      .min(1, t('common.validation.required'))
+      .regex(VN_PHONE_REGEX, t('companyAddress.validation.phoneNumber.invalid')),
+    remarks: z.string().max(255, t('common.validation.maxLength', { max: 255 })),
     addressLine: z
       .string()
       .min(1, t('common.validation.required'))

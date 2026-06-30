@@ -3,13 +3,11 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { ArrowDown, ArrowUp, Plus, Trash2, X } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react'
+import { useMemo } from 'react'
 import { defaultOccasionCampaign, type OccasionCampaign } from '../occasions-palette'
-
-type Lang = 'vi' | 'en'
+import { ChipInput, LocalizedTabs } from './collection-shared'
 
 function isCampaignActive(campaign: OccasionCampaign, today: string): boolean {
   return (
@@ -18,95 +16,6 @@ function isCampaignActive(campaign: OccasionCampaign, today: string): boolean {
     !!campaign.endDate &&
     campaign.startDate <= today &&
     today <= campaign.endDate
-  )
-}
-
-export function OccasionLocalizedTabs({ renderField }: { renderField: (lang: Lang) => React.ReactNode }) {
-  const { t } = useTenantTranslation()
-
-  return (
-    <Tabs defaultValue='vi'>
-      <TabsList className='h-8'>
-        <TabsTrigger value='vi' className='text-xs'>
-          {t('configsPage.occasionsDialog.locale.vi')}
-        </TabsTrigger>
-        <TabsTrigger value='en' className='text-xs'>
-          {t('configsPage.occasionsDialog.locale.en')}
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value='vi' className='mt-2'>
-        {renderField('vi')}
-      </TabsContent>
-      <TabsContent value='en' className='mt-2'>
-        {renderField('en')}
-      </TabsContent>
-    </Tabs>
-  )
-}
-
-export function ChipInput({
-  values,
-  onChange,
-  placeholder
-}: {
-  values: string[]
-  onChange: (next: string[]) => void
-  placeholder?: string
-}) {
-  const [draft, setDraft] = useState('')
-
-  const commit = (raw: string) => {
-    const parts = raw
-      .split(/[,\n\t]/)
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (parts.length === 0) return
-    const next = [...values]
-    for (const p of parts) if (!next.includes(p)) next.push(p)
-    onChange(next)
-    setDraft('')
-  }
-
-  return (
-    <div className='flex flex-wrap items-center gap-2 rounded-xl border bg-background p-2'>
-      {values.map((v) => (
-        <Badge key={v} variant='secondary' className='gap-1 font-mono'>
-          {v}
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            className='size-3.5 text-muted-foreground hover:bg-transparent hover:text-destructive'
-            onClick={() => onChange(values.filter((x) => x !== v))}
-            aria-label='remove'
-          >
-            <X className='size-3' />
-          </Button>
-        </Badge>
-      ))}
-
-      <Input
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ',') {
-            e.preventDefault()
-            commit(draft)
-          } else if (e.key === 'Backspace' && draft === '' && values.length > 0) {
-            onChange(values.slice(0, -1))
-          }
-        }}
-        onPaste={(e) => {
-          const text = e.clipboardData.getData('text')
-          if (/[,\n\t]/.test(text)) {
-            e.preventDefault()
-            commit(text)
-          }
-        }}
-        onBlur={() => commit(draft)}
-        placeholder={placeholder}
-      />
-    </div>
   )
 }
 
@@ -287,7 +196,9 @@ function CampaignRow({
       </div>
 
       <div className='mt-3'>
-        <OccasionLocalizedTabs
+        <LocalizedTabs
+          viLabel={t('configsPage.occasionsDialog.locale.vi')}
+          enLabel={t('configsPage.occasionsDialog.locale.en')}
           renderField={(lang) => (
             <div className='space-y-2'>
               <Field className='gap-1'>

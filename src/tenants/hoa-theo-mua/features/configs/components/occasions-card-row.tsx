@@ -9,7 +9,8 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { ArrowDown, ArrowUp, ChevronsUpDown, ImageIcon, Trash2, UploadIcon } from 'lucide-react'
 import { useRef } from 'react'
 import { slugify, type OccasionCard } from '../occasions-palette'
-import OccasionsCampaignsSection, { ChipInput, OccasionLocalizedTabs } from './occasions-campaigns-section'
+import { ChipInput, LocalizedTabs } from './collection-shared'
+import OccasionsCampaignsSection from './occasions-campaigns-section'
 
 type Lang = 'vi' | 'en'
 
@@ -180,7 +181,9 @@ export default function OccasionsCardRow({
           </div>
 
           <div className='space-y-4'>
-            <OccasionLocalizedTabs
+            <LocalizedTabs
+              viLabel={t('configsPage.occasionsDialog.locale.vi')}
+              enLabel={t('configsPage.occasionsDialog.locale.en')}
               renderField={(lang) => (
                 <div className='space-y-2'>
                   <Field className='gap-1'>

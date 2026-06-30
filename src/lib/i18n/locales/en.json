@@ -456,6 +456,13 @@
       }
     }
   },
+  "companyAddress": {
+    "validation": {
+      "phoneNumber": {
+        "invalid": "Phone number must start with 0 and be 10 or 11 digits long."
+      }
+    }
+  },
   "dataTable": {
     "column": {
       "asc": "Asc",

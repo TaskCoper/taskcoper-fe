@@ -12,11 +12,13 @@ import ConfigFieldRow from '../features/configs/components/config-field-row'
 import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
+import MainlineCollectionDialog from '../features/configs/components/mainline-collection-dialog'
 import OccasionsCollectionDialog from '../features/configs/components/occasions-collection-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
 import { FEEDBACKS_COLLECTION_KEY } from '../features/configs/feedbacks-palette'
 import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
+import { MAINLINE_COLLECTION_KEY } from '../features/configs/mainline-palette'
 import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
 import type { Config, InputOption } from '../features/configs/types'
 import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
@@ -81,6 +83,7 @@ export default function ConfigsPage() {
   const [editOpen, setEditOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<Config | null>(null)
   const [occasionsDialogOpen, setOccasionsDialogOpen] = useState(false)
+  const [mainlineDialogOpen, setMainlineDialogOpen] = useState(false)
   const [feedbacksDialogOpen, setFeedbacksDialogOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
@@ -208,6 +211,7 @@ export default function ConfigsPage() {
   )
 
   const occasionsConfig = useMemo(() => configs?.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null, [configs])
+  const mainlineConfig = useMemo(() => configs?.find((c) => c.key === MAINLINE_COLLECTION_KEY) ?? null, [configs])
   const feedbacksConfig = useMemo(() => configs?.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null, [configs])
 
   const findAhamoveRequestForConfig = useCallback(
@@ -229,6 +233,10 @@ export default function ConfigsPage() {
     (config: Config) => {
       if (config.key === OCCASIONS_COLLECTION_KEY) {
         setOccasionsDialogOpen(true)
+        return
+      }
+      if (config.key === MAINLINE_COLLECTION_KEY) {
+        setMainlineDialogOpen(true)
         return
       }
       if (config.key === FEEDBACKS_COLLECTION_KEY) {
@@ -364,6 +372,7 @@ export default function ConfigsPage() {
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
         occasionsConfig={occasionsConfig}
+        mainlineConfig={mainlineConfig}
         feedbacksConfig={feedbacksConfig}
         ahamoveRequests={ahamoveRequests}
         isGettingAhamoveService={isGettingAhamoveService}
@@ -371,6 +380,7 @@ export default function ConfigsPage() {
         onCreateStatic={openStaticPaletteCreate}
         onCreateLocked={openLockedPaletteCreate}
         onOpenOccasions={() => setOccasionsDialogOpen(true)}
+        onOpenMainline={() => setMainlineDialogOpen(true)}
         onOpenFeedbacks={() => setFeedbacksDialogOpen(true)}
         onSelectAhamove={(request) => {
           setEditingAhamoveConfig(null)
@@ -406,6 +416,12 @@ export default function ConfigsPage() {
         open={occasionsDialogOpen}
         onClose={() => setOccasionsDialogOpen(false)}
         existingConfig={occasionsConfig}
+      />
+
+      <MainlineCollectionDialog
+        open={mainlineDialogOpen}
+        onClose={() => setMainlineDialogOpen(false)}
+        existingConfig={mainlineConfig}
       />
 
       <FeedbacksCollectionDialog

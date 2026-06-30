@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
@@ -25,6 +24,7 @@ import {
 import configService from '../services'
 import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
+import { LocalizedTabs } from './collection-shared'
 import OccasionsCardRow from './occasions-card-row'
 
 interface Props {
@@ -32,8 +32,6 @@ interface Props {
   onSaved?: (config: Config | undefined) => void
   onCancel?: () => void
 }
-
-type Lang = 'vi' | 'en'
 
 type UICard = OccasionCard & { _uid: string }
 type UICollection = Omit<OccasionCollection, 'cards'> & { cards: UICard[] }
@@ -319,6 +317,8 @@ function SectionHeaderForm({
       </div>
 
       <LocalizedTabs
+        viLabel={t('configsPage.occasionsDialog.locale.vi')}
+        enLabel={t('configsPage.occasionsDialog.locale.en')}
         renderField={(lang) => (
           <div className='space-y-2'>
             <Field className='gap-1'>
@@ -342,27 +342,5 @@ function SectionHeaderForm({
         )}
       />
     </div>
-  )
-}
-
-function LocalizedTabs({ renderField }: { renderField: (lang: Lang) => React.ReactNode }) {
-  const { t } = useTenantTranslation()
-  return (
-    <Tabs defaultValue='vi'>
-      <TabsList className='h-8'>
-        <TabsTrigger value='vi' className='text-xs'>
-          {t('configsPage.occasionsDialog.locale.vi')}
-        </TabsTrigger>
-        <TabsTrigger value='en' className='text-xs'>
-          {t('configsPage.occasionsDialog.locale.en')}
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value='vi' className='mt-2'>
-        {renderField('vi')}
-      </TabsContent>
-      <TabsContent value='en' className='mt-2'>
-        {renderField('en')}
-      </TabsContent>
-    </Tabs>
   )
 }

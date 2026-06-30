@@ -9,6 +9,9 @@ import type { UpdateCompanyAddressFormValues } from '../validations'
 import UpdateCompanyAddressForm from './update-company-address-form'
 
 const toFormValues = (companyAddress: CompanyAddress): UpdateCompanyAddressFormValues => ({
+  fullName: companyAddress.fullName,
+  phone: companyAddress.phone,
+  remarks: companyAddress.remarks,
   addressLine: companyAddress.addressLine,
   city: companyAddress.city,
   ward: companyAddress.ward,

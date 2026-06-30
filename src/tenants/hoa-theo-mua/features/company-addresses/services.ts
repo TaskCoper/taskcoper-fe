@@ -3,6 +3,18 @@ import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { CompanyAddress } from './types'
 import type { CreateCompanyAddressFormValues, UpdateCompanyAddressFormValues } from './validations'
 
+type CompanyAddressPayloadKeys =
+  | 'fullName'
+  | 'phone'
+  | 'remarks'
+  | 'addressLine'
+  | 'city'
+  | 'ward'
+  | 'latitude'
+  | 'longitude'
+  | 'mapId'
+  | 'country'
+
 class CompanyAddressService extends BaseService {
   private readonly baseUrl = 'company-addresses'
 
@@ -15,12 +27,12 @@ class CompanyAddressService extends BaseService {
   createCompanyAddress = async ({
     body
   }: {
-    body: Pick<
-      CreateCompanyAddressFormValues,
-      'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
-    >
+    body: Pick<CreateCompanyAddressFormValues, CompanyAddressPayloadKeys>
   }) => {
     const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}`, {
+      fullName: body.fullName,
+      phone: body.phone,
+      remarks: body.remarks,
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,
@@ -38,12 +50,12 @@ class CompanyAddressService extends BaseService {
     body
   }: {
     id: string
-    body: Pick<
-      UpdateCompanyAddressFormValues,
-      'addressLine' | 'city' | 'ward' | 'latitude' | 'longitude' | 'mapId' | 'country'
-    >
+    body: Pick<UpdateCompanyAddressFormValues, CompanyAddressPayloadKeys>
   }) => {
     const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, {
+      fullName: body.fullName,
+      phone: body.phone,
+      remarks: body.remarks,
       addressLine: body.addressLine,
       city: body.city,
       ward: body.ward,

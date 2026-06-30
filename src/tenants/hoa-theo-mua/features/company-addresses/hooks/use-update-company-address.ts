@@ -8,6 +8,9 @@ import companyAddressService from '../services'
 import { updateCompanyAddressSchema, type UpdateCompanyAddressFormValues } from '../validations'
 
 const defaultValues: UpdateCompanyAddressFormValues = {
+  fullName: '',
+  phone: '',
+  remarks: '',
   addressLine: '',
   city: '',
   ward: '',

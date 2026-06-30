@@ -1,5 +1,8 @@
 export interface CompanyAddress {
   id: string
+  fullName: string
+  phone: string
+  remarks: string
   addressLine: string
   ward: string
   city: string

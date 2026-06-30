@@ -61,6 +61,25 @@
     "update": {
       "submit": "Update address",
       "reset": "Undo"
+    },
+    "field": {
+      "fullName": {
+        "label": "Contact full name",
+        "placeholder": "e.g. Nguyễn Văn A"
+      },
+      "phoneNumber": {
+        "label": "Phone number",
+        "placeholder": "e.g. 0901234567"
+      },
+      "remarks": {
+        "label": "Remarks",
+        "placeholder": "Internal notes about this address (opening hours, pickup instructions, etc.)"
+      }
+    },
+    "validation": {
+      "phoneNumber": {
+        "invalid": "Phone number must start with 0 and be 10 or 11 digits long."
+      }
     }
   },
   "customNews": {
@@ -671,6 +690,12 @@
       "emptyHint": "No occasion cards yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
+    "mainlinePalette": {
+      "title": "Mainline collection",
+      "openEditor": "Open editor",
+      "emptyHint": "No mainline cards yet - click to start",
+      "existsHint": "Configured - click to view & edit"
+    },
     "feedbacksPalette": {
       "title": "Customer feedbacks",
       "openEditor": "Open editor",
@@ -773,6 +798,60 @@
         "campaignSkuRequired": "Card #{{cardIndex}}, campaign #{{index}}: SKU prefix is required.",
         "campaignDatesRequired": "Card #{{cardIndex}}, campaign #{{index}}: start and end dates are required.",
         "campaignDatesInvalid": "Card #{{cardIndex}}, campaign #{{index}}: start date must be on or before end date."
+      }
+    },
+    "mainlineDialog": {
+      "title": "Mainline collection",
+      "subtitle": "The always-on product cards shown on the storefront. Each card has its own URL and filters by product categories.",
+      "configLabel": "Mainline collection",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "Section header",
+        "subtitle": "Title and description shown above the cards.",
+        "enabled": "Visible",
+        "titleField": "Title",
+        "titlePlaceholder": "e.g. Featured collections",
+        "descriptionField": "Short description",
+        "descriptionPlaceholder": "A short intro for the section"
+      },
+      "cards": {
+        "title": "Mainline cards",
+        "subtitle": "{{count}} card(s). Use the arrow buttons to reorder.",
+        "add": "Add card",
+        "empty": "No cards yet. Click \"Add card\" to begin."
+      },
+      "card": {
+        "untitled": "Card #{{index}} (no name)",
+        "noSlug": "(no URL yet)",
+        "disabled": "Hidden",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove card",
+        "image": "Card image",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "badgeField": "Badge",
+        "badgePlaceholder": "e.g. Bestseller",
+        "nameField": "Collection name",
+        "namePlaceholder": "e.g. Wedding flowers",
+        "descriptionField": "Short description",
+        "descriptionPlaceholder": "One line shown under the title",
+        "slugField": "URL slug",
+        "slugHelp": "Auto-generated from the name. Lowercase letters, digits, hyphens only.",
+        "categoryIdsField": "Filter by product categories",
+        "categoryIdsPlaceholder": "Type an ID and press Enter",
+        "categoryIdsHelp": "Category IDs from the catalog. Paste comma-separated IDs to add several."
+      },
+      "errors": {
+        "sectionTitleRequired": "Please enter a section title (VI).",
+        "slugRequired": "Card #{{index}}: URL slug is required.",
+        "slugInvalid": "Card #{{index}}: slug may only contain lowercase letters, digits, hyphens.",
+        "slugDuplicate": "Slug \"{{slug}}\" is already used by another card.",
+        "nameRequired": "Card #{{index}}: collection name (VI) is required.",
+        "imageRequired": "Card #{{index}}: please select an image."
       }
     },
     "feedbacksDialog": {

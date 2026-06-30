@@ -8,6 +8,9 @@ import companyAddressService from '../services'
 import { createCompanyAddressSchema, type CreateCompanyAddressFormValues } from '../validations'
 
 const defaultValues: CreateCompanyAddressFormValues = {
+  fullName: '',
+  phone: '',
+  remarks: '',
   addressLine: '',
   city: '',
   ward: '',
@@ -31,9 +34,6 @@ export const useCreateCompanyAddress = () => {
 
   const { mutate: createCompanyAddress, isPending: isCreatingCompanyAddress } = useMutation({
     mutationFn: companyAddressService.createCompanyAddress,
-    onSuccess: (message) => {
-      toast.success(message)
-    },
     onError: (error) => {
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail

@@ -9,6 +9,7 @@ import {
   ChevronDown,
   FileIcon,
   Flower2Icon,
+  LayoutGrid,
   ListChecks,
   MapPin,
   MessageSquareHeart,
@@ -36,6 +37,7 @@ interface Props {
   depotOptions: InputOption[]
   orderTagOptions: InputOption[]
   occasionsConfig: Config | null
+  mainlineConfig: Config | null
   feedbacksConfig: Config | null
   ahamoveRequests: AhamoveServiceRequest[]
   isGettingAhamoveService: boolean
@@ -43,6 +45,7 @@ interface Props {
   onCreateStatic: (inputType: InputType, options?: InputOption[]) => void
   onCreateLocked: (item: LockedPaletteItem) => void
   onOpenOccasions: () => void
+  onOpenMainline: () => void
   onOpenFeedbacks: () => void
   onSelectAhamove: (request: AhamoveServiceRequest) => void
 }
@@ -51,6 +54,7 @@ export default function ConfigPaletteSidebar({
   depotOptions,
   orderTagOptions,
   occasionsConfig,
+  mainlineConfig,
   feedbacksConfig,
   ahamoveRequests,
   isGettingAhamoveService,
@@ -58,6 +62,7 @@ export default function ConfigPaletteSidebar({
   onCreateStatic,
   onCreateLocked,
   onOpenOccasions,
+  onOpenMainline,
   onOpenFeedbacks,
   onSelectAhamove
 }: Props) {
@@ -199,6 +204,22 @@ export default function ConfigPaletteSidebar({
 
         <Separator className='my-5' />
 
+        {/* Mainline */}
+        <PaletteSection title={t('configsPage.mainlinePalette.title')}>
+          <CollectionPaletteButton
+            icon={<LayoutGrid className='size-4' />}
+            tone='sky'
+            label={t('configsPage.mainlinePalette.openEditor')}
+            hint={
+              mainlineConfig ? t('configsPage.mainlinePalette.existsHint') : t('configsPage.mainlinePalette.emptyHint')
+            }
+            configured={Boolean(mainlineConfig)}
+            onClick={onOpenMainline}
+          />
+        </PaletteSection>
+
+        <Separator className='my-5' />
+
         {/* Occasions */}
         <PaletteSection title={t('configsPage.occasionsPalette.title')}>
           <CollectionPaletteButton
@@ -303,7 +324,7 @@ function CollectionPaletteButton({
   onClick
 }: {
   icon: ReactNode
-  tone: 'emerald' | 'rose'
+  tone: 'emerald' | 'rose' | 'sky'
   label: string
   hint: string
   configured: boolean
@@ -311,7 +332,8 @@ function CollectionPaletteButton({
 }) {
   const tones = {
     emerald: { iconBg: 'bg-emerald-50 text-emerald-600', dot: 'bg-emerald-500' },
-    rose: { iconBg: 'bg-rose-50 text-rose-600', dot: 'bg-rose-500' }
+    rose: { iconBg: 'bg-rose-50 text-rose-600', dot: 'bg-rose-500' },
+    sky: { iconBg: 'bg-sky-50 text-sky-600', dot: 'bg-sky-500' }
   }[tone]
 
   return (

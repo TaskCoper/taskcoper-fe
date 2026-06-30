@@ -454,6 +454,13 @@
       }
     }
   },
+  "companyAddress": {
+    "validation": {
+      "phoneNumber": {
+        "invalid": "Số điện thoại phải bắt đầu bằng 0 và có 10 hoặc 11 chữ số."
+      }
+    }
+  },
   "dataTable": {
     "column": {
       "asc": "Tăng dần",
