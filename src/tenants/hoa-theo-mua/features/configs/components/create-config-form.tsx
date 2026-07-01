@@ -15,7 +15,7 @@ import { cn } from '@/shared/utils'
 import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
+import { ConfigKind, ConfigKindLabel, InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
@@ -54,7 +54,7 @@ const getRuleKey = (item: Record<string, unknown>): RuleKey | undefined => RULE_
 const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
 
 export interface CreateConfigFormProps {
-  lockedFields?: { key?: boolean; options?: boolean }
+  lockedFields?: { key?: boolean; options?: boolean; kind?: boolean }
   onPendingFileChange?: (file: File | null) => void
 }
 
@@ -62,6 +62,7 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
   const { t } = useTenantTranslation()
   const lockKey = !!lockedFields?.key
   const lockOptions = !!lockedFields?.options
+  const lockKind = !!lockedFields?.kind
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [pendingFileMeta, setPendingFileMeta] = useState<{ previewUrl: string; name: string; mime: string } | null>(
     null
@@ -105,11 +106,28 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
   const watchedValidations = (watch('value.validations') ?? []) as Array<Record<string, unknown>>
   const watchedOptions = (watch('value.options') ?? []) as InputOption[]
 
+  const getDefaultValueForType = (type: InputType): unknown => {
+    switch (type) {
+      case InputType.multiSelect:
+        return []
+      case InputType.boolean:
+      case InputType.switch:
+        return false
+      default:
+        return undefined
+    }
+  }
+
   const handleInputTypeChange = (newType: string) => {
-    setValue('value.inputType', newType as InputType)
-    setValue('value.value', newType === InputType.multiSelect ? [] : undefined)
-    setValue('value.validations', [])
-    if (newType !== InputType.select && newType !== InputType.multiSelect) setValue('value.options', [])
+    const nextType = newType as InputType
+    const opts = { shouldDirty: true, shouldValidate: true } as const
+
+    setValue('value.inputType', nextType, opts)
+    setValue('value.value', getDefaultValueForType(nextType), opts)
+    setValue('value.validations', [], opts)
+    if (nextType !== InputType.select && nextType !== InputType.multiSelect) {
+      setValue('value.options', [], opts)
+    }
   }
 
   const handleRemoveOption = (index: number) => {
@@ -338,6 +356,39 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
             />
             <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+            </div>
+          </Field>
+        )}
+      />
+
+      {/* Kind */}
+      <Controller
+        name='kind'
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid} className='gap-1'>
+            <FieldLabel htmlFor='cfg-kind'>
+              {t('configsPage.dialog.kindField')}
+              <span className='font-semibold text-destructive'>*</span>
+            </FieldLabel>
+            <Select value={field.value} onValueChange={(v) => field.onChange(v as ConfigKind)} disabled={lockKind}>
+              <SelectTrigger id='cfg-kind' aria-invalid={fieldState.invalid} disabled={lockKind}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(ConfigKind).map((kind) => (
+                  <SelectItem key={kind} value={kind}>
+                    {t(ConfigKindLabel[kind] as I18nKey)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className='min-h-4'>
+              {lockKind ? (
+                <span className='text-xs text-muted-foreground'>{t('configsPage.dialog.kindLockedHint')}</span>
+              ) : (
+                fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />
+              )}
             </div>
           </Field>
         )}

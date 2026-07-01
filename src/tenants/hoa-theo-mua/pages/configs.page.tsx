@@ -16,7 +16,9 @@ import MainlineCollectionDialog from '../features/configs/components/mainline-co
 import OccasionsCollectionDialog from '../features/configs/components/occasions-collection-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
 import { FEEDBACKS_COLLECTION_KEY } from '../features/configs/feedbacks-palette'
-import { useGetConfigs } from '../features/configs/hooks/use-get-configs'
+import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
+import { useGetSecretConfigs } from '../features/configs/hooks/use-get-secret-configs'
+import { useGetSettingConfigs } from '../features/configs/hooks/use-get-setting-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
 import { MAINLINE_COLLECTION_KEY } from '../features/configs/mainline-palette'
 import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
@@ -25,10 +27,11 @@ import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/type
 import type { CreateConfigFormInput } from '../features/configs/validations'
 import { useGetAhamoveService } from '../hooks/use-get-ahamove-service'
 import { useGetDepots } from '../hooks/use-get-depots'
+import { useGetOrderSources } from '../hooks/use-get-order-sources'
 import { useGetOrderTags } from '../hooks/use-get-order-tags'
 import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
-type LockedFields = { key?: boolean; options?: boolean }
+type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
 
 interface LockedPaletteItem {
   key: string
@@ -38,7 +41,7 @@ interface LockedPaletteItem {
   defaultValue: unknown
 }
 
-const KIND_ORDER: ConfigKind[] = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret]
+const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
 const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
@@ -70,10 +73,39 @@ const KIND_VISUALS: Record<
 
 export default function ConfigsPage() {
   const { t, i18n } = useTenantTranslation()
-  const { configs, isGettingConfigs } = useGetConfigs()
+  const [currentKind, setCurrentKind] = useState<ConfigKind>(ConfigKind.content)
+
+  const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({
+    enabled: currentKind === ConfigKind.content
+  })
+  const { settingConfigs = [], isGettingSettingConfigs } = useGetSettingConfigs({
+    enabled: currentKind === ConfigKind.setting
+  })
+  const { secretConfigs = [], isGettingSecretConfigs } = useGetSecretConfigs({
+    enabled: currentKind === ConfigKind.secret
+  })
+
   const { depots } = useGetDepots()
   const { orderTags } = useGetOrderTags()
+  const { orderSources } = useGetOrderSources()
   const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
+
+  const currentKindConfigs =
+    currentKind === ConfigKind.content
+      ? contentConfigs
+      : currentKind === ConfigKind.setting
+        ? settingConfigs
+        : secretConfigs
+
+  const isGettingConfigs =
+    (currentKind === ConfigKind.content && isGettingContentConfigs) ||
+    (currentKind === ConfigKind.setting && isGettingSettingConfigs) ||
+    (currentKind === ConfigKind.secret && isGettingSecretConfigs)
+
+  const allLoadedConfigs = useMemo<Config[]>(
+    () => [...contentConfigs, ...settingConfigs, ...secretConfigs],
+    [contentConfigs, settingConfigs, secretConfigs]
+  )
 
   const [createOpen, setCreateOpen] = useState(false)
   const [createInitialValues, setCreateInitialValues] = useState<Partial<CreateConfigFormInput>>()
@@ -96,43 +128,25 @@ export default function ConfigsPage() {
     [orderTags]
   )
 
+  const orderSourceOptions = useMemo<InputOption[]>(
+    () => orderSources.map((source) => ({ label: source.name, value: source.id })),
+    [orderSources]
+  )
+
   const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
     () => ({
       [LOCKED_ASYNC_CONFIG_KEYS.defaultDepot]: depotOptions,
-      [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions
+      [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions,
+      [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions
     }),
-    [depotOptions, orderTagOptions]
+    [depotOptions, orderTagOptions, orderSourceOptions]
   )
 
-  const configsByKind = useMemo(() => {
-    const map: Record<ConfigKind, Config[]> = {
-      [ConfigKind.content]: [],
-      [ConfigKind.setting]: [],
-      [ConfigKind.secret]: []
-    }
-
-    if (!configs) return map
-
-    for (const config of configs) {
-      const bucket = map[config.kind] ?? map[ConfigKind.content]
-      bucket.push(config)
-    }
-
-    return map
-  }, [configs])
-
-  const availableKinds = useMemo(() => KIND_ORDER.filter((kind) => configsByKind[kind].length > 0), [configsByKind])
-
-  const [activeKind, setActiveKind] = useState<ConfigKind>()
-  const currentKind =
-    activeKind && availableKinds.includes(activeKind) ? activeKind : (availableKinds[0] ?? ConfigKind.content)
-
   const groups = useMemo(() => {
-    const kindConfigs = configsByKind[currentKind] ?? []
     const seen = new Set<string>()
     const result: string[] = []
 
-    for (const config of kindConfigs) {
+    for (const config of currentKindConfigs) {
       if (!seen.has(config.value.group)) {
         seen.add(config.value.group)
         result.push(config.value.group)
@@ -140,21 +154,21 @@ export default function ConfigsPage() {
     }
 
     return result
-  }, [configsByKind, currentKind])
+  }, [currentKindConfigs])
 
   const [activeGroup, setActiveGroup] = useState<string>()
   const currentGroup = activeGroup && groups.includes(activeGroup) ? activeGroup : (groups[0] ?? '')
 
-  const groupedConfigs = useMemo(() => {
-    const kindConfigs = configsByKind[currentKind] ?? []
-
-    return kindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
-      const g = config.value.group
-      if (!acc[g]) acc[g] = []
-      acc[g].push(config)
-      return acc
-    }, {})
-  }, [configsByKind, currentKind])
+  const groupedConfigs = useMemo(
+    () =>
+      currentKindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
+        const g = config.value.group
+        if (!acc[g]) acc[g] = []
+        acc[g].push(config)
+        return acc
+      }, {}),
+    [currentKindConfigs]
+  )
 
   const openCreate = useCallback((initial: Partial<CreateConfigFormInput>, locked?: LockedFields) => {
     setCreateInitialValues(initial)
@@ -183,7 +197,7 @@ export default function ConfigsPage() {
 
   const openLockedPaletteCreate = useCallback(
     (item: LockedPaletteItem) => {
-      const existing = configs?.find((c) => c.key === item.key)
+      const existing = allLoadedConfigs.find((c) => c.key === item.key)
       if (existing) {
         setEditingConfig(existing)
         setEditOpen(true)
@@ -204,15 +218,24 @@ export default function ConfigsPage() {
             validations: []
           }
         },
-        { key: true, options: true }
+        { key: true, options: true, kind: true }
       )
     },
-    [configs, openCreate]
+    [allLoadedConfigs, openCreate]
   )
 
-  const occasionsConfig = useMemo(() => configs?.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null, [configs])
-  const mainlineConfig = useMemo(() => configs?.find((c) => c.key === MAINLINE_COLLECTION_KEY) ?? null, [configs])
-  const feedbacksConfig = useMemo(() => configs?.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null, [configs])
+  const occasionsConfig = useMemo(
+    () => allLoadedConfigs.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null,
+    [allLoadedConfigs]
+  )
+  const mainlineConfig = useMemo(
+    () => allLoadedConfigs.find((c) => c.key === MAINLINE_COLLECTION_KEY) ?? null,
+    [allLoadedConfigs]
+  )
+  const feedbacksConfig = useMemo(
+    () => allLoadedConfigs.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null,
+    [allLoadedConfigs]
+  )
 
   const findAhamoveRequestForConfig = useCallback(
     (config: Config): AhamoveServiceRequest | null => {
@@ -280,46 +303,39 @@ export default function ConfigsPage() {
           <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
         </div>
 
-        {isGettingConfigs ? (
-          <div className='space-y-3'>
-            <div className='flex gap-2'>
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className='h-9 w-28 rounded-full' />
-              ))}
-            </div>
-            <div className='flex gap-4 border-b pb-2'>
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className='h-8 w-28' />
-              ))}
-            </div>
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className='h-20 w-full' />
-            ))}
+        <div className='flex flex-col gap-4'>
+          <div className='flex flex-wrap items-center gap-2'>
+            {KIND_ORDER.map((kind) => {
+              const isActive = kind === currentKind
+              const visuals = KIND_VISUALS[kind]
+
+              return (
+                <Button
+                  key={kind}
+                  type='button'
+                  onClick={() => setCurrentKind(kind)}
+                  variant={isActive ? 'default' : 'outline'}
+                  size='sm'
+                >
+                  <visuals.Icon />
+                  <p>{t(ConfigKindLabel[kind])}</p>
+                </Button>
+              )
+            })}
           </div>
-        ) : availableKinds.length === 0 ? (
-          <div className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptyPage')}</div>
-        ) : (
-          <div className='flex flex-col gap-4'>
-            <div className='flex flex-wrap items-center gap-2'>
-              {availableKinds.map((kind) => {
-                const isActive = kind === currentKind
-                const visuals = KIND_VISUALS[kind]
 
-                return (
-                  <Button
-                    key={kind}
-                    type='button'
-                    onClick={() => setActiveKind(kind)}
-                    variant={isActive ? 'default' : 'outline'}
-                    size='sm'
-                  >
-                    <visuals.Icon />
-                    <p>{t(ConfigKindLabel[kind])}</p>
-                  </Button>
-                )
-              })}
+          {isGettingConfigs ? (
+            <div className='space-y-3'>
+              <div className='flex gap-4 border-b pb-2'>
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className='h-8 w-28' />
+                ))}
+              </div>
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className='h-20 w-full' />
+              ))}
             </div>
-
+          ) : (
             <Tabs value={currentGroup} onValueChange={(v) => setActiveGroup(v)} className='flex flex-col gap-0'>
               <div className='border-b'>
                 <TabsList className='h-auto gap-0 rounded-none bg-transparent p-0'>
@@ -364,13 +380,14 @@ export default function ConfigsPage() {
                 ))
               )}
             </Tabs>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <ConfigPaletteSidebar
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
+        orderSourceOptions={orderSourceOptions}
         occasionsConfig={occasionsConfig}
         mainlineConfig={mainlineConfig}
         feedbacksConfig={feedbacksConfig}

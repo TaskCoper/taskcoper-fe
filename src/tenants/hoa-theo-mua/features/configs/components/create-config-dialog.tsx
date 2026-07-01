@@ -17,7 +17,7 @@ interface CreateConfigDialogProps {
   open: boolean
   onClose: () => void
   initialValues?: Partial<CreateConfigFormInput>
-  lockedFields?: { key?: boolean; options?: boolean }
+  lockedFields?: { key?: boolean; options?: boolean; kind?: boolean }
 }
 
 const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''

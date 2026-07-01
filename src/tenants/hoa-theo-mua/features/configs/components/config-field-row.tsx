@@ -20,6 +20,7 @@ import {
   ChevronDownIcon,
   Code2Icon,
   ExternalLinkIcon,
+  EyeIcon,
   FileIcon,
   HashIcon,
   ImageIcon,
@@ -31,12 +32,13 @@ import {
   TypeIcon,
   UploadIcon
 } from 'lucide-react'
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
+import { useRevealConfig } from '../hooks/use-reveal-config'
 import configService from '../services'
-import { INPUT_TYPE_COLOR, InputType, type Config, type ConfigDefinition } from '../types'
+import { ConfigKind, INPUT_TYPE_COLOR, InputType, type Config, type ConfigDefinition } from '../types'
 import { buildValueValidator } from '../validations'
 
 interface ConfigFieldRowProps {
@@ -115,8 +117,10 @@ const getFilenameFromUrl = (url: string): string => {
 export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
+
   const { uploadFileWithToast: uploadImageWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
   const { uploadFileWithToast: uploadFileWithToastFn, isUploading: isUploadingFile } = useUploadFileWithToast()
+
   const imageFileInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -169,6 +173,23 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
   })
 
   const onSave = form.handleSubmit(({ value }) => saveValue(value))
+
+  const isSecret = config.kind === ConfigKind.secret
+  const [isRevealed, setIsRevealed] = useState(false)
+  const { revealConfig, isRevealingConfig } = useRevealConfig()
+
+  const handleReveal = () => {
+    revealConfig(
+      { id: config.id },
+      {
+        onSuccess: (revealed) => {
+          form.reset({ value: revealed.value.value })
+          setIsRevealed(true)
+        },
+        onError: () => toast.error(t('configKeys.toast.error'))
+      }
+    )
+  }
 
   const colorClass = INPUT_TYPE_COLOR[config.value.inputType] ?? 'text-gray-500 bg-gray-50'
   const icon = INPUT_TYPE_ICON[config.value.inputType]
@@ -480,12 +501,34 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
 
       {/* Value input row */}
       <div className='flex items-start gap-2 pl-6'>
-        <div className='flex-1 min-w-0'>{valueInput}</div>
-        {!isBooleanLike && isDirty && (
-          <Button size='sm' className='h-8 shrink-0' disabled={isSavingValue} onClick={onSave}>
-            {isSavingValue ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
-            {isSavingValue ? t('configsPage.card.saving') : t('configsPage.card.save')}
+        <div className='flex-1 min-w-0'>
+          {isSecret && !isRevealed ? (
+            <div className='flex h-8 items-center gap-2 rounded-md border border-dashed bg-muted/30 px-2.5 text-xs text-muted-foreground'>
+              <span className='flex-1 truncate font-mono tracking-widest'>••••••••</span>
+            </div>
+          ) : (
+            valueInput
+          )}
+        </div>
+        {isSecret && !isRevealed ? (
+          <Button
+            size='sm'
+            variant='outline'
+            className='h-8 shrink-0'
+            disabled={isRevealingConfig}
+            onClick={handleReveal}
+          >
+            {isRevealingConfig ? <Spinner data-icon='inline-start' /> : <EyeIcon data-icon='inline-start' />}
+            {isRevealingConfig ? t('configsPage.card.revealing') : t('configsPage.card.reveal')}
           </Button>
+        ) : (
+          !isBooleanLike &&
+          isDirty && (
+            <Button size='sm' className='h-8 shrink-0' disabled={isSavingValue} onClick={onSave}>
+              {isSavingValue ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
+              {isSavingValue ? t('configsPage.card.saving') : t('configsPage.card.save')}
+            </Button>
+          )
         )}
       </div>
 

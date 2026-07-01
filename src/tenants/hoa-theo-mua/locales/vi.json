@@ -579,10 +579,14 @@
       "groupField": "Nhóm",
       "labelField": "Nhãn",
       "labelPlaceholder": "Tên hiển thị",
+      "kindField": "Loại cấu hình",
       "inputTypeField": "Loại đầu vào",
       "defaultValueField": "Giá trị mặc định",
       "defaultValuesField": "Giá trị mặc định",
       "keyLockedHint": "Khóa cấu hình này được khóa cố định",
+      "kindLockedHint": "Loại cấu hình này được khóa cố định",
+      "revealSecret": "Hiển thị bí mật",
+      "secretHint": "Giá trị hiện tại đang được ẩn. Nhấn hiển thị để chỉnh sửa.",
       "optionsLockedHint": "{{count}} lựa chọn được quản lý bởi API",
       "descriptionField": "Mô tả",
       "descriptionPlaceholder": "Mô tả tùy chọn",
@@ -642,6 +646,8 @@
       "editDefinition": "Chỉnh sửa định nghĩa",
       "save": "Lưu",
       "saving": "Đang lưu...",
+      "reveal": "Hiển thị",
+      "revealing": "Đang tải...",
       "required": "Bắt buộc",
       "noFile": "Chưa có tệp",
       "multiSelectPlaceholder": "Chọn các lựa chọn...",
@@ -672,7 +678,8 @@
       "dateAndTime": "Ngày và giờ",
       "address": "Địa chỉ",
       "defaultDepot": "Kho mặc định",
-      "orderTags": "Nhãn đơn hàng"
+      "orderTags": "Nhãn đơn hàng",
+      "orderSources": "Nguồn đơn hàng"
     },
     "lockedPalette": {
       "title": "Nguồn API"

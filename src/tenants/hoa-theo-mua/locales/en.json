@@ -579,10 +579,14 @@
       "groupField": "Group",
       "labelField": "Label",
       "labelPlaceholder": "Display name",
+      "kindField": "Kind",
       "inputTypeField": "Input type",
       "defaultValueField": "Default value",
       "defaultValuesField": "Default values",
       "keyLockedHint": "Key is fixed for this config",
+      "kindLockedHint": "Kind is fixed for this config",
+      "revealSecret": "Reveal secret",
+      "secretHint": "The current value is hidden. Reveal it to edit.",
       "optionsLockedHint": "{{count}} options are managed by the live API",
       "descriptionField": "Description",
       "descriptionPlaceholder": "Optional description",
@@ -642,6 +646,8 @@
       "editDefinition": "Edit definition",
       "save": "Save",
       "saving": "Saving...",
+      "reveal": "Reveal",
+      "revealing": "Revealing...",
       "required": "Required",
       "noFile": "No file uploaded",
       "multiSelectPlaceholder": "Pick options...",
@@ -672,7 +678,8 @@
       "dateAndTime": "Date and Time",
       "address": "Address",
       "defaultDepot": "Default depot",
-      "orderTags": "Order tags"
+      "orderTags": "Order tags",
+      "orderSources": "Order sources"
     },
     "lockedPalette": {
       "title": "Async-backed"

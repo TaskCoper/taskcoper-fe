@@ -1,6 +1,6 @@
 import type { BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
-import type { Config } from './types'
+import type { Config, GetConfigsParams } from './types'
 import type { CreateConfigFormValues } from './validations'
 
 class ConfigService extends BaseService {
@@ -8,6 +8,36 @@ class ConfigService extends BaseService {
 
   getConfigs = async () => {
     const { data } = await this.get<BaseResponse<Config[]>>(`/v1/${this.baseUrl}`)
+
+    return data.value
+  }
+
+  getSettingConfigs = async ({ groupName, key }: GetConfigsParams) => {
+    const { data } = await this.get<BaseResponse<Config[]>>(`/v1/${this.baseUrl}/settings`, {
+      params: { groupName, key }
+    })
+
+    return data.value
+  }
+
+  getContentConfigs = async ({ groupName, key, isPublic }: GetConfigsParams & { isPublic?: boolean }) => {
+    const { data } = await this.get<BaseResponse<Config[]>>(`/v1/${this.baseUrl}/content`, {
+      params: { groupName, key, isPublic }
+    })
+
+    return data.value
+  }
+
+  getSecretConfigs = async ({ groupName, key }: GetConfigsParams) => {
+    const { data } = await this.get<BaseResponse<Config[]>>(`/v1/${this.baseUrl}/secrets`, {
+      params: { groupName, key }
+    })
+
+    return data.value
+  }
+
+  revealSecretConfig = async ({ id }: { id: string }) => {
+    const { data } = await this.post<BaseResponse<Config>>(`/v1/${this.baseUrl}/secrets/reveal/id`, id)
 
     return data.value
   }

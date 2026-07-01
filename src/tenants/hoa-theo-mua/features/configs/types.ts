@@ -99,3 +99,8 @@ export const INPUT_TYPE_COLOR: Record<InputType, string> = {
   [InputType.file]: 'text-orange-500 bg-orange-50',
   [InputType.address]: 'text-red-500 bg-red-50'
 }
+
+export interface GetConfigsParams {
+  groupName?: string
+  key?: string
+}

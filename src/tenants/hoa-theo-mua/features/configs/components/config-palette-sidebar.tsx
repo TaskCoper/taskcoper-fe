@@ -13,6 +13,7 @@ import {
   ListChecks,
   MapPin,
   MessageSquareHeart,
+  Store,
   Tags,
   ToggleLeft,
   Truck,
@@ -36,6 +37,7 @@ interface LockedPaletteItem {
 interface Props {
   depotOptions: InputOption[]
   orderTagOptions: InputOption[]
+  orderSourceOptions: InputOption[]
   occasionsConfig: Config | null
   mainlineConfig: Config | null
   feedbacksConfig: Config | null
@@ -53,6 +55,7 @@ interface Props {
 export default function ConfigPaletteSidebar({
   depotOptions,
   orderTagOptions,
+  orderSourceOptions,
   occasionsConfig,
   mainlineConfig,
   feedbacksConfig,
@@ -158,9 +161,19 @@ export default function ConfigPaletteSidebar({
         bg: 'bg-amber-50',
         options: orderTagOptions,
         defaultValue: [] as unknown
+      },
+      {
+        key: LOCKED_ASYNC_CONFIG_KEYS.orderSources,
+        label: t('configsPage.palette.orderSources'),
+        inputType: InputType.select,
+        icon: <Store className='size-4' />,
+        color: 'text-cyan-600',
+        bg: 'bg-cyan-50',
+        options: orderSourceOptions,
+        defaultValue: [] as unknown
       }
     ],
-    [depotOptions, orderTagOptions, t]
+    [depotOptions, orderTagOptions, orderSourceOptions, t]
   )
 
   return (

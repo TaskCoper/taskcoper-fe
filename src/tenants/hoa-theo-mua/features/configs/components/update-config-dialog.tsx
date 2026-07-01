@@ -6,13 +6,14 @@ import { Switch } from '@/components/ui/switch'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { SaveIcon, Trash2 } from 'lucide-react'
+import { EyeIcon, SaveIcon, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useDeleteConfig } from '../hooks/use-delete-config'
+import { useRevealConfig } from '../hooks/use-reveal-config'
 import { useUpdateConfig } from '../hooks/use-update-config'
 import { isLockedAsyncConfigKey } from '../locked-config-keys'
-import { InputType, type Config } from '../types'
+import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
 import UpdateConfigForm from './update-config-form'
 
@@ -31,9 +32,25 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
   const { methods, updateConfig, isUpdatingConfig } = useUpdateConfig(config?.id)
   const { deleteConfig, isDeletingConfig } = useDeleteConfig()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
+  const { revealConfig, isRevealingConfig } = useRevealConfig()
   const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [isRevealed, setIsRevealed] = useState(false)
 
   const isLocked = isLockedAsyncConfigKey(config?.key)
+  const isSecret = config?.kind === ConfigKind.secret
+
+  const handleReveal = () => {
+    if (!config) return
+    revealConfig(
+      { id: config.id },
+      {
+        onSuccess: (revealed) => {
+          methods.setValue('value.value', revealed.value.value, { shouldDirty: false, shouldValidate: true })
+          setIsRevealed(true)
+        }
+      }
+    )
+  }
 
   useEffect(() => {
     if (open && config) {
@@ -42,6 +59,7 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
       methods.reset({
         key: config.key,
         group,
+        kind: config.kind,
         isPublic: config.isPublic ?? false,
         value: {
           ...(config.value as CreateConfigFormValues['value']),
@@ -54,6 +72,7 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
 
   const handleClose = () => {
     setPendingFile(null)
+    setIsRevealed(false)
     onClose()
   }
 
@@ -106,10 +125,19 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
         </DialogHeader>
 
         <div className='flex-1 overflow-y-auto px-6'>
+          {isSecret && !isRevealed && (
+            <div className='mb-4 flex items-center gap-3 rounded-lg border border-dashed bg-muted/40 p-3'>
+              <div className='flex-1 text-xs text-muted-foreground'>{t('configsPage.dialog.secretHint')}</div>
+              <Button type='button' size='sm' variant='outline' disabled={isRevealingConfig} onClick={handleReveal}>
+                {isRevealingConfig ? <Spinner data-icon='inline-start' /> : <EyeIcon data-icon='inline-start' />}
+                {t('configsPage.dialog.revealSecret')}
+              </Button>
+            </div>
+          )}
           <FormProvider {...methods}>
             <form id='update-config-form' onSubmit={methods.handleSubmit(onSubmit)} className='pb-4'>
               <UpdateConfigForm
-                lockedFields={isLocked ? { key: true, options: true } : undefined}
+                lockedFields={isLocked ? { key: true, options: true, kind: true } : undefined}
                 onPendingFileChange={setPendingFile}
               />
               <Controller
