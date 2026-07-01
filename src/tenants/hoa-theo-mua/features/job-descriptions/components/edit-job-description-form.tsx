@@ -15,6 +15,7 @@ import { cn } from '@/shared/utils'
 import { ImageOffIcon, UploadIcon } from 'lucide-react'
 import { useRef } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
+import { useGetCompanyAddress } from '../../company-addresses/hooks/use-get-company-address'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
 interface EditJobDescriptionFormProps {
@@ -46,6 +47,7 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
   const { uploadFileWithToast: uploadCover, isUploading: isUploadingCover } = useUploadFileWithToast()
   const avatarFileInputRef = useRef<HTMLInputElement>(null)
   const coverFileInputRef = useRef<HTMLInputElement>(null)
+  const { companyAddress } = useGetCompanyAddress()
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-12 lg:gap-8'>
@@ -321,14 +323,16 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                   {t('recruitment.jobs.column.location')}
                   <span className='text-destructive font-semibold'>*</span>
                 </FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  placeholder={t('recruitment.jobs.form.field.location.placeholder')}
-                  spellCheck={false}
-                  autoComplete='off'
-                />
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger aria-invalid={fieldState.invalid}>
+                    <SelectValue placeholder={t('recruitment.jobs.form.field.location.placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem key={companyAddress!.city} value={companyAddress!.city}>
+                      {companyAddress!.city}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </Field>
             )}
