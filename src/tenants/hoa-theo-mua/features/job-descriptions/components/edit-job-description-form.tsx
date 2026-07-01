@@ -48,6 +48,7 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
   const avatarFileInputRef = useRef<HTMLInputElement>(null)
   const coverFileInputRef = useRef<HTMLInputElement>(null)
   const { companyAddress } = useGetCompanyAddress()
+  const companyCity = companyAddress?.city
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-12 lg:gap-8'>
@@ -328,9 +329,11 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                     <SelectValue placeholder={t('recruitment.jobs.form.field.location.placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem key={companyAddress!.city} value={companyAddress!.city}>
-                      {companyAddress!.city}
-                    </SelectItem>
+                    {companyCity && (
+                      <SelectItem key={companyCity} value={companyCity}>
+                        {companyCity}
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}

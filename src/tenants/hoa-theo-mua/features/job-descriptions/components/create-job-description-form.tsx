@@ -101,6 +101,7 @@ function StepDetails() {
   const { t } = useTenantTranslation()
   const { control } = useFormContext<CreateJobDescriptionFormValues>()
   const { companyAddress } = useGetCompanyAddress()
+  const companyCity = companyAddress?.city
 
   return (
     <div className='space-y-4'>
@@ -137,9 +138,11 @@ function StepDetails() {
                   <SelectValue placeholder={t('recruitment.jobs.form.field.location.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem key={companyAddress!.city} value={companyAddress!.city}>
-                    {companyAddress!.city}
-                  </SelectItem>
+                  {companyCity && (
+                    <SelectItem key={companyCity} value={companyCity}>
+                      {companyCity}
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
               <div className='min-h-4'>
