@@ -1,28 +1,9 @@
 import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import {
-  AlignLeft,
-  Calendar,
-  CheckCircle2,
-  ChevronDown,
-  FileIcon,
-  Flower2Icon,
-  LayoutGrid,
-  ListChecks,
-  MapPin,
-  MessageSquareHeart,
-  Store,
-  Tags,
-  ToggleLeft,
-  Truck,
-  Type,
-  Warehouse
-} from 'lucide-react'
+import { Flower2Icon, GalleryHorizontalEnd, LayoutGrid, MessageSquareHeart, Tags, Warehouse } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
-import type { AhamoveServiceRequest } from '../../../types/ahamove.type'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../locked-config-keys'
 import { InputType, type Config, type InputOption } from '../types'
 
@@ -37,108 +18,112 @@ interface LockedPaletteItem {
 interface Props {
   depotOptions: InputOption[]
   orderTagOptions: InputOption[]
-  orderSourceOptions: InputOption[]
+  // orderSourceOptions: InputOption[]
   occasionsConfig: Config | null
   mainlineConfig: Config | null
   feedbacksConfig: Config | null
-  ahamoveRequests: AhamoveServiceRequest[]
-  isGettingAhamoveService: boolean
-  language: string | undefined
+  bannersConfig: Config | null
+  // ahamoveRequests: AhamoveServiceRequest[]
+  // isGettingAhamoveService: boolean
+  // language: string | undefined
   onCreateStatic: (inputType: InputType, options?: InputOption[]) => void
   onCreateLocked: (item: LockedPaletteItem) => void
   onOpenOccasions: () => void
   onOpenMainline: () => void
   onOpenFeedbacks: () => void
-  onSelectAhamove: (request: AhamoveServiceRequest) => void
+  onOpenBanners: () => void
+  // onSelectAhamove: (request: AhamoveServiceRequest) => void
 }
 
 export default function ConfigPaletteSidebar({
   depotOptions,
   orderTagOptions,
-  orderSourceOptions,
+  // orderSourceOptions,
   occasionsConfig,
   mainlineConfig,
   feedbacksConfig,
-  ahamoveRequests,
-  isGettingAhamoveService,
-  language,
-  onCreateStatic,
+  bannersConfig,
+  // ahamoveRequests,
+  // isGettingAhamoveService,
+  // language,
+  // onCreateStatic,
   onCreateLocked,
   onOpenOccasions,
   onOpenMainline,
   onOpenFeedbacks,
-  onSelectAhamove
+  onOpenBanners
+  // onSelectAhamove
 }: Props) {
   const { t } = useTenantTranslation()
 
-  const genericPalette = useMemo(
-    () => [
-      {
-        label: t('configsPage.palette.singleLineText'),
-        inputType: InputType.text,
-        icon: <Type className='size-4' />,
-        color: 'text-red-500',
-        bg: 'bg-red-50'
-      },
-      {
-        label: t('configsPage.palette.multiLineText'),
-        inputType: InputType.textarea,
-        icon: <AlignLeft className='size-4' />,
-        color: 'text-blue-500',
-        bg: 'bg-blue-50'
-      },
-      {
-        label: t('configsPage.palette.checkbox'),
-        inputType: InputType.boolean,
-        icon: <CheckCircle2 className='size-4' />,
-        color: 'text-yellow-500',
-        bg: 'bg-yellow-50'
-      },
-      {
-        label: t('configsPage.palette.dropdown'),
-        inputType: InputType.select,
-        icon: <ChevronDown className='size-4' />,
-        color: 'text-indigo-600',
-        bg: 'bg-indigo-50'
-      },
-      {
-        label: t('configsPage.palette.multiSelect'),
-        inputType: InputType.multiSelect,
-        icon: <ListChecks className='size-4' />,
-        color: 'text-pink-600',
-        bg: 'bg-pink-50'
-      },
-      {
-        label: t('configsPage.palette.file'),
-        inputType: InputType.file,
-        icon: <FileIcon className='size-4' />,
-        color: 'text-orange-500',
-        bg: 'bg-orange-50'
-      },
-      {
-        label: t('configsPage.palette.toggleButton'),
-        inputType: InputType.switch,
-        icon: <ToggleLeft className='size-4' />,
-        color: 'text-purple-500',
-        bg: 'bg-purple-50'
-      },
-      {
-        label: t('configsPage.palette.dateAndTime'),
-        inputType: InputType.date,
-        icon: <Calendar className='size-4' />,
-        color: 'text-blue-500',
-        bg: 'bg-blue-50'
-      },
-      {
-        label: t('configsPage.palette.address'),
-        inputType: InputType.address,
-        icon: <MapPin className='size-4' />,
-        color: 'text-red-500',
-        bg: 'bg-red-50'
-      }
-    ],
-    [t]
-  )
+  // const genericPalette = useMemo(
+  //   () => [
+  //     {
+  //       label: t('configsPage.palette.singleLineText'),
+  //       inputType: InputType.text,
+  //       icon: <Type className='size-4' />,
+  //       color: 'text-red-500',
+  //       bg: 'bg-red-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.multiLineText'),
+  //       inputType: InputType.textarea,
+  //       icon: <AlignLeft className='size-4' />,
+  //       color: 'text-blue-500',
+  //       bg: 'bg-blue-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.checkbox'),
+  //       inputType: InputType.boolean,
+  //       icon: <CheckCircle2 className='size-4' />,
+  //       color: 'text-yellow-500',
+  //       bg: 'bg-yellow-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.dropdown'),
+  //       inputType: InputType.select,
+  //       icon: <ChevronDown className='size-4' />,
+  //       color: 'text-indigo-600',
+  //       bg: 'bg-indigo-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.multiSelect'),
+  //       inputType: InputType.multiSelect,
+  //       icon: <ListChecks className='size-4' />,
+  //       color: 'text-pink-600',
+  //       bg: 'bg-pink-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.file'),
+  //       inputType: InputType.file,
+  //       icon: <FileIcon className='size-4' />,
+  //       color: 'text-orange-500',
+  //       bg: 'bg-orange-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.toggleButton'),
+  //       inputType: InputType.switch,
+  //       icon: <ToggleLeft className='size-4' />,
+  //       color: 'text-purple-500',
+  //       bg: 'bg-purple-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.dateAndTime'),
+  //       inputType: InputType.date,
+  //       icon: <Calendar className='size-4' />,
+  //       color: 'text-blue-500',
+  //       bg: 'bg-blue-50'
+  //     },
+  //     {
+  //       label: t('configsPage.palette.address'),
+  //       inputType: InputType.address,
+  //       icon: <MapPin className='size-4' />,
+  //       color: 'text-red-500',
+  //       bg: 'bg-red-50'
+  //     }
+  //   ],
+  //   [t]
+  // )
 
   const lockedPalette = useMemo<Array<LockedPaletteItem & { icon: ReactNode; color: string; bg: string }>>(
     () => [
@@ -161,26 +146,26 @@ export default function ConfigPaletteSidebar({
         bg: 'bg-amber-50',
         options: orderTagOptions,
         defaultValue: [] as unknown
-      },
-      {
-        key: LOCKED_ASYNC_CONFIG_KEYS.orderSources,
-        label: t('configsPage.palette.orderSources'),
-        inputType: InputType.select,
-        icon: <Store className='size-4' />,
-        color: 'text-cyan-600',
-        bg: 'bg-cyan-50',
-        options: orderSourceOptions,
-        defaultValue: [] as unknown
       }
+      // {
+      //   key: LOCKED_ASYNC_CONFIG_KEYS.orderSources,
+      //   label: t('configsPage.palette.orderSources'),
+      //   inputType: InputType.select,
+      //   icon: <Store className='size-4' />,
+      //   color: 'text-cyan-600',
+      //   bg: 'bg-cyan-50',
+      //   options: orderSourceOptions,
+      //   defaultValue: [] as unknown
+      // }
     ],
-    [depotOptions, orderTagOptions, orderSourceOptions, t]
+    [depotOptions, orderTagOptions, t]
   )
 
   return (
     <div className='w-80 shrink-0 overflow-y-auto border-l'>
       <div className='px-2 py-4'>
         {/* Generic — single-click fields */}
-        <PaletteSection title={t('configsPage.palette.title')}>
+        {/* <PaletteSection title={t('configsPage.palette.title')}>
           {genericPalette.map((item) => (
             <button
               key={item.label}
@@ -194,9 +179,9 @@ export default function ConfigPaletteSidebar({
               <span>{item.label}</span>
             </button>
           ))}
-        </PaletteSection>
+        </PaletteSection> */}
 
-        <Separator className='my-5' />
+        {/* <Separator className='my-5' /> */}
 
         {/* Async-backed */}
         <PaletteSection title={t('configsPage.lockedPalette.title')}>
@@ -269,8 +254,24 @@ export default function ConfigPaletteSidebar({
 
         <Separator className='my-5' />
 
+        {/* Banners */}
+        <PaletteSection title={t('configsPage.bannersPalette.title')}>
+          <CollectionPaletteButton
+            icon={<GalleryHorizontalEnd className='size-4' />}
+            tone='amber'
+            label={t('configsPage.bannersPalette.openEditor')}
+            hint={
+              bannersConfig ? t('configsPage.bannersPalette.existsHint') : t('configsPage.bannersPalette.emptyHint')
+            }
+            configured={Boolean(bannersConfig)}
+            onClick={onOpenBanners}
+          />
+        </PaletteSection>
+
+        {/* <Separator className='my-5' /> */}
+
         {/* Ahamove */}
-        <PaletteSection title={t('configsPage.ahamovePalette.title')}>
+        {/* <PaletteSection title={t('configsPage.ahamovePalette.title')}>
           {isGettingAhamoveService ? (
             <div className='space-y-1.5'>
               {[1, 2, 3].map((i) => (
@@ -313,7 +314,7 @@ export default function ConfigPaletteSidebar({
               )
             })
           )}
-        </PaletteSection>
+        </PaletteSection> */}
       </div>
     </div>
   )
@@ -337,7 +338,7 @@ function CollectionPaletteButton({
   onClick
 }: {
   icon: ReactNode
-  tone: 'emerald' | 'rose' | 'sky'
+  tone: 'emerald' | 'rose' | 'sky' | 'amber'
   label: string
   hint: string
   configured: boolean
@@ -346,7 +347,8 @@ function CollectionPaletteButton({
   const tones = {
     emerald: { iconBg: 'bg-emerald-50 text-emerald-600', dot: 'bg-emerald-500' },
     rose: { iconBg: 'bg-rose-50 text-rose-600', dot: 'bg-rose-500' },
-    sky: { iconBg: 'bg-sky-50 text-sky-600', dot: 'bg-sky-500' }
+    sky: { iconBg: 'bg-sky-50 text-sky-600', dot: 'bg-sky-500' },
+    amber: { iconBg: 'bg-amber-50 text-amber-600', dot: 'bg-amber-500' }
   }[tone]
 
   return (

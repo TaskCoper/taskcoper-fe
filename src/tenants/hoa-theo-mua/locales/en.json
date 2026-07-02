@@ -709,6 +709,12 @@
       "emptyHint": "No feedbacks yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
+    "bannersPalette": {
+      "title": "Promotional banners",
+      "openEditor": "Open editor",
+      "emptyHint": "No banners yet - click to start",
+      "existsHint": "Configured - click to view & edit"
+    },
     "occasionsDialog": {
       "title": "Occasions collection",
       "subtitle": "Add as many occasion cards as you like. Each card has its own URL and filters by product categories.",
@@ -942,6 +948,52 @@
         "nameRequired": "Feedback #{{index}}: customer name is required.",
         "contentRequired": "Feedback #{{index}}: content (VI) is required.",
         "postDateRequired": "Feedback #{{index}}: post date is required."
+      }
+    },
+    "bannersDialog": {
+      "title": "Promotional banners",
+      "subtitle": "Each banner has its own slot key — reuse the same slot across multiple banners to show a slideshow at one spot on the site.",
+      "configLabel": "Promotional banners",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "General",
+        "subtitle": "Toggle every banner off without deleting anything.",
+        "enabled": "Enabled"
+      },
+      "items": {
+        "title": "Banners",
+        "subtitle": "{{count}} banner(s). Reorder with the arrow buttons.",
+        "add": "Add banner",
+        "empty": "No banners yet. Click \"Add banner\" to start."
+      },
+      "item": {
+        "untitled": "Banner #{{index}} (no slot yet)",
+        "noHref": "(no link)",
+        "disabled": "Hidden",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove banner",
+        "image": "Banner image",
+        "imageHelp": "Recommend 16:9 or match the intended slot's size.",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "slotField": "Slot key",
+        "slotPlaceholder": "e.g. hero, sidebar-top",
+        "slotHelp": "Free-form key — frontend filters banners by this string. Existing slots are suggested.",
+        "hrefField": "Click destination",
+        "hrefHelp": "Internal path (/products/...) or full URL (https://...).",
+        "openInNewTabToggle": "Open link in a new tab",
+        "altField": "Alt text",
+        "altPlaceholder": "e.g. 20% off your first order",
+        "altHelp": "Shown when the image fails to load; also used by SEO / screen readers."
+      },
+      "errors": {
+        "slotRequired": "Banner #{{index}}: slot key is required.",
+        "imageRequired": "Banner #{{index}}: image is required.",
+        "hrefRequired": "Banner #{{index}}: click destination is required."
       }
     },
     "ahamoveDialog": {

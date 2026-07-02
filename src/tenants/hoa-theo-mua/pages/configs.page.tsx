@@ -6,8 +6,9 @@ import { cn } from '@/shared/utils'
 import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
-import { normalizeAhamoveKey } from '../features/configs/ahamove-palette'
+import { BANNERS_COLLECTION_KEY } from '../features/configs/banners-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
+import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
@@ -25,7 +26,6 @@ import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
 import type { Config, InputOption } from '../features/configs/types'
 import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
 import type { CreateConfigFormInput } from '../features/configs/validations'
-import { useGetAhamoveService } from '../hooks/use-get-ahamove-service'
 import { useGetDepots } from '../hooks/use-get-depots'
 import { useGetOrderSources } from '../hooks/use-get-order-sources'
 import { useGetOrderTags } from '../hooks/use-get-order-tags'
@@ -43,16 +43,16 @@ interface LockedPaletteItem {
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
-const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
-  if (raw && typeof raw === 'object') return raw as Record<string, unknown>
-  if (typeof raw !== 'string') return null
-  try {
-    const parsed = JSON.parse(raw)
-    return parsed && typeof parsed === 'object' ? parsed : null
-  } catch {
-    return null
-  }
-}
+// const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
+//   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
+//   if (typeof raw !== 'string') return null
+//   try {
+//     const parsed = JSON.parse(raw)
+//     return parsed && typeof parsed === 'object' ? parsed : null
+//   } catch {
+//     return null
+//   }
+// }
 
 const KIND_VISUALS: Record<
   ConfigKind,
@@ -72,7 +72,7 @@ const KIND_VISUALS: Record<
 }
 
 export default function ConfigsPage() {
-  const { t, i18n } = useTenantTranslation()
+  const { t } = useTenantTranslation()
   const [currentKind, setCurrentKind] = useState<ConfigKind>(ConfigKind.content)
 
   const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({
@@ -88,7 +88,7 @@ export default function ConfigsPage() {
   const { depots } = useGetDepots()
   const { orderTags } = useGetOrderTags()
   const { orderSources } = useGetOrderSources()
-  const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
+  // const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
 
   const currentKindConfigs =
     currentKind === ConfigKind.content
@@ -117,6 +117,7 @@ export default function ConfigsPage() {
   const [occasionsDialogOpen, setOccasionsDialogOpen] = useState(false)
   const [mainlineDialogOpen, setMainlineDialogOpen] = useState(false)
   const [feedbacksDialogOpen, setFeedbacksDialogOpen] = useState(false)
+  const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
     () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
@@ -236,49 +237,54 @@ export default function ConfigsPage() {
     () => allLoadedConfigs.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null,
     [allLoadedConfigs]
   )
-
-  const findAhamoveRequestForConfig = useCallback(
-    (config: Config): AhamoveServiceRequest | null => {
-      const raw = config.value.value
-      const parsed = typeof raw === 'string' ? safeJsonParse(raw) : (raw as Record<string, unknown> | null)
-      const storedId = typeof parsed?._id === 'string' ? parsed._id : null
-      if (storedId) {
-        const byId = ahamoveRequests.find((r) => r._id === storedId)
-        if (byId) return byId
-      }
-      const suffix = config.key.replace(/^ahamove\.shipping\./, '')
-      return ahamoveRequests.find((r) => normalizeAhamoveKey(r._id) === suffix) ?? null
-    },
-    [ahamoveRequests]
+  const bannersConfig = useMemo(
+    () => allLoadedConfigs.find((c) => c.key === BANNERS_COLLECTION_KEY) ?? null,
+    [allLoadedConfigs]
   )
 
-  const openEdit = useCallback(
-    (config: Config) => {
-      if (config.key === OCCASIONS_COLLECTION_KEY) {
-        setOccasionsDialogOpen(true)
-        return
-      }
-      if (config.key === MAINLINE_COLLECTION_KEY) {
-        setMainlineDialogOpen(true)
-        return
-      }
-      if (config.key === FEEDBACKS_COLLECTION_KEY) {
-        setFeedbacksDialogOpen(true)
-        return
-      }
-      if (config.key.startsWith('ahamove.shipping.')) {
-        const match = findAhamoveRequestForConfig(config)
-        if (match) {
-          setEditingAhamoveConfig(config)
-          setSelectedAhamoveRequest(match)
-          return
-        }
-      }
-      setEditingConfig(config)
-      setEditOpen(true)
-    },
-    [findAhamoveRequestForConfig]
-  )
+  // const findAhamoveRequestForConfig = useCallback(
+  //   (config: Config): AhamoveServiceRequest | null => {
+  //     const raw = config.value.value
+  //     const parsed = typeof raw === 'string' ? safeJsonParse(raw) : (raw as Record<string, unknown> | null)
+  //     const storedId = typeof parsed?._id === 'string' ? parsed._id : null
+  //     if (storedId) {
+  //       const byId = ahamoveRequests.find((r) => r._id === storedId)
+  //       if (byId) return byId
+  //     }
+  //     const suffix = config.key.replace(/^ahamove\.shipping\./, '')
+  //     return ahamoveRequests.find((r) => normalizeAhamoveKey(r._id) === suffix) ?? null
+  //   },
+  //   [ahamoveRequests]
+  // )
+
+  const openEdit = useCallback((config: Config) => {
+    if (config.key === OCCASIONS_COLLECTION_KEY) {
+      setOccasionsDialogOpen(true)
+      return
+    }
+    if (config.key === MAINLINE_COLLECTION_KEY) {
+      setMainlineDialogOpen(true)
+      return
+    }
+    if (config.key === FEEDBACKS_COLLECTION_KEY) {
+      setFeedbacksDialogOpen(true)
+      return
+    }
+    if (config.key === BANNERS_COLLECTION_KEY) {
+      setBannersDialogOpen(true)
+      return
+    }
+    // if (config.key.startsWith('ahamove.shipping.')) {
+    //   const match = findAhamoveRequestForConfig(config)
+    //   if (match) {
+    //     setEditingAhamoveConfig(config)
+    //     setSelectedAhamoveRequest(match)
+    //     return
+    //   }
+    // }
+    setEditingConfig(config)
+    setEditOpen(true)
+  }, [])
 
   const closeEdit = useCallback(() => {
     setEditOpen(false)
@@ -387,22 +393,24 @@ export default function ConfigsPage() {
       <ConfigPaletteSidebar
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
-        orderSourceOptions={orderSourceOptions}
+        // orderSourceOptions={orderSourceOptions}
         occasionsConfig={occasionsConfig}
         mainlineConfig={mainlineConfig}
         feedbacksConfig={feedbacksConfig}
-        ahamoveRequests={ahamoveRequests}
-        isGettingAhamoveService={isGettingAhamoveService}
-        language={i18n.language}
+        bannersConfig={bannersConfig}
+        // ahamoveRequests={ahamoveRequests}
+        // isGettingAhamoveService={isGettingAhamoveService}
+        // language={i18n.language}
         onCreateStatic={openStaticPaletteCreate}
         onCreateLocked={openLockedPaletteCreate}
         onOpenOccasions={() => setOccasionsDialogOpen(true)}
         onOpenMainline={() => setMainlineDialogOpen(true)}
         onOpenFeedbacks={() => setFeedbacksDialogOpen(true)}
-        onSelectAhamove={(request) => {
-          setEditingAhamoveConfig(null)
-          setSelectedAhamoveRequest(request)
-        }}
+        onOpenBanners={() => setBannersDialogOpen(true)}
+        // onSelectAhamove={(request) => {
+        //   setEditingAhamoveConfig(null)
+        //   setSelectedAhamoveRequest(request)
+        // }}
       />
 
       <CreateConfigDialog
@@ -445,6 +453,12 @@ export default function ConfigsPage() {
         open={feedbacksDialogOpen}
         onClose={() => setFeedbacksDialogOpen(false)}
         existingConfig={feedbacksConfig}
+      />
+
+      <BannersCollectionDialog
+        open={bannersDialogOpen}
+        onClose={() => setBannersDialogOpen(false)}
+        existingConfig={bannersConfig}
       />
     </div>
   )
