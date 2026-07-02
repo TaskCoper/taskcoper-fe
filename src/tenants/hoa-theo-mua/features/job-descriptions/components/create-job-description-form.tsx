@@ -14,6 +14,7 @@ import { cn } from '@/shared/utils'
 import { CheckIcon, Circle, ImageIcon, UploadIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
+import { useGetCompanyAddress } from '../../company-addresses/hooks/use-get-company-address'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
 interface CreateJobDescriptionFormProps {
@@ -99,6 +100,8 @@ function Stepper({ currentStep, t }: { currentStep: number; t: ReturnType<typeof
 function StepDetails() {
   const { t } = useTenantTranslation()
   const { control } = useFormContext<CreateJobDescriptionFormValues>()
+  const { companyAddress } = useGetCompanyAddress()
+  const companyCity = companyAddress?.city
 
   return (
     <div className='space-y-4'>
@@ -130,14 +133,18 @@ function StepDetails() {
                 {t('recruitment.jobs.column.location')}
                 <span className='text-destructive font-semibold'>*</span>
               </FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={t('recruitment.jobs.form.field.location.placeholder')}
-                spellCheck={false}
-                autoComplete='off'
-              />
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger aria-invalid={fieldState.invalid}>
+                  <SelectValue placeholder={t('recruitment.jobs.form.field.location.placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {companyCity && (
+                    <SelectItem key={companyCity} value={companyCity}>
+                      {companyCity}
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
