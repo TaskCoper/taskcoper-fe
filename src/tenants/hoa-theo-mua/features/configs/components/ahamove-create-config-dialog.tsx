@@ -213,20 +213,15 @@ export default function AhamoveCreateConfigDialog({
             </Field>
 
             {/* Type-specific fields */}
-            {requestType === 'PER_UNIT' && (
+            {requestType === 'BOOLEAN' && (
               <Field className='gap-1'>
                 <FieldLabel htmlFor='ahamove-num'>{t('configsPage.ahamoveDialog.numField')}</FieldLabel>
                 <Input
                   id='ahamove-num'
                   type='number'
                   min={1}
-                  max={request?.max_input ?? undefined}
                   step={1}
-                  {...register('num', {
-                    valueAsNumber: true,
-                    min: 1,
-                    max: request?.max_input ?? undefined
-                  })}
+                  {...register('num', { valueAsNumber: true, min: 1 })}
                   aria-invalid={!!errors.num}
                 />
                 <FieldDescription>{t('configsPage.ahamoveDialog.numHelp')}</FieldDescription>
@@ -265,7 +260,7 @@ export default function AhamoveCreateConfigDialog({
               />
             )}
 
-            {requestType === 'INPUT' && (
+            {(requestType === 'INPUT' || requestType === 'PER_UNIT') && (
               <>
                 <Field className='gap-1'>
                   <FieldLabel htmlFor='ahamove-name'>{t('configsPage.ahamoveDialog.nameField')}</FieldLabel>
