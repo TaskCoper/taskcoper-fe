@@ -6,23 +6,24 @@ import { cn } from '@/shared/utils'
 import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
-import { BANNERS_COLLECTION_KEY } from '../features/configs/banners-palette'
+import { bannerKeySuffix, matchesBannerKey } from '../features/configs/banners-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
-import MainlineCollectionDialog from '../features/configs/components/mainline-collection-dialog'
-import OccasionsCollectionDialog from '../features/configs/components/occasions-collection-dialog'
+import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
-import { FEEDBACKS_COLLECTION_KEY } from '../features/configs/feedbacks-palette'
+import { feedbacksKeySuffix, matchesFeedbacksKey } from '../features/configs/feedbacks-palette'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
 import { useGetSecretConfigs } from '../features/configs/hooks/use-get-secret-configs'
 import { useGetSettingConfigs } from '../features/configs/hooks/use-get-setting-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
-import { MAINLINE_COLLECTION_KEY } from '../features/configs/mainline-palette'
-import { OCCASIONS_COLLECTION_KEY } from '../features/configs/occasions-palette'
+import {
+  matchesProductCollectionConfig,
+  productCollectionKeySuffix
+} from '../features/configs/product-collection-palette'
 import type { Config, InputOption } from '../features/configs/types'
 import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
 import type { CreateConfigFormInput } from '../features/configs/validations'
@@ -114,10 +115,12 @@ export default function ConfigsPage() {
   const [editingAhamoveConfig, setEditingAhamoveConfig] = useState<Config | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [editingConfig, setEditingConfig] = useState<Config | null>(null)
-  const [occasionsDialogOpen, setOccasionsDialogOpen] = useState(false)
-  const [mainlineDialogOpen, setMainlineDialogOpen] = useState(false)
+  const [productCollectionDialogOpen, setProductCollectionDialogOpen] = useState(false)
+  const [editingProductCollectionConfig, setEditingProductCollectionConfig] = useState<Config | null>(null)
   const [feedbacksDialogOpen, setFeedbacksDialogOpen] = useState(false)
+  const [editingFeedbacksConfig, setEditingFeedbacksConfig] = useState<Config | null>(null)
   const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
+  const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
 
   const depotOptions = useMemo<InputOption[]>(
     () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
@@ -225,21 +228,24 @@ export default function ConfigsPage() {
     [allLoadedConfigs, openCreate]
   )
 
-  const occasionsConfig = useMemo(
-    () => allLoadedConfigs.find((c) => c.key === OCCASIONS_COLLECTION_KEY) ?? null,
+  const productCollectionConfigs = useMemo(
+    () => allLoadedConfigs.filter(matchesProductCollectionConfig),
     [allLoadedConfigs]
   )
-  const mainlineConfig = useMemo(
-    () => allLoadedConfigs.find((c) => c.key === MAINLINE_COLLECTION_KEY) ?? null,
-    [allLoadedConfigs]
+  const feedbacksConfigs = useMemo(() => allLoadedConfigs.filter((c) => matchesFeedbacksKey(c.key)), [allLoadedConfigs])
+  const bannersConfigs = useMemo(() => allLoadedConfigs.filter((c) => matchesBannerKey(c.key)), [allLoadedConfigs])
+
+  const productCollectionTakenSuffixes = useMemo(
+    () => new Set(productCollectionConfigs.map((c) => productCollectionKeySuffix(c.key))),
+    [productCollectionConfigs]
   )
-  const feedbacksConfig = useMemo(
-    () => allLoadedConfigs.find((c) => c.key === FEEDBACKS_COLLECTION_KEY) ?? null,
-    [allLoadedConfigs]
+  const feedbacksTakenSuffixes = useMemo(
+    () => new Set(feedbacksConfigs.map((c) => feedbacksKeySuffix(c.key))),
+    [feedbacksConfigs]
   )
-  const bannersConfig = useMemo(
-    () => allLoadedConfigs.find((c) => c.key === BANNERS_COLLECTION_KEY) ?? null,
-    [allLoadedConfigs]
+  const bannersTakenSuffixes = useMemo(
+    () => new Set(bannersConfigs.map((c) => bannerKeySuffix(c.key))),
+    [bannersConfigs]
   )
 
   // const findAhamoveRequestForConfig = useCallback(
@@ -258,32 +264,36 @@ export default function ConfigsPage() {
   // )
 
   const openEdit = useCallback((config: Config) => {
-    if (config.key === OCCASIONS_COLLECTION_KEY) {
-      setOccasionsDialogOpen(true)
+    if (matchesProductCollectionConfig(config)) {
+      setEditingProductCollectionConfig(config)
+      setProductCollectionDialogOpen(true)
       return
     }
-    if (config.key === MAINLINE_COLLECTION_KEY) {
-      setMainlineDialogOpen(true)
-      return
-    }
-    if (config.key === FEEDBACKS_COLLECTION_KEY) {
+    if (matchesFeedbacksKey(config.key)) {
+      setEditingFeedbacksConfig(config)
       setFeedbacksDialogOpen(true)
       return
     }
-    if (config.key === BANNERS_COLLECTION_KEY) {
+    if (matchesBannerKey(config.key)) {
+      setEditingBannersConfig(config)
       setBannersDialogOpen(true)
       return
     }
-    // if (config.key.startsWith('ahamove.shipping.')) {
-    //   const match = findAhamoveRequestForConfig(config)
-    //   if (match) {
-    //     setEditingAhamoveConfig(config)
-    //     setSelectedAhamoveRequest(match)
-    //     return
-    //   }
-    // }
     setEditingConfig(config)
     setEditOpen(true)
+  }, [])
+
+  const openProductCollectionDialog = useCallback((config: Config | null) => {
+    setEditingProductCollectionConfig(config)
+    setProductCollectionDialogOpen(true)
+  }, [])
+  const openFeedbacksDialog = useCallback((config: Config | null) => {
+    setEditingFeedbacksConfig(config)
+    setFeedbacksDialogOpen(true)
+  }, [])
+  const openBannersDialog = useCallback((config: Config | null) => {
+    setEditingBannersConfig(config)
+    setBannersDialogOpen(true)
   }, [])
 
   const closeEdit = useCallback(() => {
@@ -393,24 +403,13 @@ export default function ConfigsPage() {
       <ConfigPaletteSidebar
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
-        // orderSourceOptions={orderSourceOptions}
-        occasionsConfig={occasionsConfig}
-        mainlineConfig={mainlineConfig}
-        feedbacksConfig={feedbacksConfig}
-        bannersConfig={bannersConfig}
-        // ahamoveRequests={ahamoveRequests}
-        // isGettingAhamoveService={isGettingAhamoveService}
-        // language={i18n.language}
-        onCreateStatic={openStaticPaletteCreate}
+        productCollectionConfigs={productCollectionConfigs}
+        feedbacksConfigs={feedbacksConfigs}
+        bannersConfigs={bannersConfigs}
         onCreateLocked={openLockedPaletteCreate}
-        onOpenOccasions={() => setOccasionsDialogOpen(true)}
-        onOpenMainline={() => setMainlineDialogOpen(true)}
-        onOpenFeedbacks={() => setFeedbacksDialogOpen(true)}
-        onOpenBanners={() => setBannersDialogOpen(true)}
-        // onSelectAhamove={(request) => {
-        //   setEditingAhamoveConfig(null)
-        //   setSelectedAhamoveRequest(request)
-        // }}
+        onOpenProductCollection={openProductCollectionDialog}
+        onOpenFeedbacks={openFeedbacksDialog}
+        onOpenBanners={openBannersDialog}
       />
 
       <CreateConfigDialog
@@ -437,28 +436,25 @@ export default function ConfigsPage() {
         liveOptionsByKey={liveOptionsByKey}
       />
 
-      <OccasionsCollectionDialog
-        open={occasionsDialogOpen}
-        onClose={() => setOccasionsDialogOpen(false)}
-        existingConfig={occasionsConfig}
-      />
-
-      <MainlineCollectionDialog
-        open={mainlineDialogOpen}
-        onClose={() => setMainlineDialogOpen(false)}
-        existingConfig={mainlineConfig}
+      <ProductCollectionDialog
+        open={productCollectionDialogOpen}
+        onClose={() => setProductCollectionDialogOpen(false)}
+        existingConfig={editingProductCollectionConfig}
+        takenSuffixes={productCollectionTakenSuffixes}
       />
 
       <FeedbacksCollectionDialog
         open={feedbacksDialogOpen}
         onClose={() => setFeedbacksDialogOpen(false)}
-        existingConfig={feedbacksConfig}
+        existingConfig={editingFeedbacksConfig}
+        takenSuffixes={feedbacksTakenSuffixes}
       />
 
       <BannersCollectionDialog
         open={bannersDialogOpen}
         onClose={() => setBannersDialogOpen(false)}
-        existingConfig={bannersConfig}
+        existingConfig={editingBannersConfig}
+        takenSuffixes={bannersTakenSuffixes}
       />
     </div>
   )

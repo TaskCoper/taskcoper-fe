@@ -37,8 +37,9 @@ import {
   defaultFeedbackCollection,
   defaultFeedbackItem,
   FEEDBACK_SOURCES,
-  FEEDBACKS_COLLECTION_KEY,
   FEEDBACKS_GROUP,
+  FEEDBACKS_KEY_PREFIX,
+  feedbacksKeySuffix,
   MAX_FEATURED_FEEDBACKS,
   parseFeedbackCollection,
   type FeedbackCollection,
@@ -48,11 +49,13 @@ import {
 import configService from '../services'
 import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
+import { CollectionKeyField, COLLECTION_KEY_SUFFIX_PATTERN } from './collection-shared'
 
 interface Props {
   open: boolean
   onClose: () => void
   existingConfig: Config | null
+  takenSuffixes?: Set<string>
 }
 
 type Lang = 'vi' | 'en'
@@ -85,7 +88,7 @@ const toUICollection = (c: FeedbackCollection): UICollection => ({
   items: c.items.map((item) => ({ ...item, _uid: genUid() }))
 })
 
-export default function FeedbacksCollectionDialog({ open, onClose, existingConfig }: Props) {
+export default function FeedbacksCollectionDialog({ open, onClose, existingConfig, takenSuffixes }: Props) {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
@@ -94,6 +97,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
   const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({})
   const [pendingPreviews, setPendingPreviews] = useState<Record<string, string>>({})
   const [openItemIds, setOpenItemIds] = useState<string[]>([])
+  const [keySuffix, setKeySuffix] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -105,6 +109,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
     Object.values(pendingPreviews).forEach((url) => URL.revokeObjectURL(url))
     setPendingPreviews({})
     setOpenItemIds(ui.items.length === 1 ? [ui.items[0]._uid] : [])
+    setKeySuffix(existingConfig ? feedbacksKeySuffix(existingConfig.key) : '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, existingConfig])
 
@@ -174,6 +179,12 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
   }
 
   const validate = (): string | null => {
+    if (!existingConfig) {
+      const trimmed = keySuffix.trim()
+      if (!trimmed) return t('configsPage.collectionKey.errors.required')
+      if (!COLLECTION_KEY_SUFFIX_PATTERN.test(trimmed)) return t('configsPage.collectionKey.errors.invalid')
+      if (takenSuffixes?.has(trimmed)) return t('configsPage.collectionKey.errors.duplicate')
+    }
     if (!collection.section.title.vi.trim()) return t('configsPage.feedbacksDialog.errors.sectionTitleRequired')
     if (overLimit) return t('configsPage.feedbacksDialog.errors.tooManyFeatured', { max: MAX_FEATURED_FEEDBACKS })
 
@@ -217,8 +228,9 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
         })
       }
 
+      const composedKey = existingConfig ? existingConfig.key : `${FEEDBACKS_KEY_PREFIX}${keySuffix.trim()}`
       const body: CreateConfigFormValues = {
-        key: FEEDBACKS_COLLECTION_KEY,
+        key: composedKey,
         isPublic: true,
         group: FEEDBACKS_GROUP,
         kind: ConfigKind.content,
@@ -261,6 +273,22 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
         </DialogHeader>
 
         <div className='flex-1 overflow-y-auto px-6 pb-4'>
+          <div className='mb-4'>
+            <CollectionKeyField
+              prefix={FEEDBACKS_KEY_PREFIX}
+              suffix={keySuffix}
+              onChange={setKeySuffix}
+              locked={Boolean(existingConfig)}
+              label={t('configsPage.collectionKey.field')}
+              placeholder={t('configsPage.collectionKey.placeholder')}
+              description={t('configsPage.collectionKey.description')}
+              takenSuffixes={takenSuffixes}
+              duplicateHint={t('configsPage.collectionKey.errors.duplicate')}
+              invalidHint={t('configsPage.collectionKey.errors.invalid')}
+              requiredHint={t('configsPage.collectionKey.errors.required')}
+            />
+          </div>
+
           <SectionHeaderForm value={collection.section} onChange={updateSection} />
 
           <div className='mt-5 flex items-center justify-between'>

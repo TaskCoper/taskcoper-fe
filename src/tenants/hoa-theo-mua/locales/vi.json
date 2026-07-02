@@ -691,51 +691,53 @@
       "title": "Yêu cầu giao hàng Ahamove",
       "empty": "Chưa có yêu cầu giao hàng khả dụng"
     },
-    "occasionsPalette": {
-      "title": "Mục bộ sưu tập theo dịp",
+    "productCollectionPalette": {
+      "title": "Bộ sưu tập sản phẩm",
+      "newLabel": "Bộ sưu tập mới",
+      "emptyList": "Chưa có bộ sưu tập nào.",
       "openEditor": "Mở trình soạn thảo",
-      "emptyHint": "Chưa có thẻ dịp nào - bấm để bắt đầu",
-      "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
-    },
-    "mainlinePalette": {
-      "title": "Bộ sưu tập chính",
-      "openEditor": "Mở trình soạn thảo",
-      "emptyHint": "Chưa có thẻ sản phẩm nào - bấm để bắt đầu",
+      "emptyHint": "Chưa có bộ sưu tập nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
     "feedbacksPalette": {
       "title": "Feedback khách hàng",
+      "newLabel": "Bộ feedback mới",
+      "emptyList": "Chưa có bộ feedback nào.",
       "openEditor": "Mở trình soạn thảo",
       "emptyHint": "Chưa có feedback nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
     "bannersPalette": {
       "title": "Banner khuyến mãi",
+      "newLabel": "Bộ banner mới",
+      "emptyList": "Chưa có bộ banner nào.",
       "openEditor": "Mở trình soạn thảo",
       "emptyHint": "Chưa có banner nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
-    "occasionsDialog": {
-      "title": "Bộ sưu tập theo dịp",
-      "subtitle": "Thêm bao nhiêu thẻ dịp tuỳ ý. Mỗi thẻ có 1 đường dẫn riêng và lọc theo danh mục sản phẩm.",
-      "configLabel": "Bộ sưu tập theo dịp",
+    "collectionKey": {
+      "field": "Khoá",
+      "placeholder": "vd. hero, checkout-footer",
+      "description": "Định danh dạng slug (chữ thường). Sẽ khoá sau khi lưu.",
+      "errors": {
+        "required": "Vui lòng nhập khoá.",
+        "invalid": "Chỉ dùng chữ cái thường, chữ số và dấu gạch nối (phải bắt đầu bằng chữ hoặc số).",
+        "duplicate": "Khoá này đã được dùng."
+      }
+    },
+    "productCollectionDialog": {
+      "title": "Bộ sưu tập sản phẩm",
+      "subtitle": "Chọn slug tuỳ ý (vd: mainline, occasions, featured). Bật chiến dịch theo thẻ khi cần luân phiên theo lịch, hoặc để tắt cho lưới luôn hiện.",
+      "configLabel": "Bộ sưu tập: {{suffix}}",
+      "keyPlaceholder": "vd: mainline, occasions, featured",
       "locale": {
         "vi": "Tiếng Việt",
         "en": "English"
       },
-      "stats": {
-        "cards": "Thẻ dịp",
-        "cardsSub": "{{count}} đang hiển thị",
-        "campaigns": "Chiến dịch",
-        "campaignsSub": "{{count}} đang chạy"
-      },
-      "detail": {
-        "emptyTitle": "Chưa chọn thẻ nào",
-        "emptyBody": "Chọn một thẻ ở bên trái để chỉnh sửa chi tiết & chiến dịch, hoặc thêm thẻ mới.",
-        "tabs": {
-          "details": "Chi tiết",
-          "campaigns": "Chiến dịch"
-        }
+      "campaignsToggle": {
+        "title": "Chiến dịch theo thẻ",
+        "description": "Bật khi mỗi thẻ cần luân phiên badge & danh mục theo lịch. Tắt vẫn giữ dữ liệu chiến dịch nhưng ẩn khỏi trình soạn thảo.",
+        "label": "Bật"
       },
       "section": {
         "title": "Phần đầu mục",
@@ -747,23 +749,22 @@
         "descriptionPlaceholder": "Một câu giới thiệu ngắn cho khu vực"
       },
       "cards": {
-        "title": "Danh sách thẻ dịp",
+        "title": "Danh sách thẻ",
         "subtitle": "{{count}} thẻ. Kéo thứ tự bằng nút mũi tên ở cuối hàng.",
-        "add": "Thêm thẻ dịp",
-        "empty": "Chưa có thẻ nào. Bấm \"Thêm thẻ dịp\" để bắt đầu."
+        "add": "Thêm thẻ",
+        "empty": "Chưa có thẻ nào. Bấm \"Thêm thẻ\" để bắt đầu."
       },
       "card": {
         "untitled": "Thẻ #{{index}} (chưa đặt tên)",
         "noSlug": "(chưa có đường dẫn)",
         "disabled": "Đang ẩn",
-        "enabledToggle": "Hiển thị trên website",
         "moveUp": "Di chuyển lên",
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá thẻ",
         "image": "Ảnh thẻ",
         "uploadImage": "Tải ảnh lên",
         "replaceImage": "Đổi ảnh",
-        "badgeField": "Tên dịp (thẻ nhỏ)",
+        "badgeField": "Nhãn thẻ",
         "badgePlaceholder": "vd: Sinh nhật",
         "nameField": "Tên bộ sưu tập",
         "namePlaceholder": "vd: Hoa sinh nhật",
@@ -771,7 +772,6 @@
         "descriptionPlaceholder": "Câu mô tả hiện dưới tên thẻ",
         "slugField": "Đường dẫn (URL)",
         "slugHelp": "Tạo tự động từ tên. Chỉ dùng chữ thường, số, gạch ngang.",
-        "accentField": "Màu nền thẻ",
         "categoryIdsField": "Danh mục sản phẩm áp dụng",
         "categoryIdsPlaceholder": "Nhập ID rồi nhấn Enter",
         "categoryIdsHelp": "ID danh mục từ catalog. Có thể dán nhiều ID cách nhau bằng dấu phẩy."
@@ -811,60 +811,6 @@
         "campaignSkuRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu tiền tố SKU.",
         "campaignDatesRequired": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: thiếu ngày bắt đầu hoặc kết thúc.",
         "campaignDatesInvalid": "Thẻ #{{cardIndex}}, chiến dịch #{{index}}: ngày bắt đầu phải trước (hoặc bằng) ngày kết thúc."
-      }
-    },
-    "mainlineDialog": {
-      "title": "Bộ sưu tập chính",
-      "subtitle": "Danh sách thẻ sản phẩm luôn hiển thị trên trang chủ. Mỗi thẻ có đường dẫn riêng và lọc theo danh mục sản phẩm.",
-      "configLabel": "Bộ sưu tập chính",
-      "locale": {
-        "vi": "Tiếng Việt",
-        "en": "English"
-      },
-      "section": {
-        "title": "Phần đầu mục",
-        "subtitle": "Tiêu đề và mô tả hiển thị trên đầu khu vực.",
-        "enabled": "Hiển thị",
-        "titleField": "Tiêu đề",
-        "titlePlaceholder": "vd: Bộ sưu tập nổi bật",
-        "descriptionField": "Mô tả ngắn",
-        "descriptionPlaceholder": "Một câu giới thiệu ngắn cho khu vực"
-      },
-      "cards": {
-        "title": "Danh sách thẻ sản phẩm",
-        "subtitle": "{{count}} thẻ. Kéo thứ tự bằng nút mũi tên ở cuối hàng.",
-        "add": "Thêm thẻ sản phẩm",
-        "empty": "Chưa có thẻ nào. Bấm \"Thêm thẻ sản phẩm\" để bắt đầu."
-      },
-      "card": {
-        "untitled": "Thẻ #{{index}} (chưa đặt tên)",
-        "noSlug": "(chưa có đường dẫn)",
-        "disabled": "Đang ẩn",
-        "moveUp": "Di chuyển lên",
-        "moveDown": "Di chuyển xuống",
-        "remove": "Xoá thẻ",
-        "image": "Ảnh thẻ",
-        "uploadImage": "Tải ảnh lên",
-        "replaceImage": "Đổi ảnh",
-        "badgeField": "Nhãn thẻ",
-        "badgePlaceholder": "vd: Bán chạy",
-        "nameField": "Tên bộ sưu tập",
-        "namePlaceholder": "vd: Hoa cưới",
-        "descriptionField": "Mô tả ngắn",
-        "descriptionPlaceholder": "Câu mô tả hiện dưới tên thẻ",
-        "slugField": "Đường dẫn (URL)",
-        "slugHelp": "Tạo tự động từ tên. Chỉ dùng chữ thường, số, gạch ngang.",
-        "categoryIdsField": "Danh mục sản phẩm áp dụng",
-        "categoryIdsPlaceholder": "Nhập ID rồi nhấn Enter",
-        "categoryIdsHelp": "ID danh mục từ catalog. Có thể dán nhiều ID cách nhau bằng dấu phẩy."
-      },
-      "errors": {
-        "sectionTitleRequired": "Vui lòng nhập tiêu đề mục (VI).",
-        "slugRequired": "Thẻ #{{index}}: thiếu đường dẫn.",
-        "slugInvalid": "Thẻ #{{index}}: đường dẫn chỉ được dùng chữ thường, số, gạch ngang.",
-        "slugDuplicate": "Đường dẫn \"{{slug}}\" đã được dùng cho thẻ khác.",
-        "nameRequired": "Thẻ #{{index}}: thiếu tên bộ sưu tập (VI).",
-        "imageRequired": "Thẻ #{{index}}: vui lòng chọn ảnh."
       }
     },
     "feedbacksDialog": {

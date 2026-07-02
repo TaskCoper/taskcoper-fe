@@ -691,51 +691,53 @@
       "title": "Ahamove Shipping Request",
       "empty": "No shipping requests available"
     },
-    "occasionsPalette": {
-      "title": "Occasions collection",
+    "productCollectionPalette": {
+      "title": "Product collections",
+      "newLabel": "New product collection",
+      "emptyList": "No product collections yet.",
       "openEditor": "Open editor",
-      "emptyHint": "No occasion cards yet - click to start",
-      "existsHint": "Configured - click to view & edit"
-    },
-    "mainlinePalette": {
-      "title": "Mainline collection",
-      "openEditor": "Open editor",
-      "emptyHint": "No mainline cards yet - click to start",
+      "emptyHint": "No product collections yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
     "feedbacksPalette": {
       "title": "Customer feedbacks",
+      "newLabel": "New feedbacks set",
+      "emptyList": "No feedback sets yet.",
       "openEditor": "Open editor",
       "emptyHint": "No feedbacks yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
     "bannersPalette": {
       "title": "Promotional banners",
+      "newLabel": "New banner set",
+      "emptyList": "No banner sets yet.",
       "openEditor": "Open editor",
       "emptyHint": "No banners yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
-    "occasionsDialog": {
-      "title": "Occasions collection",
-      "subtitle": "Add as many occasion cards as you like. Each card has its own URL and filters by product categories.",
-      "configLabel": "Occasions collection",
+    "collectionKey": {
+      "field": "Key",
+      "placeholder": "e.g. hero, checkout-footer",
+      "description": "Lowercase slug identifier. Locked once saved.",
+      "errors": {
+        "required": "Please enter a key.",
+        "invalid": "Use lowercase letters, digits, and hyphens only (must start with a letter or digit).",
+        "duplicate": "This key is already used."
+      }
+    },
+    "productCollectionDialog": {
+      "title": "Product collection",
+      "subtitle": "Pick any slug (e.g. mainline, occasions, featured). Enable per-card campaigns for date-driven rotations, or keep it off for an always-on grid.",
+      "configLabel": "Product collection: {{suffix}}",
+      "keyPlaceholder": "e.g. mainline, occasions, featured",
       "locale": {
         "vi": "Vietnamese",
         "en": "English"
       },
-      "stats": {
-        "cards": "Cards",
-        "cardsSub": "{{count}} visible",
-        "campaigns": "Campaigns",
-        "campaignsSub": "{{count}} active now"
-      },
-      "detail": {
-        "emptyTitle": "No card selected",
-        "emptyBody": "Pick a card on the left to edit its details and campaigns, or add a new one.",
-        "tabs": {
-          "details": "Details",
-          "campaigns": "Campaigns"
-        }
+      "campaignsToggle": {
+        "title": "Per-card campaigns",
+        "description": "Turn on when a card should rotate its badge & categories on a schedule. Turning off keeps existing campaign data but hides it from the editor.",
+        "label": "Enabled"
       },
       "section": {
         "title": "Section header",
@@ -747,7 +749,7 @@
         "descriptionPlaceholder": "A short intro for the section"
       },
       "cards": {
-        "title": "Occasion cards",
+        "title": "Cards",
         "subtitle": "{{count}} card(s). Use the arrow buttons to reorder.",
         "add": "Add card",
         "empty": "No cards yet. Click \"Add card\" to begin."
@@ -756,14 +758,13 @@
         "untitled": "Card #{{index}} (no name)",
         "noSlug": "(no URL yet)",
         "disabled": "Hidden",
-        "enabledToggle": "Visible on storefront",
         "moveUp": "Move up",
         "moveDown": "Move down",
         "remove": "Remove card",
         "image": "Card image",
         "uploadImage": "Upload image",
         "replaceImage": "Replace image",
-        "badgeField": "Occasion badge",
+        "badgeField": "Badge",
         "badgePlaceholder": "e.g. Birthday",
         "nameField": "Collection name",
         "namePlaceholder": "e.g. Birthday flowers",
@@ -771,7 +772,6 @@
         "descriptionPlaceholder": "One line shown under the title",
         "slugField": "URL slug",
         "slugHelp": "Auto-generated from the name. Lowercase letters, digits, hyphens only.",
-        "accentField": "Accent color",
         "categoryIdsField": "Filter by product categories",
         "categoryIdsPlaceholder": "Type an ID and press Enter",
         "categoryIdsHelp": "Category IDs from the catalog. Paste comma-separated IDs to add several."
@@ -811,60 +811,6 @@
         "campaignSkuRequired": "Card #{{cardIndex}}, campaign #{{index}}: SKU prefix is required.",
         "campaignDatesRequired": "Card #{{cardIndex}}, campaign #{{index}}: start and end dates are required.",
         "campaignDatesInvalid": "Card #{{cardIndex}}, campaign #{{index}}: start date must be on or before end date."
-      }
-    },
-    "mainlineDialog": {
-      "title": "Mainline collection",
-      "subtitle": "The always-on product cards shown on the storefront. Each card has its own URL and filters by product categories.",
-      "configLabel": "Mainline collection",
-      "locale": {
-        "vi": "Vietnamese",
-        "en": "English"
-      },
-      "section": {
-        "title": "Section header",
-        "subtitle": "Title and description shown above the cards.",
-        "enabled": "Visible",
-        "titleField": "Title",
-        "titlePlaceholder": "e.g. Featured collections",
-        "descriptionField": "Short description",
-        "descriptionPlaceholder": "A short intro for the section"
-      },
-      "cards": {
-        "title": "Mainline cards",
-        "subtitle": "{{count}} card(s). Use the arrow buttons to reorder.",
-        "add": "Add card",
-        "empty": "No cards yet. Click \"Add card\" to begin."
-      },
-      "card": {
-        "untitled": "Card #{{index}} (no name)",
-        "noSlug": "(no URL yet)",
-        "disabled": "Hidden",
-        "moveUp": "Move up",
-        "moveDown": "Move down",
-        "remove": "Remove card",
-        "image": "Card image",
-        "uploadImage": "Upload image",
-        "replaceImage": "Replace image",
-        "badgeField": "Badge",
-        "badgePlaceholder": "e.g. Bestseller",
-        "nameField": "Collection name",
-        "namePlaceholder": "e.g. Wedding flowers",
-        "descriptionField": "Short description",
-        "descriptionPlaceholder": "One line shown under the title",
-        "slugField": "URL slug",
-        "slugHelp": "Auto-generated from the name. Lowercase letters, digits, hyphens only.",
-        "categoryIdsField": "Filter by product categories",
-        "categoryIdsPlaceholder": "Type an ID and press Enter",
-        "categoryIdsHelp": "Category IDs from the catalog. Paste comma-separated IDs to add several."
-      },
-      "errors": {
-        "sectionTitleRequired": "Please enter a section title (VI).",
-        "slugRequired": "Card #{{index}}: URL slug is required.",
-        "slugInvalid": "Card #{{index}}: slug may only contain lowercase letters, digits, hyphens.",
-        "slugDuplicate": "Slug \"{{slug}}\" is already used by another card.",
-        "nameRequired": "Card #{{index}}: collection name (VI) is required.",
-        "imageRequired": "Card #{{index}}: please select an image."
       }
     },
     "feedbacksDialog": {

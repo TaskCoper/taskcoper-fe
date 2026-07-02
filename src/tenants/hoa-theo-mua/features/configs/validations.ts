@@ -240,8 +240,7 @@ const localizedTextSchema = z.object({
   en: z.string()
 })
 
-const occasionCampaignFormSchema = z.object({
-  _uid: z.string(),
+const productCollectionCampaignFormSchema = z.object({
   id: z.string(),
   campaignName: localizedTextSchema,
   skuPrefix: z.string(),
@@ -252,8 +251,7 @@ const occasionCampaignFormSchema = z.object({
   enabled: z.boolean()
 })
 
-const occasionCardFormSchema = z.object({
-  _uid: z.string(),
+const productCollectionCardFormSchema = z.object({
   id: z.string(),
   image: z.string(),
   badge: localizedTextSchema,
@@ -261,24 +259,55 @@ const occasionCardFormSchema = z.object({
   description: localizedTextSchema,
   categoryIds: z.array(z.string()),
   enabled: z.boolean(),
-  campaigns: z.array(occasionCampaignFormSchema)
+  campaigns: z.array(productCollectionCampaignFormSchema)
 })
 
-export const occasionsCollectionFormSchema = (t: TenantT) =>
+export interface ProductCollectionSchemaOpts {
+  takenSuffixes: Set<string>
+  // On edit the suffix is locked; skip its validation.
+  isEditing: boolean
+}
+
+export const productCollectionFormSchema = (t: TenantT, opts: ProductCollectionSchemaOpts) =>
   z
     .object({
+      keySuffix: z.string(),
       section: z.object({
         title: localizedTextSchema,
         description: localizedTextSchema,
         enabled: z.boolean()
       }),
-      cards: z.array(occasionCardFormSchema)
+      hasCampaigns: z.boolean(),
+      cards: z.array(productCollectionCardFormSchema)
     })
     .superRefine((data, ctx) => {
+      if (!opts.isEditing) {
+        const suffix = data.keySuffix.trim()
+        if (!suffix) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.collectionKey.errors.required'),
+            path: ['keySuffix']
+          })
+        } else if (!SLUG_REGEX.test(suffix)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.collectionKey.errors.invalid'),
+            path: ['keySuffix']
+          })
+        } else if (opts.takenSuffixes.has(suffix)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.collectionKey.errors.duplicate'),
+            path: ['keySuffix']
+          })
+        }
+      }
+
       if (!data.section.title.vi.trim()) {
         ctx.addIssue({
           code: 'custom',
-          message: t('configsPage.occasionsDialog.errors.sectionTitleRequired'),
+          message: t('configsPage.productCollectionDialog.errors.sectionTitleRequired'),
           path: ['section', 'title', 'vi']
         })
       }
@@ -289,19 +318,19 @@ export const occasionsCollectionFormSchema = (t: TenantT) =>
         if (!slug) {
           ctx.addIssue({
             code: 'custom',
-            message: t('configsPage.occasionsDialog.errors.slugRequired', { index: i + 1 }),
+            message: t('configsPage.productCollectionDialog.errors.slugRequired', { index: i + 1 }),
             path: ['cards', i, 'id']
           })
         } else if (!SLUG_REGEX.test(slug)) {
           ctx.addIssue({
             code: 'custom',
-            message: t('configsPage.occasionsDialog.errors.slugInvalid', { index: i + 1 }),
+            message: t('configsPage.productCollectionDialog.errors.slugInvalid', { index: i + 1 }),
             path: ['cards', i, 'id']
           })
         } else if (seenSlugs.has(slug)) {
           ctx.addIssue({
             code: 'custom',
-            message: t('configsPage.occasionsDialog.errors.slugDuplicate', { slug }),
+            message: t('configsPage.productCollectionDialog.errors.slugDuplicate', { slug }),
             path: ['cards', i, 'id']
           })
         }
@@ -310,10 +339,12 @@ export const occasionsCollectionFormSchema = (t: TenantT) =>
         if (!card.name.vi.trim()) {
           ctx.addIssue({
             code: 'custom',
-            message: t('configsPage.occasionsDialog.errors.nameRequired', { index: i + 1 }),
+            message: t('configsPage.productCollectionDialog.errors.nameRequired', { index: i + 1 }),
             path: ['cards', i, 'name', 'vi']
           })
         }
+
+        if (!data.hasCampaigns) return
 
         const seenCampaignIds = new Set<string>()
         card.campaigns.forEach((ca, j) => {
@@ -322,19 +353,19 @@ export const occasionsCollectionFormSchema = (t: TenantT) =>
           if (!cid) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignIdRequired', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignIdRequired', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'id']
             })
           } else if (!SLUG_REGEX.test(cid)) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignIdInvalid', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignIdInvalid', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'id']
             })
           } else if (seenCampaignIds.has(cid)) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignIdDuplicate', { ...ctxArgs, id: cid }),
+              message: t('configsPage.productCollectionDialog.errors.campaignIdDuplicate', { ...ctxArgs, id: cid }),
               path: ['cards', i, 'campaigns', j, 'id']
             })
           }
@@ -343,34 +374,34 @@ export const occasionsCollectionFormSchema = (t: TenantT) =>
           if (!ca.campaignName.vi.trim()) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignNameRequired', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignNameRequired', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'campaignName', 'vi']
             })
           }
           if (!ca.skuPrefix.trim()) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignSkuRequired', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignSkuRequired', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'skuPrefix']
             })
           }
           if (!ca.startDate) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignDatesRequired', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignDatesRequired', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'startDate']
             })
           }
           if (!ca.endDate) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignDatesRequired', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignDatesRequired', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'endDate']
             })
           } else if (ca.startDate && ca.startDate > ca.endDate) {
             ctx.addIssue({
               code: 'custom',
-              message: t('configsPage.occasionsDialog.errors.campaignDatesInvalid', ctxArgs),
+              message: t('configsPage.productCollectionDialog.errors.campaignDatesInvalid', ctxArgs),
               path: ['cards', i, 'campaigns', j, 'endDate']
             })
           }
@@ -378,7 +409,7 @@ export const occasionsCollectionFormSchema = (t: TenantT) =>
       })
     })
 
-export type OccasionsCollectionFormValues = z.infer<ReturnType<typeof occasionsCollectionFormSchema>>
+export type ProductCollectionFormValues = z.infer<ReturnType<typeof productCollectionFormSchema>>
 
 const feedbackItemFormSchema = z.object({
   _uid: z.string(),

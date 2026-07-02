@@ -8,55 +8,60 @@ import { Textarea } from '@/components/ui/textarea'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { ArrowDown, ArrowUp, ChevronsUpDown, ImageIcon, Trash2, UploadIcon } from 'lucide-react'
 import { useRef } from 'react'
-import { slugify, type OccasionCard } from '../occasions-palette'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { slugify } from '../product-collection-palette'
+import type { ProductCollectionFormValues } from '../validations'
 import { ChipInput, LocalizedTabs } from './collection-shared'
-import OccasionsCampaignsSection from './occasions-campaigns-section'
+import ProductCollectionCampaignsSection from './product-collection-campaigns-section'
 
 type Lang = 'vi' | 'en'
 
 interface Props {
-  uid: string
+  fieldId: string
   index: number
   total: number
-  card: OccasionCard
   pendingPreviewUrl?: string
-  onChange: (patch: Partial<OccasionCard>) => void
   onRemove: () => void
   onMove: (direction: 1 | -1) => void
   onPickFile: (file: File) => void
   onClearPendingFile: () => void
-  usedIds: Set<string>
 }
 
-export default function OccasionsCardRow({
-  uid,
+export default function ProductCollectionCardRow({
+  fieldId,
   index,
   total,
-  card,
   pendingPreviewUrl,
-  onChange,
   onRemove,
   onMove,
   onPickFile,
-  onClearPendingFile,
-  usedIds
+  onClearPendingFile
 }: Props) {
   const { t } = useTenantTranslation()
+  const { control, register, setValue, getValues } = useFormContext<ProductCollectionFormValues>()
   const fileRef = useRef<HTMLInputElement>(null)
-  const displayPreview = pendingPreviewUrl || card.image || ''
-  const displayName = card.name.vi || t('configsPage.occasionsDialog.card.untitled', { index: index + 1 })
+
+  const card = useWatch({ control, name: `cards.${index}` })
+  const hasCampaigns = useWatch({ control, name: 'hasCampaigns' })
+
+  const displayPreview = pendingPreviewUrl || card?.image || ''
+  const displayName = card?.name.vi || t('configsPage.productCollectionDialog.card.untitled', { index: index + 1 })
 
   const handleNameBlur = (lang: Lang, value: string) => {
-    if (lang === 'vi' && !card.id) {
-      let candidate = slugify(value) || `card-${index + 1}`
-      let n = 2
-      while (usedIds.has(candidate)) candidate = `${slugify(value) || 'card'}-${n++}`
-      onChange({ id: candidate })
-    }
+    if (lang !== 'vi' || card?.id) return
+    const otherIds = new Set(
+      getValues('cards')
+        .map((c) => c.id)
+        .filter((_, i) => i !== index)
+    )
+    let candidate = slugify(value) || `card-${index + 1}`
+    let n = 2
+    while (otherIds.has(candidate)) candidate = `${slugify(value) || 'card'}-${n++}`
+    setValue(`cards.${index}.id`, candidate, { shouldValidate: true })
   }
 
   return (
-    <AccordionItem value={uid} className='border-b-transparent'>
+    <AccordionItem value={fieldId} className='border-b-transparent'>
       <div className='flex items-center gap-2 border rounded-xl bg-muted w-full'>
         <AccordionTrigger className='p-2 hover:no-underline' headerClassName='flex-1 min-w-0' displayIcon={false}>
           <div className='flex flex-1 items-center gap-3'>
@@ -72,13 +77,13 @@ export default function OccasionsCardRow({
             <div className='flex min-w-0 flex-1 flex-col items-start'>
               <span className='truncate text-sm font-medium'>{displayName}</span>
               <span className='truncate text-xs text-muted-foreground'>
-                {card.id ? `/${card.id}` : t('configsPage.occasionsDialog.card.noSlug')}
+                {card?.id ? `/${card.id}` : t('configsPage.productCollectionDialog.card.noSlug')}
               </span>
             </div>
 
-            {!card.enabled && (
+            {!card?.enabled && (
               <Badge variant='outline' className='text-[0.625rem] text-muted-foreground'>
-                {t('configsPage.occasionsDialog.card.disabled')}
+                {t('configsPage.productCollectionDialog.card.disabled')}
               </Badge>
             )}
             <ChevronsUpDown className='size-3.5 text-muted-foreground' />
@@ -93,7 +98,7 @@ export default function OccasionsCardRow({
             className='size-7 text-muted-foreground'
             disabled={index === 0}
             onClick={() => onMove(-1)}
-            aria-label={t('configsPage.occasionsDialog.card.moveUp')}
+            aria-label={t('configsPage.productCollectionDialog.card.moveUp')}
           >
             <ArrowUp className='size-3.5' />
           </Button>
@@ -104,14 +109,14 @@ export default function OccasionsCardRow({
             className='size-7 text-muted-foreground'
             disabled={index === total - 1}
             onClick={() => onMove(1)}
-            aria-label={t('configsPage.occasionsDialog.card.moveDown')}
+            aria-label={t('configsPage.productCollectionDialog.card.moveDown')}
           >
             <ArrowDown className='size-3.5' />
           </Button>
-          <Switch
-            checked={card.enabled}
-            onCheckedChange={(checked) => onChange({ enabled: checked })}
-            className='ml-1'
+          <Controller
+            control={control}
+            name={`cards.${index}.enabled`}
+            render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} className='ml-1' />}
           />
           <Button
             type='button'
@@ -119,7 +124,7 @@ export default function OccasionsCardRow({
             size='icon'
             className='size-7 text-muted-foreground hover:text-destructive'
             onClick={onRemove}
-            aria-label={t('configsPage.occasionsDialog.card.remove')}
+            aria-label={t('configsPage.productCollectionDialog.card.remove')}
           >
             <Trash2 className='size-3.5' />
           </Button>
@@ -129,7 +134,7 @@ export default function OccasionsCardRow({
       <AccordionContent className='p-4 rounded-b-2xl'>
         <div className='grid grid-cols-1 gap-4 md:grid-cols-[160px_1fr]'>
           <div>
-            <FieldLabel className='text-xs'>{t('configsPage.occasionsDialog.card.image')}</FieldLabel>
+            <FieldLabel className='text-xs'>{t('configsPage.productCollectionDialog.card.image')}</FieldLabel>
             <div className='mt-1 aspect-square overflow-hidden rounded-md border bg-muted'>
               {displayPreview ? (
                 <img src={displayPreview} alt='' className='size-full object-cover' />
@@ -160,10 +165,10 @@ export default function OccasionsCardRow({
               >
                 <UploadIcon className='size-3.5' data-icon='inline-start' />
                 {displayPreview
-                  ? t('configsPage.occasionsDialog.card.replaceImage')
-                  : t('configsPage.occasionsDialog.card.uploadImage')}
+                  ? t('configsPage.productCollectionDialog.card.replaceImage')
+                  : t('configsPage.productCollectionDialog.card.uploadImage')}
               </Button>
-              {(pendingPreviewUrl || card.image) && (
+              {(pendingPreviewUrl || card?.image) && (
                 <Button
                   type='button'
                   variant='ghost'
@@ -171,7 +176,7 @@ export default function OccasionsCardRow({
                   className='size-8 text-muted-foreground hover:text-destructive'
                   onClick={() => {
                     onClearPendingFile()
-                    onChange({ image: '' })
+                    setValue(`cards.${index}.image`, '', { shouldDirty: true })
                   }}
                 >
                   <Trash2 className='size-3.5' />
@@ -182,34 +187,32 @@ export default function OccasionsCardRow({
 
           <div className='space-y-4'>
             <LocalizedTabs
-              viLabel={t('configsPage.occasionsDialog.locale.vi')}
-              enLabel={t('configsPage.occasionsDialog.locale.en')}
+              viLabel={t('configsPage.productCollectionDialog.locale.vi')}
+              enLabel={t('configsPage.productCollectionDialog.locale.en')}
               renderField={(lang) => (
                 <div className='space-y-2'>
                   <Field className='gap-1'>
-                    <FieldLabel>{t('configsPage.occasionsDialog.card.badgeField')}</FieldLabel>
+                    <FieldLabel>{t('configsPage.productCollectionDialog.card.badgeField')}</FieldLabel>
                     <Input
-                      value={card.badge[lang]}
-                      onChange={(e) => onChange({ badge: { ...card.badge, [lang]: e.target.value } })}
-                      placeholder={t('configsPage.occasionsDialog.card.badgePlaceholder')}
+                      {...register(`cards.${index}.badge.${lang}` as const)}
+                      placeholder={t('configsPage.productCollectionDialog.card.badgePlaceholder')}
                     />
                   </Field>
                   <Field className='gap-1'>
-                    <FieldLabel>{t('configsPage.occasionsDialog.card.nameField')}</FieldLabel>
+                    <FieldLabel>{t('configsPage.productCollectionDialog.card.nameField')}</FieldLabel>
                     <Input
-                      value={card.name[lang]}
-                      onChange={(e) => onChange({ name: { ...card.name, [lang]: e.target.value } })}
-                      onBlur={(e) => handleNameBlur(lang, e.target.value)}
-                      placeholder={t('configsPage.occasionsDialog.card.namePlaceholder')}
+                      {...register(`cards.${index}.name.${lang}` as const, {
+                        onBlur: (e) => handleNameBlur(lang, e.target.value)
+                      })}
+                      placeholder={t('configsPage.productCollectionDialog.card.namePlaceholder')}
                     />
                   </Field>
                   <Field className='gap-1'>
-                    <FieldLabel>{t('configsPage.occasionsDialog.card.descriptionField')}</FieldLabel>
+                    <FieldLabel>{t('configsPage.productCollectionDialog.card.descriptionField')}</FieldLabel>
                     <Textarea
                       rows={2}
-                      value={card.description[lang]}
-                      onChange={(e) => onChange({ description: { ...card.description, [lang]: e.target.value } })}
-                      placeholder={t('configsPage.occasionsDialog.card.descriptionPlaceholder')}
+                      {...register(`cards.${index}.description.${lang}` as const)}
+                      placeholder={t('configsPage.productCollectionDialog.card.descriptionPlaceholder')}
                     />
                   </Field>
                 </div>
@@ -217,26 +220,34 @@ export default function OccasionsCardRow({
             />
 
             <Field className='gap-1'>
-              <FieldLabel>{t('configsPage.occasionsDialog.card.slugField')}</FieldLabel>
-              <Input value={card.id} onChange={(e) => onChange({ id: e.target.value })} className='font-mono text-sm' />
-              <FieldDescription className='text-xs'>{t('configsPage.occasionsDialog.card.slugHelp')}</FieldDescription>
-            </Field>
-
-            <Field className='gap-1'>
-              <FieldLabel>{t('configsPage.occasionsDialog.card.categoryIdsField')}</FieldLabel>
-              <ChipInput
-                values={card.categoryIds}
-                onChange={(next) => onChange({ categoryIds: next })}
-                placeholder={t('configsPage.occasionsDialog.card.categoryIdsPlaceholder')}
-              />
+              <FieldLabel>{t('configsPage.productCollectionDialog.card.slugField')}</FieldLabel>
+              <Input {...register(`cards.${index}.id` as const)} className='font-mono text-sm' />
               <FieldDescription className='text-xs'>
-                {t('configsPage.occasionsDialog.card.categoryIdsHelp')}
+                {t('configsPage.productCollectionDialog.card.slugHelp')}
               </FieldDescription>
             </Field>
+
+            <Controller
+              control={control}
+              name={`cards.${index}.categoryIds`}
+              render={({ field }) => (
+                <Field className='gap-1'>
+                  <FieldLabel>{t('configsPage.productCollectionDialog.card.categoryIdsField')}</FieldLabel>
+                  <ChipInput
+                    values={field.value}
+                    onChange={field.onChange}
+                    placeholder={t('configsPage.productCollectionDialog.card.categoryIdsPlaceholder')}
+                  />
+                  <FieldDescription className='text-xs'>
+                    {t('configsPage.productCollectionDialog.card.categoryIdsHelp')}
+                  </FieldDescription>
+                </Field>
+              )}
+            />
           </div>
         </div>
 
-        <OccasionsCampaignsSection campaigns={card.campaigns} onChange={(campaigns) => onChange({ campaigns })} />
+        {hasCampaigns && <ProductCollectionCampaignsSection cardIndex={index} />}
       </AccordionContent>
     </AccordionItem>
   )

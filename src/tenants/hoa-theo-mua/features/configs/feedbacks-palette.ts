@@ -1,7 +1,13 @@
 import type { RatingValue } from '@/components/rating-field'
 
 export const FEEDBACKS_GROUP = 'feedbacks'
-export const FEEDBACKS_COLLECTION_KEY = `${FEEDBACKS_GROUP}.collection`
+export const FEEDBACKS_KEY_PREFIX = `${FEEDBACKS_GROUP}.`
+
+export const matchesFeedbacksKey = (key: string): boolean =>
+  key.startsWith(FEEDBACKS_KEY_PREFIX) && key.length > FEEDBACKS_KEY_PREFIX.length
+
+export const feedbacksKeySuffix = (key: string): string =>
+  key.startsWith(FEEDBACKS_KEY_PREFIX) ? key.slice(FEEDBACKS_KEY_PREFIX.length) : key
 
 export const MAX_FEATURED_FEEDBACKS = 6
 

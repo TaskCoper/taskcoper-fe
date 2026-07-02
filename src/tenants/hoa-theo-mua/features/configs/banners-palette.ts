@@ -1,7 +1,13 @@
 import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
 
 export const BANNERS_GROUP = 'banners'
-export const BANNERS_COLLECTION_KEY = `${BANNERS_GROUP}.collection`
+export const BANNERS_KEY_PREFIX = `${BANNERS_GROUP}.`
+
+export const matchesBannerKey = (key: string): boolean =>
+  key.startsWith(BANNERS_KEY_PREFIX) && key.length > BANNERS_KEY_PREFIX.length
+
+export const bannerKeySuffix = (key: string): string =>
+  key.startsWith(BANNERS_KEY_PREFIX) ? key.slice(BANNERS_KEY_PREFIX.length) : key
 
 // Free-form slot key (e.g. "hero", "sidebar-top", "checkout-footer").
 // Frontend components filter banners by this string.
