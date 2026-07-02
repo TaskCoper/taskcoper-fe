@@ -2,6 +2,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
+import type { AhamoveServiceRequest } from '@/tenants/hoa-theo-mua/types/ahamove.type'
 import {
   AlignLeft,
   Calendar,
@@ -22,7 +23,6 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
-import type { AhamoveServiceRequest } from '../../../types/ahamove.type'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../locked-config-keys'
 import { InputType, type Config, type InputOption } from '../types'
 

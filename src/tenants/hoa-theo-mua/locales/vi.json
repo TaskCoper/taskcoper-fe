@@ -950,7 +950,7 @@
       "labelRequired": "Vui lòng nhập nhãn",
       "descriptionField": "Mô tả",
       "numField": "Số lượng (num)",
-      "numHelp": "Số lần yêu cầu này được áp dụng cho mỗi đơn. Thường là 1.",
+      "numHelp": "Số lượng nhân với đơn giá của yêu cầu này.",
       "tierField": "Mức giá (tier)",
       "tierPlaceholder": "Chọn một mức giá",
       "tierRequired": "Vui lòng chọn mức giá",

@@ -48,14 +48,13 @@ export const buildAhamovePayload = (
   input: AhamovePayloadInput
 ): Record<string, unknown> => {
   switch (request.type) {
-    case 'BOOLEAN':
-      return { _id: request._id, num: input.num ?? 1 }
-
     case 'TIER':
       return { _id: request._id, tier_code: input.tier_code ?? '' }
 
-    case 'INPUT':
     case 'PER_UNIT':
+      return { _id: request._id, num: input.num ?? 1 }
+
+    case 'INPUT':
       return { _id: request._id, name: input.name ?? '', price: input.price ?? 0 }
 
     default:
@@ -65,12 +64,11 @@ export const buildAhamovePayload = (
 
 export const defaultAhamoveInput = (request: AhamoveServiceRequest): AhamovePayloadInput => {
   switch (request.type) {
-    case 'BOOLEAN':
-      return { num: 1 }
     case 'TIER':
       return { tier_code: request.tier_list?.[0]?.code ?? '' }
-    case 'INPUT':
     case 'PER_UNIT':
+      return { num: 1 }
+    case 'INPUT':
       return { name: '', price: request.price ?? 0 }
     default:
       return {}

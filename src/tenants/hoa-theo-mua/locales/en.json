@@ -950,7 +950,7 @@
       "labelRequired": "Label is required",
       "descriptionField": "Description",
       "numField": "Quantity (num)",
-      "numHelp": "How many times this request is applied per order. Usually 1.",
+      "numHelp": "Multiplier applied to this request's unit price.",
       "tierField": "Pricing tier",
       "tierPlaceholder": "Pick a tier",
       "tierRequired": "Tier is required",
