@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ArrowLeft, Maximize2, SaveIcon, WandSparkles } from 'lucide-react'
+import { ArrowLeft, Maximize2, SaveIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
@@ -15,7 +15,7 @@ import {
   matchesB2BServicesConfig,
   parseB2BServiceDetail
 } from '../features/configs/b2b-service-detail-palette'
-import { B2B_OVERVIEW_PRESET } from '../features/configs/components/b2b-services/b2b-overview-preset'
+// import { B2B_OVERVIEW_PRESET } from '../features/configs/components/b2b-services/b2b-overview-preset'
 import { AdvantagesForm } from '../features/configs/components/b2b-services/editor/advantages-form'
 import { CaseStudiesForm } from '../features/configs/components/b2b-services/editor/case-studies-form'
 import { CtaForm } from '../features/configs/components/b2b-services/editor/cta-form'
@@ -222,7 +222,7 @@ function B2BOverviewEditor({
         </div>
 
         <div className='ml-auto flex items-center gap-2'>
-          <Button
+          {/* <Button
             type='button'
             variant='outline'
             size='sm'
@@ -230,7 +230,7 @@ function B2BOverviewEditor({
           >
             <WandSparkles />
             {t('configsPage.b2bOverviewDialog.fillPresetButton')}
-          </Button>
+          </Button> */}
 
           <div className='flex items-center rounded-md border p-0.5'>
             {PREVIEW_LOCALES.map((option) => (
