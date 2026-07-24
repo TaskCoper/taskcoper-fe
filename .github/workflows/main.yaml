@@ -31,7 +31,7 @@ jobs:
     with:
       actor: ${{ github.actor }}
       repository: ${{ github.repository }}
-      environment: hoa-theo-mua-dev
+      environment: htm-dev
 
   build-client-prod:
     name: Build / Client / Prod

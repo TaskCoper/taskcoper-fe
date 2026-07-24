@@ -3,20 +3,24 @@
 # so deploy-application.yaml can read them via `secrets: inherit`.
 #
 # Mirrors the dev/prod setup: each environment is pinned to one deployment branch
-# (hoa-theo-mua-dev -> hoa-theo-mua-dev, dev -> dev, prod -> main) and gets one secret per
+# (htm-dev -> hoa-theo-mua-dev, dev -> dev, prod -> main) and gets one secret per
 # KEY=VALUE line in its env file (REGISTRY/TAG are skipped — CI computes those).
+#
+# NOTE: the environment name (htm-dev) must match the compose profile used in
+# build-image.yaml / deploy-application.yaml, NOT the deployment branch name — the
+# branch is only used for the deployment-branch-policy restriction below.
 #
 # Requirements: gh CLI authed with repo admin (`gh auth login`), run from repo root.
 #
 # Usage:
-#   ./.docker/sync-env-secrets.sh                                  # hoa-theo-mua-dev from .docker/.env.hoa-theo-mua-dev
-#   ENVIRONMENTS="dev prod" ./.docker/sync-env-secrets.sh          # other environments
+#   ./.docker/sync-env-secrets.sh                          # htm-dev from .docker/.env.htm-dev
+#   ENVIRONMENTS="dev prod" ./.docker/sync-env-secrets.sh  # other environments
 #   REPO=Owner/repo ./.docker/sync-env-secrets.sh
-#   ENV_FILE=.docker/.env.hoa-theo-mua-dev ENVIRONMENTS="hoa-theo-mua-dev" ./.docker/sync-env-secrets.sh
+#   ENV_FILE=.docker/.env.htm-dev ENVIRONMENTS="htm-dev" ./.docker/sync-env-secrets.sh
 set -euo pipefail
 
 REPO="${REPO:-TaskCoper/taskcoper-fe}"
-ENVIRONMENTS="${ENVIRONMENTS:-hoa-theo-mua-dev}"
+ENVIRONMENTS="${ENVIRONMENTS:-htm-dev}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Keys present in the env file that should NOT become secrets (computed in CI).
@@ -25,10 +29,10 @@ EXCLUDE='^(REGISTRY|TAG)='
 # Which deployment branch each environment is restricted to (empty => allow all).
 branch_for_env() {
   case "$1" in
-    hoa-theo-mua-dev) echo "hoa-theo-mua-dev" ;;
-    dev)              echo "dev" ;;
-    prod)             echo "main" ;;
-    *)                echo "" ;;
+    htm-dev) echo "hoa-theo-mua-dev" ;;
+    dev)     echo "dev" ;;
+    prod)    echo "main" ;;
+    *)       echo "" ;;
   esac
 }
 
@@ -68,6 +72,6 @@ JSON
   echo ">> Done '$ENV'. ($(gh secret list --repo "$REPO" --env "$ENV" | wc -l | tr -d ' ') secrets)"
 done
 
-echo "All set. Verify with: gh secret list --repo $REPO --env hoa-theo-mua-dev"
+echo "All set. Verify with: gh secret list --repo $REPO --env htm-dev"
 
-# ENVIRONMENTS="hoa-theo-mua-dev" ENV_FILE=.docker/.env.hoa-theo-mua-dev ./.docker/sync-env-secrets.sh
+# ENVIRONMENTS="htm-dev" ENV_FILE=.docker/.env.htm-dev ./.docker/sync-env-secrets.sh
