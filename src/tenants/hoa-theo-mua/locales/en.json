@@ -295,11 +295,26 @@
       },
       "form": {
         "step": {
-          "details": { "label": "Job Details", "description": "Basic information" },
-          "jobDescription": { "label": "Job Description", "description": "Role and responsibilities" },
-          "experience": { "label": "Experience", "description": "Skills and experience" },
-          "salary": { "label": "Salary", "description": "Compensation details" },
-          "review": { "label": "Review & Publish", "description": "Review and finalize" }
+          "details": {
+            "label": "Job Details",
+            "description": "Basic information"
+          },
+          "jobDescription": {
+            "label": "Job Description",
+            "description": "Role and responsibilities"
+          },
+          "experience": {
+            "label": "Experience",
+            "description": "Skills and experience"
+          },
+          "salary": {
+            "label": "Salary",
+            "description": "Compensation details"
+          },
+          "review": {
+            "label": "Review & Publish",
+            "description": "Review and finalize"
+          }
         },
         "action": {
           "continue": "Continue",
@@ -715,6 +730,14 @@
       "emptyHint": "No banners yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
+    "b2bServicesPalette": {
+      "title": "B2B Services",
+      "newLabel": "Add service",
+      "emptyList": "No services yet.",
+      "allSlugsUsed": "All services have already been created.",
+      "overviewLabel": "Overview page",
+      "overviewNewLabel": "Create overview page"
+    },
     "collectionKey": {
       "field": "Key",
       "placeholder": "e.g. hero, checkout-footer",
@@ -729,6 +752,8 @@
       "title": "Product collection",
       "subtitle": "Pick any slug (e.g. mainline, occasions, featured). Enable per-card campaigns for date-driven rotations, or keep it off for an always-on grid.",
       "configLabel": "Product collection: {{suffix}}",
+      "configLabelField": "Display label",
+      "configLabelHelp": "Shown in the config list and sidebar. Leave blank to use the default label.",
       "keyPlaceholder": "e.g. mainline, occasions, featured",
       "locale": {
         "vi": "Vietnamese",
@@ -940,6 +965,210 @@
         "slotRequired": "Banner #{{index}}: slot key is required.",
         "imageRequired": "Banner #{{index}}: image is required.",
         "hrefRequired": "Banner #{{index}}: click destination is required."
+      }
+    },
+    "b2bServicesDialog": {
+      "title": "B2B service page",
+      "subtitle": "Edit the content of one B2B service page.",
+      "fillPreset": "Quick-fill sample content (test data):",
+      "configLabel": "B2B service: {{slug}}",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "slug": {
+        "field": "Service (slug)",
+        "placeholder": "Pick a service"
+      },
+      "fields": {
+        "enabled": "Service enabled",
+        "showPackagesLink": "Show packages link",
+        "heroImage": "Hero image",
+        "heroImageHelp": "Accepts an image or a short video (mp4, webm, mov).",
+        "ogImage": "OG image",
+        "sectionImage": "Section image",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "gallery": "Gallery",
+        "galleryAdd": "Add image",
+        "galleryEmpty": "No images yet.",
+        "lede": "Lede paragraph",
+        "configLabel": "Display label",
+        "configLabelPlaceholder": "e.g. B2B service: Corporate Gifts",
+        "configLabelHelp": "Shown in the config list and sidebar so you can find this service quickly."
+      },
+      "card": {
+        "title": "Card",
+        "tag": "Tag",
+        "name": "Name",
+        "description": "Description"
+      },
+      "seo": {
+        "title": "SEO",
+        "metaTitle": "Meta title",
+        "metaDescription": "Meta description",
+        "keywords": "Keywords",
+        "keywordsHelp": "Comma-separated keywords per locale.",
+        "ogAlt": "Social image alt text",
+        "breadcrumb": "Breadcrumb label",
+        "serviceType": "Service type (schema.org)",
+        "serviceTypePlaceholder": "e.g. EventPlanning",
+        "serviceTypeHelp": "schema.org serviceType value; locale-neutral."
+      },
+      "section": {
+        "media": "Media",
+        "intro": "Intro",
+        "introHelp": "One or more opening paragraphs shown at the top of the page.",
+        "heading": "Heading",
+        "subIntro": "Sub-intro",
+        "body": "Body",
+        "closing": "Closing",
+        "include": "Include",
+        "inclusions": "Inclusions",
+        "stats": "Stats",
+        "mice": "MICE",
+        "schedule": "Schedule",
+        "personalization": "Personalization",
+        "benefits": "Benefits",
+        "process": "Process",
+        "audience": "Audience",
+        "faq": "FAQ"
+      },
+      "item": {
+        "add": "Add item",
+        "addParagraph": "Add paragraph",
+        "addFeature": "Add feature",
+        "title": "Title",
+        "description": "Description",
+        "empty": "No items yet.",
+        "untitled": "Item {{index}}",
+        "paragraph": "Paragraph {{index}}",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove",
+        "statValue": "Value",
+        "statLabel": "Label",
+        "statCaption": "Caption",
+        "faqQuestion": "Question",
+        "faqAnswer": "Answer",
+        "faqAnswerHelp": "Supports multiple lines.",
+        "faqHasZalo": "Show Zalo contact button"
+      },
+      "errors": {
+        "cardNameRequired": "The service name (VI) is required."
+      }
+    },
+    "b2bOverviewDialog": {
+      "title": "B2B overview page",
+      "subtitle": "Edit the content of the /b2b overview page.",
+      "configLabel": "B2B overview page",
+      "fillPreset": "Quick-fill sample content (test data):",
+      "fillPresetButton": "Fill sample content",
+      "section": {
+        "hero": "Hero",
+        "trustBar": "Trust bar",
+        "trustBarHelp": "Logo names and stat text; logo images stay in code.",
+        "services": "Services",
+        "servicesHelp": "The 5 cards come from each service's own card document.",
+        "caseStudies": "Case studies",
+        "partners": "Featured partners",
+        "packages": "Reception orchid packages",
+        "advantages": "Advantages",
+        "process": "Process",
+        "faq": "FAQ",
+        "faqHelp": "Keep the <zalo>…</zalo> markers verbatim in answers.",
+        "cta": "CTA"
+      },
+      "field": {
+        "eyebrow": "Eyebrow",
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "audienceLine": "Audience line",
+        "primaryCta": "Primary CTA",
+        "secondaryCta": "Secondary CTA",
+        "imageAlt": "Image alt text",
+        "heroImage": "Hero image",
+        "logosAriaLabel": "Logos aria-label",
+        "stats": "Stats",
+        "statValue": "Value (e.g. 50+)",
+        "statLabel": "Label",
+        "logoGroups": "Logo groups",
+        "groupLabel": "Group label",
+        "logoName": "Name",
+        "logoImage": "Logo image",
+        "description": "Description",
+        "explore": "Explore link",
+        "viewPackages": "View packages link",
+        "caseStudyLogo": "Case study logo",
+        "logoAlt": "Logo alt text",
+        "badge": "Badge",
+        "summary": "Summary",
+        "quote": "Quote",
+        "quoteAuthor": "Quote author",
+        "quoteRole": "Quote role",
+        "partnerLogo": "Partner logo",
+        "partnerName": "Name",
+        "partnerRole": "Role",
+        "partnerSummary": "Summary",
+        "popular": "Popular badge",
+        "fromLabel": "From label",
+        "packageCta": "Package CTA",
+        "quarterlySuffix": "Quarterly suffix",
+        "icon": "Icon",
+        "highlighted": "Highlighted package",
+        "packageName": "Name",
+        "packageTarget": "Target",
+        "packagePrice": "Price",
+        "features": "Features",
+        "itemTitle": "Title",
+        "itemDescription": "Description",
+        "stepLabel": "Step label",
+        "faqQuestion": "Question",
+        "faqAnswer": "Answer",
+        "faqAnswerHelp": "Use <zalo>…</zalo> where the Zalo link should appear.",
+        "faqHasZalo": "Answer contains a Zalo link",
+        "subEyebrow": "Sub-eyebrow",
+        "callLabel": "Call label",
+        "emailLabel": "Email label",
+        "primary": "Primary CTA",
+        "secondary": "Secondary CTA"
+      }
+    },
+    "b2bOverviewPage": {
+      "title": "B2B overview page",
+      "back": "Back to configs",
+      "previewFullPage": "Preview full page",
+      "closePreview": "Close preview",
+      "previewHint": "Live desktop preview of the section being edited",
+      "previewLocale": {
+        "vi": "VI",
+        "en": "EN"
+      },
+      "editLocaleLabel": "Editing language",
+      "unsavedWarning": "You have unsaved changes. Leave without saving?"
+    },
+    "b2bServicePage": {
+      "title": "B2B service page",
+      "back": "Back to configs",
+      "previewFullPage": "Preview full page",
+      "previewHint": "Live desktop preview of the service page being edited",
+      "fillPresetButton": "Fill sample content",
+      "unsavedWarning": "You have unsaved changes. Leave without saving?",
+      "section": {
+        "settings": "Settings",
+        "hero": "Hero & card",
+        "intro": "Overview",
+        "stats": "By the numbers",
+        "inclusions": "What's included",
+        "mice": "MICE flowers",
+        "schedule": "Schedule",
+        "personalization": "Personalization",
+        "benefits": "Benefits",
+        "process": "Process",
+        "audience": "Ideal for",
+        "faq": "FAQ",
+        "closing": "In closing",
+        "seo": "SEO & meta"
       }
     },
     "ahamoveDialog": {

@@ -46,6 +46,7 @@ const toFormValues = (existingConfig: Config | null): ProductCollectionFormValue
   const parsed = existingConfig ? parseProductCollection(existingConfig.value.value) : defaultProductCollection()
   return {
     keySuffix: existingConfig ? productCollectionKeySuffix(existingConfig.key) : '',
+    label: existingConfig?.value.label ?? '',
     section: parsed.section,
     hasCampaigns: parsed.hasCampaigns,
     cards: parsed.cards
@@ -187,7 +188,7 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
           group: PRODUCT_COLLECTION_GROUP,
           value: {
             group: PRODUCT_COLLECTION_GROUP,
-            label: existingConfig?.value.label || t('configsPage.productCollectionDialog.configLabel', { suffix }),
+            label: values.label.trim() || t('configsPage.productCollectionDialog.configLabel', { suffix }),
             inputType: InputType.json,
             required: false,
             options: [],
@@ -262,6 +263,8 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
             />
           )}
         />
+
+        <ConfigLabelField suffix={existingConfig ? productCollectionKeySuffix(existingConfig.key) : undefined} />
 
         <CampaignsToggle />
 
@@ -349,6 +352,24 @@ const findFirstMessage = (errors: ErrorLike): string | undefined => {
     if (found) return found
   }
   return undefined
+}
+
+function ConfigLabelField({ suffix }: { suffix?: string }) {
+  const { t } = useTenantTranslation()
+  const { register } = useFormContext<ProductCollectionFormValues>()
+
+  return (
+    <Field className='gap-1'>
+      <FieldLabel className='text-xs'>{t('configsPage.productCollectionDialog.configLabelField')}</FieldLabel>
+      <Input
+        {...register('label')}
+        placeholder={t('configsPage.productCollectionDialog.configLabel', { suffix: suffix || '…' })}
+      />
+      <FieldDescription className='text-xs'>
+        {t('configsPage.productCollectionDialog.configLabelHelp')}
+      </FieldDescription>
+    </Field>
+  )
 }
 
 function CampaignsToggle() {

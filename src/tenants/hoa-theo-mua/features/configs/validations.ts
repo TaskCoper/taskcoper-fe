@@ -272,6 +272,7 @@ export const productCollectionFormSchema = (t: TenantT, opts: ProductCollectionS
   z
     .object({
       keySuffix: z.string(),
+      label: z.string(),
       section: z.object({
         title: localizedTextSchema,
         description: localizedTextSchema,

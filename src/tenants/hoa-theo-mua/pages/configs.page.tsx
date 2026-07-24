@@ -4,8 +4,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
+import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
+import {
+  B2B_SERVICE_SLUGS,
+  B2B_SERVICES_GROUP,
+  b2bServicesKeySuffix,
+  isB2BOverviewKey,
+  matchesB2BServicesConfig,
+  type B2BServiceSlug
+} from '../features/configs/b2b-service-detail-palette'
 import { bannerKeySuffix, matchesBannerKey } from '../features/configs/banners-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
@@ -44,6 +56,12 @@ interface LockedPaletteItem {
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
+// Legacy `b2bservices` rows predate the `b2bServices` casing convention; fold them into
+// one tab instead of splitting the group across two casings.
+const B2B_SERVICES_GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
+const resolveGroupKey = (group: string): string =>
+  group.toLowerCase() === B2B_SERVICES_GROUP_LC ? B2B_SERVICES_GROUP : group
+
 // const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
 //   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
 //   if (typeof raw !== 'string') return null
@@ -74,7 +92,11 @@ const KIND_VISUALS: Record<
 
 export default function ConfigsPage() {
   const { t } = useTenantTranslation()
-  const [currentKind, setCurrentKind] = useState<ConfigKind>(ConfigKind.content)
+  const navigate = useNavigate()
+  const [currentKind, setCurrentKind] = useQueryState(
+    'kind',
+    parseAsStringEnum<ConfigKind>(Object.values(ConfigKind)).withDefault(ConfigKind.content)
+  )
 
   const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({
     enabled: currentKind === ConfigKind.content
@@ -151,22 +173,23 @@ export default function ConfigsPage() {
     const result: string[] = []
 
     for (const config of currentKindConfigs) {
-      if (!seen.has(config.value.group)) {
-        seen.add(config.value.group)
-        result.push(config.value.group)
+      const group = resolveGroupKey(config.value.group)
+      if (!seen.has(group)) {
+        seen.add(group)
+        result.push(group)
       }
     }
 
     return result
   }, [currentKindConfigs])
 
-  const [activeGroup, setActiveGroup] = useState<string>()
+  const [activeGroup, setActiveGroup] = useQueryState('section', parseAsString)
   const currentGroup = activeGroup && groups.includes(activeGroup) ? activeGroup : (groups[0] ?? '')
 
   const groupedConfigs = useMemo(
     () =>
       currentKindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
-        const g = config.value.group
+        const g = resolveGroupKey(config.value.group)
         if (!acc[g]) acc[g] = []
         acc[g].push(config)
         return acc
@@ -248,6 +271,19 @@ export default function ConfigsPage() {
     [bannersConfigs]
   )
 
+  const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
+  // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
+  const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
+  const b2bOverviewConfig = useMemo(
+    () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
+    [b2bServicesConfigs]
+  )
+  const usedB2BSlugs = useMemo(() => new Set(b2bServiceDocs.map((c) => b2bServicesKeySuffix(c.key))), [b2bServiceDocs])
+  const availableB2BSlugs = useMemo<B2BServiceSlug[]>(
+    () => B2B_SERVICE_SLUGS.filter((slug) => !usedB2BSlugs.has(slug)),
+    [usedB2BSlugs]
+  )
+
   // const findAhamoveRequestForConfig = useCallback(
   //   (config: Config): AhamoveServiceRequest | null => {
   //     const raw = config.value.value
@@ -263,25 +299,54 @@ export default function ConfigsPage() {
   //   [ahamoveRequests]
   // )
 
-  const openEdit = useCallback((config: Config) => {
-    if (matchesProductCollectionConfig(config)) {
-      setEditingProductCollectionConfig(config)
-      setProductCollectionDialogOpen(true)
-      return
-    }
-    if (matchesFeedbacksKey(config.key)) {
-      setEditingFeedbacksConfig(config)
-      setFeedbacksDialogOpen(true)
-      return
-    }
-    if (matchesBannerKey(config.key)) {
-      setEditingBannersConfig(config)
-      setBannersDialogOpen(true)
-      return
-    }
-    setEditingConfig(config)
-    setEditOpen(true)
-  }, [])
+  const openB2BOverviewEditor = useCallback(() => {
+    navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs/b2b-overview`)
+  }, [navigate])
+
+  // B2B service docs are edited on a dedicated full-page editor; existing rows route to their
+  // slug, "add service" routes to the first free slug.
+  const openB2BServiceEditor = useCallback(
+    (config: Config | null) => {
+      const slug = config ? b2bServicesKeySuffix(config.key) : availableB2BSlugs[0]
+      if (!slug) {
+        toast.error(t('configsPage.b2bServicesPalette.allSlugsUsed'))
+        return
+      }
+      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs/b2b-service/${slug}`)
+    },
+    [navigate, availableB2BSlugs, t]
+  )
+
+  const openEdit = useCallback(
+    (config: Config) => {
+      if (matchesProductCollectionConfig(config)) {
+        setEditingProductCollectionConfig(config)
+        setProductCollectionDialogOpen(true)
+        return
+      }
+      if (matchesFeedbacksKey(config.key)) {
+        setEditingFeedbacksConfig(config)
+        setFeedbacksDialogOpen(true)
+        return
+      }
+      if (matchesBannerKey(config.key)) {
+        setEditingBannersConfig(config)
+        setBannersDialogOpen(true)
+        return
+      }
+      if (matchesB2BServicesConfig(config)) {
+        if (isB2BOverviewKey(config.key)) {
+          openB2BOverviewEditor()
+        } else {
+          openB2BServiceEditor(config)
+        }
+        return
+      }
+      setEditingConfig(config)
+      setEditOpen(true)
+    },
+    [openB2BOverviewEditor, openB2BServiceEditor]
+  )
 
   const openProductCollectionDialog = useCallback((config: Config | null) => {
     setEditingProductCollectionConfig(config)
@@ -295,7 +360,6 @@ export default function ConfigsPage() {
     setEditingBannersConfig(config)
     setBannersDialogOpen(true)
   }, [])
-
   const closeEdit = useCallback(() => {
     setEditOpen(false)
   }, [])
@@ -406,10 +470,14 @@ export default function ConfigsPage() {
         productCollectionConfigs={productCollectionConfigs}
         feedbacksConfigs={feedbacksConfigs}
         bannersConfigs={bannersConfigs}
+        b2bServicesConfigs={b2bServiceDocs}
+        b2bOverviewConfig={b2bOverviewConfig}
         onCreateLocked={openLockedPaletteCreate}
         onOpenProductCollection={openProductCollectionDialog}
         onOpenFeedbacks={openFeedbacksDialog}
         onOpenBanners={openBannersDialog}
+        onOpenB2BService={openB2BServiceEditor}
+        onOpenB2BOverview={openB2BOverviewEditor}
       />
 
       <CreateConfigDialog

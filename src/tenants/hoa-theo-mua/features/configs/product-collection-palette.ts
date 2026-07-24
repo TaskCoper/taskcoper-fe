@@ -17,6 +17,10 @@ export { emptyLocalizedText, slugify, type LocalizedText } from './palette-share
 export const PRODUCT_COLLECTION_GROUP = 'products'
 export const PRODUCT_COLLECTION_KEY_PREFIX = `${PRODUCT_COLLECTION_GROUP}.`
 
+// `products.signature` is plain json content, not a collection — it stays on the
+// generic JSON editor rather than the collection dialog.
+const PRODUCT_NON_COLLECTION_KEYS = new Set([`${PRODUCT_COLLECTION_KEY_PREFIX}signature`])
+
 // A product-group config is a "collection" when it stores json content. That filters
 // out any future non-collection products.* configs (e.g. products.priceCap as text).
 export const matchesProductCollectionConfig = (config: Config): boolean =>
@@ -24,7 +28,8 @@ export const matchesProductCollectionConfig = (config: Config): boolean =>
   config.kind === ConfigKind.content &&
   config.value.inputType === InputType.json &&
   config.key.startsWith(PRODUCT_COLLECTION_KEY_PREFIX) &&
-  config.key.length > PRODUCT_COLLECTION_KEY_PREFIX.length
+  config.key.length > PRODUCT_COLLECTION_KEY_PREFIX.length &&
+  !PRODUCT_NON_COLLECTION_KEYS.has(config.key)
 
 export const productCollectionKeySuffix = (key: string): string =>
   key.startsWith(PRODUCT_COLLECTION_KEY_PREFIX) ? key.slice(PRODUCT_COLLECTION_KEY_PREFIX.length) : key

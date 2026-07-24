@@ -1,9 +1,19 @@
 import { Separator } from '@/components/ui/separator'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { GalleryHorizontalEnd, MessageSquareHeart, Plus, ShoppingBag, Tags, Warehouse } from 'lucide-react'
+import {
+  Briefcase,
+  GalleryHorizontalEnd,
+  LayoutDashboard,
+  MessageSquareHeart,
+  Plus,
+  ShoppingBag,
+  Tags,
+  Warehouse
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
+import { b2bServicesKeySuffix } from '../b2b-service-detail-palette'
 import { bannerKeySuffix } from '../banners-palette'
 import { feedbacksKeySuffix } from '../feedbacks-palette'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../locked-config-keys'
@@ -18,7 +28,7 @@ interface LockedPaletteItem {
   defaultValue: unknown
 }
 
-type Tone = 'emerald' | 'rose' | 'sky' | 'amber'
+type Tone = 'emerald' | 'rose' | 'sky' | 'amber' | 'violet'
 
 interface Props {
   depotOptions: InputOption[]
@@ -26,10 +36,15 @@ interface Props {
   productCollectionConfigs: Config[]
   feedbacksConfigs: Config[]
   bannersConfigs: Config[]
+  b2bServicesConfigs: Config[]
+  b2bOverviewConfig: Config | null
   onCreateLocked: (item: LockedPaletteItem) => void
   onOpenProductCollection: (config: Config | null) => void
   onOpenFeedbacks: (config: Config | null) => void
   onOpenBanners: (config: Config | null) => void
+  onOpenB2BService: (config: Config | null) => void
+  // The B2B overview editor is a dedicated page; the button just navigates there.
+  onOpenB2BOverview: () => void
 }
 
 export default function ConfigPaletteSidebar({
@@ -38,10 +53,14 @@ export default function ConfigPaletteSidebar({
   productCollectionConfigs,
   feedbacksConfigs,
   bannersConfigs,
+  b2bServicesConfigs,
+  b2bOverviewConfig,
   onCreateLocked,
   onOpenProductCollection,
   onOpenFeedbacks,
-  onOpenBanners
+  onOpenBanners,
+  onOpenB2BService,
+  onOpenB2BOverview
 }: Props) {
   const { t } = useTenantTranslation()
 
@@ -132,6 +151,42 @@ export default function ConfigPaletteSidebar({
           newLabel={t('configsPage.bannersPalette.newLabel')}
           onSelect={onOpenBanners}
         />
+
+        <Separator className='my-5' />
+
+        {/* B2B services */}
+        <CollectionPaletteList
+          title={t('configsPage.b2bServicesPalette.title')}
+          icon={<Briefcase className='size-4' />}
+          tone='violet'
+          configs={b2bServicesConfigs}
+          suffixOf={b2bServicesKeySuffix}
+          emptyLabel={t('configsPage.b2bServicesPalette.emptyList')}
+          newLabel={t('configsPage.b2bServicesPalette.newLabel')}
+          onSelect={onOpenB2BService}
+        />
+
+        {/* B2B overview page doc (singleton) */}
+        <div className='mt-1'>
+          <button
+            type='button'
+            className='flex w-full cursor-pointer items-center gap-2.5 rounded-md border border-dashed px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground'
+            onClick={() => onOpenB2BOverview()}
+            title={t('configsPage.b2bServicesPalette.overviewLabel')}
+          >
+            <span className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', TONES.violet.iconBg)}>
+              <LayoutDashboard className='size-4' />
+            </span>
+            <span className='flex-1 truncate'>
+              {b2bOverviewConfig
+                ? t('configsPage.b2bServicesPalette.overviewLabel')
+                : t('configsPage.b2bServicesPalette.overviewNewLabel')}
+            </span>
+            {b2bOverviewConfig && (
+              <span className={cn('size-1.5 shrink-0 rounded-full', TONES.violet.dot)} aria-hidden='true' />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -150,7 +205,8 @@ const TONES: Record<Tone, { iconBg: string; dot: string }> = {
   emerald: { iconBg: 'bg-emerald-50 text-emerald-600', dot: 'bg-emerald-500' },
   rose: { iconBg: 'bg-rose-50 text-rose-600', dot: 'bg-rose-500' },
   sky: { iconBg: 'bg-sky-50 text-sky-600', dot: 'bg-sky-500' },
-  amber: { iconBg: 'bg-amber-50 text-amber-600', dot: 'bg-amber-500' }
+  amber: { iconBg: 'bg-amber-50 text-amber-600', dot: 'bg-amber-500' },
+  violet: { iconBg: 'bg-violet-50 text-violet-600', dot: 'bg-violet-500' }
 }
 
 function CollectionPaletteList({

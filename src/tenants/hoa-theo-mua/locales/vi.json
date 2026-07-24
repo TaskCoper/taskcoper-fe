@@ -295,11 +295,26 @@
       },
       "form": {
         "step": {
-          "details": { "label": "Thông tin chung", "description": "Thông tin cơ bản" },
-          "jobDescription": { "label": "Mô tả công việc", "description": "Vai trò và trách nhiệm" },
-          "experience": { "label": "Kinh nghiệm", "description": "Kỹ năng và kinh nghiệm" },
-          "salary": { "label": "Mức lương", "description": "Chi tiết lương thưởng" },
-          "review": { "label": "Xem lại & Đăng", "description": "Xem lại và hoàn tất" }
+          "details": {
+            "label": "Thông tin chung",
+            "description": "Thông tin cơ bản"
+          },
+          "jobDescription": {
+            "label": "Mô tả công việc",
+            "description": "Vai trò và trách nhiệm"
+          },
+          "experience": {
+            "label": "Kinh nghiệm",
+            "description": "Kỹ năng và kinh nghiệm"
+          },
+          "salary": {
+            "label": "Mức lương",
+            "description": "Chi tiết lương thưởng"
+          },
+          "review": {
+            "label": "Xem lại & Đăng",
+            "description": "Xem lại và hoàn tất"
+          }
         },
         "action": {
           "continue": "Tiếp tục",
@@ -715,6 +730,14 @@
       "emptyHint": "Chưa có banner nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
+    "b2bServicesPalette": {
+      "title": "Dịch vụ B2B",
+      "newLabel": "Thêm dịch vụ",
+      "emptyList": "Chưa có dịch vụ nào.",
+      "allSlugsUsed": "Tất cả dịch vụ đã được tạo.",
+      "overviewLabel": "Trang tổng quan",
+      "overviewNewLabel": "Tạo trang tổng quan"
+    },
     "collectionKey": {
       "field": "Khoá",
       "placeholder": "vd. hero, checkout-footer",
@@ -729,6 +752,8 @@
       "title": "Bộ sưu tập sản phẩm",
       "subtitle": "Chọn slug tuỳ ý (vd: mainline, occasions, featured). Bật chiến dịch theo thẻ khi cần luân phiên theo lịch, hoặc để tắt cho lưới luôn hiện.",
       "configLabel": "Bộ sưu tập: {{suffix}}",
+      "configLabelField": "Nhãn hiển thị",
+      "configLabelHelp": "Hiển thị trong danh sách cấu hình và thanh bên. Để trống để dùng nhãn mặc định.",
       "keyPlaceholder": "vd: mainline, occasions, featured",
       "locale": {
         "vi": "Tiếng Việt",
@@ -940,6 +965,210 @@
         "slotRequired": "Banner #{{index}}: vui lòng nhập vị trí (slot).",
         "imageRequired": "Banner #{{index}}: vui lòng chọn ảnh.",
         "hrefRequired": "Banner #{{index}}: vui lòng nhập đường dẫn khi bấm."
+      }
+    },
+    "b2bServicesDialog": {
+      "title": "Trang dịch vụ B2B",
+      "subtitle": "Chỉnh sửa nội dung của một trang dịch vụ B2B.",
+      "fillPreset": "Điền nhanh nội dung mẫu (dữ liệu thử):",
+      "configLabel": "Dịch vụ B2B: {{slug}}",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "Tiếng Anh"
+      },
+      "slug": {
+        "field": "Dịch vụ (slug)",
+        "placeholder": "Chọn dịch vụ"
+      },
+      "fields": {
+        "enabled": "Hiển thị dịch vụ",
+        "showPackagesLink": "Hiện liên kết gói dịch vụ",
+        "heroImage": "Ảnh hero",
+        "heroImageHelp": "Hỗ trợ ảnh hoặc video ngắn (mp4, webm, mov).",
+        "ogImage": "Ảnh OG (chia sẻ mạng xã hội)",
+        "sectionImage": "Ảnh minh họa",
+        "uploadImage": "Tải ảnh",
+        "replaceImage": "Đổi ảnh",
+        "gallery": "Thư viện ảnh",
+        "galleryAdd": "Thêm ảnh",
+        "galleryEmpty": "Chưa có ảnh nào.",
+        "lede": "Đoạn mở đầu (lede)",
+        "configLabel": "Nhãn hiển thị",
+        "configLabelPlaceholder": "VD: Dịch vụ B2B: Quà tặng doanh nghiệp",
+        "configLabelHelp": "Hiển thị trong danh sách cấu hình và thanh bên để bạn tìm dịch vụ này nhanh hơn."
+      },
+      "card": {
+        "title": "Thẻ dịch vụ",
+        "tag": "Nhãn",
+        "name": "Tên",
+        "description": "Mô tả"
+      },
+      "seo": {
+        "title": "SEO",
+        "metaTitle": "Tiêu đề meta",
+        "metaDescription": "Mô tả meta",
+        "keywords": "Từ khóa",
+        "keywordsHelp": "Các từ khóa phân tách bằng dấu phẩy cho từng ngôn ngữ.",
+        "ogAlt": "Văn bản thay thế ảnh chia sẻ",
+        "breadcrumb": "Nhãn breadcrumb",
+        "serviceType": "Loại dịch vụ (schema.org)",
+        "serviceTypePlaceholder": "VD: EventPlanning",
+        "serviceTypeHelp": "Giá trị serviceType của schema.org; không phụ thuộc ngôn ngữ."
+      },
+      "section": {
+        "media": "Hình ảnh",
+        "intro": "Mở đầu",
+        "introHelp": "Một hoặc nhiều đoạn mở đầu hiển thị ở đầu trang.",
+        "heading": "Tiêu đề",
+        "subIntro": "Mở đầu phụ",
+        "body": "Nội dung",
+        "closing": "Lời kết",
+        "include": "Bật",
+        "inclusions": "Hạng mục bao gồm",
+        "stats": "Số liệu",
+        "mice": "MICE",
+        "schedule": "Lịch trình",
+        "personalization": "Cá nhân hóa",
+        "benefits": "Lợi ích",
+        "process": "Quy trình",
+        "audience": "Đối tượng",
+        "faq": "Câu hỏi thường gặp"
+      },
+      "item": {
+        "add": "Thêm mục",
+        "addParagraph": "Thêm đoạn",
+        "addFeature": "Thêm đặc điểm",
+        "title": "Tiêu đề",
+        "description": "Mô tả",
+        "empty": "Chưa có mục nào.",
+        "untitled": "Mục {{index}}",
+        "paragraph": "Đoạn {{index}}",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xóa",
+        "statValue": "Giá trị",
+        "statLabel": "Nhãn",
+        "statCaption": "Chú thích",
+        "faqQuestion": "Câu hỏi",
+        "faqAnswer": "Câu trả lời",
+        "faqAnswerHelp": "Hỗ trợ nhiều dòng.",
+        "faqHasZalo": "Hiện nút liên hệ Zalo"
+      },
+      "errors": {
+        "cardNameRequired": "Tên dịch vụ (Tiếng Việt) là bắt buộc."
+      }
+    },
+    "b2bOverviewDialog": {
+      "title": "Trang tổng quan B2B",
+      "subtitle": "Chỉnh sửa nội dung trang tổng quan /b2b.",
+      "configLabel": "Trang tổng quan B2B",
+      "fillPreset": "Điền nhanh nội dung mẫu (dữ liệu thử):",
+      "fillPresetButton": "Điền nội dung mẫu",
+      "section": {
+        "hero": "Hero",
+        "trustBar": "Thanh tin cậy",
+        "trustBarHelp": "Tên logo và chữ số liệu; hình ảnh logo giữ trong code.",
+        "services": "Dịch vụ",
+        "servicesHelp": "5 thẻ dịch vụ lấy từ tài liệu card của từng dịch vụ.",
+        "caseStudies": "Case study",
+        "partners": "Đối tác doanh nghiệp tiêu biểu",
+        "packages": "Gói hoa lan lễ tân",
+        "advantages": "Ưu điểm",
+        "process": "Quy trình",
+        "faq": "Câu hỏi thường gặp",
+        "faqHelp": "Giữ nguyên dấu <zalo>…</zalo> trong câu trả lời.",
+        "cta": "CTA"
+      },
+      "field": {
+        "eyebrow": "Eyebrow",
+        "title": "Tiêu đề",
+        "subtitle": "Phụ đề",
+        "audienceLine": "Dòng đối tượng",
+        "primaryCta": "CTA chính",
+        "secondaryCta": "CTA phụ",
+        "imageAlt": "Văn bản alt ảnh",
+        "heroImage": "Ảnh hero",
+        "logosAriaLabel": "Aria-label vùng logo",
+        "stats": "Số liệu",
+        "statValue": "Giá trị (vd. 50+)",
+        "statLabel": "Nhãn",
+        "logoGroups": "Nhóm logo",
+        "groupLabel": "Nhãn nhóm",
+        "logoName": "Tên",
+        "logoImage": "Ảnh logo",
+        "description": "Mô tả",
+        "explore": "Liên kết khám phá",
+        "viewPackages": "Liên kết xem gói",
+        "caseStudyLogo": "Logo case study",
+        "logoAlt": "Văn bản alt logo",
+        "badge": "Nhãn",
+        "summary": "Tóm tắt",
+        "quote": "Trích dẫn",
+        "quoteAuthor": "Người trích dẫn",
+        "quoteRole": "Chức danh",
+        "partnerLogo": "Logo đối tác",
+        "partnerName": "Tên",
+        "partnerRole": "Vai trò",
+        "partnerSummary": "Tóm tắt",
+        "popular": "Nhãn phổ biến",
+        "fromLabel": "Nhãn 'Từ'",
+        "packageCta": "CTA gói",
+        "quarterlySuffix": "Hậu tố mỗi quý",
+        "icon": "Biểu tượng",
+        "highlighted": "Gói nổi bật",
+        "packageName": "Tên",
+        "packageTarget": "Đối tượng",
+        "packagePrice": "Giá",
+        "features": "Đặc điểm nổi bật",
+        "itemTitle": "Tiêu đề",
+        "itemDescription": "Mô tả",
+        "stepLabel": "Nhãn bước",
+        "faqQuestion": "Câu hỏi",
+        "faqAnswer": "Câu trả lời",
+        "faqAnswerHelp": "Dùng <zalo>…</zalo> ở nơi cần chèn liên kết Zalo.",
+        "faqHasZalo": "Câu trả lời có liên kết Zalo",
+        "subEyebrow": "Eyebrow phụ",
+        "callLabel": "Nhãn gọi",
+        "emailLabel": "Nhãn email",
+        "primary": "CTA chính",
+        "secondary": "CTA phụ"
+      }
+    },
+    "b2bOverviewPage": {
+      "title": "Trang tổng quan B2B",
+      "back": "Về trang cấu hình",
+      "previewFullPage": "Xem trước toàn trang",
+      "closePreview": "Đóng xem trước",
+      "previewHint": "Xem trước trực tiếp (bản desktop) của mục đang chỉnh sửa",
+      "previewLocale": {
+        "vi": "VI",
+        "en": "EN"
+      },
+      "editLocaleLabel": "Ngôn ngữ chỉnh sửa",
+      "unsavedWarning": "Bạn có thay đổi chưa lưu. Rời trang mà không lưu?"
+    },
+    "b2bServicePage": {
+      "title": "Trang dịch vụ B2B",
+      "back": "Quay lại cấu hình",
+      "previewFullPage": "Xem toàn trang",
+      "previewHint": "Xem trước trực tiếp trang dịch vụ đang chỉnh sửa",
+      "fillPresetButton": "Điền nội dung mẫu",
+      "unsavedWarning": "Bạn có thay đổi chưa lưu. Rời đi mà không lưu?",
+      "section": {
+        "settings": "Thiết lập",
+        "hero": "Hero & thẻ",
+        "intro": "Tổng quan",
+        "stats": "Những con số",
+        "inclusions": "Dịch vụ bao gồm",
+        "mice": "Hoa sự kiện MICE",
+        "schedule": "Lịch hoa",
+        "personalization": "Cá nhân hóa",
+        "benefits": "Lợi ích",
+        "process": "Quy trình",
+        "audience": "Phù hợp với",
+        "faq": "Hỏi đáp",
+        "closing": "Lời kết",
+        "seo": "SEO & meta"
       }
     },
     "ahamoveDialog": {

@@ -1,0 +1,67 @@
+/* Scoped theme for the public /b2b page preview. The admin app's @theme inline maps
+   every color utility to var(--*) resolved at use-site, so redefining the shadcn vars
+   under `.b2b-preview` restyles all standard utilities inside the wrapper only. */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+.b2b-preview {
+  --radius: 0.5rem;
+  --radius-3xl: 1.1rem;
+  --radius-4xl: 1.3rem;
+  --background: #eef3f0;
+  --foreground: #3f3f3f;
+  --card: #ffffff;
+  --card-foreground: #3f3f3f;
+  --popover: #ffffff;
+  --popover-foreground: #3f3f3f;
+  --primary: #516c6c;
+  --primary-foreground: #ffffff;
+  --secondary: #bcd0c7;
+  --secondary-foreground: #2f4646;
+  --muted: #e3ece7;
+  --muted-foreground: #6b8079;
+  --accent: #e3ece7;
+  --accent-foreground: #2f4646;
+  --leaf: #7a9c59;
+  --leaf-foreground: #ffffff;
+  --border: #d6e2dc;
+  --input: #bcd0c7;
+  --ring: #516c6c;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Be Vietnam Pro', system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* The public site paints every heading primary by default. Must live in the base
+   layer (like the public site's globals) so text-* utilities win over it —
+   e.g. the hero h1's lg:text-white and the featured card's text-primary-foreground. */
+@layer base {
+  .b2b-preview :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--primary);
+    font-weight: 600;
+  }
+}
+
+.b2b-preview .font-title {
+  font-family: 'Playfair Display', Georgia, Cambria, serif;
+}
+
+@keyframes b2b-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.b2b-preview .animate-b2b-marquee {
+  animation: b2b-marquee 30s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b2b-preview .animate-b2b-marquee {
+    animation: none;
+  }
+}
