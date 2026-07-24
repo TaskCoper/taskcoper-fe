@@ -39,8 +39,13 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
       {
         titleKey: 'navigation.products.list',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`],
-        activeExcludePatterns: []
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`, `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/:id`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`]
+      },
+      {
+        titleKey: 'navigation.products.categories',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`]
       }
     ]
   },

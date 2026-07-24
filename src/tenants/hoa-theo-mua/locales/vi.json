@@ -89,7 +89,8 @@
   "navigation": {
     "products": {
       "title": "Sản phẩm",
-      "list": "Danh sách sản phẩm"
+      "list": "Danh sách sản phẩm",
+      "categories": "Danh mục sản phẩm"
     },
     "orders": {
       "title": "Đơn hàng",
@@ -118,7 +119,9 @@
     "button": {
       "back": "Quay lại",
       "cancel": "Hủy",
-      "delete": "Xóa"
+      "delete": "Xóa",
+      "previous": "Trước",
+      "next": "Sau"
     },
     "ui": {
       "selectOptions": "Chọn nhiều tùy chọn..."
@@ -1321,6 +1324,85 @@
       "priceField": "Giá (VNĐ)",
       "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
       "jsonPreview": "Bản xem trước JSON"
+    }
+  },
+  "productCategories": {
+    "page": {
+      "title": "Danh mục sản phẩm",
+      "description": "Quản lý cây danh mục sản phẩm và gán sản phẩm vào từng danh mục."
+    },
+    "type": {
+      "fix": "Cố định",
+      "campaign": "Chiến dịch"
+    },
+    "status": {
+      "active": "Đang hiển thị",
+      "inactive": "Đang ẩn"
+    },
+    "window": {
+      "open": "Không giới hạn"
+    },
+    "action": {
+      "actions": "Thao tác",
+      "openMenu": "Mở menu",
+      "manageProducts": "Quản lý sản phẩm",
+      "update": "Cập nhật",
+      "delete": "Xóa"
+    },
+    "column": {
+      "selectAll": "Chọn tất cả danh mục",
+      "selectRow": "Chọn danh mục",
+      "name": "Tên danh mục",
+      "namePlaceholder": "Tìm tên danh mục...",
+      "noName": "Danh mục chưa đặt tên",
+      "type": "Loại",
+      "window": "Thời gian áp dụng",
+      "status": "Trạng thái",
+      "productCount": "Số sản phẩm",
+      "subcategoryCount": "({{count}} danh mục con)",
+      "noChildren": "Không có danh mục con"
+    },
+    "form": {
+      "createTitle": "Thêm danh mục",
+      "updateTitle": "Cập nhật danh mục",
+      "createDescription": "Tạo danh mục sản phẩm cho không gian Hoa Theo Mùa.",
+      "updateDescription": "Cập nhật danh mục sản phẩm này.",
+      "nameLabel": "Tên danh mục",
+      "namePlaceholder": "Nhập tên danh mục",
+      "typeLabel": "Loại danh mục",
+      "typeFixHint": "Danh mục cố định, luôn hiển thị.",
+      "typeCampaignHint": "Danh mục theo chiến dịch, có thời gian bắt đầu/kết thúc.",
+      "startTimeLabel": "Bắt đầu",
+      "endTimeLabel": "Kết thúc",
+      "startTimeRequired": "Vui lòng chọn thời gian bắt đầu.",
+      "endTimeRequired": "Vui lòng chọn thời gian kết thúc.",
+      "endTimeAfterStart": "Thời gian kết thúc phải sau thời gian bắt đầu.",
+      "parentLabel": "Danh mục cha",
+      "parentPlaceholder": "Chọn danh mục cha",
+      "noParent": "Không có danh mục cha",
+      "activeLabel": "Hiển thị danh mục",
+      "activeHint": "Tắt để ẩn danh mục khỏi cửa hàng.",
+      "createSubmit": "Tạo danh mục",
+      "updateSubmit": "Cập nhật danh mục",
+      "createSuccess": "Tạo danh mục thành công.",
+      "updateSuccess": "Cập nhật danh mục thành công.",
+      "deleteSuccess": "Xóa danh mục thành công."
+    },
+    "confirm": {
+      "deleteTitle": "Xóa danh mục?",
+      "deleteDescription": "Thao tác này không thể hoàn tác. Danh mục đã chọn sẽ bị xóa.",
+      "deleteDescriptionWithChildren": "Thao tác này không thể hoàn tác và sẽ xóa cả {{count}} danh mục con. Sản phẩm sẽ được gỡ khỏi các danh mục này nhưng không bị xóa."
+    },
+    "assign": {
+      "title": "Quản lý sản phẩm",
+      "description": "Chọn các sản phẩm thuộc danh mục này.",
+      "descriptionNamed": "Chọn các sản phẩm thuộc danh mục \"{{name}}\".",
+      "searchPlaceholder": "Lọc sản phẩm trong trang...",
+      "selectedCount": "Đã chọn {{count}}",
+      "noProducts": "Không có sản phẩm",
+      "pageInfo": "Trang {{page}}/{{pageCount}}",
+      "submit": "Lưu thay đổi",
+      "success": "Cập nhật sản phẩm cho danh mục thành công."
     }
   }
 }

@@ -217,6 +217,27 @@ export interface CategoryProduct {
   productIds: string[] | null
 }
 
+export interface GetCategoryProductsParams {
+  pageIndex?: number
+  pageSize?: number
+  keyword?: string
+}
+
+/** Payload sent to POST/PUT /category-products — mirrors the create/update DTOs (§4.3 / §4.4). */
+export interface CategoryProductPayload {
+  name: string
+  type: CategoryProductType
+  isActive: boolean
+  startTime: string | null
+  endTime: string | null
+  parentId?: string | null
+}
+
+/** Payload for PUT /category-products/{id}/products — the FULL replacement list (§4.6). */
+export interface AssignProductsPayload {
+  productIds: string[]
+}
+
 type ProductRawFieldKey =
   | 'warrantyMonthsRaw'
   | 'weightRaw'

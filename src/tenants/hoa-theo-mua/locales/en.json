@@ -89,7 +89,8 @@
   "navigation": {
     "products": {
       "title": "Product",
-      "list": "Product list"
+      "list": "Product list",
+      "categories": "Categories"
     },
     "orders": {
       "title": "Order",
@@ -118,7 +119,9 @@
     "button": {
       "back": "Back",
       "cancel": "Cancel",
-      "delete": "Delete"
+      "delete": "Delete",
+      "previous": "Previous",
+      "next": "Next"
     },
     "ui": {
       "selectOptions": "Select options..."
@@ -1321,6 +1324,85 @@
       "priceField": "Price (VND)",
       "priceHelp": "Declared item value in Vietnamese đồng. Used by Ahamove for compensation.",
       "jsonPreview": "JSON preview"
+    }
+  },
+  "productCategories": {
+    "page": {
+      "title": "Product categories",
+      "description": "Manage the product category tree and assign products to each category."
+    },
+    "type": {
+      "fix": "Fixed",
+      "campaign": "Campaign"
+    },
+    "status": {
+      "active": "Visible",
+      "inactive": "Hidden"
+    },
+    "window": {
+      "open": "Open"
+    },
+    "action": {
+      "actions": "Actions",
+      "openMenu": "Open menu",
+      "manageProducts": "Manage products",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "column": {
+      "selectAll": "Select all categories",
+      "selectRow": "Select category",
+      "name": "Category name",
+      "namePlaceholder": "Search category name...",
+      "noName": "Untitled category",
+      "type": "Type",
+      "window": "Active window",
+      "status": "Status",
+      "productCount": "Products",
+      "subcategoryCount": "({{count}} subcategories)",
+      "noChildren": "No subcategories"
+    },
+    "form": {
+      "createTitle": "Add category",
+      "updateTitle": "Update category",
+      "createDescription": "Create a product category for the Hoa Theo Mua workspace.",
+      "updateDescription": "Update this product category.",
+      "nameLabel": "Category name",
+      "namePlaceholder": "Enter category name",
+      "typeLabel": "Category type",
+      "typeFixHint": "A fixed category that is always shown.",
+      "typeCampaignHint": "A time-bound campaign category with a start/end window.",
+      "startTimeLabel": "Start",
+      "endTimeLabel": "End",
+      "startTimeRequired": "Please pick a start time.",
+      "endTimeRequired": "Please pick an end time.",
+      "endTimeAfterStart": "End time must be after the start time.",
+      "parentLabel": "Parent category",
+      "parentPlaceholder": "Select a parent category",
+      "noParent": "No parent category",
+      "activeLabel": "Category visible",
+      "activeHint": "Turn off to hide the category from the storefront.",
+      "createSubmit": "Create category",
+      "updateSubmit": "Update category",
+      "createSuccess": "Category created successfully.",
+      "updateSuccess": "Category updated successfully.",
+      "deleteSuccess": "Category deleted successfully."
+    },
+    "confirm": {
+      "deleteTitle": "Delete category?",
+      "deleteDescription": "This action cannot be undone. The selected category will be deleted.",
+      "deleteDescriptionWithChildren": "This action cannot be undone and will also delete {{count}} subcategories. Products are unlinked from these categories but not deleted."
+    },
+    "assign": {
+      "title": "Manage products",
+      "description": "Choose the products that belong to this category.",
+      "descriptionNamed": "Choose the products that belong to \"{{name}}\".",
+      "searchPlaceholder": "Filter products on this page...",
+      "selectedCount": "{{count}} selected",
+      "noProducts": "No products",
+      "pageInfo": "Page {{page}} of {{pageCount}}",
+      "submit": "Save changes",
+      "success": "Category products updated successfully."
     }
   }
 }

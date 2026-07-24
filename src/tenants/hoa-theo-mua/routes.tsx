@@ -10,6 +10,7 @@ const OrdersCustomersPage = lazy(() => import('./pages/orders-customers.page'))
 
 const ProductsListPage = lazy(() => import('./pages/products-list.page'))
 const ProductPage = lazy(() => import('./pages/product.page'))
+const ProductCategoriesPage = lazy(() => import('./pages/product-categories.page'))
 
 const RecruitmentJobsPage = lazy(() => import('./pages/recruitment-jobs.page'))
 const RecruitmentJobPage = lazy(() => import('./pages/recruitment-job.page'))
@@ -47,6 +48,7 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         element: <FeatureFlagGuardLayout requires='custom.productManagement' />,
         children: [
           { path: 'products', element: <ProductsListPage /> },
+          { path: 'products/categories', element: <ProductCategoriesPage /> },
           { path: 'products/:id', element: <ProductPage /> }
         ]
       },
