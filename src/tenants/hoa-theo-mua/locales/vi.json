@@ -87,11 +87,14 @@
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
   "navigation": {
+    "products": {
+      "title": "Sản phẩm",
+      "list": "Danh sách sản phẩm",
+      "categories": "Danh mục sản phẩm"
+    },
     "orders": {
-      "title": "Quản lý đơn hàng",
-      "dashboard": "Tổng quan",
-      "list": "Danh sách đơn hàng",
-      "customers": "Khách hàng"
+      "title": "Đơn hàng",
+      "list": "Danh sách đơn hàng"
     },
     "recruitment": {
       "title": "Tuyển dụng",
@@ -100,7 +103,7 @@
       "applicants": "Ứng viên"
     },
     "addresses": {
-      "title": "Quản lý địa chỉ",
+      "title": "Địa chỉ",
       "list": "Địa chỉ giao hàng",
       "zones": "Khu vực giao hàng"
     },
@@ -116,7 +119,9 @@
     "button": {
       "back": "Quay lại",
       "cancel": "Hủy",
-      "delete": "Xóa"
+      "delete": "Xóa",
+      "previous": "Trước",
+      "next": "Sau"
     },
     "ui": {
       "selectOptions": "Chọn nhiều tùy chọn..."
@@ -194,6 +199,138 @@
       "sku": "Mã SP",
       "total": "Thành tiền",
       "unitPrice": "Đơn giá"
+    }
+  },
+  "products": {
+    "list": {
+      "title": "Sản phẩm",
+      "description": "Xem và quản lý danh mục sản phẩm đã đồng bộ từ Nhanh.vn."
+    },
+    "common": {
+      "noData": "Không có",
+      "unnamed": "Sản phẩm chưa đặt tên"
+    },
+    "action": {
+      "actions": "Thao tác",
+      "openMenu": "Mở menu thao tác sản phẩm",
+      "viewDetails": "Xem chi tiết"
+    },
+    "column": {
+      "selectAll": "Chọn tất cả sản phẩm",
+      "selectRow": "Chọn sản phẩm",
+      "image": "Ảnh",
+      "product": "Sản phẩm",
+      "category": "Danh mục",
+      "brand": "Thương hiệu",
+      "supplier": "Nhà cung cấp",
+      "productType": "Loại sản phẩm",
+      "unit": "Đơn vị",
+      "barcode": "Mã vạch",
+      "price": "Giá bán",
+      "importPrice": "Giá nhập",
+      "costPrice": "Giá vốn",
+      "wholesalePrice": "Giá sỉ",
+      "availableForSale": "Có thể bán",
+      "totalStock": "Tổng tồn",
+      "size": "Kích thước",
+      "color": "Màu sắc",
+      "origin": "Xuất xứ",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo"
+    },
+    "detail": {
+      "viewImage": "Xem ảnh sản phẩm",
+      "backToList": "Quay lại danh sách",
+      "notFound": "Không tìm thấy sản phẩm",
+      "notFoundDescription": "Sản phẩm này có thể đã bị xóa hoặc không còn khả dụng.",
+      "vatIncluded": "Đã bao gồm VAT",
+      "priceUnknown": "Chưa có giá",
+      "inStock": "Còn hàng",
+      "outOfStock": "Hết hàng",
+      "availableCount": "Còn {{count}} sản phẩm",
+      "off": "giảm",
+      "onlyLeft": "Chỉ còn {{count}} sản phẩm",
+      "viewOnWebsite": "Xem trên website",
+      "copyCode": "Sao chép mã",
+      "copied": "Đã sao chép",
+      "share": "Sao chép liên kết",
+      "linkCopied": "Đã sao chép liên kết",
+      "suppliedBy": "Nhà cung cấp",
+      "totalUnits": "tổng số lượng",
+      "tab": {
+        "specifications": "Thông số",
+        "pricing": "Giá",
+        "inventory": "Tồn kho"
+      },
+      "section": {
+        "identity": "Định danh",
+        "classification": "Phân loại",
+        "attributes": "Thuộc tính",
+        "pricing": "Giá",
+        "inventory": "Tồn kho",
+        "meta": "Khác"
+      }
+    },
+    "field": {
+      "nhanhProductId": "ID Nhanh.vn",
+      "productCode": "Mã sản phẩm",
+      "barcode": "Mã vạch",
+      "parentProductCode": "Mã sản phẩm cha",
+      "parentProductName": "Tên sản phẩm cha",
+      "otherName": "Tên khác",
+      "slug": "Đường dẫn website",
+      "productType": "Loại sản phẩm",
+      "categoryName": "Danh mục",
+      "categoryCode": "Mã danh mục",
+      "internalCategoryCode": "Mã danh mục nội bộ",
+      "brand": "Thương hiệu",
+      "supplier": "Nhà cung cấp",
+      "productLabel": "Nhãn sản phẩm",
+      "unit": "Đơn vị tính",
+      "size": "Kích thước",
+      "color": "Màu sắc",
+      "origin": "Xuất xứ",
+      "weight": "Cân nặng (g)",
+      "length": "Chiều dài (cm)",
+      "width": "Chiều rộng (cm)",
+      "height": "Chiều cao (cm)",
+      "warrantyMonths": "Bảo hành (tháng)",
+      "warrantyAddress": "Địa chỉ bảo hành",
+      "importPrice": "Giá nhập",
+      "importVat": "VAT nhập",
+      "importPriceWithVat": "Giá nhập + VAT",
+      "price": "Giá bán",
+      "priceWithVat": "Giá bán + VAT",
+      "branchPrice": "Giá bán chi nhánh",
+      "branchPriceWithVat": "Giá bán chi nhánh + VAT",
+      "oldPrice": "Giá cũ",
+      "costPrice": "Giá vốn",
+      "wholesalePrice": "Giá sỉ",
+      "wholesalePriceWithVat": "Giá sỉ + VAT",
+      "wholesaleBranchPrice": "Giá sỉ chi nhánh",
+      "wholesaleBranchPriceWithVat": "Giá sỉ chi nhánh + VAT",
+      "vat": "VAT",
+      "profitPercentage": "% Lợi nhuận",
+      "totalStock": "Tổng tồn",
+      "stock": "Tồn",
+      "warehouseStock": "Tồn trong kho",
+      "availableForSale": "Có thể bán",
+      "deliveringStock": "Đang giao hàng",
+      "stockTransferring": "Đang chuyển kho",
+      "held": "Tạm giữ",
+      "heldComponents": "Tạm giữ linh kiện",
+      "preOrder": "Đặt trước",
+      "pendingImportStock": "Chờ nhập hàng",
+      "warrantyStock": "Bảo hành (tồn)",
+      "stockError": "Lỗi tồn kho",
+      "createdAt": "Ngày tạo",
+      "webOrder": "Thứ tự website",
+      "parentProductId": "ID sản phẩm cha",
+      "importVatMode": "VAT Mode giá nhập",
+      "saleVatMode": "VAT mode giá bán",
+      "priceLabel": "Giá tiền",
+      "branchPriceDuplicate": "Giá bán chi nhánh (khác)",
+      "wholesaleBranchPriceDuplicate": "Giá sỉ chi nhánh (khác)"
     }
   },
   "recruitment": {
@@ -1187,6 +1324,85 @@
       "priceField": "Giá (VNĐ)",
       "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
       "jsonPreview": "Bản xem trước JSON"
+    }
+  },
+  "productCategories": {
+    "page": {
+      "title": "Danh mục sản phẩm",
+      "description": "Quản lý cây danh mục sản phẩm và gán sản phẩm vào từng danh mục."
+    },
+    "type": {
+      "fix": "Cố định",
+      "campaign": "Chiến dịch"
+    },
+    "status": {
+      "active": "Đang hiển thị",
+      "inactive": "Đang ẩn"
+    },
+    "window": {
+      "open": "Không giới hạn"
+    },
+    "action": {
+      "actions": "Thao tác",
+      "openMenu": "Mở menu",
+      "manageProducts": "Quản lý sản phẩm",
+      "update": "Cập nhật",
+      "delete": "Xóa"
+    },
+    "column": {
+      "selectAll": "Chọn tất cả danh mục",
+      "selectRow": "Chọn danh mục",
+      "name": "Tên danh mục",
+      "namePlaceholder": "Tìm tên danh mục...",
+      "noName": "Danh mục chưa đặt tên",
+      "type": "Loại",
+      "window": "Thời gian áp dụng",
+      "status": "Trạng thái",
+      "productCount": "Số sản phẩm",
+      "subcategoryCount": "({{count}} danh mục con)",
+      "noChildren": "Không có danh mục con"
+    },
+    "form": {
+      "createTitle": "Thêm danh mục",
+      "updateTitle": "Cập nhật danh mục",
+      "createDescription": "Tạo danh mục sản phẩm cho không gian Hoa Theo Mùa.",
+      "updateDescription": "Cập nhật danh mục sản phẩm này.",
+      "nameLabel": "Tên danh mục",
+      "namePlaceholder": "Nhập tên danh mục",
+      "typeLabel": "Loại danh mục",
+      "typeFixHint": "Danh mục cố định, luôn hiển thị.",
+      "typeCampaignHint": "Danh mục theo chiến dịch, có thời gian bắt đầu/kết thúc.",
+      "startTimeLabel": "Bắt đầu",
+      "endTimeLabel": "Kết thúc",
+      "startTimeRequired": "Vui lòng chọn thời gian bắt đầu.",
+      "endTimeRequired": "Vui lòng chọn thời gian kết thúc.",
+      "endTimeAfterStart": "Thời gian kết thúc phải sau thời gian bắt đầu.",
+      "parentLabel": "Danh mục cha",
+      "parentPlaceholder": "Chọn danh mục cha",
+      "noParent": "Không có danh mục cha",
+      "activeLabel": "Hiển thị danh mục",
+      "activeHint": "Tắt để ẩn danh mục khỏi cửa hàng.",
+      "createSubmit": "Tạo danh mục",
+      "updateSubmit": "Cập nhật danh mục",
+      "createSuccess": "Tạo danh mục thành công.",
+      "updateSuccess": "Cập nhật danh mục thành công.",
+      "deleteSuccess": "Xóa danh mục thành công."
+    },
+    "confirm": {
+      "deleteTitle": "Xóa danh mục?",
+      "deleteDescription": "Thao tác này không thể hoàn tác. Danh mục đã chọn sẽ bị xóa.",
+      "deleteDescriptionWithChildren": "Thao tác này không thể hoàn tác và sẽ xóa cả {{count}} danh mục con. Sản phẩm sẽ được gỡ khỏi các danh mục này nhưng không bị xóa."
+    },
+    "assign": {
+      "title": "Quản lý sản phẩm",
+      "description": "Chọn các sản phẩm thuộc danh mục này.",
+      "descriptionNamed": "Chọn các sản phẩm thuộc danh mục \"{{name}}\".",
+      "searchPlaceholder": "Lọc sản phẩm trong trang...",
+      "selectedCount": "Đã chọn {{count}}",
+      "noProducts": "Không có sản phẩm",
+      "pageInfo": "Trang {{page}}/{{pageCount}}",
+      "submit": "Lưu thay đổi",
+      "success": "Cập nhật sản phẩm cho danh mục thành công."
     }
   }
 }

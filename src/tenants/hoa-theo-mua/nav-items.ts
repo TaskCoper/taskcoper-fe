@@ -1,5 +1,5 @@
 import type { TenantNavMainItem, TenantNavQuickActionItem } from '@/lib/feature-flags/tenant-nav-items'
-import { BriefcaseIcon, MapPinIcon, NewspaperIcon, PackageIcon, SettingsIcon } from 'lucide-react'
+import { BriefcaseIcon, FlowerIcon, MapPinIcon, NewspaperIcon, PackageIcon, SettingsIcon } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
 export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
@@ -28,6 +28,25 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
       //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`,
       //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`]
       // }
+    ]
+  },
+  {
+    titleKey: 'navigation.products.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products`,
+    icon: FlowerIcon,
+    feature: 'custom.productManagement',
+    items: [
+      {
+        titleKey: 'navigation.products.list',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`, `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/:id`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`]
+      },
+      {
+        titleKey: 'navigation.products.categories',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`]
+      }
     ]
   },
   {

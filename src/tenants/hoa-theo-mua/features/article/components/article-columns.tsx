@@ -13,6 +13,7 @@ import {
 import { formatDate } from '@/lib/date'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn, getAvatarFallback } from '@/shared/utils'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '@/tenants/hoa-theo-mua/config'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
@@ -61,7 +62,10 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       },
       header: ({ column }) => <DataTableColumnHeader column={column} label={'articles.column.title'} />,
       cell: ({ row }) => (
-        <Link to={`/htm/news/${row.original.id}`} className='flex min-w-0 items-center gap-3 hover:underline'>
+        <Link
+          to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}`}
+          className='flex min-w-0 items-center gap-3 hover:underline'
+        >
           <Avatar className='size-9 rounded-lg'>
             <AvatarImage src={row.original.pictureUrl ?? undefined} />
             <AvatarFallback className='rounded-lg text-xs font-medium'>
@@ -87,7 +91,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
         <DataTableColumnHeader column={column} label={'articles.column.viewCount'} className='flex mx-auto' />
       ),
       cell: ({ row }) => (
-        <Link to={`/htm/news/detail?id=${row.original.id}`} className='hover:underline'>
+        <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/detail?id=${row.original.id}`} className='hover:underline'>
           <p className='w-full max-w-125 truncate tabular-nums xl:max-w-none text-center'>{row.original.viewCount}</p>
         </Link>
       ),
@@ -177,10 +181,12 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
                 <DropdownMenuLabel>{t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to={`/htm/news/${row.original.id}`}>{t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}</Link>
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}`}>
+                    {t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to={`/htm/news/${row.original.id}/update`}>
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}/update`}>
                     {t(`${ARTICLE_I18N_PREFIX}.action.updateDetails`)}
                   </Link>
                 </DropdownMenuItem>

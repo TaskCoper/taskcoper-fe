@@ -8872,6 +8872,7 @@ __metadata:
     use-debounce: "npm:^10.0.6"
     vaul: "npm:^1.1.2"
     vite: "npm:^8.0.12"
+    yet-another-react-lightbox: "npm:^3.32.1"
     zod: "npm:^4.3.6"
     zustand: "npm:^5.0.9"
   languageName: unknown
@@ -9377,6 +9378,23 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 10c0/f340718df45e97a9551b9bf9dac61c80050bc464513b710debfb5067c380c8472e3b67809cffacb4ab5ffb5e66ef9310816c88b05f371cec60abfedd8c88e0a2
+  languageName: node
+  linkType: hard
+
+"yet-another-react-lightbox@npm:^3.32.1":
+  version: 3.32.1
+  resolution: "yet-another-react-lightbox@npm:3.32.1"
+  peerDependencies:
+    "@types/react": ^16 || ^17 || ^18 || ^19
+    "@types/react-dom": ^16 || ^17 || ^18 || ^19
+    react: ^16.8.0 || ^17 || ^18 || ^19
+    react-dom: ^16.8.0 || ^17 || ^18 || ^19
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/06772cee49e0f098e9b81b84427768af274b3aa19e617cc58b3174d57a0a90472b4c42d40d48fdb4064b01936a3ff58a512bc6b45c452c0facbf10a2e4494c6d
   languageName: node
   linkType: hard
 

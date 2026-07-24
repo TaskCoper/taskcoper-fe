@@ -1,0 +1,48 @@
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { categoryProductService } from '../services'
+import { CategoryProductType } from '../types'
+import { categoryProductSchema, type CategoryProductFormValues } from '../validations'
+import { getErrorDescription } from './error-description'
+
+const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
+
+export const categoryFormDefaultValues: CategoryProductFormValues = {
+  name: '',
+  type: CategoryProductType.Fix,
+  isActive: true,
+  startTime: null,
+  endTime: null,
+  parentId: undefined
+}
+
+export const useAddCategory = () => {
+  const queryClient = useQueryClient()
+  const { t } = useTenantTranslation()
+
+  const methods = useForm<CategoryProductFormValues>({
+    defaultValues: categoryFormDefaultValues,
+    resolver: zodResolver(categoryProductSchema(t))
+  })
+
+  const { mutate: addCategory, isPending: isAddingCategory } = useMutation({
+    mutationFn: categoryProductService.addCategory,
+    onSuccess: () => {
+      toast.success(t(`${CATEGORY_FORM_PREFIX}.createSuccess`))
+      methods.reset(categoryFormDefaultValues)
+    },
+    onError: (error) => {
+      toast.error(t('error.somethingWentWrong'), {
+        description: getErrorDescription(error.response?.data)
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['categoryProducts'] })
+    }
+  })
+
+  return { methods, addCategory, isAddingCategory }
+}

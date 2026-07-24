@@ -23,6 +23,7 @@ import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, UploadIcon, 
 import { useRef, useState } from 'react'
 import { Controller, FormProvider, useFieldArray, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { useAddArticle } from '../features/article/hooks/use-add-article'
 import { useGetCategoryNews } from '../features/article/hooks/use-get-category-news'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
@@ -67,7 +68,7 @@ export default function NewsAddPage() {
   }
 
   const onBackToArticles = () => {
-    navigate('/htm/news')
+    navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`)
   }
 
   const statusLabel = status === 1 ? t(`${ARTICLE_STATUS_PREFIX}.published`) : t(`${ARTICLE_STATUS_PREFIX}.draft`)
