@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - dev
+      - hoa-theo-mua-dev
   workflow_dispatch:
 jobs:
   build-client-dev:
@@ -18,6 +19,19 @@ jobs:
       actor: ${{ github.actor }}
       repository: ${{ github.repository }}
       environment: dev
+
+  build-client-htm-dev:
+    name: Build / Client / Htm-Dev
+    if: ${{ github.ref == 'refs/heads/hoa-theo-mua-dev' }}
+    uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      environment: hoa-theo-mua-dev
 
   build-client-prod:
     name: Build / Client / Prod
@@ -60,4 +74,21 @@ jobs:
       repository: ${{ github.repository }}
       profile: prod
       tag: prod-latest
+    secrets: inherit
+
+  deploy-client-htm-dev:
+    name: Deploy / Htm-Dev / Client
+    needs: build-client-htm-dev
+    permissions:
+      contents: read
+      packages: write
+    if: ${{ github.ref == 'refs/heads/hoa-theo-mua-dev' }}
+    uses: ./.github/workflows/deploy-application.yaml
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      profile: htm-dev
+      tag: htm-dev-latest
+      # htm-dev shares hoatheomua-be's dev host/network, so deploy on the hoatheomua runner.
+      run-on: hoatheomua
     secrets: inherit

@@ -7,6 +7,9 @@ x-client-base: &client-base
     args:
       API_BASE_URL: ${API_BASE_URL}
       FILE_BASE_URL: ${FILE_BASE_URL}
+      APP_BASE_URL: ${APP_BASE_URL}
+      GOONG_MAP_API_KEY: ${GOONG_MAP_API_KEY}
+      GOONG_MAP_TILE_API_KEY: ${GOONG_MAP_TILE_API_KEY}
   environment:
     TZ: UTC
 
@@ -25,6 +28,13 @@ services:
     networks: [taskcoper-network-prod]
     profiles: [prod, client-prod, client]
 
+  taskcoper-client-htm-dev:
+    <<: *client-base
+    container_name: htm-taskcoper-client-dev
+    hostname: htm-taskcoper-client-dev
+    networks: [hoatheomua-network-dev]
+    profiles: [htm-dev, client-htm-dev, client]
+
 networks:
   taskcoper-network-prod:
     name: taskcoper-network-prod
@@ -39,3 +49,9 @@ networks:
     external: true
     ipam:
       driver: default
+
+  # htm-dev shares hoatheomua-be's dev network so the gateway can reach htm-taskcoper-client-dev.
+  # Owned/created by hoatheomua-be's dev compose — must already exist before `up` of the htm-dev profile.
+  hoatheomua-network-dev:
+    name: hoatheomua-network-dev
+    external: true
