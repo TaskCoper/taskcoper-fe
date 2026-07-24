@@ -87,11 +87,13 @@
     "categoriesComingSoon": "Categories — Coming Soon"
   },
   "navigation": {
+    "products": {
+      "title": "Product",
+      "list": "Product list"
+    },
     "orders": {
-      "title": "Order management",
-      "dashboard": "Dashboard",
-      "list": "Order list",
-      "customers": "Customers"
+      "title": "Order",
+      "list": "Order list"
     },
     "recruitment": {
       "title": "Recruitment",
@@ -100,7 +102,7 @@
       "applicants": "Applicants"
     },
     "addresses": {
-      "title": "Address management",
+      "title": "Address",
       "list": "Delivery addresses",
       "zones": "Delivery zones"
     },
@@ -194,6 +196,138 @@
       "sku": "SKU",
       "total": "Total",
       "unitPrice": "Unit price"
+    }
+  },
+  "products": {
+    "list": {
+      "title": "Products",
+      "description": "Browse and manage the product catalog synced from Nhanh.vn."
+    },
+    "common": {
+      "noData": "None",
+      "unnamed": "Unnamed product"
+    },
+    "action": {
+      "actions": "Actions",
+      "openMenu": "Open product actions menu",
+      "viewDetails": "View details"
+    },
+    "column": {
+      "selectAll": "Select all products",
+      "selectRow": "Select product",
+      "image": "Image",
+      "product": "Product",
+      "category": "Category",
+      "brand": "Brand",
+      "supplier": "Supplier",
+      "productType": "Product type",
+      "unit": "Unit",
+      "barcode": "Barcode",
+      "price": "Sale price",
+      "importPrice": "Import price",
+      "costPrice": "Cost price",
+      "wholesalePrice": "Wholesale price",
+      "availableForSale": "Available",
+      "totalStock": "Total stock",
+      "size": "Size",
+      "color": "Color",
+      "origin": "Origin",
+      "status": "Status",
+      "createdAt": "Created at"
+    },
+    "detail": {
+      "viewImage": "View product image",
+      "backToList": "Back to products",
+      "notFound": "Product not found",
+      "notFoundDescription": "This product may have been removed or is no longer available.",
+      "vatIncluded": "VAT included",
+      "priceUnknown": "Price not available",
+      "inStock": "In stock",
+      "outOfStock": "Out of stock",
+      "availableCount": "{{count}} available",
+      "off": "Off",
+      "onlyLeft": "Only {{count}} left",
+      "viewOnWebsite": "View on website",
+      "copyCode": "Copy code",
+      "copied": "Copied",
+      "share": "Copy link",
+      "linkCopied": "Link copied to clipboard",
+      "suppliedBy": "Supplier",
+      "totalUnits": "total units",
+      "tab": {
+        "specifications": "Specifications",
+        "pricing": "Pricing",
+        "inventory": "Inventory"
+      },
+      "section": {
+        "identity": "Identity",
+        "classification": "Classification",
+        "attributes": "Attributes",
+        "pricing": "Pricing",
+        "inventory": "Inventory",
+        "meta": "Other"
+      }
+    },
+    "field": {
+      "nhanhProductId": "Nhanh.vn ID",
+      "productCode": "Product code",
+      "barcode": "Barcode",
+      "parentProductCode": "Parent product code",
+      "parentProductName": "Parent product name",
+      "otherName": "Other name",
+      "slug": "Website slug",
+      "productType": "Product type",
+      "categoryName": "Category",
+      "categoryCode": "Category code",
+      "internalCategoryCode": "Internal category code",
+      "brand": "Brand",
+      "supplier": "Supplier",
+      "productLabel": "Product label",
+      "unit": "Unit",
+      "size": "Size",
+      "color": "Color",
+      "origin": "Origin",
+      "weight": "Weight (g)",
+      "length": "Length (cm)",
+      "width": "Width (cm)",
+      "height": "Height (cm)",
+      "warrantyMonths": "Warranty (months)",
+      "warrantyAddress": "Warranty address",
+      "importPrice": "Import price",
+      "importVat": "Import VAT",
+      "importPriceWithVat": "Import price + VAT",
+      "price": "Sale price",
+      "priceWithVat": "Sale price + VAT",
+      "branchPrice": "Branch price",
+      "branchPriceWithVat": "Branch price + VAT",
+      "oldPrice": "Old price",
+      "costPrice": "Cost price",
+      "wholesalePrice": "Wholesale price",
+      "wholesalePriceWithVat": "Wholesale price + VAT",
+      "wholesaleBranchPrice": "Wholesale branch price",
+      "wholesaleBranchPriceWithVat": "Wholesale branch price + VAT",
+      "vat": "VAT",
+      "profitPercentage": "Profit %",
+      "totalStock": "Total stock",
+      "stock": "Stock",
+      "warehouseStock": "In-warehouse stock",
+      "availableForSale": "Available",
+      "deliveringStock": "Delivering",
+      "stockTransferring": "Transferring",
+      "held": "Held",
+      "heldComponents": "Held components",
+      "preOrder": "Pre-order",
+      "pendingImportStock": "Pending import",
+      "warrantyStock": "Warranty stock",
+      "stockError": "Stock error",
+      "createdAt": "Created at",
+      "webOrder": "Website order",
+      "parentProductId": "Parent product ID",
+      "importVatMode": "Import VAT mode",
+      "saleVatMode": "Sale VAT mode",
+      "priceLabel": "Price label",
+      "branchPriceDuplicate": "Branch price (alt)",
+      "wholesaleBranchPriceDuplicate": "Wholesale branch price (alt)"
     }
   },
   "recruitment": {

@@ -136,14 +136,16 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
           ) : null}
         </DataTableFilterTrigger>
       </PopoverTrigger>
-      <PopoverContent align='start' className='flex w-auto flex-col gap-4'>
+      <PopoverContent align='start' className='flex w-80 flex-col gap-4'>
         <div className='flex flex-col gap-3'>
-          <p className='font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>{title}</p>
+          <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+            {title}
+          </p>
           <div className='flex items-center gap-4'>
             <Label htmlFor={`${id}-from`} className='sr-only'>
               {t('dataTable.filter.from')}
             </Label>
-            <div className='relative'>
+            <div className='relative flex-1'>
               <Input
                 id={`${id}-from`}
                 type='number'
@@ -156,7 +158,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 max={max}
                 value={range[0]?.toString()}
                 onChange={onFromInputChange}
-                className={cn('h-7.5 w-24', unit && 'pr-8')}
+                className={cn('h-7.5 w-full', unit && 'pr-8')}
               />
               {unit && (
                 <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>
@@ -167,7 +169,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
             <Label htmlFor={`${id}-to`} className='sr-only'>
               {t('dataTable.filter.to')}
             </Label>
-            <div className='relative'>
+            <div className='relative flex-1'>
               <Input
                 id={`${id}-to`}
                 type='number'
@@ -180,7 +182,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 max={max}
                 value={range[1]?.toString()}
                 onChange={onToInputChange}
-                className={cn('h-7.5 w-24', unit && 'pr-8')}
+                className={cn('h-7.5 w-full', unit && 'pr-8')}
               />
               {unit && (
                 <span className='absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm'>

@@ -8,6 +8,9 @@ const OrdersDashboardPage = lazy(() => import('./pages/orders-dashboard.page'))
 const OrdersListPage = lazy(() => import('./pages/orders-list.page'))
 const OrdersCustomersPage = lazy(() => import('./pages/orders-customers.page'))
 
+const ProductsListPage = lazy(() => import('./pages/products-list.page'))
+const ProductPage = lazy(() => import('./pages/product.page'))
+
 const RecruitmentJobsPage = lazy(() => import('./pages/recruitment-jobs.page'))
 const RecruitmentJobPage = lazy(() => import('./pages/recruitment-job.page'))
 const RecruitmentJobCreatePage = lazy(() => import('./pages/recruitment-job-create.page'))
@@ -38,6 +41,13 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'orders', element: <OrdersListPage /> },
           { path: 'orders/dashboard', element: <OrdersDashboardPage /> },
           { path: 'orders/customers', element: <OrdersCustomersPage /> }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.productManagement' />,
+        children: [
+          { path: 'products', element: <ProductsListPage /> },
+          { path: 'products/:id', element: <ProductPage /> }
         ]
       },
       {
