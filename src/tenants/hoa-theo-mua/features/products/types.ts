@@ -197,9 +197,28 @@ export const CategoryProductType = {
 
 export type CategoryProductType = (typeof CategoryProductType)[keyof typeof CategoryProductType]
 
+/**
+ * Filter settings persisted as a JSON object on the category.
+ * Parent categories carry `filterByName` / `filterByPrice`; children carry `isFilterable`.
+ */
+export interface CategoryMetadata {
+  filterByName?: boolean
+  filterByPrice?: boolean
+  isFilterable?: boolean
+}
+
 export interface CategoryProduct {
   categoryId: string
   name: string
+  name_En: string | null
+
+  description: string | null
+  description_En: string | null
+
+  position: number | null
+
+  /** JSON-encoded string, e.g. '{"filterByName":true,"filterByPrice":true}' — parse before use. */
+  metaData: string | null
 
   startTime: string | null
   endTime: string | null
@@ -226,6 +245,12 @@ export interface GetCategoryProductsParams {
 /** Payload sent to POST/PUT /category-products — mirrors the create/update DTOs (§4.3 / §4.4). */
 export interface CategoryProductPayload {
   name: string
+  name_En: string | null
+  description: string | null
+  description_En: string | null
+  position: number | null
+  /** Sent to the API as a JSON-encoded string — the backend stores it as raw text. */
+  metaData: string | null
   type: CategoryProductType
   isActive: boolean
   startTime: string | null

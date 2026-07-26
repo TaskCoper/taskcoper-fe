@@ -5,10 +5,15 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import type { BasePaginationResponse } from '@/lib/axios'
+import { calculateReorderPosition } from '@/shared/utils'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
+import { arrayMove } from '@dnd-kit/sortable'
+import { useQueryClient } from '@tanstack/react-query'
+import type { Row } from '@tanstack/react-table'
 import { CirclePlus } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler } from 'react-hook-form'
 import { AssignProductsDialog } from '../features/products/components/assign-products-dialog'
 import { getCategoryColumns } from '../features/products/components/category-product-columns'
@@ -19,11 +24,23 @@ import {
 import { useAddCategory } from '../features/products/hooks/use-add-category'
 import { useDeleteCategory } from '../features/products/hooks/use-delete-category'
 import { useGetCategories } from '../features/products/hooks/use-get-categories'
+import { useGetCategory } from '../features/products/hooks/use-get-category'
+import { useReorderCategory } from '../features/products/hooks/use-reorder-category'
 import { useUpdateCategory } from '../features/products/hooks/use-update-category'
-import type { CategoryProduct } from '../features/products/types'
+import type { CategoryMetadata, CategoryProduct } from '../features/products/types'
 import type { CategoryProductFormValues } from '../features/products/validations'
 
 const CATEGORY_PREFIX = 'productCategories' as const
+
+/** `metaData` comes back as a JSON-encoded string (or null) — parse it defensively. */
+const parseCategoryMetadata = (metaData: string | null): CategoryMetadata => {
+  if (!metaData) return {}
+  try {
+    return JSON.parse(metaData) as CategoryMetadata
+  } catch {
+    return {}
+  }
+}
 
 /** All descendant ids of a category (any depth) — used to exclude invalid parents and warn on delete. */
 const collectDescendantIds = (category: CategoryProduct): string[] => {
@@ -45,9 +62,32 @@ const flattenWithDepth = (categories: CategoryProduct[], depth = 0): ParentOptio
     ...flattenWithDepth(category.children ?? [], depth + 1)
   ])
 
+/** Ascending by `position`; unset positions sink to the end while preserving server order (stable sort). */
+const byPositionAsc = (a: CategoryProduct, b: CategoryProduct) =>
+  (a.position ?? Number.POSITIVE_INFINITY) - (b.position ?? Number.POSITIVE_INFINITY)
+
+/** Sort every level of the category tree ascending by position, client-side. */
+const sortCategoryTree = (categories: CategoryProduct[]): CategoryProduct[] =>
+  [...categories]
+    .sort(byPositionAsc)
+    .map((category) =>
+      category.children?.length ? { ...category, children: sortCategoryTree(category.children) } : category
+    )
+
+/** Immutably set a category's `position` inside the tree — used for the optimistic reorder. */
+const setCategoryPosition = (categories: CategoryProduct[], categoryId: string, position: number): CategoryProduct[] =>
+  categories.map((category) => {
+    if (category.categoryId === categoryId) return { ...category, position }
+    if (category.children?.length) {
+      return { ...category, children: setCategoryPosition(category.children, categoryId, position) }
+    }
+    return category
+  })
+
 export default function ProductCategoriesPage() {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
+  const queryClient = useQueryClient()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<CategoryProduct | null>(null)
   const [managingCategory, setManagingCategory] = useState<CategoryProduct | null>(null)
@@ -56,21 +96,36 @@ export default function ProductCategoriesPage() {
   const { methods: addMethods, addCategory, isAddingCategory } = useAddCategory()
   const { methods: updateMethods, updateCategory, isUpdatingCategory } = useUpdateCategory(editingCategory?.categoryId)
   const { deleteCategory, isDeletingCategory } = useDeleteCategory()
+  const { reorderCategory } = useReorderCategory()
+  const { category: editingCategoryDetail, isLoadingCategory } = useGetCategory(editingCategory?.categoryId)
 
-  const handleOpenUpdateCategory = useCallback(
-    (category: CategoryProduct) => {
-      setEditingCategory(category)
-      updateMethods.reset({
-        name: category.name ?? '',
-        type: category.type,
-        isActive: category.isActive,
-        startTime: category.startTime,
-        endTime: category.endTime,
-        parentId: category.parentId ?? undefined
-      })
-    },
-    [updateMethods]
-  )
+  const handleOpenUpdateCategory = useCallback((category: CategoryProduct) => {
+    setEditingCategory(category)
+  }, [])
+
+  useEffect(() => {
+    if (!editingCategoryDetail) return
+
+    const metadata = parseCategoryMetadata(editingCategoryDetail.metaData)
+
+    updateMethods.reset({
+      name: editingCategoryDetail.name ?? '',
+      name_En: editingCategoryDetail.name_En ?? '',
+      description: editingCategoryDetail.description ?? '',
+      description_En: editingCategoryDetail.description_En ?? '',
+      type: editingCategoryDetail.type,
+      isActive: editingCategoryDetail.isActive,
+      startTime: editingCategoryDetail.startTime,
+      endTime: editingCategoryDetail.endTime,
+      parentId: editingCategoryDetail.parentId ?? undefined,
+      position: editingCategoryDetail.position ?? null,
+      metaData: {
+        filterByName: metadata.filterByName ?? false,
+        filterByPrice: metadata.filterByPrice ?? false,
+        isFilterable: metadata.isFilterable ?? false
+      }
+    })
+  }, [editingCategoryDetail, updateMethods])
 
   const handleManageProducts = useCallback((category: CategoryProduct) => {
     setManagingCategory(category)
@@ -121,8 +176,45 @@ export default function ProductCategoriesPage() {
     keyword
   })
 
-  const categoryRows = categories.value.items
+  // Sort ascending by position on the client so reordered children settle into their new slot (§reorder).
+  const categoryRows = useMemo(() => sortCategoryTree(categories.value.items), [categories.value.items])
   const parentOptions = useMemo(() => flattenWithDepth(categories.value.items), [categories.value.items])
+
+  // Reorder is children-only: a dragged child can only be dropped between its own siblings.
+  const handleReorderCategory = useCallback(
+    ({ activeRow, overRow }: { activeRow: Row<CategoryProduct>; overRow: Row<CategoryProduct> }) => {
+      const active = activeRow.original
+      const over = overRow.original
+
+      if (active.parentId == null || active.parentId !== over.parentId) return
+
+      const siblings = activeRow.getParentRow()?.subRows.map((row) => row.original) ?? []
+      const oldIndex = siblings.findIndex((sibling) => sibling.categoryId === active.categoryId)
+      const overIndex = siblings.findIndex((sibling) => sibling.categoryId === over.categoryId)
+      if (oldIndex === -1 || overIndex === -1) return
+
+      const reordered = arrayMove(siblings, oldIndex, overIndex)
+      const newPosition = calculateReorderPosition(
+        reordered.map((sibling) => ({ position: sibling.position ?? 0 })),
+        overIndex
+      )
+
+      if (newPosition === active.position) return
+
+      // Optimistically reorder in the cache (the tree is sorted by position on render) before persisting.
+      queryClient.setQueriesData<BasePaginationResponse<CategoryProduct>>({ queryKey: ['categoryProducts'] }, (old) =>
+        old
+          ? {
+              ...old,
+              value: { ...old.value, items: setCategoryPosition(old.value.items, active.categoryId, newPosition) }
+            }
+          : old
+      )
+
+      reorderCategory({ category: active, position: newPosition })
+    },
+    [queryClient, reorderCategory]
+  )
 
   // On edit, a category cannot parent itself or any of its descendants (§4.4).
   const editParentOptions = useMemo(() => {
@@ -197,7 +289,11 @@ export default function ProductCategoriesPage() {
         <p className='text-sm text-muted-foreground'>{t(`${CATEGORY_PREFIX}.page.description`)}</p>
       </div>
 
-      <DataTable table={table} isLoading={isLoadingCategories}>
+      <DataTable
+        table={table}
+        isLoading={isLoadingCategories}
+        rowDnd={{ getRowCanDrag: (row) => row.depth > 0, onReorder: handleReorderCategory }}
+      >
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={() => setIsAddDialogOpen(true)}>
             <CirclePlus className='size-3' />
@@ -222,6 +318,7 @@ export default function ProductCategoriesPage() {
         methods={updateMethods}
         parentOptions={editParentOptions}
         isSubmitting={isUpdatingCategory}
+        isLoading={isLoadingCategory}
         onOpenChange={handleUpdateDialogOpenChange}
         onSubmit={handleUpdateCategory}
       />

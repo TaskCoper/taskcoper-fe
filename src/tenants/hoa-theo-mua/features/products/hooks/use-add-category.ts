@@ -12,11 +12,20 @@ const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
 
 export const categoryFormDefaultValues: CategoryProductFormValues = {
   name: '',
+  name_En: '',
+  description: '',
+  description_En: '',
   type: CategoryProductType.Fix,
   isActive: true,
   startTime: null,
   endTime: null,
-  parentId: undefined
+  parentId: undefined,
+  position: null,
+  metaData: {
+    filterByName: false,
+    filterByPrice: false,
+    isFilterable: false
+  }
 }
 
 export const useAddCategory = () => {

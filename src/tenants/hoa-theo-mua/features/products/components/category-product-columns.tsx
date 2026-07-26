@@ -13,6 +13,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { CategoryProduct } from '../types'
+import { CategoryDragHandle } from './category-drag-handle'
 import { CategoryStatusBadge, CategoryTypeBadge, CategoryWindow } from './category-product-badges'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
@@ -35,6 +36,17 @@ export const getCategoryColumns = ({
   isDeletingCategory
 }: GetColumnsParams): ColumnDef<CategoryProduct>[] => {
   return [
+    {
+      id: 'drag',
+      header: () => null,
+      // Only nested categories (depth > 0) are draggable; top-level rows render an empty cell.
+      cell: ({ row }) => (row.depth > 0 ? <CategoryDragHandle t={t} /> : null),
+      enableSorting: false,
+      enableHiding: false,
+      size: 5,
+      minSize: 5,
+      maxSize: 5
+    },
     {
       id: 'expander',
       header: () => null,

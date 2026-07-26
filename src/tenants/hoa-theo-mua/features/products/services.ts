@@ -23,13 +23,26 @@ const toCategoryPayload = ({
   startTime,
   endTime,
   parentId,
+  name_En,
+  description,
+  description_En,
+  metaData,
   ...rest
 }: CategoryProductFormValues): CategoryProductPayload => {
   const isCampaign = type === CategoryProductType.Campaign
 
+  // A child category (has a parent) only carries `isFilterable`; a parent carries the filter inputs.
+  const scopedMetadata = parentId
+    ? { isFilterable: metaData.isFilterable }
+    : { filterByName: metaData.filterByName, filterByPrice: metaData.filterByPrice }
+
   return {
     ...rest,
     type,
+    name_En: name_En?.trim() || null,
+    description: description?.trim() || null,
+    description_En: description_En?.trim() || null,
+    metaData: JSON.stringify(scopedMetadata),
     startTime: isCampaign ? (startTime ?? null) : null,
     endTime: isCampaign ? (endTime ?? null) : null,
     ...(parentId ? { parentId } : {})
@@ -89,6 +102,33 @@ class CategoryProductService extends BaseService {
 
   updateCategory = async ({ id, body }: { id?: string; body: CategoryProductFormValues }) => {
     const { data } = await this.put<BaseResponse<CategoryProduct>>(`/v1/${this.baseUrl}/${id}`, toCategoryPayload(body))
+
+    return data.value
+  }
+
+  /**
+   * Persist a new sort position for a category. Reuses the PUT contract, echoing the category's
+   * current fields back (metaData is already a stored JSON string) with only `position` changed.
+   */
+  reorderCategory = async ({ category, position }: { category: CategoryProduct; position: number }) => {
+    const payload: CategoryProductPayload = {
+      name: category.name,
+      name_En: category.name_En,
+      description: category.description,
+      description_En: category.description_En,
+      position,
+      metaData: category.metaData,
+      type: category.type,
+      isActive: category.isActive,
+      startTime: category.startTime,
+      endTime: category.endTime,
+      ...(category.parentId ? { parentId: category.parentId } : {})
+    }
+
+    const { data } = await this.put<BaseResponse<CategoryProduct>>(
+      `/v1/${this.baseUrl}/${category.categoryId}`,
+      payload
+    )
 
     return data.value
   }

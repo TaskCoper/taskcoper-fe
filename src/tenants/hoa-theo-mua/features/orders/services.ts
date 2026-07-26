@@ -1,6 +1,7 @@
-import type { BaseResponse } from '@/lib/axios'
+import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
-import type { NhanhVnOrdersRequest, NhanhVnOrdersResponse, ShippingLocation, ShippingLocationType } from './types'
+import type { GetOrdersParams } from './hooks/use-get-orders'
+import type { Order, ShippingLocation, ShippingLocationType } from './types'
 
 interface GetOrderShippingLocationsBody {
   locationVersion: 'v2'
@@ -11,10 +12,21 @@ interface GetOrderShippingLocationsBody {
 class OrderService extends BaseService {
   private readonly baseUrl = 'orders'
 
-  getOrdersNhanhVn = async (body?: NhanhVnOrdersRequest) => {
-    const { data } = await this.post<NhanhVnOrdersResponse>(`/v1/${this.baseUrl}/nhanh-vn`, body)
+  getOrders = async ({ pageIndex, pageSize }: GetOrdersParams) => {
+    const { data } = await this.get<BasePaginationResponse<Order>>(`/v1/nhanh-vn/${this.baseUrl}`, {
+      params: {
+        pageIndex,
+        pageSize
+      }
+    })
 
     return data
+  }
+
+  getOrder = async ({ id }: { id?: string }) => {
+    const { data } = await this.get<BaseResponse<Order>>(`/v1/nhanh-vn/${this.baseUrl}/${id}`)
+
+    return data.value
   }
 
   getOrderShippingLocations = async (body: GetOrderShippingLocationsBody) => {

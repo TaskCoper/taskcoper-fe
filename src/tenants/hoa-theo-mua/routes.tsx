@@ -4,9 +4,8 @@ import { lazy } from 'react'
 import { Outlet, type RouteObject } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
-const OrdersDashboardPage = lazy(() => import('./pages/orders-dashboard.page'))
-const OrdersListPage = lazy(() => import('./pages/orders-list.page'))
-const OrdersCustomersPage = lazy(() => import('./pages/orders-customers.page'))
+const OrdersPage = lazy(() => import('./pages/orders.page'))
+const OrderPage = lazy(() => import('./pages/order.page'))
 
 const ProductsListPage = lazy(() => import('./pages/products-list.page'))
 const ProductPage = lazy(() => import('./pages/product.page'))
@@ -39,9 +38,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
       {
         element: <FeatureFlagGuardLayout requires='custom.orderManagement' />,
         children: [
-          { path: 'orders', element: <OrdersListPage /> },
-          { path: 'orders/dashboard', element: <OrdersDashboardPage /> },
-          { path: 'orders/customers', element: <OrdersCustomersPage /> }
+          { path: 'orders', element: <OrdersPage /> },
+          { path: 'orders/:id', element: <OrderPage /> }
         ]
       },
       {
