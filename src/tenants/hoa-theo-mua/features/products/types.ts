@@ -1,5 +1,8 @@
+import type { Category } from '../categories/types'
+
 export interface Product {
   id: string
+  isPin: boolean
 
   sourceRowNumber: number
 
@@ -190,77 +193,19 @@ export interface Product {
   origin: string | null
 }
 
-export const CategoryProductType = {
-  Fix: 'Fix',
-  Campaign: 'Campaign'
-} as const
-
-export type CategoryProductType = (typeof CategoryProductType)[keyof typeof CategoryProductType]
-
 /**
- * Filter settings persisted as a JSON object on the category.
- * Parent categories carry `filterByName` / `filterByPrice`; children carry `isFilterable`.
+ * Slim product shape returned by GET /products-pin — the pinned storefront list.
+ * Distinct from the full catalog `Product` row: prices arrive already parsed as numbers
+ * and it carries an explicit sort `position`.
  */
-export interface CategoryMetadata {
-  filterByName?: boolean
-  filterByPrice?: boolean
-  isFilterable?: boolean
-}
-
-export interface CategoryProduct {
-  categoryId: string
-  name: string
-  name_En: string | null
-
-  description: string | null
-  description_En: string | null
-
+export interface PinnedProduct {
+  productId: string
+  productCode: string | null
+  productName: string | null
+  coverImage: string | null
+  price: number | null
+  oldPrice: number | null
   position: number | null
-
-  /** JSON-encoded string, e.g. '{"filterByName":true,"filterByPrice":true}' — parse before use. */
-  metaData: string | null
-
-  startTime: string | null
-  endTime: string | null
-
-  type: CategoryProductType
-  isActive: boolean
-
-  userId: string
-  parentId: string | null
-
-  parent: CategoryProduct | null
-  children: CategoryProduct[]
-
-  productCount: number | null
-  productIds: string[] | null
-}
-
-export interface GetCategoryProductsParams {
-  pageIndex?: number
-  pageSize?: number
-  keyword?: string
-}
-
-/** Payload sent to POST/PUT /category-products — mirrors the create/update DTOs (§4.3 / §4.4). */
-export interface CategoryProductPayload {
-  name: string
-  name_En: string | null
-  description: string | null
-  description_En: string | null
-  position: number | null
-  /** Sent to the API as a JSON-encoded string — the backend stores it as raw text. */
-  metaData: string | null
-  type: CategoryProductType
-  isActive: boolean
-  startTime: string | null
-  endTime: string | null
-  parentId?: string | null
-}
-
-/** Payload for PUT /category-products/{id}/products — the FULL replacement list (§4.6). */
-export interface AssignProductsPayload {
-  productIds: string[]
 }
 
 type ProductRawFieldKey =
@@ -349,5 +294,12 @@ export interface ProductDetail extends Omit<Product, ProductRawFieldKey> {
   createdAt: string
   updatedAt: string | null
 
-  categories: CategoryProduct[]
+  categories: Category[]
 }
+
+/**
+ * Item shape returned by the products LIST endpoint. It carries the same numeric price/stock fields
+ * as `ProductDetail` (NOT the raw-string `Product` shape the table renders) but has no `categories`
+ * array, so the service maps each item through `productDetailToProduct` before handing it to the UI.
+ */
+export type ProductListItem = Omit<ProductDetail, 'categories'>

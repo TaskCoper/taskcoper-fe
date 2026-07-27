@@ -2,11 +2,10 @@ import { Badge } from '@/components/ui/badge'
 import { formatDateTime } from '@/lib/date'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CategoryProductType, type CategoryProduct } from '../types'
+import { CategoryProductType, type Category } from '../types'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
-/** Fix / Campaign pill — campaign categories get a distinct accent so time-bound groups stand out. */
 export function CategoryTypeBadge({ type, t }: { type: CategoryProductType; t: TenantT }) {
   const isCampaign = type === CategoryProductType.Campaign
 
@@ -25,7 +24,6 @@ export function CategoryTypeBadge({ type, t }: { type: CategoryProductType; t: T
   )
 }
 
-/** Active / inactive dot chip mirroring the storefront status treatment. */
 export function CategoryStatusBadge({ isActive, t }: { isActive: boolean; t: TenantT }) {
   return (
     <span
@@ -42,16 +40,21 @@ export function CategoryStatusBadge({ isActive, t }: { isActive: boolean; t: Ten
   )
 }
 
-/** Render the campaign window, or a muted dash for non-campaign / undated categories. */
-export function CategoryWindow({ category, t }: { category: CategoryProduct; t: TenantT }) {
+export function CategoryWindow({
+  category,
+  t
+}: {
+  category: Pick<Category, 'type' | 'startTime' | 'endTime'>
+  t: TenantT
+}) {
   if (category.type !== CategoryProductType.Campaign) {
-    return <span className='text-muted-foreground/50'>—</span>
+    return null
   }
 
   const start = formatDateTime(category.startTime)
   const end = formatDateTime(category.endTime)
 
-  if (!start && !end) return <span className='text-muted-foreground/50'>—</span>
+  if (!start && !end) return null
 
   return (
     <span className='whitespace-nowrap text-xs text-muted-foreground'>

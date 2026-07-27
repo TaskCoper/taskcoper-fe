@@ -3,15 +3,20 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import type { RangeValue } from '@/types/data-table.type'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { getProductColumns } from '../features/products/components/product-columns'
+import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
+import { usePinProduct } from '../features/products/hooks/use-pin-product'
 
-export default function ProductsListPage() {
+export default function ProductsPage() {
   const { t } = useTenantTranslation()
   const navigate = useNavigate()
+  const { pinProduct, pinningProductId, isPinningProduct } = usePinProduct()
+  const { maxPrice } = useGetMaxPriceProduct()
 
   const columns = useMemo(
     () =>
@@ -19,10 +24,24 @@ export default function ProductsListPage() {
         t,
         onViewDetail: (product) => {
           navigate(product.id)
-        }
+        },
+        onTogglePin: (product) => {
+          pinProduct({ body: { productId: product.id, isPin: !product.isPin } })
+        },
+        pinningProductId,
+        isTogglingPin: isPinningProduct
       }),
-    [t, navigate]
+    [t, navigate, pinProduct, pinningProductId, isPinningProduct]
   )
+
+  const filterOptionOverrides = useMemo(() => {
+    const overrides: Record<string, RangeValue> = {}
+    if (maxPrice && maxPrice > 0) {
+      overrides.price = [0, maxPrice]
+    }
+
+    return overrides
+  }, [maxPrice])
 
   const { page, limit } = useTableQueryParams({ columns, prefix: 'products' })
 
@@ -31,10 +50,10 @@ export default function ProductsListPage() {
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
 
   const { products, isGettingProducts } = useGetProducts({
-    PageIndex: page,
-    PageSize: limit,
-    PriceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
-    PriceTo: Number.isFinite(priceTo) ? priceTo : undefined
+    pageIndex: page,
+    pageSize: limit,
+    priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
+    priceTo: Number.isFinite(priceTo) ? priceTo : undefined
   })
 
   const items = products?.value.items ?? []
@@ -45,14 +64,26 @@ export default function ProductsListPage() {
     columns,
     pageCount: Math.ceil(totalCount / limit) || 1,
     initialState: {
-      columnPinning: { left: ['select', 'image', 'product'], right: ['actions'] },
+      columnPinning: { right: ['actions'] },
       columnVisibility: {
         supplier: false,
         productType: false,
         barcode: false,
+        // Keep only the headline `price` visible; the granular price/VAT fields are opt-in.
+        priceWithVat: false,
+        oldPrice: false,
+        branchPrice: false,
+        branchPriceWithVat: false,
         importPrice: false,
-        costPrice: false,
+        importVat: false,
+        importPriceWithVat: false,
         wholesalePrice: false,
+        wholesalePriceWithVat: false,
+        wholesaleBranchPrice: false,
+        wholesaleBranchPriceWithVat: false,
+        costPrice: false,
+        vat: false,
+        profitPercentage: false,
         size: false,
         color: false,
         origin: false,
@@ -81,7 +112,7 @@ export default function ProductsListPage() {
         </div>
 
         <DataTable table={table} isLoading={isGettingProducts}>
-          <DataTableToolbar table={table} />
+          <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides} />
         </DataTable>
       </div>
     </div>

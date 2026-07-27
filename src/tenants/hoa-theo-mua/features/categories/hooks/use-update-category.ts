@@ -3,10 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { categoryProductService } from '../services'
+import { getErrorDescription } from '../error-description'
+import categoryService from '../services'
 import { categoryProductSchema, type CategoryProductFormValues } from '../validations'
 import { categoryFormDefaultValues } from './use-add-category'
-import { getErrorDescription } from './error-description'
 
 const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
 
@@ -20,7 +20,7 @@ export const useUpdateCategory = (id?: string) => {
   })
 
   const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation({
-    mutationFn: ({ body }: { body: CategoryProductFormValues }) => categoryProductService.updateCategory({ id, body }),
+    mutationFn: ({ body }: { body: CategoryProductFormValues }) => categoryService.updateCategory({ id, body }),
     onSuccess: () => {
       toast.success(t(`${CATEGORY_FORM_PREFIX}.updateSuccess`))
     },

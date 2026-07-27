@@ -9,14 +9,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Spinner } from '@/components/ui/spinner'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, ImageIcon, MoreHorizontalIcon } from 'lucide-react'
+import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon } from 'lucide-react'
 import type { Product } from '../types'
 import { formatPrice, formatQuantity, parseNumber } from '../utils'
-
-const MAX_PRICE_FILTER = 10_000_000
 
 const renderNoData = (t: TenantT) => (
   <span className='text-muted-foreground/60 italic text-sm select-none'>{t('products.common.noData')}</span>
@@ -37,11 +36,39 @@ function isActiveStatus(status: string | null) {
 
 export const getProductColumns = ({
   t,
-  onViewDetail
+  onViewDetail,
+  onTogglePin,
+  pinningProductId,
+  isTogglingPin
 }: {
   t: TenantT
   onViewDetail: (product: Product) => void
+  onTogglePin: (product: Product) => void
+  pinningProductId?: string | null
+  isTogglingPin?: boolean
 }): ColumnDef<Product>[] => {
+  const moneyColumn = (id: string, field: keyof Product): ColumnDef<Product> => ({
+    id,
+    accessorFn: (row) => parseNumber(row[field] as string | null),
+    meta: { label: `products.column.${id}` },
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        label={`products.column.${id}`}
+        tooltip={`products.columnTooltip.${id}`}
+        className='ml-auto'
+      />
+    ),
+    cell: ({ row }) => {
+      const value = formatPrice(row.original[field] as string | null)
+      return <div className='text-right'>{value ? <span className='font-medium'>{value}</span> : renderNoData(t)}</div>
+    },
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 130
+  })
+
   return [
     {
       id: 'select',
@@ -65,6 +92,42 @@ export const getProductColumns = ({
       enableHiding: false,
       enableColumnFilter: false,
       size: 40
+    },
+    {
+      id: 'pin',
+      header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
+      cell: ({ row }) => {
+        const { isPin } = row.original
+        const isPinning = pinningProductId === row.original.id
+
+        return (
+          <Button
+            variant='ghost'
+            className='size-8 p-0'
+            // Disable every row's toggle while any pin/move is in flight; only the active row spins.
+            disabled={isTogglingPin}
+            aria-pressed={isPin}
+            aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            title={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            onClick={() => onTogglePin(row.original)}
+          >
+            {isPinning ? (
+              <Spinner className='size-4' />
+            ) : (
+              <PinIcon
+                className={cn(
+                  'size-4 transition-colors',
+                  isPin ? 'fill-primary text-primary' : 'text-muted-foreground'
+                )}
+              />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: false,
+      enableHiding: false,
+      enableColumnFilter: false,
+      size: 44
     },
     {
       id: 'image',
@@ -211,18 +274,22 @@ export const getProductColumns = ({
     },
     {
       id: 'price',
-      accessorFn: (row) => parseNumber(row.priceWithVatRaw ?? row.priceRaw),
+      accessorFn: (row) => parseNumber(row.priceRaw ?? row.priceWithVatRaw),
       meta: {
         label: 'products.column.price',
         variant: 'range',
-        unit: '₫',
-        range: [0, MAX_PRICE_FILTER]
+        unit: '₫'
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='products.column.price' className='ml-auto' />
+        <DataTableColumnHeader
+          column={column}
+          label='products.column.price'
+          tooltip='products.columnTooltip.price'
+          className='ml-auto'
+        />
       ),
       cell: ({ row }) => {
-        const value = formatPrice(row.original.priceWithVatRaw ?? row.original.priceRaw)
+        const value = formatPrice(row.original.priceRaw ?? row.original.priceWithVatRaw)
         if (!value) return <div className='text-right'>{renderNoData(t)}</div>
 
         return <p className='text-right font-semibold text-emerald-600 dark:text-emerald-400'>{value}</p>
@@ -232,59 +299,47 @@ export const getProductColumns = ({
       enableColumnFilter: true,
       size: 140
     },
+    // Retail-price group
+    moneyColumn('priceWithVat', 'priceWithVatRaw'),
+    moneyColumn('oldPrice', 'oldPriceRaw'),
+    moneyColumn('branchPrice', 'branchPriceRaw'),
+    moneyColumn('branchPriceWithVat', 'branchPriceWithVatRaw'),
+    // Import-price group
+    moneyColumn('importPrice', 'importPriceRaw'),
+    moneyColumn('importVat', 'importVatRaw'),
+    moneyColumn('importPriceWithVat', 'importPriceWithVatRaw'),
+    // Wholesale-price group
+    moneyColumn('wholesalePrice', 'wholesalePriceRaw'),
+    moneyColumn('wholesalePriceWithVat', 'wholesalePriceWithVatRaw'),
+    moneyColumn('wholesaleBranchPrice', 'wholesaleBranchPriceRaw'),
+    moneyColumn('wholesaleBranchPriceWithVat', 'wholesaleBranchPriceWithVatRaw'),
+    // Cost & margin
+    moneyColumn('costPrice', 'costPriceRaw'),
+    moneyColumn('vat', 'vatRaw'),
     {
-      id: 'importPrice',
-      accessorFn: (row) => parseNumber(row.importPriceRaw),
-      meta: { label: 'products.column.importPrice' },
+      id: 'profitPercentage',
+      accessorFn: (row) => parseNumber(row.profitPercentageRaw),
+      meta: { label: 'products.column.profitPercentage' },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='products.column.importPrice' className='ml-auto' />
+        <DataTableColumnHeader
+          column={column}
+          label='products.column.profitPercentage'
+          tooltip='products.columnTooltip.profitPercentage'
+          className='ml-auto'
+        />
       ),
       cell: ({ row }) => {
-        const value = formatPrice(row.original.importPriceRaw)
+        const value = formatQuantity(row.original.profitPercentageRaw)
         return (
-          <div className='text-right'>{value ? <span className='font-medium'>{value}</span> : renderNoData(t)}</div>
+          <div className='text-right tabular-nums'>
+            {value ? <span className='font-medium'>{value}%</span> : renderNoData(t)}
+          </div>
         )
       },
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: false,
-      size: 130
-    },
-    {
-      id: 'costPrice',
-      accessorFn: (row) => parseNumber(row.costPriceRaw),
-      meta: { label: 'products.column.costPrice' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='products.column.costPrice' className='ml-auto' />
-      ),
-      cell: ({ row }) => {
-        const value = formatPrice(row.original.costPriceRaw)
-        return (
-          <div className='text-right'>{value ? <span className='font-medium'>{value}</span> : renderNoData(t)}</div>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      enableColumnFilter: false,
-      size: 130
-    },
-    {
-      id: 'wholesalePrice',
-      accessorFn: (row) => parseNumber(row.wholesalePriceRaw),
-      meta: { label: 'products.column.wholesalePrice' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label='products.column.wholesalePrice' className='ml-auto' />
-      ),
-      cell: ({ row }) => {
-        const value = formatPrice(row.original.wholesalePriceRaw)
-        return (
-          <div className='text-right'>{value ? <span className='font-medium'>{value}</span> : renderNoData(t)}</div>
-        )
-      },
-      enableSorting: false,
-      enableHiding: true,
-      enableColumnFilter: false,
-      size: 130
+      size: 120
     },
     {
       id: 'availableForSale',

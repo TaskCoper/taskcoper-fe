@@ -7,7 +7,7 @@ import type { GetCategoryParams, NewsCategoryRow } from '../types'
 export const useGetCategories = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
-  keyword = ''
+  keyword
 }: GetCategoryParams = {}) => {
   const { data: categories = getDefaultPaginationResponse<NewsCategoryRow>(), isLoading: isLoadingCategories } =
     useQuery({

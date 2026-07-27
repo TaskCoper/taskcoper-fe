@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
+import type { RangeValue } from '@/types/data-table.type'
 import type { Column } from '@tanstack/react-table'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
@@ -15,8 +16,6 @@ interface Range {
   min: number
   max: number
 }
-
-type RangeValue = [number, number]
 
 function getIsValidRange(value: unknown): value is RangeValue {
   return Array.isArray(value) && value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number'
@@ -37,15 +36,17 @@ function parseValuesAsNumbers(value: unknown): RangeValue | undefined {
 interface DataTableSliderFilterProps<TData> {
   column: Column<TData, unknown>
   title?: string
+  /** Override the column meta's static range with a freshly-fetched one */
+  rangeOverride?: RangeValue
 }
 
-export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderFilterProps<TData>) {
+export function DataTableSliderFilter<TData>({ column, title, rangeOverride }: DataTableSliderFilterProps<TData>) {
   const { t } = useTenantTranslation()
   const id = React.useId()
 
   const columnFilterValue = parseValuesAsNumbers(column.getFilterValue())
 
-  const defaultRange = column.columnDef.meta?.range
+  const defaultRange = rangeOverride ?? column.columnDef.meta?.range
   const unit = column.columnDef.meta?.unit
 
   const { min, max, step } = React.useMemo<Range & { step: number }>(() => {

@@ -1,8 +1,8 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { categoryProductService } from '../services'
-import { getErrorDescription } from './error-description'
+import { getErrorDescription } from '../error-description'
+import categoryService from '../services'
 
 /**
  * Persist a reordered child category. The optimistic reordering is done at drag time
@@ -13,7 +13,7 @@ export const useReorderCategory = () => {
   const { t } = useTenantTranslation()
 
   const { mutate: reorderCategory, isPending: isReorderingCategory } = useMutation({
-    mutationFn: categoryProductService.reorderCategory,
+    mutationFn: categoryService.reorderCategory,
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(error.response?.data)

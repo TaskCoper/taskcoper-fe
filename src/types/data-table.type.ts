@@ -15,7 +15,7 @@ declare module '@tanstack/react-table' {
     placeholder?: string
     variant?: FilterVariant
     options?: Option[]
-    range?: [number, number]
+    range?: RangeValue
     unit?: string
     icon?: React.FC<React.SVGProps<SVGSVGElement>>
   }
@@ -35,6 +35,8 @@ export interface Option {
   count?: number | string
   icon?: React.FC<React.SVGProps<SVGSVGElement>>
 }
+
+export type RangeValue = [number, number]
 
 export type FilterOperator = DataTableConfig['operators'][number]
 export type FilterVariant = DataTableConfig['filterVariants'][number]

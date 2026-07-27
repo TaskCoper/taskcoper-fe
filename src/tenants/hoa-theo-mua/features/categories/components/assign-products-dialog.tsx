@@ -16,26 +16,25 @@ import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { ChevronLeftIcon, ChevronRightIcon, ImageIcon, SaveIcon, SearchIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useGetProducts } from '../../products/hooks/use-get-products'
+import { formatPrice } from '../../products/utils'
 import { useAssignProducts } from '../hooks/use-assign-products'
 import { useGetCategory } from '../hooks/use-get-category'
-import { useGetProducts } from '../hooks/use-get-products'
-import type { CategoryProduct } from '../types'
-import { formatPrice } from '../utils'
+import type { Category } from '../types'
 
 const ASSIGN_PREFIX = 'productCategories.assign' as const
 const PAGE_SIZE = 10
 
 interface AssignProductsDialogProps {
   open: boolean
-  category: CategoryProduct | null
+  category: Category | null
   onOpenChange: (open: boolean) => void
 }
 
-export function AssignProductsDialog({ open, category, onOpenChange }: AssignProductsDialogProps) {
+export default function AssignProductsDialog({ open, category, onOpenChange }: AssignProductsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-2xl' position='top-center'>
-        {/* Keyed by category so each open remounts with fresh page / selection state. */}
         {category && <AssignProductsBody key={category.categoryId} category={category} onOpenChange={onOpenChange} />}
       </DialogContent>
     </Dialog>
@@ -43,7 +42,7 @@ export function AssignProductsDialog({ open, category, onOpenChange }: AssignPro
 }
 
 interface AssignProductsBodyProps {
-  category: CategoryProduct
+  category: Category
   onOpenChange: (open: boolean) => void
 }
 
@@ -51,14 +50,13 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
   const { t } = useTenantTranslation()
   const [page, setPage] = useState(DEFAULT_PAGE_INDEX)
   const [filter, setFilter] = useState('')
-  // Selection persists across pagination — the API expects the FULL desired set (§4.6), not a delta.
+
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
   // Detail endpoint is the only source of the category's current productIds (§4.2).
   const { category: detail, isFetching: isLoadingDetail } = useGetCategory(category.categoryId)
-  const { products, isGettingProducts } = useGetProducts({ PageIndex: page, PageSize: PAGE_SIZE })
+  const { products, isGettingProducts } = useGetProducts({ pageIndex: page, pageSize: PAGE_SIZE })
 
-  // Seed the selection from the current assignment once the detail arrives (adjust-state-in-render, no effect).
   const [seeded, setSeeded] = useState(false)
   if (detail && !seeded) {
     setSeeded(true)
@@ -68,12 +66,12 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
   const totalCount = products?.value.totalCount ?? 0
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
+  // Filter on client
   const visibleItems = useMemo(() => {
     const items = products?.value.items ?? []
     const keyword = filter.trim().toLowerCase()
     if (!keyword) return items
 
-    // The list endpoint has no server-side keyword param (§4.7) — filter the loaded page client-side.
     return items.filter((product) =>
       [product.productName, product.productCode].some((value) => value?.toLowerCase().includes(keyword))
     )
@@ -213,6 +211,7 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
         <Button type='button' variant='outline' disabled={isAssigningProducts} onClick={() => onOpenChange(false)}>
           {t('common.button.cancel')}
         </Button>
+
         <Button type='button' disabled={isAssigningProducts || isLoadingDetail} onClick={handleSubmit}>
           {isAssigningProducts ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
           {t(`${ASSIGN_PREFIX}.submit`)}

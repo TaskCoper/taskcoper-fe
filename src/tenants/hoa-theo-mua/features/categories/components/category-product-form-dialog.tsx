@@ -89,7 +89,7 @@ function CategoryProductFormSkeleton() {
   )
 }
 
-export function CategoryProductFormDialog({
+export default function CategoryProductFormDialog({
   mode,
   open,
   methods,

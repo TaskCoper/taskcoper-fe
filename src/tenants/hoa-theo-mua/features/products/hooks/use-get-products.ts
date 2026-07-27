@@ -3,23 +3,23 @@ import { useQuery } from '@tanstack/react-query'
 import productService from '../services'
 
 export interface GetProductsParams {
-  PageIndex?: number
-  PageSize?: number
-  PriceFrom?: number
-  PriceTo?: number
-  SortBy?: string[]
+  pageIndex?: number
+  pageSize?: number
+  priceFrom?: number
+  priceTo?: number
+  sortBy?: string[]
 }
 
 export const useGetProducts = ({
-  PageIndex = DEFAULT_PAGE_INDEX,
-  PageSize = DEFAULT_PAGE_SIZE,
-  PriceFrom,
-  PriceTo,
-  SortBy
+  pageIndex = DEFAULT_PAGE_INDEX,
+  pageSize = DEFAULT_PAGE_SIZE,
+  priceFrom,
+  priceTo,
+  sortBy
 }: GetProductsParams) => {
   const { data: products, isLoading: isGettingProducts } = useQuery({
-    queryKey: ['products', PageIndex, PageSize, PriceFrom, PriceTo, SortBy],
-    queryFn: () => productService.getProducts({ PageIndex, PageSize, PriceFrom, PriceTo, SortBy })
+    queryKey: ['products', pageIndex, pageSize, priceFrom, priceTo, sortBy],
+    queryFn: () => productService.getProducts({ pageIndex, pageSize, priceFrom, priceTo, sortBy })
   })
 
   return { products, isGettingProducts }

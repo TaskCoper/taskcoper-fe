@@ -1,9 +1,9 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { categoryProductService } from '../services'
+import { getErrorDescription, getResponseMessage } from '../error-description'
+import categoryService from '../services'
 import type { AssignProductsPayload } from '../types'
-import { getErrorDescription, getResponseMessage } from './error-description'
 
 const CATEGORY_ASSIGN_PREFIX = 'productCategories.assign' as const
 
@@ -17,7 +17,7 @@ export const useAssignProducts = ({ onAssignSuccess }: AssignProductsParams = {}
 
   const { mutate: assignProducts, isPending: isAssigningProducts } = useMutation({
     mutationFn: ({ id, body }: { id: string; body: AssignProductsPayload }) =>
-      categoryProductService.assignProducts({ id, body }),
+      categoryService.assignProducts({ id, body }),
     onSuccess: (message) => {
       toast.success(getResponseMessage(message) || t(`${CATEGORY_ASSIGN_PREFIX}.success`))
       onAssignSuccess?.()

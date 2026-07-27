@@ -89,8 +89,13 @@
   "navigation": {
     "products": {
       "title": "Sản phẩm",
-      "list": "Danh sách sản phẩm",
-      "categories": "Danh mục sản phẩm"
+      "list": "Tất cả sản phẩm",
+      "pinned": "Sắp xếp sản phẩm"
+    },
+    "categories": {
+      "title": "Danh mục sản phẩm",
+      "list": "Tất cả danh mục",
+      "sort": "Sắp xếp danh mục"
     },
     "orders": {
       "title": "Đơn hàng",
@@ -368,6 +373,11 @@
       "title": "Sản phẩm",
       "description": "Xem và quản lý danh mục sản phẩm đã đồng bộ từ Nhanh.vn."
     },
+    "pinned": {
+      "title": "Sản phẩm ghim",
+      "description": "Kéo để sắp xếp lại thứ tự sản phẩm nổi bật trên gian hàng.",
+      "empty": "Chưa có sản phẩm nào được ghim."
+    },
     "common": {
       "noData": "Không có",
       "unnamed": "Sản phẩm chưa đặt tên"
@@ -375,11 +385,14 @@
     "action": {
       "actions": "Thao tác",
       "openMenu": "Mở menu thao tác sản phẩm",
-      "viewDetails": "Xem chi tiết"
+      "viewDetails": "Xem chi tiết",
+      "pin": "Ghim sản phẩm",
+      "unpin": "Bỏ ghim sản phẩm"
     },
     "column": {
       "selectAll": "Chọn tất cả sản phẩm",
       "selectRow": "Chọn sản phẩm",
+      "pin": "Ghim",
       "image": "Ảnh",
       "product": "Sản phẩm",
       "category": "Danh mục",
@@ -389,9 +402,20 @@
       "unit": "Đơn vị",
       "barcode": "Mã vạch",
       "price": "Giá bán",
+      "priceWithVat": "Giá bán + VAT",
+      "oldPrice": "Giá cũ",
+      "branchPrice": "Giá bán chi nhánh",
+      "branchPriceWithVat": "Giá bán chi nhánh + VAT",
       "importPrice": "Giá nhập",
-      "costPrice": "Giá vốn",
+      "importVat": "VAT nhập",
+      "importPriceWithVat": "Giá nhập + VAT",
       "wholesalePrice": "Giá sỉ",
+      "wholesalePriceWithVat": "Giá sỉ + VAT",
+      "wholesaleBranchPrice": "Giá sỉ chi nhánh",
+      "wholesaleBranchPriceWithVat": "Giá sỉ chi nhánh + VAT",
+      "costPrice": "Giá vốn",
+      "vat": "VAT",
+      "profitPercentage": "% Lợi nhuận",
       "availableForSale": "Có thể bán",
       "totalStock": "Tổng tồn",
       "size": "Kích thước",
@@ -399,6 +423,23 @@
       "origin": "Xuất xứ",
       "status": "Trạng thái",
       "createdAt": "Ngày tạo"
+    },
+    "columnTooltip": {
+      "price": "Giá bán lẻ của sản phẩm (chưa gồm VAT).",
+      "priceWithVat": "Giá bán lẻ đã bao gồm thuế VAT.",
+      "oldPrice": "Giá bán trước đây, dùng để hiển thị mức giảm giá.",
+      "branchPrice": "Giá bán lẻ áp dụng riêng cho chi nhánh.",
+      "branchPriceWithVat": "Giá bán lẻ tại chi nhánh đã bao gồm VAT.",
+      "importPrice": "Giá nhập hàng từ nhà cung cấp.",
+      "importVat": "Giá trị thuế VAT tính trên giá nhập.",
+      "importPriceWithVat": "Giá nhập đã bao gồm thuế VAT.",
+      "wholesalePrice": "Giá bán sỉ (bán buôn) của sản phẩm.",
+      "wholesalePriceWithVat": "Giá bán sỉ đã bao gồm thuế VAT.",
+      "wholesaleBranchPrice": "Giá bán sỉ áp dụng riêng cho chi nhánh.",
+      "wholesaleBranchPriceWithVat": "Giá bán sỉ tại chi nhánh đã bao gồm VAT.",
+      "costPrice": "Giá vốn trung bình của sản phẩm (avgCost).",
+      "vat": "Giá trị thuế VAT của sản phẩm.",
+      "profitPercentage": "Tỷ lệ lợi nhuận so với giá vốn."
     },
     "detail": {
       "viewImage": "Xem ảnh sản phẩm",
@@ -1492,6 +1533,14 @@
     "page": {
       "title": "Danh mục sản phẩm",
       "description": "Quản lý cây danh mục sản phẩm và gán sản phẩm vào từng danh mục."
+    },
+    "sort": {
+      "title": "Sắp xếp danh mục",
+      "description": "Kéo để sắp xếp lại danh mục, hoặc kéo một danh mục con sang danh mục khác để di chuyển.",
+      "empty": "Chưa có danh mục nào để sắp xếp.",
+      "dropInto": "Kéo danh mục con vào đây",
+      "reorder": "Kéo để sắp xếp lại danh mục",
+      "itemCount": "{{count}} danh mục con"
     },
     "type": {
       "fix": "Cố định",

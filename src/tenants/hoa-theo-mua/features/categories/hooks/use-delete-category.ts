@@ -1,8 +1,8 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { categoryProductService } from '../services'
-import { getErrorDescription, getResponseMessage } from './error-description'
+import { getErrorDescription, getResponseMessage } from '../error-description'
+import categoryService from '../services'
 
 const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
 
@@ -15,7 +15,7 @@ export const useDeleteCategory = ({ onDeleteSuccess }: DeleteCategoryParams = {}
   const { t } = useTenantTranslation()
 
   const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation({
-    mutationFn: categoryProductService.deleteCategory,
+    mutationFn: categoryService.deleteCategory,
     onSuccess: (message) => {
       toast.success(getResponseMessage(message) || t(`${CATEGORY_FORM_PREFIX}.deleteSuccess`))
       onDeleteSuccess?.()

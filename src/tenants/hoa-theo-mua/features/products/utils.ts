@@ -51,7 +51,7 @@ const numToRaw = (value: number | null): string | null => (value == null ? null 
  * shape used across the products UI (columns, detail page). Lets a single set of `formatPrice` /
  * `formatQuantity` renderers work whether the data came from the list row or a fresh fetch.
  */
-export function productDetailToProduct(detail: ProductDetail): Product {
+export function productDetailToProduct(detail: Omit<ProductDetail, 'categories'>): Product {
   return {
     ...detail,
     warrantyMonthsRaw: numToRaw(detail.warrantyMonths),

@@ -89,8 +89,13 @@
   "navigation": {
     "products": {
       "title": "Product",
-      "list": "Product list",
-      "categories": "Categories"
+      "list": "All products",
+      "pinned": "Arrange products"
+    },
+    "categories": {
+      "title": "Product categories",
+      "list": "All categories",
+      "sort": "Arrange categories"
     },
     "orders": {
       "title": "Order",
@@ -368,6 +373,11 @@
       "title": "Products",
       "description": "Browse and manage the product catalog synced from Nhanh.vn."
     },
+    "pinned": {
+      "title": "Pinned products",
+      "description": "Drag to reorder the products featured on the storefront.",
+      "empty": "No pinned products yet."
+    },
     "common": {
       "noData": "None",
       "unnamed": "Unnamed product"
@@ -375,11 +385,14 @@
     "action": {
       "actions": "Actions",
       "openMenu": "Open product actions menu",
-      "viewDetails": "View details"
+      "viewDetails": "View details",
+      "pin": "Pin product",
+      "unpin": "Unpin product"
     },
     "column": {
       "selectAll": "Select all products",
       "selectRow": "Select product",
+      "pin": "Pin",
       "image": "Image",
       "product": "Product",
       "category": "Category",
@@ -389,9 +402,20 @@
       "unit": "Unit",
       "barcode": "Barcode",
       "price": "Sale price",
+      "priceWithVat": "Sale price + VAT",
+      "oldPrice": "Old price",
+      "branchPrice": "Branch sale price",
+      "branchPriceWithVat": "Branch sale price + VAT",
       "importPrice": "Import price",
-      "costPrice": "Cost price",
+      "importVat": "Import VAT",
+      "importPriceWithVat": "Import price + VAT",
       "wholesalePrice": "Wholesale price",
+      "wholesalePriceWithVat": "Wholesale price + VAT",
+      "wholesaleBranchPrice": "Branch wholesale price",
+      "wholesaleBranchPriceWithVat": "Branch wholesale price + VAT",
+      "costPrice": "Cost price",
+      "vat": "VAT",
+      "profitPercentage": "Profit %",
       "availableForSale": "Available",
       "totalStock": "Total stock",
       "size": "Size",
@@ -399,6 +423,23 @@
       "origin": "Origin",
       "status": "Status",
       "createdAt": "Created at"
+    },
+    "columnTooltip": {
+      "price": "Retail selling price of the product (before VAT).",
+      "priceWithVat": "Retail selling price with VAT included.",
+      "oldPrice": "Previous selling price, used to show a discount.",
+      "branchPrice": "Retail selling price set specifically for the branch.",
+      "branchPriceWithVat": "Branch retail selling price with VAT included.",
+      "importPrice": "Purchase price paid to the supplier.",
+      "importVat": "VAT amount calculated on the import price.",
+      "importPriceWithVat": "Import price with VAT included.",
+      "wholesalePrice": "Wholesale (bulk) selling price of the product.",
+      "wholesalePriceWithVat": "Wholesale selling price with VAT included.",
+      "wholesaleBranchPrice": "Wholesale selling price set specifically for the branch.",
+      "wholesaleBranchPriceWithVat": "Branch wholesale selling price with VAT included.",
+      "costPrice": "Average cost of goods (avgCost).",
+      "vat": "VAT amount applied to the product.",
+      "profitPercentage": "Profit margin relative to the cost price."
     },
     "detail": {
       "viewImage": "View product image",
@@ -1492,6 +1533,14 @@
     "page": {
       "title": "Product categories",
       "description": "Manage the product category tree and assign products to each category."
+    },
+    "sort": {
+      "title": "Arrange categories",
+      "description": "Drag to reorder categories, or drag a subcategory into another category to move it.",
+      "empty": "No categories to arrange yet.",
+      "dropInto": "Drop a subcategory here",
+      "reorder": "Drag to reorder category",
+      "itemCount": "{{count}} subcategories"
     },
     "type": {
       "fix": "Fixed",

@@ -58,7 +58,6 @@ export const categoryProductSchema = (t: TenantT) => {
     .superRefine((values, ctx) => {
       if (values.type !== CategoryProductType.Campaign) return
 
-      // A campaign category with no window makes no UX sense — enforce client-side (§4.3, §6.4).
       if (!values.startTime) {
         ctx.addIssue({
           code: 'custom',

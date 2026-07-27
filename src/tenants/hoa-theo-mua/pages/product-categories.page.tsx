@@ -5,30 +5,23 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import type { BasePaginationResponse } from '@/lib/axios'
-import { calculateReorderPosition } from '@/shared/utils'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
-import { arrayMove } from '@dnd-kit/sortable'
-import { useQueryClient } from '@tanstack/react-query'
-import type { Row } from '@tanstack/react-table'
 import { CirclePlus } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler } from 'react-hook-form'
-import { AssignProductsDialog } from '../features/products/components/assign-products-dialog'
-import { getCategoryColumns } from '../features/products/components/category-product-columns'
-import {
-  CategoryProductFormDialog,
+import AssignProductsDialog from '../features/categories/components/assign-products-dialog'
+import { getCategoryColumns } from '../features/categories/components/category-product-columns'
+import CategoryProductFormDialog, {
   type ParentOption
-} from '../features/products/components/category-product-form-dialog'
-import { useAddCategory } from '../features/products/hooks/use-add-category'
-import { useDeleteCategory } from '../features/products/hooks/use-delete-category'
-import { useGetCategories } from '../features/products/hooks/use-get-categories'
-import { useGetCategory } from '../features/products/hooks/use-get-category'
-import { useReorderCategory } from '../features/products/hooks/use-reorder-category'
-import { useUpdateCategory } from '../features/products/hooks/use-update-category'
-import type { CategoryMetadata, CategoryProduct } from '../features/products/types'
-import type { CategoryProductFormValues } from '../features/products/validations'
+} from '../features/categories/components/category-product-form-dialog'
+import { useAddCategory } from '../features/categories/hooks/use-add-category'
+import { useDeleteCategory } from '../features/categories/hooks/use-delete-category'
+import { useGetCategories } from '../features/categories/hooks/use-get-categories'
+import { useGetCategory } from '../features/categories/hooks/use-get-category'
+import { useUpdateCategory } from '../features/categories/hooks/use-update-category'
+import type { Category, CategoryMetadata } from '../features/categories/types'
+import type { CategoryProductFormValues } from '../features/categories/validations'
 
 const CATEGORY_PREFIX = 'productCategories' as const
 
@@ -43,9 +36,9 @@ const parseCategoryMetadata = (metaData: string | null): CategoryMetadata => {
 }
 
 /** All descendant ids of a category (any depth) — used to exclude invalid parents and warn on delete. */
-const collectDescendantIds = (category: CategoryProduct): string[] => {
+const collectDescendantIds = (category: Category): string[] => {
   const ids: string[] = []
-  const visit = (node: CategoryProduct) => {
+  const visit = (node: Category) => {
     node.children?.forEach((child) => {
       ids.push(child.categoryId)
       visit(child)
@@ -56,50 +49,38 @@ const collectDescendantIds = (category: CategoryProduct): string[] => {
 }
 
 /** Flatten the tree into depth-tagged options for the parent picker. */
-const flattenWithDepth = (categories: CategoryProduct[], depth = 0): ParentOption[] =>
+const flattenWithDepth = (categories: Category[], depth = 0): ParentOption[] =>
   categories.flatMap((category) => [
     { categoryId: category.categoryId, name: category.name, depth },
     ...flattenWithDepth(category.children ?? [], depth + 1)
   ])
 
 /** Ascending by `position`; unset positions sink to the end while preserving server order (stable sort). */
-const byPositionAsc = (a: CategoryProduct, b: CategoryProduct) =>
+const byPositionAsc = (a: Category, b: Category) =>
   (a.position ?? Number.POSITIVE_INFINITY) - (b.position ?? Number.POSITIVE_INFINITY)
 
 /** Sort every level of the category tree ascending by position, client-side. */
-const sortCategoryTree = (categories: CategoryProduct[]): CategoryProduct[] =>
+const sortCategoryTree = (categories: Category[]): Category[] =>
   [...categories]
     .sort(byPositionAsc)
     .map((category) =>
       category.children?.length ? { ...category, children: sortCategoryTree(category.children) } : category
     )
 
-/** Immutably set a category's `position` inside the tree — used for the optimistic reorder. */
-const setCategoryPosition = (categories: CategoryProduct[], categoryId: string, position: number): CategoryProduct[] =>
-  categories.map((category) => {
-    if (category.categoryId === categoryId) return { ...category, position }
-    if (category.children?.length) {
-      return { ...category, children: setCategoryPosition(category.children, categoryId, position) }
-    }
-    return category
-  })
-
 export default function ProductCategoriesPage() {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
-  const queryClient = useQueryClient()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<CategoryProduct | null>(null)
-  const [managingCategory, setManagingCategory] = useState<CategoryProduct | null>(null)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [managingCategory, setManagingCategory] = useState<Category | null>(null)
   const isUpdateDialogOpen = !!editingCategory
 
   const { methods: addMethods, addCategory, isAddingCategory } = useAddCategory()
   const { methods: updateMethods, updateCategory, isUpdatingCategory } = useUpdateCategory(editingCategory?.categoryId)
   const { deleteCategory, isDeletingCategory } = useDeleteCategory()
-  const { reorderCategory } = useReorderCategory()
   const { category: editingCategoryDetail, isLoadingCategory } = useGetCategory(editingCategory?.categoryId)
 
-  const handleOpenUpdateCategory = useCallback((category: CategoryProduct) => {
+  const handleOpenUpdateCategory = useCallback((category: Category) => {
     setEditingCategory(category)
   }, [])
 
@@ -127,12 +108,12 @@ export default function ProductCategoriesPage() {
     })
   }, [editingCategoryDetail, updateMethods])
 
-  const handleManageProducts = useCallback((category: CategoryProduct) => {
+  const handleManageProducts = useCallback((category: Category) => {
     setManagingCategory(category)
   }, [])
 
   const handleDeleteCategory = useCallback(
-    async (category: CategoryProduct) => {
+    async (category: Category) => {
       const descendantCount = collectDescendantIds(category).length
 
       const confirmed = await confirm({
@@ -180,42 +161,6 @@ export default function ProductCategoriesPage() {
   const categoryRows = useMemo(() => sortCategoryTree(categories.value.items), [categories.value.items])
   const parentOptions = useMemo(() => flattenWithDepth(categories.value.items), [categories.value.items])
 
-  // Reorder is children-only: a dragged child can only be dropped between its own siblings.
-  const handleReorderCategory = useCallback(
-    ({ activeRow, overRow }: { activeRow: Row<CategoryProduct>; overRow: Row<CategoryProduct> }) => {
-      const active = activeRow.original
-      const over = overRow.original
-
-      if (active.parentId == null || active.parentId !== over.parentId) return
-
-      const siblings = activeRow.getParentRow()?.subRows.map((row) => row.original) ?? []
-      const oldIndex = siblings.findIndex((sibling) => sibling.categoryId === active.categoryId)
-      const overIndex = siblings.findIndex((sibling) => sibling.categoryId === over.categoryId)
-      if (oldIndex === -1 || overIndex === -1) return
-
-      const reordered = arrayMove(siblings, oldIndex, overIndex)
-      const newPosition = calculateReorderPosition(
-        reordered.map((sibling) => ({ position: sibling.position ?? 0 })),
-        overIndex
-      )
-
-      if (newPosition === active.position) return
-
-      // Optimistically reorder in the cache (the tree is sorted by position on render) before persisting.
-      queryClient.setQueriesData<BasePaginationResponse<CategoryProduct>>({ queryKey: ['categoryProducts'] }, (old) =>
-        old
-          ? {
-              ...old,
-              value: { ...old.value, items: setCategoryPosition(old.value.items, active.categoryId, newPosition) }
-            }
-          : old
-      )
-
-      reorderCategory({ category: active, position: newPosition })
-    },
-    [queryClient, reorderCategory]
-  )
-
   // On edit, a category cannot parent itself or any of its descendants (§4.4).
   const editParentOptions = useMemo(() => {
     if (!editingCategory) return parentOptions
@@ -232,7 +177,7 @@ export default function ProductCategoriesPage() {
     getSubRows: (row) => row.children ?? undefined,
     getRowCanExpand: (row) => !!row.original.children?.length,
     initialState: {
-      sorting: (sorting ?? []) as ExtendedColumnSort<CategoryProduct>[],
+      sorting: (sorting ?? []) as ExtendedColumnSort<Category>[],
       columnPinning: { right: ['actions'] }
     },
     getRowId: ({ categoryId }) => categoryId,
@@ -289,11 +234,7 @@ export default function ProductCategoriesPage() {
         <p className='text-sm text-muted-foreground'>{t(`${CATEGORY_PREFIX}.page.description`)}</p>
       </div>
 
-      <DataTable
-        table={table}
-        isLoading={isLoadingCategories}
-        rowDnd={{ getRowCanDrag: (row) => row.depth > 0, onReorder: handleReorderCategory }}
-      >
+      <DataTable table={table} isLoading={isLoadingCategories}>
         <DataTableToolbar table={table}>
           <Button size='sm' onClick={() => setIsAddDialogOpen(true)}>
             <CirclePlus className='size-3' />

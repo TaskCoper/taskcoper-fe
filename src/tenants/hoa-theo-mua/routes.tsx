@@ -7,9 +7,12 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 const OrdersPage = lazy(() => import('./pages/orders.page'))
 const OrderPage = lazy(() => import('./pages/order.page'))
 
-const ProductsListPage = lazy(() => import('./pages/products-list.page'))
 const ProductPage = lazy(() => import('./pages/product.page'))
+const ProductsPage = lazy(() => import('./pages/products.page'))
+const PinnedProductsPage = lazy(() => import('./pages/pinned-products.page'))
+
 const ProductCategoriesPage = lazy(() => import('./pages/product-categories.page'))
+const ProductCategoriesSortPage = lazy(() => import('./pages/product-categories-sort.page'))
 
 const RecruitmentJobsPage = lazy(() => import('./pages/recruitment-jobs.page'))
 const RecruitmentJobPage = lazy(() => import('./pages/recruitment-job.page'))
@@ -45,8 +48,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
       {
         element: <FeatureFlagGuardLayout requires='custom.productManagement' />,
         children: [
-          { path: 'products', element: <ProductsListPage /> },
+          { path: 'products', element: <ProductsPage /> },
+          { path: 'products/pinned', element: <PinnedProductsPage /> },
           { path: 'products/categories', element: <ProductCategoriesPage /> },
+          { path: 'products/categories/sort', element: <ProductCategoriesSortPage /> },
           { path: 'products/:id', element: <ProductPage /> }
         ]
       },

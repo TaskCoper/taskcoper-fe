@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { categoryProductService } from '../services'
+import categoryService from '../services'
 
 export const useGetCategory = (id?: string) => {
   const {
@@ -10,7 +10,7 @@ export const useGetCategory = (id?: string) => {
     isLoading: isLoadingCategory
   } = useQuery({
     queryKey: ['categoryProduct', id],
-    queryFn: () => categoryProductService.getCategory({ id }),
+    queryFn: () => categoryService.getCategory({ id }),
     enabled: !!id
   })
 
