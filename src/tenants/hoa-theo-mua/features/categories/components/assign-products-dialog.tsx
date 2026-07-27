@@ -15,7 +15,8 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { ChevronLeftIcon, ChevronRightIcon, ImageIcon, SaveIcon, SearchIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useDebounce } from 'use-debounce'
 import { useGetProducts } from '../../products/hooks/use-get-products'
 import { formatPrice } from '../../products/utils'
 import { useAssignProducts } from '../hooks/use-assign-products'
@@ -50,12 +51,22 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
   const { t } = useTenantTranslation()
   const [page, setPage] = useState(DEFAULT_PAGE_INDEX)
   const [filter, setFilter] = useState('')
+  const [debouncedFilter] = useDebounce(filter.trim(), 300)
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
-  // Detail endpoint is the only source of the category's current productIds.
+  const [lastSearch, setLastSearch] = useState(debouncedFilter)
+  if (lastSearch !== debouncedFilter) {
+    setLastSearch(debouncedFilter)
+    setPage(DEFAULT_PAGE_INDEX)
+  }
+
   const { category: detail, isFetching: isLoadingDetail } = useGetCategory(category.categoryId)
-  const { products, isGettingProducts } = useGetProducts({ pageIndex: page, pageSize: PAGE_SIZE })
+  const { products, isGettingProducts } = useGetProducts({
+    pageIndex: page,
+    pageSize: PAGE_SIZE,
+    search: debouncedFilter || undefined
+  })
 
   const [seeded, setSeeded] = useState(false)
   if (detail && !seeded) {
@@ -66,16 +77,7 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
   const totalCount = products?.value.totalCount ?? 0
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
-  // Filter on client
-  const visibleItems = useMemo(() => {
-    const items = products?.value.items ?? []
-    const keyword = filter.trim().toLowerCase()
-    if (!keyword) return items
-
-    return items.filter((product) =>
-      [product.productName, product.productCode].some((value) => value?.toLowerCase().includes(keyword))
-    )
-  }, [products, filter])
+  const visibleItems = products?.value.items ?? []
 
   const { assignProducts, isAssigningProducts } = useAssignProducts({
     onAssignSuccess: () => onOpenChange(false)

@@ -7,12 +7,13 @@ import { productDetailToProduct } from './utils'
 class ProductService extends BaseService {
   private readonly baseUrl = 'products'
 
-  getProducts = async ({ pageIndex, pageSize, search, priceFrom, priceTo, sortBy }: GetProductsParams) => {
+  getProducts = async ({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy }: GetProductsParams) => {
     const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
         search,
+        categoryIds,
         priceFrom,
         priceTo,
         sortBy
