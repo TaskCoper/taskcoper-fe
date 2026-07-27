@@ -376,7 +376,21 @@
     "pinned": {
       "title": "Pinned products",
       "description": "Drag to reorder the products featured on the storefront.",
-      "empty": "No pinned products yet."
+      "empty": "No pinned products yet.",
+      "categoryFilter": {
+        "label": "Category",
+        "all": "All (global)",
+        "empty": "No categories yet."
+      }
+    },
+    "pinDialog": {
+      "title": "Pin product",
+      "description": "Check to pin, uncheck to unpin this product in each place.",
+      "global": "Global (storefront)",
+      "categoriesLabel": "Product categories",
+      "noCategories": "This product isn't in any category.",
+      "apply": "Apply",
+      "cancel": "Cancel"
     },
     "common": {
       "noData": "None",
@@ -393,9 +407,11 @@
       "selectAll": "Select all products",
       "selectRow": "Select product",
       "pin": "Pin",
+      "nhanhProductId": "Nhanh.vn ID",
       "image": "Image",
       "product": "Product",
       "category": "Category",
+      "categories": "Categories",
       "brand": "Brand",
       "supplier": "Supplier",
       "productType": "Product type",
@@ -1536,11 +1552,14 @@
     },
     "sort": {
       "title": "Arrange categories",
-      "description": "Drag to reorder categories, or drag a subcategory into another category to move it.",
+      "description": "Drag a row to reorder it. Drag right to nest it under the row above, or left to move it out.",
       "empty": "No categories to arrange yet.",
-      "dropInto": "Drop a subcategory here",
       "reorder": "Drag to reorder category",
       "itemCount": "{{count}} subcategories"
+    },
+    "tree": {
+      "expand": "Expand",
+      "collapse": "Collapse"
     },
     "type": {
       "fix": "Fixed",

@@ -53,7 +53,7 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
-  // Detail endpoint is the only source of the category's current productIds (§4.2).
+  // Detail endpoint is the only source of the category's current productIds.
   const { category: detail, isFetching: isLoadingDetail } = useGetCategory(category.categoryId)
   const { products, isGettingProducts } = useGetProducts({ pageIndex: page, pageSize: PAGE_SIZE })
 

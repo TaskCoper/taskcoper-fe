@@ -1,57 +1,38 @@
 import { Badge } from '@/components/ui/badge'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { useDroppable } from '@dnd-kit/core'
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVerticalIcon } from 'lucide-react'
-import { useMemo } from 'react'
-import type { CategoryDropZoneData, CategoryNodeDragData, SortableCategory } from '../types'
-import { CategoryTypeBadge, CategoryWindow } from './category-product-badges'
+import { FolderOpenIcon, GripVerticalIcon, TagIcon } from 'lucide-react'
+import { type CategoryNodeDragData, type SortableCategory } from '../types'
+import { CategoryWindow } from './category-product-badges'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
-function NodeDropZone({ containerId, t }: { containerId: string; t: TenantT }) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: `dropzone:${containerId}`,
-    data: { type: 'CategoryDropZone', containerId } satisfies CategoryDropZoneData
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        'flex items-center justify-center rounded-lg border border-dashed py-4 text-center text-xs text-muted-foreground transition-colors',
-        isOver && 'border-primary bg-primary/5 text-primary'
-      )}
-    >
-      {t(`${CATEGORY_I18N_PREFIX}.sort.dropInto`)}
-    </div>
-  )
-}
-
 interface SortableCategoryNodeProps {
   category: SortableCategory
+  /** Effective nesting level — drives both indentation and styling. While a row is dragged this is
+   *  the *projected* depth, so the placeholder and overlay preview the level it will drop into. */
   depth: number
+  indentationWidth: number
   t: TenantT
-  /** Whether a drag is currently in progress — childless nodes only expose a drop zone while dragging. */
-  isDragActive?: boolean
   disabled?: boolean
   isOverlay?: boolean
+  /** Whether this node is the last child among its siblings — decides the connector's shape (└ vs ├). */
+  isLast?: boolean
+  /** For each ancestor depth, whether that ancestor's guide column still has a line running through it. */
+  ancestorLines?: boolean[]
 }
 
-/**
- * A single node in the category sort tree, rendered recursively so the board supports arbitrarily
- * deep nesting. Each node is draggable via its grip (reorders among siblings / reparents), and hosts
- * its own `SortableContext` for its children plus a drop zone when it is empty.
- */
 export default function SortableCategoryNode({
   category,
   depth,
+  indentationWidth,
   t,
-  isDragActive = false,
   disabled,
-  isOverlay = false
+  isOverlay = false,
+  isLast = false,
+  ancestorLines = []
 }: SortableCategoryNodeProps) {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: category.categoryId,
@@ -60,46 +41,56 @@ export default function SortableCategoryNode({
     disabled
   })
 
-  const children = useMemo(() => category.children ?? [], [category.children])
-  const childIds = useMemo(() => children.map((child) => child.categoryId), [children])
-
+  const childCount = category.children?.length ?? 0
+  const hasChildren = childCount > 0
   const name = category.name?.trim()
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : 1
-  }
+  const icon = hasChildren ? (
+    <FolderOpenIcon className={cn('size-4 shrink-0 text-muted-foreground', depth === 0 ? 'text-primary' : '')} />
+  ) : (
+    <TagIcon className={cn('size-4 shrink-0 text-muted-foreground', depth === 0 ? 'text-primary' : '')} />
+  )
 
-  const header = (
-    <div className='flex items-center gap-2'>
+  const card = (
+    <div
+      className={cn(
+        'flex items-center gap-2 rounded-xl border bg-card p-2',
+        isOverlay && 'shadow-lg ring-2 ring-primary ring-offset-2',
+        !isOverlay && isDragging && 'opacity-40'
+      )}
+    >
       <button
         type='button'
         aria-label={t(`${CATEGORY_I18N_PREFIX}.sort.reorder`)}
         className={cn(
           'flex size-7 shrink-0 items-center justify-center rounded text-muted-foreground/60',
           'touch-none hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-          isOverlay ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'
+          isOverlay ? 'cursor-grabbing' : 'cursor-grab active:cursor-grabbing'
         )}
         {...(isOverlay ? {} : { ...attributes, ...listeners })}
       >
         <GripVerticalIcon className='size-4' />
       </button>
 
+      {icon}
+
       <p
-        className={cn('truncate font-medium', depth === 0 && 'font-semibold', !name && 'italic text-muted-foreground')}
+        className={cn(
+          'truncate font-medium',
+          depth === 0 && 'font-semibold text-primary',
+          !name && 'italic text-muted-foreground'
+        )}
         title={name || undefined}
       >
         {name || t(`${CATEGORY_I18N_PREFIX}.column.noName`)}
       </p>
 
-      <CategoryTypeBadge type={category.type} t={t} />
-
       <div className='ml-auto flex shrink-0 items-center gap-2'>
         <CategoryWindow category={category} t={t} />
-        {children.length > 0 && (
+
+        {childCount > 0 && (
           <Badge variant='secondary' className='tabular-nums'>
-            {t(`${CATEGORY_I18N_PREFIX}.sort.itemCount`, { count: children.length })}
+            {t(`${CATEGORY_I18N_PREFIX}.sort.itemCount`, { count: childCount })}
           </Badge>
         )}
       </div>
@@ -107,33 +98,35 @@ export default function SortableCategoryNode({
   )
 
   if (isOverlay) {
-    return <div className='rounded-xl bg-card p-3 shadow-lg ring-2 ring-primary ring-offset-2'>{header}</div>
+    return <div style={{ paddingLeft: depth * indentationWidth }}>{card}</div>
   }
 
-  const showDropZone = isDragActive && children.length === 0
-
-  return (
-    <div ref={setNodeRef} style={style} className={cn('rounded-xl border bg-card', depth === 0 ? 'p-4' : 'p-3')}>
-      {header}
-
-      {(children.length > 0 || showDropZone) && (
-        <div className='mt-3 space-y-2 border-l border-dashed pl-3'>
-          <SortableContext items={childIds} strategy={verticalListSortingStrategy}>
-            {children.map((child) => (
-              <SortableCategoryNode
-                key={child.categoryId}
-                category={child}
-                depth={depth + 1}
-                t={t}
-                isDragActive={isDragActive}
-                disabled={disabled}
-              />
-            ))}
-          </SortableContext>
-
-          {showDropZone && <NodeDropZone containerId={category.categoryId} t={t} />}
+  const guides = (
+    <>
+      {ancestorLines.map((showLine, index) => (
+        <div key={index} style={{ width: indentationWidth }} className='relative shrink-0'>
+          {showLine && <span className='absolute -bottom-1 left-1/2 top-0 w-px -translate-x-1/2 bg-border' />}
+        </div>
+      ))}
+      {depth > 0 && (
+        <div style={{ width: indentationWidth }} className='relative shrink-0'>
+          <span
+            className={cn('absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border', isLast ? 'h-1/2' : '-bottom-1')}
+          />
+          <span className='absolute left-1/2 top-1/2 h-px w-1/2 -translate-y-1/2 bg-border' />
         </div>
       )}
+    </>
+  )
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      className={cn('flex items-stretch', isDragging && 'relative z-10')}
+    >
+      {isDragging ? <div style={{ width: depth * indentationWidth }} className='shrink-0' /> : guides}
+      <div className='min-w-0 flex-1'>{card}</div>
     </div>
   )
 }

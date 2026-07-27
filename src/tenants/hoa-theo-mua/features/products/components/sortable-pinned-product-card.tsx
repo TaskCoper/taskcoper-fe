@@ -13,19 +13,15 @@ interface SortablePinnedProductCardProps {
   isUnpinning?: boolean
   /** Disables the unpin button while any pin/move is in flight. */
   isBusy?: boolean
-  /** 1-based rank in the pinned grid, shown as a badge (1, 2, 3, 4, …). */
-  position?: number
 }
 
-/** DnD wrapper around `PinnedProductCard` — the whole card is the drag handle. */
 export function SortablePinnedProductCard({
   product,
   t,
   disabled,
   onUnpin,
   isUnpinning,
-  isBusy,
-  position
+  isBusy
 }: SortablePinnedProductCardProps) {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: product.productId,
@@ -53,7 +49,6 @@ export function SortablePinnedProductCard({
         onUnpin={onUnpin}
         isUnpinning={isUnpinning}
         disabled={isBusy}
-        position={position}
         className='cursor-grab active:cursor-grabbing'
       />
     </div>

@@ -1,8 +1,14 @@
 import type { Category } from '../categories/types'
 
+/** A product's category membership plus whether that specific product ↔ category pair is pinned. */
+export interface ProductCategory extends Category {
+  isPinned: boolean
+}
+
 export interface Product {
   id: string
-  isPin: boolean
+  isPinned: boolean
+  categories: ProductCategory[]
 
   sourceRowNumber: number
 
@@ -293,13 +299,4 @@ export interface ProductDetail extends Omit<Product, ProductRawFieldKey> {
 
   createdAt: string
   updatedAt: string | null
-
-  categories: Category[]
 }
-
-/**
- * Item shape returned by the products LIST endpoint. It carries the same numeric price/stock fields
- * as `ProductDetail` (NOT the raw-string `Product` shape the table renders) but has no `categories`
- * array, so the service maps each item through `productDetailToProduct` before handing it to the UI.
- */
-export type ProductListItem = Omit<ProductDetail, 'categories'>

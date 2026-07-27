@@ -46,7 +46,7 @@ export const categoryProductSchema = (t: TenantT) => {
       description_En: requiredText(t, DESCRIPTION_MAX, t(`${CATEGORY_FORM_PREFIX}.descriptionEnRequired`)),
       type: z.enum([CategoryProductType.Fix, CategoryProductType.Campaign]),
       isActive: z.boolean(),
-      // ISO 8601 strings from the date picker; only meaningful for Campaign categories (§3).
+      // ISO 8601 strings from the date picker; only meaningful for Campaign categories.
       startTime: z.string().nullish(),
       endTime: z.string().nullish(),
       parentId: optionalUuid(t),

@@ -1,4 +1,22 @@
-import type { Product, ProductDetail } from './types'
+import { calculateReorderPosition } from '@/shared/utils'
+import type { PinnedProduct, Product, ProductDetail } from './types'
+
+/**
+ * Position that appends `productId` after every *other* product currently pinned in a scope. Returns
+ * `null` when there are no others (the sole pin can keep the server default). Shared by the single
+ * pin flow and the multi-target pin manager so both compute the same clean, gapped positions and
+ * avoid the duplicate-INITIAL_POSITION collisions that break ordering.
+ */
+export function resolveAppendPosition(pinned: PinnedProduct[], productId: string): number | null {
+  const others = pinned.filter((product) => product.productId !== productId)
+  if (others.length === 0) return null
+
+  const sorted = [...others].sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+  return calculateReorderPosition(
+    sorted.map((product) => ({ position: product.position ?? 0 })),
+    sorted.length
+  )
+}
 
 export const vndFormatter = new Intl.NumberFormat('vi-VN', {
   style: 'currency',
@@ -51,7 +69,7 @@ const numToRaw = (value: number | null): string | null => (value == null ? null 
  * shape used across the products UI (columns, detail page). Lets a single set of `formatPrice` /
  * `formatQuantity` renderers work whether the data came from the list row or a fresh fetch.
  */
-export function productDetailToProduct(detail: Omit<ProductDetail, 'categories'>): Product {
+export function productDetailToProduct(detail: ProductDetail): Product {
   return {
     ...detail,
     warrantyMonthsRaw: numToRaw(detail.warrantyMonths),

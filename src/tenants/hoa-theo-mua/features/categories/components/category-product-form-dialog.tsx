@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
@@ -19,26 +18,21 @@ import { Textarea } from '@/components/ui/textarea'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { SaveIcon } from 'lucide-react'
+import { FolderIcon, SaveIcon } from 'lucide-react'
 import { Controller, FormProvider, type SubmitHandler, type UseFormReturn } from 'react-hook-form'
 import { CategoryProductType } from '../types'
 import type { CategoryProductFormValues } from '../validations'
+import CategoryTreePicker, { type CategoryTreeLikeNode } from './category-tree-picker'
 
 const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
-const NONE_PARENT_VALUE = '__none__'
-
-/** A parent-picker option, flattened from the tree with `depth` for indentation. */
-export interface ParentOption {
-  categoryId: string
-  name: string
-  depth: number
-}
 
 interface CategoryProductFormDialogProps {
   mode: 'create' | 'update'
   open: boolean
   methods: UseFormReturn<CategoryProductFormValues>
-  parentOptions: ParentOption[]
+  parentCategories: CategoryTreeLikeNode[]
+  /** On edit, the category being edited and all its descendants — a category can't parent itself or a descendant. */
+  excludeParentIds?: Set<string>
   isSubmitting: boolean
   /** True while the category detail is being fetched for edit — renders a skeleton instead of stale/default field values. */
   isLoading?: boolean
@@ -93,7 +87,8 @@ export default function CategoryProductFormDialog({
   mode,
   open,
   methods,
-  parentOptions,
+  parentCategories,
+  excludeParentIds,
   isSubmitting,
   isLoading = false,
   onOpenChange,
@@ -245,7 +240,7 @@ export default function CategoryProductFormDialog({
                               onClick={() => field.onChange(option)}
                               aria-pressed={selected}
                               className={cn(
-                                'rounded-lg border px-3 py-2.5 text-left transition-colors',
+                                'cursor-pointer rounded-lg border px-3 py-2.5 text-left transition-colors',
                                 selected
                                   ? 'border-primary bg-primary/5 ring-1 ring-primary'
                                   : 'border-input hover:bg-accent'
@@ -290,24 +285,20 @@ export default function CategoryProductFormDialog({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid} className='gap-1'>
                       <FieldLabel htmlFor={field.name}>{t(`${CATEGORY_FORM_PREFIX}.parentLabel`)}</FieldLabel>
-                      <Select
-                        value={field.value ?? NONE_PARENT_VALUE}
-                        onValueChange={(value) => field.onChange(value === NONE_PARENT_VALUE ? undefined : value)}
-                      >
-                        <SelectTrigger id={field.name} className='w-full' aria-invalid={fieldState.invalid}>
-                          <SelectValue placeholder={t(`${CATEGORY_FORM_PREFIX}.parentPlaceholder`)} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value={NONE_PARENT_VALUE}>{t(`${CATEGORY_FORM_PREFIX}.noParent`)}</SelectItem>
-                            {parentOptions.map((option) => (
-                              <SelectItem key={option.categoryId} value={option.categoryId}>
-                                <span style={{ paddingLeft: `${option.depth * 12}px` }}>{option.name}</span>
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <CategoryTreePicker
+                        categories={parentCategories}
+                        excludeIds={excludeParentIds}
+                        value={field.value ?? null}
+                        onChange={(categoryId) => field.onChange(categoryId ?? undefined)}
+                        t={t}
+                        triggerId={field.name}
+                        invalid={fieldState.invalid}
+                        emptyLabel={t('productCategories.sort.empty')}
+                        rootOption={{
+                          icon: <FolderIcon className='size-4 shrink-0 text-muted-foreground' />,
+                          label: t(`${CATEGORY_FORM_PREFIX}.noParent`)
+                        }}
+                      />
                       <div className='min-h-4'>
                         {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                       </div>

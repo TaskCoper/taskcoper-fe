@@ -1,19 +1,18 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
 import type { GetProductsParams } from './hooks/use-get-products'
-import type { PinnedProduct, ProductDetail, ProductListItem } from './types'
+import type { PinnedProduct, ProductDetail } from './types'
 import { productDetailToProduct } from './utils'
 
 class ProductService extends BaseService {
   private readonly baseUrl = 'products'
 
-  getProducts = async ({ pageIndex, pageSize, priceFrom, priceTo, sortBy }: GetProductsParams) => {
-    // The list endpoint returns numeric price/stock fields (same shape as ProductDetail), while the
-    // table renders the raw-string `Product` shape — map each item so every column resolves correctly.
-    const { data } = await this.get<BasePaginationResponse<ProductListItem>>(`/v1/${this.baseUrl}`, {
+  getProducts = async ({ pageIndex, pageSize, search, priceFrom, priceTo, sortBy }: GetProductsParams) => {
+    const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
+        search,
         priceFrom,
         priceTo,
         sortBy
@@ -29,8 +28,12 @@ class ProductService extends BaseService {
     }
   }
 
-  getPinnedProducts = async () => {
-    const { data } = await this.get<BaseResponse<PinnedProduct[]>>(`/v1/${this.baseUrl}-pin`)
+  getPinnedProducts = async ({ categoryId }: { categoryId?: string }) => {
+    const { data } = await this.get<BaseResponse<PinnedProduct[]>>(`/v1/${this.baseUrl}-pin`, {
+      params: {
+        CategoryId: categoryId
+      }
+    })
 
     return data.value
   }
@@ -41,15 +44,19 @@ class ProductService extends BaseService {
     return data.value
   }
 
-  moveProduct = async ({ id, position }: { id: string; position: number }) => {
+  moveProduct = async ({ id, position, categoryId }: { id: string; position: number; categoryId?: string }) => {
+    // `categoryId` selects which (isPin, position) pair the backend writes: absent → the Product-level
+    // position, present → the junction (product ↔ category) position. `undefined` is dropped by JSON
+    // serialization, so a global move sends a clean `{ position }` body.
     const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/move`, {
-      position
+      position,
+      categoryId
     })
 
     return data.value
   }
 
-  pinProduct = async ({ body }: { body: { productId: string; isPin: boolean } }) => {
+  pinProduct = async ({ body }: { body: { productId: string; isPin: boolean; categoryId?: string } }) => {
     const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/pin`, body)
 
     return data.value

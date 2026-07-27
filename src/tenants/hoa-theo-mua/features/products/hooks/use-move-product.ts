@@ -2,14 +2,10 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { getErrorDescription } from '../error-description'
+import { productKeys } from '../query-keys'
 import productService from '../services'
 
-/**
- * Persist a reordered pinned product. The optimistic reordering is done at drag time
- * (see the page's drag handler); this hook just persists and re-syncs on settle so the
- * grid settles into the server's canonical order.
- */
-export const useMoveProduct = () => {
+export const useMoveProduct = (categoryId?: string) => {
   const queryClient = useQueryClient()
   const { t } = useTenantTranslation()
 
@@ -18,14 +14,17 @@ export const useMoveProduct = () => {
     isPending: isMovingProduct,
     variables: movingVariables
   } = useMutation({
-    mutationFn: productService.moveProduct,
+    // `categoryId` is a hook-level concern, so callers still pass just `{ id, position }`; the scope
+    // is injected here and picks the Product vs junction position pair server-side.
+    mutationFn: (variables: { id: string; position: number }) =>
+      productService.moveProduct({ ...variables, categoryId }),
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(error.response?.data)
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['products', 'pinned'] })
+      queryClient.invalidateQueries({ queryKey: productKeys.pinnedRoot() })
     }
   })
 

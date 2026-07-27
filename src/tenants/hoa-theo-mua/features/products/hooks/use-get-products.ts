@@ -5,6 +5,7 @@ import productService from '../services'
 export interface GetProductsParams {
   pageIndex?: number
   pageSize?: number
+  search?: string
   priceFrom?: number
   priceTo?: number
   sortBy?: string[]
@@ -13,13 +14,14 @@ export interface GetProductsParams {
 export const useGetProducts = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
+  search,
   priceFrom,
   priceTo,
   sortBy
 }: GetProductsParams) => {
   const { data: products, isLoading: isGettingProducts } = useQuery({
-    queryKey: ['products', pageIndex, pageSize, priceFrom, priceTo, sortBy],
-    queryFn: () => productService.getProducts({ pageIndex, pageSize, priceFrom, priceTo, sortBy })
+    queryKey: ['products', pageIndex, pageSize, search, priceFrom, priceTo, sortBy],
+    queryFn: () => productService.getProducts({ pageIndex, pageSize, search, priceFrom, priceTo, sortBy })
   })
 
   return { products, isGettingProducts }

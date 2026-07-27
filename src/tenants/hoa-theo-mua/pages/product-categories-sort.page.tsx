@@ -1,12 +1,11 @@
-import { customCollisionDetection } from '@/components/dnd/collision-detection'
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
+import { closestCenter, defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FolderTreeIcon } from 'lucide-react'
 import SortableCategoryNode from '../features/categories/components/sortable-category-node'
-import { useCategorySortDnd } from '../features/categories/hooks/use-category-sort-dnd'
+import { INDENTATION_WIDTH, useCategorySortDnd } from '../features/categories/hooks/use-category-sort-dnd'
 import { useGetSortableCategories } from '../features/categories/hooks/use-get-sortable-categories'
 
 const CATEGORY_PREFIX = 'productCategories' as const
@@ -17,9 +16,21 @@ export default function ProductCategoriesSortPage() {
 
   const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories()
 
-  const { roots, rootIds, activeNode, isReorderingCategory, onDragStart, onDragOver, onDragEnd } = useCategorySortDnd({
-    categories: sortableCategories
-  })
+  const {
+    roots,
+    flattenedItems,
+    sortedIds,
+    guidesById,
+    projected,
+    activeId,
+    activeNode,
+    isReorderingCategory,
+    onDragStart,
+    onDragMove,
+    onDragOver,
+    onDragEnd,
+    onDragCancel
+  } = useCategorySortDnd({ categories: sortableCategories })
 
   return (
     <div className='h-full overflow-auto'>
@@ -30,9 +41,9 @@ export default function ProductCategoriesSortPage() {
         </div>
 
         {isLoadingSortableCategories ? (
-          <div className='space-y-4'>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className='h-40 w-full rounded-xl' />
+          <div className='space-y-3'>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Skeleton key={index} className='h-16 w-full rounded-xl' />
             ))}
           </div>
         ) : roots.length === 0 ? (
@@ -43,29 +54,41 @@ export default function ProductCategoriesSortPage() {
         ) : (
           <DndContext
             sensors={sensors}
-            collisionDetection={customCollisionDetection}
+            collisionDetection={closestCenter}
             measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
             onDragStart={onDragStart}
+            onDragMove={onDragMove}
             onDragOver={onDragOver}
             onDragEnd={onDragEnd}
+            onDragCancel={onDragCancel}
           >
-            <SortableContext items={rootIds} strategy={verticalListSortingStrategy}>
-              <div className='space-y-4'>
-                {roots.map((root) => (
+            <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
+              <div className='space-y-1'>
+                {flattenedItems.map((item) => (
                   <SortableCategoryNode
-                    key={root.categoryId}
-                    category={root}
-                    depth={0}
+                    key={item.categoryId}
+                    category={item.category}
+                    depth={item.categoryId === activeId && projected ? projected.depth : item.depth}
+                    indentationWidth={INDENTATION_WIDTH}
                     t={t}
-                    isDragActive={!!activeNode}
                     disabled={isReorderingCategory}
+                    isLast={guidesById.get(item.categoryId)?.isLast}
+                    ancestorLines={guidesById.get(item.categoryId)?.ancestorLines}
                   />
                 ))}
               </div>
             </SortableContext>
 
             <DragOverlay dropAnimation={defaultDropAnimation}>
-              {activeNode ? <SortableCategoryNode isOverlay category={activeNode} depth={0} t={t} /> : null}
+              {activeNode ? (
+                <SortableCategoryNode
+                  isOverlay
+                  category={activeNode}
+                  depth={projected?.depth ?? 0}
+                  indentationWidth={INDENTATION_WIDTH}
+                  t={t}
+                />
+              ) : null}
             </DragOverlay>
           </DndContext>
         )}

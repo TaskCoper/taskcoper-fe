@@ -13,7 +13,8 @@ import { Spinner } from '@/components/ui/spinner'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon } from 'lucide-react'
+import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon } from 'lucide-react'
+import { Link } from 'react-router'
 import type { Product } from '../types'
 import { formatPrice, formatQuantity, parseNumber } from '../utils'
 
@@ -34,15 +35,17 @@ function isActiveStatus(status: string | null) {
   return normalized.includes('bán') || normalized.includes('active') || normalized.includes('kinh doanh')
 }
 
+function isProductPinned(product: Product) {
+  return product.isPinned || product.categories.some((category) => category.isPinned)
+}
+
 export const getProductColumns = ({
   t,
-  onViewDetail,
   onTogglePin,
   pinningProductId,
   isTogglingPin
 }: {
   t: TenantT
-  onViewDetail: (product: Product) => void
   onTogglePin: (product: Product) => void
   pinningProductId?: string | null
   isTogglingPin?: boolean
@@ -97,7 +100,7 @@ export const getProductColumns = ({
       id: 'pin',
       header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
       cell: ({ row }) => {
-        const { isPin } = row.original
+        const isPin = isProductPinned(row.original)
         const isPinning = pinningProductId === row.original.id
 
         return (
@@ -130,15 +133,30 @@ export const getProductColumns = ({
       size: 44
     },
     {
+      id: 'nhanhProductId',
+      accessorKey: 'nhanhProductId',
+      meta: { label: 'products.column.nhanhProductId' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.nhanhProductId' />,
+      cell: ({ row }) => {
+        const value = row.original.nhanhProductId
+        if (!value) return renderNoData(t)
+
+        return <p>{value}</p>
+      },
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: false,
+      size: 160
+    },
+    {
       id: 'image',
       header: () => <span className='sr-only'>{t('products.column.image')}</span>,
       cell: ({ row }) => {
         const { coverImage, productName } = row.original
 
         return (
-          <button
-            type='button'
-            onClick={() => onViewDetail(row.original)}
+          <Link
+            to={row.original.id}
             className='group relative block size-11 overflow-hidden rounded-lg border bg-muted transition-colors hover:border-primary'
             aria-label={t('products.action.viewDetails')}
           >
@@ -154,7 +172,7 @@ export const getProductColumns = ({
                 <ImageIcon className='size-5 text-muted-foreground/40' />
               </span>
             )}
-          </button>
+          </Link>
         )
       },
       enableSorting: false,
@@ -165,29 +183,31 @@ export const getProductColumns = ({
     {
       id: 'product',
       accessorKey: 'productName',
-      meta: { label: 'products.column.product' },
+      meta: {
+        label: 'products.column.product',
+        placeholder: 'Nhập để tìm kiếm...',
+        variant: 'text',
+        icon: SearchIcon
+      },
       header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.product' />,
       cell: ({ row }) => {
         const { productName, productCode } = row.original
 
         return (
-          <button
-            type='button'
-            onClick={() => onViewDetail(row.original)}
-            className='flex max-w-72 flex-col items-start text-left'
-          >
-            <span className='truncate font-medium hover:underline'>
+          <Link to={row.original.id} className='flex max-w-72 flex-col items-start text-left'>
+            <span className='truncate font-semibold hover:underline'>
               {productName?.trim() || t('products.common.unnamed')}
             </span>
+
             {productCode?.trim() && (
               <span className='truncate font-mono text-xs text-muted-foreground'>{productCode}</span>
             )}
-          </button>
+          </Link>
         )
       },
       enableSorting: false,
       enableHiding: false,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 260
     },
     {
@@ -209,6 +229,30 @@ export const getProductColumns = ({
       enableHiding: true,
       enableColumnFilter: false,
       size: 160
+    },
+    {
+      id: 'categories',
+      accessorFn: (row) => row.categories.map((category) => category.name).join(', '),
+      meta: { label: 'products.column.categories' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.categories' />,
+      cell: ({ row }) => {
+        const { categories } = row.original
+        if (!categories.length) return renderNoData(t)
+
+        return (
+          <div className='flex max-w-72 flex-wrap gap-1'>
+            {categories.map((category) => (
+              <Badge key={category.categoryId} variant='secondary' className='font-normal'>
+                {category.name}
+              </Badge>
+            ))}
+          </div>
+        )
+      },
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: false,
+      size: 220
     },
     {
       id: 'brand',
@@ -492,9 +536,11 @@ export const getProductColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>{t('products.action.actions')}</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onViewDetail(row.original)}>
-              <EyeIcon className='size-4' />
-              {t('products.action.viewDetails')}
+            <DropdownMenuItem asChild>
+              <Link to={row.original.id}>
+                <EyeIcon className='size-4' />
+                {t('products.action.viewDetails')}
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -12,9 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler } from 'react-hook-form'
 import AssignProductsDialog from '../features/categories/components/assign-products-dialog'
 import { getCategoryColumns } from '../features/categories/components/category-product-columns'
-import CategoryProductFormDialog, {
-  type ParentOption
-} from '../features/categories/components/category-product-form-dialog'
+import CategoryProductFormDialog from '../features/categories/components/category-product-form-dialog'
 import { useAddCategory } from '../features/categories/hooks/use-add-category'
 import { useDeleteCategory } from '../features/categories/hooks/use-delete-category'
 import { useGetCategories } from '../features/categories/hooks/use-get-categories'
@@ -47,13 +45,6 @@ const collectDescendantIds = (category: Category): string[] => {
   visit(category)
   return ids
 }
-
-/** Flatten the tree into depth-tagged options for the parent picker. */
-const flattenWithDepth = (categories: Category[], depth = 0): ParentOption[] =>
-  categories.flatMap((category) => [
-    { categoryId: category.categoryId, name: category.name, depth },
-    ...flattenWithDepth(category.children ?? [], depth + 1)
-  ])
 
 /** Ascending by `position`; unset positions sink to the end while preserving server order (stable sort). */
 const byPositionAsc = (a: Category, b: Category) =>
@@ -159,15 +150,12 @@ export default function ProductCategoriesPage() {
 
   // Sort ascending by position on the client so reordered children settle into their new slot (§reorder).
   const categoryRows = useMemo(() => sortCategoryTree(categories.value.items), [categories.value.items])
-  const parentOptions = useMemo(() => flattenWithDepth(categories.value.items), [categories.value.items])
 
   // On edit, a category cannot parent itself or any of its descendants (§4.4).
-  const editParentOptions = useMemo(() => {
-    if (!editingCategory) return parentOptions
-
-    const excluded = new Set([editingCategory.categoryId, ...collectDescendantIds(editingCategory)])
-    return parentOptions.filter((option) => !excluded.has(option.categoryId))
-  }, [editingCategory, parentOptions])
+  const editExcludeParentIds = useMemo(() => {
+    if (!editingCategory) return undefined
+    return new Set([editingCategory.categoryId, ...collectDescendantIds(editingCategory)])
+  }, [editingCategory])
 
   const { table } = useDataTable({
     data: categoryRows,
@@ -247,7 +235,7 @@ export default function ProductCategoriesPage() {
         mode='create'
         open={isAddDialogOpen}
         methods={addMethods}
-        parentOptions={parentOptions}
+        parentCategories={categoryRows}
         isSubmitting={isAddingCategory}
         onOpenChange={handleAddDialogOpenChange}
         onSubmit={handleCreateCategory}
@@ -257,7 +245,8 @@ export default function ProductCategoriesPage() {
         mode='update'
         open={isUpdateDialogOpen}
         methods={updateMethods}
-        parentOptions={editParentOptions}
+        parentCategories={categoryRows}
+        excludeParentIds={editExcludeParentIds}
         isSubmitting={isUpdatingCategory}
         isLoading={isLoadingCategory}
         onOpenChange={handleUpdateDialogOpenChange}

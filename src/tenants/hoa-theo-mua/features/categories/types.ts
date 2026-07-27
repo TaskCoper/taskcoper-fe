@@ -84,9 +84,3 @@ export interface CategoryNodeDragData {
   type: 'CategoryNode'
   category: SortableCategory
 }
-
-/** Payload for the empty drop zone a childless node exposes so a node can be nested into it. */
-export interface CategoryDropZoneData {
-  type: 'CategoryDropZone'
-  containerId: string
-}

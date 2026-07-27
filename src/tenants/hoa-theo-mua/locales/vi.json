@@ -376,7 +376,21 @@
     "pinned": {
       "title": "Sản phẩm ghim",
       "description": "Kéo để sắp xếp lại thứ tự sản phẩm nổi bật trên gian hàng.",
-      "empty": "Chưa có sản phẩm nào được ghim."
+      "empty": "Chưa có sản phẩm nào được ghim.",
+      "categoryFilter": {
+        "label": "Danh mục",
+        "all": "Tất cả (toàn cục)",
+        "empty": "Chưa có danh mục nào."
+      }
+    },
+    "pinDialog": {
+      "title": "Ghim sản phẩm",
+      "description": "Tích để ghim, bỏ tích để bỏ ghim sản phẩm ở từng nơi.",
+      "global": "Toàn cục (trang chủ)",
+      "categoriesLabel": "Danh mục sản phẩm",
+      "noCategories": "Sản phẩm chưa thuộc danh mục nào.",
+      "apply": "Áp dụng",
+      "cancel": "Hủy"
     },
     "common": {
       "noData": "Không có",
@@ -393,9 +407,11 @@
       "selectAll": "Chọn tất cả sản phẩm",
       "selectRow": "Chọn sản phẩm",
       "pin": "Ghim",
+      "nhanhProductId": "Mã Nhanh.vn",
       "image": "Ảnh",
       "product": "Sản phẩm",
       "category": "Danh mục",
+      "categories": "Danh mục sản phẩm",
       "brand": "Thương hiệu",
       "supplier": "Nhà cung cấp",
       "productType": "Loại sản phẩm",
@@ -1536,11 +1552,14 @@
     },
     "sort": {
       "title": "Sắp xếp danh mục",
-      "description": "Kéo để sắp xếp lại danh mục, hoặc kéo một danh mục con sang danh mục khác để di chuyển.",
+      "description": "Kéo một hàng để sắp xếp lại. Kéo sang phải để lồng vào hàng phía trên, hoặc sang trái để tách ra.",
       "empty": "Chưa có danh mục nào để sắp xếp.",
-      "dropInto": "Kéo danh mục con vào đây",
       "reorder": "Kéo để sắp xếp lại danh mục",
       "itemCount": "{{count}} danh mục con"
+    },
+    "tree": {
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn"
     },
     "type": {
       "fix": "Cố định",

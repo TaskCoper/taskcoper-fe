@@ -5,33 +5,26 @@ import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { RangeValue } from '@/types/data-table.type'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
-import { useMemo } from 'react'
-import { useNavigate } from 'react-router'
+import { useMemo, useState } from 'react'
+import PinProductDialog from '../features/products/components/pin-product-dialog'
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
-import { usePinProduct } from '../features/products/hooks/use-pin-product'
+import type { Product } from '../features/products/types'
 
 export default function ProductsPage() {
   const { t } = useTenantTranslation()
-  const navigate = useNavigate()
-  const { pinProduct, pinningProductId, isPinningProduct } = usePinProduct()
   const { maxPrice } = useGetMaxPriceProduct()
+
+  const [pinTarget, setPinTarget] = useState<Product | null>(null)
 
   const columns = useMemo(
     () =>
       getProductColumns({
         t,
-        onViewDetail: (product) => {
-          navigate(product.id)
-        },
-        onTogglePin: (product) => {
-          pinProduct({ body: { productId: product.id, isPin: !product.isPin } })
-        },
-        pinningProductId,
-        isTogglingPin: isPinningProduct
+        onTogglePin: (product) => setPinTarget(product)
       }),
-    [t, navigate, pinProduct, pinningProductId, isPinningProduct]
+    [t]
   )
 
   const filterOptionOverrides = useMemo(() => {
@@ -46,12 +39,16 @@ export default function ProductsPage() {
   const { page, limit } = useTableQueryParams({ columns, prefix: 'products' })
 
   const [priceFilter] = useQueryState('products_price', parseAsArrayOf(parseAsString, ','))
+  const [searchFilter] = useQueryState('products_product', parseAsString)
+
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
+  const search = searchFilter ?? undefined
 
   const { products, isGettingProducts } = useGetProducts({
     pageIndex: page,
     pageSize: limit,
+    search,
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
     priceTo: Number.isFinite(priceTo) ? priceTo : undefined
   })
@@ -115,6 +112,13 @@ export default function ProductsPage() {
           <DataTableToolbar table={table} filterOptionOverrides={filterOptionOverrides} />
         </DataTable>
       </div>
+
+      <PinProductDialog
+        product={pinTarget}
+        onOpenChange={(open) => {
+          if (!open) setPinTarget(null)
+        }}
+      />
     </div>
   )
 }
