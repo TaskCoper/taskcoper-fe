@@ -12,11 +12,12 @@ interface GetOrderShippingLocationsBody {
 class OrderService extends BaseService {
   private readonly baseUrl = 'orders'
 
-  getOrders = async ({ pageIndex, pageSize }: GetOrdersParams) => {
+  getOrders = async ({ pageIndex, pageSize, search }: GetOrdersParams) => {
     const { data } = await this.get<BasePaginationResponse<Order>>(`/v1/nhanh-vn/${this.baseUrl}`, {
       params: {
         pageIndex,
-        pageSize
+        pageSize,
+        search
       }
     })
 

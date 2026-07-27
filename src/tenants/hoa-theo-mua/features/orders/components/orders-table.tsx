@@ -5,6 +5,7 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { Row } from '@tanstack/react-table'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { useGetOrders } from '../hooks/use-get-orders'
 import type { Order } from '../types'
@@ -104,7 +105,11 @@ export function OrdersTable() {
 
   const { page, limit } = useTableQueryParams({ columns, prefix: 'orders' })
 
-  const { orders, isGettingOrders } = useGetOrders({ pageIndex: page, pageSize: limit })
+  const [searchFilter] = useQueryState('orders_orderId', parseAsString)
+
+  const search = searchFilter ?? undefined
+
+  const { orders, isGettingOrders } = useGetOrders({ pageIndex: page, pageSize: limit, search })
 
   const items = orders?.value.items ?? []
   const totalCount = orders?.value.totalCount ?? 0

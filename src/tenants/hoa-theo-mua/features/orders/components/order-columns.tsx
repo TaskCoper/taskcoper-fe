@@ -13,7 +13,14 @@ import { formatDateTime } from '@/lib/date'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { ChevronDownIcon, ChevronRightIcon, CopyIcon, ExternalLinkIcon, MoreHorizontalIcon } from 'lucide-react'
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CopyIcon,
+  ExternalLinkIcon,
+  MoreHorizontalIcon,
+  SearchIcon
+} from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
@@ -154,7 +161,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<Order>[] => {
     {
       id: 'orderId',
       accessorFn: (row) => row.idDonHangNhanh,
-      meta: { label: 'orders.column.nhanhOrderId' },
+      meta: { label: 'orders.column.nhanhOrderId', variant: 'text', icon: SearchIcon },
       header: ({ column }) => <DataTableColumnHeader column={column} label='orders.column.nhanhOrderId' />,
       cell: ({ row }) => {
         const value = row.original.idDonHangNhanh?.trim()
@@ -173,7 +180,7 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<Order>[] => {
       },
       enableSorting: false,
       enableHiding: false,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 130
     },
     {
