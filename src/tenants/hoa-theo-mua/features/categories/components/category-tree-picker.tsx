@@ -231,9 +231,13 @@ function CategoryTreeNode({
       className='relative flex w-4 shrink-0 items-center justify-center rounded text-muted-foreground cursor-pointer'
     >
       {depth > 0 && (
-        <span className={cn('absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border', isLast ? 'h-1/2' : 'h-full')} />
+        <span
+          className={cn('absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border', isLast ? 'h-1/2' : '-bottom-1')}
+        />
       )}
-      <ChevronRightIcon className={cn('relative size-4 transition-transform', isExpanded && 'rotate-90')} />
+      <ChevronRightIcon
+        className={cn('relative size-4 rounded bg-popover transition-transform', isExpanded && 'rotate-90')}
+      />
     </button>
   ) : depth > 0 ? (
     <div className='relative w-4 shrink-0'>
