@@ -95,7 +95,8 @@ export default function ProductCategoriesPage() {
         filterByName: metadata.filterByName ?? false,
         filterByPrice: metadata.filterByPrice ?? false,
         isFilterable: metadata.isFilterable ?? false
-      }
+      },
+      page: editingCategoryDetail.page ?? []
     })
   }, [editingCategoryDetail, updateMethods])
 

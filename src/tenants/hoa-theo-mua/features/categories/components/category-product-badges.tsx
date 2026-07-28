@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { formatDateTime } from '@/lib/date'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CategoryProductType, type Category } from '../types'
+import { CategoryProductPageLabel, CategoryProductType, type Category } from '../types'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
@@ -37,6 +37,22 @@ export function CategoryStatusBadge({ isActive, t }: { isActive: boolean; t: Ten
       <span className={cn('size-1.5 rounded-full', isActive ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
       {t(`${CATEGORY_I18N_PREFIX}.status.${isActive ? 'active' : 'inactive'}`)}
     </span>
+  )
+}
+
+export function CategoryPageBadges({ page, t }: { page: Category['page']; t: TenantT }) {
+  if (!page?.length) {
+    return null
+  }
+
+  return (
+    <div className='flex flex-wrap gap-1'>
+      {page.map((p) => (
+        <Badge key={p} variant='outline' className='font-normal'>
+          {t(CategoryProductPageLabel[p])}
+        </Badge>
+      ))}
+    </div>
   )
 }
 

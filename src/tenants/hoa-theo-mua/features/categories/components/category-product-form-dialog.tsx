@@ -1,4 +1,5 @@
 import { DatePickerField } from '@/components/date-picker-field'
+import MultiSelectField from '@/components/multi-select-field'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,8 +20,9 @@ import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { FolderIcon, SaveIcon } from 'lucide-react'
+import { useMemo } from 'react'
 import { Controller, FormProvider, type SubmitHandler, type UseFormReturn } from 'react-hook-form'
-import { CategoryProductType } from '../types'
+import { CategoryProductPage, CategoryProductPageLabel, CategoryProductType } from '../types'
 import type { CategoryProductFormValues } from '../validations'
 import CategoryTreePicker, { type CategoryTreeLikeNode } from './category-tree-picker'
 
@@ -101,6 +103,11 @@ export default function CategoryProductFormDialog({
   // A category with a parent is a child (renders `isFilterable`); a top-level one is a parent
   // (renders the name/price filter toggles). §filter metadata.
   const isChild = !!methods.watch('parentId')
+
+  const pageOptions = useMemo(
+    () => Object.values(CategoryProductPage).map((page) => ({ value: page, label: t(CategoryProductPageLabel[page]) })),
+    [t]
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -305,6 +312,18 @@ export default function CategoryProductFormDialog({
                     </Field>
                   )}
                 />
+
+                {!isChild && (
+                  <MultiSelectField
+                    name='page'
+                    control={methods.control}
+                    options={pageOptions}
+                    label={`${CATEGORY_FORM_PREFIX}.pagesLabel` as I18nKey}
+                    placeholder={`${CATEGORY_FORM_PREFIX}.pagesPlaceholder` as I18nKey}
+                    searchPlaceholder={`${CATEGORY_FORM_PREFIX}.pagesSearchPlaceholder` as I18nKey}
+                    emptyMessage={`${CATEGORY_FORM_PREFIX}.pagesEmpty` as I18nKey}
+                  />
+                )}
 
                 {isChild ? (
                   <Controller

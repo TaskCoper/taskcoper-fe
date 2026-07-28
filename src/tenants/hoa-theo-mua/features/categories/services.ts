@@ -21,6 +21,7 @@ const toCategoryPayload = ({
   description,
   description_En,
   metaData,
+  page,
   ...rest
 }: CategoryProductFormValues): CreateCategoryPayload => {
   const isCampaign = type === CategoryProductType.Campaign
@@ -39,6 +40,7 @@ const toCategoryPayload = ({
     metaData: JSON.stringify(scopedMetadata),
     startTime: isCampaign ? (startTime ?? null) : null,
     endTime: isCampaign ? (endTime ?? null) : null,
+    page: parentId ? [] : page,
     ...(parentId ? { parentId } : {})
   }
 }

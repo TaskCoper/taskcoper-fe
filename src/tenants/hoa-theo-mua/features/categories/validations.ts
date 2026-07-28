@@ -1,6 +1,6 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
-import { CategoryProductType } from './types'
+import { CategoryProductPage, CategoryProductType } from './types'
 
 const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
 
@@ -33,6 +33,16 @@ export const categoryMetadataSchema = z.object({
 
 export type CategoryMetadataFormValues = z.infer<typeof categoryMetadataSchema>
 
+const categoryPageSchema = z.enum([
+  CategoryProductPage.Home,
+  CategoryProductPage.Products,
+  CategoryProductPage.Business,
+  CategoryProductPage.About,
+  CategoryProductPage.News,
+  CategoryProductPage.Recruitment,
+  CategoryProductPage.Contact
+])
+
 export const categoryProductSchema = (t: TenantT) => {
   return z
     .object({
@@ -51,8 +61,9 @@ export const categoryProductSchema = (t: TenantT) => {
       endTime: z.string().nullish(),
       parentId: optionalUuid(t),
       // Sort order, managed outside this form (no field rendered); nullable when unset.
-      position: z.number().int().nullable(),
-      metaData: categoryMetadataSchema
+      position: z.number().nullable(),
+      metaData: categoryMetadataSchema,
+      page: z.array(categoryPageSchema)
     })
     .strict()
     .superRefine((values, ctx) => {

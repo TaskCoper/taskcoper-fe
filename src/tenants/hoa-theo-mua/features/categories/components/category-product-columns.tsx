@@ -13,7 +13,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import type { Category } from '../types'
-import { CategoryStatusBadge, CategoryTypeBadge, CategoryWindow } from './category-product-badges'
+import { CategoryPageBadges, CategoryStatusBadge, CategoryTypeBadge, CategoryWindow } from './category-product-badges'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
@@ -130,6 +130,16 @@ export const getCategoryColumns = ({
       size: 40
     },
     {
+      id: 'page',
+      accessorKey: 'page',
+      meta: { label: `${CATEGORY_I18N_PREFIX}.column.page` },
+      header: ({ column }) => <DataTableColumnHeader column={column} label={`${CATEGORY_I18N_PREFIX}.column.page`} />,
+      cell: ({ row }) => <CategoryPageBadges page={row.original.page} t={t} />,
+      enableSorting: false,
+      enableHiding: true,
+      size: 80
+    },
+    {
       id: 'window',
       accessorFn: (row) => row.startTime,
       meta: { label: `${CATEGORY_I18N_PREFIX}.column.window` },
@@ -169,7 +179,7 @@ export const getCategoryColumns = ({
       cell: ({ row }) => {
         // productCount is only populated by the detail endpoint, not the list (§4.1) — hide when unknown.
         const count = row.original.productCount
-        return <p className='text-center text-sm tabular-nums text-muted-foreground'>{count == null ? '—' : count}</p>
+        return <p className='text-center text-sm tabular-nums text-muted-foreground'>{count == null ? '0' : count}</p>
       },
       enableSorting: false,
       enableHiding: true,

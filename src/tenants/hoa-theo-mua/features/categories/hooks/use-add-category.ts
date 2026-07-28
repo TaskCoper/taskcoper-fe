@@ -25,7 +25,8 @@ export const categoryFormDefaultValues: CategoryProductFormValues = {
     filterByName: false,
     filterByPrice: false,
     isFilterable: false
-  }
+  },
+  page: []
 }
 
 export const useAddCategory = () => {

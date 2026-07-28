@@ -1565,6 +1565,15 @@
       "fix": "Cố định",
       "campaign": "Chiến dịch"
     },
+    "pageOption": {
+      "home": "Trang chủ",
+      "products": "Sản phẩm",
+      "business": "Doanh nghiệp",
+      "about": "Giới thiệu",
+      "news": "Tin tức",
+      "recruitment": "Tuyển dụng",
+      "contact": "Liên hệ"
+    },
     "status": {
       "active": "Đang hiển thị",
       "inactive": "Đang ẩn"
@@ -1587,6 +1596,7 @@
       "namePlaceholder": "Tìm tên danh mục...",
       "noName": "Danh mục chưa đặt tên",
       "type": "Loại",
+      "page": "Trang hiển thị",
       "window": "Thời gian áp dụng",
       "status": "Trạng thái",
       "productCount": "Số sản phẩm",
@@ -1622,6 +1632,10 @@
       "parentLabel": "Danh mục cha",
       "parentPlaceholder": "Chọn danh mục cha",
       "noParent": "Không có danh mục cha",
+      "pagesLabel": "Hiển thị trên trang",
+      "pagesPlaceholder": "Chọn trang",
+      "pagesSearchPlaceholder": "Tìm trang...",
+      "pagesEmpty": "Không tìm thấy trang nào.",
       "filterByNameLabel": "Lọc theo tên",
       "filterByNameHint": "Hiển thị ô tìm kiếm theo tên trên trang danh mục này.",
       "filterByPriceLabel": "Lọc theo giá",
