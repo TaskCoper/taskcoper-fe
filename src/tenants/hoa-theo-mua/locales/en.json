@@ -387,6 +387,8 @@
       "title": "Pin product",
       "description": "Check to pin, uncheck to unpin this product in each place.",
       "global": "Global (storefront)",
+      "selectAll": "Select all",
+      "selectAllHint": "Pin or unpin this product everywhere at once.",
       "categoriesLabel": "Product categories",
       "noCategories": "This product isn't in any category.",
       "apply": "Apply",

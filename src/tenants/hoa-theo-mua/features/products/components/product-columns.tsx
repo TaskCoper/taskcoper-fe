@@ -17,6 +17,7 @@ import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon } from 'luc
 import { Link } from 'react-router'
 import type { Product } from '../types'
 import { formatPrice, formatQuantity, parseNumber } from '../utils'
+import CategoriesColumnFilter from './categories-column-filter'
 
 const renderNoData = (t: TenantT) => (
   <span className='text-muted-foreground/60 italic text-sm select-none'>{t('products.common.noData')}</span>
@@ -233,7 +234,11 @@ export const getProductColumns = ({
     {
       id: 'categories',
       accessorFn: (row) => row.categories.map((category) => category.name).join(', '),
-      meta: { label: 'products.column.categories' },
+      meta: {
+        label: 'products.column.categories',
+        variant: 'multiSelect',
+        renderFilter: ({ column, label }) => <CategoriesColumnFilter column={column} title={label} />
+      },
       header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.categories' />,
       cell: ({ row }) => {
         const { categories } = row.original
@@ -251,7 +256,7 @@ export const getProductColumns = ({
       },
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 220
     },
     {

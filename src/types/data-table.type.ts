@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { DataTableConfig } from '@/lib/data-table/data-table'
 import type { FilterItemSchema } from '@/lib/data-table/parsers'
-import type { ColumnSort, Row, RowData } from '@tanstack/react-table'
+import type { Column, ColumnSort, Row, RowData } from '@tanstack/react-table'
 
 declare module '@tanstack/react-table' {
   // biome-ignore lint/correctness/noUnusedVariables: TData is used in the TableMeta interface
@@ -18,6 +18,9 @@ declare module '@tanstack/react-table' {
     range?: RangeValue
     unit?: string
     icon?: React.FC<React.SVGProps<SVGSVGElement>>
+    // Escape hatch for filters whose UI can't be expressed by `variant` alone (e.g. a tree picker) -
+    // when set, the toolbar renders this instead of switching on `variant`.
+    renderFilter?: (context: { column: Column<TData, TValue>; label: string }) => React.ReactNode
   }
 }
 

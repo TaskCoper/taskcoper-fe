@@ -40,15 +40,18 @@ export default function ProductsPage() {
 
   const [priceFilter] = useQueryState('products_price', parseAsArrayOf(parseAsString, ','))
   const [searchFilter] = useQueryState('products_product', parseAsString)
+  const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
 
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined
+  const categoryIds = categoriesFilter?.length ? categoriesFilter : undefined
 
   const { products, isGettingProducts } = useGetProducts({
     pageIndex: page,
     pageSize: limit,
     search,
+    categoryIds,
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
     priceTo: Number.isFinite(priceTo) ? priceTo : undefined
   })

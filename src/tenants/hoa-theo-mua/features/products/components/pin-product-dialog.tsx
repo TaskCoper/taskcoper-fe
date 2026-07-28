@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import { Field, FieldLabel } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
@@ -57,6 +58,19 @@ export default function PinProductDialog({ product, onOpenChange }: PinProductDi
     { key: GLOBAL_KEY, label: t('products.pinDialog.global') },
     ...categories.map((category) => ({ key: category.categoryId, label: category.name }))
   ]
+
+  const isAllSelected = targets.every((target) => effective(target.key))
+  const isSomeSelected = targets.some((target) => effective(target.key))
+  const toggleAll = () => {
+    const next = !isAllSelected
+    setOverrides((previous) => {
+      const updated = { ...previous }
+      targets.forEach((target) => {
+        updated[target.key] = next
+      })
+      return updated
+    })
+  }
 
   const handleApply = () => {
     if (!product) return
@@ -122,6 +136,20 @@ export default function PinProductDialog({ product, onOpenChange }: PinProductDi
               </>
             ) : (
               <p className='text-xs text-muted-foreground'>{t('products.pinDialog.noCategories')}</p>
+            )}
+
+            {targets.length > 1 && (
+              <Field orientation='horizontal' className='items-center justify-between rounded-lg border p-3'>
+                <div className='space-y-0.5'>
+                  <FieldLabel htmlFor='pin-target-select-all'>{t('products.pinDialog.selectAll')}</FieldLabel>
+                  <p className='text-xs text-muted-foreground'>{t('products.pinDialog.selectAllHint')}</p>
+                </div>
+                <Checkbox
+                  id='pin-target-select-all'
+                  checked={isAllSelected || (isSomeSelected && 'indeterminate')}
+                  onCheckedChange={toggleAll}
+                />
+              </Field>
             )}
           </div>
         )}

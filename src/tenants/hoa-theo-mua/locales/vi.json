@@ -387,6 +387,8 @@
       "title": "Ghim sản phẩm",
       "description": "Tích để ghim, bỏ tích để bỏ ghim sản phẩm ở từng nơi.",
       "global": "Toàn cục (trang chủ)",
+      "selectAll": "Chọn tất cả",
+      "selectAllHint": "Ghim hoặc bỏ ghim sản phẩm này ở tất cả mọi nơi cùng lúc.",
       "categoriesLabel": "Danh mục sản phẩm",
       "noCategories": "Sản phẩm chưa thuộc danh mục nào.",
       "apply": "Áp dụng",

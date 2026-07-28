@@ -128,6 +128,10 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
   const label = columnMeta.label ? t(columnMeta.label) : column.id
   const placeholder = columnMeta.placeholder ? t(columnMeta.placeholder) : label
 
+  if (columnMeta.renderFilter) {
+    return columnMeta.renderFilter({ column, label })
+  }
+
   switch (columnMeta.variant) {
     case 'text':
       if (columnMeta.icon) {
