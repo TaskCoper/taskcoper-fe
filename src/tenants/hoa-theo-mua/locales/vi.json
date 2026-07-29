@@ -77,6 +77,13 @@
         "searching": "Đang tìm kiếm...",
         "empty": "Không tìm thấy địa chỉ phù hợp"
       },
+      "map": {
+        "hint": "Kéo ghim hoặc chạm vào bản đồ để chọn chính xác vị trí.",
+        "useLocation": "Vị trí của tôi",
+        "resolving": "Đang tìm địa chỉ…",
+        "locationError": "Không lấy được vị trí của bạn. Vui lòng chọn điểm trên bản đồ.",
+        "tooFar": "Điểm này quá xa địa chỉ của bạn. Vui lòng kéo ghim lại gần hơn."
+      },
       "remarks": {
         "label": "Ghi chú",
         "placeholder": "Ghi chú nội bộ về địa chỉ này (giờ mở cửa, hướng dẫn lấy hàng, v.v.)"
@@ -135,7 +142,13 @@
       "next": "Sau"
     },
     "ui": {
-      "selectOptions": "Chọn nhiều tùy chọn..."
+      "selectOptions": "Chọn nhiều tùy chọn...",
+      "selectPlaceholder": "Chọn...",
+      "selected": "đã chọn",
+      "optional": "không bắt buộc",
+      "search": "Tìm kiếm",
+      "loading": "Đang tải...",
+      "remove": "Xóa"
     },
     "validation": {
       "maxLength": "Tối đa {{max}} ký tự",
@@ -490,10 +503,18 @@
       "linkCopied": "Đã sao chép liên kết",
       "suppliedBy": "Nhà cung cấp",
       "totalUnits": "tổng số lượng",
+      "categories": {
+        "title": "Danh mục",
+        "description": "Chọn các danh mục mà sản phẩm này thuộc về.",
+        "placeholder": "Chọn danh mục",
+        "save": "Lưu danh mục",
+        "updated": "Đã cập nhật danh mục sản phẩm"
+      },
       "tab": {
         "specifications": "Thông số",
         "pricing": "Giá",
-        "inventory": "Tồn kho"
+        "inventory": "Tồn kho",
+        "overview": "Tổng quan"
       },
       "section": {
         "identity": "Định danh",
@@ -502,6 +523,11 @@
         "pricing": "Giá",
         "inventory": "Tồn kho",
         "meta": "Khác"
+      },
+      "information": "Thông tin sản phẩm",
+      "table": {
+        "field": "Trường",
+        "value": "Giá trị"
       }
     },
     "field": {

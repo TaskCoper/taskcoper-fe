@@ -9,7 +9,7 @@ import type {
   SortableCategory
 } from './types'
 import { CategoryProductType } from './types'
-import type { CategoryProductFormValues } from './validations'
+import type { CategoryProductFormValues, UpdateProductCategoriesFormValues } from './validations'
 
 type MessageResponse = string | { message?: string }
 
@@ -133,6 +133,12 @@ class CategoryService extends BaseService {
         page
       }
     })
+
+    return data.value
+  }
+
+  updateProductCategories = async ({ body }: { body: UpdateProductCategoriesFormValues }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/detail`, body)
 
     return data.value
   }

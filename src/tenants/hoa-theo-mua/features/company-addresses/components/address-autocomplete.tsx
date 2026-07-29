@@ -15,7 +15,7 @@ interface AddressAutocompleteProps {
   id?: string
   value: string
   onValueChange: (value: string) => void
-  onResolve: (result: { latitude: number; longitude: number; mapId: string }) => void
+  onResolve: (result: { latitude: number; longitude: number; mapId: string; ward: string; city: string }) => void
   onClear: () => void
   ward: string
   city: string
@@ -60,13 +60,21 @@ export default function AddressAutocomplete({
   }
 
   const handleSelect = async (suggestion: VietmapSearchResult) => {
+    // Keep only the street/POI portion in the address line — the ward and city
+    // are lifted into their own selectors via onResolve below.
     const addressLine = suggestion.name || suggestion.display
     lastSelectedRef.current = addressLine
     onValueChange(addressLine)
     setOpen(false)
 
     const place = await resolveGeocodePlace({ refId: suggestion.ref_id })
-    onResolve({ latitude: place.lat, longitude: place.lng, mapId: suggestion.ref_id })
+    onResolve({
+      latitude: place.lat,
+      longitude: place.lng,
+      mapId: suggestion.ref_id,
+      ward: place.ward,
+      city: place.city
+    })
   }
 
   return (

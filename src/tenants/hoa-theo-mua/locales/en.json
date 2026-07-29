@@ -77,6 +77,13 @@
         "searching": "Searching...",
         "empty": "No matching address found"
       },
+      "map": {
+        "hint": "Drag the pin or tap the map to set the exact location.",
+        "useLocation": "My location",
+        "resolving": "Finding address…",
+        "locationError": "Couldn't get your location. Please pick the point on the map.",
+        "tooFar": "That point is too far from your address. Move the pin closer."
+      },
       "remarks": {
         "label": "Remarks",
         "placeholder": "Internal notes about this address (opening hours, pickup instructions, etc.)"
@@ -135,7 +142,13 @@
       "next": "Next"
     },
     "ui": {
-      "selectOptions": "Select options..."
+      "selectOptions": "Select options...",
+      "selectPlaceholder": "Select...",
+      "selected": "selected",
+      "optional": "optional",
+      "search": "Search",
+      "loading": "Loading...",
+      "remove": "Remove"
     },
     "validation": {
       "maxLength": "Maximum {{max}} characters allowed",
@@ -490,10 +503,18 @@
       "linkCopied": "Link copied to clipboard",
       "suppliedBy": "Supplier",
       "totalUnits": "total units",
+      "categories": {
+        "title": "Categories",
+        "description": "Choose which categories this product belongs to.",
+        "placeholder": "Select categories",
+        "save": "Save categories",
+        "updated": "Product categories updated"
+      },
       "tab": {
         "specifications": "Specifications",
         "pricing": "Pricing",
-        "inventory": "Inventory"
+        "inventory": "Inventory",
+        "overview": "Overview"
       },
       "section": {
         "identity": "Identity",
@@ -502,6 +523,11 @@
         "pricing": "Pricing",
         "inventory": "Inventory",
         "meta": "Other"
+      },
+      "information": "Product information",
+      "table": {
+        "field": "Field",
+        "value": "Value"
       }
     },
     "field": {

@@ -95,4 +95,16 @@ export const categoryProductSchema = (t: TenantT) => {
     })
 }
 
+const categorySchema = z.object({
+  categoryProductId: z.uuid(),
+  isPin: z.boolean(),
+  position: z.number()
+})
+
+export const updateProductCategoriesSchema = z.object({
+  productId: z.uuid(),
+  categoryProductLists: z.array(categorySchema)
+})
+
 export type CategoryProductFormValues = z.infer<ReturnType<typeof categoryProductSchema>>
+export type UpdateProductCategoriesFormValues = z.infer<typeof updateProductCategoriesSchema>
