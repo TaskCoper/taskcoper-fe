@@ -54,8 +54,16 @@ export const categoryProductSchema = (t: TenantT) => {
         .min(1, t('task.validation.name.minLength'))
         .max(NAME_MAX, t('common.validation.maxLength', { max: NAME_MAX })),
       name_En: requiredText(t, NAME_MAX, t(`${CATEGORY_FORM_PREFIX}.nameEnRequired`)),
-      description: requiredText(t, DESCRIPTION_MAX, t(`${CATEGORY_FORM_PREFIX}.descriptionRequired`)),
-      description_En: requiredText(t, DESCRIPTION_MAX, t(`${CATEGORY_FORM_PREFIX}.descriptionEnRequired`)),
+      description: z
+        .string()
+        .trim()
+        .max(DESCRIPTION_MAX, t('common.validation.maxLength', { max: DESCRIPTION_MAX }))
+        .nullish(),
+      description_En: z
+        .string()
+        .trim()
+        .max(DESCRIPTION_MAX, t('common.validation.maxLength', { max: DESCRIPTION_MAX }))
+        .nullish(),
       type: z.enum([CategoryProductType.Fix, CategoryProductType.Campaign]),
       isActive: z.boolean(),
       // ISO 8601 strings from the date picker; only meaningful for Campaign categories.

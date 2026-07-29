@@ -4,18 +4,17 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { buildTree, computeTreeGuides, flattenTree, getProjection, locateNode, removeChildrenOf } from '../tree-utils'
-import type { SortableCategory } from '../types'
+import type { CategoryProductPage, SortableCategory } from '../types'
 import { useReorderCategory } from './use-reorder-category'
 
 /** Horizontal distance (px) the pointer must travel to nest/unnest by one level while dragging. */
 export const INDENTATION_WIDTH = 32
 
-// Same key the board's query is registered under — the optimistic write below targets that cache
-// entry directly, and `useReorderCategory` invalidates the `categoryProducts` prefix on settle.
-const SORTABLE_CATEGORIES_QUERY_KEY = ['categoryProducts', 'sortable']
-
 interface UseCategorySortDndProps {
   categories: SortableCategory[] | undefined
+  /** Must match the `page` filter passed to `useGetSortableCategories` so the optimistic write below
+   *  lands on the exact cache entry the page reads from — see `use-get-sortable-categories.ts`. */
+  page?: CategoryProductPage[]
 }
 
 /**
@@ -25,9 +24,14 @@ interface UseCategorySortDndProps {
  * dragged row into its projected slot, rebuild the nested tree, compute its position among its new
  * siblings, write it into the cache for instant feedback, and persist.
  */
-export const useCategorySortDnd = ({ categories }: UseCategorySortDndProps) => {
+export const useCategorySortDnd = ({ categories, page }: UseCategorySortDndProps) => {
   const queryClient = useQueryClient()
   const { reorderCategory, isReorderingCategory } = useReorderCategory()
+
+  // Same key `useGetSortableCategories` registers its query under — the optimistic write below
+  // targets that cache entry directly, and `useReorderCategory` invalidates the `categoryProducts`
+  // prefix on settle.
+  const sortableCategoriesQueryKey = ['categoryProducts', 'sortable', page]
 
   const [activeId, setActiveId] = useState<string | null>(null)
   const [overId, setOverId] = useState<string | null>(null)
@@ -106,7 +110,7 @@ export const useCategorySortDnd = ({ categories }: UseCategorySortDndProps) => {
 
     // Reflect the new slot/level immediately, then persist (settle re-syncs from the server).
     located.node.position = newPosition
-    queryClient.setQueryData<SortableCategory[]>(SORTABLE_CATEGORIES_QUERY_KEY, newTree)
+    queryClient.setQueryData<SortableCategory[]>(sortableCategoriesQueryKey, newTree)
 
     reorderCategory({ category: original, position: newPosition, parentId: target.parentId })
   }

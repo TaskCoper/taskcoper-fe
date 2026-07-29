@@ -8,7 +8,7 @@ import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import type { ExtendedColumnSort } from '@/types/data-table.type'
 import { CirclePlus } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { type SubmitHandler } from 'react-hook-form'
 import AssignProductsDialog from '../features/categories/components/assign-products-dialog'
 import { getCategoryColumns } from '../features/categories/components/category-product-columns'
@@ -16,22 +16,11 @@ import CategoryProductFormDialog from '../features/categories/components/categor
 import { useAddCategory } from '../features/categories/hooks/use-add-category'
 import { useDeleteCategory } from '../features/categories/hooks/use-delete-category'
 import { useGetCategories } from '../features/categories/hooks/use-get-categories'
-import { useGetCategory } from '../features/categories/hooks/use-get-category'
 import { useUpdateCategory } from '../features/categories/hooks/use-update-category'
-import type { Category, CategoryMetadata } from '../features/categories/types'
+import type { Category } from '../features/categories/types'
 import type { CategoryProductFormValues } from '../features/categories/validations'
 
 const CATEGORY_PREFIX = 'productCategories' as const
-
-/** `metaData` comes back as a JSON-encoded string (or null) — parse it defensively. */
-const parseCategoryMetadata = (metaData: string | null): CategoryMetadata => {
-  if (!metaData) return {}
-  try {
-    return JSON.parse(metaData) as CategoryMetadata
-  } catch {
-    return {}
-  }
-}
 
 /** All descendant ids of a category (any depth) — used to exclude invalid parents and warn on delete. */
 const collectDescendantIds = (category: Category): string[] => {
@@ -67,40 +56,17 @@ export default function ProductCategoriesPage() {
   const isUpdateDialogOpen = !!editingCategory
 
   const { methods: addMethods, addCategory, isAddingCategory } = useAddCategory()
-  const { methods: updateMethods, updateCategory, isUpdatingCategory } = useUpdateCategory(editingCategory?.categoryId)
+  const {
+    methods: updateMethods,
+    updateCategory,
+    isUpdatingCategory,
+    isLoadingCategory
+  } = useUpdateCategory(editingCategory?.categoryId)
   const { deleteCategory, isDeletingCategory } = useDeleteCategory()
-  const { category: editingCategoryDetail, isLoadingCategory } = useGetCategory(editingCategory?.categoryId)
 
   const handleOpenUpdateCategory = useCallback((category: Category) => {
     setEditingCategory(category)
   }, [])
-
-  useEffect(() => {
-    if (!editingCategoryDetail) return
-
-    const metadata = parseCategoryMetadata(editingCategoryDetail.metaData)
-
-    updateMethods.reset({
-      name: editingCategoryDetail.name ?? '',
-      name_En: editingCategoryDetail.name_En ?? '',
-      description: editingCategoryDetail.description ?? '',
-      description_En: editingCategoryDetail.description_En ?? '',
-      type: editingCategoryDetail.type,
-      isActive: editingCategoryDetail.isActive,
-      startTime: editingCategoryDetail.startTime,
-      endTime: editingCategoryDetail.endTime,
-      parentId: editingCategoryDetail.parentId ?? undefined,
-      position: editingCategoryDetail.position ?? null,
-      metaData: {
-        filterByName: metadata.filterByName ?? false,
-        filterByPrice: metadata.filterByPrice ?? false,
-        isFilterable: metadata.isFilterable ?? false,
-        rows: metadata.rows ?? 1,
-        cols: metadata.cols ?? 4
-      },
-      page: editingCategoryDetail.page ?? []
-    })
-  }, [editingCategoryDetail, updateMethods])
 
   const handleManageProducts = useCallback((category: Category) => {
     setManagingCategory(category)

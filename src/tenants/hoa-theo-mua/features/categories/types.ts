@@ -111,6 +111,7 @@ export interface SortableCategory {
   userId: string
   parentId: string | null
   children: SortableCategory[]
+  page: CategoryProductPage[] | null
 }
 
 /** Payload carried by every draggable node in the (arbitrarily deep) category sort tree. */

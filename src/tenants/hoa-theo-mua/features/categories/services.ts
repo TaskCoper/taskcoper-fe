@@ -107,6 +107,7 @@ class CategoryService extends BaseService {
       isActive: true,
       startTime: category.startTime,
       endTime: category.endTime,
+      page: nextParentId ? [] : (category.page ?? []),
       ...(nextParentId ? { parentId: nextParentId } : {})
     }
 

@@ -103,6 +103,9 @@ export default function CategoryProductFormDialog({
   // A category with a parent is a child (renders `isFilterable`); a top-level one is a parent
   // (renders the name/price filter toggles). §filter metadata.
   const isChild = !!methods.watch('parentId')
+  const { errors } = methods.formState
+  const isViTabInvalid = !!(errors.name || errors.description)
+  const isEnTabInvalid = !!(errors.name_En || errors.description_En)
 
   const pageOptions = useMemo(
     () => Object.values(CategoryProductPage).map((page) => ({ value: page, label: t(CategoryProductPageLabel[page]) })),
@@ -127,8 +130,20 @@ export default function CategoryProductFormDialog({
               <FieldGroup className='gap-3'>
                 <Tabs defaultValue='vi' className='gap-3'>
                   <TabsList className='w-full'>
-                    <TabsTrigger value='vi'>{t(`${CATEGORY_FORM_PREFIX}.langVi`)}</TabsTrigger>
-                    <TabsTrigger value='en'>{t(`${CATEGORY_FORM_PREFIX}.langEn`)}</TabsTrigger>
+                    <TabsTrigger
+                      value='vi'
+                      data-invalid={isViTabInvalid}
+                      className='data-[invalid=true]:text-destructive data-[invalid=true]:bg-destructive/10'
+                    >
+                      {t(`${CATEGORY_FORM_PREFIX}.langVi`)}
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='en'
+                      data-invalid={isEnTabInvalid}
+                      className='data-[invalid=true]:text-destructive data-[invalid=true]:bg-destructive/10'
+                    >
+                      {t(`${CATEGORY_FORM_PREFIX}.langEn`)}
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value='vi' className='flex flex-col gap-3'>
@@ -162,7 +177,6 @@ export default function CategoryProductFormDialog({
                         <Field data-invalid={fieldState.invalid} className='gap-1'>
                           <FieldLabel htmlFor={field.name} className='gap-0.5'>
                             {t(`${CATEGORY_FORM_PREFIX}.descriptionLabel`)}
-                            <span className='font-semibold text-destructive'>*</span>
                           </FieldLabel>
                           <Textarea
                             {...field}
@@ -211,7 +225,6 @@ export default function CategoryProductFormDialog({
                         <Field data-invalid={fieldState.invalid} className='gap-1'>
                           <FieldLabel htmlFor={field.name} className='gap-0.5'>
                             {t(`${CATEGORY_FORM_PREFIX}.descriptionEnLabel`)}
-                            <span className='font-semibold text-destructive'>*</span>
                           </FieldLabel>
                           <Textarea
                             {...field}
