@@ -4,7 +4,7 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { RangeValue } from '@/types/data-table.type'
-import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
+import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import PinProductDialog from '../features/products/components/pin-product-dialog'
 import { getProductColumns } from '../features/products/components/product-columns'
@@ -41,11 +41,13 @@ export default function ProductsPage() {
   const [priceFilter] = useQueryState('products_price', parseAsArrayOf(parseAsString, ','))
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
+  const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
 
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined
   const categoryIds = categoriesFilter?.length ? categoriesFilter : undefined
+  const isPin = isPinFilter ?? undefined
 
   const { products, isGettingProducts } = useGetProducts({
     pageIndex: page,
@@ -53,7 +55,8 @@ export default function ProductsPage() {
     search,
     categoryIds,
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
-    priceTo: Number.isFinite(priceTo) ? priceTo : undefined
+    priceTo: Number.isFinite(priceTo) ? priceTo : undefined,
+    isPin
   })
 
   const items = products?.value.items ?? []
@@ -65,6 +68,9 @@ export default function ProductsPage() {
     pageCount: Math.ceil(totalCount / limit) || 1,
     initialState: {
       columnPinning: { right: ['actions'] },
+      // Filters render in column-definition order (isPinned after the product search input); this
+      // reorders the table display only, so isPinned still sits first, right after the checkbox.
+      columnOrder: ['select', 'isPinned'],
       columnVisibility: {
         supplier: false,
         productType: false,

@@ -141,7 +141,8 @@
       "maxLength": "Tối đa {{max}} ký tự",
       "number": {
         "integer": "Phải là số nguyên",
-        "invalid": "Phải là số hợp lệ"
+        "invalid": "Phải là số hợp lệ",
+        "min": "Phải lớn hơn hoặc bằng {{min}}"
       },
       "url": {
         "invalid": "URL không hợp lệ"
@@ -411,10 +412,15 @@
       "pin": "Ghim sản phẩm",
       "unpin": "Bỏ ghim sản phẩm"
     },
+    "filter": {
+      "pinned": "Đã ghim",
+      "notPinned": "Chưa ghim"
+    },
     "column": {
       "selectAll": "Chọn tất cả sản phẩm",
       "selectRow": "Chọn sản phẩm",
       "pin": "Ghim",
+      "isPinned": "Trạng thái ghim",
       "nhanhProductId": "Mã Nhanh.vn",
       "image": "Ảnh",
       "product": "Sản phẩm",
@@ -1581,7 +1587,9 @@
       "about": "Giới thiệu",
       "news": "Tin tức",
       "recruitment": "Tuyển dụng",
-      "contact": "Liên hệ"
+      "contact": "Liên hệ",
+      "mainline": "Các dòng sản phẩm chính",
+      "featured": "Sản phẩm nổi bật"
     },
     "status": {
       "active": "Đang hiển thị",
@@ -1596,7 +1604,11 @@
       "manageProducts": "Quản lý sản phẩm",
       "update": "Cập nhật",
       "delete": "Xóa",
-      "reorder": "Kéo để sắp xếp"
+      "reorder": "Kéo để sắp xếp",
+      "copyId": "Sao chép ID"
+    },
+    "copyId": {
+      "success": "Đã sao chép ID danh mục"
     },
     "column": {
       "selectAll": "Chọn tất cả danh mục",
@@ -1649,6 +1661,8 @@
       "filterByNameHint": "Hiển thị ô tìm kiếm theo tên trên trang danh mục này.",
       "filterByPriceLabel": "Lọc theo giá",
       "filterByPriceHint": "Hiển thị ô lọc khoảng giá trên trang danh mục này.",
+      "rowsLabel": "Số hàng",
+      "colsLabel": "Số cột",
       "isFilterableLabel": "Hiển thị làm bộ lọc",
       "isFilterableHint": "Đưa danh mục con này vào danh sách bộ lọc hiển thị cho khách hàng.",
       "activeLabel": "Hiển thị danh mục",

@@ -7,9 +7,6 @@ import { CategoryProductType } from '../types'
 import { CategoryTypeBadge, CategoryWindow } from './category-product-badges'
 import type { CategoryTreeLikeNode } from './category-tree-picker'
 
-const collectIds = (categories: CategoryTreeLikeNode[]): string[] =>
-  categories.flatMap((category) => [category.categoryId, ...collectIds(category.children ?? [])])
-
 interface CategoryTreeMultiPickerProps {
   categories: CategoryTreeLikeNode[]
   selectedIds: Set<string>
@@ -29,12 +26,13 @@ export default function CategoryTreeMultiPicker({
   emptyLabel,
   isLoading
 }: CategoryTreeMultiPickerProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string> | null>(null)
-  const effectiveExpandedIds = expandedIds ?? new Set(collectIds(categories))
+  // Nodes start collapsed; the set holds only the IDs the user has explicitly expanded.
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
+  const effectiveExpandedIds = expandedIds
 
   const toggleExpanded = (categoryId: string) =>
     setExpandedIds((previous) => {
-      const next = new Set(previous ?? collectIds(categories))
+      const next = new Set(previous)
       if (next.has(categoryId)) next.delete(categoryId)
       else next.add(categoryId)
       return next

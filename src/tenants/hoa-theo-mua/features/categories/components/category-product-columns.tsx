@@ -11,7 +11,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import { ChevronDownIcon, ChevronRightIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CopyIcon,
+  EditIcon,
+  MoreHorizontalIcon,
+  SearchIcon,
+  SettingsIcon,
+  TrashIcon
+} from 'lucide-react'
+import { toast } from 'sonner'
 import type { Category } from '../types'
 import { CategoryPageBadges, CategoryStatusBadge, CategoryTypeBadge, CategoryWindow } from './category-product-badges'
 
@@ -165,26 +175,26 @@ export const getCategoryColumns = ({
       enableHiding: true,
       size: 40
     },
-    {
-      id: 'productCount',
-      accessorKey: 'productCount',
-      meta: { label: `${CATEGORY_I18N_PREFIX}.column.productCount` },
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          label={`${CATEGORY_I18N_PREFIX}.column.productCount`}
-          className='mx-auto'
-        />
-      ),
-      cell: ({ row }) => {
-        // productCount is only populated by the detail endpoint, not the list (§4.1) — hide when unknown.
-        const count = row.original.productCount
-        return <p className='text-center text-sm tabular-nums text-muted-foreground'>{count == null ? '0' : count}</p>
-      },
-      enableSorting: false,
-      enableHiding: true,
-      size: 40
-    },
+    // {
+    //   id: 'productCount',
+    //   accessorKey: 'productCount',
+    //   meta: { label: `${CATEGORY_I18N_PREFIX}.column.productCount` },
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader
+    //       column={column}
+    //       label={`${CATEGORY_I18N_PREFIX}.column.productCount`}
+    //       className='mx-auto'
+    //     />
+    //   ),
+    //   cell: ({ row }) => {
+    //     // productCount is only populated by the detail endpoint, not the list (§4.1) — hide when unknown.
+    //     const count = row.original.productCount
+    //     return <p className='text-center text-sm tabular-nums text-muted-foreground'>{count == null ? '0' : count}</p>
+    //   },
+    //   enableSorting: false,
+    //   enableHiding: true,
+    //   size: 40
+    // },
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -200,16 +210,28 @@ export const getCategoryColumns = ({
               <DropdownMenuLabel>{t(`${CATEGORY_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => onManageProducts(row.original)}>
+                <SettingsIcon />
                 {t(`${CATEGORY_I18N_PREFIX}.action.manageProducts`)}
               </DropdownMenuItem>
               <DropdownMenuItem disabled={isUpdatingCategory} onClick={() => onUpdateCategory(row.original)}>
+                <EditIcon />
                 {t(`${CATEGORY_I18N_PREFIX}.action.update`)}
               </DropdownMenuItem>
               <DropdownMenuItem
-                className='focus:text-destructive'
+                onClick={async () => {
+                  await navigator.clipboard.writeText(row.original.categoryId)
+                  toast.success(t(`${CATEGORY_I18N_PREFIX}.copyId.success`))
+                }}
+              >
+                <CopyIcon className='size-4' />
+                {t(`${CATEGORY_I18N_PREFIX}.action.copyId`)}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className='focus:text-destructive focus:bg-destructive-50'
                 disabled={isDeletingCategory}
                 onClick={() => onDeleteCategory(row.original)}
               >
+                <TrashIcon className='focus:text-destructive ' />
                 {t(`${CATEGORY_I18N_PREFIX}.action.delete`)}
               </DropdownMenuItem>
             </DropdownMenuContent>

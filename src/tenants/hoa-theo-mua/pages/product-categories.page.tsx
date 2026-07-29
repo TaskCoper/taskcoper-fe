@@ -94,7 +94,9 @@ export default function ProductCategoriesPage() {
       metaData: {
         filterByName: metadata.filterByName ?? false,
         filterByPrice: metadata.filterByPrice ?? false,
-        isFilterable: metadata.isFilterable ?? false
+        isFilterable: metadata.isFilterable ?? false,
+        rows: metadata.rows ?? 1,
+        cols: metadata.cols ?? 4
       },
       page: editingCategoryDetail.page ?? []
     })

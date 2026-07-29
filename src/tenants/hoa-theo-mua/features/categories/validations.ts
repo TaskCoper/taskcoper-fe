@@ -21,27 +21,29 @@ const requiredText = (t: TenantT, max: number, requiredMessage: string) =>
 
 /**
  * Per-category filter settings. Which keys are meaningful depends on the node:
- * - parent (no `parentId`): `filterByName` / `filterByPrice` — render name/price filter inputs on its page.
+ * - parent (no `parentId`): `filterByName` / `filterByPrice` / `rows` / `cols` — render name/price filter
+ *   inputs and control the product grid layout on its page.
  * - child (has `parentId`): `isFilterable` — whether it shows up as a filter option on the client.
- * All three are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant pair.
+ * All keys are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant subset.
  */
-export const categoryMetadataSchema = z.object({
-  filterByName: z.boolean(),
-  filterByPrice: z.boolean(),
-  isFilterable: z.boolean()
-})
+export const categoryMetadataSchema = (t: TenantT) =>
+  z.object({
+    filterByName: z.boolean(),
+    filterByPrice: z.boolean(),
+    isFilterable: z.boolean(),
+    rows: z
+      .number({ message: t('common.validation.number.invalid') })
+      .int({ message: t('common.validation.number.integer') })
+      .min(1, t('common.validation.number.min', { min: 1 })),
+    cols: z
+      .number({ message: t('common.validation.number.invalid') })
+      .int({ message: t('common.validation.number.integer') })
+      .min(1, t('common.validation.number.min', { min: 1 }))
+  })
 
-export type CategoryMetadataFormValues = z.infer<typeof categoryMetadataSchema>
+export type CategoryMetadataFormValues = z.infer<ReturnType<typeof categoryMetadataSchema>>
 
-const categoryPageSchema = z.enum([
-  CategoryProductPage.Home,
-  CategoryProductPage.Products,
-  CategoryProductPage.Business,
-  CategoryProductPage.About,
-  CategoryProductPage.News,
-  CategoryProductPage.Recruitment,
-  CategoryProductPage.Contact
-])
+const categoryPageSchema = z.enum(CategoryProductPage)
 
 export const categoryProductSchema = (t: TenantT) => {
   return z
@@ -62,7 +64,7 @@ export const categoryProductSchema = (t: TenantT) => {
       parentId: optionalUuid(t),
       // Sort order, managed outside this form (no field rendered); nullable when unset.
       position: z.number().nullable(),
-      metaData: categoryMetadataSchema,
+      metaData: categoryMetadataSchema(t),
       page: z.array(categoryPageSchema)
     })
     .strict()

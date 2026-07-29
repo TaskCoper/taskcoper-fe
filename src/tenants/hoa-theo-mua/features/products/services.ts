@@ -7,8 +7,39 @@ import { productDetailToProduct } from './utils'
 class ProductService extends BaseService {
   private readonly baseUrl = 'products'
 
-  getProducts = async ({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy }: GetProductsParams) => {
-    const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
+  // getProducts = async ({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy }: GetProductsParams) => {
+  //   const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
+  //     params: {
+  //       pageIndex,
+  //       pageSize,
+  //       search,
+  //       categoryIds,
+  //       priceFrom,
+  //       priceTo,
+  //       sortBy
+  //     }
+  //   })
+
+  //   return {
+  //     ...data,
+  //     value: {
+  //       ...data.value,
+  //       items: data.value.items.map(productDetailToProduct)
+  //     }
+  //   }
+  // }
+
+  getProducts = async ({
+    pageIndex,
+    pageSize,
+    search,
+    categoryIds,
+    priceFrom,
+    priceTo,
+    sortBy,
+    isPin
+  }: GetProductsParams) => {
+    const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v2/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -16,7 +47,8 @@ class ProductService extends BaseService {
         categoryIds,
         priceFrom,
         priceTo,
-        sortBy
+        sortBy,
+        isPin
       }
     })
 

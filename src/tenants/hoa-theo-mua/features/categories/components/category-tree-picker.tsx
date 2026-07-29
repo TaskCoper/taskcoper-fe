@@ -22,9 +22,6 @@ export interface CategoryTreeRootOption {
   label: string
 }
 
-const collectIds = (categories: CategoryTreeLikeNode[]): string[] =>
-  categories.flatMap((category) => [category.categoryId, ...collectIds(category.children ?? [])])
-
 const findCategoryName = (categories: CategoryTreeLikeNode[], categoryId: string): string | null => {
   for (const category of categories) {
     if (category.categoryId === categoryId) return category.name
@@ -73,16 +70,15 @@ export default function CategoryTreePicker({
   invalid
 }: CategoryTreePickerProps) {
   const [open, setOpen] = useState(false)
-  // `null` means "not yet customized" - the tree renders fully expanded by default until the user
-  // collapses/expands a node, at which point we materialize a concrete set to track from there.
-  const [expandedIds, setExpandedIds] = useState<Set<string> | null>(null)
+  // Nodes start collapsed; the set holds only the IDs the user has explicitly expanded.
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
   const visibleCategories = excludeIds ? pruneExcluded(categories, excludeIds) : categories
-  const effectiveExpandedIds = expandedIds ?? new Set(collectIds(visibleCategories))
+  const effectiveExpandedIds = expandedIds
 
   const toggleExpanded = (categoryId: string) =>
     setExpandedIds((previous) => {
-      const next = new Set(previous ?? collectIds(visibleCategories))
+      const next = new Set(previous)
       if (next.has(categoryId)) next.delete(categoryId)
       else next.add(categoryId)
       return next

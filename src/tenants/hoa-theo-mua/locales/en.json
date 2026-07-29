@@ -141,7 +141,8 @@
       "maxLength": "Maximum {{max}} characters allowed",
       "number": {
         "integer": "Must be an integer",
-        "invalid": "Must be a valid number"
+        "invalid": "Must be a valid number",
+        "min": "Must be at least {{min}}"
       },
       "url": {
         "invalid": "Invalid URL"
@@ -411,10 +412,15 @@
       "pin": "Pin product",
       "unpin": "Unpin product"
     },
+    "filter": {
+      "pinned": "Pinned",
+      "notPinned": "Not pinned"
+    },
     "column": {
       "selectAll": "Select all products",
       "selectRow": "Select product",
       "pin": "Pin",
+      "isPinned": "Pinned status",
       "nhanhProductId": "Nhanh.vn ID",
       "image": "Image",
       "product": "Product",
@@ -1581,7 +1587,9 @@
       "about": "About",
       "news": "News",
       "recruitment": "Recruitment",
-      "contact": "Contact"
+      "contact": "Contact",
+      "mainline": "Mainline products",
+      "featured": "Featured products"
     },
     "status": {
       "active": "Visible",
@@ -1596,7 +1604,11 @@
       "manageProducts": "Manage products",
       "update": "Update",
       "delete": "Delete",
-      "reorder": "Drag to reorder"
+      "reorder": "Drag to reorder",
+      "copyId": "Copy ID"
+    },
+    "copyId": {
+      "success": "Category ID copied"
     },
     "column": {
       "selectAll": "Select all categories",
@@ -1649,6 +1661,8 @@
       "filterByNameHint": "Show a name search input on this category's page.",
       "filterByPriceLabel": "Filter by price",
       "filterByPriceHint": "Show a price range input on this category's page.",
+      "rowsLabel": "Rows",
+      "colsLabel": "Columns",
       "isFilterableLabel": "Show as filter option",
       "isFilterableHint": "Include this subcategory in the filter selection on the client.",
       "activeLabel": "Category visible",

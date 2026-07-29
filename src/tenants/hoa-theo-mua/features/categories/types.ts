@@ -12,7 +12,9 @@ export const CategoryProductPage = {
   About: 'About',
   News: 'News',
   Recruitment: 'Recruitment',
-  Contact: 'Contact'
+  Contact: 'Contact',
+  Mainline: 'Mainline',
+  Featured: 'Featured'
 } as const
 
 export type CategoryProductPage = (typeof CategoryProductPage)[keyof typeof CategoryProductPage]
@@ -24,7 +26,9 @@ export const CategoryProductPageLabel: Record<CategoryProductPage, string> = {
   [CategoryProductPage.About]: 'productCategories.pageOption.about',
   [CategoryProductPage.News]: 'productCategories.pageOption.news',
   [CategoryProductPage.Recruitment]: 'productCategories.pageOption.recruitment',
-  [CategoryProductPage.Contact]: 'productCategories.pageOption.contact'
+  [CategoryProductPage.Contact]: 'productCategories.pageOption.contact',
+  [CategoryProductPage.Mainline]: 'productCategories.pageOption.mainline',
+  [CategoryProductPage.Featured]: 'productCategories.pageOption.featured'
 } as const
 
 export type CategoryProductPageLabel = (typeof CategoryProductPageLabel)[keyof typeof CategoryProductPageLabel]
@@ -33,6 +37,9 @@ export interface CategoryMetadata {
   filterByName?: boolean
   filterByPrice?: boolean
   isFilterable?: boolean
+  /** Grid layout for this parent category's product section — rows/cols of items rendered on the UI. */
+  rows?: number
+  cols?: number
 }
 
 export interface Category {

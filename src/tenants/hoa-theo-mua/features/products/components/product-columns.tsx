@@ -98,42 +98,6 @@ export const getProductColumns = ({
       size: 40
     },
     {
-      id: 'pin',
-      header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
-      cell: ({ row }) => {
-        const isPin = isProductPinned(row.original)
-        const isPinning = pinningProductId === row.original.id
-
-        return (
-          <Button
-            variant='ghost'
-            className='size-8 p-0'
-            // Disable every row's toggle while any pin/move is in flight; only the active row spins.
-            disabled={isTogglingPin}
-            aria-pressed={isPin}
-            aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
-            title={isPin ? t('products.action.unpin') : t('products.action.pin')}
-            onClick={() => onTogglePin(row.original)}
-          >
-            {isPinning ? (
-              <Spinner className='size-4' />
-            ) : (
-              <PinIcon
-                className={cn(
-                  'size-4 transition-colors',
-                  isPin ? 'fill-primary text-primary' : 'text-muted-foreground'
-                )}
-              />
-            )}
-          </Button>
-        )
-      },
-      enableSorting: false,
-      enableHiding: false,
-      enableColumnFilter: false,
-      size: 44
-    },
-    {
       id: 'nhanhProductId',
       accessorKey: 'nhanhProductId',
       meta: { label: 'products.column.nhanhProductId' },
@@ -210,6 +174,57 @@ export const getProductColumns = ({
       enableHiding: false,
       enableColumnFilter: true,
       size: 260
+    },
+    {
+      id: 'isPinned',
+      accessorKey: 'isPinned',
+      meta: {
+        label: 'products.column.isPinned',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.filter.pinned'),
+            value: 'true'
+          },
+          {
+            label: t('products.filter.notPinned'),
+            value: 'false'
+          }
+        ]
+      },
+      header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
+      cell: ({ row }) => {
+        const isPin = isProductPinned(row.original)
+        const isPinning = pinningProductId === row.original.id
+
+        return (
+          <Button
+            variant='ghost'
+            className='size-8 p-0'
+            // Disable every row's toggle while any pin/move is in flight; only the active row spins.
+            disabled={isTogglingPin}
+            aria-pressed={isPin}
+            aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            title={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            onClick={() => onTogglePin(row.original)}
+          >
+            {isPinning ? (
+              <Spinner className='size-4' />
+            ) : (
+              <PinIcon
+                className={cn(
+                  'size-4 transition-colors',
+                  isPin ? 'fill-primary text-primary' : 'text-muted-foreground'
+                )}
+              />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: false,
+      enableHiding: false,
+      enableColumnFilter: true,
+      size: 44
     },
     {
       id: 'category',
