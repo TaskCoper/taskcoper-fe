@@ -10,6 +10,8 @@ x-client-base: &client-base
       APP_BASE_URL: ${APP_BASE_URL}
       GOONG_MAP_API_KEY: ${GOONG_MAP_API_KEY}
       GOONG_MAP_TILE_API_KEY: ${GOONG_MAP_TILE_API_KEY}
+      VIETMAP_API_KEY: ${VIETMAP_API_KEY}
+      VIETMAP_MAP_API_KEY: ${VIETMAP_MAP_API_KEY}
   environment:
     TZ: UTC
 

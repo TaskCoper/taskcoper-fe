@@ -52,6 +52,9 @@ jobs:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           GOONG_MAP_API_KEY: ${{ secrets.GOONG_MAP_API_KEY }}
           GOONG_MAP_TILE_API_KEY: ${{ secrets.GOONG_MAP_TILE_API_KEY }}
+          VIETMAP_API_KEY: ${{ secrets.VIETMAP_API_KEY }}
+          VIETMAP_MAP_API_KEY: ${{ secrets.VIETMAP_MAP_API_KEY }}
+
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
           docker compose -f .docker/compose.yaml --profile "$PROFILE" push
