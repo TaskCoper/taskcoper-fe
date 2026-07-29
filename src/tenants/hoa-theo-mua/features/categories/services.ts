@@ -3,6 +3,7 @@ import { BaseService } from '../../services/base.service'
 import type {
   AssignProductsPayload,
   Category,
+  CategoryProductPage,
   CreateCategoryPayload,
   GetCategoriesParams,
   SortableCategory
@@ -120,8 +121,12 @@ class CategoryService extends BaseService {
     return data.value
   }
 
-  getSortableCategories = async () => {
-    const { data } = await this.get<BaseResponse<SortableCategory[]>>(`/v1/${this.baseUrl}/with-children`)
+  getSortableCategories = async ({ page }: { page?: CategoryProductPage[] }) => {
+    const { data } = await this.get<BaseResponse<SortableCategory[]>>(`/v1/${this.baseUrl}/with-children`, {
+      params: {
+        Page: page
+      }
+    })
 
     return data.value
   }

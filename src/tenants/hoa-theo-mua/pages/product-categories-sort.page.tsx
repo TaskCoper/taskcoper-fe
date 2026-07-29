@@ -1,12 +1,15 @@
 import { useDndSensors } from '@/components/dnd/use-dnd-sensors'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { closestCenter, defaultDropAnimation, DndContext, DragOverlay, MeasuringStrategy } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FolderTreeIcon } from 'lucide-react'
+import { parseAsStringEnum, useQueryState } from 'nuqs'
 import SortableCategoryNode from '../features/categories/components/sortable-category-node'
 import { INDENTATION_WIDTH, useCategorySortDnd } from '../features/categories/hooks/use-category-sort-dnd'
 import { useGetSortableCategories } from '../features/categories/hooks/use-get-sortable-categories'
+import { CategoryProductPage, CategoryProductPageLabel } from '../features/categories/types'
 
 const CATEGORY_PREFIX = 'productCategories' as const
 
@@ -14,7 +17,12 @@ export default function ProductCategoriesSortPage() {
   const { t } = useTenantTranslation()
   const sensors = useDndSensors()
 
-  const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories()
+  const [pageFilter, setPageFilter] = useQueryState(
+    'categories_page',
+    parseAsStringEnum<CategoryProductPage>(Object.values(CategoryProductPage)).withDefault(CategoryProductPage.Products)
+  )
+
+  const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories({ page: [pageFilter] })
 
   const {
     roots,
@@ -35,9 +43,24 @@ export default function ProductCategoriesSortPage() {
   return (
     <div className='h-full overflow-auto'>
       <div className='space-y-6 p-6'>
-        <div>
-          <p className='text-2xl font-bold'>{t(`${CATEGORY_PREFIX}.sort.title`)}</p>
-          <p className='text-sm text-muted-foreground'>{t(`${CATEGORY_PREFIX}.sort.description`)}</p>
+        <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+          <div>
+            <p className='text-2xl font-bold'>{t(`${CATEGORY_PREFIX}.sort.title`)}</p>
+            <p className='text-sm text-muted-foreground'>{t(`${CATEGORY_PREFIX}.sort.description`)}</p>
+          </div>
+
+          <Select value={pageFilter} onValueChange={(value) => setPageFilter(value as CategoryProductPage)}>
+            <SelectTrigger className='w-full sm:w-56'>
+              <SelectValue placeholder={t(`${CATEGORY_PREFIX}.sort.filterPlaceholder`)} />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(CategoryProductPage).map((page) => (
+                <SelectItem key={page} value={page}>
+                  {t(CategoryProductPageLabel[page])}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {isLoadingSortableCategories ? (

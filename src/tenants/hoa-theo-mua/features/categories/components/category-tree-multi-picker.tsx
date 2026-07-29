@@ -1,5 +1,4 @@
 import { Checkbox } from '@/components/ui/checkbox'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { ChevronRightIcon, FolderIcon, FolderOpenIcon, TagIcon } from 'lucide-react'
@@ -42,7 +41,7 @@ export default function CategoryTreeMultiPicker({
     })
 
   return (
-    <ScrollArea className='max-h-80'>
+    <div className='max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'>
       <div className='space-y-1 p-1'>
         {categories.length === 0 && !isLoading ? (
           <p className='px-2 py-3 text-center text-xs text-muted-foreground'>{emptyLabel}</p>
@@ -63,7 +62,7 @@ export default function CategoryTreeMultiPicker({
           ))
         )}
       </div>
-    </ScrollArea>
+    </div>
   )
 }
 

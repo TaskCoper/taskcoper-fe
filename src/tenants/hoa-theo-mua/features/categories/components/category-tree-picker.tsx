@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { CheckIcon, ChevronRightIcon, ChevronsUpDownIcon, FolderIcon, FolderOpenIcon, TagIcon } from 'lucide-react'
@@ -97,7 +96,7 @@ export default function CategoryTreePicker({
   const selectedLabel = value ? (findCategoryName(visibleCategories, value) ?? value) : (rootOption?.label ?? '')
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           id={triggerId}
@@ -115,7 +114,7 @@ export default function CategoryTreePicker({
       </PopoverTrigger>
 
       <PopoverContent align='start' sideOffset={8} className='w-96 min-w-(--radix-popover-trigger-width) p-1'>
-        <ScrollArea>
+        <div className='max-h-[calc(var(--radix-popover-content-available-height)-8px)] overflow-y-auto'>
           <div className='space-y-1'>
             {rootOption && (
               <TreeRow
@@ -145,7 +144,7 @@ export default function CategoryTreePicker({
               ))
             )}
           </div>
-        </ScrollArea>
+        </div>
       </PopoverContent>
     </Popover>
   )

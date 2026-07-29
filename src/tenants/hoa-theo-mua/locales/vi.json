@@ -71,6 +71,12 @@
         "label": "Số điện thoại",
         "placeholder": "vd: 0901234567"
       },
+      "addressLine": {
+        "placeholder": "Tìm kiếm địa chỉ...",
+        "disabledPlaceholder": "Chọn thành phố và phường/xã trước",
+        "searching": "Đang tìm kiếm...",
+        "empty": "Không tìm thấy địa chỉ phù hợp"
+      },
       "remarks": {
         "label": "Ghi chú",
         "placeholder": "Ghi chú nội bộ về địa chỉ này (giờ mở cửa, hướng dẫn lấy hàng, v.v.)"
@@ -1557,7 +1563,8 @@
       "description": "Kéo một hàng để sắp xếp lại. Kéo sang phải để lồng vào hàng phía trên, hoặc sang trái để tách ra.",
       "empty": "Chưa có danh mục nào để sắp xếp.",
       "reorder": "Kéo để sắp xếp lại danh mục",
-      "itemCount": "{{count}} danh mục con"
+      "itemCount": "{{count}} danh mục con",
+      "filterPlaceholder": "Lọc theo trang"
     },
     "tree": {
       "expand": "Mở rộng",

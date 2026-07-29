@@ -71,6 +71,12 @@
         "label": "Phone number",
         "placeholder": "e.g. 0901234567"
       },
+      "addressLine": {
+        "placeholder": "Search for the address...",
+        "disabledPlaceholder": "Select a city and ward first",
+        "searching": "Searching...",
+        "empty": "No matching address found"
+      },
       "remarks": {
         "label": "Remarks",
         "placeholder": "Internal notes about this address (opening hours, pickup instructions, etc.)"
@@ -1557,7 +1563,8 @@
       "description": "Drag a row to reorder it. Drag right to nest it under the row above, or left to move it out.",
       "empty": "No categories to arrange yet.",
       "reorder": "Drag to reorder category",
-      "itemCount": "{{count}} subcategories"
+      "itemCount": "{{count}} subcategories",
+      "filterPlaceholder": "Filter by page"
     },
     "tree": {
       "expand": "Expand",
