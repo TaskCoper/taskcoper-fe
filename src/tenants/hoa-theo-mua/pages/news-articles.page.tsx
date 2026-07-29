@@ -10,6 +10,7 @@ import { CirclePlus } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getColumns } from '../features/article/components/article-columns'
 import { useDeleteArticle } from '../features/article/hooks/use-delete-article'
 import { useGetArticles } from '../features/article/hooks/use-get-articles'
@@ -23,7 +24,7 @@ export default function NewsArticlesPage() {
   const navigate = useNavigate()
 
   const onNavigate = () => {
-    navigate('/htm/news/add')
+    navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`)
   }
 
   const handleDeleteArticle = useCallback(

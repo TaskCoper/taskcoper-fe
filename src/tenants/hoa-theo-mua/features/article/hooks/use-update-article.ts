@@ -1,4 +1,5 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '@/tenants/hoa-theo-mua/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, type SubmitHandler } from 'react-hook-form'
@@ -27,7 +28,7 @@ export const useUpdateArticle = (id?: string) => {
     mutationFn: ({ body }: { body: AddArticleForm }) => articleService.updateArticle({ id, body }),
     onSuccess: (message) => {
       toast.success(message)
-      navigate(`/htm/news/${id}`)
+      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${id}`)
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {

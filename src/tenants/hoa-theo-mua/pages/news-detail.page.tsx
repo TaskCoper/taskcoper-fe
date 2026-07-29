@@ -11,6 +11,7 @@ import { getAvatarFallback } from '@/shared/utils'
 import { ArrowLeftIcon, FileTextIcon, ImageIcon, PencilIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { useGetArticle } from '../features/article/hooks/use-get-article'
 import { ArticleStatus, ArticleStatusLabel, type ArticleRow } from '../features/article/types'
 
@@ -63,7 +64,7 @@ function DetailState({ title, description, actionLabel }: { title: string; descr
           </CardHeader>
           <CardContent className='flex justify-center'>
             <Button asChild variant='outline'>
-              <Link to='/htm/news'>
+              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`}>
                 <ArrowLeftIcon data-icon='inline-start' />
                 {actionLabel}
               </Link>
@@ -242,7 +243,7 @@ export default function NewsDetailPage() {
               type='button'
               variant='ghost'
               size='sm'
-              onClick={() => navigate('/htm/news')}
+              onClick={() => navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news`)}
               className='w-fit px-0 text-muted-foreground hover:bg-transparent hover:text-foreground'
             >
               <ArrowLeftIcon data-icon='inline-start' />
@@ -294,7 +295,7 @@ export default function NewsDetailPage() {
 
           <aside className='col-span-1 mt-8 space-y-6 lg:col-span-4 lg:mt-0'>
             <Button asChild className='w-full justify-center' aria-label={t(`${ARTICLE_DETAIL_PREFIX}.edit`)}>
-              <Link to={`/htm/news/${id}/update`}>
+              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${id}/update`}>
                 {t('articles.action.updateDetails')}
                 <PencilIcon className='size-4' />
               </Link>

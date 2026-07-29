@@ -4,9 +4,15 @@ import { lazy } from 'react'
 import { Outlet, type RouteObject } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
-const OrdersDashboardPage = lazy(() => import('./pages/orders-dashboard.page'))
-const OrdersListPage = lazy(() => import('./pages/orders-list.page'))
-const OrdersCustomersPage = lazy(() => import('./pages/orders-customers.page'))
+const OrdersPage = lazy(() => import('./pages/orders.page'))
+const OrderPage = lazy(() => import('./pages/order.page'))
+
+const ProductPage = lazy(() => import('./pages/product.page'))
+const ProductsPage = lazy(() => import('./pages/products.page'))
+const PinnedProductsPage = lazy(() => import('./pages/pinned-products.page'))
+
+const ProductCategoriesPage = lazy(() => import('./pages/product-categories.page'))
+const ProductCategoriesSortPage = lazy(() => import('./pages/product-categories-sort.page'))
 
 const RecruitmentJobsPage = lazy(() => import('./pages/recruitment-jobs.page'))
 const RecruitmentJobPage = lazy(() => import('./pages/recruitment-job.page'))
@@ -35,9 +41,18 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
       {
         element: <FeatureFlagGuardLayout requires='custom.orderManagement' />,
         children: [
-          { path: 'orders', element: <OrdersListPage /> },
-          { path: 'orders/dashboard', element: <OrdersDashboardPage /> },
-          { path: 'orders/customers', element: <OrdersCustomersPage /> }
+          { path: 'orders', element: <OrdersPage /> },
+          { path: 'orders/:id', element: <OrderPage /> }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.productManagement' />,
+        children: [
+          { path: 'products', element: <ProductsPage /> },
+          { path: 'products/pinned', element: <PinnedProductsPage /> },
+          { path: 'products/categories', element: <ProductCategoriesPage /> },
+          { path: 'products/categories/sort', element: <ProductCategoriesSortPage /> },
+          { path: 'products/:id', element: <ProductPage /> }
         ]
       },
       {

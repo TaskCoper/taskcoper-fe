@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import type { Option } from '@/types/data-table.type'
+import type { Option, RangeValue } from '@/types/data-table.type'
 import type { Column, Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 import * as React from 'react'
@@ -52,8 +52,8 @@ function DebouncedInput({
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<'div'> {
   table: Table<TData>
-  /** Override filter options with updated counts - keyed by column.id */
-  filterOptionOverrides?: Record<string, Option[]>
+  /** Override filter options (or range bounds, for 'range' columns) with fresh data - keyed by column.id */
+  filterOptionOverrides?: Record<string, Option[] | RangeValue>
 }
 
 export function DataTableToolbar<TData>({
@@ -109,7 +109,11 @@ export function DataTableToolbar<TData>({
 }
 interface DataTableToolbarFilterProps<TData> {
   column: Column<TData>
-  optionsOverride?: Option[]
+  optionsOverride?: Option[] | RangeValue
+}
+
+function isRangeValue(value: Option[] | RangeValue | undefined): value is RangeValue {
+  return Array.isArray(value) && value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number'
 }
 
 function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToolbarFilterProps<TData>) {
@@ -117,12 +121,16 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
   const columnMeta = column.columnDef.meta
 
   // Use override options if provided, otherwise fall back to column meta options
-  const options = optionsOverride ?? columnMeta?.options ?? []
+  const options = (!isRangeValue(optionsOverride) ? optionsOverride : undefined) ?? columnMeta?.options ?? []
 
   if (!columnMeta?.variant) return null
 
   const label = columnMeta.label ? t(columnMeta.label) : column.id
   const placeholder = columnMeta.placeholder ? t(columnMeta.placeholder) : label
+
+  if (columnMeta.renderFilter) {
+    return columnMeta.renderFilter({ column, label })
+  }
 
   switch (columnMeta.variant) {
     case 'text':
@@ -177,7 +185,13 @@ function DataTableToolbarFilter<TData>({ column, optionsOverride }: DataTableToo
       )
 
     case 'range':
-      return <DataTableSliderFilter column={column} title={label} />
+      return (
+        <DataTableSliderFilter
+          column={column}
+          title={label}
+          rangeOverride={isRangeValue(optionsOverride) ? optionsOverride : undefined}
+        />
+      )
 
     case 'date':
     case 'dateRange':

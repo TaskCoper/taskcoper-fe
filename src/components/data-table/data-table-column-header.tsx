@@ -5,26 +5,54 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { Column } from '@tanstack/react-table'
-import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff, X } from 'lucide-react'
+import { ChevronDown, ChevronsUpDown, ChevronUp, CircleHelp, EyeOff, X } from 'lucide-react'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>
   label: string
+  /** Optional i18n key for a help tooltip rendered as a `?` icon next to the label. */
+  tooltip?: string
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   label,
+  tooltip,
   className,
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
   const { t } = useTenantTranslation()
 
+  const tooltipIcon = tooltip ? (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          role='button'
+          tabIndex={0}
+          aria-label={t(tooltip)}
+          // Sits inside the trigger button — stop clicks/keys from also toggling the sort/hide menu.
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          className='inline-flex cursor-help text-muted-foreground/60 hover:text-muted-foreground'
+        >
+          <CircleHelp className='size-3.5' />
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className='max-w-60 text-center font-normal'>{t(tooltip)}</TooltipContent>
+    </Tooltip>
+  ) : null
+
   if (!column.getCanSort() && !column.getCanHide()) {
-    return <div className={cn(className)}>{t(label)}</div>
+    return (
+      <div className={cn('flex items-center gap-1', className)}>
+        {t(label)}
+        {tooltipIcon}
+      </div>
+    )
   }
 
   return (
@@ -45,6 +73,7 @@ export function DataTableColumnHeader<TData, TValue>({
           ) : (
             <ChevronsUpDown />
           ))}
+        {tooltipIcon}
       </DropdownMenuTrigger>
       <DropdownMenuContent align='start' className='min-w-28'>
         {column.getCanSort() && (

@@ -8,7 +8,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ArrowLeft, Maximize2, SaveIcon, WandSparkles } from 'lucide-react'
+import { ArrowLeft, Maximize2, SaveIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
@@ -46,7 +46,7 @@ import {
   RichItemListEditor,
   StatsListEditor
 } from '../features/configs/components/b2b-services/b2b-section-editors'
-import { B2B_SERVICE_PRESETS } from '../features/configs/components/b2b-services/b2b-service-presets'
+// import { B2B_SERVICE_PRESETS } from '../features/configs/components/b2b-services/b2b-service-presets'
 import { useSaveB2BService } from '../features/configs/components/b2b-services/editor/use-save-b2b-service'
 import type { PreviewContact, PreviewLocale } from '../features/configs/components/b2b-services/preview/preview-shared'
 import type { ServiceSibling } from '../features/configs/components/b2b-services/service-preview/service-chrome'
@@ -312,13 +312,17 @@ function B2BServiceEditor({
     () => existingConfig?.value.label ?? t('configsPage.b2bServicesDialog.configLabel', { slug })
   )
   const [baseline, setBaseline] = useState(() => JSON.stringify(buildResolved(working)))
+  const [baselineLabel, setBaselineLabel] = useState(configLabel)
   const [selected, setSelected] = useState<NavKey>('hero')
   const [previewLocale, setPreviewLocale] = useState<PreviewLocale>('vi')
   const [editLocale, setEditLocale] = useState<PreviewLocale>('vi')
   const [fullPreviewOpen, setFullPreviewOpen] = useState(false)
 
   const resolved = useMemo(() => buildResolved(working), [working])
-  const isDirty = useMemo(() => JSON.stringify(resolved) !== baseline, [resolved, baseline])
+  const isDirty = useMemo(
+    () => JSON.stringify(resolved) !== baseline || configLabel !== baselineLabel,
+    [resolved, baseline, configLabel, baselineLabel]
+  )
 
   useEffect(() => {
     if (!isDirty) return
@@ -360,6 +364,7 @@ function B2BServiceEditor({
     const saved = await save(resolved, existingConfig, configLabel)
     if (saved) {
       setBaseline(JSON.stringify(resolved))
+      setBaselineLabel(configLabel)
       if (!existingConfig) navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`)
     }
   }
@@ -399,7 +404,7 @@ function B2BServiceEditor({
         </div>
 
         <div className='ml-auto flex items-center gap-2'>
-          <Button
+          {/* <Button
             type='button'
             variant='outline'
             size='sm'
@@ -410,7 +415,7 @@ function B2BServiceEditor({
           >
             <WandSparkles />
             {t('configsPage.b2bServicePage.fillPresetButton')}
-          </Button>
+          </Button> */}
 
           <div className='flex items-center rounded-md border p-0.5'>
             {PREVIEW_LOCALES.map((option) => (

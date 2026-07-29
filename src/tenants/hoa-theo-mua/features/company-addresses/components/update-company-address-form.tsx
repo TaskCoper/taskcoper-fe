@@ -8,15 +8,13 @@ import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { lazy, Suspense, useEffect, useRef } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
-import { useDebounce } from 'use-debounce'
-import { useGetLatLng } from '../../../hooks/use-get-lat-lng'
-import { pickBestGeocodeResult } from '../../../services/goong.service'
 import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import { useUpdateCompanyAddress } from '../hooks/use-update-company-address'
 import type { CompanyAddress } from '../types'
 import type { UpdateCompanyAddressFormValues } from '../validations'
+import AddressAutocomplete from './address-autocomplete'
 
-const CompanyAddressMap = lazy(() => import('./company-address-map'))
+const VietmapAddressMap = lazy(() => import('./vietmap-address-map'))
 
 interface UpdateCompanyAddressFormProps {
   companyAddress: CompanyAddress
@@ -28,7 +26,6 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
   const {
     control,
     setValue,
-    getValues,
     watch,
     reset,
     handleSubmit,
@@ -36,7 +33,6 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
   } = methods
 
   const cityCodeForm = watch('cityCode')
-  const addressLineForm = watch('addressLine')
   const wardForm = watch('ward')
   const cityForm = watch('city')
 
@@ -48,11 +44,6 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     parentId: cityCodeForm,
     enabled: cityCodeForm !== -1
   })
-
-  const fullAddress = addressLineForm && wardForm && cityForm ? `${addressLineForm}, ${wardForm}, ${cityForm}` : ''
-  const [debouncedAddress] = useDebounce(fullAddress, 1000)
-
-  const { latLng } = useGetLatLng({ address: debouncedAddress, enabled: !!debouncedAddress })
 
   const hydratedAddressId = useRef<string | null>(null)
   useEffect(() => {
@@ -86,31 +77,6 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     })
     hydratedAddressId.current = companyAddress.id
   }, [companyAddress, cities, wards, isLoadingWards, cityCodeForm, setValue, reset])
-
-  useEffect(() => {
-    if (!debouncedAddress) {
-      return
-    }
-
-    const best = pickBestGeocodeResult(debouncedAddress, latLng)
-    if (!best) {
-      return
-    }
-
-    const { latitude, longitude, mapId } = getValues()
-
-    if (
-      best.geometry.location.lat === latitude &&
-      best.geometry.location.lng === longitude &&
-      best.place_id === mapId
-    ) {
-      return
-    }
-
-    setValue('latitude', best.geometry.location.lat, { shouldDirty: true })
-    setValue('longitude', best.geometry.location.lng, { shouldDirty: true })
-    setValue('mapId', best.place_id, { shouldDirty: true })
-  }, [latLng, debouncedAddress, getValues, setValue])
 
   const onSubmit: SubmitHandler<UpdateCompanyAddressFormValues> = (body) => {
     updateCompanyAddress(
@@ -183,14 +149,29 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
                 {t('user.updateProfile.field.address.label')}
                 <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
               </FieldLabel>
-              <Input
-                {...field}
-                type='tel'
-                value={field.value ?? ''}
+              <AddressAutocomplete
                 id={field.name}
-                aria-invalid={fieldState.invalid}
-                autoComplete='off'
-                spellCheck={false}
+                value={field.value ?? ''}
+                onValueChange={field.onChange}
+                onResolve={({ latitude, longitude, mapId }) => {
+                  setValue('latitude', latitude, { shouldDirty: true })
+                  setValue('longitude', longitude, { shouldDirty: true })
+                  setValue('mapId', mapId, { shouldDirty: true })
+                }}
+                onClear={() => {
+                  setValue('latitude', 0, { shouldDirty: true })
+                  setValue('longitude', 0, { shouldDirty: true })
+                  setValue('mapId', '', { shouldDirty: true })
+                }}
+                ward={wardForm ?? ''}
+                city={cityForm ?? ''}
+                placeholder={
+                  wardForm && cityForm
+                    ? t('companyAddress.field.addressLine.placeholder')
+                    : t('companyAddress.field.addressLine.disabledPlaceholder')
+                }
+                disabled={!wardForm || !cityForm}
+                invalid={fieldState.invalid}
               />
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -297,7 +278,7 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
         />
 
         <Suspense fallback={<Skeleton className='h-80 w-full rounded-xl' />}>
-          <CompanyAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />
+          <VietmapAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />
         </Suspense>
 
         <div className='flex items-center justify-end gap-2 mt-2'>

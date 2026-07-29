@@ -3,11 +3,8 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useDebounce } from 'use-debounce'
-import { useGetLatLng } from '../../../hooks/use-get-lat-lng'
-import { pickBestGeocodeResult } from '../../../services/goong.service'
+import AddressAutocomplete from './address-autocomplete'
 import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import type { CreateCompanyAddressFormValues } from '../validations'
 
@@ -16,7 +13,6 @@ export default function CreateCompanyAddressForm() {
   const { control, setValue, watch } = useFormContext<CreateCompanyAddressFormValues>()
 
   const cityCodeForm = watch('cityCode')
-  const addressLineForm = watch('addressLine')
   const wardForm = watch('ward')
   const cityForm = watch('city')
 
@@ -28,20 +24,6 @@ export default function CreateCompanyAddressForm() {
     parentId: cityCodeForm,
     enabled: cityCodeForm !== -1
   })
-
-  const fullAddress = addressLineForm && wardForm && cityForm ? `${addressLineForm}, ${wardForm}, ${cityForm}` : ''
-  const [debouncedAddress] = useDebounce(fullAddress, 300)
-
-  const { latLng } = useGetLatLng({ address: debouncedAddress, enabled: !!debouncedAddress })
-
-  useEffect(() => {
-    if (!debouncedAddress) return
-    const best = pickBestGeocodeResult(debouncedAddress, latLng)
-    if (!best) return
-    setValue('latitude', best.geometry.location.lat, { shouldDirty: true })
-    setValue('longitude', best.geometry.location.lng, { shouldDirty: true })
-    setValue('mapId', best.place_id, { shouldDirty: true })
-  }, [latLng, debouncedAddress, setValue])
 
   return (
     <div className='space-y-2'>
@@ -102,14 +84,29 @@ export default function CreateCompanyAddressForm() {
               {t('user.updateProfile.field.address.label')}
               <span className='text-muted-foreground text-xs'>({t('common.ui.optional')})</span>
             </FieldLabel>
-            <Input
-              {...field}
-              type='tel'
-              value={field.value ?? ''}
+            <AddressAutocomplete
               id={field.name}
-              aria-invalid={fieldState.invalid}
-              autoComplete='off'
-              spellCheck={false}
+              value={field.value ?? ''}
+              onValueChange={field.onChange}
+              onResolve={({ latitude, longitude, mapId }) => {
+                setValue('latitude', latitude, { shouldDirty: true })
+                setValue('longitude', longitude, { shouldDirty: true })
+                setValue('mapId', mapId, { shouldDirty: true })
+              }}
+              onClear={() => {
+                setValue('latitude', 0, { shouldDirty: true })
+                setValue('longitude', 0, { shouldDirty: true })
+                setValue('mapId', '', { shouldDirty: true })
+              }}
+              ward={wardForm ?? ''}
+              city={cityForm ?? ''}
+              placeholder={
+                wardForm && cityForm
+                  ? t('companyAddress.field.addressLine.placeholder')
+                  : t('companyAddress.field.addressLine.disabledPlaceholder')
+              }
+              disabled={!wardForm || !cityForm}
+              invalid={fieldState.invalid}
             />
             <div className='min-h-4'>
               {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}

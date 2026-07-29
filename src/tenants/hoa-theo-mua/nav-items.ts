@@ -1,6 +1,19 @@
 import type { TenantNavMainItem, TenantNavQuickActionItem } from '@/lib/feature-flags/tenant-nav-items'
-import { BriefcaseIcon, MapPinIcon, NewspaperIcon, PackageIcon, SettingsIcon } from 'lucide-react'
+import {
+  BriefcaseIcon,
+  FlowerIcon,
+  FolderTreeIcon,
+  MapPinIcon,
+  NewspaperIcon,
+  PackageIcon,
+  SettingsIcon
+} from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
+
+// activePatterns: URL nào thì mục này sáng đèn (match kiểu chính xác)
+// activeExcludePatterns: URL nào thì KHÔNG được sáng đèn, dù có khớp activePatterns ở trên (check trước, ưu tiên hơn)
+// Lưu ý: pattern có dạng /products/:id sẽ khớp với MỌI đường dẫn con, ví dụ /products/pinned, /products/categories...
+// nên route con nào có menu riêng thì phải thêm vào activeExcludePatterns của route cha, không thì 2 mục cùng sáng đèn 1 lúc
 
 export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
   {
@@ -9,11 +22,6 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
     icon: PackageIcon,
     feature: 'custom.orderManagement',
     items: [
-      // {
-      //   titleKey: 'navigation.orders.dashboard',
-      //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
-      //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`]
-      // },
       {
         titleKey: 'navigation.orders.list',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders`,
@@ -23,11 +31,48 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
           `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`
         ]
       }
-      // {
-      //   titleKey: 'navigation.orders.customers',
-      //   url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`,
-      //   activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`]
-      // }
+    ]
+  },
+  {
+    titleKey: 'navigation.products.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products`,
+    icon: FlowerIcon,
+    feature: 'custom.productManagement',
+    items: [
+      {
+        titleKey: 'navigation.products.list',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`, `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/:id`],
+        // /products/:id khớp cả /products/pinned và /products/categories nên phải loại 2 cái này ra
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/pinned`
+        ]
+      },
+      {
+        titleKey: 'navigation.products.pinned',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/pinned`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/pinned`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.categories.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`,
+    icon: FolderTreeIcon,
+    feature: 'custom.productManagement',
+    items: [
+      {
+        titleKey: 'navigation.categories.list',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories`],
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories/sort`]
+      },
+      {
+        titleKey: 'navigation.categories.sort',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories/sort`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/categories/sort`]
+      }
     ]
   },
   {
