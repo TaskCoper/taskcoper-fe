@@ -112,7 +112,7 @@ export const useCategorySortDnd = ({ categories, page }: UseCategorySortDndProps
     located.node.position = newPosition
     queryClient.setQueryData<SortableCategory[]>(sortableCategoriesQueryKey, newTree)
 
-    reorderCategory({ category: original, position: newPosition, parentId: target.parentId })
+    reorderCategory({ category: original, position: newPosition, parentId: target.parentId, page })
   }
 
   const onDragCancel = () => resetState()

@@ -31,8 +31,6 @@ export default function UpdateSystemOrderDialog({ order, open, onOpenChange }: U
 
   const { control } = methods
 
-  console.log(methods.formState.errors)
-
   return (
     <Dialog open={open} onOpenChange={(next) => !isUpdatingOrder && onOpenChange(next)}>
       <DialogContent className='max-w-md' position='top-center'>

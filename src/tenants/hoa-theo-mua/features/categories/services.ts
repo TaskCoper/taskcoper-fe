@@ -88,11 +88,13 @@ class CategoryService extends BaseService {
   reorderCategory = async ({
     category,
     position,
-    parentId
+    parentId,
+    page
   }: {
     category: SortableCategory
     position: number
     parentId?: string | null
+    page?: CategoryProductPage[]
   }) => {
     const nextParentId = parentId !== undefined ? parentId : category.parentId
 
@@ -107,7 +109,7 @@ class CategoryService extends BaseService {
       isActive: true,
       startTime: category.startTime,
       endTime: category.endTime,
-      page: nextParentId ? [] : (category.page ?? []),
+      page: nextParentId ? [] : category.page?.length ? category.page : (page ?? []),
       ...(nextParentId ? { parentId: nextParentId } : {})
     }
 
