@@ -30,6 +30,11 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
           `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/dashboard`,
           `/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/customers`
         ]
+      },
+      {
+        titleKey: 'navigation.orders.system',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders`]
       }
     ]
   },

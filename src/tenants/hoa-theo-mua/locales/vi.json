@@ -112,7 +112,8 @@
     },
     "orders": {
       "title": "Đơn hàng",
-      "list": "Danh sách đơn hàng"
+      "list": "Đơn hàng Nhanh.vn",
+      "system": "Đơn hàng hệ thống"
     },
     "recruitment": {
       "title": "Tuyển dụng",
@@ -183,8 +184,8 @@
     "dashboardComingSoon": "Tổng quan đơn hàng - Sắp ra mắt",
     "listComingSoon": "Danh sách đơn hàng - Sắp ra mắt",
     "list": {
-      "title": "Đơn hàng",
-      "description": "Xem và quản lý các đơn hàng Nhanh.vn đã đồng bộ vào Hoa Theo Mùa."
+      "title": "Đơn hàng Nhanh.vn",
+      "description": "Xem và quản lý các đơn hàng đồng bộ từ Nhanh.vn."
     },
     "action": {
       "actions": "Thao tác",
@@ -386,6 +387,10 @@
       "untitled": "Đơn chưa có mã",
       "itemCount": "Số mặt hàng",
       "noItems": "Không có sản phẩm"
+    },
+    "status": {
+      "paid": "Đã thanh toán",
+      "pending": "Chờ thanh toán"
     }
   },
   "products": {
@@ -1714,6 +1719,88 @@
       "pageInfo": "Trang {{page}}/{{pageCount}}",
       "submit": "Lưu thay đổi",
       "success": "Cập nhật sản phẩm cho danh mục thành công."
+    }
+  },
+  "systemOrders": {
+    "list": {
+      "title": "Đơn hàng hệ thống",
+      "description": "Xem và quản lý các đơn hàng được tạo trên hệ thống."
+    },
+    "column": {
+      "selectAll": "Chọn tất cả đơn hàng",
+      "selectRow": "Chọn đơn hàng",
+      "customer": "Khách hàng",
+      "createdAt": "Ngày tạo",
+      "address": "Địa chỉ giao hàng",
+      "status": "Trạng thái",
+      "amount": "Tổng tiền",
+      "tracking": "Mã vận đơn",
+      "shippingFee": "Phí vận chuyển",
+      "productFee": "Tiền hàng",
+      "invoice": "Hóa đơn",
+      "remarks": "Ghi chú"
+    },
+    "filter": {
+      "searchPlaceholder": "Tìm theo tên khách hàng"
+    },
+    "action": {
+      "edit": "Chỉnh sửa đơn hàng",
+      "showDetails": "Xem chi tiết",
+      "collapseDetails": "Thu gọn chi tiết",
+      "openMenu": "Mở menu thao tác đơn hàng",
+      "actions": "Thao tác",
+      "openPayment": "Mở trang thanh toán",
+      "openQr": "Mở mã QR",
+      "copyTracking": "Sao chép mã vận đơn"
+    },
+    "copyTracking": {
+      "success": "Đã sao chép mã vận đơn"
+    },
+    "update": {
+      "success": "Đã cập nhật đơn hàng"
+    },
+    "edit": {
+      "title": "Chỉnh sửa đơn hàng",
+      "description": "Cập nhật mã vận đơn, liên kết Ahamove và phí vận chuyển.",
+      "trackingNumber": "Mã vận đơn",
+      "trackingNumberPlaceholder": "ví dụ: TRK123456",
+      "ahaMoveTrackingUrl": "Liên kết theo dõi Ahamove",
+      "ahaMoveTrackingUrlPlaceholder": "https://...",
+      "shippingFee": "Phí vận chuyển",
+      "shippingFeePlaceholder": "ví dụ: 30000",
+      "invalidUrl": "Nhập URL hợp lệ hoặc để trống",
+      "invalidFee": "Nhập số tiền hợp lệ (từ 0 trở lên)",
+      "save": "Lưu thay đổi",
+      "cancel": "Hủy"
+    },
+    "common": {
+      "noData": "Không có dữ liệu",
+      "noDataShort": "-",
+      "yes": "Có",
+      "no": "Không"
+    },
+    "invoice": {
+      "export": "Xuất hóa đơn"
+    },
+    "detail": {
+      "shipping": "Vận chuyển",
+      "invoice": "Hóa đơn",
+      "trackNumber": "Mã vận đơn",
+      "nhanhOrderId": "Mã đơn Nhanh",
+      "nhanhTracking": "Theo dõi Nhanh",
+      "ahamoveTracking": "Theo dõi Ahamove",
+      "openLink": "Mở liên kết",
+      "address": "Địa chỉ",
+      "shortAddress": "Địa chỉ rút gọn",
+      "exportInvoice": "Xuất hóa đơn",
+      "taxCode": "Mã số thuế",
+      "receiptName": "Người nhận hóa đơn",
+      "receiptPhone": "SĐT nhận hóa đơn",
+      "receiptEmail": "Email nhận hóa đơn",
+      "vat": "VAT",
+      "mapTitle": "Bản đồ vị trí giao hàng",
+      "noLocation": "Không có vị trí giao hàng",
+      "openInMaps": "Mở Google Maps"
     }
   }
 }

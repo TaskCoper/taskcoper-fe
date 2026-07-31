@@ -162,3 +162,56 @@ export interface ShippingLocation {
   id: number
   name: string
 }
+
+interface SystemOrderCoordinates {
+  latitude: number
+  longitude: number
+  ward: number
+  city: number
+  address: string
+  shortAddress: string
+}
+
+interface SystemOrderShippingTracking {
+  trackNumber: string
+  nhanhOrderId: number | null
+  nhanhTrackingUrl: string | null
+  ahahaMoveOrderId: string | null
+  ahahaMoveTrackingUrl: string | null
+}
+
+interface SystemOrderFees {
+  shippingFee: number
+  productFee: number
+  totalFee: number
+}
+
+interface SystemOrderInvoice {
+  taxCode: string | null
+  identityNumber: string | null
+  receiptFullName: string | null
+  receiptPhoneNumber: string | null
+  receiptAddress: string | null
+  receiptEmail: string | null
+  isExportInvoice: boolean
+  vat: number
+  invoiceType: number | null
+}
+
+/** A system order returned by GET /v1/orders/admin. */
+export interface SystemOrder
+  extends SystemOrderCoordinates, SystemOrderShippingTracking, SystemOrderFees, SystemOrderInvoice {
+  orderId: string // Guid
+  fullName: string
+  phone: string
+  remarks: string
+  status: OrderStatus
+  paymentUrl: string
+  qrUrl: string | null
+  orderTime: number
+  tagIds: number[]
+  paymentMethod: number
+  createAt: string // DateTimeOffset
+  updateAt: string | null // DateTimeOffset
+  userId: string // Guid
+}

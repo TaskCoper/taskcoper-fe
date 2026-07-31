@@ -112,7 +112,8 @@
     },
     "orders": {
       "title": "Order",
-      "list": "Order list"
+      "list": "Nhanh.vn orders",
+      "system": "System orders"
     },
     "recruitment": {
       "title": "Recruitment",
@@ -183,8 +184,8 @@
     "dashboardComingSoon": "Orders Dashboard — Coming Soon",
     "listComingSoon": "Orders List — Coming Soon",
     "list": {
-      "title": "Orders",
-      "description": "Review and manage Nhanh.vn orders synced into Hoa Theo Mua."
+      "title": "Nhanh.vn Orders",
+      "description": "Review and manage orders synced from Nhanh.vn."
     },
     "action": {
       "actions": "Actions",
@@ -386,6 +387,10 @@
       "untitled": "Untitled order",
       "itemCount": "Items",
       "noItems": "No line items"
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending"
     }
   },
   "products": {
@@ -1714,6 +1719,88 @@
       "pageInfo": "Page {{page}} of {{pageCount}}",
       "submit": "Save changes",
       "success": "Category products updated successfully."
+    }
+  },
+  "systemOrders": {
+    "list": {
+      "title": "System Orders",
+      "description": "Review and manage orders created on the system."
+    },
+    "column": {
+      "selectAll": "Select all orders",
+      "selectRow": "Select order",
+      "customer": "Customer",
+      "createdAt": "Created at",
+      "address": "Shipping address",
+      "status": "Status",
+      "amount": "Total",
+      "tracking": "Tracking code",
+      "shippingFee": "Shipping fee",
+      "productFee": "Product fee",
+      "invoice": "Invoice",
+      "remarks": "Remarks"
+    },
+    "filter": {
+      "searchPlaceholder": "Search by customer name"
+    },
+    "action": {
+      "edit": "Edit order",
+      "showDetails": "View details",
+      "collapseDetails": "Collapse details",
+      "openMenu": "Open order actions",
+      "actions": "Actions",
+      "openPayment": "Open payment page",
+      "openQr": "Open QR code",
+      "copyTracking": "Copy tracking code"
+    },
+    "copyTracking": {
+      "success": "Tracking code copied"
+    },
+    "update": {
+      "success": "Order updated"
+    },
+    "edit": {
+      "title": "Edit order",
+      "description": "Update the tracking code, Ahamove link and shipping fee.",
+      "trackingNumber": "Tracking code",
+      "trackingNumberPlaceholder": "e.g. TRK123456",
+      "ahaMoveTrackingUrl": "Ahamove tracking link",
+      "ahaMoveTrackingUrlPlaceholder": "https://...",
+      "shippingFee": "Shipping fee",
+      "shippingFeePlaceholder": "e.g. 30000",
+      "invalidUrl": "Enter a valid URL or leave it empty",
+      "invalidFee": "Enter a valid amount (0 or more)",
+      "save": "Save changes",
+      "cancel": "Cancel"
+    },
+    "common": {
+      "noData": "No data",
+      "noDataShort": "-",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "invoice": {
+      "export": "Invoice"
+    },
+    "detail": {
+      "shipping": "Shipping",
+      "invoice": "Invoice",
+      "trackNumber": "Tracking code",
+      "nhanhOrderId": "Nhanh order ID",
+      "nhanhTracking": "Nhanh tracking",
+      "ahamoveTracking": "Ahamove tracking",
+      "openLink": "Open link",
+      "address": "Address",
+      "shortAddress": "Short address",
+      "exportInvoice": "Export invoice",
+      "taxCode": "Tax code",
+      "receiptName": "Receipt name",
+      "receiptPhone": "Receipt phone",
+      "receiptEmail": "Receipt email",
+      "vat": "VAT",
+      "mapTitle": "Delivery location map",
+      "noLocation": "No delivery location",
+      "openInMaps": "Open in Maps"
     }
   }
 }

@@ -1,7 +1,9 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type { GetOrdersParams } from './hooks/use-get-orders'
-import type { Order, ShippingLocation, ShippingLocationType } from './types'
+import type { GetSystemOrdersParams } from './hooks/use-get-system-orders'
+import type { Order, ShippingLocation, ShippingLocationType, SystemOrder } from './types'
+import type { UpdateOrderFormValues } from './validation'
 
 interface GetOrderShippingLocationsBody {
   locationVersion: 'v2'
@@ -24,6 +26,14 @@ class OrderService extends BaseService {
     return data
   }
 
+  getSystemOrders = async ({ pageIndex, pageSize, search }: GetSystemOrdersParams) => {
+    const { data } = await this.get<BasePaginationResponse<SystemOrder>>(`/v1/${this.baseUrl}/admin`, {
+      params: { pageIndex, pageSize, search }
+    })
+
+    return data
+  }
+
   getOrder = async ({ id }: { id?: string }) => {
     const { data } = await this.get<BaseResponse<Order>>(`/v1/nhanh-vn/${this.baseUrl}/${id}`)
 
@@ -39,6 +49,12 @@ class OrderService extends BaseService {
     )
 
     return data.value.data
+  }
+
+  updateOrder = async ({ body }: { body: UpdateOrderFormValues }) => {
+    const { data } = await this.patch<BaseResponse<string>>(`/v1/${this.baseUrl}/update-ahamove`, body)
+
+    return data.value
   }
 }
 
