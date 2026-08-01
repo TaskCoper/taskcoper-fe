@@ -36,10 +36,12 @@ import { useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
+import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
 import { useRevealConfig } from '../hooks/use-reveal-config'
 import configService from '../services'
 import { ConfigKind, INPUT_TYPE_COLOR, InputType, type Config, type ConfigDefinition } from '../types'
 import { buildValueValidator } from '../validations'
+import DurationMinutesInput from './duration-minutes-input'
 
 interface ConfigFieldRowProps {
   config: Config
@@ -227,6 +229,26 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       case InputType.number:
+        if (isSecondsAsMinutesConfigKey(config.key)) {
+          return (
+            <Controller
+              name='value'
+              control={form.control}
+              render={({ field }) => (
+                <div className='flex items-center gap-2'>
+                  <DurationMinutesInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    className='h-8 text-sm'
+                    ariaInvalid={!!errors.value}
+                  />
+                  <span className='shrink-0 text-xs text-muted-foreground'>{t('configsPage.card.minutesUnit')}</span>
+                </div>
+              )}
+            />
+          )
+        }
         return (
           <Input
             type='number'

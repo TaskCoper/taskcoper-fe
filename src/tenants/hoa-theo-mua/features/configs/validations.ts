@@ -100,14 +100,25 @@ const literalUnion = (values: Array<string | number>): z.ZodTypeAny => {
   )
 }
 
+// Native number inputs report an empty value as `''`/`NaN` rather than `undefined`, and
+// `z.coerce.number()` chokes on that with a raw "expected number, received NaN" message.
+// Normalize blank/NaN input to `undefined` before coercion so required/optional + custom
+// messages behave the same way string fields do.
+const toNumberOrUndefined = (val: unknown): number | undefined => {
+  if (val === '' || val === null || val === undefined) return undefined
+  const n = typeof val === 'number' ? val : Number(val)
+  return Number.isNaN(n) ? undefined : n
+}
+
 export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
+  if (def.inputType === 'number') {
+    const n = applyNumberRules(z.number({ message: 'Bắt buộc nhập' }), def.validations)
+    return z.preprocess(toNumberOrUndefined, def.required ? n : n.optional())
+  }
+
   let base: z.ZodTypeAny
 
   switch (def.inputType) {
-    case 'number':
-      base = applyNumberRules(z.coerce.number(), def.validations)
-      break
-
     case 'boolean':
     case 'switch':
       base = z.coerce.boolean()

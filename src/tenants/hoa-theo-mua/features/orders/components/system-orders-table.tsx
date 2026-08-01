@@ -137,7 +137,7 @@ function SystemOrderDetailsSubRow({ row }: { row: Row<SystemOrder> }) {
 
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2'>
         <DetailCard icon={TruckIcon} title={t('systemOrders.detail.shipping')}>
-          <DetailRow label={t('systemOrders.detail.trackNumber')} value={text(order.trackNumber)} mono />
+          {/* <DetailRow label={t('systemOrders.detail.trackNumber')} value={text(order.trackNumber)} mono /> */}
           <DetailRow label={t('systemOrders.detail.nhanhOrderId')} value={order.nhanhOrderId ?? emptyValue} mono />
           <DetailRow
             label={t('systemOrders.detail.nhanhTracking')}

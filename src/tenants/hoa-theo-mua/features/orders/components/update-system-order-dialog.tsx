@@ -88,6 +88,7 @@ export default function UpdateSystemOrderDialog({ order, open, onOpenChange }: U
                   {...field}
                   id='system-order-shipping-fee'
                   type='number'
+                  readOnly
                   inputMode='numeric'
                   min={0}
                   step={1000}

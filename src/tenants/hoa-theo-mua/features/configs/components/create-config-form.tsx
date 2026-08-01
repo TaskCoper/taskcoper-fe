@@ -17,6 +17,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { ConfigKind, ConfigKindLabel, InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
+import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
+import DurationMinutesInput from './duration-minutes-input'
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
 
@@ -84,6 +86,7 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
 
   const inputType = (watch('value.inputType') ?? InputType.text) as InputType
   const availableRules = AVAILABLE_VALIDATIONS[inputType] ?? []
+  const isDurationInSeconds = isSecondsAsMinutesConfigKey(watch('key'))
 
   const {
     fields: optionFields,
@@ -172,6 +175,25 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
           />
         )
       case InputType.number:
+        if (isDurationInSeconds) {
+          return (
+            <Controller
+              name='value.value'
+              control={control}
+              render={({ field }) => (
+                <div className='flex items-center gap-2'>
+                  <DurationMinutesInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    placeholder='0'
+                  />
+                  <span className='shrink-0 text-xs text-muted-foreground'>{t('configsPage.dialog.minutesUnit')}</span>
+                </div>
+              )}
+            />
+          )
+        }
         return <Input type='number' {...register('value.value', { valueAsNumber: true })} placeholder='0' />
       case InputType.date:
         return (
