@@ -5,8 +5,8 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import { matchShippingLocation } from '../../../utils/match-shipping-location'
+import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import type { CreateCompanyAddressFormValues } from '../validations'
 import AddressAutocomplete from './address-autocomplete'
 import AddressMapField from './address-map-field'
@@ -143,6 +143,8 @@ export default function CreateCompanyAddressForm() {
               ward={wardForm ?? ''}
               city={cityForm ?? ''}
               placeholder={t('companyAddress.field.addressLine.placeholder')}
+              searchingLabel={t('companyAddress.field.addressLine.searching')}
+              emptyLabel={t('companyAddress.field.addressLine.empty')}
               invalid={fieldState.invalid}
             />
             <div className='min-h-4'>
@@ -216,29 +218,43 @@ export default function CreateCompanyAddressForm() {
         />
       </div>
 
-      {/* Map preview only appears once an address has resolved to a point. */}
-      {!(latitudeForm === 0 && longitudeForm === 0) &&
-      Number.isFinite(latitudeForm) &&
-      Number.isFinite(longitudeForm) ? (
-        <AddressMapField
-          latitude={latitudeForm}
-          longitude={longitudeForm}
-          onResolve={({ latitude, longitude, mapId }) => {
-            // Map picks fine-tune the coordinate only — leave the address line
-            // the user typed/selected untouched.
-            setValue('latitude', latitude, { shouldDirty: true })
-            setValue('longitude', longitude, { shouldDirty: true })
-            setValue('mapId', mapId, { shouldDirty: true })
-          }}
-          anchorLatitude={mapAnchor?.latitude}
-          anchorLongitude={mapAnchor?.longitude}
-          hint={t('companyAddress.field.map.hint')}
-          useLocationLabel={t('companyAddress.field.map.useLocation')}
-          resolvingLabel={t('companyAddress.field.map.resolving')}
-          locationErrorLabel={t('companyAddress.field.map.locationError')}
-          tooFarLabel={t('companyAddress.field.map.tooFar')}
-        />
-      ) : null}
+      {/* Always mounted: the map itself only renders once a point exists, but the
+          "use my location" control stays available so a pin can be dropped first. */}
+      <AddressMapField
+        latitude={latitudeForm}
+        longitude={longitudeForm}
+        onResolve={({ latitude, longitude, mapId, addressLine, ward, city }) => {
+          // Sync every field to whatever the reverse geocode landed on:
+          // coordinate, address line, and the ward/city selectors.
+          setValue('latitude', latitude, { shouldDirty: true })
+          setValue('longitude', longitude, { shouldDirty: true })
+          setValue('mapId', mapId, { shouldDirty: true })
+          if (addressLine) {
+            setValue('addressLine', addressLine, { shouldDirty: true })
+          }
+
+          // Lift the resolved ward/city into their own selectors.
+          const matchedCity = matchShippingLocation(cities, city)
+          const cityChanged = Boolean(matchedCity && matchedCity.id !== cityCodeForm)
+          if (cityChanged && matchedCity) {
+            setValue('cityCode', matchedCity.id, { shouldDirty: true })
+            setValue('city', matchedCity.name, { shouldDirty: true })
+            setValue('wardCode', -1, { shouldDirty: true })
+            setValue('ward', '', { shouldDirty: true })
+          }
+          pendingWardRef.current = ward || null
+          // Same city → its ward list is already loaded, resolve now;
+          // a changed city resolves via the effect once wards reload.
+          if (!cityChanged) resolvePendingWard()
+        }}
+        anchorLatitude={mapAnchor?.latitude}
+        anchorLongitude={mapAnchor?.longitude}
+        hint={t('companyAddress.field.map.hint')}
+        useLocationLabel={t('companyAddress.field.map.useLocation')}
+        resolvingLabel={t('companyAddress.field.map.resolving')}
+        locationErrorLabel={t('companyAddress.field.map.locationError')}
+        tooFarLabel={t('companyAddress.field.map.tooFar')}
+      />
 
       <Controller
         name='remarks'

@@ -2,7 +2,6 @@ import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { Spinner } from '@/components/ui/spinner'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -19,7 +18,9 @@ interface AddressAutocompleteProps {
   onClear: () => void
   ward: string
   city: string
-  placeholder?: string
+  placeholder: string
+  searchingLabel: string
+  emptyLabel: string
   disabled?: boolean
   invalid?: boolean
 }
@@ -33,10 +34,11 @@ export default function AddressAutocomplete({
   ward,
   city,
   placeholder,
+  searchingLabel,
+  emptyLabel,
   disabled,
   invalid
 }: AddressAutocompleteProps) {
-  const { t } = useTenantTranslation()
   const [open, setOpen] = useState(false)
   const lastSelectedRef = useRef<string | null>(null)
 
@@ -79,9 +81,9 @@ export default function AddressAutocomplete({
 
   return (
     <Command shouldFilter={false} className='overflow-visible bg-transparent p-0'>
-      <Popover open={open && !disabled} onOpenChange={setOpen}>
+      <Popover open={open && !disabled} onOpenChange={setOpen} modal>
         <PopoverAnchor asChild>
-          <InputGroup className='h-9'>
+          <InputGroup className='h-9 bg-input/50'>
             <CommandPrimitive.Input
               data-slot='command-input'
               id={id}
@@ -93,7 +95,7 @@ export default function AddressAutocomplete({
               aria-invalid={invalid}
               autoComplete='off'
               spellCheck={false}
-              className='w-full text-sm outline-hidden rounded-lg disabled:cursor-not-allowed disabled:opacity-50'
+              className='w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50'
             />
             <InputGroupAddon>
               <SearchIcon className='size-4 shrink-0 opacity-50' />
@@ -110,11 +112,11 @@ export default function AddressAutocomplete({
             {isSearchingAddress ? (
               <div className='flex items-center justify-center gap-2 py-6 text-sm text-muted-foreground'>
                 <Spinner className='size-4' />
-                {t('companyAddress.field.addressLine.searching')}
+                {searchingLabel}
               </div>
             ) : (
               <>
-                <CommandEmpty>{t('companyAddress.field.addressLine.empty')}</CommandEmpty>
+                <CommandEmpty>{emptyLabel}</CommandEmpty>
                 <CommandGroup>
                   {suggestions.map((suggestion) => (
                     <CommandItem

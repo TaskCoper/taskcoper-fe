@@ -18,10 +18,6 @@ export interface ResolvedMapAddress {
   city: string
 }
 
-// How far the pin may be dragged from the address the user typed. Enough to
-// fine-tune the exact building, not enough to land in another area.
-const MAX_PIN_DISTANCE_METERS = 500
-
 interface AddressMapFieldProps {
   latitude: number
   longitude: number
@@ -59,6 +55,11 @@ export default function AddressMapField({
   const handleReject = useCallback(() => {
     if (tooFarLabel) toast.error(tooFarLabel)
   }, [tooFarLabel])
+
+  // The map only makes sense once we have a real point to centre on. Until then
+  // the header (hint + "use my location") still shows so the user can drop a pin
+  // from their device location without having to type an address first.
+  const hasPoint = !(latitude === 0 && longitude === 0) && Number.isFinite(latitude) && Number.isFinite(longitude)
 
   const handlePick = useCallback(
     async ({ latitude: lat, longitude: lng }: { latitude: number; longitude: number }) => {
@@ -137,32 +138,39 @@ export default function AddressMapField({
           size='sm'
           className='h-7 shrink-0 px-2 text-xs'
           onClick={handleUseLocation}
-          disabled={disabled || isLocating}
+          disabled={disabled || isLocating || (isReverseGeocoding && !hasPoint)}
         >
-          {isLocating ? <Spinner className='size-3.5' /> : <LocateFixedIcon className='size-3.5' />}
+          {isLocating || (isReverseGeocoding && !hasPoint) ? (
+            <Spinner className='size-3.5' />
+          ) : (
+            <LocateFixedIcon className='size-3.5' />
+          )}
           {useLocationLabel}
         </Button>
       </div>
 
-      <div className='relative'>
-        <Suspense fallback={<Skeleton className='h-56 w-full rounded-xl' />}>
-          <AddressMapPicker
-            latitude={latitude}
-            longitude={longitude}
-            onPick={handlePick}
-            anchorLatitude={anchorLatitude}
-            anchorLongitude={anchorLongitude}
-            maxDistanceMeters={MAX_PIN_DISTANCE_METERS}
-            onReject={handleReject}
-          />
-        </Suspense>
-        {isReverseGeocoding ? (
-          <div className='absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 bg-background/85 py-1.5 text-xs text-muted-foreground backdrop-blur-sm'>
-            <Spinner className='size-3.5' />
-            {resolvingLabel}
-          </div>
-        ) : null}
-      </div>
+      {hasPoint ? (
+        <div className='relative'>
+          <Suspense fallback={<Skeleton className='h-56 w-full rounded-xl' />}>
+            <AddressMapPicker
+              latitude={latitude}
+              longitude={longitude}
+              onPick={handlePick}
+              anchorLatitude={anchorLatitude}
+              anchorLongitude={anchorLongitude}
+              // TODO: temporarily disabled — pass `maxDistanceMeters={500}` to re-enable the pin radius limit.
+              maxDistanceMeters={undefined}
+              onReject={handleReject}
+            />
+          </Suspense>
+          {isReverseGeocoding ? (
+            <div className='absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 bg-background/85 py-1.5 text-xs text-muted-foreground backdrop-blur-sm'>
+              <Spinner className='size-3.5' />
+              {resolvingLabel}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   )
 }
