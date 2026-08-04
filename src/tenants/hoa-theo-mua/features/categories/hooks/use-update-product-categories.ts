@@ -11,10 +11,10 @@ import { updateProductCategoriesSchema, type UpdateProductCategoriesFormValues }
 
 const toFormValues = (product: Product): UpdateProductCategoriesFormValues => ({
   productId: product.id,
-  categoryProductLists: product.categories.map((category, index) => ({
+  categoryProductLists: product.categories.map((category) => ({
     categoryProductId: category.categoryId,
-    isPin: category.isPinned,
-    position: category.position ?? index
+    isPin: category.isPinned ?? false,
+    position: category.position ?? 0
   }))
 })
 

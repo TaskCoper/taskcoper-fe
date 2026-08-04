@@ -9,6 +9,9 @@ export interface Product {
   id: string
   isPinned: boolean
   categories: ProductCategory[]
+  parent: ProductDetail | null
+
+  otherImages: string[] | null
 
   sourceRowNumber: number
 
@@ -299,4 +302,6 @@ export interface ProductDetail extends Omit<Product, ProductRawFieldKey> {
 
   createdAt: string
   updatedAt: string | null
+
+  children: ProductDetail[] | null
 }

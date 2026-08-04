@@ -266,7 +266,6 @@ interface ComboboxListProps<TData> {
   onSearchChange: (value: string) => void
   searchValue: string
   getId: (item: TData) => string
-  getLabel: (item: TData) => string
   renderOption: (item: TData) => React.ReactNode
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
@@ -281,7 +280,6 @@ function ComboboxList<TData>({
   onSearchChange,
   searchValue,
   getId,
-  getLabel,
   renderOption,
   isFetchingNextPage,
   hasNextPage,
@@ -311,12 +309,7 @@ function ComboboxList<TData>({
               const id = getId(item)
               const isSelected = selectedIds.includes(id)
               return (
-                <CommandItem
-                  key={id}
-                  value={getLabel(item)}
-                  onSelect={() => onSelect(item)}
-                  className='cursor-pointer gap-3'
-                >
+                <CommandItem key={id} value={id} onSelect={() => onSelect(item)} className='cursor-pointer gap-3'>
                   <div className='flex-1 overflow-hidden flex items-center gap-2'>{renderOption(item)}</div>
 
                   <CheckIcon

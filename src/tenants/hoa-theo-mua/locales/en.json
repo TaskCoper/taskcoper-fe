@@ -508,6 +508,11 @@
       "linkCopied": "Link copied to clipboard",
       "suppliedBy": "Supplier",
       "totalUnits": "total units",
+      "parent": {
+        "title": "This is a variant of another product",
+        "description": "Part of “{{name}}”. Open the parent product to see all of its variants.",
+        "view": "View parent product"
+      },
       "categories": {
         "title": "Categories",
         "description": "Choose which categories this product belongs to.",
@@ -522,6 +527,8 @@
         "overview": "Overview"
       },
       "section": {
+        "basicInfo": "Basic information",
+        "images": "Product images",
         "identity": "Identity",
         "classification": "Classification",
         "attributes": "Attributes",
@@ -529,10 +536,30 @@
         "inventory": "Inventory",
         "meta": "Other"
       },
+      "sectionDesc": {
+        "basicInfo": "Core product details and identifiers.",
+        "images": "Cover and additional product photos.",
+        "identity": "Product codes, barcode and parent references.",
+        "classification": "Category, brand and label classification.",
+        "attributes": "Variant options and physical dimensions.",
+        "pricing": "Selling, import and wholesale prices.",
+        "inventory": "Stock levels across warehouses and states.",
+        "meta": "Creation date and web ordering.",
+        "variants": "Child products belonging to this product."
+      },
       "information": "Product information",
       "table": {
         "field": "Field",
         "value": "Value"
+      },
+      "gallery": {
+        "cover": "Cover",
+        "previous": "Previous image",
+        "next": "Next image"
+      },
+      "variants": {
+        "title": "Variants",
+        "options": "Options"
       }
     },
     "field": {

@@ -508,6 +508,11 @@
       "linkCopied": "Đã sao chép liên kết",
       "suppliedBy": "Nhà cung cấp",
       "totalUnits": "tổng số lượng",
+      "parent": {
+        "title": "Đây là một phiên bản của sản phẩm khác",
+        "description": "Thuộc sản phẩm “{{name}}”. Mở sản phẩm cha để xem tất cả phiên bản.",
+        "view": "Xem sản phẩm cha"
+      },
       "categories": {
         "title": "Danh mục",
         "description": "Chọn các danh mục mà sản phẩm này thuộc về.",
@@ -522,6 +527,8 @@
         "overview": "Tổng quan"
       },
       "section": {
+        "basicInfo": "Thông tin cơ bản",
+        "images": "Ảnh sản phẩm",
         "identity": "Định danh",
         "classification": "Phân loại",
         "attributes": "Thuộc tính",
@@ -529,10 +536,30 @@
         "inventory": "Tồn kho",
         "meta": "Khác"
       },
+      "sectionDesc": {
+        "basicInfo": "Thông tin và mã định danh cơ bản của sản phẩm.",
+        "images": "Ảnh đại diện và ảnh phụ của sản phẩm.",
+        "identity": "Mã sản phẩm, mã vạch và tham chiếu sản phẩm cha.",
+        "classification": "Danh mục, thương hiệu và nhãn phân loại.",
+        "attributes": "Tùy chọn biến thể và kích thước vật lý.",
+        "pricing": "Giá bán, giá nhập và giá sỉ.",
+        "inventory": "Số lượng tồn theo kho và trạng thái.",
+        "meta": "Ngày tạo và thứ tự hiển thị trên website.",
+        "variants": "Các sản phẩm con thuộc sản phẩm này."
+      },
       "information": "Thông tin sản phẩm",
       "table": {
         "field": "Trường",
         "value": "Giá trị"
+      },
+      "gallery": {
+        "cover": "Ảnh đại diện",
+        "previous": "Ảnh trước",
+        "next": "Ảnh tiếp theo"
+      },
+      "variants": {
+        "title": "Biến thể",
+        "options": "Tùy chọn"
       }
     },
     "field": {

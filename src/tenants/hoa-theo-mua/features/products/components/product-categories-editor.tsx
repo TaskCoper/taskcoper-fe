@@ -3,7 +3,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
 import { CornerDownRightIcon, FolderIcon, TagIcon, TagsIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
@@ -15,19 +14,13 @@ import { CategoryProductType } from '../../categories/types'
 import type { UpdateProductCategoriesFormValues } from '../../categories/validations'
 import type { Product } from '../types'
 
-// One form item in `categoryProductLists`.
 type CategoryListItem = UpdateProductCategoriesFormValues['categoryProductLists'][number]
 
-/** A category paired with its depth in the tree, so the flat combobox list can indent children under parents. */
 interface CategoryOption {
   category: Category
   depth: number
 }
 
-// Wide enough that the whole (small) category tree is usually available for search without paging.
-const CATEGORY_PAGE_SIZE = 100
-
-/** Depth-first flatten of the (arbitrarily deep) category tree so every child is a selectable option too. */
 const flattenCategories = (categories: Category[], depth = 0): CategoryOption[] =>
   categories.flatMap((category) => [{ category, depth }, ...flattenCategories(category.children ?? [], depth + 1)])
 
@@ -42,15 +35,11 @@ export default function ProductCategoriesEditor({ product }: ProductCategoriesEd
   const [debouncedSearch] = useDebounce(search.trim(), 300)
 
   const { categories, isLoadingCategories } = useGetCategories({
-    pageIndex: DEFAULT_PAGE_INDEX,
-    pageSize: CATEGORY_PAGE_SIZE,
     keyword: debouncedSearch || undefined
   })
 
   const options = useMemo(() => flattenCategories(categories.value.items), [categories.value.items])
 
-  // Resolve a selected junction's id back to its category name for the badge list. Seed from the product's own
-  // categories so already-selected names show even when the current (filtered) search results don't include them.
   const categoryNameById = useMemo(() => {
     const map = new Map<string, string>()
     product.categories.forEach((category) => map.set(category.categoryId, category.name))
@@ -93,6 +82,7 @@ export default function ProductCategoriesEditor({ product }: ProductCategoriesEd
             })}
             renderOption={({ category, depth }) => {
               const hasChildren = (category.children?.length ?? 0) > 0
+
               return (
                 <span className='flex min-w-0 items-center gap-1.5' style={{ paddingLeft: depth * 16 }}>
                   {depth > 0 && <CornerDownRightIcon className='size-3.5 shrink-0 text-muted-foreground/60' />}
