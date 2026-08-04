@@ -1003,7 +1003,7 @@
       "keyLockedHint": "Key is fixed for this config",
       "kindLockedHint": "Kind is fixed for this config",
       "revealSecret": "Reveal secret",
-      "secretHint": "The current value is hidden. Reveal it to edit.",
+      "secretHint": "Reveal the current value to update.",
       "optionsLockedHint": "{{count}} options are managed by the live API",
       "descriptionField": "Description",
       "descriptionPlaceholder": "Optional description",
@@ -1071,6 +1071,7 @@
       "multiSelectPlaceholder": "Pick options...",
       "public": "Public",
       "publicTooltip": "Expose this config to client-side consumers",
+      "secretLockedTooltip": "Reveal the secret before changing it",
       "complexValue": "Complex value",
       "openEditor": "Open editor",
       "hints": {

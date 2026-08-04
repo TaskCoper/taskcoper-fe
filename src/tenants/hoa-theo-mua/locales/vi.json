@@ -1003,7 +1003,7 @@
       "keyLockedHint": "Khóa cấu hình này được khóa cố định",
       "kindLockedHint": "Loại cấu hình này được khóa cố định",
       "revealSecret": "Hiển thị bí mật",
-      "secretHint": "Giá trị hiện tại đang được ẩn. Nhấn hiển thị để chỉnh sửa.",
+      "secretHint": "Nhấn hiển thị để chỉnh sửa.",
       "optionsLockedHint": "{{count}} lựa chọn được quản lý bởi API",
       "descriptionField": "Mô tả",
       "descriptionPlaceholder": "Mô tả tùy chọn",
@@ -1071,6 +1071,7 @@
       "multiSelectPlaceholder": "Chọn các lựa chọn...",
       "public": "Công khai",
       "publicTooltip": "Cho phép client truy cập config này",
+      "secretLockedTooltip": "Hiển thị bí mật trước khi thay đổi",
       "complexValue": "Giá trị phức hợp",
       "openEditor": "Mở trình chỉnh sửa",
       "hints": {

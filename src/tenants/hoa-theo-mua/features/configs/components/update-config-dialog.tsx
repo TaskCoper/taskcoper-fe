@@ -77,6 +77,8 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
   }
 
   const onSubmit: SubmitHandler<CreateConfigFormValues> = async (body) => {
+    if (isSecret && !isRevealed) return
+
     const group = getGroupFromKey(body.key) || body.value.group
     let resolvedValue = body.value.value
 
@@ -126,19 +128,21 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
 
         <div className='flex-1 overflow-y-auto px-6'>
           {isSecret && !isRevealed && (
-            <div className='mb-4 flex items-center gap-3 rounded-lg border border-dashed bg-muted/40 p-3'>
-              <div className='flex-1 text-xs text-muted-foreground'>{t('configsPage.dialog.secretHint')}</div>
-              <Button type='button' size='sm' variant='outline' disabled={isRevealingConfig} onClick={handleReveal}>
+            <div className='mb-3 flex items-center gap-3 rounded-lg border border-primary/40 border-dashed bg-primary/10 pl-3 pr-2 py-2'>
+              <p className='flex-1 text-xs text-primary font-medium'>{t('configsPage.dialog.secretHint')}</p>
+              <Button type='button' size='sm' disabled={isRevealingConfig} onClick={handleReveal}>
                 {isRevealingConfig ? <Spinner data-icon='inline-start' /> : <EyeIcon data-icon='inline-start' />}
                 {t('configsPage.dialog.revealSecret')}
               </Button>
             </div>
           )}
+
           <FormProvider {...methods}>
             <form id='update-config-form' onSubmit={methods.handleSubmit(onSubmit)} className='pb-4'>
               <UpdateConfigForm
                 lockedFields={isLocked ? { key: true, options: true, kind: true } : undefined}
                 onPendingFileChange={setPendingFile}
+                valueLocked={isSecret && !isRevealed}
               />
               <Controller
                 name='isPublic'
@@ -183,7 +187,12 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
           <Button type='button' variant='outline' disabled={isSubmitting} onClick={handleClose}>
             {t('configsPage.dialog.cancel')}
           </Button>
-          <Button type='submit' form='update-config-form' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            form='update-config-form'
+            disabled={isSubmitting || (isSecret && !isRevealed)}
+            title={isSecret && !isRevealed ? t('configsPage.card.secretLockedTooltip') : undefined}
+          >
             {isSubmitting ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
             {isSubmitting ? t('configsPage.dialog.saving') : t('configsPage.dialog.save')}
           </Button>

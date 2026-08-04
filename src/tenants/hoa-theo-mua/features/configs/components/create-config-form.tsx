@@ -15,9 +15,9 @@ import { cn } from '@/shared/utils'
 import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
 import { ConfigKind, ConfigKindLabel, InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
-import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
 import DurationMinutesInput from './duration-minutes-input'
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
@@ -58,9 +58,14 @@ const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
 export interface CreateConfigFormProps {
   lockedFields?: { key?: boolean; options?: boolean; kind?: boolean }
   onPendingFileChange?: (file: File | null) => void
+  valueLocked?: boolean
 }
 
-export default function CreateConfigForm({ lockedFields, onPendingFileChange }: CreateConfigFormProps = {}) {
+export default function CreateConfigForm({
+  lockedFields,
+  onPendingFileChange,
+  valueLocked
+}: CreateConfigFormProps = {}) {
   const { t } = useTenantTranslation()
   const lockKey = !!lockedFields?.key
   const lockOptions = !!lockedFields?.options
@@ -458,7 +463,16 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
       </div>
 
       {/* Default Value */}
-      {defaultValueNode &&
+      {valueLocked ? (
+        <FieldGroup className='gap-1'>
+          <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
+          <div className='flex h-9 items-center gap-2 rounded-md border border-dashed bg-muted/30 px-2.5 text-xs text-muted-foreground'>
+            <span className='flex-1 truncate font-mono tracking-widest'>••••••••</span>
+          </div>
+          <span className='text-xs text-muted-foreground'>{t('configsPage.dialog.secretHint')}</span>
+        </FieldGroup>
+      ) : (
+        defaultValueNode &&
         (inputType === InputType.date ? (
           defaultValueNode
         ) : (
@@ -467,7 +481,8 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
             {defaultValueNode}
             {errors.value?.value && <FieldError className='text-xs' errors={[errors.value.value as never]} />}
           </FieldGroup>
-        ))}
+        ))
+      )}
 
       {/* Description */}
       <Controller
@@ -537,7 +552,7 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
       )}
 
       {/* Default Value — select (single value) */}
-      {inputType === InputType.select && (
+      {!valueLocked && inputType === InputType.select && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
           <Controller
@@ -591,7 +606,7 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
       )}
 
       {/* Default Values — multiSelect (array) */}
-      {inputType === InputType.multiSelect && (
+      {!valueLocked && inputType === InputType.multiSelect && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValuesField')}</FieldLabel>
           <Controller

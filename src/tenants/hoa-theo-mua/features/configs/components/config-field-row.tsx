@@ -160,13 +160,19 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
 
+  const isSecret = config.kind === ConfigKind.secret
+  const [isRevealed, setIsRevealed] = useState(false)
+  const [revealedValue, setRevealedValue] = useState<unknown>(undefined)
+  const { revealConfig, isRevealingConfig } = useRevealConfig()
+
   const { mutate: togglePublic, isPending: isTogglingPublic } = useMutation({
     mutationFn: (isPublic: boolean) => {
       const group = getGroupFromKey(config.key) || config.value.group
+      const value = isSecret && isRevealed ? revealedValue : config.value.value
 
       return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, group, kind: config.kind, isPublic, value: { ...config.value, group } }
+        body: { key: config.key, group, kind: config.kind, isPublic, value: { ...config.value, group, value } }
       })
     },
     onSuccess: () => toast.success(t('configKeys.toast.updated')),
@@ -176,16 +182,13 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
 
   const onSave = form.handleSubmit(({ value }) => saveValue(value))
 
-  const isSecret = config.kind === ConfigKind.secret
-  const [isRevealed, setIsRevealed] = useState(false)
-  const { revealConfig, isRevealingConfig } = useRevealConfig()
-
   const handleReveal = () => {
     revealConfig(
       { id: config.id },
       {
         onSuccess: (revealed) => {
           form.reset({ value: revealed.value.value })
+          setRevealedValue(revealed.value.value)
           setIsRevealed(true)
         },
         onError: () => toast.error(t('configKeys.toast.error'))
@@ -499,14 +502,16 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
         <Label
           htmlFor={`pub-${config.id}`}
           className='flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground'
-          title={t('configsPage.card.publicTooltip')}
+          title={
+            isSecret && !isRevealed ? t('configsPage.card.secretLockedTooltip') : t('configsPage.card.publicTooltip')
+          }
         >
           {t('configsPage.card.public')}
           <Switch
             id={`pub-${config.id}`}
             checked={config.isPublic}
             onCheckedChange={(checked) => togglePublic(checked)}
-            disabled={isTogglingPublic}
+            disabled={isTogglingPublic || (isSecret && !isRevealed)}
           />
         </Label>
 
