@@ -64,7 +64,7 @@ export const getColumns = ({
   onDeleteJob
 }: {
   t: TenantT
-  onDeleteJob?: (id: string, title: string) => void
+  onDeleteJob?: (identifier: string, title: string) => void
 }): ColumnDef<JobDescription>[] => {
   return [
     {
@@ -280,7 +280,7 @@ export const getColumns = ({
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id, title } = row.original
+        const { id, slug, title } = row.original
 
         return (
           <DropdownMenu>
@@ -315,7 +315,7 @@ export const getColumns = ({
                 <Link to={id}>{t('recruitment.jobs.actions.viewDetails')}</Link>
               </DropdownMenuItem>
               {onDeleteJob ? (
-                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteJob(id, title)}>
+                <DropdownMenuItem className='focus:text-destructive' onClick={() => onDeleteJob(slug ?? id, title)}>
                   {t('recruitment.jobs.actions.delete')}
                 </DropdownMenuItem>
               ) : null}

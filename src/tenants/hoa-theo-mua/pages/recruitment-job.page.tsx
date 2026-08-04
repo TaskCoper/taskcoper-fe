@@ -43,7 +43,7 @@ export default function RecruitmentJobPage() {
   const { jobDescription, isGettingJobDescription } = useGetJobDescription({ id })
 
   const { methods, updateJobDescription, isUpdating } = useUpdateJobDescription({
-    id,
+    identifier: jobDescription?.slug,
     jobDescription,
     onSuccess: () => setIsEditing(false)
   })

@@ -68,14 +68,14 @@ class JobDescriptionService extends BaseService {
     return data.value
   }
 
-  updateJobDescription = async ({ id, body }: { id: string; body: CreateJobDescriptionFormValues }) => {
-    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, toApiBody(body))
+  updateJobDescription = async ({ identifier, body }: { identifier: string; body: CreateJobDescriptionFormValues }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}`, toApiBody(body))
 
     return data.value
   }
 
-  deleteJobDescription = async ({ id }: { id: string }) => {
-    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
+  deleteJobDescription = async ({ identifier }: { identifier: string }) => {
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data.value
   }
