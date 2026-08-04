@@ -24,7 +24,7 @@ export const useDeleteArticle = ({ onDeleteSuccess }: DeleteArticlesParams = {})
     },
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: ['articles'] })
-      queryClient.invalidateQueries({ queryKey: ['article', variables.id] })
+      queryClient.invalidateQueries({ queryKey: ['article', variables.identifier] })
     }
   })
 

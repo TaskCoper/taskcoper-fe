@@ -199,12 +199,12 @@ function AuthorProfileCard({
 
 export default function NewsDetailPage() {
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
 
   const { t } = useTenantTranslation()
-  const { article, isError, isLoadingArticle } = useGetArticle(id)
+  const { article, isError, isLoadingArticle } = useGetArticle(slug)
 
-  if (!id) {
+  if (!slug) {
     return (
       <DetailState
         title={t(`${ARTICLE_DETAIL_PREFIX}.missingIdTitle`)}
@@ -230,8 +230,7 @@ export default function NewsDetailPage() {
 
   const statusLabel = t(ArticleStatusLabel[article.status])
   const authorEmail = article.user.email.trim()
-  const authorFullName = `${article.user.userFirstName} ${article.user.userLastName}`.trim()
-  const authorName = authorFullName || authorEmail || t(`${ARTICLE_DETAIL_PREFIX}.unknownAuthor`)
+  const authorName = article.user.userFullName || authorEmail || t(`${ARTICLE_DETAIL_PREFIX}.unknownAuthor`)
   const authorAvatarUrl = article.user.userAvatar
 
   return (
@@ -295,7 +294,7 @@ export default function NewsDetailPage() {
 
           <aside className='col-span-1 mt-8 space-y-6 lg:col-span-4 lg:mt-0'>
             <Button asChild className='w-full justify-center' aria-label={t(`${ARTICLE_DETAIL_PREFIX}.edit`)}>
-              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${id}/update`}>
+              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${slug}/update`}>
                 {t('articles.action.updateDetails')}
                 <PencilIcon className='size-4' />
               </Link>

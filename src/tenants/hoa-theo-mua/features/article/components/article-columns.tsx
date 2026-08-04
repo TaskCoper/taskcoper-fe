@@ -23,7 +23,7 @@ const ARTICLE_I18N_PREFIX = 'articles' as const
 
 interface GetColumnsParams {
   t: TenantT
-  onDeleteArticle: (id: string) => void
+  onDeleteArticle: (identifier: string) => void
   isDeletingArticle?: boolean
 }
 
@@ -63,7 +63,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       header: ({ column }) => <DataTableColumnHeader column={column} label={'articles.column.title'} />,
       cell: ({ row }) => (
         <Link
-          to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}`}
+          to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.slug}`}
           className='flex min-w-0 items-center gap-3 hover:underline'
         >
           <Avatar className='size-9 rounded-lg'>
@@ -162,11 +162,10 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
       enableColumnFilter: true,
       size: 30
     },
-
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { id } = row.original
+        const { slug, id } = row.original
 
         return (
           <div className='flex justify-end pr-2'>
@@ -181,12 +180,12 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
                 <DropdownMenuLabel>{t(`${ARTICLE_I18N_PREFIX}.action.actions`)}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}`}>
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${slug}`}>
                     {t(`${ARTICLE_I18N_PREFIX}.action.viewDetails`)}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${row.original.id}/update`}>
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${slug}/update`}>
                     {t(`${ARTICLE_I18N_PREFIX}.action.updateDetails`)}
                   </Link>
                 </DropdownMenuItem>
@@ -194,7 +193,7 @@ export const getColumns = ({ t, onDeleteArticle, isDeletingArticle }: GetColumns
                   className='focus:text-destructive'
                   disabled={isDeletingArticle}
                   onClick={() => {
-                    onDeleteArticle(id)
+                    onDeleteArticle(slug ?? id)
                   }}
                 >
                   {t(`${ARTICLE_I18N_PREFIX}.action.delete`)}

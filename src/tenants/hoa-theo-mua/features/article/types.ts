@@ -41,6 +41,5 @@ export interface UserResponse {
   userId: string
   email: string
   userAvatar: string | null
-  userFirstName: string
-  userLastName: string
+  userFullName: string
 }

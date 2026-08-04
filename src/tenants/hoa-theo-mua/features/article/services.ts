@@ -21,8 +21,8 @@ class ArticleService extends BaseService {
     return data
   }
 
-  getArticle = async ({ id }: { id?: string }) => {
-    const { data } = await this.get<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}/${id}`)
+  getArticle = async ({ identifier }: { identifier?: string }) => {
+    const { data } = await this.get<BaseResponse<ArticleRow>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data
   }
@@ -51,16 +51,16 @@ class ArticleService extends BaseService {
     return data
   }
 
-  deleteArticle = async ({ id }: { id: string }) => {
-    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`)
+  deleteArticle = async ({ identifier }: { identifier: string }) => {
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}`)
 
     return data.value
   }
 
   updateArticle = async ({
-    id,
+    identifier,
     body
-  }: { id: string | undefined } & {
+  }: { identifier: string | undefined } & {
     body: AddArticleForm
   }) => {
     const { categories, ...rest } = body
@@ -70,7 +70,7 @@ class ArticleService extends BaseService {
       categoryIds: categories.map((x) => x.id)
     }
 
-    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}`, payload)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${identifier}`, payload)
 
     return data.value
   }

@@ -49,10 +49,10 @@ const getArticleCategories = (article: { categories: CategoryResponse[] }): Cate
 
 export default function NewsUpdatePage() {
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
   const { t } = useTenantTranslation()
-  const { article } = useGetArticle(id)
-  const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.id)
+  const { article } = useGetArticle(slug)
+  const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.slug ?? article?.id)
   const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
@@ -92,7 +92,7 @@ export default function NewsUpdatePage() {
   }
 
   const statusLabel = status === 1 ? t(`${ARTICLE_STATUS_PREFIX}.published`) : t(`${ARTICLE_STATUS_PREFIX}.draft`)
-  const isSubmitDisabled = isUpdatingArticle || !id || isUploading
+  const isSubmitDisabled = isUpdatingArticle || !slug || isUploading
 
   return (
     <div className='h-full overflow-y-auto flex flex-col gap-4 p-4 max-w-5xl mx-auto'>

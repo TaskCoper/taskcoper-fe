@@ -80,8 +80,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'news', element: <NewsArticlesPage /> },
           { path: 'news/categories', element: <NewsCategoriesPage /> },
           { path: 'news/add', element: <NewsAddPage /> },
-          { path: 'news/:id/update', element: <NewsUpdatePage /> },
-          { path: 'news/:id', element: <NewsDetailPage /> }
+          { path: 'news/:slug/update', element: <NewsUpdatePage /> },
+          { path: 'news/:slug', element: <NewsDetailPage /> }
         ]
       },
       {
