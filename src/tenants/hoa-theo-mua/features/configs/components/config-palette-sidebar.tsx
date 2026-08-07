@@ -31,6 +31,7 @@ interface LockedPaletteItem {
 type Tone = 'emerald' | 'rose' | 'sky' | 'amber' | 'violet'
 
 interface Props {
+  className?: string
   depotOptions: InputOption[]
   orderTagOptions: InputOption[]
   productCollectionConfigs: Config[]
@@ -48,6 +49,7 @@ interface Props {
 }
 
 export default function ConfigPaletteSidebar({
+  className,
   depotOptions,
   orderTagOptions,
   productCollectionConfigs,
@@ -91,7 +93,7 @@ export default function ConfigPaletteSidebar({
   )
 
   return (
-    <div className='w-80 shrink-0 overflow-y-auto border-l'>
+    <div className={cn('w-80 shrink-0 overflow-y-auto border-l', className)}>
       <div className='px-2 py-4'>
         {/* Async-backed */}
         <PaletteSection title={t('configsPage.lockedPalette.title')}>

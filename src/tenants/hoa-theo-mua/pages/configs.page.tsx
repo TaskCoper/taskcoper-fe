@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
+import { ChevronDown, FileText, KeyRound, PanelRight, Plus, Settings2 } from 'lucide-react'
 import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
@@ -143,6 +144,7 @@ export default function ConfigsPage() {
   const [editingFeedbacksConfig, setEditingFeedbacksConfig] = useState<Config | null>(null)
   const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
+  const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
     () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
@@ -366,7 +368,7 @@ export default function ConfigsPage() {
 
   return (
     <div className='flex h-full min-h-0'>
-      <div className='flex flex-col gap-4 p-6 w-6xl mx-auto'>
+      <div className='flex w-full min-h-0 flex-col gap-4 p-4 lg:max-w-6xl lg:mx-auto lg:p-6'>
         <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <span>{t('configsPage.breadcrumb')}</span>
           <ChevronDown className='size-3.5 -rotate-90' />
@@ -379,11 +381,21 @@ export default function ConfigsPage() {
           )}
         </nav>
 
-        <div className='flex items-start justify-between'>
+        <div className='flex items-start justify-between gap-2'>
           <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
+          <Button
+            type='button'
+            variant='outline'
+            size='icon'
+            className='shrink-0 lg:hidden'
+            onClick={() => setPaletteSheetOpen(true)}
+          >
+            <PanelRight className='size-4' />
+            <span className='sr-only'>{t('configsPage.palette.title')}</span>
+          </Button>
         </div>
 
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-1 flex-col gap-4 min-h-0'>
           <div className='flex flex-wrap items-center gap-2'>
             {KIND_ORDER.map((kind) => {
               const isActive = kind === currentKind
@@ -416,15 +428,19 @@ export default function ConfigsPage() {
               ))}
             </div>
           ) : (
-            <Tabs value={currentGroup} onValueChange={(v) => setActiveGroup(v)} className='flex flex-col gap-0'>
-              <div className='border-b'>
-                <TabsList className='h-auto gap-0 rounded-none bg-transparent p-0'>
+            <Tabs
+              value={currentGroup}
+              onValueChange={(v) => setActiveGroup(v)}
+              className='flex flex-1 flex-col gap-0 min-h-0'
+            >
+              <div className='shrink-0 overflow-x-auto border-b'>
+                <TabsList className='h-auto w-max gap-0 rounded-none bg-transparent p-0'>
                   {groups.map((group) => (
                     <TabsTrigger
                       key={group}
                       value={group}
                       className={cn(
-                        'relative h-9 rounded-none border-b-2 border-b-transparent px-4 text-sm font-medium capitalize text-muted-foreground shadow-none transition-none',
+                        'relative h-9 shrink-0 rounded-none border-b-2 border-b-transparent px-4 text-sm font-medium capitalize text-muted-foreground shadow-none transition-none',
                         'data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none'
                       )}
                     >
@@ -435,7 +451,7 @@ export default function ConfigsPage() {
                   <Button
                     variant='ghost'
                     size='sm'
-                    className='text-muted-foreground first:ml-0 ml-2'
+                    className='shrink-0 text-muted-foreground first:ml-0 ml-2'
                     onClick={() => openStaticPaletteCreate(InputType.text)}
                   >
                     <Plus className='size-3.5' />
@@ -444,27 +460,32 @@ export default function ConfigsPage() {
                 </TabsList>
               </div>
 
-              {groups.length === 0 ? (
-                <p className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
-              ) : (
-                groups.map((group) => (
-                  <TabsContent key={group} value={group} className='mt-3 space-y-4'>
-                    {(groupedConfigs[group] ?? []).length === 0 ? (
-                      <p className='py-8 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
-                    ) : (
-                      (groupedConfigs[group] ?? []).map((config) => (
-                        <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
-                      ))
-                    )}
-                  </TabsContent>
-                ))
-              )}
+              <div className='min-h-0 flex-1 overflow-y-auto'>
+                {groups.length === 0 ? (
+                  <p className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
+                ) : (
+                  groups.map((group) => (
+                    <TabsContent key={group} value={group} className='mt-3 space-y-4'>
+                      {(groupedConfigs[group] ?? []).length === 0 ? (
+                        <p className='py-8 text-center text-sm text-muted-foreground'>
+                          {t('configsPage.emptySection')}
+                        </p>
+                      ) : (
+                        (groupedConfigs[group] ?? []).map((config) => (
+                          <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
+                        ))
+                      )}
+                    </TabsContent>
+                  ))
+                )}
+              </div>
             </Tabs>
           )}
         </div>
       </div>
 
       <ConfigPaletteSidebar
+        className='hidden lg:block'
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
         productCollectionConfigs={productCollectionConfigs}
@@ -479,6 +500,48 @@ export default function ConfigsPage() {
         onOpenB2BService={openB2BServiceEditor}
         onOpenB2BOverview={openB2BOverviewEditor}
       />
+
+      <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
+        <SheetContent side='right' className='w-4/5 gap-0 p-0 sm:max-w-sm'>
+          <SheetHeader className='border-b'>
+            <SheetTitle>{t('configsPage.palette.title')}</SheetTitle>
+          </SheetHeader>
+          <ConfigPaletteSidebar
+            className='w-full flex-1 overflow-y-auto border-0'
+            depotOptions={depotOptions}
+            orderTagOptions={orderTagOptions}
+            productCollectionConfigs={productCollectionConfigs}
+            feedbacksConfigs={feedbacksConfigs}
+            bannersConfigs={bannersConfigs}
+            b2bServicesConfigs={b2bServiceDocs}
+            b2bOverviewConfig={b2bOverviewConfig}
+            onCreateLocked={(item) => {
+              setPaletteSheetOpen(false)
+              openLockedPaletteCreate(item)
+            }}
+            onOpenProductCollection={(config) => {
+              setPaletteSheetOpen(false)
+              openProductCollectionDialog(config)
+            }}
+            onOpenFeedbacks={(config) => {
+              setPaletteSheetOpen(false)
+              openFeedbacksDialog(config)
+            }}
+            onOpenBanners={(config) => {
+              setPaletteSheetOpen(false)
+              openBannersDialog(config)
+            }}
+            onOpenB2BService={(config) => {
+              setPaletteSheetOpen(false)
+              openB2BServiceEditor(config)
+            }}
+            onOpenB2BOverview={() => {
+              setPaletteSheetOpen(false)
+              openB2BOverviewEditor()
+            }}
+          />
+        </SheetContent>
+      </Sheet>
 
       <CreateConfigDialog
         open={createOpen}
