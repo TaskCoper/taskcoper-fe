@@ -16,9 +16,11 @@ import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
+import { isProductSignatureKey } from '../signature-landing-palette'
 import { ConfigKind, ConfigKindLabel, InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
 import DurationMinutesInput from './duration-minutes-input'
+import SignatureLandingEditor from './signature-landing-editor'
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
 
@@ -91,7 +93,10 @@ export default function CreateConfigForm({
 
   const inputType = (watch('value.inputType') ?? InputType.text) as InputType
   const availableRules = AVAILABLE_VALIDATIONS[inputType] ?? []
-  const isDurationInSeconds = isSecondsAsMinutesConfigKey(watch('key'))
+  const configKey = watch('key')
+  const isDurationInSeconds = isSecondsAsMinutesConfigKey(configKey)
+  // `products.signature` is a product → landing-page map; it gets a dedicated editor instead of raw JSON.
+  const isSignatureLanding = inputType === InputType.json && isProductSignatureKey(configKey)
 
   const {
     fields: optionFields,
@@ -214,6 +219,16 @@ export default function CreateConfigForm({
       case InputType.text:
         return <Textarea rows={3} {...register('value.value')} />
       case InputType.json:
+        if (isSignatureLanding) {
+          return (
+            <Controller
+              name='value.value'
+              control={control}
+              render={({ field }) => <SignatureLandingEditor value={field.value} onChange={field.onChange} />}
+            />
+          )
+        }
+        return <Textarea rows={4} placeholder='{}' {...register('value.value')} />
       case InputType.address:
         return <Textarea rows={4} placeholder='{}' {...register('value.value')} />
       case InputType.select:
@@ -473,7 +488,8 @@ export default function CreateConfigForm({
         </FieldGroup>
       ) : (
         defaultValueNode &&
-        (inputType === InputType.date ? (
+        // The date picker and the signature editor render their own labels.
+        (inputType === InputType.date || isSignatureLanding ? (
           defaultValueNode
         ) : (
           <FieldGroup className='gap-1'>
