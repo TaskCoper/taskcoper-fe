@@ -432,7 +432,10 @@
     },
     "filter": {
       "pinned": "Đã ghim",
-      "notPinned": "Chưa ghim"
+      "notPinned": "Chưa ghim",
+      "product": "Sản phẩm",
+      "combo": "Combo",
+      "material": "Thành phần"
     },
     "column": {
       "selectAll": "Chọn tất cả sản phẩm",
@@ -524,7 +527,8 @@
         "specifications": "Thông số",
         "pricing": "Giá",
         "inventory": "Tồn kho",
-        "overview": "Tổng quan"
+        "overview": "Tổng quan",
+        "quantity": "Định lượng"
       },
       "section": {
         "basicInfo": "Thông tin cơ bản",
@@ -560,6 +564,44 @@
       "variants": {
         "title": "Biến thể",
         "options": "Tùy chọn"
+      },
+      "comboSpecification": {
+        "title": "Định lượng combo",
+        "description": "Các thành phần và số lượng cần thiết để tạo một combo.",
+        "core": "Thành phần Core",
+        "coreDescription": "Các thành phần chính của combo.",
+        "support": "Thành phần Support",
+        "supportDescription": "Các thành phần hỗ trợ hoặc phụ kiện của combo.",
+        "material": "Thành phần",
+        "quantityPerCombo": "Số lượng / combo",
+        "baseQuantity": "Định lượng gốc",
+        "actualQuantity": "Định lượng thực tế",
+        "role": "Vai trò",
+        "factor": "Chỉ số kích thước",
+        "factorHint": "Chỉ số phải nằm trong khoảng từ 1 đến 10",
+        "saveFactor": "Lưu chỉ số",
+        "editButton": "Chỉnh sửa",
+        "saveChanges": "Lưu thay đổi",
+        "unit": "Đơn vị",
+        "availableForSale": "Có thể bán",
+        "maxComboPossible": "Combo tối đa",
+        "unnamedMaterial": "Thành phần chưa đặt tên",
+        "addButton": "Thêm thành phần",
+        "addTitle": "Thêm thành phần vào công thức",
+        "addDescription": "Chọn sản phẩm vật liệu, nhập định lượng và phân loại Core hoặc Support.",
+        "searchMaterial": "Tìm theo tên hoặc mã vật liệu...",
+        "noMaterials": "Không tìm thấy vật liệu phù hợp",
+        "stock": "Tồn kho",
+        "save": "Lưu công thức",
+        "saveSuccess": "Đã lưu công thức combo thành công",
+        "addSuccess": "Đã thêm thành phần vào công thức combo thành công",
+        "selectAll": "Chọn tất cả thành phần",
+        "selectMaterial": "Chọn thành phần {{name}}",
+        "deleteButton": "Xóa vật liệu",
+        "deleteTitle": "Xóa vật liệu khỏi công thức?",
+        "deleteDescription": "Bạn có chắc muốn xóa {{count}} vật liệu đã chọn khỏi công thức combo không?",
+        "deleteConfirm": "Xóa vật liệu",
+        "deleteSuccess": "Đã xóa vật liệu khỏi công thức combo"
       }
     },
     "field": {

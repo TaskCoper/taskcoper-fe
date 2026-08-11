@@ -146,7 +146,7 @@ export const INVENTORY_FIELDS: FieldConfig[] = [
   { key: 'stockErrorRaw', label: 'products.field.stockError', format: 'quantity' }
 ]
 
-export const TAB_VALUES = ['overview', 'specifications', 'pricing', 'inventory', 'variants'] as const
+export const TAB_VALUES = ['overview', 'specifications', 'pricing', 'inventory', 'variants', 'quantity'] as const
 
 export interface SpecRow {
   label: string

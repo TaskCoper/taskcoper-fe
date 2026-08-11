@@ -26,6 +26,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
+import { ComboSpecification } from '../features/products/combos/components/combo-specification'
 import {
   ATTRIBUTE_OVERVIEW_FIELDS,
   BASIC_INFO_FIELDS,
@@ -44,6 +45,7 @@ import {
   VariantRow
 } from '../features/products/components/product-detail/parts'
 import { useGetProduct } from '../features/products/hooks/use-get-product'
+import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
 import { formatPrice, formatQuantity, parseNumber, productDetailToProduct } from '../features/products/utils'
 
 export default function ProductPage() {
@@ -68,6 +70,21 @@ export default function ProductPage() {
 
   const product = fetchedDetail ? productDetailToProduct(fetchedDetail) : undefined
   const variants = fetchedDetail?.children?.map((child) => productDetailToProduct(child)) ?? []
+  const isCombo = product?.productType?.trim().toLowerCase() === 'combo'
+  const hasVariants = variants.length > 0
+  const isVariant = Boolean(product?.parentProductId?.trim())
+  const canEditFactor = isVariant || !hasVariants
+  const canManageComboSpecification = isCombo || hasVariants
+  const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
+
+  const {
+    comboSpecification,
+    isGettingComboSpecification,
+    isError: isComboSpecificationError
+  } = useGetComboSpecification({
+    id: id ?? '',
+    enabled: canManageComboSpecification && isComboSpecificationRequested
+  })
 
   if (isGettingProduct) return <ProductDetailSkeleton />
 
@@ -93,7 +110,6 @@ export default function ProductPage() {
 
   const displayName = productName?.trim() || t('products.common.unnamed')
   const active = isActiveStatus(status)
-
   const parent = product.parent
   const parentName = parent?.productName?.trim() || parent?.productCode?.trim() || t('products.common.unnamed')
 
@@ -122,8 +138,11 @@ export default function ProductPage() {
   const inventoryRows = buildRows(INVENTORY_FIELDS, product)
 
   const rawTab = searchParams.get('tab')
+  const isComboSpecificationTab = rawTab === 'quantity'
   const isValidTab =
-    TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) && (rawTab !== 'variants' || variants.length > 0)
+    TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) &&
+    (rawTab !== 'variants' || variants.length > 0) &&
+    (!isComboSpecificationTab || canManageComboSpecification)
   const currentTab = isValidTab ? rawTab! : 'overview'
 
   const handleTabChange = (value: string) => {
@@ -160,6 +179,7 @@ export default function ProductPage() {
     { value: 'specifications', label: t('products.detail.tab.specifications') },
     { value: 'pricing', label: t('products.detail.tab.pricing') },
     { value: 'inventory', label: t('products.detail.tab.inventory') },
+    ...(canManageComboSpecification ? [{ value: 'quantity', label: t('products.detail.tab.quantity') }] : []),
     ...(variants.length > 0 ? [{ value: 'variants', label: t('products.detail.variants.title') }] : [])
   ]
 
@@ -435,6 +455,28 @@ export default function ProductPage() {
               <DetailRows rows={inventoryRows} t={t} />
             </DetailSection>
           </TabsContent>
+
+          {canManageComboSpecification && (
+            <TabsContent value='quantity' className='mt-0'>
+              <DetailSection
+                title={t('products.detail.comboSpecification.title')}
+                description={t('products.detail.comboSpecification.description')}
+              >
+                <ComboSpecification
+                  key={`${id}-${comboSpecification?.factor ?? 1}`}
+                  productId={id ?? ''}
+                  comboId={product.parentProductId?.trim() || id || ''}
+                  subId={comboSpecification?.subId ?? ''}
+                  factor={comboSpecification?.factor ?? 1}
+                  canEditFactor={canEditFactor}
+                  materials={comboSpecification?.materials ?? []}
+                  isLoading={isGettingComboSpecification}
+                  isError={isComboSpecificationError}
+                  t={t}
+                />
+              </DetailSection>
+            </TabsContent>
+          )}
 
           {/* Variants */}
           {variants.length > 0 && (

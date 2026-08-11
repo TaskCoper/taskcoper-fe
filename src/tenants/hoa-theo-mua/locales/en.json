@@ -432,7 +432,10 @@
     },
     "filter": {
       "pinned": "Pinned",
-      "notPinned": "Not pinned"
+      "notPinned": "Not pinned",
+      "product": "Product",
+      "combo": "Combo",
+      "material": "Material"
     },
     "column": {
       "selectAll": "Select all products",
@@ -524,7 +527,8 @@
         "specifications": "Specifications",
         "pricing": "Pricing",
         "inventory": "Inventory",
-        "overview": "Overview"
+        "overview": "Overview",
+        "quantity": "Quantity"
       },
       "section": {
         "basicInfo": "Basic information",
@@ -560,6 +564,44 @@
       "variants": {
         "title": "Variants",
         "options": "Options"
+      },
+      "comboSpecification": {
+        "title": "Combo quantity",
+        "description": "The components and quantities required to make one combo.",
+        "core": "Core materials",
+        "coreDescription": "The main materials in this combo.",
+        "support": "Support materials",
+        "supportDescription": "Supporting materials or accessories in this combo.",
+        "material": "Material",
+        "quantityPerCombo": "Quantity / combo",
+        "baseQuantity": "Base quantity",
+        "actualQuantity": "Actual quantity",
+        "role": "Role",
+        "factor": "Size factor",
+        "factorHint": "Factor must be between 1 and 10",
+        "saveFactor": "Save factor",
+        "editButton": "Edit",
+        "saveChanges": "Save changes",
+        "unit": "Unit",
+        "availableForSale": "Available",
+        "maxComboPossible": "Max combos",
+        "unnamedMaterial": "Unnamed material",
+        "addButton": "Add material",
+        "addTitle": "Add material to recipe",
+        "addDescription": "Choose material products, enter quantities, and assign Core or Support roles.",
+        "searchMaterial": "Search by material name or code...",
+        "noMaterials": "No matching materials found",
+        "stock": "Stock",
+        "save": "Save recipe",
+        "saveSuccess": "Combo recipe saved successfully",
+        "addSuccess": "Material added to combo recipe successfully",
+        "selectAll": "Select all materials",
+        "selectMaterial": "Select material {{name}}",
+        "deleteButton": "Delete materials",
+        "deleteTitle": "Delete materials from recipe?",
+        "deleteDescription": "Are you sure you want to delete {{count}} selected materials from this combo recipe?",
+        "deleteConfirm": "Delete materials",
+        "deleteSuccess": "Materials removed from combo recipe"
       }
     },
     "field": {

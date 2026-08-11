@@ -42,7 +42,11 @@ export default function ProductsPage() {
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
   const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
+  const [productTypeFilter] = useQueryState('products_productType', parseAsString)
+  const [legacyTagFilter] = useQueryState('products_tag', parseAsString)
 
+  // The table stores the product-type filter under its column id; the API calls it `tag`.
+  const tag = productTypeFilter ?? legacyTagFilter ?? undefined
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined
@@ -56,7 +60,8 @@ export default function ProductsPage() {
     categoryIds,
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
     priceTo: Number.isFinite(priceTo) ? priceTo : undefined,
-    isPin
+    isPin,
+    tag
   })
 
   const items = products?.value.items ?? []
