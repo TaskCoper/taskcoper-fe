@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useConfirmStore } from '@/lib/zustand/confirm.store'
+// import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { SaveIcon, Trash2 } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm, useWatch, type SubmitHandler } from 'react-hook-form'
@@ -21,7 +22,7 @@ import {
   type AhamovePayloadInput
 } from '../ahamove-palette'
 import { useCreateConfig } from '../hooks/use-create-config'
-import { useDeleteConfig } from '../hooks/use-delete-config'
+// import { useDeleteConfig } from '../hooks/use-delete-config'
 import { useUpdateConfig } from '../hooks/use-update-config'
 import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
@@ -67,10 +68,10 @@ export default function AhamoveCreateConfigDialog({
   const { t, i18n } = useTenantTranslation()
   const locale = i18n.language
   const isEdit = !!existingConfig
-  const { confirm } = useConfirmStore()
+  // const { confirm } = useConfirmStore()
   const { createConfig, isCreatingConfig } = useCreateConfig()
   const { updateConfig, isUpdatingConfig } = useUpdateConfig(existingConfig?.id)
-  const { deleteConfig, isDeletingConfig } = useDeleteConfig()
+  // const { deleteConfig, isDeletingConfig } = useDeleteConfig()
 
   const defaults = useMemo<AhamoveFormValues>(() => {
     if (!request) {
@@ -147,23 +148,24 @@ export default function AhamoveCreateConfigDialog({
     }
   }
 
-  const handleDelete = async () => {
-    if (!existingConfig) return
-    const confirmed = await confirm({
-      title: t('configsPage.confirm.deleteTitle'),
-      description: t('configsPage.confirm.deleteDescription'),
-      confirmText: t('configsPage.confirm.deleteConfirm'),
-      cancelText: t('configsPage.confirm.deleteCancel'),
-      variant: 'destructive'
-    })
-    if (!confirmed) return
-    deleteConfig({ id: existingConfig.id }, { onSuccess: onClose })
-  }
+  // Config deletion is temporarily disabled.
+  // const handleDelete = async () => {
+  //   if (!existingConfig) return
+  //   const confirmed = await confirm({
+  //     title: t('configsPage.confirm.deleteTitle'),
+  //     description: t('configsPage.confirm.deleteDescription'),
+  //     confirmText: t('configsPage.confirm.deleteConfirm'),
+  //     cancelText: t('configsPage.confirm.deleteCancel'),
+  //     variant: 'destructive'
+  //   })
+  //   if (!confirmed) return
+  //   deleteConfig({ id: existingConfig.id }, { onSuccess: onClose })
+  // }
 
   const requestType = request?.type ?? null
   const requestName = request ? localizedAhamoveName(request, locale) : ''
   const keyPreview = existingConfig?.key ?? (request ? `ahamove.shipping.${normalizeAhamoveKey(request._id)}` : '')
-  const isSubmitting = (isEdit ? isUpdatingConfig : isCreatingConfig) || isDeletingConfig
+  const isSubmitting = isEdit ? isUpdatingConfig : isCreatingConfig
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -292,17 +294,19 @@ export default function AhamoveCreateConfigDialog({
         </div>
 
         <DialogFooter className='pb-6 px-6'>
+          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
           {isEdit && (
-            <Button
-              type='button'
-              variant='destructive'
-              className='mr-auto'
-              disabled={isSubmitting}
-              onClick={handleDelete}
-            >
-              <Trash2 className='size-3.5' />
-              {t('configsPage.dialog.delete')}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className='mr-auto inline-flex'>
+                  <Button type='button' variant='destructive' disabled className='pointer-events-none'>
+                    <Trash2 className='size-3.5' />
+                    {t('configsPage.dialog.delete')}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{t('configsPage.dialog.deleteDisabledTooltip')}</TooltipContent>
+            </Tooltip>
           )}
           <Button type='button' variant='outline' disabled={isSubmitting} onClick={onClose}>
             {t('configsPage.dialog.cancel')}

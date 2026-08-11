@@ -12,7 +12,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { slugify } from '../product-collection-palette'
 import type { ProductCollectionFormValues } from '../validations'
 import { ChipInput, LocalizedTabs } from './collection-shared'
-import ProductCollectionCampaignsSection from './product-collection-campaigns-section'
+// Campaign UI temporarily disabled — see the commented section at the bottom of this file.
+// import ProductCollectionCampaignsSection from './product-collection-campaigns-section'
 
 type Lang = 'vi' | 'en'
 
@@ -42,7 +43,7 @@ export default function ProductCollectionCardRow({
   const fileRef = useRef<HTMLInputElement>(null)
 
   const card = useWatch({ control, name: `cards.${index}` })
-  const hasCampaigns = useWatch({ control, name: 'hasCampaigns' })
+  // const hasCampaigns = useWatch({ control, name: 'hasCampaigns' })
 
   const displayPreview = pendingPreviewUrl || card?.image || ''
   const displayName = card?.name.vi || t('configsPage.productCollectionDialog.card.untitled', { index: index + 1 })
@@ -247,7 +248,7 @@ export default function ProductCollectionCardRow({
           </div>
         </div>
 
-        {hasCampaigns && <ProductCollectionCampaignsSection cardIndex={index} />}
+        {/* {hasCampaigns && <ProductCollectionCampaignsSection cardIndex={index} />} */}
       </AccordionContent>
     </AccordionItem>
   )
