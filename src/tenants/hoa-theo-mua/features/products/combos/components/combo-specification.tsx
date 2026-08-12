@@ -414,7 +414,7 @@ export function ComboSpecification({
 
   const coreMaterials = materials.filter((material) => String(material.role) === CORE_ROLE)
   const supportMaterials = materials.filter((material) => String(material.role) !== CORE_ROLE)
-  const isFactorValid = factor >= 1 && factor <= 10
+  const isFactorValid = factor >= 1
 
   const handleStartEditing = () => {
     setEditValues(
@@ -536,7 +536,6 @@ export function ComboSpecification({
                     id='combo-factor'
                     type='number'
                     min={1}
-                    max={10}
                     step={0.1}
                     value={factor}
                     onFocus={(event) => event.currentTarget.select()}

@@ -578,7 +578,7 @@
         "actualQuantity": "Định lượng thực tế",
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
-        "factorHint": "Chỉ số phải nằm trong khoảng từ 1 đến 10",
+        "factorHint": "Chỉ số phải lớn hơn hoặc bằng 1",
         "saveFactor": "Lưu chỉ số",
         "editButton": "Chỉnh sửa",
         "saveChanges": "Lưu thay đổi",

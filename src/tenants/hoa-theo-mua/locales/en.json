@@ -578,7 +578,7 @@
         "actualQuantity": "Actual quantity",
         "role": "Role",
         "factor": "Size factor",
-        "factorHint": "Factor must be between 1 and 10",
+        "factorHint": "Factor must be greater than or equal to 1",
         "saveFactor": "Save factor",
         "editButton": "Edit",
         "saveChanges": "Save changes",
