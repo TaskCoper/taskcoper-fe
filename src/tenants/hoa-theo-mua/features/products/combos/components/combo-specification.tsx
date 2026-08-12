@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
@@ -14,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { cn } from '@/shared/utils'
 import { CheckIcon, PencilIcon, PlusIcon, SearchIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { ComboMaterial, MaterialOption, UpdateComboSpecificationMaterial } from '../types'
@@ -58,87 +60,114 @@ function ComboMaterialTable({
   const allSelected = materialIds.length > 0 && materialIds.every((materialId) => selectedMaterialIds.has(materialId))
 
   return (
-    <div className='overflow-x-auto rounded-lg border'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className='w-12'>
-              <Checkbox
-                checked={allSelected}
-                onCheckedChange={() => onToggleAll(materialIds)}
-                aria-label={t('products.detail.comboSpecification.selectAll')}
-              />
-            </TableHead>
-            <TableHead>{t('products.detail.comboSpecification.material')}</TableHead>
-            <TableHead className='text-right'>{t('products.detail.comboSpecification.baseQuantity')}</TableHead>
-            <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
-            <TableHead>{t('products.detail.comboSpecification.unit')}</TableHead>
-            <TableHead>{t('products.detail.comboSpecification.role')}</TableHead>
-            <TableHead className='text-right'>{t('products.detail.comboSpecification.availableForSale')}</TableHead>
-            <TableHead className='text-right'>{t('products.detail.comboSpecification.maxComboPossible')}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {materials.map((material, index) => (
-            <TableRow key={`${material.materialId}-${index}`}>
-              <TableCell>
+    <div className='overflow-hidden rounded-xl border bg-background shadow-sm'>
+      <div className='overflow-x-auto'>
+        <Table className='min-w-245'>
+          <TableHeader className='bg-muted/40'>
+            <TableRow>
+              <TableHead className='w-12'>
                 <Checkbox
-                  checked={selectedMaterialIds.has(material.materialId)}
-                  onCheckedChange={() => onToggle(material.materialId)}
-                  aria-label={t('products.detail.comboSpecification.selectMaterial', {
-                    name: material.materialName || material.materialId
-                  })}
+                  checked={allSelected}
+                  onCheckedChange={() => onToggleAll(materialIds)}
+                  aria-label={t('products.detail.comboSpecification.selectAll')}
                 />
-              </TableCell>
-              <TableCell className='min-w-52 font-medium'>
-                {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
-              </TableCell>
-              <TableCell className='text-right tabular-nums'>
-                {isEditing ? (
-                  <Input
-                    type='number'
-                    min={1}
-                    step={1}
-                    value={editValues[material.materialId]?.quantity ?? material.quantityPerCombo}
-                    onChange={(event) => onEditChange(material.materialId, { quantity: Number(event.target.value) })}
-                    className='ml-auto w-24'
-                  />
-                ) : (
-                  material.quantityPerCombo
-                )}
-              </TableCell>
-              <TableCell className='text-right font-semibold tabular-nums'>
-                {getActualQuantity(editValues[material.materialId]?.quantity ?? material.quantityPerCombo, factor)}
-              </TableCell>
-              <TableCell>{material.unit || '-'}</TableCell>
-              <TableCell>
-                {isEditing ? (
-                  <Select
-                    value={editValues[material.materialId]?.isCore ? CORE_ROLE : '2'}
-                    onValueChange={(value) => onEditChange(material.materialId, { isCore: value === CORE_ROLE })}
-                  >
-                    <SelectTrigger className='w-40 min-w-40'>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={CORE_ROLE}>{t('products.detail.comboSpecification.core')}</SelectItem>
-                      <SelectItem value='2'>{t('products.detail.comboSpecification.support')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : String(material.role) === CORE_ROLE ? (
-                  t('products.detail.comboSpecification.core')
-                ) : (
-                  t('products.detail.comboSpecification.support')
-                )}
-              </TableCell>
-              <TableCell className='text-right tabular-nums'>{material.availableForSale ?? '-'}</TableCell>
-              <TableCell className='text-right font-semibold tabular-nums'>
-                {material.maxComboPossible ?? '-'}
-              </TableCell>
+              </TableHead>
+              <TableHead>{t('products.detail.comboSpecification.material')}</TableHead>
+              <TableHead className='text-right'>{t('products.detail.comboSpecification.baseQuantity')}</TableHead>
+              <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
+              <TableHead>{t('products.detail.comboSpecification.unit')}</TableHead>
+              <TableHead>{t('products.detail.comboSpecification.role')}</TableHead>
+              <TableHead className='text-right'>{t('products.detail.comboSpecification.availableForSale')}</TableHead>
+              <TableHead className='text-right'>{t('products.detail.comboSpecification.maxComboPossible')}</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {materials.map((material, index) => (
+              <TableRow key={`${material.materialId}-${index}`}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedMaterialIds.has(material.materialId)}
+                    onCheckedChange={() => onToggle(material.materialId)}
+                    aria-label={t('products.detail.comboSpecification.selectMaterial', {
+                      name: material.materialName || material.materialId
+                    })}
+                  />
+                </TableCell>
+                <TableCell className='min-w-52 font-medium'>
+                  <div className='flex min-w-0 flex-col'>
+                    <span className='truncate'>
+                      {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
+                    </span>
+                    <span className='font-mono text-xs font-normal text-muted-foreground'>{material.materialId}</span>
+                  </div>
+                </TableCell>
+                <TableCell className='text-right tabular-nums'>
+                  {isEditing ? (
+                    <Input
+                      type='number'
+                      min={1}
+                      step={1}
+                      value={editValues[material.materialId]?.quantity ?? material.quantityPerCombo}
+                      onChange={(event) => onEditChange(material.materialId, { quantity: Number(event.target.value) })}
+                      className='ml-auto h-9 w-24'
+                    />
+                  ) : (
+                    material.quantityPerCombo
+                  )}
+                </TableCell>
+                <TableCell className='text-right font-semibold tabular-nums text-primary'>
+                  {getActualQuantity(editValues[material.materialId]?.quantity ?? material.quantityPerCombo, factor)}
+                </TableCell>
+                <TableCell>
+                  {material.unit ? (
+                    <Badge variant='outline' className='font-normal'>
+                      {material.unit}
+                    </Badge>
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
+                <TableCell>
+                  {isEditing ? (
+                    <Select
+                      value={editValues[material.materialId]?.isCore ? CORE_ROLE : '2'}
+                      onValueChange={(value) => onEditChange(material.materialId, { isCore: value === CORE_ROLE })}
+                    >
+                      <SelectTrigger className='w-40 min-w-40'>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={CORE_ROLE}>{t('products.detail.comboSpecification.core')}</SelectItem>
+                        <SelectItem value='2'>{t('products.detail.comboSpecification.support')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge
+                      variant='secondary'
+                      className={cn(
+                        'font-medium',
+                        String(material.role) === CORE_ROLE
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+                          : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
+                      )}
+                    >
+                      {String(material.role) === CORE_ROLE
+                        ? t('products.detail.comboSpecification.core')
+                        : t('products.detail.comboSpecification.support')}
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell className='text-right font-medium tabular-nums'>
+                  {material.availableForSale ?? '-'}
+                </TableCell>
+                <TableCell className='text-right font-semibold tabular-nums text-foreground'>
+                  {material.maxComboPossible ?? '-'}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
