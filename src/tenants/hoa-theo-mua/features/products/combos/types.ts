@@ -4,6 +4,7 @@ export interface ComboMaterial {
   materialId: string
   subId?: string | null
   materialName?: string | null
+  coverImage?: string | null
   role: ComboMaterialRole
   roleName?: string | null
   quantityPerCombo: number
@@ -24,9 +25,9 @@ export interface MaterialOption {
   materialId: string
   materialCode: string
   materialName: string
+  coverImage?: string | null
   unit: string | null
-  availableStock: number | null
-  tags: string[]
+  availableForSale: number | null
 }
 
 export interface MaterialsPage {
@@ -51,21 +52,21 @@ export interface UpdateComboSpecificationPayload {
 }
 
 export interface DeleteComboSpecificationItemsPayload {
-  items: Array<{
-    subId: string
-    matId: string
-  }>
+  materials: string[]
 }
-
 export interface UpdateComboSpecificationItem {
-  subId: string
   matId: string
   quantity: number
   isCore: boolean
+  isActive: boolean
 }
 
 export interface UpdateComboSpecificationItemsPayload {
   items: UpdateComboSpecificationItem[]
 }
 
-export type AddComboSpecificationItemsPayload = UpdateComboSpecificationItemsPayload
+export type AddComboSpecificationItem = UpdateComboSpecificationItem
+
+export interface AddComboSpecificationItemsPayload {
+  items: AddComboSpecificationItem[]
+}

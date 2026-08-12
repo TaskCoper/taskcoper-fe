@@ -5,6 +5,7 @@ import type {
   ComboSpecification,
   DeleteComboSpecificationItemsPayload,
   MaterialsPage,
+  MaterialOption,
   AddComboSpecificationItemsPayload,
   UpdateComboSpecificationItemsPayload,
   UpdateComboSpecificationPayload
@@ -20,6 +21,7 @@ const getMockComboSpecification = (id: string | number): ComboSpecification => (
     {
       materialId: 'mock-material-001',
       materialName: 'Hoa hồng Julibee',
+      coverImage: null,
       role: 1,
       roleName: 'Core',
       quantityPerCombo: 10,
@@ -30,6 +32,7 @@ const getMockComboSpecification = (id: string | number): ComboSpecification => (
     {
       materialId: 'mock-material-002',
       materialName: 'Hoa lá phụ Cẩm Chướng',
+      coverImage: null,
       role: 1,
       roleName: 'Core',
       quantityPerCombo: 5,
@@ -40,15 +43,148 @@ const getMockComboSpecification = (id: string | number): ComboSpecification => (
     {
       materialId: 'mock-material-003',
       materialName: 'Giấy gói hoa Hàn Quốc',
+      coverImage: null,
       role: 2,
       roleName: 'Support',
       quantityPerCombo: 2,
       unit: 'Tờ',
       availableForSale: 30,
       maxComboPossible: 15
+    },
+    {
+      materialId: 'mock-material-004',
+      materialName: 'Hoa hồng đỏ Sa Đéc',
+      coverImage: null,
+      role: 1,
+      roleName: 'Core',
+      quantityPerCombo: 2,
+      unit: 'Cành',
+      availableForSale: 7,
+      maxComboPossible: 3
+    },
+    {
+      materialId: 'mock-material-005',
+      materialName: 'Hoa hồng trắng',
+      coverImage: null,
+      role: 1,
+      roleName: 'Core',
+      quantityPerCombo: 3,
+      unit: 'Cành',
+      availableForSale: 30,
+      maxComboPossible: 10
+    },
+    {
+      materialId: 'mock-material-006',
+      materialName: 'Hoa Baby Hà Lan (Hết hàng)',
+      coverImage: null,
+      role: 2,
+      roleName: 'Support',
+      quantityPerCombo: 1,
+      unit: 'Bó',
+      availableForSale: 0,
+      maxComboPossible: 0
+    },
+    {
+      materialId: 'mock-material-007',
+      materialName: 'Giấy gói kiếng trong suốt',
+      coverImage: null,
+      role: 2,
+      roleName: 'Support',
+      quantityPerCombo: 1,
+      unit: 'Tờ',
+      availableForSale: 100,
+      maxComboPossible: 100
+    },
+    {
+      materialId: 'mock-material-008',
+      materialName: 'Dây ruy băng Satin đỏ',
+      coverImage: null,
+      role: 2,
+      roleName: 'Support',
+      quantityPerCombo: 1,
+      unit: 'Cuộn',
+      availableForSale: 20,
+      maxComboPossible: 20
     }
   ]
 })
+
+const mockMaterials: MaterialOption[] = [
+  {
+    materialId: 'mock-material-004',
+    materialCode: 'HOA_HONG_DO_MOCK',
+    materialName: 'Hoa hồng đỏ mock',
+    coverImage: null,
+    unit: 'Cành',
+    availableForSale: 150
+  },
+  {
+    materialId: 'mock-material-005',
+    materialCode: 'HOA_BABY_TRANG_MOCK',
+    materialName: 'Hoa baby trắng mock',
+    coverImage: null,
+    unit: 'Bó',
+    availableForSale: 45
+  },
+  {
+    materialId: 'mock-material-006',
+    materialCode: 'GIAY_GOI_HAN_MOCK',
+    materialName: 'Giấy gói hoa Hàn Quốc mock',
+    coverImage: null,
+    unit: 'Tờ',
+    availableForSale: 80
+  },
+  {
+    materialId: 'mock-material-007',
+    materialCode: 'DAY_RUY_BANG_MOCK',
+    materialName: 'Dây ruy băng satin mock',
+    coverImage: null,
+    unit: 'Cuộn',
+    availableForSale: 32
+  },
+  {
+    materialId: 'mock-material-008',
+    materialCode: 'HOA_HUONG_DUONG_MOCK',
+    materialName: 'Hoa hướng dương mock',
+    unit: 'Cành',
+    availableForSale: 12 // Tồn kho ít (dùng test LOW_STOCK)
+  },
+  {
+    materialId: 'mock-material-009',
+    materialCode: 'HOA_HONG_TRANG_MOCK',
+    materialName: 'Hoa hồng trắng mock',
+    unit: 'Cành',
+    availableForSale: 30
+  },
+  {
+    materialId: 'mock-material-010',
+    materialCode: 'HOA_TULIP_VANG_MOCK',
+    materialName: 'Hoa tulip vàng mock',
+    unit: 'Cành',
+    availableForSale: 0 // Hết hàng (dùng test OUT_OF_STOCK)
+  },
+  {
+    materialId: 'mock-material-011',
+    materialCode: 'LA_CALI_MOCK',
+    materialName: 'Lá bạch đàn (Cali) mock',
+    unit: 'Cành',
+    availableForSale: 100
+  },
+  {
+    materialId: 'mock-material-012',
+    materialCode: 'XOP_CAM_HOA_MOCK',
+    materialName: 'Xốp cắm hoa Oasis mock',
+    unit: 'Cục',
+    availableForSale: 25
+  },
+  {
+    materialId: 'mock-material-013',
+    materialCode: 'TUI_XACH_HOA_MOCK',
+    materialName: 'Túi xách trong suốt đựng hoa mock',
+    unit: 'Cái',
+    availableForSale: 5
+  }
+]
 
 class ProductService extends BaseService {
   private readonly baseUrl = 'products'
@@ -137,11 +273,30 @@ class ProductService extends BaseService {
   }
 
   getMaterials = async ({ search, page = 1, pageSize = 20 }: { search?: string; page?: number; pageSize?: number }) => {
-    const { data } = await this.get<BaseResponse<MaterialsPage>>(`/v1/materials`, {
-      params: { search, page, pageSize }
-    })
+    try {
+      const { data } = await this.get<BaseResponse<MaterialsPage>>(`/v1/materials`, {
+        params: { search, page, pageSize }
+      })
 
-    return data.value
+      return data.value
+    } catch {
+      const normalizedSearch = search?.trim().toLowerCase()
+      const filteredItems = normalizedSearch
+        ? mockMaterials.filter(
+            (material) =>
+              material.materialName.toLowerCase().includes(normalizedSearch) ||
+              material.materialCode.toLowerCase().includes(normalizedSearch)
+          )
+        : mockMaterials
+
+      return {
+        page: 1,
+        pageSize: filteredItems.length,
+        totalItems: filteredItems.length,
+        totalPages: filteredItems.length > 0 ? 1 : 0,
+        items: filteredItems
+      }
+    }
   }
 
   addComboSpecificationItems = async ({

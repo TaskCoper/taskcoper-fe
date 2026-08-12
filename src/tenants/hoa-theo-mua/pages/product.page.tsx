@@ -75,6 +75,7 @@ export default function ProductPage() {
   const isVariant = Boolean(product?.parentProductId?.trim())
   const canEditFactor = isVariant || !hasVariants
   const canManageComboSpecification = isCombo || hasVariants
+  const canManageComboMaterials = !isVariant
   const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
 
   const {
@@ -469,6 +470,7 @@ export default function ProductPage() {
                   subId={comboSpecification?.subId ?? ''}
                   factor={comboSpecification?.factor ?? 1}
                   canEditFactor={canEditFactor}
+                  canManageMaterials={canManageComboMaterials}
                   materials={comboSpecification?.materials ?? []}
                   isLoading={isGettingComboSpecification}
                   isError={isComboSpecificationError}
