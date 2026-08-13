@@ -1,6 +1,7 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
 import { FEEDBACK_SOURCES, MAX_FEATURED_FEEDBACKS } from './feedbacks-palette'
+import { isSafeHref, isValidPagePattern, pickerValueToYmd, POPUP_FREQUENCIES } from './promotion-popup-palette'
 import { ConfigKind, InputType, type ConfigDefinition, type ValidationRule } from './types'
 
 const KEY_REGEX_STRICT = /^[a-z][a-z0-9]*(_[a-z0-9]+)*(\.[a-z][a-z0-9]*(_[a-z0-9]+)*)+$/
@@ -100,10 +101,6 @@ const literalUnion = (values: Array<string | number>): z.ZodTypeAny => {
   )
 }
 
-// Native number inputs report an empty value as `''`/`NaN` rather than `undefined`, and
-// `z.coerce.number()` chokes on that with a raw "expected number, received NaN" message.
-// Normalize blank/NaN input to `undefined` before coercion so required/optional + custom
-// messages behave the same way string fields do.
 const toNumberOrUndefined = (val: unknown): number | undefined => {
   if (val === '' || val === null || val === undefined) return undefined
   const n = typeof val === 'number' ? val : Number(val)
@@ -493,6 +490,88 @@ export const feedbacksCollectionFormSchema = (t: TenantT) =>
     })
 
 export type FeedbacksCollectionFormValues = z.infer<ReturnType<typeof feedbacksCollectionFormSchema>>
+
+const promotionCampaignFormSchema = z.object({
+  id: z.string(),
+  image: z.string(),
+  href: z.string(),
+  openInNewTab: z.boolean(),
+  alt: localizedTextSchema,
+  startDate: z.string().nullable(),
+  endDate: z.string().nullable(),
+  enabled: z.boolean(),
+  // `[]` inherits `section.pages`; a non-empty list replaces it.
+  pages: z.array(z.string())
+})
+
+export const promotionPopupFormSchema = (t: TenantT) =>
+  z
+    .object({
+      section: z.object({
+        enabled: z.boolean(),
+        frequency: z.enum(POPUP_FREQUENCIES),
+        pages: z.array(z.string())
+      }),
+      items: z.array(promotionCampaignFormSchema)
+    })
+    .superRefine((data, ctx) => {
+      // A bad pattern can't be reported by the storefront — it just silently changes where
+      // the popup appears — so it is caught here instead.
+      const invalidSectionPattern = data.section.pages.find((pattern) => !isValidPagePattern(pattern))
+      if (invalidSectionPattern) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.promotionPopupDialog.errors.pagePatternInvalid', {
+            pattern: invalidSectionPattern
+          }),
+          path: ['section', 'pages']
+        })
+      }
+
+      data.items.forEach((item, i) => {
+        const index = i + 1
+
+        const invalidPattern = item.pages.find((pattern) => !isValidPagePattern(pattern))
+        if (invalidPattern) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.promotionPopupDialog.errors.itemPagePatternInvalid', {
+              index,
+              pattern: invalidPattern
+            }),
+            path: ['items', i, 'pages']
+          })
+        }
+
+        if (!item.alt.vi.trim()) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.promotionPopupDialog.errors.altRequired', { index }),
+            path: ['items', i, 'alt', 'vi']
+          })
+        }
+
+        if (!isSafeHref(item.href)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.promotionPopupDialog.errors.hrefInvalid', { index }),
+            path: ['items', i, 'href']
+          })
+        }
+
+        const start = pickerValueToYmd(item.startDate)
+        const end = pickerValueToYmd(item.endDate)
+        if (start && end && start > end) {
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.promotionPopupDialog.errors.datesInvalid', { index }),
+            path: ['items', i, 'endDate']
+          })
+        }
+      })
+    })
+
+export type PromotionPopupFormValues = z.infer<ReturnType<typeof promotionPopupFormSchema>>
 
 export function inputTypeToValueType(inputType: InputType): 'string' | 'number' | 'boolean' | 'json' | 'date' {
   switch (inputType) {

@@ -27,6 +27,7 @@ import ConfigPaletteSidebar from '../features/configs/components/config-palette-
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
 import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
+import PromotionPopupDialog from '../features/configs/components/promotion-popup-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
 import { feedbacksKeySuffix, matchesFeedbacksKey } from '../features/configs/feedbacks-palette'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
@@ -37,6 +38,11 @@ import {
   matchesProductCollectionConfig,
   productCollectionKeySuffix
 } from '../features/configs/product-collection-palette'
+import {
+  isPromotionPopupKey,
+  PROMOTION_POPUP_GROUP,
+  PROMOTION_POPUP_KEY
+} from '../features/configs/promotion-popup-palette'
 import type { Config, InputOption } from '../features/configs/types'
 import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
 import type { CreateConfigFormInput } from '../features/configs/validations'
@@ -109,6 +115,8 @@ export default function ConfigsPage() {
     enabled: currentKind === ConfigKind.secret
   })
 
+  const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
+
   const { depots } = useGetDepots()
   const { orderTags } = useGetOrderTags()
   const { orderSources } = useGetOrderSources()
@@ -144,6 +152,7 @@ export default function ConfigsPage() {
   const [editingFeedbacksConfig, setEditingFeedbacksConfig] = useState<Config | null>(null)
   const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
+  const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
   const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
@@ -273,6 +282,13 @@ export default function ConfigsPage() {
     [bannersConfigs]
   )
 
+  // Own query, not `allLoadedConfigs`: content configs only load on the Content tab, so
+  // deriving it there would read as "not created yet" and make the editor POST a duplicate.
+  const promotionPopupConfig = useMemo(
+    () => promotionsGroupConfigs.find((c) => c.key === PROMOTION_POPUP_KEY) ?? null,
+    [promotionsGroupConfigs]
+  )
+
   const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
   // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
   const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
@@ -321,6 +337,10 @@ export default function ConfigsPage() {
 
   const openEdit = useCallback(
     (config: Config) => {
+      if (isPromotionPopupKey(config.key)) {
+        setPromotionPopupDialogOpen(true)
+        return
+      }
       if (matchesProductCollectionConfig(config)) {
         setEditingProductCollectionConfig(config)
         setProductCollectionDialogOpen(true)
@@ -361,6 +381,9 @@ export default function ConfigsPage() {
   const openBannersDialog = useCallback((config: Config | null) => {
     setEditingBannersConfig(config)
     setBannersDialogOpen(true)
+  }, [])
+  const openPromotionPopupDialog = useCallback(() => {
+    setPromotionPopupDialogOpen(true)
   }, [])
   const closeEdit = useCallback(() => {
     setEditOpen(false)
@@ -493,12 +516,14 @@ export default function ConfigsPage() {
         bannersConfigs={bannersConfigs}
         b2bServicesConfigs={b2bServiceDocs}
         b2bOverviewConfig={b2bOverviewConfig}
+        promotionPopupConfig={promotionPopupConfig}
         onCreateLocked={openLockedPaletteCreate}
         onOpenProductCollection={openProductCollectionDialog}
         onOpenFeedbacks={openFeedbacksDialog}
         onOpenBanners={openBannersDialog}
         onOpenB2BService={openB2BServiceEditor}
         onOpenB2BOverview={openB2BOverviewEditor}
+        onOpenPromotionPopup={openPromotionPopupDialog}
       />
 
       <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
@@ -515,6 +540,7 @@ export default function ConfigsPage() {
             bannersConfigs={bannersConfigs}
             b2bServicesConfigs={b2bServiceDocs}
             b2bOverviewConfig={b2bOverviewConfig}
+            promotionPopupConfig={promotionPopupConfig}
             onCreateLocked={(item) => {
               setPaletteSheetOpen(false)
               openLockedPaletteCreate(item)
@@ -538,6 +564,10 @@ export default function ConfigsPage() {
             onOpenB2BOverview={() => {
               setPaletteSheetOpen(false)
               openB2BOverviewEditor()
+            }}
+            onOpenPromotionPopup={() => {
+              setPaletteSheetOpen(false)
+              openPromotionPopupDialog()
             }}
           />
         </SheetContent>
@@ -586,6 +616,12 @@ export default function ConfigsPage() {
         onClose={() => setBannersDialogOpen(false)}
         existingConfig={editingBannersConfig}
         takenSuffixes={bannersTakenSuffixes}
+      />
+
+      <PromotionPopupDialog
+        open={promotionPopupDialogOpen}
+        onClose={() => setPromotionPopupDialogOpen(false)}
+        existingConfig={promotionPopupConfig}
       />
     </div>
   )

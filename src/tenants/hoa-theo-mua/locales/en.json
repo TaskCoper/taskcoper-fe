@@ -1226,6 +1226,11 @@
       "emptyHint": "No banners yet - click to start",
       "existsHint": "Configured - click to view & edit"
     },
+    "promotionPopupPalette": {
+      "title": "Promotional popup",
+      "emptyHint": "Not set up yet - click to create",
+      "existsHint": "Configured - click to edit"
+    },
     "b2bServicesPalette": {
       "title": "B2B Services",
       "newLabel": "Add service",
@@ -1461,6 +1466,88 @@
         "slotRequired": "Banner #{{index}}: slot key is required.",
         "imageRequired": "Banner #{{index}}: image is required.",
         "hrefRequired": "Banner #{{index}}: click destination is required."
+      }
+    },
+    "promotionPopupDialog": {
+      "title": "Promotional popup",
+      "subtitle": "Shown over public storefront pages a moment after they load. Several running campaigns turn the popup into a slideshow visitors can page through.",
+      "configLabel": "Promotional popup",
+      "publicWarning": "This config is public: images and links are readable before a campaign starts. Do not put embargoed information here.",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "General",
+        "subtitle": "Turn off to hide every popup without deleting any campaign.",
+        "enabled": "Enabled",
+        "frequencyField": "How often it comes back",
+        "frequency": {
+          "once-per-session": "Once per visit",
+          "every-load": "Every page load"
+        },
+        "frequencyHelp": {
+          "once-per-session": "Shown once per browser tab. Reloading does not bring it back; closing the tab and returning does.",
+          "every-load": "Shown on every reload and every new tab. Intrusive - use for short campaigns or to preview your own changes, then switch back."
+        },
+        "pagesField": "Where it appears",
+        "pagesHelp": "Applies to every campaign that has no scope of its own. Exclusions (!) always win. Leave empty to show it everywhere."
+      },
+      "items": {
+        "title": "Campaigns",
+        "subtitle": "{{count}} campaign(s), {{active}} running today. Reorder with the arrow buttons.",
+        "add": "Add campaign",
+        "empty": "No campaigns yet. Click \"Add campaign\" to start."
+      },
+      "activeWarning": "{{count}} campaigns run at the same time. The site only shows the first {{max}}.",
+      "item": {
+        "untitled": "Campaign #{{index}} (no alt text yet)",
+        "noHref": "(no link - image is not clickable)",
+        "hasErrors": "Needs attention",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove campaign",
+        "image": "Campaign image",
+        "imageHelp": "Recommend 4:5 portrait (e.g. 1000x1250px), max 5MB.",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "datePlaceholder": "Pick a date",
+        "datesHelp": "Leave empty for no bound. The end date is inclusive. Evaluated in Vietnam time.",
+        "hrefField": "Click destination",
+        "hrefPlaceholder": "/products/... or https://...",
+        "hrefHelp": "Internal path (/products/...) or full URL (https://...). Leave empty for an announcement-only image.",
+        "openInNewTabToggle": "Open link in a new tab",
+        "altField": "Alt text",
+        "altPlaceholder": "e.g. Tet 2026 sale - 20% off",
+        "altHelp": "Required. Shown when the image fails, used by screen readers, and used as the campaign name in this list.",
+        "status": {
+          "active": "Running",
+          "scheduled": "Scheduled",
+          "expired": "Ended",
+          "disabled": "Off",
+          "incomplete": "Image or dates invalid"
+        },
+        "pagesField": "Where this campaign appears",
+        "pagesHelp": "Leave empty to follow the general scope above. Adding any pattern replaces it entirely for this campaign."
+      },
+      "errors": {
+        "imageRequired": "Campaign #{{index}}: image is required.",
+        "altRequired": "Campaign #{{index}}: Vietnamese alt text is required.",
+        "hrefInvalid": "Campaign #{{index}}: invalid destination. Use /a-path or https://...",
+        "datesInvalid": "Campaign #{{index}}: the end date must be on or after the start date.",
+        "imageTooLarge": "Image exceeds {{max}}MB. Please choose a smaller file.",
+        "pagePatternInvalid": "Invalid page pattern \"{{pattern}}\" in the general scope.",
+        "itemPagePatternInvalid": "Campaign #{{index}}: invalid page pattern \"{{pattern}}\"."
+      },
+      "pages": {
+        "placeholder": "Type a pattern, press Enter",
+        "remove": "Remove {{pattern}}",
+        "invalid": "Use *, /a-path, /a-path/* for pages under it, or !/a-path to exclude.",
+        "inherits": "Follows the general scope: {{patterns}}",
+        "everywhere": "every page",
+        "emptyMeansEverywhere": "Every page. Add a pattern to narrow it down."
       }
     },
     "b2bServicesDialog": {
