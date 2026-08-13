@@ -15,8 +15,13 @@ export type PromotionPopupFrequency = (typeof POPUP_FREQUENCIES)[number]
 
 export const DEFAULT_POPUP_FREQUENCY: PromotionPopupFrequency = 'once-per-session'
 
-// Default scope: everywhere except product detail pages.
-export const DEFAULT_POPUP_PAGES: readonly string[] = ['*', '!/products/*']
+export const POLICY_PAGE_PATHS: readonly string[] = ['/delivery', '/ordering', '/privacy', '/returns', '/terms']
+
+export const DEFAULT_POPUP_PAGES: readonly string[] = [
+  '*',
+  '!/products/*',
+  ...POLICY_PAGE_PATHS.map((path) => `!${path}`)
+]
 
 // Hosts allowed by the storefront's next/image config.
 export const ALLOWED_IMAGE_HOSTS: readonly string[] = [
@@ -173,18 +178,23 @@ export const matchesPages = (patterns: readonly string[], path: string): boolean
   return includes.some((pattern) => matchesPattern(pattern, target))
 }
 
-// Common route shortcuts; not exhaustive — any valid pattern is accepted.
+// Every storefront header route, in nav order, then the shipped defaults so a
+// cleared scope can be rebuilt from chips. Not exhaustive — any valid pattern is accepted.
 export const PAGE_PATTERN_PRESETS: readonly string[] = [
   '*',
   '/',
   '/products',
+  '/products/*',
   '/b2b',
   '/b2b/*',
+  '/about',
   '/news',
   '/news/*',
-  '/about',
+  '/recruitment',
+  '/recruitment/*',
+  '/contact',
   '!/products/*',
-  '!/ordering'
+  ...POLICY_PAGE_PATHS.map((path) => `!${path}`)
 ]
 
 // Validates patterns at save time so typos can't silently misconfigure scope.
