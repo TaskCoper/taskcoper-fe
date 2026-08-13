@@ -1184,6 +1184,11 @@
       "emptyHint": "Chưa có banner nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
     },
+    "promotionPopupPalette": {
+      "title": "Popup khuyến mãi",
+      "emptyHint": "Chưa thiết lập - bấm để tạo",
+      "existsHint": "Đã thiết lập - bấm để chỉnh sửa"
+    },
     "b2bServicesPalette": {
       "title": "Dịch vụ B2B",
       "newLabel": "Thêm dịch vụ",
@@ -1419,6 +1424,88 @@
         "slotRequired": "Banner #{{index}}: vui lòng nhập vị trí (slot).",
         "imageRequired": "Banner #{{index}}: vui lòng chọn ảnh.",
         "hrefRequired": "Banner #{{index}}: vui lòng nhập đường dẫn khi bấm."
+      }
+    },
+    "promotionPopupDialog": {
+      "title": "Popup khuyến mãi",
+      "subtitle": "Hiển thị đè lên các trang công khai ngay sau khi trang tải xong. Nhiều chiến dịch đang chạy sẽ trở thành slideshow cho khách bấm qua lại.",
+      "configLabel": "Popup khuyến mãi",
+      "publicWarning": "Cấu hình này công khai: ảnh và đường dẫn có thể bị xem trước cả khi chiến dịch bắt đầu. Đừng đưa thông tin chưa được phép công bố vào đây.",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "English"
+      },
+      "section": {
+        "title": "Cấu hình chung",
+        "subtitle": "Tắt để ẩn toàn bộ popup mà không cần xoá chiến dịch.",
+        "enabled": "Hiển thị",
+        "frequencyField": "Tần suất hiện lại",
+        "frequency": {
+          "once-per-session": "Một lần mỗi lượt truy cập",
+          "every-load": "Mỗi lần tải trang"
+        },
+        "frequencyHelp": {
+          "once-per-session": "Chỉ hiện một lần cho mỗi tab. Tải lại trang sẽ không hiện nữa; đóng tab rồi quay lại thì có.",
+          "every-load": "Hiện lại mỗi lần tải trang và mỗi tab mới. Khá làm phiền - chỉ nên dùng cho chiến dịch ngắn hoặc để tự kiểm tra, sau đó đổi lại."
+        },
+        "pagesField": "Hiển thị ở trang nào",
+        "pagesHelp": "Áp dụng cho mọi chiến dịch không tự chọn phạm vi riêng. Mẫu loại trừ (!) luôn được ưu tiên. Để trống nghĩa là hiện ở mọi trang."
+      },
+      "items": {
+        "title": "Danh sách chiến dịch",
+        "subtitle": "{{count}} chiến dịch, {{active}} đang chạy hôm nay. Đổi thứ tự bằng nút mũi tên.",
+        "add": "Thêm chiến dịch",
+        "empty": "Chưa có chiến dịch nào. Bấm \"Thêm chiến dịch\" để bắt đầu."
+      },
+      "activeWarning": "Đang có {{count}} chiến dịch chạy cùng lúc. Web chỉ hiển thị {{max}} chiến dịch đầu tiên.",
+      "item": {
+        "untitled": "Chiến dịch #{{index}} (chưa có mô tả ảnh)",
+        "noHref": "(không có đường dẫn - ảnh không bấm được)",
+        "hasErrors": "Thiếu thông tin",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xoá chiến dịch",
+        "image": "Ảnh chiến dịch",
+        "imageHelp": "Khuyến nghị ảnh dọc tỉ lệ 4:5 (vd 1000x1250px), tối đa 5MB.",
+        "uploadImage": "Tải ảnh lên",
+        "replaceImage": "Đổi ảnh",
+        "startDate": "Ngày bắt đầu",
+        "endDate": "Ngày kết thúc",
+        "datePlaceholder": "Chọn ngày",
+        "datesHelp": "Để trống nếu không giới hạn. Ngày kết thúc tính cả ngày đó. Giờ theo múi giờ Việt Nam.",
+        "hrefField": "Đường dẫn khi bấm vào",
+        "hrefPlaceholder": "/products/... hoặc https://...",
+        "hrefHelp": "Đường dẫn nội bộ (/products/...) hoặc URL đầy đủ (https://...). Để trống nếu chỉ muốn hiện ảnh thông báo.",
+        "openInNewTabToggle": "Mở link ở tab mới",
+        "altField": "Mô tả ảnh (alt)",
+        "altPlaceholder": "vd: Ưu đãi Tết 2026 - giảm 20%",
+        "altHelp": "Bắt buộc. Hiển thị khi ảnh lỗi, phục vụ trợ năng, và dùng làm tên chiến dịch trong danh sách này.",
+        "status": {
+          "active": "Đang chạy",
+          "scheduled": "Chờ đến ngày",
+          "expired": "Đã kết thúc",
+          "disabled": "Đang tắt",
+          "incomplete": "Ảnh hoặc ngày chưa hợp lệ"
+        },
+        "pagesField": "Chiến dịch này hiện ở trang nào",
+        "pagesHelp": "Để trống để dùng theo phạm vi chung ở trên. Chỉ cần thêm một mẫu là chiến dịch này sẽ dùng danh sách riêng, không cộng dồn."
+      },
+      "errors": {
+        "imageRequired": "Chiến dịch #{{index}}: vui lòng chọn ảnh.",
+        "altRequired": "Chiến dịch #{{index}}: vui lòng nhập mô tả ảnh tiếng Việt.",
+        "hrefInvalid": "Chiến dịch #{{index}}: đường dẫn không hợp lệ. Chỉ chấp nhận /duong-dan hoặc https://...",
+        "datesInvalid": "Chiến dịch #{{index}}: ngày kết thúc phải sau ngày bắt đầu.",
+        "imageTooLarge": "Ảnh vượt quá {{max}}MB. Vui lòng chọn ảnh nhỏ hơn.",
+        "pagePatternInvalid": "Mẫu trang \"{{pattern}}\" trong phạm vi chung không hợp lệ.",
+        "itemPagePatternInvalid": "Chiến dịch #{{index}}: mẫu trang \"{{pattern}}\" không hợp lệ."
+      },
+      "pages": {
+        "placeholder": "Nhập mẫu rồi nhấn Enter",
+        "remove": "Xoá {{pattern}}",
+        "invalid": "Dùng *, /duong-dan, /duong-dan/* cho các trang bên trong, hoặc !/duong-dan để loại trừ.",
+        "inherits": "Theo phạm vi chung: {{patterns}}",
+        "everywhere": "mọi trang",
+        "emptyMeansEverywhere": "Mọi trang. Thêm mẫu để giới hạn lại."
       }
     },
     "b2bServicesDialog": {

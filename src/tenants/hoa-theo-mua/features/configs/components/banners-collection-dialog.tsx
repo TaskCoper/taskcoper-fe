@@ -38,7 +38,7 @@ import {
 import configService from '../services'
 import { ConfigKind, InputType, type Config } from '../types'
 import type { CreateConfigFormValues } from '../validations'
-import { CollectionKeyField, COLLECTION_KEY_SUFFIX_PATTERN, LocalizedTabs } from './collection-shared'
+import { COLLECTION_KEY_SUFFIX_PATTERN, CollectionKeyField, LocalizedTabs } from './collection-shared'
 
 interface Props {
   open: boolean
@@ -229,13 +229,17 @@ export default function BannersCollectionDialog({ open, onClose, existingConfig,
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && !submitting && onClose()}>
-      <DialogContent position='top-center' className='flex min-w-5xl flex-col gap-0 p-0' showCloseButton={false}>
+      <DialogContent
+        position='top-center'
+        className='flex min-w-5xl flex-col gap-0 p-0 overflow-hidden'
+        showCloseButton={false}
+      >
         <DialogHeader className='px-6 pt-6 pb-3'>
           <DialogTitle>{t('configsPage.bannersDialog.title')}</DialogTitle>
           <p className='text-xs text-muted-foreground'>{t('configsPage.bannersDialog.subtitle')}</p>
         </DialogHeader>
 
-        <div className='flex-1 overflow-y-auto px-6 pb-4'>
+        <div className='min-h-0 flex-1 overflow-y-auto px-6 pb-4'>
           <div className='mb-4'>
             <CollectionKeyField
               prefix={BANNERS_KEY_PREFIX}

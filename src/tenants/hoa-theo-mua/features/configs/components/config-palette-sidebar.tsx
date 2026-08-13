@@ -5,6 +5,7 @@ import {
   Briefcase,
   GalleryHorizontalEnd,
   LayoutDashboard,
+  Megaphone,
   MessageSquareHeart,
   Plus,
   ShoppingBag,
@@ -28,7 +29,7 @@ interface LockedPaletteItem {
   defaultValue: unknown
 }
 
-type Tone = 'emerald' | 'rose' | 'sky' | 'amber' | 'violet'
+type Tone = 'emerald' | 'rose' | 'sky' | 'amber' | 'violet' | 'fuchsia'
 
 interface Props {
   className?: string
@@ -39,6 +40,7 @@ interface Props {
   bannersConfigs: Config[]
   b2bServicesConfigs: Config[]
   b2bOverviewConfig: Config | null
+  promotionPopupConfig: Config | null
   onCreateLocked: (item: LockedPaletteItem) => void
   onOpenProductCollection: (config: Config | null) => void
   onOpenFeedbacks: (config: Config | null) => void
@@ -46,6 +48,7 @@ interface Props {
   onOpenB2BService: (config: Config | null) => void
   // The B2B overview editor is a dedicated page; the button just navigates there.
   onOpenB2BOverview: () => void
+  onOpenPromotionPopup: () => void
 }
 
 export default function ConfigPaletteSidebar({
@@ -57,12 +60,14 @@ export default function ConfigPaletteSidebar({
   bannersConfigs,
   b2bServicesConfigs,
   b2bOverviewConfig,
+  promotionPopupConfig,
   onCreateLocked,
   onOpenProductCollection,
   onOpenFeedbacks,
   onOpenBanners,
   onOpenB2BService,
-  onOpenB2BOverview
+  onOpenB2BOverview,
+  onOpenPromotionPopup
 }: Props) {
   const { t } = useTenantTranslation()
 
@@ -156,6 +161,30 @@ export default function ConfigPaletteSidebar({
 
         <Separator className='my-5' />
 
+        {/* Promotional popup (singleton) */}
+        <PaletteSection title={t('configsPage.promotionPopupPalette.title')}>
+          <button
+            type='button'
+            className='flex w-full cursor-pointer items-center gap-2.5 rounded-md border border-dashed px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground'
+            onClick={onOpenPromotionPopup}
+            title={t('configsPage.promotionPopupPalette.title')}
+          >
+            <span className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', TONES.fuchsia.iconBg)}>
+              <Megaphone className='size-4' />
+            </span>
+            <span className='flex-1 truncate'>
+              {promotionPopupConfig
+                ? t('configsPage.promotionPopupPalette.existsHint')
+                : t('configsPage.promotionPopupPalette.emptyHint')}
+            </span>
+            {promotionPopupConfig && (
+              <span className={cn('size-1.5 shrink-0 rounded-full', TONES.fuchsia.dot)} aria-hidden='true' />
+            )}
+          </button>
+        </PaletteSection>
+
+        <Separator className='my-5' />
+
         {/* B2B services */}
         <CollectionPaletteList
           title={t('configsPage.b2bServicesPalette.title')}
@@ -208,7 +237,8 @@ const TONES: Record<Tone, { iconBg: string; dot: string }> = {
   rose: { iconBg: 'bg-rose-50 text-rose-600', dot: 'bg-rose-500' },
   sky: { iconBg: 'bg-sky-50 text-sky-600', dot: 'bg-sky-500' },
   amber: { iconBg: 'bg-amber-50 text-amber-600', dot: 'bg-amber-500' },
-  violet: { iconBg: 'bg-violet-50 text-violet-600', dot: 'bg-violet-500' }
+  violet: { iconBg: 'bg-violet-50 text-violet-600', dot: 'bg-violet-500' },
+  fuchsia: { iconBg: 'bg-fuchsia-50 text-fuchsia-600', dot: 'bg-fuchsia-500' }
 }
 
 function CollectionPaletteList({

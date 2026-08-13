@@ -169,7 +169,11 @@ export default function AhamoveCreateConfigDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent position='top-center' className='flex max-w-xl flex-col gap-0 p-0' showCloseButton={false}>
+      <DialogContent
+        position='top-center'
+        className='flex max-w-xl flex-col gap-0 p-0 overflow-hidden'
+        showCloseButton={false}
+      >
         <DialogHeader className='px-6 pt-6 pb-4'>
           <DialogTitle>
             {t('configsPage.ahamoveDialog.title')}
@@ -177,7 +181,7 @@ export default function AhamoveCreateConfigDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className='flex-1 overflow-y-auto px-6 pb-4'>
+        <div className='min-h-0 flex-1 overflow-y-auto px-6 pb-4'>
           <form id='ahamove-create-config-form' onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
             {/* Identifier — read-only summary */}
             <div className='flex items-center justify-between rounded-md bg-muted/50 p-3 text-xs'>
