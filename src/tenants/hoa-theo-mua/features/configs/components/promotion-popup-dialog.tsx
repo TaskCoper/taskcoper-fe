@@ -309,10 +309,8 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
                     name='section.frequency'
                     control={control}
                     render={({ field }) => (
-                      <div className='flex flex-wrap items-center gap-3'>
-                        <FieldLabel className='text-xs'>
-                          {t('configsPage.promotionPopupDialog.section.frequencyField')}
-                        </FieldLabel>
+                      <div className='space-y-0.5'>
+                        <FieldLabel>{t('configsPage.promotionPopupDialog.section.frequencyField')}</FieldLabel>
                         <Select value={field.value} onValueChange={field.onChange}>
                           <SelectTrigger size='sm' className='w-56 shrink-0 text-xs'>
                             <SelectValue />
