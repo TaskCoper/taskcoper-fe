@@ -141,7 +141,7 @@ export function AddMaterialsDialog({
                       <p className='truncate text-sm font-medium'>{material.materialName}</p>
                       <p className='text-xs text-muted-foreground'>
                         {material.materialCode} · {material.unit || '-'} ·{' '}
-                        {t('products.detail.comboSpecification.stock')}: {material.availableStock ?? '-'}
+                        {t('products.detail.comboSpecification.stock')}: {material.availableForSale ?? '-'}
                       </p>
                     </div>
                     {draft && (
