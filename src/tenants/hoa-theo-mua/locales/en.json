@@ -394,6 +394,10 @@
     }
   },
   "products": {
+    "categoryNames": {
+      "villa": "Villa",
+      "thatchedHouse": "Thatched house"
+    },
     "list": {
       "title": "Products",
       "description": "Browse and manage the product catalog synced from Nhanh.vn."
@@ -588,8 +592,13 @@
         "maxComboPossible": "Max combos",
         "unnamedMaterial": "Unnamed material",
         "addButton": "Add material",
+        "addRecipe": "Add recipe",
         "addTitle": "Add material to recipe",
         "addDescription": "Choose material products, enter quantities, and assign Core or Support roles.",
+        "availableMaterials": "Available materials",
+        "selectedMaterials": "Selected materials",
+        "noSelectedMaterials": "No materials selected",
+        "removeMaterial": "Remove material",
         "searchMaterial": "Search by material name or code...",
         "noMaterials": "No matching materials found",
         "stock": "Stock",

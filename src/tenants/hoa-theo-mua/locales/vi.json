@@ -394,6 +394,10 @@
     }
   },
   "products": {
+    "categoryNames": {
+      "villa": "Biệt thự",
+      "thatchedHouse": "Nhà lá"
+    },
     "list": {
       "title": "Sản phẩm",
       "description": "Xem và quản lý danh mục sản phẩm đã đồng bộ từ Nhanh.vn."
@@ -588,8 +592,13 @@
         "maxComboPossible": "Combo tối đa",
         "unnamedMaterial": "Thành phần chưa đặt tên",
         "addButton": "Thêm thành phần",
+        "addRecipe": "Thêm công thức",
         "addTitle": "Thêm thành phần vào công thức",
         "addDescription": "Chọn sản phẩm vật liệu, nhập định lượng và phân loại Core hoặc Support.",
+        "availableMaterials": "Danh sách thành phần",
+        "selectedMaterials": "Thành phần đã chọn",
+        "noSelectedMaterials": "Chưa chọn thành phần nào",
+        "removeMaterial": "Bỏ thành phần",
         "searchMaterial": "Tìm theo tên hoặc mã vật liệu...",
         "noMaterials": "Không tìm thấy vật liệu phù hợp",
         "stock": "Tồn kho",

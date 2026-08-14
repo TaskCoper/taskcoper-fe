@@ -9,22 +9,15 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { PlusIcon, SearchIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import type { MaterialOption, ComboMaterial, UpdateComboSpecificationMaterial } from '../types'
+import type { ComboMaterial, MaterialOption } from '../types'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
-
-const CORE_ROLE = '1'
-const getActualQuantity = (quantity: number, factor: number) => Math.floor(quantity * factor)
-
-interface MaterialDraft extends UpdateComboSpecificationMaterial {
-  materialName: string
-  unit: string | null
-}
+import { SelectedMaterialCard } from './selected-material-card'
+import type { MaterialDraft } from './selected-material-card'
 
 export function AddMaterialsDialog({
   open,
@@ -50,6 +43,8 @@ export function AddMaterialsDialog({
     [existingMaterials]
   )
   const selectableMaterials = materials.filter((material) => !existingIds.has(material.materialId))
+  const coreDrafts = drafts.filter((draft) => draft.isCore)
+  const supportDrafts = drafts.filter((draft) => !draft.isCore)
 
   const toggleMaterial = (material: MaterialOption, checked: boolean) => {
     setDrafts((current) =>
@@ -60,7 +55,9 @@ export function AddMaterialsDialog({
               ...current,
               {
                 matId: material.materialId,
+                materialCode: material.materialCode,
                 materialName: material.materialName,
+                coverImage: material.coverImage,
                 unit: material.unit,
                 quantity: 1,
                 isCore: true,
@@ -70,11 +67,9 @@ export function AddMaterialsDialog({
         : current.filter((draft) => draft.matId !== material.materialId)
     )
   }
-
-  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) => {
+  const removeDraft = (matId: string) => setDrafts((current) => current.filter((draft) => draft.matId !== matId))
+  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) =>
     setDrafts((current) => current.map((draft) => (draft.matId === matId ? { ...draft, ...updates } : draft)))
-  }
-
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && !isAddingComboSpecificationItems) {
       setDrafts([])
@@ -82,9 +77,8 @@ export function AddMaterialsDialog({
     }
     onOpenChange(nextOpen)
   }
-
   const handleSave = async () => {
-    if (drafts.length === 0 || drafts.some((draft) => draft.quantity <= 0)) return
+    if (drafts.length === 0 || drafts.some((draft) => !Number.isFinite(draft.quantity) || draft.quantity <= 0)) return
     await addComboSpecificationItems({
       comboId,
       body: { items: drafts.map(({ matId, quantity, isCore, isActive }) => ({ matId, quantity, isCore, isActive })) }
@@ -94,92 +88,94 @@ export function AddMaterialsDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='min-w-4xl' position='top-center'>
+      <DialogContent className='w-[90vw] sm:max-w-6xl' position='top-center'>
         <DialogHeader>
           <DialogTitle>{t('products.detail.comboSpecification.addTitle')}</DialogTitle>
           <DialogDescription>{t('products.detail.comboSpecification.addDescription')}</DialogDescription>
         </DialogHeader>
-        <div className='space-y-4'>
-          <div className='relative'>
-            <SearchIcon className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={t('products.detail.comboSpecification.searchMaterial')}
-              className='pl-9'
-            />
-          </div>
-          <div className='max-h-80 overflow-y-auto rounded-lg border'>
-            {isGettingMaterials ? (
-              <div className='space-y-2 p-4'>
-                {[1, 2, 3].map((row) => (
-                  <Skeleton key={row} className='h-12 w-full' />
-                ))}
-              </div>
-            ) : selectableMaterials.length === 0 ? (
-              <div className='py-8 text-center text-sm text-muted-foreground'>
-                {t('products.detail.comboSpecification.noMaterials')}
-              </div>
-            ) : (
-              selectableMaterials.map((material) => {
-                const draft = drafts.find((item) => item.matId === material.materialId)
-                return (
-                  <div key={material.materialId} className='flex items-center gap-3 border-b p-3 last:border-b-0'>
+        <div className='grid gap-4 md:grid-cols-2'>
+          <section className='min-w-0 space-y-3 rounded-lg border p-3'>
+            <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.availableMaterials')}</h3>
+            <div className='relative'>
+              <SearchIcon className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder={t('products.detail.comboSpecification.searchMaterial')}
+                className='pl-9'
+              />
+            </div>
+            <div className='max-h-96 overflow-y-auto rounded-lg border'>
+              {isGettingMaterials ? (
+                <div className='space-y-2 p-4'>
+                  {[1, 2, 3].map((row) => (
+                    <Skeleton key={row} className='h-12 w-full' />
+                  ))}
+                </div>
+              ) : selectableMaterials.length === 0 ? (
+                <div className='py-8 text-center text-sm text-muted-foreground'>
+                  {t('products.detail.comboSpecification.noMaterials')}
+                </div>
+              ) : (
+                selectableMaterials.map((material) => (
+                  <label
+                    key={material.materialId}
+                    className='flex cursor-pointer items-center gap-3 border-b p-3 last:border-b-0'
+                  >
                     <Checkbox
-                      checked={!!draft}
+                      checked={drafts.some((draft) => draft.matId === material.materialId)}
                       onCheckedChange={(checked) => toggleMaterial(material, checked === true)}
                       aria-label={material.materialName}
                     />
-                    <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-                      {material.coverImage ? (
-                        <img src={material.coverImage} alt={material.materialName} className='size-full object-cover' />
-                      ) : (
-                        <span className='text-xs text-muted-foreground'>-</span>
-                      )}
-                    </div>
+                    <MaterialImage
+                      src={material.coverImage}
+                      alt={material.materialName}
+                      emptyLabel={t('products.common.noData')}
+                    />
                     <div className='min-w-0 flex-1'>
                       <p className='truncate text-sm font-medium'>{material.materialName}</p>
-                      <p className='text-xs text-muted-foreground'>
-                        {material.materialCode} · {material.unit || '-'} ·{' '}
-                        {t('products.detail.comboSpecification.stock')}: {material.availableForSale ?? '-'}
+                      <p className='truncate text-xs text-muted-foreground'>
+                        {material.materialCode} · {material.unit || t('products.common.noData')} ·{' '}
+                        {t('products.detail.comboSpecification.stock')}:{' '}
+                        {material.availableForSale ?? t('products.common.noData')}
                       </p>
                     </div>
-                    {draft && (
-                      <div className='flex items-center gap-2'>
-                        <Input
-                          type='number'
-                          min={0.01}
-                          step='any'
-                          value={draft.quantity}
-                          onChange={(event) =>
-                            updateDraft(material.materialId, { quantity: Number(event.target.value) })
-                          }
-                          className='w-24'
-                          aria-label={t('products.detail.comboSpecification.quantityPerCombo')}
-                        />
-                        <span className='whitespace-nowrap text-sm text-muted-foreground'>
-                          × {factor} ={' '}
-                          <strong className='text-foreground'>{getActualQuantity(draft.quantity, factor)}</strong>
-                        </span>
-                        <Select
-                          value={draft.isCore ? CORE_ROLE : '2'}
-                          onValueChange={(value) => updateDraft(material.materialId, { isCore: value === CORE_ROLE })}
-                        >
-                          <SelectTrigger className='w-40 min-w-40'>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value={CORE_ROLE}>{t('products.detail.comboSpecification.core')}</SelectItem>
-                            <SelectItem value='2'>{t('products.detail.comboSpecification.support')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-                  </div>
-                )
-              })
-            )}
-          </div>
+                  </label>
+                ))
+              )}
+            </div>
+          </section>
+          <section className='min-w-0 h-165 space-y-3 rounded-lg border p-3'>
+            <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.selectedMaterials')}</h3>
+            <div className='max-h-150 space-y-3 overflow-y-auto'>
+              {drafts.length === 0 ? (
+                <div className='rounded-lg border border-dashed py-12 text-center text-sm text-muted-foreground'>
+                  {t('products.detail.comboSpecification.noSelectedMaterials')}
+                </div>
+              ) : (
+                <div className='grid gap-3'>
+                  <DraftGroup
+                    title={t('products.detail.comboSpecification.core')}
+                    isCore
+                    drafts={coreDrafts}
+                    factor={factor}
+                    onRemove={removeDraft}
+                    onUpdate={updateDraft}
+                    t={t}
+                  />
+                  <DraftGroup
+                    title={t('products.detail.comboSpecification.support')}
+                    isCore={false}
+                    drafts={supportDrafts}
+                    factor={factor}
+                    onRemove={removeDraft}
+                    onUpdate={updateDraft}
+                    t={t}
+                  />
+                </div>
+              )}
+            </div>
+          </section>
         </div>
         <DialogFooter>
           <Button
@@ -196,10 +192,72 @@ export function AddMaterialsDialog({
             disabled={drafts.length === 0 || isAddingComboSpecificationItems}
           >
             <PlusIcon data-icon='inline-start' />
-            {isAddingComboSpecificationItems ? t('common.ui.loading') : t('products.detail.comboSpecification.save')}
+            {isAddingComboSpecificationItems
+              ? t('common.ui.loading')
+              : t('products.detail.comboSpecification.addRecipe')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function DraftGroup({
+  title,
+  isCore,
+  drafts,
+  factor,
+  onRemove,
+  onUpdate,
+  t
+}: {
+  title: string
+  isCore: boolean
+  drafts: MaterialDraft[]
+  factor: number
+  onRemove: (matId: string) => void
+  onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
+  t: TenantT
+}) {
+  return (
+    <div className='rounded-lg p-3'>
+      <h4
+        className={`mb-3 rounded-md border px-2 py-1 text-xs font-semibold ${
+          isCore
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+            : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
+        }`}
+      >
+        {title}
+      </h4>
+      <div className='space-y-3'>
+        {drafts.length === 0 ? (
+          <p className='text-xs text-muted-foreground'>{t('products.detail.comboSpecification.noSelectedMaterials')}</p>
+        ) : (
+          drafts.map((draft) => (
+            <SelectedMaterialCard
+              key={draft.matId}
+              draft={draft}
+              factor={factor}
+              onRemove={onRemove}
+              onUpdate={onUpdate}
+              t={t}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  )
+}
+
+function MaterialImage({ src, alt, emptyLabel }: { src?: string | null; alt: string; emptyLabel: string }) {
+  return (
+    <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
+      {src ? (
+        <img src={src} alt={alt} className='size-full object-cover' />
+      ) : (
+        <span className='text-xs text-muted-foreground'>{emptyLabel}</span>
+      )}
+    </div>
   )
 }

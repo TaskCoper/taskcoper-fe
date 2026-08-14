@@ -2,6 +2,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { LayoutGridIcon } from 'lucide-react'
 import CategoryTreePicker from '../../categories/components/category-tree-picker'
 import { useGetSortableCategories } from '../../categories/hooks/use-get-sortable-categories'
+import { localizeProductCategories } from './product-category-labels'
 
 interface PinnedCategoryFilterProps {
   value: string | null
@@ -12,13 +13,14 @@ interface PinnedCategoryFilterProps {
 export default function PinnedCategoryFilter({ value, onChange, disabled }: PinnedCategoryFilterProps) {
   const { t } = useTenantTranslation()
   const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories()
+  const localizedCategories = localizeProductCategories(sortableCategories, t)
 
   return (
     <div className='w-full max-w-xs space-y-1'>
       <p className='text-sm font-medium'>{t('products.pinned.categoryFilter.label')}</p>
 
       <CategoryTreePicker
-        categories={sortableCategories}
+        categories={localizedCategories}
         value={value}
         onChange={onChange}
         t={t}

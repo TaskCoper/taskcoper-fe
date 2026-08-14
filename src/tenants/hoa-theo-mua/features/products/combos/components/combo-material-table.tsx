@@ -45,7 +45,7 @@ export function ComboMaterialTable({
       <div className='overflow-x-auto'>
         <Table className='min-w-245'>
           <TableHeader className='bg-muted/40'>
-            <TableRow>
+            <TableRow className='bg-muted'>
               <TableHead className='w-12'>
                 <Checkbox
                   checked={allSelected}
@@ -58,8 +58,8 @@ export function ComboMaterialTable({
               <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
               <TableHead>{t('products.detail.comboSpecification.unit')}</TableHead>
               <TableHead>{t('products.detail.comboSpecification.role')}</TableHead>
-              <TableHead className='text-right'>{t('products.detail.comboSpecification.availableForSale')}</TableHead>
-              <TableHead className='text-right'>{t('products.detail.comboSpecification.maxComboPossible')}</TableHead>
+              <TableHead className='text-center'>{t('products.detail.comboSpecification.availableForSale')}</TableHead>
+              <TableHead className='text-center'>{t('products.detail.comboSpecification.maxComboPossible')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -84,7 +84,7 @@ export function ComboMaterialTable({
                           className='size-full object-cover'
                         />
                       ) : (
-                        <span className='text-xs text-muted-foreground'>-</span>
+                        <span className='text-xs text-muted-foreground'>{t('products.common.noData')}</span>
                       )}
                     </div>
                     <div className='flex min-w-0 flex-col'>
@@ -118,7 +118,7 @@ export function ComboMaterialTable({
                       {material.unit}
                     </Badge>
                   ) : (
-                    '-'
+                    t('products.common.noData')
                   )}
                 </TableCell>
                 <TableCell>
@@ -151,11 +151,11 @@ export function ComboMaterialTable({
                     </Badge>
                   )}
                 </TableCell>
-                <TableCell className='text-right font-medium tabular-nums'>
-                  {material.availableForSale ?? '-'}
+                <TableCell className='text-center font-medium tabular-nums'>
+                  {material.availableForSale ?? t('products.common.noData')}
                 </TableCell>
-                <TableCell className='text-right font-semibold tabular-nums text-foreground'>
-                  {material.maxComboPossible ?? '-'}
+                <TableCell className='text-center font-semibold tabular-nums text-foreground'>
+                  {material.maxComboPossible ?? t('products.common.noData')}
                 </TableCell>
               </TableRow>
             ))}
