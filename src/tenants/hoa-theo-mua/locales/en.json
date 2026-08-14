@@ -1791,6 +1791,8 @@
       "page": "Pages",
       "window": "Active window",
       "status": "Status",
+      "filters": "Filters",
+      "grid": "Grid",
       "productCount": "Products",
       "subcategoryCount": "({{count}} subcategories)",
       "noChildren": "No subcategories"

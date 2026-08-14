@@ -1791,6 +1791,8 @@
       "page": "Trang hiển thị",
       "window": "Thời gian áp dụng",
       "status": "Trạng thái",
+      "filters": "Bộ lọc",
+      "grid": "Lưới",
       "productCount": "Số sản phẩm",
       "subcategoryCount": "({{count}} danh mục con)",
       "noChildren": "Không có danh mục con"

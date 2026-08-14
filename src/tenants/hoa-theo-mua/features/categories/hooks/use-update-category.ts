@@ -6,22 +6,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { getErrorDescription } from '../error-description'
 import categoryService from '../services'
-import type { CategoryMetadata } from '../types'
+import { parseCategoryMetadata } from '../types'
 import { categoryProductSchema, type CategoryProductFormValues } from '../validations'
 import { categoryFormDefaultValues } from './use-add-category'
 import { useGetCategory } from './use-get-category'
 
 const CATEGORY_FORM_PREFIX = 'productCategories.form' as const
-
-/** `metaData` comes back as a JSON-encoded string (or null) — parse it defensively. */
-const parseCategoryMetadata = (metaData: string | null): CategoryMetadata => {
-  if (!metaData) return {}
-  try {
-    return JSON.parse(metaData) as CategoryMetadata
-  } catch {
-    return {}
-  }
-}
 
 export const useUpdateCategory = (id?: string) => {
   const queryClient = useQueryClient()
@@ -34,8 +24,6 @@ export const useUpdateCategory = (id?: string) => {
 
   const { category, isLoadingCategory } = useGetCategory(id)
 
-  // Re-sync the form whenever the `['categoryProduct', id]` cache entry changes — on first load,
-  // on switching to a different `id`, and after `onSettled` below refetches post-update.
   useEffect(() => {
     if (!category) return
 
@@ -56,8 +44,8 @@ export const useUpdateCategory = (id?: string) => {
         filterByName: metadata.filterByName ?? false,
         filterByPrice: metadata.filterByPrice ?? false,
         isFilterable: metadata.isFilterable ?? false,
-        rows: metadata.rows ?? 1,
-        cols: metadata.cols ?? 4
+        rows: metadata.rows ?? null,
+        cols: metadata.cols ?? null
       },
       page: category.page ?? []
     })

@@ -23,7 +23,14 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Category } from '../types'
-import { CategoryPageBadges, CategoryStatusBadge, CategoryTypeBadge, CategoryWindow } from './category-product-badges'
+import {
+  CategoryFilterBadges,
+  CategoryGridLabel,
+  CategoryPageBadges,
+  CategoryStatusBadge,
+  CategoryTypeBadge,
+  CategoryWindow
+} from './category-product-badges'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
@@ -174,6 +181,32 @@ export const getCategoryColumns = ({
       enableSorting: false,
       enableHiding: true,
       size: 40
+    },
+    {
+      id: 'filters',
+      meta: { label: `${CATEGORY_I18N_PREFIX}.column.filters` },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label={`${CATEGORY_I18N_PREFIX}.column.filters`} />
+      ),
+      cell: ({ row }) => <CategoryFilterBadges category={row.original} t={t} />,
+      enableSorting: false,
+      enableHiding: true,
+      size: 60
+    },
+    {
+      id: 'grid',
+      meta: { label: `${CATEGORY_I18N_PREFIX}.column.grid` },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label={`${CATEGORY_I18N_PREFIX}.column.grid`} className='mx-auto' />
+      ),
+      cell: ({ row }) => (
+        <div className='flex justify-center'>
+          <CategoryGridLabel category={row.original} />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: true,
+      size: 30
     },
     // {
     //   id: 'productCount',

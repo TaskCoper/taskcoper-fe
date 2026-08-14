@@ -27,10 +27,8 @@ const toCategoryPayload = ({
 }: CategoryProductFormValues): CreateCategoryPayload => {
   const isCampaign = type === CategoryProductType.Campaign
 
-  // A child category (has a parent) only carries `isFilterable`; a parent carries the filter inputs
-  // plus the product grid layout (`rows`/`cols`) for its section.
   const scopedMetadata = parentId
-    ? { isFilterable: metaData.isFilterable }
+    ? { isFilterable: metaData.isFilterable, rows: metaData.rows, cols: metaData.cols }
     : {
         filterByName: metaData.filterByName,
         filterByPrice: metaData.filterByPrice,

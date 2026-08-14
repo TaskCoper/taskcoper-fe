@@ -21,9 +21,10 @@ const requiredText = (t: TenantT, max: number, requiredMessage: string) =>
 
 /**
  * Per-category filter settings. Which keys are meaningful depends on the node:
- * - parent (no `parentId`): `filterByName` / `filterByPrice` / `rows` / `cols` — render name/price filter
- *   inputs and control the product grid layout on its page.
+ * - parent (no `parentId`): `filterByName` / `filterByPrice` — render name/price filter inputs.
  * - child (has `parentId`): `isFilterable` — whether it shows up as a filter option on the client.
+ * - both: `rows` / `cols` — the product grid layout (and thus page size, `rows × cols`); a parent's
+ *   applies to its section, a child's to the grid shown when that child is picked as a filter.
  * All keys are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant subset.
  */
 export const categoryMetadataSchema = (t: TenantT) =>
@@ -34,11 +35,13 @@ export const categoryMetadataSchema = (t: TenantT) =>
     rows: z
       .number({ message: t('common.validation.number.invalid') })
       .int({ message: t('common.validation.number.integer') })
-      .min(1, t('common.validation.number.min', { min: 1 })),
+      .min(1, t('common.validation.number.min', { min: 1 }))
+      .nullable(),
     cols: z
       .number({ message: t('common.validation.number.invalid') })
       .int({ message: t('common.validation.number.integer') })
       .min(1, t('common.validation.number.min', { min: 1 }))
+      .nullable()
   })
 
 export type CategoryMetadataFormValues = z.infer<ReturnType<typeof categoryMetadataSchema>>
