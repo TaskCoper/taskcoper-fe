@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { formatDateTime } from '@/lib/date'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CategoryProductPageLabel, CategoryProductType, type Category } from '../types'
+import { CategoryProductPageLabel, CategoryProductType, parseCategoryMetadata, type Category } from '../types'
 
 const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
@@ -75,6 +75,59 @@ export function CategoryWindow({
   return (
     <span className='whitespace-nowrap text-xs text-muted-foreground'>
       {start || t(`${CATEGORY_I18N_PREFIX}.window.open`)} - {end || t(`${CATEGORY_I18N_PREFIX}.window.open`)}
+    </span>
+  )
+}
+
+export function CategoryFilterBadges({
+  category,
+  t
+}: {
+  category: Pick<Category, 'metaData' | 'parentId'>
+  t: TenantT
+}) {
+  const metadata = parseCategoryMetadata(category.metaData)
+  // A parent category renders the name/price filter toggles; a child renders `isFilterable`.
+  const badges = category.parentId
+    ? metadata.isFilterable
+      ? [t(`${CATEGORY_I18N_PREFIX}.form.isFilterableLabel`)]
+      : []
+    : [
+        metadata.filterByName && t(`${CATEGORY_I18N_PREFIX}.form.filterByNameLabel`),
+        metadata.filterByPrice && t(`${CATEGORY_I18N_PREFIX}.form.filterByPriceLabel`)
+      ].filter((label): label is string => !!label)
+
+  if (!badges.length) {
+    return <span className='text-xs text-muted-foreground'>-</span>
+  }
+
+  return (
+    <div className='flex flex-wrap gap-1'>
+      {badges.map((label) => (
+        <Badge key={label} variant='outline' className='font-normal'>
+          {label}
+        </Badge>
+      ))}
+    </div>
+  )
+}
+
+export function CategoryGridLabel({ category, t }: { category: Pick<Category, 'metaData'>; t: TenantT }) {
+  const metadata = parseCategoryMetadata(category.metaData)
+
+  if (!metadata.rows && !metadata.cols) {
+    return <span className='text-xs text-muted-foreground'>-</span>
+  }
+
+  return (
+    <span className='inline-flex items-center gap-1.5 whitespace-nowrap text-sm tabular-nums'>
+      <span>
+        {metadata.rows ?? 1} {t(`${CATEGORY_I18N_PREFIX}.column.gridRow`)}
+      </span>
+      <span className='text-muted-foreground'>×</span>
+      <span>
+        {metadata.cols ?? 4} {t(`${CATEGORY_I18N_PREFIX}.column.gridCol`)}
+      </span>
     </span>
   )
 }

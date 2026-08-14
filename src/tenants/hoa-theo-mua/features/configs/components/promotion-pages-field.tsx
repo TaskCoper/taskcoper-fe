@@ -9,10 +9,6 @@ import { isValidPagePattern, PAGE_PATTERN_PRESETS } from '../promotion-popup-pal
 
 const isExclusion = (pattern: string): boolean => pattern.trim().startsWith('!')
 
-/**
- * Editor for a `pages` list of route patterns, validated as-typed.
- * `inheritedFrom` set means an empty list inherits the section's scope.
- */
 export function PromotionPagesField({
   label,
   description,
@@ -52,8 +48,8 @@ export function PromotionPagesField({
     : t('configsPage.promotionPopupDialog.pages.emptyMeansEverywhere')
 
   return (
-    <Field className='gap-1.5'>
-      <FieldLabel className='text-xs'>{label}</FieldLabel>
+    <Field className='gap-1'>
+      <FieldLabel>{label}</FieldLabel>
 
       {/* Chips and the input share one control so the field reads as a single input. */}
       <div
