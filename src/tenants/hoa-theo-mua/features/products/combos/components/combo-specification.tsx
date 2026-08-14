@@ -7,7 +7,7 @@ import { CheckIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react
 import { useState } from 'react'
 import type { ComboMaterial } from '../types'
 import { useDeleteComboSpecificationItems } from '../hooks/use-delete-combo-specification-items'
-import { useUpdateComboSpecification } from '../hooks/use-update-combo-specification'
+import { useUpdateChildQuantity } from '../hooks/use-update-child-quantity'
 import { useUpdateComboSpecificationItems } from '../hooks/use-update-combo-specification-items'
 import { DetailSection } from '../../components/product-detail/parts'
 import { AddMaterialsDialog } from './add-materials-dialog'
@@ -18,8 +18,9 @@ const CORE_ROLE = '1'
 export function ComboSpecification({
   productId,
   comboId,
-  subId,
   factor: initialFactor,
+  comboAvailableQty,
+  comboStockStatus,
   canEditFactor,
   canManageMaterials,
   materials,
@@ -29,8 +30,9 @@ export function ComboSpecification({
 }: {
   productId: string
   comboId: string
-  subId: string
   factor: number
+  comboAvailableQty?: number | null
+  comboStockStatus?: string | null
   canEditFactor: boolean
   canManageMaterials: boolean
   materials: ComboMaterial[]
@@ -46,8 +48,7 @@ export function ComboSpecification({
   const [selectedMaterialIds, setSelectedMaterialIds] = useState<Set<string>>(new Set())
   const { confirm } = useConfirmStore()
   const { deleteComboSpecificationItems, isDeletingComboSpecificationItems } = useDeleteComboSpecificationItems()
-  const { updateComboSpecification: saveFactor, isUpdatingComboSpecification: isSavingFactor } =
-    useUpdateComboSpecification()
+  const { updateChildQuantity, isUpdatingChildQuantity } = useUpdateChildQuantity()
   const { updateComboSpecificationItems, isUpdatingComboSpecificationItems } = useUpdateComboSpecificationItems()
 
   if (isLoading) {
@@ -116,21 +117,9 @@ export function ComboSpecification({
   }
 
   const handleSaveFactor = async () => {
-    if (!isFactorValid || isSavingFactor) return
+    if (!isFactorValid || isUpdatingChildQuantity) return
 
-    await saveFactor({
-      id: productId,
-      body: {
-        subId,
-        factor,
-        materials: materials.map((material) => ({
-          matId: material.materialId,
-          quantity: material.quantityPerCombo,
-          isCore: String(material.role) === CORE_ROLE,
-          isActive: true
-        }))
-      }
-    })
+    await updateChildQuantity({ productId, factor })
     setSavedFactor(factor)
   }
 
@@ -175,7 +164,7 @@ export function ComboSpecification({
 
   return (
     <div className='space-y-8'>
-      <div className={`flex flex-wrap items-end gap-4 ${canEditFactor ? 'justify-between' : 'justify-end'}`}>
+      <div className='flex flex-wrap items-end justify-between gap-4'>
         {canEditFactor && (
           <div className='space-y-1'>
             <div className='flex flex-wrap items-center gap-3'>
@@ -202,7 +191,7 @@ export function ComboSpecification({
                       type='button'
                       size='sm'
                       onClick={() => void handleSaveFactor()}
-                      disabled={!isFactorValid || isSavingFactor}
+                      disabled={!isFactorValid || isUpdatingChildQuantity}
                     >
                       {t('products.detail.comboSpecification.saveFactor')}
                     </Button>
@@ -218,7 +207,10 @@ export function ComboSpecification({
           </div>
         )}
 
-        <div className='flex flex-wrap justify-end gap-2'>
+        {!canEditFactor && <ComboAvailability quantity={comboAvailableQty} status={comboStockStatus} t={t} />}
+
+        <div className='ml-auto flex flex-wrap justify-end gap-2'>
+          {canEditFactor && <ComboAvailability quantity={comboAvailableQty} status={comboStockStatus} t={t} />}
           {isEditing && canManageMaterials ? (
             <>
               <Button
@@ -330,6 +322,18 @@ export function ComboSpecification({
           t={t}
         />
       )}
+    </div>
+  )
+}
+
+function ComboAvailability({ quantity, status, t }: { quantity?: number | null; status?: string | null; t: TenantT }) {
+  if (quantity == null && !status) return null
+
+  return (
+    <div className='rounded-md border bg-muted/40 px-3 py-1.5 text-sm'>
+      <span className='font-medium'>{t('products.detail.comboSpecification.availableQuantity')}:</span>{' '}
+      <span className='tabular-nums'>{quantity ?? '-'}</span>
+      {status && <span className='ml-2 text-muted-foreground'>({status})</span>}
     </div>
   )
 }

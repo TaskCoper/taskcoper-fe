@@ -299,6 +299,15 @@ class ProductService extends BaseService {
     }
   }
 
+  updateChildQuantity = async ({ productId, factor }: { productId: string | number; factor: number }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseComboUrl}/child-quantity`, {
+      productId,
+      factor
+    })
+
+    return data.value
+  }
+
   addComboSpecificationItems = async ({
     comboId,
     body

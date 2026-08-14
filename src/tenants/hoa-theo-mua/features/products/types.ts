@@ -27,6 +27,9 @@ export interface Product {
   // D - Tên sản phẩm cha
   parentProductName: string | null
 
+  comboAvailableQty: number | null
+  comboStockStatus: string | null
+
   // E - Mã vạch
   barcode: string | null
 
