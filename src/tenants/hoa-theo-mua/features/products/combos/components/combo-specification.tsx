@@ -19,8 +19,8 @@ export function ComboSpecification({
   productId,
   comboId,
   factor: initialFactor,
-  comboAvailableQty,
-  comboStockStatus,
+  sellableQuantity,
+  stockStatus,
   canEditFactor,
   canManageMaterials,
   materials,
@@ -31,8 +31,8 @@ export function ComboSpecification({
   productId: string
   comboId: string
   factor: number
-  comboAvailableQty?: number | null
-  comboStockStatus?: string | null
+  sellableQuantity?: number | null
+  stockStatus?: string | null
   canEditFactor: boolean
   canManageMaterials: boolean
   materials: ComboMaterial[]
@@ -207,10 +207,10 @@ export function ComboSpecification({
           </div>
         )}
 
-        {!canEditFactor && <ComboAvailability quantity={comboAvailableQty} status={comboStockStatus} t={t} />}
+        {!canEditFactor && <ComboAvailability quantity={sellableQuantity} status={stockStatus} t={t} />}
 
         <div className='ml-auto flex flex-wrap justify-end gap-2'>
-          {canEditFactor && <ComboAvailability quantity={comboAvailableQty} status={comboStockStatus} t={t} />}
+          {canEditFactor && <ComboAvailability quantity={sellableQuantity} status={stockStatus} t={t} />}
           {isEditing && canManageMaterials ? (
             <>
               <Button

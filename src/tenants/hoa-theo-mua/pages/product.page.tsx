@@ -468,8 +468,8 @@ export default function ProductPage() {
                   productId={id ?? ''}
                   comboId={product.parentProductId?.trim() || id || ''}
                   factor={comboSpecification?.factor ?? 1}
-                  comboAvailableQty={product.comboAvailableQty}
-                  comboStockStatus={product.comboStockStatus}
+                  sellableQuantity={product.sellableQuantity}
+                  stockStatus={product.stockStatus}
                   canEditFactor={canEditFactor}
                   canManageMaterials={canManageComboMaterials}
                   materials={comboSpecification?.materials ?? []}
