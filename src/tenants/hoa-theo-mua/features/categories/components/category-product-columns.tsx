@@ -201,7 +201,7 @@ export const getCategoryColumns = ({
       ),
       cell: ({ row }) => (
         <div className='flex justify-center'>
-          <CategoryGridLabel category={row.original} />
+          <CategoryGridLabel category={row.original} t={t} />
         </div>
       ),
       enableSorting: false,

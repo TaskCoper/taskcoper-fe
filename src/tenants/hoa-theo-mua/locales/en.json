@@ -1793,6 +1793,8 @@
       "status": "Status",
       "filters": "Filters",
       "grid": "Grid",
+      "gridRow": "Row",
+      "gridCol": "Col",
       "productCount": "Products",
       "subcategoryCount": "({{count}} subcategories)",
       "noChildren": "No subcategories"

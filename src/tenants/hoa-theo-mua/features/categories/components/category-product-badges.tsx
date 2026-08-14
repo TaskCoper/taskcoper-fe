@@ -112,7 +112,7 @@ export function CategoryFilterBadges({
   )
 }
 
-export function CategoryGridLabel({ category }: { category: Pick<Category, 'metaData'> }) {
+export function CategoryGridLabel({ category, t }: { category: Pick<Category, 'metaData'>; t: TenantT }) {
   const metadata = parseCategoryMetadata(category.metaData)
 
   if (!metadata.rows && !metadata.cols) {
@@ -120,8 +120,14 @@ export function CategoryGridLabel({ category }: { category: Pick<Category, 'meta
   }
 
   return (
-    <span className='whitespace-nowrap text-sm tabular-nums'>
-      {metadata.rows ?? 1} × {metadata.cols ?? 4}
+    <span className='inline-flex items-center gap-1.5 whitespace-nowrap text-sm tabular-nums'>
+      <span>
+        {metadata.rows ?? 1} {t(`${CATEGORY_I18N_PREFIX}.column.gridRow`)}
+      </span>
+      <span className='text-muted-foreground'>×</span>
+      <span>
+        {metadata.cols ?? 4} {t(`${CATEGORY_I18N_PREFIX}.column.gridCol`)}
+      </span>
     </span>
   )
 }

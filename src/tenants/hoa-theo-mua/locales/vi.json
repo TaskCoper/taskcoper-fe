@@ -1793,6 +1793,8 @@
       "status": "Trạng thái",
       "filters": "Bộ lọc",
       "grid": "Lưới",
+      "gridRow": "Dòng",
+      "gridCol": "Cột",
       "productCount": "Số sản phẩm",
       "subcategoryCount": "({{count}} danh mục con)",
       "noChildren": "Không có danh mục con"
