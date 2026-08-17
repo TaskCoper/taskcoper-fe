@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import { cn } from '@/shared/utils'
 import { ArrowRight, ChevronRight, Mail, Phone } from 'lucide-react'
 import type { B2BServiceDetail } from '../../../b2b-service-detail-palette'
@@ -78,7 +79,12 @@ export function ServiceHeroPreview({ detail, locale }: { detail: B2BServiceDetai
                   className='absolute inset-0 size-full object-cover'
                 />
               ) : (
-                <img src={detail.heroImage} alt={name} className='absolute inset-0 size-full object-cover' />
+                <ImageWithViewport
+                  src={detail.heroImage}
+                  alt={name}
+                  className='absolute inset-0 size-full'
+                  loading='eager'
+                />
               )}
               <span
                 aria-hidden='true'

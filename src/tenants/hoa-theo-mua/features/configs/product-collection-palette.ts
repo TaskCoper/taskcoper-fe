@@ -14,6 +14,13 @@ import { ConfigKind, InputType, type Config } from './types'
 
 export { emptyLocalizedText, slugify, type LocalizedText } from './palette-shared'
 
+/**
+ * Storefront collection cards are portrait, not square. 4:5 is the best fit across the two renderers
+ * (`products-occasions-section.tsx` and `about-product-lines-section.tsx`), whose actual boxes vary
+ * from 0.54 to 0.94 depending on breakpoint.
+ */
+export const PRODUCT_COLLECTION_IMAGE_ASPECT = 4 / 5
+
 export const PRODUCT_COLLECTION_GROUP = 'products'
 export const PRODUCT_COLLECTION_KEY_PREFIX = `${PRODUCT_COLLECTION_GROUP}.`
 

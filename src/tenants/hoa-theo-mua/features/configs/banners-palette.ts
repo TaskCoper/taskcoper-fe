@@ -1,5 +1,54 @@
 import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
 
+/** A banner shape: the ratio to frame against, plus how to describe it to an author. */
+export interface BannerShape {
+  aspect: number
+  /** Written as a ratio, e.g. `16:5`. */
+  label: string
+  /** A concrete upload size at that ratio, e.g. `1920×600`. */
+  example: string
+}
+
+const SHAPE_3_1: BannerShape = { aspect: 3, label: '3:1', example: '1800×600' }
+const SHAPE_16_5: BannerShape = { aspect: 16 / 5, label: '16:5', example: '1920×600' }
+const SHAPE_5_1: BannerShape = { aspect: 5, label: '5:1', example: '2800×560' }
+
+/**
+ * Banner shapes, by storefront slot. The storefront renders banners with `w-full h-auto` (no
+ * fixed crop box), so these ratios are an upload guide matching each slot's fallback art, not an
+ * enforced crop.
+ */
+export const BANNER_SLOT_SHAPE: Record<string, BannerShape> = {
+  /** `banner-one.webp`, 2172×678. */
+  'home.collection': SHAPE_16_5,
+  /** `sale-banner.webp`, 2804×561. */
+  'home.sale': SHAPE_5_1,
+  /** Both fall back to `sale-banner.webp` through `ProductsPromiseSection`. */
+  products: SHAPE_5_1,
+  product: SHAPE_5_1
+}
+
+/** The slots the storefront names in `types/config.type.ts` → `BANNER_SLOTS`. */
+export const KNOWN_BANNER_SLOTS: string[] = Object.keys(BANNER_SLOT_SHAPE)
+
+/** Fallback for slots with no known box; 3:1 is the safe (widest) end of the design's actual 3.2:1-5:1 range. */
+export const DEFAULT_BANNER_SHAPE = SHAPE_3_1
+
+// Mirrors the storefront's own `normalizeSlot` (`hooks/use-banner-by-slot.ts`), so a slot typed as
+// `Home_Collection` resolves here exactly as it will resolve there.
+const normalizeSlot = (slot: string): string =>
+  slot
+    .trim()
+    .toLowerCase()
+    .replace(/[-_.\s]/g, '')
+
+const SHAPE_BY_NORMALIZED_SLOT = new Map(
+  Object.entries(BANNER_SLOT_SHAPE).map(([slot, shape]) => [normalizeSlot(slot), shape])
+)
+
+export const bannerShapeForSlot = (slot: string): BannerShape =>
+  SHAPE_BY_NORMALIZED_SLOT.get(normalizeSlot(slot)) ?? DEFAULT_BANNER_SHAPE
+
 export const BANNERS_GROUP = 'banners'
 export const BANNERS_KEY_PREFIX = `${BANNERS_GROUP}.`
 

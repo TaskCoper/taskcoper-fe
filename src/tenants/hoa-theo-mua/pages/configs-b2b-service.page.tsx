@@ -37,6 +37,7 @@ import {
   type PersonalizationBlock,
   type StatsBlock
 } from '../features/configs/b2b-service-detail-palette'
+import { B2B_IMAGE_ASPECT } from '../features/configs/components/b2b-services/b2b-image-aspects'
 import {
   FaqListEditor,
   ImageUploadField,
@@ -540,11 +541,14 @@ function B2BServiceEditor({
 function ListBlockEditor({
   block,
   onChange,
-  locale
+  locale,
+  aspectRatio
 }: {
   block: ListBlock
   onChange: (next: ListBlock) => void
   locale: PreviewLocale
+  /** The four sections sharing this editor render their image at different aspects. */
+  aspectRatio: number
 }) {
   const { t } = useTenantTranslation()
   return (
@@ -571,6 +575,7 @@ function ListBlockEditor({
         locale={locale}
       />
       <ImageUploadField
+        aspectRatio={aspectRatio}
         value={block.image ?? ''}
         onChange={(image) => onChange({ ...block, image })}
         label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -667,6 +672,7 @@ function ServiceForm({
       return (
         <div className='space-y-4'>
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.serviceHero}
             value={working.heroImage}
             onChange={(heroImage) => patch({ heroImage })}
             label={t('configsPage.b2bServicesDialog.fields.heroImage')}
@@ -713,6 +719,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDivider}
             value={working.introImage ?? ''}
             onChange={(introImage) => patch({ introImage })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -739,6 +746,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDividerWide}
             value={working.stats.image ?? ''}
             onChange={(image) => patch({ stats: { ...working.stats, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -754,6 +762,7 @@ function ServiceForm({
           onToggle={(v) => toggleSection('inclusions', v)}
         >
           <ListBlockEditor
+            aspectRatio={B2B_IMAGE_ASPECT.sectionSplit}
             block={working.inclusions}
             onChange={(inclusions) => patch({ inclusions })}
             locale={locale}
@@ -790,6 +799,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionSplit}
             value={working.mice.image ?? ''}
             onChange={(image) => patch({ mice: { ...working.mice, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -804,7 +814,12 @@ function ServiceForm({
           enabled={working.enabledSections.has('schedule')}
           onToggle={(v) => toggleSection('schedule', v)}
         >
-          <ListBlockEditor block={working.schedule} onChange={(schedule) => patch({ schedule })} locale={locale} />
+          <ListBlockEditor
+            aspectRatio={B2B_IMAGE_ASPECT.sectionSplit}
+            block={working.schedule}
+            onChange={(schedule) => patch({ schedule })}
+            locale={locale}
+          />
         </OptionalSection>
       )
 
@@ -848,6 +863,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionSplit}
             value={working.personalization.image ?? ''}
             onChange={(image) => patch({ personalization: { ...working.personalization, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -874,6 +890,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDividerWide}
             value={working.benefits.image ?? ''}
             onChange={(image) => patch({ benefits: { ...working.benefits, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -888,7 +905,12 @@ function ServiceForm({
           enabled={working.enabledSections.has('process')}
           onToggle={(v) => toggleSection('process', v)}
         >
-          <ListBlockEditor block={working.process} onChange={(process) => patch({ process })} locale={locale} />
+          <ListBlockEditor
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDivider}
+            block={working.process}
+            onChange={(process) => patch({ process })}
+            locale={locale}
+          />
         </OptionalSection>
       )
 
@@ -899,7 +921,12 @@ function ServiceForm({
           enabled={working.enabledSections.has('audience')}
           onToggle={(v) => toggleSection('audience', v)}
         >
-          <ListBlockEditor block={working.audience} onChange={(audience) => patch({ audience })} locale={locale} />
+          <ListBlockEditor
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDivider}
+            block={working.audience}
+            onChange={(audience) => patch({ audience })}
+            locale={locale}
+          />
         </OptionalSection>
       )
 
@@ -922,6 +949,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDivider}
             value={working.faq.image ?? ''}
             onChange={(image) => patch({ faq: { ...working.faq, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -945,6 +973,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.sectionDivider}
             value={working.closing.image ?? ''}
             onChange={(image) => patch({ closing: { ...working.closing, image } })}
             label={t('configsPage.b2bServicesDialog.fields.sectionImage')}
@@ -989,6 +1018,7 @@ function ServiceForm({
             locale={locale}
           />
           <ImageUploadField
+            aspectRatio={B2B_IMAGE_ASPECT.openGraph}
             value={working.ogImage ?? ''}
             onChange={(ogImage) => patch({ ogImage })}
             label={t('configsPage.b2bServicesDialog.fields.ogImage')}

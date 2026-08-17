@@ -1,3 +1,4 @@
+import { encodeImageViewport, type ImageViewport } from '@/lib/image-viewport'
 import { Accordion } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
@@ -90,12 +91,15 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
   // so an entry auto-orphans when the associated card is removed via useFieldArray.remove().
   const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({})
   const [pendingPreviews, setPendingPreviews] = useState<Record<string, string>>({})
+  // Staged files only have a blob: URL, which can't carry a viewport, so it's held here until upload.
+  const [pendingViewports, setPendingViewports] = useState<Record<string, ImageViewport | null>>({})
   const [openCardIds, setOpenCardIds] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     reset(toFormValues(existingConfig))
     setPendingFiles({})
+    setPendingViewports({})
     setPendingPreviews((prev) => {
       Object.values(prev).forEach(URL.revokeObjectURL)
       return {}
@@ -128,6 +132,8 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
 
   const setPendingFileForCard = (fieldId: string, file: File) => {
     setPendingFiles((prev) => ({ ...prev, [fieldId]: file }))
+    // A new picture resets the viewport rather than reusing the old one's framing.
+    setPendingViewports((prev) => ({ ...prev, [fieldId]: null }))
     setPendingPreviews((prev) => {
       if (prev[fieldId]) URL.revokeObjectURL(prev[fieldId])
       return { ...prev, [fieldId]: URL.createObjectURL(file) }
@@ -142,6 +148,11 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
       return next
     })
     setPendingFiles((prev) => {
+      const next = { ...prev }
+      delete next[fieldId]
+      return next
+    })
+    setPendingViewports((prev) => {
       const next = { ...prev }
       delete next[fieldId]
       return next
@@ -171,7 +182,7 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
             setIsSaving(false)
             return
           }
-          uploadedCards[i] = { ...uploadedCards[i], image: url }
+          uploadedCards[i] = { ...uploadedCards[i], image: encodeImageViewport(url, pendingViewports[fieldId] ?? null) }
         }
 
         const resolved: ProductCollection = {
@@ -306,6 +317,10 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
                 index={index}
                 total={cardFields.length}
                 pendingPreviewUrl={pendingPreviews[field.id]}
+                pendingViewport={pendingViewports[field.id] ?? null}
+                onPendingViewportChange={(viewport) =>
+                  setPendingViewports((prev) => ({ ...prev, [field.id]: viewport }))
+                }
                 onRemove={() => removeCard(index)}
                 onMove={(dir) => moveCard(index, index + dir)}
                 onPickFile={(file) => setPendingFileForCard(field.id, file)}

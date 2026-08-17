@@ -844,6 +844,12 @@
       "uptime": "Uptime"
     }
   },
+  "imageViewport": {
+    "adjust": "Adjust framing",
+    "description": "Drag the image and zoom to choose which part stays visible.",
+    "useFullImage": "Use full image",
+    "zoom": "Zoom"
+  },
   "language": {
     "english": "English",
     "vietnamese": "Vietnamese"

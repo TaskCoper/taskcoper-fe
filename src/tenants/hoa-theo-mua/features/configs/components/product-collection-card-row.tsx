@@ -1,3 +1,6 @@
+import { ImageViewportButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
+import { decodeImageViewport, encodeImageViewport, type ImageViewport } from '@/lib/image-viewport'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,7 +12,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { ArrowDown, ArrowUp, ChevronsUpDown, ImageIcon, Trash2, UploadIcon } from 'lucide-react'
 import { useRef } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
-import { slugify } from '../product-collection-palette'
+import { PRODUCT_COLLECTION_IMAGE_ASPECT, slugify } from '../product-collection-palette'
 import type { ProductCollectionFormValues } from '../validations'
 import { ChipInput, LocalizedTabs } from './collection-shared'
 // Campaign UI temporarily disabled — see the commented section at the bottom of this file.
@@ -22,6 +25,8 @@ interface Props {
   index: number
   total: number
   pendingPreviewUrl?: string
+  pendingViewport: ImageViewport | null
+  onPendingViewportChange: (viewport: ImageViewport | null) => void
   onRemove: () => void
   onMove: (direction: 1 | -1) => void
   onPickFile: (file: File) => void
@@ -33,6 +38,8 @@ export default function ProductCollectionCardRow({
   index,
   total,
   pendingPreviewUrl,
+  pendingViewport,
+  onPendingViewportChange,
   onRemove,
   onMove,
   onPickFile,
@@ -46,6 +53,14 @@ export default function ProductCollectionCardRow({
   // const hasCampaigns = useWatch({ control, name: 'hasCampaigns' })
 
   const displayPreview = pendingPreviewUrl || card?.image || ''
+
+  const isStaged = Boolean(pendingPreviewUrl)
+  const viewport = isStaged ? pendingViewport : decodeImageViewport(card?.image ?? '').viewport
+
+  const handleViewportChange = (next: ImageViewport | null) => {
+    if (isStaged) onPendingViewportChange(next)
+    else setValue(`cards.${index}.image`, encodeImageViewport(card?.image ?? '', next), { shouldDirty: true })
+  }
   const displayName = card?.name.vi || t('configsPage.productCollectionDialog.card.untitled', { index: index + 1 })
 
   const handleNameBlur = (lang: Lang, value: string) => {
@@ -66,15 +81,16 @@ export default function ProductCollectionCardRow({
       <div className='flex items-center gap-2 border rounded-xl bg-muted w-full'>
         <AccordionTrigger className='p-2 hover:no-underline' headerClassName='flex-1 min-w-0' displayIcon={false}>
           <div className='flex flex-1 items-center gap-3'>
-            <div className='size-10 shrink-0 overflow-hidden rounded-lg border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='size-10 shrink-0 rounded-lg border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-4' />
                 </div>
-              )}
-            </div>
+              }
+            />
             <div className='flex min-w-0 flex-1 flex-col items-start'>
               <span className='truncate text-sm font-medium'>{displayName}</span>
               <span className='truncate text-xs text-muted-foreground'>
@@ -136,15 +152,16 @@ export default function ProductCollectionCardRow({
         <div className='grid grid-cols-1 gap-4 md:grid-cols-[160px_1fr]'>
           <div>
             <FieldLabel className='text-xs'>{t('configsPage.productCollectionDialog.card.image')}</FieldLabel>
-            <div className='mt-1 aspect-square overflow-hidden rounded-md border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='mt-1 aspect-[4/5] rounded-md border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-6' />
                 </div>
-              )}
-            </div>
+              }
+            />
             <input
               ref={fileRef}
               type='file'
@@ -169,6 +186,13 @@ export default function ProductCollectionCardRow({
                   ? t('configsPage.productCollectionDialog.card.replaceImage')
                   : t('configsPage.productCollectionDialog.card.uploadImage')}
               </Button>
+              <ImageViewportButton
+                src={displayPreview}
+                viewport={viewport}
+                onViewportChange={handleViewportChange}
+                aspectRatio={PRODUCT_COLLECTION_IMAGE_ASPECT}
+                size='icon-sm'
+              />
               {(pendingPreviewUrl || card?.image) && (
                 <Button
                   type='button'

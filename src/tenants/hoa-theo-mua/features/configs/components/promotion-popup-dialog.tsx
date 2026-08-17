@@ -1,4 +1,6 @@
 import { DatePickerField } from '@/components/date-picker-field'
+import { ImageViewportButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,9 +11,11 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { decodeImageViewport, encodeImageViewport, type ImageViewport } from '@/lib/image-viewport'
 import { MAX_UPLOAD_IMAGE_SIZE } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -44,6 +48,7 @@ import {
   pickerValueToYmd,
   POPUP_FREQUENCIES,
   PROMOTION_POPUP_GROUP,
+  PROMOTION_POPUP_IMAGE_ASPECT,
   PROMOTION_POPUP_KEY,
   ymdToPickerValue,
   type CampaignStatus,
@@ -101,6 +106,8 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
   // Keyed by field id so staged files survive reorder and orphan on remove.
   const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({})
   const [pendingPreviews, setPendingPreviews] = useState<Record<string, string>>({})
+  // Staged files only have a blob: URL, which can't carry a viewport, so it's held here until upload.
+  const [pendingViewports, setPendingViewports] = useState<Record<string, ImageViewport | null>>({})
   const [openItemIds, setOpenItemIds] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
@@ -111,6 +118,7 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
     const initial = existingConfig ? parsePromotionPopup(existingConfig.value.value) : defaultPromotionPopup()
     reset(toFormValues(initial))
     setPendingFiles({})
+    setPendingViewports({})
     setPendingPreviews((prev) => {
       Object.values(prev).forEach((url) => URL.revokeObjectURL(url))
       return {}
@@ -151,6 +159,11 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
       delete next[fieldId]
       return next
     })
+    setPendingViewports((prev) => {
+      const next = { ...prev }
+      delete next[fieldId]
+      return next
+    })
   }, [])
 
   const setPendingFileForItem = (fieldId: string, file: File) => {
@@ -159,6 +172,8 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
       return
     }
     setPendingFiles((prev) => ({ ...prev, [fieldId]: file }))
+    // A new picture resets the viewport rather than reusing the old one's framing.
+    setPendingViewports((prev) => ({ ...prev, [fieldId]: null }))
     setPendingPreviews((prev) => {
       if (prev[fieldId]) URL.revokeObjectURL(prev[fieldId])
       return { ...prev, [fieldId]: URL.createObjectURL(file) }
@@ -210,7 +225,8 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
             setIsSaving(false)
             return
           }
-          image = url
+          // encodeImageViewport refuses blob: URLs, so the viewport can only be written once the image has a real URL.
+          image = encodeImageViewport(url, fieldId ? pendingViewports[fieldId] : null)
         }
 
         items.push({
@@ -394,6 +410,10 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
                       today={today}
                       sectionPages={watchedSection?.pages ?? []}
                       pendingPreviewUrl={pendingPreviews[field.id]}
+                      pendingViewport={pendingViewports[field.id] ?? null}
+                      onPendingViewportChange={(viewport) =>
+                        setPendingViewports((prev) => ({ ...prev, [field.id]: viewport }))
+                      }
                       onRemove={() => removeItem(index)}
                       onMove={(dir) => {
                         const to = index + dir
@@ -408,6 +428,20 @@ export default function PromotionPopupDialog({ open, onClose, existingConfig }: 
             </div>
 
             <DialogFooter className='border-t px-6 py-4'>
+              {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+              {existingConfig && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className='mr-auto inline-flex'>
+                      <Button type='button' variant='destructive' disabled className='pointer-events-none'>
+                        <Trash2 className='size-3.5' />
+                        {t('configsPage.dialog.delete')}
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>{t('configsPage.dialog.deleteDisabledTooltip')}</TooltipContent>
+                </Tooltip>
+              )}
               <Button type='button' variant='outline' disabled={submitting} onClick={onClose}>
                 {t('configsPage.dialog.cancel')}
               </Button>
@@ -430,6 +464,8 @@ function CampaignRow({
   today,
   sectionPages,
   pendingPreviewUrl,
+  pendingViewport,
+  onPendingViewportChange,
   onRemove,
   onMove,
   onPickFile,
@@ -441,6 +477,8 @@ function CampaignRow({
   today: string
   sectionPages: string[]
   pendingPreviewUrl?: string
+  pendingViewport: ImageViewport | null
+  onPendingViewportChange: (viewport: ImageViewport | null) => void
   onRemove: () => void
   onMove: (direction: 1 | -1) => void
   onPickFile: (file: File) => void
@@ -454,6 +492,14 @@ function CampaignRow({
   const itemErrors = formState.errors.items?.[index]
 
   const displayPreview = pendingPreviewUrl || item?.image || ''
+
+  const isStaged = Boolean(pendingPreviewUrl)
+  const viewport = isStaged ? pendingViewport : decodeImageViewport(item?.image ?? '').viewport
+
+  const handleViewportChange = (next: ImageViewport | null) => {
+    if (isStaged) onPendingViewportChange(next)
+    else setValue(`items.${index}.image`, encodeImageViewport(item?.image ?? '', next), { shouldDirty: true })
+  }
   // `alt.vi` doubles as the row label.
   const displayLabel =
     item?.alt?.vi?.trim() || t('configsPage.promotionPopupDialog.item.untitled', { index: index + 1 })
@@ -472,15 +518,16 @@ function CampaignRow({
       <div className='flex w-full items-center gap-2 rounded-xl border bg-muted'>
         <AccordionTrigger className='p-2 hover:no-underline' headerClassName='flex-1 min-w-0' displayIcon={false}>
           <div className='flex flex-1 items-center gap-3'>
-            <div className='h-12 w-10 shrink-0 overflow-hidden rounded-lg border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='h-12 w-10 shrink-0 rounded-lg border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-4' />
                 </div>
-              )}
-            </div>
+              }
+            />
             <div className='flex min-w-0 flex-1 flex-col items-start'>
               <span className='truncate text-sm font-medium'>{displayLabel}</span>
               <span className='flex items-center gap-1 truncate text-xs text-muted-foreground'>
@@ -555,15 +602,16 @@ function CampaignRow({
           <div className='space-y-2'>
             <FieldLabel className='text-xs'>{t('configsPage.promotionPopupDialog.item.image')}</FieldLabel>
             {/* 4:5 matches the box the storefront reserves, so this is the real crop. */}
-            <div className='mt-1 aspect-[4/5] overflow-hidden rounded-lg border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='mt-1 aspect-[4/5] rounded-lg border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-6' />
                 </div>
-              )}
-            </div>
+              }
+            />
 
             <input
               ref={fileRef}
@@ -590,6 +638,14 @@ function CampaignRow({
                   ? t('configsPage.promotionPopupDialog.item.replaceImage')
                   : t('configsPage.promotionPopupDialog.item.uploadImage')}
               </Button>
+
+              <ImageViewportButton
+                src={displayPreview}
+                viewport={viewport}
+                onViewportChange={handleViewportChange}
+                aspectRatio={PROMOTION_POPUP_IMAGE_ASPECT}
+                size='icon-sm'
+              />
 
               {displayPreview && (
                 <Button

@@ -1460,7 +1460,7 @@
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá banner",
         "image": "Ảnh banner",
-        "imageHelp": "Khuyến nghị tỉ lệ 16:9 hoặc theo vị trí hiển thị.",
+        "imageHelp": "Ảnh ngang, khuyến nghị tỉ lệ {{ratio}} (vd {{example}}px) theo vị trí hiển thị.",
         "uploadImage": "Tải ảnh lên",
         "replaceImage": "Đổi ảnh",
         "slotField": "Vị trí (slot)",

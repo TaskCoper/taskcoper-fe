@@ -49,7 +49,6 @@ const AVAILABLE_VALIDATIONS: Partial<Record<InputType, RuleKey[]>> = {
   [InputType.text]: ['minLength', 'maxLength', 'pattern', 'email', 'url'],
   [InputType.textarea]: ['minLength', 'maxLength', 'pattern'],
   [InputType.number]: ['min', 'max', 'integer'],
-  [InputType.image]: ['url'],
   [InputType.file]: ['url']
 }
 

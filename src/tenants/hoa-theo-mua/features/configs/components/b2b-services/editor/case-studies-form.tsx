@@ -47,6 +47,7 @@ function CaseStudyList({
               onMove={(dir) => move(index, dir)}
             >
               <ImageUploadField
+                aspectRatio={null}
                 label={t('configsPage.b2bOverviewDialog.field.caseStudyLogo')}
                 value={item.logo}
                 onChange={(logo) => update(index, { ...item, logo })}

@@ -1,4 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
+import { ImageViewportUrlButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
@@ -7,8 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { releaseStagedUpload, stageUpload, useStagedUpload } from '@/lib/staged-uploads'
 import { ArrowDown, ArrowUp, ChevronsUpDown, ImageIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useRef } from 'react'
@@ -97,7 +99,8 @@ export function ImageUploadField({
   onChange,
   label,
   description,
-  allowVideo = false
+  allowVideo = false,
+  aspectRatio
 }: {
   value: string
   onChange: (next: string) => void
@@ -105,13 +108,16 @@ export function ImageUploadField({
   description?: string
   /** When true, also accepts video uploads (e.g. the hero slot) and previews them inline. */
   allowVideo?: boolean
+  /** Aspect the preview and framing editor crop to; `null` for slots that never crop. */
+  aspectRatio: number | null
 }) {
   const { t } = useTenantTranslation()
-  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const fileRef = useRef<HTMLInputElement>(null)
-  const isVideo = allowVideo && isVideoUrl(value)
+  const staged = useStagedUpload(value)
+  // A staged file has no extension to read, so its type comes from the File itself.
+  const isVideo = staged ? staged.file.type.startsWith('video/') : allowVideo && isVideoUrl(value)
 
-  const pick = async (file: File) => {
+  const pick = (file: File) => {
     const isFileVideo = file.type.startsWith('video/')
     const maxSize = isFileVideo ? MAX_B2B_VIDEO_SIZE : MAX_B2B_IMAGE_SIZE
     if (file.size > maxSize) {
@@ -120,24 +126,31 @@ export function ImageUploadField({
       })
       return
     }
-    const url = await uploadFileWithToast({ file, showSuccessToast: false })
-    if (url) onChange(url)
+    // Staged until save; uploading on pick would orphan a file when the user backs out.
+    releaseStagedUpload(value)
+    onChange(stageUpload(file))
   }
 
   return (
     <div className='space-y-2'>
       <FieldLabel className='text-xs'>{label}</FieldLabel>
-      <div className='aspect-[16/9] w-full max-w-xs overflow-hidden rounded-lg border bg-muted'>
-        {value ? (
-          isVideo ? (
-            <video src={value} muted loop autoPlay playsInline className='size-full object-cover' />
-          ) : (
-            <img src={value} alt='' className='size-full object-cover' />
-          )
+      {/* Mirrors the slot's real aspect so what's framed here is what ships. */}
+      <div
+        className='w-full max-w-xs overflow-hidden rounded-lg border bg-muted'
+        style={{ aspectRatio: aspectRatio ?? 16 / 9 }}
+      >
+        {value && isVideo ? (
+          <video src={value} muted loop autoPlay playsInline className='size-full object-cover' />
         ) : (
-          <div className='flex size-full items-center justify-center text-muted-foreground'>
-            <ImageIcon className='size-6' />
-          </div>
+          <ImageWithViewport
+            src={value}
+            className='size-full'
+            fallback={
+              <div className='flex size-full items-center justify-center text-muted-foreground'>
+                <ImageIcon className='size-6' />
+              </div>
+            }
+          />
         )}
       </div>
       <input
@@ -152,25 +165,26 @@ export function ImageUploadField({
         }}
       />
       <div className='flex items-center gap-1'>
-        <Button
-          type='button'
-          variant='outline'
-          size='sm'
-          disabled={isUploading}
-          onClick={() => fileRef.current?.click()}
-        >
+        <Button type='button' variant='outline' size='sm' onClick={() => fileRef.current?.click()}>
           <UploadIcon data-icon='inline-start' />
           {value
             ? t('configsPage.b2bServicesDialog.fields.replaceImage')
             : t('configsPage.b2bServicesDialog.fields.uploadImage')}
         </Button>
+        {/* Doesn't apply to video, or to slots that never crop. */}
+        {aspectRatio !== null && !isVideo && (
+          <ImageViewportUrlButton value={value} onChange={onChange} aspectRatio={aspectRatio} size='icon-sm' />
+        )}
         {value && (
           <Button
             type='button'
             variant='ghost'
             size='icon'
             className='text-muted-foreground hover:text-destructive'
-            onClick={() => onChange('')}
+            onClick={() => {
+              releaseStagedUpload(value)
+              onChange('')
+            }}
           >
             <Trash2 className='size-3.5' />
           </Button>
@@ -183,13 +197,11 @@ export function ImageUploadField({
 
 export function ImageUploadList({ items, onChange }: { items: string[]; onChange: (next: string[]) => void }) {
   const { t } = useTenantTranslation()
-  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const addMany = async (files: File[]) => {
-    const urls = await Promise.all(files.map((file) => uploadFileWithToast({ file, showSuccessToast: false })))
-    const uploaded = urls.filter((url): url is string => Boolean(url))
-    if (uploaded.length) onChange([...items, ...uploaded])
+  // Staged like a single image field; files upload when the form is saved.
+  const addMany = (files: File[]) => {
+    if (files.length) onChange([...items, ...files.map(stageUpload)])
   }
 
   const move = (from: number, to: number) => {
@@ -216,13 +228,7 @@ export function ImageUploadList({ items, onChange }: { items: string[]; onChange
             if (files.length) addMany(files)
           }}
         />
-        <Button
-          type='button'
-          variant='outline'
-          size='sm'
-          disabled={isUploading}
-          onClick={() => fileRef.current?.click()}
-        >
+        <Button type='button' variant='outline' size='sm' onClick={() => fileRef.current?.click()}>
           <Plus className='size-3.5' data-icon='inline-start' />
           {t('configsPage.b2bServicesDialog.fields.galleryAdd')}
         </Button>
@@ -265,7 +271,10 @@ export function ImageUploadList({ items, onChange }: { items: string[]; onChange
                   variant='ghost'
                   size='icon'
                   className='size-6 text-white hover:bg-white/20 hover:text-destructive'
-                  onClick={() => onChange(items.filter((_, i) => i !== index))}
+                  onClick={() => {
+                    releaseStagedUpload(url)
+                    onChange(items.filter((_, i) => i !== index))
+                  }}
                 >
                   <Trash2 className='size-3' />
                 </Button>

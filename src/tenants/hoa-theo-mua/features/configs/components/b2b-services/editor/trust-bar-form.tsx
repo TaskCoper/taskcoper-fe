@@ -1,3 +1,4 @@
+import { B2B_IMAGE_ASPECT } from '../b2b-image-aspects'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import {
   defaultLogoItem,
@@ -46,6 +47,7 @@ function LogoItemList({
               onMove={(dir) => move(index, dir)}
             >
               <ImageUploadField
+                aspectRatio={B2B_IMAGE_ASPECT.logo}
                 label={t('configsPage.b2bOverviewDialog.field.logoImage')}
                 value={item.image}
                 onChange={(image) => update(index, { ...item, image })}

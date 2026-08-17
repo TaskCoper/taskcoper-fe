@@ -1,5 +1,8 @@
 import type { RatingValue } from '@/components/rating-field'
 
+// Storefront draws this as a 40px circular avatar (`testimonial-carousel.tsx`), so it must be square.
+export const FEEDBACK_IMAGE_ASPECT = 1
+
 export const FEEDBACKS_GROUP = 'feedbacks'
 export const FEEDBACKS_KEY_PREFIX = `${FEEDBACKS_GROUP}.`
 

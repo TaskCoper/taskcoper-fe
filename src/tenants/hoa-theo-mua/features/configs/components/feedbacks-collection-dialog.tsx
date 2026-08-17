@@ -1,4 +1,6 @@
 import { DatePickerField } from '@/components/date-picker-field'
+import { ImageViewportButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import RatingField, { type RatingValue } from '@/components/rating-field'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
@@ -12,9 +14,11 @@ import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { decodeImageViewport, encodeImageViewport, type ImageViewport } from '@/lib/image-viewport'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   AlertTriangle,
@@ -36,6 +40,7 @@ import {
   countFeatured,
   defaultFeedbackCollection,
   defaultFeedbackItem,
+  FEEDBACK_IMAGE_ASPECT,
   FEEDBACK_SOURCES,
   FEEDBACKS_GROUP,
   FEEDBACKS_KEY_PREFIX,
@@ -96,6 +101,8 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
   const [collection, setCollection] = useState<UICollection>(() => toUICollection(defaultFeedbackCollection()))
   const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({})
   const [pendingPreviews, setPendingPreviews] = useState<Record<string, string>>({})
+  // Staged files only have a blob: URL, which can't carry a viewport, so it's held here until upload.
+  const [pendingViewports, setPendingViewports] = useState<Record<string, ImageViewport | null>>({})
   const [openItemIds, setOpenItemIds] = useState<string[]>([])
   const [keySuffix, setKeySuffix] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -106,6 +113,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
     const ui = toUICollection(initial)
     setCollection(ui)
     setPendingFiles({})
+    setPendingViewports({})
     Object.values(pendingPreviews).forEach((url) => URL.revokeObjectURL(url))
     setPendingPreviews({})
     setOpenItemIds(ui.items.length === 1 ? [ui.items[0]._uid] : [])
@@ -155,6 +163,11 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
           delete next[item._uid]
           return next
         })
+        setPendingViewports((prev) => {
+          const next = { ...prev }
+          delete next[item._uid]
+          return next
+        })
       }
       return { ...prev, items: prev.items.filter((_, i) => i !== index) }
     })
@@ -172,6 +185,8 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
 
   const setPendingFileForItem = (uid: string, file: File) => {
     setPendingFiles((prev) => ({ ...prev, [uid]: file }))
+    // A new picture resets the viewport rather than reusing the old one's framing.
+    setPendingViewports((prev) => ({ ...prev, [uid]: null }))
     setPendingPreviews((prev) => {
       if (prev[uid]) URL.revokeObjectURL(prev[uid])
       return { ...prev, [uid]: URL.createObjectURL(file) }
@@ -216,7 +231,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
           setIsSaving(false)
           return
         }
-        uiItems[i] = { ...item, image: url }
+        uiItems[i] = { ...item, image: encodeImageViewport(url, pendingViewports[item._uid] ?? null) }
       }
 
       const resolved: FeedbackCollection = {
@@ -337,6 +352,10 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
                   total={collection.items.length}
                   item={item}
                   pendingPreviewUrl={pendingPreviews[item._uid]}
+                  pendingViewport={pendingViewports[item._uid] ?? null}
+                  onPendingViewportChange={(viewport) =>
+                    setPendingViewports((prev) => ({ ...prev, [item._uid]: viewport }))
+                  }
                   onChange={(patch) => updateItem(index, patch)}
                   onRemove={() => removeItem(index)}
                   onMove={(dir) => moveItem(index, index + dir)}
@@ -353,6 +372,11 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
                       delete next[item._uid]
                       return next
                     })
+                    setPendingViewports((prev) => {
+                      const next = { ...prev }
+                      delete next[item._uid]
+                      return next
+                    })
                   }}
                 />
               ))}
@@ -361,6 +385,20 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
         </div>
 
         <DialogFooter className='border-t px-6 py-4'>
+          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+          {existingConfig && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className='mr-auto inline-flex'>
+                  <Button type='button' variant='destructive' disabled className='pointer-events-none'>
+                    <Trash2 className='size-3.5' />
+                    {t('configsPage.dialog.delete')}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{t('configsPage.dialog.deleteDisabledTooltip')}</TooltipContent>
+            </Tooltip>
+          )}
           <Button type='button' variant='outline' disabled={submitting} onClick={onClose}>
             {t('configsPage.dialog.cancel')}
           </Button>
@@ -468,6 +506,8 @@ function ItemRow({
   total,
   item,
   pendingPreviewUrl,
+  pendingViewport,
+  onPendingViewportChange,
   onChange,
   onRemove,
   onMove,
@@ -479,6 +519,8 @@ function ItemRow({
   total: number
   item: FeedbackItem
   pendingPreviewUrl?: string
+  pendingViewport: ImageViewport | null
+  onPendingViewportChange: (viewport: ImageViewport | null) => void
   onChange: (patch: Partial<FeedbackItem>) => void
   onRemove: () => void
   onMove: (direction: 1 | -1) => void
@@ -488,6 +530,14 @@ function ItemRow({
   const { t } = useTenantTranslation()
   const fileRef = useRef<HTMLInputElement>(null)
   const displayPreview = pendingPreviewUrl || item.image || ''
+
+  const isStaged = Boolean(pendingPreviewUrl)
+  const viewport = isStaged ? pendingViewport : decodeImageViewport(item.image).viewport
+
+  const handleViewportChange = (next: ImageViewport | null) => {
+    if (isStaged) onPendingViewportChange(next)
+    else onChange({ image: encodeImageViewport(item.image, next) })
+  }
   const displayName = item.customerName || t('configsPage.feedbacksDialog.item.untitled', { index: index + 1 })
 
   const dateForm = useForm<{ postDate: string }>({
@@ -499,15 +549,16 @@ function ItemRow({
       <div className='flex items-center gap-2 border rounded-xl bg-muted w-full'>
         <AccordionTrigger className='p-2 hover:no-underline' headerClassName='flex-1 min-w-0' displayIcon={false}>
           <div className='flex flex-1 items-center gap-3'>
-            <div className='size-10 shrink-0 overflow-hidden rounded-lg border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='size-10 shrink-0 rounded-lg border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-4' />
                 </div>
-              )}
-            </div>
+              }
+            />
             <div className='flex min-w-0 flex-1 flex-col items-start'>
               <span className='truncate text-sm font-medium'>{displayName}</span>
               <span className='flex items-center gap-1.5 truncate text-xs text-muted-foreground'>
@@ -586,15 +637,16 @@ function ItemRow({
           {/* Image upload */}
           <div className='space-y-2'>
             <FieldLabel className='text-xs'>{t('configsPage.feedbacksDialog.item.image')}</FieldLabel>
-            <div className='mt-1 aspect-square overflow-hidden rounded-lg border bg-muted'>
-              {displayPreview ? (
-                <img src={displayPreview} alt='' className='size-full object-cover' />
-              ) : (
+            <ImageWithViewport
+              src={displayPreview}
+              viewport={viewport}
+              className='mt-1 aspect-square rounded-lg border bg-muted'
+              fallback={
                 <div className='flex size-full items-center justify-center text-muted-foreground'>
                   <ImageIcon className='size-6' />
                 </div>
-              )}
-            </div>
+              }
+            />
 
             <input
               ref={fileRef}
@@ -621,6 +673,14 @@ function ItemRow({
                   ? t('configsPage.feedbacksDialog.item.replaceImage')
                   : t('configsPage.feedbacksDialog.item.uploadImage')}
               </Button>
+
+              <ImageViewportButton
+                src={displayPreview}
+                viewport={viewport}
+                onViewportChange={handleViewportChange}
+                aspectRatio={FEEDBACK_IMAGE_ASPECT}
+                size='icon-sm'
+              />
 
               {(pendingPreviewUrl || item.image) && (
                 <Button

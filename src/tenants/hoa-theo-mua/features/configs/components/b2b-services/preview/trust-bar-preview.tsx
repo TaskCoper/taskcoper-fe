@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import { memo } from 'react'
 import type { OverviewTrustBar } from '../../../b2b-overview-palette'
 import { buildMarqueeSet, Marquee, marqueeDuration, pick, type PreviewLocale } from './preview-shared'
@@ -52,7 +53,7 @@ export const TrustBarPreview = memo(function TrustBarPreview({
                       className='flex py-3 pl-3 pr-10 items-center justify-center gap-3 rounded-2xl bg-card'
                     >
                       <div className='relative size-10 shrink-0 overflow-hidden rounded-xl bg-primary/5 sm:h-14 sm:w-14'>
-                        <img src={item.image} alt={name} className='size-full object-cover' />
+                        <ImageWithViewport src={item.image} alt={name} className='size-full' />
                       </div>
                       <span className='whitespace-nowrap font-title text-sm font-semibold text-primary sm:text-base'>
                         {name}
