@@ -23,7 +23,6 @@ import {
   EyeIcon,
   FileIcon,
   HashIcon,
-  ImageIcon,
   ListChecksIcon,
   MapPinIcon,
   PencilIcon,
@@ -58,7 +57,6 @@ const INPUT_TYPE_ICON: Record<InputType, React.ReactNode> = {
   [InputType.select]: <ChevronDownIcon className='size-3' />,
   [InputType.multiSelect]: <ListChecksIcon className='size-3' />,
   [InputType.json]: <Code2Icon className='size-3' />,
-  [InputType.image]: <ImageIcon className='size-3' />,
   [InputType.file]: <FileIcon className='size-3' />,
   [InputType.address]: <MapPinIcon className='size-3' />
 }
@@ -120,10 +118,8 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
 
-  const { uploadFileWithToast: uploadImageWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
   const { uploadFileWithToast: uploadFileWithToastFn, isUploading: isUploadingFile } = useUploadFileWithToast()
 
-  const imageFileInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const initialValue =
@@ -180,7 +176,9 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
 
-  const onSave = form.handleSubmit(({ value }) => saveValue(value))
+  const onSave = form.handleSubmit(({ value }) => {
+    saveValue(value)
+  })
 
   const handleReveal = () => {
     revealConfig(
@@ -346,46 +344,6 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       }
-      case InputType.image:
-        return (
-          <Controller
-            name='value'
-            control={form.control}
-            render={({ field }) => (
-              <div className='flex items-center gap-2'>
-                <input
-                  type='file'
-                  accept='image/*'
-                  className='hidden'
-                  ref={imageFileInputRef}
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0]
-                    if (!file) return
-                    e.target.value = ''
-                    const url = await uploadImageWithToast({ file, showSuccessToast: false })
-                    if (url) field.onChange(url)
-                  }}
-                />
-                {field.value ? (
-                  <div className='h-8 w-8 shrink-0 overflow-hidden rounded border'>
-                    <img src={String(field.value)} alt='' className='size-full object-cover' />
-                  </div>
-                ) : null}
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  className={cn('h-8 flex-1 text-xs', !!errors.value && 'border-destructive')}
-                  onClick={() => imageFileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                >
-                  {isUploadingImage ? <Spinner data-icon='inline-start' /> : <UploadIcon data-icon='inline-start' />}
-                  {isUploadingImage ? t('common.ui.uploading') : t('common.button.upload')}
-                </Button>
-              </div>
-            )}
-          />
-        )
       case InputType.file:
         return (
           <Controller

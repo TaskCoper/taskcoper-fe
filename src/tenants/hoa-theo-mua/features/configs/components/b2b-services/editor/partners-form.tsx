@@ -42,6 +42,7 @@ function PartnerItemList({
               onMove={(dir) => move(index, dir)}
             >
               <ImageUploadField
+                aspectRatio={null}
                 label={t('configsPage.b2bOverviewDialog.field.partnerLogo')}
                 value={item.logo}
                 onChange={(logo) => update(index, { ...item, logo })}

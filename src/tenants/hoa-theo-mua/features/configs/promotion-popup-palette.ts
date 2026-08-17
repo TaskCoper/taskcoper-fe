@@ -23,6 +23,10 @@ export const DEFAULT_POPUP_PAGES: readonly string[] = [
   ...POLICY_PAGE_PATHS.map((path) => `!${path}`)
 ]
 
+// Matches the box `promotion-slide.tsx` reserves (`aspect-4/5`); that renderer uses `object-contain`
+// over a blurred copy of itself, so this ratio isn't an enforced crop, just what avoids letterboxing.
+export const PROMOTION_POPUP_IMAGE_ASPECT = 4 / 5
+
 // Hosts allowed by the storefront's next/image config.
 export const ALLOWED_IMAGE_HOSTS: readonly string[] = [
   'taskcoper.hcm.ss.bfcplatform.vn',

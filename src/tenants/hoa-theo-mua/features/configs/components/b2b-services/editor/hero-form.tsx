@@ -1,5 +1,6 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { OverviewHero } from '../../../b2b-overview-palette'
+import { B2B_IMAGE_ASPECT } from '../b2b-image-aspects'
 import { ImageUploadField, LocalizedField } from '../b2b-section-editors'
 import type { PreviewLocale } from '../preview/preview-shared'
 import { SectionCard } from './editor-shared'
@@ -56,6 +57,7 @@ export function HeroForm({
         locale={locale}
       />
       <ImageUploadField
+        aspectRatio={B2B_IMAGE_ASPECT.overviewHero}
         label={t('configsPage.b2bOverviewDialog.field.heroImage')}
         value={value.image}
         onChange={(image) => onChange({ ...value, image })}

@@ -38,7 +38,6 @@ export const configDefinitionSchema = z
       'select',
       'multiSelect',
       'json',
-      'image',
       'file',
       'address'
     ]),
@@ -146,7 +145,6 @@ export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
       base = z.unknown()
       break
 
-    case 'image':
     case 'file': {
       let s = applyStringRules(z.string(), def.validations)
       if (def.required) s = s.min(1, 'Bắt buộc nhập')
@@ -586,7 +584,6 @@ export function inputTypeToValueType(inputType: InputType): 'string' | 'number' 
     case 'address':
     case 'multiSelect':
       return 'json'
-    case 'image':
     case 'file':
       return 'string'
     default:

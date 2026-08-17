@@ -834,6 +834,12 @@
       "uptime": "Thời gian hoạt động"
     }
   },
+  "imageViewport": {
+    "adjust": "Điều chỉnh khung hình",
+    "description": "Kéo ảnh và thu phóng để chọn phần hiển thị.",
+    "useFullImage": "Dùng toàn bộ ảnh",
+    "zoom": "Thu phóng"
+  },
   "language": {
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt"

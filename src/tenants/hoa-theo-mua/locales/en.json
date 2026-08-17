@@ -1407,7 +1407,7 @@
         "moveDown": "Move down",
         "remove": "Remove banner",
         "image": "Banner image",
-        "imageHelp": "Recommend 16:9 or match the intended slot's size.",
+        "imageHelp": "Wide image — {{ratio}} recommended (e.g. {{example}}px) for this slot.",
         "uploadImage": "Upload image",
         "replaceImage": "Replace image",
         "slotField": "Slot key",
