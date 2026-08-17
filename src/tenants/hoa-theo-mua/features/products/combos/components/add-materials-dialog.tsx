@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
@@ -10,14 +11,18 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { PlusIcon, SearchIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SearchIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { ComboMaterial, MaterialOption } from '../types'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
 import { SelectedMaterialCard } from './selected-material-card'
 import type { MaterialDraft } from './selected-material-card'
+
+const MAX_COMBO_MATERIALS = 15
+const MATERIALS_PAGE_SIZE = 10
 
 export function AddMaterialsDialog({
   open,
@@ -36,6 +41,7 @@ export function AddMaterialsDialog({
 }) {
   const [search, setSearch] = useState('')
   const [drafts, setDrafts] = useState<MaterialDraft[]>([])
+  const [materialsPage, setMaterialsPage] = useState(1)
   const { materials, isGettingMaterials } = useGetMaterials({ search, enabled: open })
   const { addComboSpecificationItems, isAddingComboSpecificationItems } = useAddComboSpecificationItems()
   const existingIds = useMemo(
@@ -43,8 +49,14 @@ export function AddMaterialsDialog({
     [existingMaterials]
   )
   const selectableMaterials = materials.filter((material) => !existingIds.has(material.materialId))
+  const totalPages = Math.ceil(selectableMaterials.length / MATERIALS_PAGE_SIZE)
+  const paginatedMaterials = selectableMaterials.slice(
+    (materialsPage - 1) * MATERIALS_PAGE_SIZE,
+    materialsPage * MATERIALS_PAGE_SIZE
+  )
   const coreDrafts = drafts.filter((draft) => draft.isCore)
   const supportDrafts = drafts.filter((draft) => !draft.isCore)
+  const selectedMaterialCount = drafts.length
 
   const toggleMaterial = (material: MaterialOption, checked: boolean) => {
     setDrafts((current) =>
@@ -74,6 +86,7 @@ export function AddMaterialsDialog({
     if (!nextOpen && !isAddingComboSpecificationItems) {
       setDrafts([])
       setSearch('')
+      setMaterialsPage(1)
     }
     onOpenChange(nextOpen)
   }
@@ -93,19 +106,22 @@ export function AddMaterialsDialog({
           <DialogTitle>{t('products.detail.comboSpecification.addTitle')}</DialogTitle>
           <DialogDescription>{t('products.detail.comboSpecification.addDescription')}</DialogDescription>
         </DialogHeader>
-        <div className='grid gap-4 md:grid-cols-2'>
-          <section className='min-w-0 space-y-3 rounded-lg border p-3'>
+        <div className='grid h-[75vh] min-h-0 items-stretch gap-4 md:grid-cols-2'>
+          <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
             <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.availableMaterials')}</h3>
             <div className='relative'>
               <SearchIcon className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
               <Input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  setSearch(event.target.value)
+                  setMaterialsPage(1)
+                }}
                 placeholder={t('products.detail.comboSpecification.searchMaterial')}
                 className='pl-9'
               />
             </div>
-            <div className='max-h-96 overflow-y-auto rounded-lg border'>
+            <div className='min-h-0 flex-1 overflow-y-auto rounded-lg border'>
               {isGettingMaterials ? (
                 <div className='space-y-2 p-4'>
                   {[1, 2, 3].map((row) => (
@@ -117,7 +133,7 @@ export function AddMaterialsDialog({
                   {t('products.detail.comboSpecification.noMaterials')}
                 </div>
               ) : (
-                selectableMaterials.map((material) => (
+                paginatedMaterials.map((material) => (
                   <label
                     key={material.materialId}
                     className='flex cursor-pointer items-center gap-3 border-b p-3 last:border-b-0'
@@ -144,16 +160,59 @@ export function AddMaterialsDialog({
                 ))
               )}
             </div>
+            {totalPages > 1 && (
+              <div className='flex items-center justify-between gap-2'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  onClick={() => setMaterialsPage((current) => Math.max(1, current - 1))}
+                  disabled={materialsPage === 1 || isGettingMaterials}
+                >
+                  <ChevronLeftIcon />
+                  {t('dataTable.pagination.goToPreviousPage')}
+                </Button>
+                <span className='text-xs text-muted-foreground'>
+                  {t('dataTable.pagination.pageXofY', { current: materialsPage, total: totalPages })}
+                </span>
+                <Button
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  onClick={() => setMaterialsPage((current) => Math.min(totalPages, current + 1))}
+                  disabled={materialsPage >= totalPages || isGettingMaterials}
+                >
+                  {t('dataTable.pagination.goToNextPage')}
+                  <ChevronRightIcon />
+                </Button>
+              </div>
+            )}
           </section>
-          <section className='min-w-0 h-165 space-y-3 rounded-lg border p-3'>
-            <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.selectedMaterials')}</h3>
-            <div className='max-h-150 space-y-3 overflow-y-auto'>
-              {drafts.length === 0 ? (
-                <div className='rounded-lg border border-dashed py-12 text-center text-sm text-muted-foreground'>
-                  {t('products.detail.comboSpecification.noSelectedMaterials')}
-                </div>
-              ) : (
-                <div className='grid gap-3'>
+          <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
+            <div className='flex items-center justify-between '>
+              <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.selectedMaterials')}</h3>
+              <Badge variant='outline'>{selectedMaterialCount}</Badge>
+            </div>
+            {selectedMaterialCount >= MAX_COMBO_MATERIALS && (
+              <p className='text-xs font-light text-amber-500'>
+                {t('products.detail.comboSpecification.materialLimitWarning', { count: MAX_COMBO_MATERIALS })}
+              </p>
+            )}
+            <Tabs defaultValue='core' className='min-h-0 flex-1'>
+              <TabsList className='w-full'>
+                <TabsTrigger value='core'>
+                  {t('products.detail.comboSpecification.core')} ({coreDrafts.length})
+                </TabsTrigger>
+                <TabsTrigger value='support'>
+                  {t('products.detail.comboSpecification.support')} ({supportDrafts.length})
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value='core' className='min-h-0 flex-1 overflow-y-auto'>
+                {coreDrafts.length === 0 ? (
+                  <div className='rounded-lg border border-dashed py-12 text-center text-sm text-muted-foreground'>
+                    {t('products.detail.comboSpecification.noSelectedMaterials')}
+                  </div>
+                ) : (
                   <DraftGroup
                     title={t('products.detail.comboSpecification.core')}
                     isCore
@@ -163,6 +222,14 @@ export function AddMaterialsDialog({
                     onUpdate={updateDraft}
                     t={t}
                   />
+                )}
+              </TabsContent>
+              <TabsContent value='support' className='min-h-0 flex-1 overflow-y-auto'>
+                {supportDrafts.length === 0 ? (
+                  <div className='rounded-lg border border-dashed py-12 text-center text-sm text-muted-foreground'>
+                    {t('products.detail.comboSpecification.noSelectedMaterials')}
+                  </div>
+                ) : (
                   <DraftGroup
                     title={t('products.detail.comboSpecification.support')}
                     isCore={false}
@@ -172,9 +239,9 @@ export function AddMaterialsDialog({
                     onUpdate={updateDraft}
                     t={t}
                   />
-                </div>
-              )}
-            </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </section>
         </div>
         <DialogFooter>

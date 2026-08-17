@@ -111,7 +111,7 @@ const getMockComboSpecification = (id: string | number): ComboSpecification => (
 
 const mockMaterials: MaterialOption[] = [
   {
-    materialId: 'mock-material-004',
+    materialId: 'mock-material-014',
     materialCode: 'HOA_HONG_DO_MOCK',
     materialName: 'Hoa hồng đỏ mock',
     coverImage: null,
@@ -119,7 +119,7 @@ const mockMaterials: MaterialOption[] = [
     availableForSale: 150
   },
   {
-    materialId: 'mock-material-005',
+    materialId: 'mock-material-015',
     materialCode: 'HOA_BABY_TRANG_MOCK',
     materialName: 'Hoa baby trắng mock',
     coverImage: null,
@@ -127,7 +127,7 @@ const mockMaterials: MaterialOption[] = [
     availableForSale: 45
   },
   {
-    materialId: 'mock-material-006',
+    materialId: 'mock-material-016',
     materialCode: 'GIAY_GOI_HAN_MOCK',
     materialName: 'Giấy gói hoa Hàn Quốc mock',
     coverImage: null,
@@ -135,7 +135,7 @@ const mockMaterials: MaterialOption[] = [
     availableForSale: 80
   },
   {
-    materialId: 'mock-material-007',
+    materialId: 'mock-material-017',
     materialCode: 'DAY_RUY_BANG_MOCK',
     materialName: 'Dây ruy băng satin mock',
     coverImage: null,
@@ -143,7 +143,7 @@ const mockMaterials: MaterialOption[] = [
     availableForSale: 32
   },
   {
-    materialId: 'mock-material-008',
+    materialId: 'mock-material-018',
     materialCode: 'HOA_HUONG_DUONG_MOCK',
     materialName: 'Hoa hướng dương mock',
     unit: 'Cành',
@@ -179,6 +179,41 @@ const mockMaterials: MaterialOption[] = [
   },
   {
     materialId: 'mock-material-013',
+    materialCode: 'TUI_XACH_HOA_MOCK',
+    materialName: 'Túi xách trong suốt đựng hoa mock',
+    unit: 'Cái',
+    availableForSale: 5
+  },
+  {
+    materialId: 'mock-material-019',
+    materialCode: 'HOA_HONG_TRANG_MOCK',
+    materialName: 'Hoa hồng trắng mock',
+    unit: 'Cành',
+    availableForSale: 30
+  },
+  {
+    materialId: 'mock-material-020',
+    materialCode: 'HOA_TULIP_VANG_MOCK',
+    materialName: 'Hoa tulip vàng mock',
+    unit: 'Cành',
+    availableForSale: 0 // Hết hàng (dùng test OUT_OF_STOCK)
+  },
+  {
+    materialId: 'mock-material-021',
+    materialCode: 'LA_CALI_MOCK',
+    materialName: 'Lá bạch đàn (Cali) mock',
+    unit: 'Cành',
+    availableForSale: 100
+  },
+  {
+    materialId: 'mock-material-022',
+    materialCode: 'XOP_CAM_HOA_MOCK',
+    materialName: 'Xốp cắm hoa Oasis mock',
+    unit: 'Cục',
+    availableForSale: 25
+  },
+  {
+    materialId: 'mock-material-023',
     materialCode: 'TUI_XACH_HOA_MOCK',
     materialName: 'Túi xách trong suốt đựng hoa mock',
     unit: 'Cái',
@@ -289,12 +324,16 @@ class ProductService extends BaseService {
           )
         : mockMaterials
 
+      const normalizedPage = Math.max(1, page)
+      const normalizedPageSize = Math.max(1, pageSize)
+      const startIndex = (normalizedPage - 1) * normalizedPageSize
+
       return {
-        page: 1,
-        pageSize: filteredItems.length,
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
         totalItems: filteredItems.length,
-        totalPages: filteredItems.length > 0 ? 1 : 0,
-        items: filteredItems
+        totalPages: Math.ceil(filteredItems.length / normalizedPageSize),
+        items: filteredItems.slice(startIndex, startIndex + normalizedPageSize)
       }
     }
   }

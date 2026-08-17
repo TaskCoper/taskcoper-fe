@@ -6,6 +6,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { RangeValue } from '@/types/data-table.type'
 import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import PinProductDialog from '../features/products/components/pin-product-dialog'
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
@@ -15,6 +16,7 @@ import type { Product } from '../features/products/types'
 export default function ProductsPage() {
   const { t } = useTenantTranslation()
   const { maxPrice } = useGetMaxPriceProduct()
+  const [searchParams] = useSearchParams()
 
   const [pinTarget, setPinTarget] = useState<Product | null>(null)
 
@@ -42,11 +44,10 @@ export default function ProductsPage() {
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
   const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
-  const [productTypeFilter] = useQueryState('products_productType', parseAsString)
   const [legacyTagFilter] = useQueryState('products_tag', parseAsString)
 
   // The table stores the product-type filter under its column id; the API calls it `tag`.
-  const tag = productTypeFilter ?? legacyTagFilter ?? undefined
+  const tag = searchParams.get('products_productType') ?? legacyTagFilter ?? undefined
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined

@@ -305,7 +305,7 @@ export const getProductColumns = ({
         options: [
           {
             label: t('products.filter.product'),
-            value: 'Product'
+            value: 'Sản phẩm'
           },
           {
             label: t('products.filter.combo'),
@@ -313,7 +313,7 @@ export const getProductColumns = ({
           },
           {
             label: t('products.filter.material'),
-            value: 'Material'
+            value: 'Thành phần'
           }
         ]
       },

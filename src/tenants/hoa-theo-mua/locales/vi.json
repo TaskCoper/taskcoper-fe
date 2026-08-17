@@ -597,6 +597,7 @@
         "addDescription": "Chọn sản phẩm vật liệu, nhập định lượng và phân loại Core hoặc Support.",
         "availableMaterials": "Danh sách thành phần",
         "selectedMaterials": "Thành phần đã chọn",
+        "materialLimitWarning": "Combo đã chạm ngưỡng tối đa {{count}} thành phần.",
         "noSelectedMaterials": "Chưa chọn thành phần nào",
         "removeMaterial": "Bỏ thành phần",
         "searchMaterial": "Tìm theo tên hoặc mã vật liệu...",

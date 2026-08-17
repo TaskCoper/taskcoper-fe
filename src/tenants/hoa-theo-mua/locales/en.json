@@ -597,6 +597,7 @@
         "addDescription": "Choose material products, enter quantities, and assign Core or Support roles.",
         "availableMaterials": "Available materials",
         "selectedMaterials": "Selected materials",
+        "materialLimitWarning": "This combo has reached the maximum limit of {{count}} materials.",
         "noSelectedMaterials": "No materials selected",
         "removeMaterial": "Remove material",
         "searchMaterial": "Search by material name or code...",
