@@ -10,10 +10,18 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SearchIcon } from 'lucide-react'
+import { PlusIcon, SearchIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { ComboMaterial, MaterialOption } from '../types'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
@@ -50,9 +58,10 @@ export function AddMaterialsDialog({
   )
   const selectableMaterials = materials.filter((material) => !existingIds.has(material.materialId))
   const totalPages = Math.ceil(selectableMaterials.length / MATERIALS_PAGE_SIZE)
+  const currentMaterialsPage = Math.min(materialsPage, Math.max(totalPages, 1))
   const paginatedMaterials = selectableMaterials.slice(
-    (materialsPage - 1) * MATERIALS_PAGE_SIZE,
-    materialsPage * MATERIALS_PAGE_SIZE
+    (currentMaterialsPage - 1) * MATERIALS_PAGE_SIZE,
+    currentMaterialsPage * MATERIALS_PAGE_SIZE
   )
   const coreDrafts = drafts.filter((draft) => draft.isCore)
   const supportDrafts = drafts.filter((draft) => !draft.isCore)
@@ -161,31 +170,55 @@ export function AddMaterialsDialog({
               )}
             </div>
             {totalPages > 1 && (
-              <div className='flex items-center justify-between gap-2'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() => setMaterialsPage((current) => Math.max(1, current - 1))}
-                  disabled={materialsPage === 1 || isGettingMaterials}
-                >
-                  <ChevronLeftIcon />
-                  {t('dataTable.pagination.goToPreviousPage')}
-                </Button>
-                <span className='text-xs text-muted-foreground'>
-                  {t('dataTable.pagination.pageXofY', { current: materialsPage, total: totalPages })}
-                </span>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() => setMaterialsPage((current) => Math.min(totalPages, current + 1))}
-                  disabled={materialsPage >= totalPages || isGettingMaterials}
-                >
-                  {t('dataTable.pagination.goToNextPage')}
-                  <ChevronRightIcon />
-                </Button>
-              </div>
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href='#'
+                      aria-label={t('dataTable.pagination.goToPreviousPage')}
+                      aria-disabled={currentMaterialsPage === 1 || isGettingMaterials}
+                      className={
+                        currentMaterialsPage === 1 || isGettingMaterials ? 'pointer-events-none opacity-50' : undefined
+                      }
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setMaterialsPage((current) => Math.max(1, current - 1))
+                      }}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href='#'
+                        isActive={page === currentMaterialsPage}
+                        aria-label={`Go to page ${page}`}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          if (!isGettingMaterials) setMaterialsPage(page)
+                        }}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href='#'
+                      aria-label={t('dataTable.pagination.goToNextPage')}
+                      aria-disabled={currentMaterialsPage === totalPages || isGettingMaterials}
+                      className={
+                        currentMaterialsPage === totalPages || isGettingMaterials
+                          ? 'pointer-events-none opacity-50'
+                          : undefined
+                      }
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setMaterialsPage((current) => Math.min(totalPages, current + 1))
+                      }}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             )}
           </section>
           <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
