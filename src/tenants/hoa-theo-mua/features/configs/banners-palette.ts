@@ -63,7 +63,7 @@ export const bannerKeySuffix = (key: string): string =>
 export interface BannerItem {
   id: string
   slot: string
-  image: string
+  image: LocalizedText
   href: string
   openInNewTab: boolean
   alt: LocalizedText
@@ -82,7 +82,7 @@ const genId = (): string => `bn_${Math.random().toString(36).slice(2, 8)}`
 export const defaultBannerItem = (): BannerItem => ({
   id: genId(),
   slot: '',
-  image: '',
+  image: emptyLocalizedText(),
   href: '',
   openInNewTab: false,
   alt: emptyLocalizedText(),
@@ -105,17 +105,24 @@ export const parseBannerCollection = (raw: unknown): BannerCollection => {
   }
 }
 
-const parseBannerItem = (raw: Partial<BannerItem> | undefined): BannerItem => ({
-  ...defaultBannerItem(),
-  ...raw,
-  id: typeof raw?.id === 'string' && raw.id ? raw.id : genId(),
-  slot: raw?.slot ?? '',
-  image: raw?.image ?? '',
-  href: raw?.href ?? '',
-  openInNewTab: Boolean(raw?.openInNewTab),
-  alt: parseLocalizedText(raw?.alt),
-  enabled: raw?.enabled ?? true
-})
+const parseBannerItem = (raw: Partial<BannerItem> | undefined): BannerItem => {
+  // Legacy items stored a single image URL; reuse it for both locales so existing banners keep rendering.
+  const rawImage: unknown = raw?.image
+  return {
+    ...defaultBannerItem(),
+    ...raw,
+    id: typeof raw?.id === 'string' && raw.id ? raw.id : genId(),
+    slot: raw?.slot ?? '',
+    image:
+      typeof rawImage === 'string'
+        ? { vi: rawImage, en: rawImage }
+        : parseLocalizedText(rawImage as Partial<LocalizedText> | undefined),
+    href: raw?.href ?? '',
+    openInNewTab: Boolean(raw?.openInNewTab),
+    alt: parseLocalizedText(raw?.alt),
+    enabled: raw?.enabled ?? true
+  }
+}
 
 // Convenience: distinct slot keys already used in the collection (for autocomplete).
 export const collectSlotKeys = (items: BannerItem[]): string[] => {
