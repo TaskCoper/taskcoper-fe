@@ -1,9 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { primaryButtonEffectClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import {
   BoxIcon,
@@ -16,6 +18,7 @@ import {
   Link2Icon,
   PackageIcon,
   ScanBarcodeIcon,
+  ShoppingCartIcon,
   StarIcon,
   TagIcon,
   ZoomInIcon
@@ -27,6 +30,7 @@ import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
 import { ComboSpecification } from '../features/products/combos/components/combo-specification'
+import { useUpdateComboPublication } from '../features/products/combos/hooks/use-update-combo-publication'
 import {
   ATTRIBUTE_OVERVIEW_FIELDS,
   BASIC_INFO_FIELDS,
@@ -61,6 +65,10 @@ export default function ProductPage() {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [copied, setCopied] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [publicationOverride, setPublicationOverride] = useState<{
+    comboId: string
+    isPublished: boolean
+  } | null>(null)
 
   const [imageResetId, setImageResetId] = useState(id)
   if (id !== imageResetId) {
@@ -86,6 +94,7 @@ export default function ProductPage() {
     id: id ?? '',
     enabled: canManageComboSpecification && isComboSpecificationRequested
   })
+  const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
   if (isGettingProduct) return <ProductDetailSkeleton />
 
@@ -111,6 +120,13 @@ export default function ProductPage() {
 
   const displayName = productName?.trim() || t('products.common.unnamed')
   const active = isActiveStatus(status)
+  const comboId = product.parentProductId?.trim() || id || ''
+  const publicationComboId = id || ''
+  const isComboPublished =
+    publicationOverride?.comboId === publicationComboId
+      ? publicationOverride.isPublished
+      : (comboSpecification?.isActive ?? product.isActive ?? false)
+  const canUpdateComboPublication = canManageComboSpecification || isVariant
   const parent = product.parent
   const parentName = parent?.productName?.trim() || parent?.productCode?.trim() || t('products.common.unnamed')
 
@@ -173,6 +189,13 @@ export default function ProductPage() {
     } catch {
       /* clipboard unavailable - silently ignore */
     }
+  }
+
+  const handleUpdateComboPublication = async (publish: boolean) => {
+    if (!publicationComboId || isUpdatingComboPublication || publish === isComboPublished) return
+
+    await updateComboPublication({ comboId: publicationComboId, publish })
+    setPublicationOverride({ comboId: publicationComboId, isPublished: publish })
   }
 
   const TABS = [
@@ -263,6 +286,37 @@ export default function ProductPage() {
                     {t('products.detail.viewOnWebsite')}
                   </a>
                 </Button>
+              )}
+              {canUpdateComboPublication && (
+                <div className='flex items-center gap-2'>
+                  <span className='whitespace-nowrap text-sm font-medium text-muted-foreground'>
+                    {t('products.detail.comboSpecification.publicationStatus')}:
+                  </span>
+                  <Select
+                    value={isComboPublished ? 'published' : 'unpublished'}
+                    onValueChange={(value) => void handleUpdateComboPublication(value === 'published')}
+                    disabled={isUpdatingComboPublication}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        'h-9 min-w-36 gap-2 rounded-lg px-3 font-semibold shadow-sm transition-colors',
+                        isComboPublished
+                          ? cn(
+                              primaryButtonEffectClasses,
+                              'border-primary bg-none! ring-primary! [&_svg]:text-primary-foreground!'
+                            )
+                          : 'border-input bg-background text-foreground hover:bg-muted'
+                      )}
+                    >
+                      {isComboPublished && <ShoppingCartIcon className='size-4 shrink-0' />}
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent align='end'>
+                      <SelectItem value='published'>{t('products.detail.comboSpecification.published')}</SelectItem>
+                      <SelectItem value='unpublished'>{t('products.detail.comboSpecification.unpublished')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
               <Button variant='outline' size='sm' onClick={handleCopyLink}>
                 {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
@@ -464,10 +518,10 @@ export default function ProductPage() {
                 description={t('products.detail.comboSpecification.description')}
               >
                 <ComboSpecification
-                  key={`${id}-${comboSpecification?.factor ?? 1}`}
+                  key={`${id}-${comboSpecification?.factor ?? 'unconfigured'}`}
                   productId={id ?? ''}
-                  comboId={product.parentProductId?.trim() || id || ''}
-                  factor={comboSpecification?.factor ?? 1}
+                  comboId={comboId}
+                  factor={comboSpecification?.factor ?? null}
                   sellableQuantity={product.sellableQuantity}
                   stockStatus={product.stockStatus}
                   canEditFactor={canEditFactor}

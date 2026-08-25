@@ -1,5 +1,13 @@
 import type { Category } from '../categories/types'
 
+export const PRODUCT_TYPE_TAG = {
+  combo: 1,
+  product: 2,
+  material: 3
+} as const
+
+export type ProductTypeTag = (typeof PRODUCT_TYPE_TAG)[keyof typeof PRODUCT_TYPE_TAG]
+
 /** A product's category membership plus whether that specific product ↔ category pair is pinned. */
 export interface ProductCategory extends Category {
   isPinned: boolean
@@ -146,6 +154,9 @@ export interface Product {
 
   // AQ - Trạng thái
   status: string | null
+
+  // Combo storefront publication status
+  isActive: boolean | null
 
   // AR - Mã danh mục
   categoryCode: string | null

@@ -13,10 +13,10 @@ export const useDeleteComboSpecificationItems = () => {
   const { mutateAsync: deleteComboSpecificationItems, isPending: isDeletingComboSpecificationItems } = useMutation({
     mutationFn: ({ id, body }: { id: string; body: DeleteComboSpecificationItemsPayload }) =>
       productService.deleteComboSpecificationItems({ id, body }),
-    onSuccess: (message, { id }) => {
+    onSuccess: (message) => {
       toast.success(message || t('products.detail.comboSpecification.deleteSuccess'))
-      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(id) })
-      void queryClient.invalidateQueries({ queryKey: productKeys.detail(id) })
+      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecificationsRoot() })
+      void queryClient.invalidateQueries({ queryKey: productKeys.detailsRoot() })
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {

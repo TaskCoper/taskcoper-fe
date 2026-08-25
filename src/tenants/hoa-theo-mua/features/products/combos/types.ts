@@ -1,12 +1,13 @@
-export type ComboMaterialRole = 1 | 2 | '1' | '2'
+export type ComboMaterialRole = 1 | 2 | '1' | '2' | 'Core' | 'Support'
 
 export interface ComboMaterial {
   materialId: string
   subId?: string | null
   materialName?: string | null
   coverImage?: string | null
-  role: ComboMaterialRole
+  role?: ComboMaterialRole | null
   roleName?: string | null
+  isCore: boolean
   quantityPerCombo: number
   unit: string | null
   availableForSale: number | null
@@ -17,9 +18,12 @@ export interface ComboSpecification {
   subId: string
   productCode: string
   productName: string
+  isActive?: boolean | null
   factor?: number | null
   materials: ComboMaterial[]
 }
+
+export type MaterialProductLabel = 'Thành phần' | 'Phụ liệu'
 
 export interface MaterialOption {
   materialId: string
@@ -47,7 +51,7 @@ export interface UpdateComboSpecificationMaterial {
 
 export interface UpdateComboSpecificationPayload {
   subId: string
-  factor: number
+  factor: number | null
   materials: UpdateComboSpecificationMaterial[]
 }
 

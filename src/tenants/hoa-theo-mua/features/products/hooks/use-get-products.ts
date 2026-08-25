@@ -1,6 +1,7 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useQuery } from '@tanstack/react-query'
 import productService from '../services'
+import type { ProductTypeTag } from '../types'
 
 // export interface GetProductsParams {
 //   pageIndex?: number
@@ -21,7 +22,7 @@ export interface GetProductsParams {
   priceTo?: number
   sortBy?: string[]
   isPin?: boolean
-  tag?: string
+  tag?: ProductTypeTag
 }
 
 export const useGetProducts = ({
