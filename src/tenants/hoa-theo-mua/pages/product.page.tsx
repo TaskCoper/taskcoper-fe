@@ -65,10 +65,6 @@ export default function ProductPage() {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [copied, setCopied] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
-  const [publicationOverride, setPublicationOverride] = useState<{
-    comboId: string
-    isPublished: boolean
-  } | null>(null)
 
   const [imageResetId, setImageResetId] = useState(id)
   if (id !== imageResetId) {
@@ -85,6 +81,7 @@ export default function ProductPage() {
   const canManageComboSpecification = isCombo || hasVariants
   const canManageComboMaterials = !isVariant
   const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
+  const canUpdateComboPublication = canManageComboSpecification || isVariant
 
   const {
     comboSpecification,
@@ -122,11 +119,7 @@ export default function ProductPage() {
   const active = isActiveStatus(status)
   const comboId = product.parentProductId?.trim() || id || ''
   const publicationComboId = id || ''
-  const isComboPublished =
-    publicationOverride?.comboId === publicationComboId
-      ? publicationOverride.isPublished
-      : (comboSpecification?.isActive ?? product.isActive ?? false)
-  const canUpdateComboPublication = canManageComboSpecification || isVariant
+  const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
   const parent = product.parent
   const parentName = parent?.productName?.trim() || parent?.productCode?.trim() || t('products.common.unnamed')
 
@@ -195,7 +188,6 @@ export default function ProductPage() {
     if (!publicationComboId || isUpdatingComboPublication || publish === isComboPublished) return
 
     await updateComboPublication({ comboId: publicationComboId, publish })
-    setPublicationOverride({ comboId: publicationComboId, isPublished: publish })
   }
 
   const TABS = [

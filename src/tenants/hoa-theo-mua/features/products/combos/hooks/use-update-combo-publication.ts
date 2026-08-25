@@ -4,6 +4,8 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { getErrorDescription } from '../../error-description'
 import { productKeys } from '../../query-keys'
 import productService from '../../services'
+import type { ProductDetail } from '../../types'
+import type { ComboSpecification } from '../types'
 
 export const useUpdateComboPublication = () => {
   const queryClient = useQueryClient()
@@ -21,8 +23,13 @@ export const useUpdateComboPublication = () => {
               : 'products.detail.comboSpecification.unpublishSuccess'
           )
       )
-      void queryClient.invalidateQueries({ queryKey: productKeys.detail(comboId) })
-      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(comboId) })
+
+      queryClient.setQueryData<ProductDetail>(productKeys.detail(comboId), (current) =>
+        current ? { ...current, isActive: publish } : current
+      )
+      queryClient.setQueryData<ComboSpecification | null>(productKeys.comboSpecification(comboId), (current) =>
+        current ? { ...current, isActive: publish } : current
+      )
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
