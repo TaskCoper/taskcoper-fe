@@ -13,8 +13,6 @@ import { DetailSection } from '../../components/product-detail/parts'
 import { AddMaterialsDialog } from './add-materials-dialog'
 import { ComboMaterialTable, type MaterialEditValue } from './combo-material-table'
 
-const CORE_ROLE = '1'
-
 export function ComboSpecification({
   productId,
   comboId,
@@ -30,7 +28,7 @@ export function ComboSpecification({
 }: {
   productId: string
   comboId: string
-  factor: number
+  factor: number | null
   sellableQuantity?: number | null
   stockStatus?: string | null
   canEditFactor: boolean
@@ -41,8 +39,8 @@ export function ComboSpecification({
   t: TenantT
 }) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [factor, setFactor] = useState(initialFactor >= 1 ? initialFactor : 1)
-  const [savedFactor, setSavedFactor] = useState(initialFactor >= 1 ? initialFactor : 1)
+  const normalizedInitialFactor = initialFactor !== null && initialFactor > 0 ? initialFactor : null
+  const [factor, setFactor] = useState<number | null>(normalizedInitialFactor)
   const [isEditing, setIsEditing] = useState(false)
   const [editValues, setEditValues] = useState<Record<string, MaterialEditValue>>({})
   const [selectedMaterialIds, setSelectedMaterialIds] = useState<Set<string>>(new Set())
@@ -68,9 +66,9 @@ export function ComboSpecification({
     return <div className='rounded-lg border py-8 text-center text-sm text-destructive'>{t('common.error')}</div>
   }
 
-  const coreMaterials = materials.filter((material) => String(material.role) === CORE_ROLE)
-  const supportMaterials = materials.filter((material) => String(material.role) !== CORE_ROLE)
-  const isFactorValid = factor >= 1
+  const coreMaterials = materials.filter((material) => material.isCore)
+  const supportMaterials = materials.filter((material) => !material.isCore)
+  const isFactorValid = factor === null || (Number.isFinite(factor) && factor > 0)
 
   const handleStartEditing = () => {
     setEditValues(
@@ -79,7 +77,7 @@ export function ComboSpecification({
           material.materialId,
           {
             quantity: material.quantityPerCombo,
-            isCore: String(material.role) === CORE_ROLE
+            isCore: material.isCore
           }
         ])
       )
@@ -103,11 +101,11 @@ export function ComboSpecification({
     const items = materials.map((material) => ({
       matId: material.materialId,
       quantity: editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
-      isCore: editValues[material.materialId]?.isCore ?? String(material.role) === CORE_ROLE,
+      isCore: editValues[material.materialId]?.isCore ?? material.isCore,
       isActive: true
     }))
 
-    if (items.some((item) => !Number.isInteger(item.quantity) || item.quantity <= 0)) return
+    if (items.some((item) => !Number.isFinite(item.quantity) || item.quantity <= 0)) return
 
     await updateComboSpecificationItems({
       comboId,
@@ -120,7 +118,6 @@ export function ComboSpecification({
     if (!isFactorValid || isUpdatingChildQuantity) return
 
     await updateChildQuantity({ productId, factor })
-    setSavedFactor(factor)
   }
 
   const toggleMaterial = (materialId: string) => {
@@ -176,32 +173,35 @@ export function ComboSpecification({
                   <Input
                     id='combo-factor'
                     type='number'
-                    min={1}
-                    step={0.1}
-                    value={factor}
+                    min={0}
+                    step='any'
+                    value={factor ?? ''}
+                    aria-invalid={factor !== null && !isFactorValid}
                     onFocus={(event) => event.currentTarget.select()}
                     onChange={(event) => {
-                      const normalizedValue = event.target.value.replace(/^0+(?=\d)/, '')
-                      setFactor(Number(normalizedValue))
+                      setFactor(event.target.value === '' ? null : event.target.valueAsNumber)
                     }}
                     className='w-40'
                   />
-                  {factor !== savedFactor && (
-                    <Button
-                      type='button'
-                      size='sm'
-                      onClick={() => void handleSaveFactor()}
-                      disabled={!isFactorValid || isUpdatingChildQuantity}
-                    >
-                      {t('products.detail.comboSpecification.saveFactor')}
-                    </Button>
-                  )}
+                  <Button
+                    type='button'
+                    size='sm'
+                    onClick={() => void handleSaveFactor()}
+                    disabled={!isFactorValid || isUpdatingChildQuantity}
+                  >
+                    {t('products.detail.comboSpecification.saveFactor')}
+                  </Button>
                 </>
               ) : (
                 <span className='rounded-md border bg-muted px-3 py-1.5 text-sm tabular-nums'>{factor}</span>
               )}
             </div>
-            {canEditFactor && !isFactorValid && (
+            {factor === null && (
+              <p className='text-xs text-muted-foreground'>
+                {t('products.detail.comboSpecification.factorUnconfigured')}
+              </p>
+            )}
+            {factor !== null && !isFactorValid && (
               <p className='text-xs text-destructive'>{t('products.detail.comboSpecification.factorHint')}</p>
             )}
           </div>
@@ -282,6 +282,7 @@ export function ComboSpecification({
           <ComboMaterialTable
             materials={coreMaterials}
             factor={factor}
+            applyFactor={canEditFactor}
             isEditing={isEditing}
             editValues={editValues}
             onEditChange={handleEditChange}
@@ -301,6 +302,7 @@ export function ComboSpecification({
           <ComboMaterialTable
             materials={supportMaterials}
             factor={factor}
+            applyFactor={canEditFactor}
             isEditing={isEditing}
             editValues={editValues}
             onEditChange={handleEditChange}
@@ -317,7 +319,6 @@ export function ComboSpecification({
           open={isAddDialogOpen}
           onOpenChange={setIsAddDialogOpen}
           comboId={comboId}
-          factor={factor}
           existingMaterials={materials}
           t={t}
         />

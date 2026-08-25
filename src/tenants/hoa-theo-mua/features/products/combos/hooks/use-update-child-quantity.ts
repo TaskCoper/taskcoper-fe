@@ -10,7 +10,7 @@ export const useUpdateChildQuantity = () => {
   const { t } = useTenantTranslation()
 
   const { mutateAsync: updateChildQuantity, isPending: isUpdatingChildQuantity } = useMutation({
-    mutationFn: ({ productId, factor }: { productId: string; factor: number }) =>
+    mutationFn: ({ productId, factor }: { productId: string; factor: number | null }) =>
       productService.updateChildQuantity({ productId, factor }),
     onSuccess: (message, { productId }) => {
       toast.success(message || t('products.detail.comboSpecification.saveFactor'))

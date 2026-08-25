@@ -16,13 +16,11 @@ export interface MaterialDraft extends UpdateComboSpecificationMaterial {
 
 export function SelectedMaterialCard({
   draft,
-  factor,
   onRemove,
   onUpdate,
   t
 }: {
   draft: MaterialDraft
-  factor: number
   onRemove: (matId: string) => void
   onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
   t: TenantT
@@ -54,13 +52,14 @@ export function SelectedMaterialCard({
           </label>
           <Input
             type='number'
-            min={0.01}
+            min={0}
             step='any'
             value={draft.quantity}
             onChange={(event) => onUpdate(draft.matId, { quantity: Number(event.target.value) })}
           />
           <p className='text-xs text-muted-foreground'>
-            {t('products.detail.comboSpecification.actualQuantity')}: {Math.floor(draft.quantity * factor)}
+            {t('products.detail.comboSpecification.actualQuantity')}:{' '}
+            {draft.quantity > 0 ? draft.quantity : t('products.detail.comboSpecification.unconfigured')}
           </p>
         </div>
         <div className='space-y-1'>

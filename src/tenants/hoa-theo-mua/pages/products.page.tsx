@@ -6,17 +6,30 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { RangeValue } from '@/types/data-table.type'
 import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
 import PinProductDialog from '../features/products/components/pin-product-dialog'
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
-import type { Product } from '../features/products/types'
+import { PRODUCT_TYPE_TAG, type Product, type ProductTypeTag } from '../features/products/types'
+
+const parseProductTypeTag = (value: string | null | undefined): ProductTypeTag | undefined => {
+  const normalizedValue = value?.trim().toLocaleLowerCase('vi')
+
+  if (normalizedValue === String(PRODUCT_TYPE_TAG.combo) || normalizedValue === 'combo') {
+    return PRODUCT_TYPE_TAG.combo
+  }
+  if (normalizedValue === String(PRODUCT_TYPE_TAG.product) || normalizedValue === 'sản phẩm') {
+    return PRODUCT_TYPE_TAG.product
+  }
+  if (normalizedValue === String(PRODUCT_TYPE_TAG.material) || normalizedValue === 'thành phần') {
+    return PRODUCT_TYPE_TAG.material
+  }
+  return undefined
+}
 
 export default function ProductsPage() {
   const { t } = useTenantTranslation()
   const { maxPrice } = useGetMaxPriceProduct()
-  const [searchParams] = useSearchParams()
 
   const [pinTarget, setPinTarget] = useState<Product | null>(null)
 
@@ -44,10 +57,11 @@ export default function ProductsPage() {
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
   const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
+  const [productTypeFilter] = useQueryState('products_productType', parseAsString)
   const [legacyTagFilter] = useQueryState('products_tag', parseAsString)
 
   // The table stores the product-type filter under its column id; the API calls it `tag`.
-  const tag = searchParams.get('products_productType') ?? legacyTagFilter ?? undefined
+  const tag = parseProductTypeTag(productTypeFilter ?? legacyTagFilter)
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined

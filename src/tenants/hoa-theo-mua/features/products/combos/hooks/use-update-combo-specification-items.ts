@@ -13,10 +13,10 @@ export const useUpdateComboSpecificationItems = () => {
   const { mutateAsync: updateComboSpecificationItems, isPending: isUpdatingComboSpecificationItems } = useMutation({
     mutationFn: ({ comboId, body }: { comboId: string; body: UpdateComboSpecificationItemsPayload }) =>
       productService.updateComboSpecificationItems({ comboId, body }),
-    onSuccess: (message, { comboId }) => {
+    onSuccess: (message) => {
       toast.success(message || t('products.detail.comboSpecification.updateSuccess'))
-      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(comboId) })
-      void queryClient.invalidateQueries({ queryKey: productKeys.detail(comboId) })
+      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecificationsRoot() })
+      void queryClient.invalidateQueries({ queryKey: productKeys.detailsRoot() })
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {

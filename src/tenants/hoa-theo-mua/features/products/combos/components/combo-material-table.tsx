@@ -19,6 +19,7 @@ export interface MaterialEditValue {
 export function ComboMaterialTable({
   materials,
   factor,
+  applyFactor,
   isEditing,
   editValues,
   onEditChange,
@@ -28,7 +29,8 @@ export function ComboMaterialTable({
   t
 }: {
   materials: ComboMaterial[]
-  factor: number
+  factor: number | null
+  applyFactor: boolean
   isEditing: boolean
   editValues: Record<string, MaterialEditValue>
   onEditChange: (materialId: string, updates: Partial<MaterialEditValue>) => void
@@ -99,18 +101,32 @@ export function ComboMaterialTable({
                   {isEditing ? (
                     <Input
                       type='number'
-                      min={1}
-                      step={1}
-                      value={editValues[material.materialId]?.quantity ?? material.quantityPerCombo}
-                      onChange={(event) => onEditChange(material.materialId, { quantity: Number(event.target.value) })}
+                      min={0}
+                      step='any'
+                      value={(editValues[material.materialId]?.quantity ?? material.quantityPerCombo) || ''}
+                      onChange={(event) =>
+                        onEditChange(material.materialId, {
+                          quantity: event.target.value === '' ? 0 : event.target.valueAsNumber
+                        })
+                      }
                       className='ml-auto h-9 w-24'
                     />
-                  ) : (
+                  ) : material.quantityPerCombo > 0 ? (
                     material.quantityPerCombo
+                  ) : (
+                    t('products.detail.comboSpecification.unconfigured')
                   )}
                 </TableCell>
                 <TableCell className='text-right font-semibold tabular-nums text-primary'>
-                  {getActualQuantity(editValues[material.materialId]?.quantity ?? material.quantityPerCombo, factor)}
+                  {(editValues[material.materialId]?.quantity ?? material.quantityPerCombo) <= 0 ||
+                  (applyFactor && factor === null)
+                    ? t('products.detail.comboSpecification.unconfigured')
+                    : applyFactor && factor !== null
+                      ? getActualQuantity(
+                          editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
+                          factor
+                        )
+                      : (editValues[material.materialId]?.quantity ?? material.quantityPerCombo)}
                 </TableCell>
                 <TableCell>
                   {material.unit ? (
@@ -140,12 +156,12 @@ export function ComboMaterialTable({
                       variant='secondary'
                       className={cn(
                         'font-medium',
-                        String(material.role) === CORE_ROLE
+                        material.isCore
                           ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
                           : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
                       )}
                     >
-                      {String(material.role) === CORE_ROLE
+                      {material.isCore
                         ? t('products.detail.comboSpecification.core')
                         : t('products.detail.comboSpecification.support')}
                     </Badge>

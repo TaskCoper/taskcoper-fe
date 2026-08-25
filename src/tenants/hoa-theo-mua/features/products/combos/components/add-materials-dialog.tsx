@@ -19,11 +19,13 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { PlusIcon, SearchIcon } from 'lucide-react'
+import { ListFilterIcon, PlusIcon, SearchIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import type { ComboMaterial, MaterialOption } from '../types'
+import { useDebounce } from 'use-debounce'
+import type { ComboMaterial, MaterialOption, MaterialProductLabel } from '../types'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
 import { SelectedMaterialCard } from './selected-material-card'
@@ -36,21 +38,25 @@ export function AddMaterialsDialog({
   open,
   onOpenChange,
   comboId,
-  factor,
   existingMaterials,
   t
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   comboId: string
-  factor: number
   existingMaterials: ComboMaterial[]
   t: TenantT
 }) {
   const [search, setSearch] = useState('')
+  const [productLabel, setProductLabel] = useState<MaterialProductLabel>()
   const [drafts, setDrafts] = useState<MaterialDraft[]>([])
   const [materialsPage, setMaterialsPage] = useState(1)
-  const { materials, isGettingMaterials } = useGetMaterials({ search, enabled: open })
+  const [debouncedSearch] = useDebounce(search.trim(), 500)
+  const { materials, isGettingMaterials } = useGetMaterials({
+    search: debouncedSearch || undefined,
+    productLabel,
+    enabled: open
+  })
   const { addComboSpecificationItems, isAddingComboSpecificationItems } = useAddComboSpecificationItems()
   const existingIds = useMemo(
     () => new Set(existingMaterials.map((material) => material.materialId)),
@@ -95,6 +101,7 @@ export function AddMaterialsDialog({
     if (!nextOpen && !isAddingComboSpecificationItems) {
       setDrafts([])
       setSearch('')
+      setProductLabel(undefined)
       setMaterialsPage(1)
     }
     onOpenChange(nextOpen)
@@ -118,17 +125,49 @@ export function AddMaterialsDialog({
         <div className='grid h-[75vh] min-h-0 items-stretch gap-4 md:grid-cols-2'>
           <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
             <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.availableMaterials')}</h3>
-            <div className='relative'>
-              <SearchIcon className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
-              <Input
-                value={search}
-                onChange={(event) => {
-                  setSearch(event.target.value)
+            <div className='flex gap-2'>
+              <div className='relative min-w-0 flex-1'>
+                <SearchIcon className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
+                <Input
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value)
+                    setMaterialsPage(1)
+                  }}
+                  placeholder={t('products.detail.comboSpecification.searchMaterial')}
+                  className='pl-9'
+                />
+              </div>
+              <Select
+                value={productLabel ?? ''}
+                onValueChange={(value) => {
+                  if (value === 'all') {
+                    setProductLabel(undefined)
+                    setMaterialsPage(1)
+                    return
+                  }
+                  if (value !== 'Thành phần' && value !== 'Phụ liệu') return
+                  setProductLabel(value)
                   setMaterialsPage(1)
                 }}
-                placeholder={t('products.detail.comboSpecification.searchMaterial')}
-                className='pl-9'
-              />
+              >
+                <SelectTrigger
+                  className='w-38 shrink-0'
+                  aria-label={t('products.detail.comboSpecification.materialTypeFilter')}
+                >
+                  <ListFilterIcon />
+                  <SelectValue placeholder={t('products.detail.comboSpecification.materialTypePlaceholder')} />
+                </SelectTrigger>
+                <SelectContent align='end'>
+                  <SelectItem value='all'>{t('products.detail.comboSpecification.allMaterialTypes')}</SelectItem>
+                  <SelectItem value='Thành phần'>
+                    {t('products.detail.comboSpecification.materialProductLabel')}
+                  </SelectItem>
+                  <SelectItem value='Phụ liệu'>
+                    {t('products.detail.comboSpecification.accessoryProductLabel')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className='min-h-0 flex-1 overflow-y-auto rounded-lg border'>
               {isGettingMaterials ? (
@@ -250,7 +289,6 @@ export function AddMaterialsDialog({
                     title={t('products.detail.comboSpecification.core')}
                     isCore
                     drafts={coreDrafts}
-                    factor={factor}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
                     t={t}
@@ -267,7 +305,6 @@ export function AddMaterialsDialog({
                     title={t('products.detail.comboSpecification.support')}
                     isCore={false}
                     drafts={supportDrafts}
-                    factor={factor}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
                     t={t}
@@ -306,7 +343,6 @@ function DraftGroup({
   title,
   isCore,
   drafts,
-  factor,
   onRemove,
   onUpdate,
   t
@@ -314,7 +350,6 @@ function DraftGroup({
   title: string
   isCore: boolean
   drafts: MaterialDraft[]
-  factor: number
   onRemove: (matId: string) => void
   onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
   t: TenantT
@@ -335,14 +370,7 @@ function DraftGroup({
           <p className='text-xs text-muted-foreground'>{t('products.detail.comboSpecification.noSelectedMaterials')}</p>
         ) : (
           drafts.map((draft) => (
-            <SelectedMaterialCard
-              key={draft.matId}
-              draft={draft}
-              factor={factor}
-              onRemove={onRemove}
-              onUpdate={onUpdate}
-              t={t}
-            />
+            <SelectedMaterialCard key={draft.matId} draft={draft} onRemove={onRemove} onUpdate={onUpdate} t={t} />
           ))
         )}
       </div>

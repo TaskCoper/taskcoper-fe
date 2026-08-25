@@ -12,6 +12,8 @@ export const productKeys = {
   /** Prefix that matches every category-scoped pinned list — use for broad invalidation. */
   pinnedRoot: () => [...productKeys.all, 'pinned'] as const,
   pinned: (categoryId?: string | null) => [...productKeys.all, 'pinned', categoryId ?? null] as const,
+  detailsRoot: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string | number) => [...productKeys.all, 'detail', String(id)] as const,
+  comboSpecificationsRoot: () => [...productKeys.all, 'combo-specification'] as const,
   comboSpecification: (id: string | number) => [...productKeys.all, 'combo-specification', String(id)] as const
 }
