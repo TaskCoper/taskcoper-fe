@@ -583,6 +583,7 @@
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
         "factorHint": "Chỉ số phải lớn hơn 0",
+        "quantityHint": "Định lượng phải là số lớn hơn 0",
         "factorUnconfigured": "Chưa cấu hình kích thước",
         "unconfigured": "Chưa cấu hình",
         "publicationStatus": "Trạng thái",

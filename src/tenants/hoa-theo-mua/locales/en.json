@@ -583,6 +583,7 @@
         "role": "Role",
         "factor": "Size factor",
         "factorHint": "Factor must be greater than 0",
+        "quantityHint": "Quantity must be a number greater than 0",
         "factorUnconfigured": "Size factor has not been configured",
         "unconfigured": "Not configured",
         "publicationStatus": "Status",

@@ -1,27 +1,37 @@
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import type { ComboMaterial } from '../types'
+import { ComboRole, ComboRoleLabel, type ComboMaterial } from '../types'
 
-const CORE_ROLE = '1'
+// const CORE_ROLE = '1'
 
 const getActualQuantity = (quantity: number, factor: number) => Math.floor(quantity * factor)
+
+const getActualQuantityDisplay = (quantity: number, factor: number | null, applyFactor: boolean) => {
+  if (!Number.isFinite(quantity) || quantity <= 0) return null
+  if (!applyFactor) return quantity
+  if (factor === null || !Number.isFinite(factor) || factor <= 0) return null
+
+  return getActualQuantity(quantity, factor)
+}
 
 export interface MaterialEditValue {
   quantity: number
   isCore: boolean
 }
 
-export function ComboMaterialTable({
+export default function ComboMaterialTable({
   materials,
   factor,
   applyFactor,
   isEditing,
   editValues,
+  quantityErrors,
   onEditChange,
   selectedMaterialIds,
   onToggle,
@@ -33,6 +43,7 @@ export function ComboMaterialTable({
   applyFactor: boolean
   isEditing: boolean
   editValues: Record<string, MaterialEditValue>
+  quantityErrors: Record<string, string | undefined>
   onEditChange: (materialId: string, updates: Partial<MaterialEditValue>) => void
   selectedMaterialIds: Set<string>
   onToggle: (materialId: string) => void
@@ -79,15 +90,11 @@ export function ComboMaterialTable({
                 <TableCell className='min-w-52 font-medium'>
                   <div className='flex min-w-0 items-center gap-3'>
                     <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-                      {material.coverImage ? (
-                        <img
-                          src={material.coverImage}
-                          alt={material.materialName || material.materialId}
-                          className='size-full object-cover'
-                        />
-                      ) : (
-                        <span className='text-xs text-muted-foreground'>{t('products.common.noData')}</span>
-                      )}
+                      <img
+                        src={material.coverImage || '/images/placeholder-cover.png'}
+                        alt={material.materialName || material.materialId}
+                        className='size-full object-cover'
+                      />
                     </div>
                     <div className='flex min-w-0 flex-col'>
                       <span className='truncate'>
@@ -99,18 +106,29 @@ export function ComboMaterialTable({
                 </TableCell>
                 <TableCell className='text-right tabular-nums'>
                   {isEditing ? (
-                    <Input
-                      type='number'
-                      min={0}
-                      step='any'
-                      value={(editValues[material.materialId]?.quantity ?? material.quantityPerCombo) || ''}
-                      onChange={(event) =>
-                        onEditChange(material.materialId, {
-                          quantity: event.target.value === '' ? 0 : event.target.valueAsNumber
-                        })
-                      }
-                      className='ml-auto h-9 w-24'
-                    />
+                    <div className='ml-auto w-32'>
+                      <Input
+                        type='number'
+                        min={0}
+                        step='any'
+                        value={
+                          Number.isFinite(editValues[material.materialId]?.quantity)
+                            ? editValues[material.materialId]?.quantity || ''
+                            : ''
+                        }
+                        aria-invalid={Boolean(quantityErrors[material.materialId])}
+                        onChange={(event) =>
+                          onEditChange(material.materialId, {
+                            quantity: event.target.value === '' ? Number.NaN : event.target.valueAsNumber
+                          })
+                        }
+                        className='h-9 w-full'
+                      />
+                      <FieldError
+                        className='mt-1 text-left text-xs leading-tight'
+                        errors={[{ message: quantityErrors[material.materialId] }]}
+                      />
+                    </div>
                   ) : material.quantityPerCombo > 0 ? (
                     material.quantityPerCombo
                   ) : (
@@ -118,15 +136,11 @@ export function ComboMaterialTable({
                   )}
                 </TableCell>
                 <TableCell className='text-right font-semibold tabular-nums text-primary'>
-                  {(editValues[material.materialId]?.quantity ?? material.quantityPerCombo) <= 0 ||
-                  (applyFactor && factor === null)
-                    ? t('products.detail.comboSpecification.unconfigured')
-                    : applyFactor && factor !== null
-                      ? getActualQuantity(
-                          editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
-                          factor
-                        )
-                      : (editValues[material.materialId]?.quantity ?? material.quantityPerCombo)}
+                  {getActualQuantityDisplay(
+                    editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
+                    factor,
+                    applyFactor
+                  ) ?? t('products.detail.comboSpecification.unconfigured')}
                 </TableCell>
                 <TableCell>
                   {material.unit ? (
@@ -140,15 +154,21 @@ export function ComboMaterialTable({
                 <TableCell>
                   {isEditing ? (
                     <Select
-                      value={editValues[material.materialId]?.isCore ? CORE_ROLE : '2'}
-                      onValueChange={(value) => onEditChange(material.materialId, { isCore: value === CORE_ROLE })}
+                      value={editValues[material.materialId]?.isCore ? ComboRole[1] : ComboRole[2]}
+                      onValueChange={(value) =>
+                        onEditChange(material.materialId, {
+                          isCore: value === ComboRole[1]
+                        })
+                      }
                     >
                       <SelectTrigger className='w-40 min-w-40'>
                         <SelectValue />
                       </SelectTrigger>
+
                       <SelectContent>
-                        <SelectItem value={CORE_ROLE}>{t('products.detail.comboSpecification.core')}</SelectItem>
-                        <SelectItem value='2'>{t('products.detail.comboSpecification.support')}</SelectItem>
+                        <SelectItem value={ComboRole[1]}>{t(ComboRoleLabel[ComboRole[1]])}</SelectItem>
+
+                        <SelectItem value={ComboRole[2]}>{t(ComboRoleLabel[ComboRole[2]])}</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (

@@ -5,17 +5,23 @@ import type { MaterialProductLabel } from '../types'
 export const useGetMaterials = ({
   search,
   productLabel,
+  excludeIds,
+  pageIndex,
+  pageSize,
   enabled = true
 }: {
   search?: string
   productLabel?: MaterialProductLabel
+  excludeIds?: string[]
+  pageIndex?: number
+  pageSize?: number
   enabled?: boolean
 } = {}) => {
   const { data: materialsPage, isLoading: isGettingMaterials } = useQuery({
-    queryKey: ['materials', search, productLabel],
-    queryFn: () => productService.getMaterials({ search, productLabel, page: 1, pageSize: 100 }),
+    queryKey: ['materials', search, productLabel, excludeIds, pageIndex, pageSize],
+    queryFn: () => productService.getMaterials({ search, productLabel, excludeIds, pageIndex, pageSize }),
     enabled
   })
 
-  return { materials: materialsPage?.items ?? [], isGettingMaterials }
+  return { materialsPage, materials: materialsPage?.items ?? [], isGettingMaterials }
 }

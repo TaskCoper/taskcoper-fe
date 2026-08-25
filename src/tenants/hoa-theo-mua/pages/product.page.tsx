@@ -81,7 +81,6 @@ export default function ProductPage() {
   const canManageComboSpecification = isCombo || hasVariants
   const canManageComboMaterials = !isVariant
   const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
-  const canUpdateComboPublication = canManageComboSpecification || isVariant
 
   const {
     comboSpecification,
@@ -279,37 +278,35 @@ export default function ProductPage() {
                   </a>
                 </Button>
               )}
-              {canUpdateComboPublication && (
-                <div className='flex items-center gap-2'>
-                  <span className='whitespace-nowrap text-sm font-medium text-muted-foreground'>
-                    {t('products.detail.comboSpecification.publicationStatus')}:
-                  </span>
-                  <Select
-                    value={isComboPublished ? 'published' : 'unpublished'}
-                    onValueChange={(value) => void handleUpdateComboPublication(value === 'published')}
-                    disabled={isUpdatingComboPublication}
+              <div className='flex items-center gap-2'>
+                <span className='whitespace-nowrap text-sm font-medium text-muted-foreground'>
+                  {t('products.detail.comboSpecification.publicationStatus')}:
+                </span>
+                <Select
+                  value={isComboPublished ? 'published' : 'unpublished'}
+                  onValueChange={(value) => void handleUpdateComboPublication(value === 'published')}
+                  disabled={isUpdatingComboPublication}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      'h-9 min-w-36 gap-2 rounded-lg px-3 font-semibold shadow-sm transition-colors',
+                      isComboPublished
+                        ? cn(
+                            primaryButtonEffectClasses,
+                            'border-primary bg-none! ring-primary! [&_svg]:text-primary-foreground!'
+                          )
+                        : 'border-input bg-background text-foreground hover:bg-muted'
+                    )}
                   >
-                    <SelectTrigger
-                      className={cn(
-                        'h-9 min-w-36 gap-2 rounded-lg px-3 font-semibold shadow-sm transition-colors',
-                        isComboPublished
-                          ? cn(
-                              primaryButtonEffectClasses,
-                              'border-primary bg-none! ring-primary! [&_svg]:text-primary-foreground!'
-                            )
-                          : 'border-input bg-background text-foreground hover:bg-muted'
-                      )}
-                    >
-                      {isComboPublished && <ShoppingCartIcon className='size-4 shrink-0' />}
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent align='end'>
-                      <SelectItem value='published'>{t('products.detail.comboSpecification.published')}</SelectItem>
-                      <SelectItem value='unpublished'>{t('products.detail.comboSpecification.unpublished')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+                    {isComboPublished && <ShoppingCartIcon className='size-4 shrink-0' />}
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align='end'>
+                    <SelectItem value='published'>{t('products.detail.comboSpecification.published')}</SelectItem>
+                    <SelectItem value='unpublished'>{t('products.detail.comboSpecification.unpublished')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button variant='outline' size='sm' onClick={handleCopyLink}>
                 {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
                 {linkCopied ? t('products.detail.copied') : t('products.detail.share')}

@@ -3,9 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { XIcon } from 'lucide-react'
-import type { UpdateComboSpecificationMaterial } from '../types'
-
-const CORE_ROLE = '1'
+import { ComboRole, ComboRoleLabel, type UpdateComboSpecificationMaterial } from '../types'
 
 export interface MaterialDraft extends UpdateComboSpecificationMaterial {
   materialCode: string
@@ -28,7 +26,7 @@ export function SelectedMaterialCard({
   return (
     <div className='space-y-3 rounded-lg border p-3'>
       <div className='flex items-start gap-3'>
-        <MaterialImage src={draft.coverImage} alt={draft.materialName} emptyLabel={t('products.common.noData')} />
+        <MaterialImage src={draft.coverImage} alt={draft.materialName} />
         <div className='min-w-0 flex-1'>
           <p className='truncate text-sm font-medium'>{draft.materialName}</p>
           <p className='truncate text-xs text-muted-foreground'>
@@ -65,15 +63,15 @@ export function SelectedMaterialCard({
         <div className='space-y-1'>
           <label className='text-xs text-muted-foreground'>{t('products.detail.comboSpecification.role')}</label>
           <Select
-            value={draft.isCore ? CORE_ROLE : '2'}
-            onValueChange={(value) => onUpdate(draft.matId, { isCore: value === CORE_ROLE })}
+            value={draft.isCore ? ComboRole[1] : ComboRole[2]}
+            onValueChange={(value) => onUpdate(draft.matId, { isCore: value === ComboRole[1] })}
           >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={CORE_ROLE}>{t('products.detail.comboSpecification.core')}</SelectItem>
-              <SelectItem value='2'>{t('products.detail.comboSpecification.support')}</SelectItem>
+              <SelectItem value={ComboRole[1]}>{t(ComboRoleLabel[ComboRole[1]])}</SelectItem>
+              <SelectItem value={ComboRole[2]}>{t(ComboRoleLabel[ComboRole[2]])}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -82,14 +80,10 @@ export function SelectedMaterialCard({
   )
 }
 
-function MaterialImage({ src, alt, emptyLabel }: { src?: string | null; alt: string; emptyLabel: string }) {
+function MaterialImage({ src, alt }: { src?: string | null; alt: string }) {
   return (
     <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-      {src ? (
-        <img src={src} alt={alt} className='size-full object-cover' />
-      ) : (
-        <span className='text-xs text-muted-foreground'>{emptyLabel}</span>
-      )}
+      <img src={src || '/images/placeholder-cover.png'} alt={alt} className='size-full object-cover' />
     </div>
   )
 }

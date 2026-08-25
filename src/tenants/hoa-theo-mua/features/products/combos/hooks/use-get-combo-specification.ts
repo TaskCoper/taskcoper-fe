@@ -10,7 +10,7 @@ export const useGetComboSpecification = ({ id, enabled = true }: { id: string | 
   } = useQuery({
     queryKey: productKeys.comboSpecification(id),
     queryFn: () => productService.getComboSpecification({ id }),
-    enabled: enabled && id !== '' && id != null
+    enabled: enabled && !!id
   })
 
   return { comboSpecification, isGettingComboSpecification, isError }

@@ -12,15 +12,17 @@ export const useUpdateChildQuantity = () => {
   const { mutateAsync: updateChildQuantity, isPending: isUpdatingChildQuantity } = useMutation({
     mutationFn: ({ productId, factor }: { productId: string; factor: number | null }) =>
       productService.updateChildQuantity({ productId, factor }),
-    onSuccess: (message, { productId }) => {
+    onSuccess: (message) => {
       toast.success(message || t('products.detail.comboSpecification.saveFactor'))
-      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(productId) })
-      void queryClient.invalidateQueries({ queryKey: productKeys.detail(productId) })
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(error.response?.data)
       })
+    },
+    onSettled: (_data, _error, { productId }) => {
+      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(productId) })
+      void queryClient.invalidateQueries({ queryKey: productKeys.detail(productId) })
     }
   })
 
