@@ -1,6 +1,5 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useQuery } from '@tanstack/react-query'
-import { productKeys } from '../query-keys'
 import productService from '../services'
 import type { ProductTypeTag } from '../types'
 
