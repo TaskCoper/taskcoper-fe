@@ -12,7 +12,7 @@ export type ImageWithViewportProps = {
   alt?: string
   /** Applied to the box. The caller owns its aspect, rounding and background. */
   className?: string
-  /** Also applied to the box — for an aspect that is computed rather than a static utility class. */
+  /** Also applied to the box - for an aspect that is computed rather than a static utility class. */
   style?: CSSProperties
   imgClassName?: string
   loading?: 'eager' | 'lazy'
@@ -25,7 +25,7 @@ export type ImageWithViewportProps = {
  * itself is never modified.
  *
  * Falls back to plain `object-cover` whenever a framing can't be produced (no viewport, still
- * loading, unmeasured box, malformed fragment) — matching pre-viewport behavior exactly.
+ * loading, unmeasured box, malformed fragment) - matching pre-viewport behavior exactly.
  */
 export function ImageWithViewport({
   src,

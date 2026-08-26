@@ -10,6 +10,7 @@ import PinProductDialog from '../features/products/components/pin-product-dialog
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
+import { useUpdatingProductPinId } from '../features/products/hooks/use-update-product-pins'
 import type { Product } from '../features/products/types'
 
 export default function ProductsPage() {
@@ -17,14 +18,17 @@ export default function ProductsPage() {
   const { maxPrice } = useGetMaxPriceProduct()
 
   const [pinTarget, setPinTarget] = useState<Product | null>(null)
+  // The dialog owns the mutation, so the pending row is read from the mutation cache.
+  const pinningProductId = useUpdatingProductPinId()
 
   const columns = useMemo(
     () =>
       getProductColumns({
         t,
-        onTogglePin: (product) => setPinTarget(product)
+        onTogglePin: (product) => setPinTarget(product),
+        pinningProductId
       }),
-    [t]
+    [t, pinningProductId]
   )
 
   const filterOptionOverrides = useMemo(() => {

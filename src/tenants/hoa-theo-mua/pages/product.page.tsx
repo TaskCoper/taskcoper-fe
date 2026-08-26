@@ -250,7 +250,7 @@ export default function ProductPage() {
             </div>
           </div>
 
-          {/* Parent product notice — this product is a variant/child of another */}
+          {/* Parent product notice - this product is a variant/child of another */}
           {parent && (
             <Link
               to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parent.id}`}

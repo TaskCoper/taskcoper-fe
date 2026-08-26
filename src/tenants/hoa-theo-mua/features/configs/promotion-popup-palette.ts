@@ -183,7 +183,7 @@ export const matchesPages = (patterns: readonly string[], path: string): boolean
 }
 
 // Every storefront header route, in nav order, then the shipped defaults so a
-// cleared scope can be rebuilt from chips. Not exhaustive — any valid pattern is accepted.
+// cleared scope can be rebuilt from chips. Not exhaustive - any valid pattern is accepted.
 export const PAGE_PATTERN_PRESETS: readonly string[] = [
   '*',
   '/',

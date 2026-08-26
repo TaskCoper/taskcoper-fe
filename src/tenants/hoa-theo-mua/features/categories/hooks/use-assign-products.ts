@@ -1,6 +1,7 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { productKeys } from '../../products/query-keys'
 import { getErrorDescription, getResponseMessage } from '../error-description'
 import categoryService from '../services'
 import type { AssignProductsPayload } from '../types'
@@ -30,10 +31,13 @@ export const useAssignProducts = ({ onAssignSuccess }: AssignProductsParams = {}
     onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: ['categoryProducts'] })
       queryClient.invalidateQueries({ queryKey: ['categoryProduct', variables.id] })
-      // Every product in the submitted set may have gained or lost this category (§5).
+      // Every product in the submitted set may have gained or lost this category (§5). Keyed through
+      // `productKeys.detail` - the old `['product', id]` literal matched nothing any hook registers,
+      // so product detail silently stayed stale after an assign.
       variables.body.productIds.forEach((productId) => {
-        queryClient.invalidateQueries({ queryKey: ['product', productId] })
+        queryClient.invalidateQueries({ queryKey: productKeys.detail(productId) })
       })
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() })
     }
   })
 

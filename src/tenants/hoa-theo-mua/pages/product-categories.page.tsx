@@ -22,7 +22,7 @@ import type { CategoryProductFormValues } from '../features/categories/validatio
 
 const CATEGORY_PREFIX = 'productCategories' as const
 
-/** All descendant ids of a category (any depth) — used to exclude invalid parents and warn on delete. */
+/** All descendant ids of a category (any depth) - used to exclude invalid parents and warn on delete. */
 const collectDescendantIds = (category: Category): string[] => {
   const ids: string[] = []
   const visit = (node: Category) => {

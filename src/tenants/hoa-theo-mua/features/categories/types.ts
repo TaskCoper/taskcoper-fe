@@ -37,12 +37,12 @@ export interface CategoryMetadata {
   filterByName?: boolean
   filterByPrice?: boolean
   isFilterable?: boolean
-  /** Grid layout for this parent category's product section — rows/cols of items rendered on the UI. */
+  /** Grid layout for this parent category's product section - rows/cols of items rendered on the UI. */
   rows?: number | null
   cols?: number | null
 }
 
-/** `metaData` comes back as a JSON-encoded string (or null) — parse it defensively. */
+/** `metaData` comes back as a JSON-encoded string (or null) - parse it defensively. */
 export const parseCategoryMetadata = (metaData: string | null): CategoryMetadata => {
   if (!metaData) return {}
   try {

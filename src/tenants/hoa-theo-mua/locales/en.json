@@ -1,7 +1,7 @@
 {
   "addresses": {
-    "listComingSoon": "Delivery Addresses — Coming Soon",
-    "zonesComingSoon": "Delivery Zones — Coming Soon"
+    "listComingSoon": "Delivery Addresses - Coming Soon",
+    "zonesComingSoon": "Delivery Zones - Coming Soon"
   },
   "articleCategories": {
     "page": {
@@ -55,7 +55,7 @@
     "createButton": "Add company address",
     "createDialog": {
       "title": "Company Address",
-      "description": "Add a company address so it shows on the company info page and can be used elsewhere — geolocation, maps, etc.",
+      "description": "Add a company address so it shows on the company info page and can be used elsewhere - geolocation, maps, etc.",
       "submit": "Add address"
     },
     "update": {
@@ -96,8 +96,8 @@
     }
   },
   "customNews": {
-    "articlesComingSoon": "Articles — Coming Soon",
-    "categoriesComingSoon": "Categories — Coming Soon"
+    "articlesComingSoon": "Articles - Coming Soon",
+    "categoriesComingSoon": "Categories - Coming Soon"
   },
   "navigation": {
     "products": {
@@ -180,9 +180,9 @@
     }
   },
   "orders": {
-    "customersComingSoon": "Customers — Coming Soon",
-    "dashboardComingSoon": "Orders Dashboard — Coming Soon",
-    "listComingSoon": "Orders List — Coming Soon",
+    "customersComingSoon": "Customers - Coming Soon",
+    "dashboardComingSoon": "Orders Dashboard - Coming Soon",
+    "listComingSoon": "Orders List - Coming Soon",
     "list": {
       "title": "Nhanh.vn Orders",
       "description": "Review and manage orders synced from Nhanh.vn."
@@ -223,7 +223,7 @@
     },
     "common": {
       "noData": "No data",
-      "noDataShort": "—",
+      "noDataShort": "-",
       "noOrders": "No orders found"
     },
     "copyOrderId": {
@@ -400,12 +400,81 @@
     },
     "pinned": {
       "title": "Pinned products",
-      "description": "Drag to reorder the products featured on the storefront.",
+      "description": "Add products and drag to order how they appear on the storefront.",
       "empty": "No pinned products yet.",
+      "emptyDescription": "Add products to feature them on the storefront.",
+      "count": "{{count}} pinned",
+      "filteredCount": "Showing {{count}} of {{total}}",
+      "loadFailed": "Couldn't load the pinned products.",
+      "retry": "Retry",
+      "searchPlaceholder": "Search pinned products…",
+      "searchEmpty": "No pinned products match \"{{query}}\".",
+      "clearSearch": "Clear search",
+      "dragDisabledWhileSearching": "Clear the search to drag. You can still reposition from the ⋮ menu.",
+      "dragHint": "Drag a card by its ⠿ handle, or focus the handle and press Space, then use the arrow keys.",
+      "dragHandle": "Drag to reorder",
+      "positionBadge": "#{{position}}",
       "categoryFilter": {
-        "label": "Category",
-        "all": "All (global)",
-        "empty": "No categories yet."
+        "label": "Pin scope",
+        "all": "Homepage (global)",
+        "empty": "No categories yet.",
+        "hintGlobal": "This is the homepage pin list. Pick a category to see that category's own pin list.",
+        "hintCategory": "Pins that belong to the \"{{name}}\" category."
+      },
+      "view": {
+        "grid": "Grid",
+        "list": "List",
+        "label": "View"
+      },
+      "fold": {
+        "label": "Storefront cut-off - first {{count}} products",
+        "below": "Products below this line don't appear on the storefront."
+      },
+      "card": {
+        "actions": "Pinned product actions",
+        "openProduct": "Open product page"
+      },
+      "move": {
+        "top": "Move to top",
+        "bottom": "Move to bottom",
+        "up": "Move up",
+        "down": "Move down",
+        "toPosition": "Move to position…",
+        "positionLabel": "Position (1–{{max}})",
+        "apply": "Move",
+        "invalid": "Enter a number between 1 and {{max}}."
+      },
+      "reorder": {
+        "failed": "Couldn't save the new order. The previous order was restored."
+      },
+      "unpin": {
+        "action": "Unpin",
+        "success": "Unpinned \"{{name}}\".",
+        "undo": "Undo",
+        "undone": "Restored \"{{name}}\" to its previous position.",
+        "undoFailed": "Couldn't undo. Please try again."
+      },
+      "add": {
+        "trigger": "Add products",
+        "title": "Add pinned products",
+        "descriptionGlobal": "Pick products to pin to the homepage. New products are appended to the end of the list.",
+        "descriptionCategory": "Pick products to pin in \"{{name}}\". New products are appended to the end of the list.",
+        "searchPlaceholder": "Search by product name or code…",
+        "sourceCategory": "In this category",
+        "sourceAll": "All products",
+        "sourceAllHint": "Products that aren't in the category yet will be added to \"{{name}}\" before being pinned.",
+        "alreadyPinned": "Pinned",
+        "notInCategory": "Not in this category",
+        "selectedCount": "{{count}} selected",
+        "clearSelection": "Clear selection",
+        "noProducts": "No products found.",
+        "endOfList": "All {{count}} products shown.",
+        "submit": "Pin {{count}} products",
+        "submitEmpty": "Pin products",
+        "success": "Pinned {{count}} products.",
+        "partial": "Pinned {{succeeded}} of {{total}}; {{failed}} failed.",
+        "membershipFailed": "Couldn't add the products to the category. Assign the category to them first, then pin.",
+        "limitReached": "Select at most {{count}} products at a time."
       }
     },
     "pinDialog": {
@@ -417,7 +486,10 @@
       "categoriesLabel": "Product categories",
       "noCategories": "This product isn't in any category.",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "addCategory": "Pin to another category",
+      "addCategoryHint": "Pick a category this product isn't in yet. It will be added to the category before being pinned.",
+      "willJoinCategory": "Will join category"
     },
     "common": {
       "noData": "None",
@@ -625,8 +697,8 @@
     }
   },
   "recruitment": {
-    "applicantsComingSoon": "Applicants — Coming Soon",
-    "jobsComingSoon": "Job Postings — Coming Soon",
+    "applicantsComingSoon": "Applicants - Coming Soon",
+    "jobsComingSoon": "Job Postings - Coming Soon",
     "applicants": {
       "title": "Applicants",
       "description": "Review and manage all received job applications.",
@@ -1077,15 +1149,15 @@
       "removeProduct": "Remove product from this landing page",
       "searchPlaceholder": "Search by product name or code",
       "noResults": "No product found",
-      "moreResults": "{{count}} more products — type to filter",
+      "moreResults": "{{count}} more products - type to filter",
       "assignedElsewhere": "Currently on another landing page",
       "unknownProduct": "Product no longer in the catalog",
-      "missingUrl": "No URL yet — this group won't be saved",
-      "missingProducts": "No product assigned — this group won't be saved",
+      "missingUrl": "No URL yet - this group won't be saved",
+      "missingProducts": "No product assigned - this group won't be saved",
       "rawMode": "Edit JSON",
       "visualMode": "Visual editor",
       "rawHint": "Shape: { \"productId\": \"landing page url\" }",
-      "invalidJson": "Invalid JSON — changes are not applied"
+      "invalidJson": "Invalid JSON - changes are not applied"
     },
     "breadcrumb": "Manage Configuration",
     "fallbackTitle": "Configurations",
@@ -1299,7 +1371,7 @@
     },
     "feedbacksDialog": {
       "title": "Customer feedbacks",
-      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google — placeholders must be replaced before launch.",
+      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google - placeholders must be replaced before launch.",
       "configLabel": "Customer feedbacks",
       "locale": {
         "vi": "Vietnamese",
@@ -1382,7 +1454,7 @@
     },
     "bannersDialog": {
       "title": "Promotional banners",
-      "subtitle": "Each banner has its own slot key — reuse the same slot across multiple banners to show a slideshow at one spot on the site.",
+      "subtitle": "Each banner has its own slot key - reuse the same slot across multiple banners to show a slideshow at one spot on the site.",
       "configLabel": "Promotional banners",
       "locale": {
         "vi": "Vietnamese",
@@ -1407,12 +1479,12 @@
         "moveDown": "Move down",
         "remove": "Remove banner",
         "image": "Banner image",
-        "imageHelp": "Wide image — {{ratio}} recommended (e.g. {{example}}px) for this slot.",
+        "imageHelp": "Wide image - {{ratio}} recommended (e.g. {{example}}px) for this slot.",
         "uploadImage": "Upload image",
         "replaceImage": "Replace image",
         "slotField": "Slot key",
         "slotPlaceholder": "e.g. hero, sidebar-top",
-        "slotHelp": "Free-form key — frontend filters banners by this string. Existing slots are suggested.",
+        "slotHelp": "Free-form key - frontend filters banners by this string. Existing slots are suggested.",
         "hrefField": "Click destination",
         "hrefHelp": "Internal path (/products/...) or full URL (https://...).",
         "openInNewTabToggle": "Open link in a new tab",

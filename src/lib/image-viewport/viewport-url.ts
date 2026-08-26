@@ -1,6 +1,6 @@
 import type { ImageViewport } from './types'
 
-// No runtime imports here (or in viewport-layout.ts) — lets verify-image-viewport.mjs load this under Node's type stripping.
+// No runtime imports here (or in viewport-layout.ts) - lets verify-image-viewport.mjs load this under Node's type stripping.
 
 export const IMAGE_VIEWPORT_VERSION = 1
 
@@ -10,7 +10,7 @@ export const IMAGE_VIEWPORT_FRAGMENT_KEY = 'iv'
 /** Decimals kept when serializing. 0.01% of a 4000px image is 0.4px. */
 export const IMAGE_VIEWPORT_PRECISION = 2
 
-/** The whole image. Never serialized — `encodeImageViewport` drops it. */
+/** The whole image. Never serialized - `encodeImageViewport` drops it. */
 export const FULL_FRAME_VIEWPORT: ImageViewport = { v: IMAGE_VIEWPORT_VERSION, x: 0, y: 0, w: 100, h: 100 }
 
 const TOKEN_SEPARATOR = '&'
@@ -28,7 +28,7 @@ const isTransientUrl = (url: string): boolean => url.startsWith('blob:') || url.
 /**
  * Brings a candidate into range and guarantees `x + w <= 100` and `y + h <= 100`.
  *
- * Returns `null` for anything unusable — missing fields, `NaN`, or a degenerate rect — so every
+ * Returns `null` for anything unusable - missing fields, `NaN`, or a degenerate rect - so every
  * caller has exactly one failure mode to handle. react-easy-crop emits float noise such as
  * `-0.0000001` or `100.0000001`, so this runs on its output too.
  */
@@ -77,7 +77,7 @@ const parseToken = (raw: string): ImageViewport | null => {
  * Splits a stored image value into the URL to render and the framing to apply. Never throws;
  * legacy or malformed fragments yield `viewport: null`, and unrelated fragment tokens are preserved.
  *
- * Hand-parsed rather than `new URL()`, which throws on `''` — the default value of every image field here.
+ * Hand-parsed rather than `new URL()`, which throws on `''` - the default value of every image field here.
  */
 export const decodeImageViewport = (
   url: string | null | undefined
@@ -109,7 +109,7 @@ export const decodeImageViewport = (
 }
 
 /**
- * Writes a framing into a stored image value, returning the string to persist. Idempotent — any
+ * Writes a framing into a stored image value, returning the string to persist. Idempotent - any
  * existing framing is stripped first. Returns the bare URL when the viewport is absent, unusable,
  * or full-frame, so legacy and reset values look identical.
  *

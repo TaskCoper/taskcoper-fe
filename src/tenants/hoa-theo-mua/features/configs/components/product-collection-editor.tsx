@@ -331,7 +331,7 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
         )}
 
         <div className='flex items-center justify-between gap-2 border-t pt-4'>
-          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+          {/* Config deletion is temporarily disabled for safety - the button stays visible but inert. */}
           {existingConfig ? (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -396,7 +396,7 @@ function ConfigLabelField({ suffix }: { suffix?: string }) {
   )
 }
 
-// Campaign UI temporarily disabled — see the commented <CampaignsToggle /> above.
+// Campaign UI temporarily disabled - see the commented <CampaignsToggle /> above.
 // function CampaignsToggle() {
 //   const { t } = useTenantTranslation()
 //   const { control } = useFormContext<ProductCollectionFormValues>()

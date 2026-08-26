@@ -122,14 +122,14 @@ export type ImageViewportEditorDialogProps = {
   initialViewport?: ImageViewport | null
   minZoom?: number
   maxZoom?: number
-  /** `null` means "show the whole image" — the same state as an image that was never framed. */
+  /** `null` means "show the whole image" - the same state as an image that was never framed. */
   onSave: (viewport: ImageViewport | null) => void
 }
 
 /**
  * Lets a content editor choose which part of an image is visible in a given slot.
  *
- * No cropped copy is produced — the result is a viewport applied with CSS at render time. Callers
+ * No cropped copy is produced - the result is a viewport applied with CSS at render time. Callers
  * supply `aspectRatio` because only they know the box the image will render into.
  */
 export function ImageViewportEditorDialog({

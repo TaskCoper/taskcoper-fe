@@ -1,6 +1,6 @@
 import type { ImageViewport } from './types'
 
-// No runtime imports here — see the note in `viewport-url.ts`.
+// No runtime imports here - see the note in `viewport-url.ts`.
 
 /** Absolute placement of the `<img>` inside its container, in CSS pixels. */
 export type ViewportLayout = {

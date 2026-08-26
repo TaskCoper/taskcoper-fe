@@ -34,7 +34,7 @@ export function DataTableColumnHeader<TData, TValue>({
           role='button'
           tabIndex={0}
           aria-label={t(tooltip)}
-          // Sits inside the trigger button — stop clicks/keys from also toggling the sort/hide menu.
+          // Sits inside the trigger button - stop clicks/keys from also toggling the sort/hide menu.
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
           className='inline-flex cursor-help text-muted-foreground/60 hover:text-muted-foreground'

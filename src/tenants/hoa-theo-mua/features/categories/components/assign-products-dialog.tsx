@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -13,10 +12,10 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { DEFAULT_PAGE_INDEX } from '@/shared/constants'
-import { cn } from '@/shared/utils'
-import { ChevronLeftIcon, ChevronRightIcon, ImageIcon, SaveIcon, SearchIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, SaveIcon, SearchIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
+import { ProductPickerRow } from '../../products/components/product-picker-row'
 import { useGetProducts } from '../../products/hooks/use-get-products'
 import { formatPrice } from '../../products/utils'
 import { useAssignProducts } from '../hooks/use-assign-products'
@@ -140,41 +139,15 @@ function AssignProductsBody({ category, onOpenChange }: AssignProductsBodyProps)
 
                 return (
                   <li key={product.id}>
-                    <label
-                      className={cn(
-                        'flex cursor-pointer items-center gap-3 px-3 py-2.5 transition-colors hover:bg-accent',
-                        checked && 'bg-primary/5'
-                      )}
-                    >
-                      <Checkbox checked={checked} onCheckedChange={(value) => toggleProduct(product.id, !!value)} />
-                      <span className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted'>
-                        {product.coverImage ? (
-                          <img
-                            src={product.coverImage}
-                            alt={product.productName ?? ''}
-                            loading='lazy'
-                            className='size-full object-cover'
-                          />
-                        ) : (
-                          <ImageIcon className='size-4 text-muted-foreground/40' />
-                        )}
-                      </span>
-                      <span className='min-w-0 flex-1'>
-                        <span className='block truncate text-sm font-medium'>
-                          {product.productName?.trim() || t('products.common.unnamed')}
-                        </span>
-                        {product.productCode?.trim() && (
-                          <span className='block truncate font-mono text-xs text-muted-foreground'>
-                            {product.productCode}
-                          </span>
-                        )}
-                      </span>
-                      {price && (
-                        <span className='shrink-0 text-sm font-medium text-emerald-600 dark:text-emerald-400'>
-                          {price}
-                        </span>
-                      )}
-                    </label>
+                    <ProductPickerRow
+                      t={t}
+                      productName={product.productName}
+                      productCode={product.productCode}
+                      coverImage={product.coverImage}
+                      price={price}
+                      checked={checked}
+                      onCheckedChange={(value) => toggleProduct(product.id, value)}
+                    />
                   </li>
                 )
               })}

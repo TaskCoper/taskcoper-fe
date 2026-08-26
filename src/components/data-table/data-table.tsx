@@ -32,7 +32,7 @@ import { DataTableRowDragContext, type DataTableRowDragHandle } from './use-data
  * that row (e.g. a grip-handle column) reads to become the drag activator.
  */
 interface RowDndConfig<TData> {
-  /** Which rows can be dragged — defaults to every row. */
+  /** Which rows can be dragged - defaults to every row. */
   getRowCanDrag?: (row: Row<TData>) => boolean
   /** Fired on a valid drop with the dragged row and the row it landed on. */
   onReorder: (params: { activeRow: Row<TData>; overRow: Row<TData> }) => void

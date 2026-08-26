@@ -14,7 +14,7 @@ import AddressMapField from './address-map-field'
 export default function CreateCompanyAddressForm() {
   const { t } = useTenantTranslation()
   const { control, setValue, watch } = useFormContext<CreateCompanyAddressFormValues>()
-  // The coordinate the typed address resolved to — map picks are constrained to
+  // The coordinate the typed address resolved to - map picks are constrained to
   // a radius around it so the pin can be fine-tuned but not moved to a new area.
   const [mapAnchor, setMapAnchor] = useState<{ latitude: number; longitude: number } | null>(null)
 

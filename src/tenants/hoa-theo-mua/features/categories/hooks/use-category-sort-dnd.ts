@@ -13,7 +13,7 @@ export const INDENTATION_WIDTH = 32
 interface UseCategorySortDndProps {
   categories: SortableCategory[] | undefined
   /** Must match the `page` filter passed to `useGetSortableCategories` so the optimistic write below
-   *  lands on the exact cache entry the page reads from — see `use-get-sortable-categories.ts`. */
+   *  lands on the exact cache entry the page reads from - see `use-get-sortable-categories.ts`. */
   page?: CategoryProductPage[]
 }
 
@@ -28,7 +28,7 @@ export const useCategorySortDnd = ({ categories, page }: UseCategorySortDndProps
   const queryClient = useQueryClient()
   const { reorderCategory, isReorderingCategory } = useReorderCategory()
 
-  // Same key `useGetSortableCategories` registers its query under — the optimistic write below
+  // Same key `useGetSortableCategories` registers its query under - the optimistic write below
   // targets that cache entry directly, and `useReorderCategory` invalidates the `categoryProducts`
   // prefix on settle.
   const sortableCategoriesQueryKey = ['categoryProducts', 'sortable', page]
@@ -39,7 +39,7 @@ export const useCategorySortDnd = ({ categories, page }: UseCategorySortDndProps
 
   const roots = useMemo(() => categories ?? [], [categories])
 
-  // Full flatten — used verbatim when committing a drop so a moved node keeps its subtree.
+  // Full flatten - used verbatim when committing a drop so a moved node keeps its subtree.
   const flattenedTree = useMemo(() => flattenTree(roots), [roots])
 
   // While dragging, collapse the active node's subtree so projection neighbours reflect where the

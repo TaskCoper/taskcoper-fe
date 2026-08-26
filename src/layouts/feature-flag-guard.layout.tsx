@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { isRedirectLoop } from '../lib/feature-flags/redirect-loop'
 import type { FeatureKey } from '../lib/feature-flags/types'
-// TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+// TEMP: dynamic tenant identification disabled - using hoa-theo-mua config directly.
 // import { resolveFeatureCheck, useTenantConfig } from '../lib/feature-flags/use-feature-flags'
 import { resolveFeatureCheck } from '../lib/feature-flags/use-feature-flags'
 import logo from '/images/taskcoper.png'
@@ -24,7 +24,7 @@ function TenantConfigLoading() {
 
 export function FeatureFlagGuardLayout({ requires }: { requires: FeatureKey }) {
   const { isGettingMe } = useGetMe()
-  // TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+  // TEMP: dynamic tenant identification disabled - using hoa-theo-mua config directly.
   // const config = useTenantConfig()
   const config = hoaTheoMuaConfig
   const location = useLocation()
@@ -44,7 +44,7 @@ export function FeatureFlagGuardLayout({ requires }: { requires: FeatureKey }) {
 
 export function TenantLandingRedirect() {
   const { isGettingMe } = useGetMe()
-  // TEMP: dynamic tenant identification disabled — using hoa-theo-mua config directly.
+  // TEMP: dynamic tenant identification disabled - using hoa-theo-mua config directly.
   // const config = useTenantConfig()
   const config = hoaTheoMuaConfig
   const location = useLocation()

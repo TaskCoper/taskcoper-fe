@@ -35,7 +35,7 @@ export type TenantNavQuickActionItem = {
 
 // Tenant-specific NavMain sections, keyed by organizationId. The shared sidebar
 // concatenates these after the global NAV_MAIN_CONFIG, so a tenant branch only
-// touches src/tenants/<TENANT>/ to add menu entries — no edits to shared sidebar
+// touches src/tenants/<TENANT>/ to add menu entries - no edits to shared sidebar
 // files needed.
 // const TENANT_NAV_MAIN: Record<string, TenantNavMainItem[]> = {
 //   [HOA_THEO_MUA_ORG_ID]: hoaTheoMuaNavMain

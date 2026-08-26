@@ -11,7 +11,7 @@ export type GuardedNavItem = {
 }
 
 // Filter a list of nav items by the current tenant config + user role.
-// Single source of truth for nav visibility — keep top-nav and sidebar in sync.
+// Single source of truth for nav visibility - keep top-nav and sidebar in sync.
 export function useFilteredNavItems<T extends GuardedNavItem>(items: T[]): T[] {
   const { me } = useGetMe()
   // const config = useTenantConfig()

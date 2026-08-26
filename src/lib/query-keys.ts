@@ -232,7 +232,7 @@ export const queryKeys = {
   tasks: {
     all: ['tasks'] as const,
     lists: () => [...queryKeys.tasks.all, 'list'] as const,
-    // listParent is a prefix of list — invalidating it cascades to every filter combo for that milestone
+    // listParent is a prefix of list - invalidating it cascades to every filter combo for that milestone
     listParent: (parentMilestoneIdentifier?: string) =>
       [...queryKeys.tasks.lists(), 'by-parent', parentMilestoneIdentifier] as const,
     list: ({
@@ -462,7 +462,7 @@ export const queryKeys = {
     public: () => [...queryKeys.commissions.all, 'public'] as const
   },
 
-  // Vouchers — single root, all per-voucher data nests under detail(id)
+  // Vouchers - single root, all per-voucher data nests under detail(id)
   vouchers: {
     all: ['vouchers'] as const,
     lists: () => [...queryKeys.vouchers.all, 'list'] as const,

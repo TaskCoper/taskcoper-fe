@@ -234,7 +234,7 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                       <FolderOpenIcon className='size-4' />
                       <p className='text-xs font-medium'>{t('purchasedPackage.belongsToProject')}</p>
                     </div>
-                    <p className='text-xs font-semibold'>{booking.bookedByProject?.name ?? '—'}</p>
+                    <p className='text-xs font-semibold'>{booking.bookedByProject?.name ?? '-'}</p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
@@ -243,7 +243,7 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                       <p className='text-xs font-medium'>{t('purchasedPackage.purchasedOn')}</p>
                     </div>
                     <p className='text-xs font-semibold'>
-                      {booking.createdOnUtc ? formatDate(booking.createdOnUtc, 'dateLong') : '—'}
+                      {booking.createdOnUtc ? formatDate(booking.createdOnUtc, 'dateLong') : '-'}
                     </p>
                   </div>
                 </div>
@@ -263,21 +263,21 @@ export default function PackageBookingDialog({ open, onOpenChange, booking }: Pa
                       {t('mentorPackage.bookingDialog.activationDeadline')}
                     </p>
                     <p className='text-xs font-semibold'>
-                      {booking.activationDeadlineUtc ? formatDate(booking.activationDeadlineUtc, 'dateLong') : '—'}
+                      {booking.activationDeadlineUtc ? formatDate(booking.activationDeadlineUtc, 'dateLong') : '-'}
                     </p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
                     <p className='text-xs text-muted-foreground'>{t('mentorPackage.bookingDialog.activatedOn')}</p>
                     <p className='text-xs font-semibold'>
-                      {booking.activatedOnUtc ? formatDate(booking.activatedOnUtc, 'dateLong') : '—'}
+                      {booking.activatedOnUtc ? formatDate(booking.activatedOnUtc, 'dateLong') : '-'}
                     </p>
                   </div>
 
                   <div className='flex items-center justify-between gap-2'>
                     <p className='text-xs text-muted-foreground'>{t('mentorPackage.bookingDialog.usageDeadline')}</p>
                     <p className='text-xs font-semibold'>
-                      {booking.usageDeadlineUtc ? formatDate(booking.usageDeadlineUtc, 'dateLong') : '—'}
+                      {booking.usageDeadlineUtc ? formatDate(booking.usageDeadlineUtc, 'dateLong') : '-'}
                     </p>
                   </div>
                 </div>

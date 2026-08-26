@@ -270,7 +270,7 @@ const DaySection = ({ dayOfWeek, schedules, isToday, onEdit }: DaySectionProps) 
           ))}
         </div>
       ) : (
-        <div className='px-3 py-4 text-center text-xs font-medium text-muted-foreground/70'>—</div>
+        <div className='px-3 py-4 text-center text-xs font-medium text-muted-foreground/70'>-</div>
       )}
     </div>
   )

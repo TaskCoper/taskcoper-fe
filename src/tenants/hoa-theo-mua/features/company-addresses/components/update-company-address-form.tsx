@@ -31,7 +31,7 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     formState: { isDirty }
   } = methods
 
-  // The coordinate the typed address (or the saved point) resolved to — map
+  // The coordinate the typed address (or the saved point) resolved to - map
   // picks are constrained to a radius around it.
   const [mapAnchor, setMapAnchor] = useState<{ latitude: number; longitude: number } | null>(null)
 

@@ -183,7 +183,7 @@ export default function AhamoveCreateConfigDialog({
 
         <div className='min-h-0 flex-1 overflow-y-auto px-6 pb-4'>
           <form id='ahamove-create-config-form' onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
-            {/* Identifier — read-only summary */}
+            {/* Identifier - read-only summary */}
             <div className='flex items-center justify-between rounded-md bg-muted/50 p-3 text-xs'>
               <span className='truncate font-mono text-muted-foreground'>{keyPreview}</span>
               {requestType && (
@@ -298,7 +298,7 @@ export default function AhamoveCreateConfigDialog({
         </div>
 
         <DialogFooter className='pb-6 px-6'>
-          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+          {/* Config deletion is temporarily disabled for safety - the button stays visible but inert. */}
           {isEdit && (
             <Tooltip>
               <TooltipTrigger asChild>

@@ -6,7 +6,7 @@ export type TenantConfig = {
   modules: Record<ModuleKey, boolean>
   custom: Record<string, boolean>
   // Where users are sent after auth and when a guard blocks a route.
-  // Must point to a path that the tenant has enabled — otherwise the
+  // Must point to a path that the tenant has enabled - otherwise the
   // FeatureFlagGuardLayout loop detector kicks in.
   defaultLanding: string
   // Where the header logo links to. Free to point at the marketing home
@@ -15,7 +15,7 @@ export type TenantConfig = {
   // defaultLanding) so clicking the logo doesn't bounce.
   logoUrl: string
   // i18next namespace this tenant's strings register under. When set, the
-  // tenant's locale bundle is layered on top of the base `translation` ns —
+  // tenant's locale bundle is layered on top of the base `translation` ns -
   // matching keys override the base, missing keys fall back to the base.
   i18nNamespace?: string
   // Per-language dynamic loaders. Each is a `() => import('./locales/<lng>.json')`
