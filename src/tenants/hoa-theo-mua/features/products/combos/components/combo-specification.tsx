@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Input } from '@/components/ui/input'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { CheckIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
+import { CheckIcon, CircleCheck, CircleX, PackageCheck, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import type { ComboMaterial } from '../types'
@@ -359,13 +359,27 @@ export function ComboSpecification({
 }
 
 function ComboAvailability({ quantity, status, t }: { quantity?: number | null; status?: string | null; t: TenantT }) {
-  if (quantity == null && !status) return null
-
+  // if (quantity == null && !status) return null
+  const isInStock = status === 'Còn hàng'
   return (
-    <div className='rounded-md border bg-muted/40 px-3 py-1.5 text-sm'>
-      <span className='font-medium'>{t('products.detail.comboSpecification.availableQuantity')}:</span>{' '}
-      <span className='tabular-nums'>{quantity ?? '-'}</span>
-      {status && <span className='ml-2 text-muted-foreground'>({status})</span>}
+    <div className='inline-flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-1.5 text-sm'>
+      <PackageCheck className='size-4.5 text-muted-foreground' />
+
+      <span className='font-medium'>{t('products.detail.comboSpecification.availableQuantity')}:</span>
+
+      <span className='font-semibold tabular-nums'>{quantity ?? '--'}</span>
+
+      {status && (
+        <span className='ml-1 inline-flex items-center gap-1'>
+          {isInStock ? (
+            <CircleCheck className='size-4 text-emerald-600' />
+          ) : (
+            <CircleX className='size-4 text-destructive' />
+          )}
+
+          <span className={isInStock ? 'text-emerald-600' : 'text-destructive'}>{status}</span>
+        </span>
+      )}
     </div>
   )
 }
