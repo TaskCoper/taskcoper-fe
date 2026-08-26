@@ -1,9 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { primaryButtonEffectClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import {
   BoxIcon,
@@ -16,6 +18,7 @@ import {
   Link2Icon,
   PackageIcon,
   ScanBarcodeIcon,
+  ShoppingCartIcon,
   StarIcon,
   TagIcon,
   ZoomInIcon
@@ -26,6 +29,8 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
+import { ComboSpecification } from '../features/products/combos/components/combo-specification'
+import { useUpdateComboPublication } from '../features/products/combos/hooks/use-update-combo-publication'
 import {
   ATTRIBUTE_OVERVIEW_FIELDS,
   BASIC_INFO_FIELDS,
@@ -44,6 +49,7 @@ import {
   VariantRow
 } from '../features/products/components/product-detail/parts'
 import { useGetProduct } from '../features/products/hooks/use-get-product'
+import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
 import { formatPrice, formatQuantity, parseNumber, productDetailToProduct } from '../features/products/utils'
 
 export default function ProductPage() {
@@ -68,6 +74,23 @@ export default function ProductPage() {
 
   const product = fetchedDetail ? productDetailToProduct(fetchedDetail) : undefined
   const variants = fetchedDetail?.children?.map((child) => productDetailToProduct(child)) ?? []
+  const isCombo = product?.productType?.trim().toLowerCase() === 'combo'
+  const hasVariants = variants.length > 0
+  const isVariant = Boolean(product?.parentProductId?.trim())
+  const canEditFactor = isVariant
+  const canManageComboSpecification = isCombo || hasVariants
+  const canManageComboMaterials = !isVariant
+  const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
+
+  const {
+    comboSpecification,
+    isGettingComboSpecification,
+    isError: isComboSpecificationError
+  } = useGetComboSpecification({
+    id: id ?? '',
+    enabled: canManageComboSpecification && isComboSpecificationRequested
+  })
+  const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
   if (isGettingProduct) return <ProductDetailSkeleton />
 
@@ -93,9 +116,17 @@ export default function ProductPage() {
 
   const displayName = productName?.trim() || t('products.common.unnamed')
   const active = isActiveStatus(status)
-
+  const comboId = product.parentProductId?.trim() || id || ''
+  const publicationComboId = id || ''
+  const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
   const parent = product.parent
-  const parentName = parent?.productName?.trim() || parent?.productCode?.trim() || t('products.common.unnamed')
+  const parentId = product.parentId?.trim() || parent?.id
+  const parentName =
+    product.parentProductName?.trim() ||
+    parent?.productName?.trim() ||
+    product.parentProductCode?.trim() ||
+    parent?.productCode?.trim() ||
+    t('products.common.unnamed')
 
   const galleryImages = [
     ...(coverImage ? [{ src: coverImage, isCover: true }] : []),
@@ -122,8 +153,11 @@ export default function ProductPage() {
   const inventoryRows = buildRows(INVENTORY_FIELDS, product)
 
   const rawTab = searchParams.get('tab')
+  const isComboSpecificationTab = rawTab === 'quantity'
   const isValidTab =
-    TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) && (rawTab !== 'variants' || variants.length > 0)
+    TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) &&
+    (rawTab !== 'variants' || variants.length > 0) &&
+    (!isComboSpecificationTab || canManageComboSpecification)
   const currentTab = isValidTab ? rawTab! : 'overview'
 
   const handleTabChange = (value: string) => {
@@ -155,11 +189,30 @@ export default function ProductPage() {
     }
   }
 
+  const handleUpdateComboPublication = async (publish: boolean) => {
+    if (!publicationComboId || isUpdatingComboPublication || publish === isComboPublished) return
+
+    await updateComboPublication({ comboId: publicationComboId, publish })
+  }
+
+  const ensureComboUnpublished = async () => {
+    if (!isComboPublished) return true
+    if (!publicationComboId || isUpdatingComboPublication) return false
+
+    try {
+      await updateComboPublication({ comboId: publicationComboId, publish: false })
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const TABS = [
     { value: 'overview', label: t('products.detail.tab.overview') },
     { value: 'specifications', label: t('products.detail.tab.specifications') },
     { value: 'pricing', label: t('products.detail.tab.pricing') },
     { value: 'inventory', label: t('products.detail.tab.inventory') },
+    ...(canManageComboSpecification ? [{ value: 'quantity', label: t('products.detail.tab.quantity') }] : []),
     ...(variants.length > 0 ? [{ value: 'variants', label: t('products.detail.variants.title') }] : [])
   ]
 
@@ -243,6 +296,35 @@ export default function ProductPage() {
                   </a>
                 </Button>
               )}
+              <div className='flex items-center gap-2'>
+                <span className='whitespace-nowrap text-sm font-medium text-muted-foreground'>
+                  {t('products.detail.comboSpecification.publicationStatus')}:
+                </span>
+                <Select
+                  value={isComboPublished ? 'published' : 'unpublished'}
+                  onValueChange={(value) => void handleUpdateComboPublication(value === 'published')}
+                  disabled={isUpdatingComboPublication}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      'h-9 min-w-36 gap-2 rounded-lg px-3 font-semibold shadow-sm transition-colors',
+                      isComboPublished
+                        ? cn(
+                            primaryButtonEffectClasses,
+                            'border-primary bg-none! ring-primary! [&_svg]:text-primary-foreground!'
+                          )
+                        : 'border-input bg-background text-foreground hover:bg-muted'
+                    )}
+                  >
+                    {isComboPublished && <ShoppingCartIcon className='size-4 shrink-0' />}
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align='end'>
+                    <SelectItem value='published'>{t('products.detail.comboSpecification.published')}</SelectItem>
+                    <SelectItem value='unpublished'>{t('products.detail.comboSpecification.unpublished')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button variant='outline' size='sm' onClick={handleCopyLink}>
                 {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
                 {linkCopied ? t('products.detail.copied') : t('products.detail.share')}
@@ -251,9 +333,9 @@ export default function ProductPage() {
           </div>
 
           {/* Parent product notice — this product is a variant/child of another */}
-          {parent && (
+          {parentId && (
             <Link
-              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parent.id}`}
+              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
               className='group flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-2 transition-colors hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/40 dark:hover:bg-blue-950/60'
             >
               <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
@@ -436,6 +518,32 @@ export default function ProductPage() {
             </DetailSection>
           </TabsContent>
 
+          {canManageComboSpecification && (
+            <TabsContent value='quantity' className='mt-0'>
+              <DetailSection
+                title={t('products.detail.comboSpecification.title')}
+                description={t('products.detail.comboSpecification.description')}
+              >
+                <ComboSpecification
+                  key={`${id}-${product.factor ?? 'unconfigured'}`}
+                  productId={id ?? ''}
+                  comboId={comboId}
+                  factor={product.factor}
+                  sellableQuantity={product.sellableQuantity}
+                  stockStatus={product.stockStatus}
+                  canEditFactor={canEditFactor}
+                  canManageMaterials={canManageComboMaterials}
+                  isUpdatingPublication={isUpdatingComboPublication}
+                  onEnsureUnpublished={ensureComboUnpublished}
+                  materials={comboSpecification?.materials ?? []}
+                  isLoading={isGettingComboSpecification}
+                  isError={isComboSpecificationError}
+                  t={t}
+                />
+              </DetailSection>
+            </TabsContent>
+          )}
+
           {/* Variants */}
           {variants.length > 0 && (
             <TabsContent value='variants' className='mt-0'>
@@ -455,6 +563,7 @@ export default function ProductPage() {
                         <TableHead className='w-14' />
                         <TableHead>{t('products.column.product')}</TableHead>
                         <TableHead>{t('products.detail.variants.options')}</TableHead>
+                        <TableHead>{t('products.detail.comboSpecification.factor')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.price')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.availableForSale')}</TableHead>
                         <TableHead>{t('products.column.status')}</TableHead>
@@ -462,7 +571,7 @@ export default function ProductPage() {
                     </TableHeader>
                     <TableBody>
                       {variants.map((variant) => (
-                        <VariantRow key={variant.id} variant={variant} t={t} />
+                        <VariantRow key={variant.id} variant={variant} parentId={id ?? ''} t={t} />
                       ))}
                     </TableBody>
                   </Table>
