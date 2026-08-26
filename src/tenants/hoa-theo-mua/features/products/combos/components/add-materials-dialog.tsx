@@ -199,7 +199,17 @@ export function AddMaterialsDialog({
                     />
                     <MaterialImage src={material.coverImage} alt={material.materialName} />
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium'>{material.materialName}</p>
+                      <div className='flex justify-between items-center gap-2'>
+                        <p className='min-w-0 truncate text-sm font-medium'>{material.materialName}</p>
+                        {material.availableForSale === 0 && (
+                          <Badge
+                            variant='outline'
+                            className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+                          >
+                            {t('products.detail.outOfStock')}
+                          </Badge>
+                        )}
+                      </div>
                       <p className='truncate text-xs text-muted-foreground'>
                         {material.materialCode} · {material.unit || t('products.common.noData')} ·{' '}
                         {t('products.detail.comboSpecification.stock')}:{' '}
