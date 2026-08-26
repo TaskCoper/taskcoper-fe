@@ -521,7 +521,7 @@ export default function CreateConfigForm({
         )}
       />
 
-      {/* Options — select & multiSelect share the editor (hidden when sourced from an async API) */}
+      {/* Options - select & multiSelect share the editor (hidden when sourced from an async API) */}
       {(inputType === InputType.select || inputType === InputType.multiSelect) && !lockOptions && (
         <FieldGroup className='gap-2'>
           <div className='flex items-center justify-between'>
@@ -566,7 +566,7 @@ export default function CreateConfigForm({
         </FieldGroup>
       )}
 
-      {/* Default Value — select (single value) */}
+      {/* Default Value - select (single value) */}
       {!valueLocked && inputType === InputType.select && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
@@ -620,7 +620,7 @@ export default function CreateConfigForm({
         </FieldGroup>
       )}
 
-      {/* Default Values — multiSelect (array) */}
+      {/* Default Values - multiSelect (array) */}
       {!valueLocked && inputType === InputType.multiSelect && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValuesField')}</FieldLabel>

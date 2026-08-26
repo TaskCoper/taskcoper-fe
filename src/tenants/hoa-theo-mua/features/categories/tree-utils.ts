@@ -15,7 +15,7 @@ export interface FlattenedCategory {
   category: SortableCategory
   parentId: string | null
   depth: number
-  /** Index among its siblings in the source tree — unused by the sort, kept for completeness. */
+  /** Index among its siblings in the source tree - unused by the sort, kept for completeness. */
   index: number
 }
 
@@ -32,7 +32,7 @@ export const flattenTree = (
 
 /**
  * Drop every descendant of the given ids out of the flat list. Used while dragging so the moving
- * branch collapses to a single row — this keeps the projection's neighbour lookups (and the depth
+ * branch collapses to a single row - this keeps the projection's neighbour lookups (and the depth
  * range they allow) honest, and makes it impossible to drop a node into its own subtree.
  */
 export const removeChildrenOf = (items: FlattenedCategory[], ids: string[]): FlattenedCategory[] => {

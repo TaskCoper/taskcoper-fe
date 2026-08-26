@@ -63,14 +63,14 @@ const checkLayout = ({ label, naturalAspect, containerAspect, viewport }) => {
 
   const { left, top, width, height } = layout
 
-  // (a) No distortion — the rendered box keeps the source's intrinsic aspect.
+  // (a) No distortion - the rendered box keeps the source's intrinsic aspect.
   near(width / height, naturalAspect, `${label} · uniform scale`)
 
-  // (b) Full cover — the image never pulls away from an edge.
+  // (b) Full cover - the image never pulls away from an edge.
   ok(width >= containerWidth - TOLERANCE, `${label} · covers width`, `${width} < ${containerWidth}`)
   ok(height >= containerHeight - TOLERANCE, `${label} · covers height`, `${height} < ${containerHeight}`)
 
-  // (c) Containment — no gap on any side.
+  // (c) Containment - no gap on any side.
   ok(left <= TOLERANCE, `${label} · left edge`, `left=${left} must be <= 0`)
   ok(top <= TOLERANCE, `${label} · top edge`, `top=${top} must be <= 0`)
   ok(left + width >= containerWidth - TOLERANCE, `${label} · right edge`, `${left + width} < ${containerWidth}`)
@@ -94,7 +94,7 @@ const checkLayout = ({ label, naturalAspect, containerAspect, viewport }) => {
     `region ${regionWidth}x${regionHeight} smaller than container ${containerWidth}x${containerHeight}`
   )
 
-  // (e) Exactness — when the container matches the region's aspect, it maps onto it precisely.
+  // (e) Exactness - when the container matches the region's aspect, it maps onto it precisely.
   // Tolerance is 1e-3 (looser than TOLERANCE) since a stored viewport is rounded to IMAGE_VIEWPORT_PRECISION decimals.
   const regionAspect = (viewport.w / viewport.h) * naturalAspect
   if (Math.abs(containerAspect - regionAspect) <= 1e-3 * regionAspect) {
@@ -131,7 +131,7 @@ const LAYOUT_CASES = [
 ]
 
 for (const { label, naturalAspect, containerAspect } of LAYOUT_CASES) {
-  // Framed to the container's own aspect — the exactness path.
+  // Framed to the container's own aspect - the exactness path.
   checkLayout({
     label: `${label} · matched`,
     naturalAspect,
@@ -139,7 +139,7 @@ for (const { label, naturalAspect, containerAspect } of LAYOUT_CASES) {
     viewport: regionFor(naturalAspect, containerAspect)
   })
 
-  // Framed at a different aspect than it renders into — the graceful-degradation path.
+  // Framed at a different aspect than it renders into - the graceful-degradation path.
   checkLayout({ label: `${label} · mismatched`, naturalAspect, containerAspect, viewport: regionFor(naturalAspect, 1) })
 
   // Zoomed in and pushed off-centre, which is what dragging in the editor produces.

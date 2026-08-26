@@ -46,7 +46,7 @@ export const getColumns = (): ColumnDef<TransactionRow>[] => {
       header: ({ column }) => <DataTableColumnHeader column={column} label='transactions.column.description' />,
       cell: ({ row }) => (
         <Link to={`/payments/checkout?transactionId=${row.original.transactionId}`}>
-          <p className='max-w-75 truncate hover:underline'>{row.original.description || '—'}</p>
+          <p className='max-w-75 truncate hover:underline'>{row.original.description || '-'}</p>
         </Link>
       ),
       enableSorting: false,

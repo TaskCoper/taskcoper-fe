@@ -64,7 +64,7 @@ export const useStagedUpload = (url: string | null | undefined): StagedUpload | 
 
 /**
  * Outcome of resolving a payload. Tagged rather than `T | null` because a payload can legitimately
- * *be* `null` — a generic config value, for one — and a failure must not look like a valid result.
+ * *be* `null` - a generic config value, for one - and a failure must not look like a valid result.
  */
 export type ResolveStagedResult<T> = { ok: true; value: T } | { ok: false }
 

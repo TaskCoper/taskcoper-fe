@@ -33,7 +33,7 @@
 }
 
 /* The public site paints every heading primary by default. Must live in the base
-   layer (like the public site's globals) so text-* utilities win over it —
+   layer (like the public site's globals) so text-* utilities win over it -
    e.g. the hero h1's lg:text-white and the featured card's text-primary-foreground. */
 @layer base {
   .b2b-preview :is(h1, h2, h3, h4, h5, h6) {

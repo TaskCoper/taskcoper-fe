@@ -10,7 +10,7 @@ export const parseLocalizedText = (raw: Partial<LocalizedText> | undefined): Loc
   en: raw?.en ?? ''
 })
 
-// Strip diacritics + lowercase + kebab — used to derive a URL-safe id from the VI name.
+// Strip diacritics + lowercase + kebab - used to derive a URL-safe id from the VI name.
 export const slugify = (input: string): string =>
   input
     .normalize('NFD')
@@ -28,7 +28,7 @@ export const safeJsonParse = (s: string): unknown => {
   }
 }
 
-// A collection section header — title/description/visibility — shared across product palettes.
+// A collection section header - title/description/visibility - shared across product palettes.
 export interface CollectionSection {
   title: LocalizedText
   description: LocalizedText

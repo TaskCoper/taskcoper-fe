@@ -21,9 +21,9 @@ const requiredText = (t: TenantT, max: number, requiredMessage: string) =>
 
 /**
  * Per-category filter settings. Which keys are meaningful depends on the node:
- * - parent (no `parentId`): `filterByName` / `filterByPrice` — render name/price filter inputs.
- * - child (has `parentId`): `isFilterable` — whether it shows up as a filter option on the client.
- * - both: `rows` / `cols` — the product grid layout (and thus page size, `rows × cols`); a parent's
+ * - parent (no `parentId`): `filterByName` / `filterByPrice` - render name/price filter inputs.
+ * - child (has `parentId`): `isFilterable` - whether it shows up as a filter option on the client.
+ * - both: `rows` / `cols` - the product grid layout (and thus page size, `rows × cols`); a parent's
  *   applies to its section, a child's to the grid shown when that child is picked as a filter.
  * All keys are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant subset.
  */

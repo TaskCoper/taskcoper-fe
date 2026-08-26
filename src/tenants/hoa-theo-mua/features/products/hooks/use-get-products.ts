@@ -3,16 +3,6 @@ import { useQuery } from '@tanstack/react-query'
 import productService from '../services'
 import type { ProductTypeTag } from '../types'
 
-// export interface GetProductsParams {
-//   pageIndex?: number
-//   pageSize?: number
-//   search?: string
-//   categoryIds?: string[]
-//   priceFrom?: number
-//   priceTo?: number
-//   sortBy?: string[]
-// }
-
 export interface GetProductsParams {
   pageIndex?: number
   pageSize?: number

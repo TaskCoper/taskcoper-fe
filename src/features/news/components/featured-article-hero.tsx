@@ -34,7 +34,7 @@ export function FeaturedArticleHero({ article, onPrev, onNext }: FeaturedArticle
         />
       </div>
 
-      {/* Subtle bottom gradient only — for legibility */}
+      {/* Subtle bottom gradient only - for legibility */}
       <div className='absolute inset-0 bg-linear-to-t from-slate-950/60 via-slate-950/10 to-transparent' />
 
       {/* Minimal eyebrow label, top-left */}

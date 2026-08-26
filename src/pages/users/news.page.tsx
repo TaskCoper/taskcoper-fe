@@ -33,7 +33,7 @@ export default function NewsPage() {
   return (
     <div className='h-full overflow-y-auto bg-background pb-12'>
       <div className='mx-auto w-full max-w-7xl space-y-12 px-4 py-8 md:px-6 lg:px-8'>
-        {/* Editorial masthead — minimal, no gradients */}
+        {/* Editorial masthead - minimal, no gradients */}
         <header className='border-b border-border pb-6'>
           <div className='flex items-center gap-2'>
             <span className='h-px w-8 bg-emerald-600' aria-hidden />
@@ -72,7 +72,7 @@ export default function NewsPage() {
           </div>
         </section>
 
-        {/* Newsletter — full-width split: editorial image left, signup right */}
+        {/* Newsletter - full-width split: editorial image left, signup right */}
         <section className='overflow-hidden rounded-xl border border-border bg-card'>
           <div className='grid lg:grid-cols-2'>
             <div className='relative aspect-video w-full overflow-hidden bg-muted lg:aspect-auto lg:min-h-75'>
@@ -137,7 +137,7 @@ export default function NewsPage() {
             </a>
           </div>
 
-          {/* Category filter — ghost pills, minimal */}
+          {/* Category filter - ghost pills, minimal */}
           <div className='-mx-1 flex flex-wrap gap-x-5 gap-y-2 px-1'>
             <button
               type='button'

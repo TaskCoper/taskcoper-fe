@@ -1,21 +1,17 @@
-import { calculateReorderPosition } from '@/shared/utils'
-import type { PinnedProduct, Product, ProductDetail } from './types'
+import type { Product, ProductDetail } from './types'
 
 /**
- * Position that appends `productId` after every *other* product currently pinned in a scope. Returns
- * `null` when there are no others (the sole pin can keep the server default). Shared by the single
- * pin flow and the multi-target pin manager so both compute the same clean, gapped positions and
- * avoid the duplicate-INITIAL_POSITION collisions that break ordering.
+ * Fold a string down to lowercase ASCII for local search matching. Vietnamese product names are
+ * routinely typed without tone marks ("hoa hong" for "hoa hồng"), so stripping the combining marks
+ * is what makes an in-page filter actually find things.
  */
-export function resolveAppendPosition(pinned: PinnedProduct[], productId: string): number | null {
-  const others = pinned.filter((product) => product.productId !== productId)
-  if (others.length === 0) return null
-
-  const sorted = [...others].sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-  return calculateReorderPosition(
-    sorted.map((product) => ({ position: product.position ?? 0 })),
-    sorted.length
-  )
+export function normalizeForSearch(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLowerCase()
+    .trim()
 }
 
 export const vndFormatter = new Intl.NumberFormat('vi-VN', {

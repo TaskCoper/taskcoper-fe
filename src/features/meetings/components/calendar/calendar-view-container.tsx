@@ -73,7 +73,7 @@ export default function CalendarViewContainer({
       const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 })
       return { activeFrom: weekStart.toISOString(), activeTo: weekEnd.toISOString() }
     }
-    // month — extend to cover full calendar grid (prev/next month days)
+    // month - extend to cover full calendar grid (prev/next month days)
     const monthStart = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 })
     const monthEnd = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 0 })
     return { activeFrom: monthStart.toISOString(), activeTo: monthEnd.toISOString() }

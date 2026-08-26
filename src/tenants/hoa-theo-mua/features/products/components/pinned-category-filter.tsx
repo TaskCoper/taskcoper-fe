@@ -1,35 +1,36 @@
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { LayoutGridIcon } from 'lucide-react'
-import CategoryTreePicker from '../../categories/components/category-tree-picker'
-import { useGetSortableCategories } from '../../categories/hooks/use-get-sortable-categories'
+import CategoryTreePicker, { type CategoryTreeLikeNode } from '../../categories/components/category-tree-picker'
 
 interface PinnedCategoryFilterProps {
+  t: TenantT
+  /**
+   * The category tree, passed in rather than fetched here - the board also reads it to resolve the
+   * storefront cut-off, and one shared query beats two.
+   */
+  categories: CategoryTreeLikeNode[]
+  isLoading?: boolean
   value: string | null
   onChange: (categoryId: string | null) => void
-  disabled?: boolean
 }
 
-export default function PinnedCategoryFilter({ value, onChange, disabled }: PinnedCategoryFilterProps) {
-  const { t } = useTenantTranslation()
-  const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories()
-
+/**
+ * Picks which pin list the board is editing. Each scope keeps its **own** independent list and
+ * ordering - the root option is the storefront homepage, not a union of every category's pins.
+ */
+export default function PinnedCategoryFilter({ t, categories, isLoading, value, onChange }: PinnedCategoryFilterProps) {
   return (
-    <div className='w-full max-w-xs space-y-1'>
-      <p className='text-sm font-medium'>{t('products.pinned.categoryFilter.label')}</p>
-
-      <CategoryTreePicker
-        categories={sortableCategories}
-        value={value}
-        onChange={onChange}
-        t={t}
-        disabled={disabled}
-        isLoading={isLoadingSortableCategories}
-        emptyLabel={t('products.pinned.categoryFilter.empty')}
-        rootOption={{
-          icon: <LayoutGridIcon className='size-4 shrink-0 text-muted-foreground' />,
-          label: t('products.pinned.categoryFilter.all')
-        }}
-      />
-    </div>
+    <CategoryTreePicker
+      categories={categories}
+      value={value}
+      onChange={onChange}
+      t={t}
+      isLoading={isLoading}
+      emptyLabel={t('products.pinned.categoryFilter.empty')}
+      rootOption={{
+        icon: <LayoutGridIcon className='size-4 shrink-0 text-muted-foreground' />,
+        label: t('products.pinned.categoryFilter.all')
+      }}
+    />
   )
 }

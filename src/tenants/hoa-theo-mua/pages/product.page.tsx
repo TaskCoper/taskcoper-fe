@@ -28,9 +28,10 @@ import { Link, useParams, useSearchParams } from 'react-router'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
-import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
 import { ComboSpecification } from '../features/products/combos/components/combo-specification'
+import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
 import { useUpdateComboPublication } from '../features/products/combos/hooks/use-update-combo-publication'
+import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
 import {
   ATTRIBUTE_OVERVIEW_FIELDS,
   BASIC_INFO_FIELDS,
@@ -49,7 +50,6 @@ import {
   VariantRow
 } from '../features/products/components/product-detail/parts'
 import { useGetProduct } from '../features/products/hooks/use-get-product'
-import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
 import { formatPrice, formatQuantity, parseNumber, productDetailToProduct } from '../features/products/utils'
 
 export default function ProductPage() {
@@ -76,9 +76,11 @@ export default function ProductPage() {
   const variants = fetchedDetail?.children?.map((child) => productDetailToProduct(child)) ?? []
   const isCombo = product?.productType?.trim().toLowerCase() === 'combo'
   const hasVariants = variants.length > 0
+  const areAllVariantsCombos =
+    hasVariants && variants.every((variant) => variant.productType?.trim().toLowerCase() === 'combo')
   const isVariant = Boolean(product?.parentProductId?.trim())
   const canEditFactor = isVariant
-  const canManageComboSpecification = isCombo || hasVariants
+  const canManageComboSpecification = isCombo || areAllVariantsCombos
   const canManageComboMaterials = !isVariant
   const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
 

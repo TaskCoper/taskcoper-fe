@@ -10,7 +10,7 @@ TaskCoper đang chuyển từ sản phẩm SaaS chung sang mô hình **B2B đa k
 
 - Chỉ được dùng một **subset** trong các module sản phẩm (vd: chỉ Task Management).
 - Có thể có thêm vài **tính năng tùy chỉnh** riêng cho họ.
-- Vẫn dùng **chung một codebase, chung một build pipeline** — không fork repo, không build riêng.
+- Vẫn dùng **chung một codebase, chung một build pipeline** - không fork repo, không build riêng.
 
 **Outcome:** một lớp feature flag có kiểu (typed), nguồn sự thật là `tenants.config.ts`. Mặc định = tất cả flag bật → khách hàng cũ không bị ảnh hưởng. Thêm khách hàng mới = thêm một entry vào registry. Có thể chuyển sang backend trong tương lai mà không phải sửa nơi khác.
 
@@ -55,7 +55,7 @@ src/layouts/
 
 ## 4. Ý nghĩa từng file
 
-### 4.1 `types.ts` — Khung dữ liệu
+### 4.1 `types.ts` - Khung dữ liệu
 
 ```ts
 export type ModuleKey = 'home' | 'taskManagement' | 'mentorNetworking' | 'meetings' | 'news'
@@ -71,9 +71,9 @@ export type FeatureKey = `module.${ModuleKey}` | `custom.${string}`
 ```
 
 - `FeatureKey` là **dot-path** thống nhất. Ví dụ: `'module.taskManagement'`, `'custom.quarterlyReport'`.
-- `custom` để mở (`Record<string, boolean>`) — thêm cờ không cần sửa type.
+- `custom` để mở (`Record<string, boolean>`) - thêm cờ không cần sửa type.
 
-### 4.2 `default.config.ts` — Khi không match tenant nào
+### 4.2 `default.config.ts` - Khi không match tenant nào
 
 ```ts
 export const DEFAULT_TENANT_CONFIG: TenantConfig = {
@@ -91,7 +91,7 @@ export const DEFAULT_TENANT_CONFIG: TenantConfig = {
 
 **Mặc định = tất cả flag bật** → không khách hàng nào bị thay đổi hành vi cho đến khi thêm entry vào registry.
 
-### 4.3 `tenants.config.ts` — Registry per-tenant
+### 4.3 `tenants.config.ts` - Registry per-tenant
 
 ```ts
 export const TENANT_CONFIGS: Record<string, Partial<TenantConfig>> = {
@@ -115,10 +115,10 @@ export const TENANT_CONFIGS: Record<string, Partial<TenantConfig>> = {
 ```
 
 - Khóa là `organizationId` (UUID).
-- Giá trị là `Partial<TenantConfig>` — chỉ ghi đè field nào khác default.
+- Giá trị là `Partial<TenantConfig>` - chỉ ghi đè field nào khác default.
 - **File này là nguồn sự thật duy nhất** cho cấu hình per-tenant. Đổi config = sửa file này, KHÔNG sửa nơi khác.
 
-### 4.4 `resolve-tenant-config.ts` — Logic merge
+### 4.4 `resolve-tenant-config.ts` - Logic merge
 
 ```ts
 export function resolveTenantConfig(organizationId: string | null | undefined): TenantConfig {
@@ -136,21 +136,21 @@ export function resolveTenantConfig(organizationId: string | null | undefined): 
 
 Cho `organizationId`, trả về `TenantConfig` đã merge đầy đủ.
 
-> **Migration tương lai:** khi backend muốn cầm flag, chỉ cần đổi thân hàm này thành React Query call `/v1/organization/{id}/feature-flags` — toàn bộ consumer (hook, guard, nav filter) giữ nguyên.
+> **Migration tương lai:** khi backend muốn cầm flag, chỉ cần đổi thân hàm này thành React Query call `/v1/organization/{id}/feature-flags` - toàn bộ consumer (hook, guard, nav filter) giữ nguyên.
 
-### 4.5 `use-feature-flags.ts` — Hooks và utilities
+### 4.5 `use-feature-flags.ts` - Hooks và utilities
 
 | Hàm / Hook                         | Mục đích                                                                          | Khi dùng                                              |
 | ---------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | `useTenantConfig()`                | Trả về `TenantConfig` đã resolve cho user hiện tại (dựa vào `useGetMe`)           | Khi cần đọc nhiều flag cùng lúc                       |
-| `useFeature(key)`                  | Bool — feature đó có bật không                                                    | Trong component, check 1 flag                         |
+| `useFeature(key)`                  | Bool - feature đó có bật không                                                    | Trong component, check 1 flag                         |
 | `useRoleHomePath()`                | Đích redirect post-auth (admin → role home cứng; user → `config.defaultLanding`)  | Trong guard `Navigate`                                |
-| `resolveFeatureCheck(config, key)` | Hàm thuần (không phải hook) — check feature trong một config có sẵn               | Dùng trong `.filter()`, `useMemo`, callback           |
-| `isFeatureEnabled(orgId, key)`     | Hàm thuần — check feature theo `orgId` trực tiếp (gọi `resolveTenantConfig` ngầm) | NGOÀI React (axios interceptor, zustand action, util) |
+| `resolveFeatureCheck(config, key)` | Hàm thuần (không phải hook) - check feature trong một config có sẵn               | Dùng trong `.filter()`, `useMemo`, callback           |
+| `isFeatureEnabled(orgId, key)`     | Hàm thuần - check feature theo `orgId` trực tiếp (gọi `resolveTenantConfig` ngầm) | NGOÀI React (axios interceptor, zustand action, util) |
 
 **Quy tắc:** trong component → ưu tiên `useFeature` hoặc `useTenantConfig`. Ngoài React → `isFeatureEnabled` / `resolveFeatureCheck`.
 
-### 4.6 `use-filtered-nav-items.ts` — Lọc nav dùng chung
+### 4.6 `use-filtered-nav-items.ts` - Lọc nav dùng chung
 
 ```ts
 export type GuardedNavItem = {
@@ -168,7 +168,7 @@ Hook lọc một mảng items theo `roles` (vai trò user) + `feature` (flag ten
 
 **Vì sao tách ra hook chung:** nếu để inline ở mỗi nơi, sửa luật visibility ở một bên mà quên bên kia → hai surface lệch nhau. Hook chung = một nơi sửa, hai nơi update đồng bộ.
 
-### 4.7 `redirect-loop.ts` — Phát hiện loop
+### 4.7 `redirect-loop.ts` - Phát hiện loop
 
 ```ts
 export function isRedirectLoop(currentPathname: string, target: string, source: string): boolean
@@ -181,13 +181,13 @@ Nếu `currentPathname === target`:
 
 Phòng trường hợp tenant config bị sai (vd `defaultLanding: '/projects'` mà `taskManagement: false`) gây loop redirect vô hạn → khoá trình duyệt.
 
-### 4.8 `feature-flag-guard.layout.tsx` — Route guards
+### 4.8 `feature-flag-guard.layout.tsx` - Route guards
 
 | Component                              | Vai trò                                                                                                                    |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `FeatureFlagGuardLayout({ requires })` | Bọc nhóm route. Nếu module tắt → redirect về `defaultLanding`. Có loop guard.                                              |
-| `TenantLandingRedirect`                | Component dùng cho catch-all `path: '*'` — redirect về `defaultLanding`. Có loop guard.                                    |
-| `TenantConfigLoading` _(nội bộ)_       | Loading overlay full-screen (`fixed inset-0 z-1000 bg-background`) trong lúc `useGetMe` đang resolve — chặn flash content. |
+| `TenantLandingRedirect`                | Component dùng cho catch-all `path: '*'` - redirect về `defaultLanding`. Có loop guard.                                    |
+| `TenantConfigLoading` _(nội bộ)_       | Loading overlay full-screen (`fixed inset-0 z-1000 bg-background`) trong lúc `useGetMe` đang resolve - chặn flash content. |
 
 ### 4.9 `auth-guard.layout.tsx` & `role-guard.layout.tsx`
 
@@ -233,7 +233,7 @@ URL bất kỳ
 │                    └─ Page component (hoặc redirect tiếp nếu defaultLanding cũng bị chặn)
 ```
 
-### 5.2 Ví dụ cụ thể — Khách hàng task-only truy cập `/news`
+### 5.2 Ví dụ cụ thể - Khách hàng task-only truy cập `/news`
 
 Tenant config: `news: false`, `taskManagement: true`, `defaultLanding: '/projects'`.
 
@@ -246,17 +246,17 @@ Tenant config: `news: false`, `taskManagement: true`, `defaultLanding: '/project
    - Return `<Navigate to='/projects' replace />`.
 4. Router chuyển sang `/projects`, render `ProjectsPage`. User KHÔNG kịp thấy `NewsPage`.
 
-### 5.3 Cold reload — Tránh flash content
+### 5.3 Cold reload - Tránh flash content
 
 Khi user hard refresh tại URL bị chặn:
 
 1. `useGetMe` đang fetch → chưa biết `organizationId` → config tạm là DEFAULT (mọi flag = true).
 2. Nếu guard chạy ngay → flag = true → render trang bị cấm.
-3. Khi `useGetMe` resolve, config flip → redirect — **flash content đã xảy ra rồi**.
+3. Khi `useGetMe` resolve, config flip → redirect - **flash content đã xảy ra rồi**.
 
 **Cách khắc phục:** `FeatureFlagGuardLayout` kiểm tra `isGettingMe`. Nếu đang loading → render `TenantConfigLoading` (overlay full-screen) thay vì trả `<Outlet />`. Component con không mount, không có flash.
 
-### 5.4 Loop guard — Misconfig safety net
+### 5.4 Loop guard - Misconfig safety net
 
 Nếu tenant config sai (vd `defaultLanding` trỏ vào module đã tắt):
 
@@ -269,7 +269,7 @@ User visit anywhere → blocked → Navigate to /projects
 `isRedirectLoop` chặn:
 
 1. So sánh `location.pathname` với `target`.
-2. Bằng nhau → `console.error('[feature-flags] Redirect loop detected — ...')` + return `true`.
+2. Bằng nhau → `console.error('[feature-flags] Redirect loop detected - ...')` + return `true`.
 3. Caller bail out, render `null`. Trình duyệt không bị treo.
 
 Dev mở console thấy lỗi → biết phải sửa `tenants.config.ts`.
@@ -303,11 +303,11 @@ Dev mở console thấy lỗi → biết phải sửa `tenants.config.ts`.
 
 ### 6.2 Thêm module mới (ví dụ `chat`)
 
-1. **types.ts** — thêm vào `ModuleKey`:
+1. **types.ts** - thêm vào `ModuleKey`:
    ```ts
    export type ModuleKey = '...' | 'chat'
    ```
-2. **default.config.ts** — thêm `chat: true` vào `modules`. (Default bật → tenant cũ không bị thay đổi.)
+2. **default.config.ts** - thêm `chat: true` vào `modules`. (Default bật → tenant cũ không bị thay đổi.)
 3. **Bọc route** trong `user.route.tsx`:
    ```tsx
    {
@@ -315,8 +315,8 @@ Dev mở console thấy lỗi → biết phải sửa `tenants.config.ts`.
      children: [ { path: 'chat', element: <ChatPage /> } ]
    }
    ```
-4. **Gắn vào nav** (sidebar / top-nav) — thêm `feature: 'module.chat'` vào item mới.
-5. **Cập nhật QA doc** `docs/feature-flags-test-cases.md` — thêm row B cho `/chat`.
+4. **Gắn vào nav** (sidebar / top-nav) - thêm `feature: 'module.chat'` vào item mới.
+5. **Cập nhật QA doc** `docs/feature-flags-test-cases.md` - thêm row B cho `/chat`.
 
 ### 6.3 Thêm custom flag
 
@@ -373,7 +373,7 @@ const navigations: TopNavItem[] = [
 ]
 ```
 
-`useFilteredNavItems` tự lọc — không phải đụng filter expression.
+`useFilteredNavItems` tự lọc - không phải đụng filter expression.
 
 ---
 
@@ -389,7 +389,7 @@ const navigations: TopNavItem[] = [
   - Đừng chọn User-only (`/applications`) nếu tenant chủ yếu Mentor.
   - Đừng chọn admin-only (`/dashboard`, `/manage`).
 - ❌ KHÔNG dùng `/sign-in`, `/sign-up`, `/verify-email`.
-- ❌ Tránh deep project paths (`/projects/<id>/<section>`) — phụ thuộc per-project permission của từng user.
+- ❌ Tránh deep project paths (`/projects/<id>/<section>`) - phụ thuộc per-project permission của từng user.
 - 🟢 Default an toàn: `/projects` (với `taskManagement: true`), `/` (với `home: true`), `/users/<self>` (luôn có quyền).
 
 ### 7.2 `logoUrl`
@@ -406,18 +406,18 @@ const navigations: TopNavItem[] = [
 ### 7.4 `custom`
 
 - Bật cờ KHÔNG tự bật tính năng. Phải có code `useFeature('custom.X')` đâu đó. Grep `useFeature('custom.X')` trước khi thêm cờ mới để chắc tên đúng.
-- Tên cờ là string thường — typo silently → `false`.
+- Tên cờ là string thường - typo silently → `false`.
 
 ### 7.5 Quy trình test
 
 - Chạy section A (default regression) + section B (tenant mới) trong `docs/feature-flags-test-cases.md`.
-- **Hard refresh** (clear cache) khi test cold-load — React Query cache có thể che bug flash.
+- **Hard refresh** (clear cache) khi test cold-load - React Query cache có thể che bug flash.
 - Mở DevTools console. Không được có `[feature-flags] Redirect loop detected` xuất hiện trong luồng bình thường (chỉ xuất hiện khi config sai).
 - Chạy `yarn check` (lint + i18n + tsc) trước khi merge.
 
 ---
 
-## 8. Loop protection — Tổng quan
+## 8. Loop protection - Tổng quan
 
 Mọi guard mà redirect đến tenant-derived path đều chạy qua `isRedirectLoop`:
 
@@ -441,7 +441,7 @@ Mọi guard mà redirect đến tenant-derived path đều chạy qua `isRedirec
 | --------------------------------------------------------- | ------------------------------------------------------------------------ |
 | `src/lib/feature-flags/types.ts`                          | Định nghĩa kiểu                                                          |
 | `src/lib/feature-flags/default.config.ts`                 | Config mặc định (all-on)                                                 |
-| `src/lib/feature-flags/tenants.config.ts`                 | **Registry — file bạn sửa khi onboard tenant**                           |
+| `src/lib/feature-flags/tenants.config.ts`                 | **Registry - file bạn sửa khi onboard tenant**                           |
 | `src/lib/feature-flags/resolve-tenant-config.ts`          | Merge default + override                                                 |
 | `src/lib/feature-flags/use-feature-flags.ts`              | Hooks chính                                                              |
 | `src/lib/feature-flags/use-filtered-nav-items.ts`         | Lọc nav (dùng chung sidebar + top-nav)                                   |
@@ -450,7 +450,7 @@ Mọi guard mà redirect đến tenant-derived path đều chạy qua `isRedirec
 | `src/layouts/feature-flag-guard.layout.tsx`               | `FeatureFlagGuardLayout`, `TenantLandingRedirect`, `TenantConfigLoading` |
 | `src/layouts/auth-guard.layout.tsx`                       | Auth gate (đã loop-guarded)                                              |
 | `src/layouts/role-guard.layout.tsx`                       | Role gate (đã loop-guarded)                                              |
-| `src/routes/user.route.tsx`                               | Route tree — nơi bọc các module bằng guard                               |
+| `src/routes/user.route.tsx`                               | Route tree - nơi bọc các module bằng guard                               |
 | `src/routes/public.route.tsx`                             | Public routes (gồm `/` gắn `module.home`)                                |
 | `src/components/sidebar/users/user-workspace-sidebar.tsx` | Sidebar workspace                                                        |
 | `src/layouts/user-default.layout.tsx`                     | Top-nav header                                                           |
@@ -461,7 +461,7 @@ Mọi guard mà redirect đến tenant-derived path đều chạy qua `isRedirec
 ## 10. FAQ ngắn
 
 **Q: Sao mình chọn registry post-login mà không phải subdomain hay build-time env?**
-A: Same codebase + same build pipeline là yêu cầu cứng → loại build-time env. Subdomain phải setup DNS/SSL cho từng tenant + phá axios cookie rewrite ở dev — overkill khi đã có `organizationId` sẵn trong JWT.
+A: Same codebase + same build pipeline là yêu cầu cứng → loại build-time env. Subdomain phải setup DNS/SSL cho từng tenant + phá axios cookie rewrite ở dev - overkill khi đã có `organizationId` sẵn trong JWT.
 
 **Q: Khách hàng mới có bị ảnh hưởng nếu chưa thêm vào registry?**
 A: Không. `organizationId` không match → dùng `DEFAULT_TENANT_CONFIG` = tất cả flag bật → hành vi như cũ.
@@ -470,10 +470,10 @@ A: Không. `organizationId` không match → dùng `DEFAULT_TENANT_CONFIG` = t�
 A: Trong component / hook → `useFeature`. Ngoài React (axios, zustand action, utility thuần) → `isFeatureEnabled`.
 
 **Q: Custom flag nhưng không thấy tác dụng?**
-A: Cờ chỉ bật trạng thái — code phải có `useFeature('custom.X')` để đọc. Grep tên cờ trước khi thêm.
+A: Cờ chỉ bật trạng thái - code phải có `useFeature('custom.X')` để đọc. Grep tên cờ trước khi thêm.
 
 **Q: User báo blank page, không loop, console có lỗi `[feature-flags] Redirect loop detected`?**
-A: Tenant config sai. Xem thông báo console — nó nói rõ guard nào trip + path nào loop. Sửa `defaultLanding` hoặc `logoUrl` trong `tenants.config.ts`.
+A: Tenant config sai. Xem thông báo console - nó nói rõ guard nào trip + path nào loop. Sửa `defaultLanding` hoặc `logoUrl` trong `tenants.config.ts`.
 
 **Q: Test xong rồi flag flicker khi đăng nhập?**
 A: Đảm bảo `FeatureFlagGuardLayout` đã `if (isGettingMe) return <TenantConfigLoading />`. Cold reload với cache trống để verify.

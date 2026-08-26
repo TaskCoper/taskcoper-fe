@@ -400,12 +400,81 @@
     },
     "pinned": {
       "title": "Sản phẩm ghim",
-      "description": "Kéo để sắp xếp lại thứ tự sản phẩm nổi bật trên gian hàng.",
+      "description": "Thêm sản phẩm và kéo để sắp xếp thứ tự hiển thị trên gian hàng.",
       "empty": "Chưa có sản phẩm nào được ghim.",
+      "emptyDescription": "Thêm sản phẩm để chúng hiển thị nổi bật trên gian hàng.",
+      "count": "Đã ghim {{count}} sản phẩm",
+      "filteredCount": "Hiển thị {{count}}/{{total}}",
+      "loadFailed": "Không tải được danh sách sản phẩm ghim.",
+      "retry": "Thử lại",
+      "searchPlaceholder": "Tìm trong danh sách đã ghim...",
+      "searchEmpty": "Không có sản phẩm ghim nào khớp với \"{{query}}\".",
+      "clearSearch": "Xóa tìm kiếm",
+      "dragDisabledWhileSearching": "Xóa tìm kiếm để kéo sắp xếp. Bạn vẫn có thể dùng menu ⋮ để chuyển vị trí.",
+      "dragHint": "Kéo thẻ bằng tay cầm ⠿, hoặc chọn tay cầm rồi nhấn Space và dùng phím mũi tên.",
+      "dragHandle": "Kéo để sắp xếp",
+      "positionBadge": "#{{position}}",
       "categoryFilter": {
-        "label": "Danh mục",
-        "all": "Tất cả (toàn cục)",
-        "empty": "Chưa có danh mục nào."
+        "label": "Phạm vi ghim",
+        "all": "Trang chủ (toàn cục)",
+        "empty": "Chưa có danh mục nào.",
+        "hintGlobal": "Đây là danh sách ghim của trang chủ. Chọn một danh mục để xem danh sách ghim riêng của danh mục đó.",
+        "hintCategory": "Danh sách ghim riêng của danh mục \"{{name}}\"."
+      },
+      "view": {
+        "grid": "Dạng lưới",
+        "list": "Dạng danh sách",
+        "label": "Kiểu hiển thị"
+      },
+      "fold": {
+        "label": "Giới hạn hiển thị trên gian hàng - {{count}} sản phẩm đầu tiên",
+        "below": "Sản phẩm bên dưới đường này sẽ không hiển thị trên gian hàng."
+      },
+      "card": {
+        "actions": "Thao tác với sản phẩm ghim",
+        "openProduct": "Mở trang sản phẩm"
+      },
+      "move": {
+        "top": "Đưa lên đầu",
+        "bottom": "Đưa xuống cuối",
+        "up": "Lên một vị trí",
+        "down": "Xuống một vị trí",
+        "toPosition": "Chuyển đến vị trí...",
+        "positionLabel": "Vị trí (1–{{max}})",
+        "apply": "Chuyển",
+        "invalid": "Nhập số từ 1 đến {{max}}."
+      },
+      "reorder": {
+        "failed": "Không lưu được thứ tự mới. Đã khôi phục thứ tự cũ."
+      },
+      "unpin": {
+        "action": "Bỏ ghim",
+        "success": "Đã bỏ ghim \"{{name}}\".",
+        "undo": "Hoàn tác",
+        "undone": "Đã ghim lại \"{{name}}\" về vị trí cũ.",
+        "undoFailed": "Không hoàn tác được. Vui lòng thử lại."
+      },
+      "add": {
+        "trigger": "Thêm sản phẩm",
+        "title": "Thêm sản phẩm ghim",
+        "descriptionGlobal": "Chọn sản phẩm để ghim lên trang chủ. Sản phẩm mới được thêm vào cuối danh sách.",
+        "descriptionCategory": "Chọn sản phẩm để ghim trong danh mục \"{{name}}\". Sản phẩm mới được thêm vào cuối danh sách.",
+        "searchPlaceholder": "Tìm theo tên hoặc mã sản phẩm...",
+        "sourceCategory": "Trong danh mục này",
+        "sourceAll": "Tất cả sản phẩm",
+        "sourceAllHint": "Sản phẩm chưa thuộc danh mục sẽ được thêm vào \"{{name}}\" trước khi ghim.",
+        "alreadyPinned": "Đã ghim",
+        "notInCategory": "Chưa thuộc danh mục",
+        "selectedCount": "Đã chọn {{count}}",
+        "clearSelection": "Bỏ chọn tất cả",
+        "noProducts": "Không tìm thấy sản phẩm nào.",
+        "endOfList": "Đã hiển thị toàn bộ {{count}} sản phẩm.",
+        "submit": "Ghim {{count}} sản phẩm",
+        "submitEmpty": "Ghim sản phẩm",
+        "success": "Đã ghim {{count}} sản phẩm.",
+        "partial": "Đã ghim {{succeeded}}/{{total}} sản phẩm, {{failed}} sản phẩm lỗi.",
+        "membershipFailed": "Không thêm được sản phẩm vào danh mục. Hãy gán danh mục cho sản phẩm rồi ghim lại.",
+        "limitReached": "Chỉ chọn tối đa {{count}} sản phẩm mỗi lần."
       }
     },
     "pinDialog": {
@@ -417,7 +486,10 @@
       "categoriesLabel": "Danh mục sản phẩm",
       "noCategories": "Sản phẩm chưa thuộc danh mục nào.",
       "apply": "Áp dụng",
-      "cancel": "Hủy"
+      "cancel": "Hủy",
+      "addCategory": "Ghim vào danh mục khác",
+      "addCategoryHint": "Chọn một danh mục chưa có sản phẩm này. Sản phẩm sẽ được thêm vào danh mục trước khi ghim.",
+      "willJoinCategory": "Sẽ thêm vào danh mục"
     },
     "common": {
       "noData": "Không có",
@@ -1142,15 +1214,15 @@
       "removeProduct": "Bỏ sản phẩm khỏi landing page",
       "searchPlaceholder": "Tìm theo tên hoặc mã sản phẩm",
       "noResults": "Không tìm thấy sản phẩm",
-      "moreResults": "Còn {{count}} sản phẩm khác — nhập từ khóa để lọc",
+      "moreResults": "Còn {{count}} sản phẩm khác - nhập từ khóa để lọc",
       "assignedElsewhere": "Đang thuộc landing page khác",
       "unknownProduct": "Sản phẩm không còn trong danh mục",
-      "missingUrl": "Chưa có đường dẫn — nhóm này sẽ không được lưu",
-      "missingProducts": "Chưa gán sản phẩm — nhóm này sẽ không được lưu",
+      "missingUrl": "Chưa có đường dẫn - nhóm này sẽ không được lưu",
+      "missingProducts": "Chưa gán sản phẩm - nhóm này sẽ không được lưu",
       "rawMode": "Chỉnh JSON",
       "visualMode": "Chỉnh trực quan",
       "rawHint": "Dạng { \"id sản phẩm\": \"đường dẫn landing page\" }",
-      "invalidJson": "JSON không hợp lệ — thay đổi chưa được áp dụng"
+      "invalidJson": "JSON không hợp lệ - thay đổi chưa được áp dụng"
     },
     "breadcrumb": "Quản lý cấu hình",
     "fallbackTitle": "Cấu hình",

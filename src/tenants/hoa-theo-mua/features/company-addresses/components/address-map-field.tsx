@@ -108,15 +108,15 @@ export default function AddressMapField({
           // timeout is distinguishable (on macOS, "unavailable" usually means
           // Location Services is off for the browser in System Settings).
           console.warn('[geolocation] failed', { code: error.code, message: error.message })
-          // POSITION_UNAVAILABLE means the OS provider couldn't get a fix — the
+          // POSITION_UNAVAILABLE means the OS provider couldn't get a fix - the
           // browser message is usually empty/cryptic, so give an actionable hint.
           const description =
             error.code === error.POSITION_UNAVAILABLE
-              ? 'Location unavailable — check Location Services and Wi‑Fi are on.'
+              ? 'Location unavailable - check Location Services and Wi‑Fi are on.'
               : error.message || undefined
           toast.error(locationErrorLabel, { description })
         },
-        // Allow a recent cached fix and a longer window — high-accuracy on a
+        // Allow a recent cached fix and a longer window - high-accuracy on a
         // desktop can be slow, and a coarse position is fine as a starting pin.
         { enableHighAccuracy: highAccuracy, timeout: 15000, maximumAge: 60000 }
       )
@@ -158,7 +158,7 @@ export default function AddressMapField({
               onPick={handlePick}
               anchorLatitude={anchorLatitude}
               anchorLongitude={anchorLongitude}
-              // TODO: temporarily disabled — pass `maxDistanceMeters={500}` to re-enable the pin radius limit.
+              // TODO: temporarily disabled - pass `maxDistanceMeters={500}` to re-enable the pin radius limit.
               maxDistanceMeters={undefined}
               onReject={handleReject}
             />

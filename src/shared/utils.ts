@@ -242,3 +242,60 @@ export const getPlainTextFromHtml = (value: string | null): string => {
 
   return value.replace(/<[^>]*>/g, ' ')
 }
+
+/**
+ * Chạy `task` cho từng item nhưng giới hạn số lượng task chạy cùng lúc.
+ *
+ * - Không vượt quá `limit` task concurrent.
+ * - Một item fail không làm dừng các item còn lại.
+ * - Kết quả trả về theo đúng thứ tự của `items`.
+ * - Mỗi kết quả có format giống `Promise.allSettled`.
+ */
+export async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  task: (item: T, index: number) => Promise<R>
+): Promise<PromiseSettledResult<R>[]> {
+  // Tạo sẵn mảng kết quả với cùng số lượng phần tử như `items`.
+  // Mỗi worker sẽ ghi kết quả vào đúng index của item tương ứng.
+  const results = new Array<PromiseSettledResult<R>>(items.length)
+
+  // Index của item tiếp theo chưa được xử lý.
+  // Các worker sẽ cùng dùng cursor này để lấy việc tiếp theo.
+  let cursor = 0
+
+  // Mỗi worker liên tục lấy item tiếp theo và xử lý cho tới khi không còn item nào.
+  const worker = async () => {
+    while (cursor < items.length) {
+      // Lấy index hiện tại, sau đó tăng cursor để worker khác có thể lấy item tiếp theo.
+      const index = cursor++
+
+      try {
+        // Chạy task cho item hiện tại.
+        // Nếu thành công, lưu kết quả vào đúng vị trí ban đầu.
+        results[index] = {
+          status: 'fulfilled',
+          value: await task(items[index], index)
+        }
+      } catch (reason) {
+        // Nếu task fail, lưu lỗi lại thay vì throw,
+        // để worker tiếp tục xử lý các item còn lại.
+        results[index] = {
+          status: 'rejected',
+          reason
+        }
+      }
+    }
+  }
+
+  // Số worker tối đa bằng `limit`, nhưng không cần nhiều worker hơn số lượng item.
+  // Math.max(1, ...) đảm bảo luôn tạo ít nhất 1 worker.
+  const workerCount = Math.max(1, Math.min(limit, items.length))
+
+  // Chạy tất cả worker song song.
+  // Mỗi worker tự lấy item tiếp theo thông qua `cursor`.
+  await Promise.all(Array.from({ length: workerCount }, worker))
+
+  // Trả về kết quả theo đúng thứ tự của `items`.
+  return results
+}

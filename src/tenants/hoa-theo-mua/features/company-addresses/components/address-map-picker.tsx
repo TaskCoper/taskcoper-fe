@@ -233,7 +233,7 @@ export default function AddressMapPicker({
 
     return () => {
       // Defer teardown one macrotask. StrictMode's remount above runs first and
-      // cancels this, so the map is only really destroyed on a genuine unmount —
+      // cancels this, so the map is only really destroyed on a genuine unmount -
       // by which point its style has loaded and remove() aborts nothing.
       teardownTimerRef.current = window.setTimeout(() => {
         teardownTimerRef.current = null
@@ -241,7 +241,7 @@ export default function AddressMapPicker({
           markerRef.current?.remove()
           mapRef.current?.remove()
         } catch {
-          // Benign teardown races — safe to ignore.
+          // Benign teardown races - safe to ignore.
         }
         mapRef.current = null
         markerRef.current = null

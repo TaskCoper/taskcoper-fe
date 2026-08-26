@@ -43,13 +43,12 @@ function isProductPinned(product: Product) {
 export const getProductColumns = ({
   t,
   onTogglePin,
-  pinningProductId,
-  isTogglingPin
+  pinningProductId
 }: {
   t: TenantT
   onTogglePin: (product: Product) => void
+  /** The one row whose pin batch is in flight - see `useUpdatingProductPinId`. */
   pinningProductId?: string | null
-  isTogglingPin?: boolean
 }): ColumnDef<Product>[] => {
   const moneyColumn = (id: string, field: keyof Product): ColumnDef<Product> => ({
     id,
@@ -201,8 +200,8 @@ export const getProductColumns = ({
           <Button
             variant='ghost'
             className='size-8 p-0'
-            // Disable every row's toggle while any pin/move is in flight; only the active row spins.
-            disabled={isTogglingPin}
+            // Per-row only: locking the whole column while one product writes made the table feel frozen.
+            disabled={isPinning}
             aria-pressed={isPin}
             aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
             title={isPin ? t('products.action.unpin') : t('products.action.pin')}

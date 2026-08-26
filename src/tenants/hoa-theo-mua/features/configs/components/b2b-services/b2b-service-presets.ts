@@ -20,13 +20,13 @@ export const B2B_SERVICE_PRESETS: Record<B2BServiceSlug, B2BServiceDetail> = {
         en: 'OUTSOURCED FLORAL DEPARTMENT'
       },
       description: {
-        vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP — vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
-        en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms — operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
+        vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP - vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
+        en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms - operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
       }
     },
     lede: {
-      vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP — vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
-      en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms — operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
+      vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP - vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
+      en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms - operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
     },
     seo: {
       metaTitle: {
@@ -34,8 +34,8 @@ export const B2B_SERVICE_PRESETS: Record<B2BServiceSlug, B2BServiceDetail> = {
         en: 'OUTSOURCED FLORAL DEPARTMENT'
       },
       metaDescription: {
-        vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP — vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
-        en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms — operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
+        vi: 'Giải pháp outsource toàn bộ vận hành hoa cho khách sạn 4–5 sao chuẩn quốc tế: từ sảnh, nhà hàng đến phòng khách VIP - vận hành như một phòng hoa nội bộ, không cần khách sạn tự duy trì nhân sự florist.',
+        en: 'A solution to outsource all floral operations for international-standard 4–5 star hotels: from the lobby and restaurants to VIP guest rooms - operating like an in-house floral department, without the hotel needing to maintain its own florist staff.'
       },
       keywords: {
         vi: '',

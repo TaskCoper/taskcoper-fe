@@ -28,7 +28,7 @@ export default function DurationMinutesInput({
   const [text, setText] = useState(() => toText(value))
 
   // Re-sync local text when the underlying (seconds) value changes from outside
-  // this input — e.g. after a save or a form reset — without clobbering in-progress typing.
+  // this input - e.g. after a save or a form reset - without clobbering in-progress typing.
   if (value !== prevValue) {
     setPrevValue(value)
     setText(toText(value))

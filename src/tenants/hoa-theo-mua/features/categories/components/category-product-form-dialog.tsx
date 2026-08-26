@@ -33,10 +33,10 @@ interface CategoryProductFormDialogProps {
   open: boolean
   methods: UseFormReturn<CategoryProductFormValues>
   parentCategories: CategoryTreeLikeNode[]
-  /** On edit, the category being edited and all its descendants — a category can't parent itself or a descendant. */
+  /** On edit, the category being edited and all its descendants - a category can't parent itself or a descendant. */
   excludeParentIds?: Set<string>
   isSubmitting: boolean
-  /** True while the category detail is being fetched for edit — renders a skeleton instead of stale/default field values. */
+  /** True while the category detail is being fetched for edit - renders a skeleton instead of stale/default field values. */
   isLoading?: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: SubmitHandler<CategoryProductFormValues>

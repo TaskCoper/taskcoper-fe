@@ -220,7 +220,7 @@ export const getCategoryColumns = ({
     //     />
     //   ),
     //   cell: ({ row }) => {
-    //     // productCount is only populated by the detail endpoint, not the list (§4.1) — hide when unknown.
+    //     // productCount is only populated by the detail endpoint, not the list (§4.1) - hide when unknown.
     //     const count = row.original.productCount
     //     return <p className='text-center text-sm tabular-nums text-muted-foreground'>{count == null ? '0' : count}</p>
     //   },

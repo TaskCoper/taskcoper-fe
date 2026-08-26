@@ -55,7 +55,7 @@ const renderCurrency = (value: number | null, t: TenantT) => {
   return <p className='text-right tabular-nums'>{vndFormatter.format(value)}</p>
 }
 
-// Profit can be negative — tint accordingly so losses stand out.
+// Profit can be negative - tint accordingly so losses stand out.
 const renderProfit = (value: number | null, t: TenantT) => {
   if (value == null) return <div className='text-right'>{renderNoData(t)}</div>
 

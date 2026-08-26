@@ -1,7 +1,7 @@
 /**
  * The visible rectangle of a source image, as percentages (0..100) of its natural size.
  * Matches react-easy-crop's `croppedAreaPercentages` shape, so a saved framing round-trips
- * through `initialCroppedAreaPercentages` without conversion. Presentation only — the asset itself
+ * through `initialCroppedAreaPercentages` without conversion. Presentation only - the asset itself
  * is never modified.
  */
 export type ImageViewport = {

@@ -358,7 +358,7 @@ export default function OrderPage() {
       toast.success(t('orders.copyOrderId.success'))
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
-      /* clipboard unavailable — silently ignore */
+      /* clipboard unavailable - silently ignore */
     }
   }
 

@@ -4,7 +4,7 @@ import productService from '../services'
 import type { ProductDetail } from '../types'
 
 /**
- * Resolves an arbitrary set of product ids to their details — for screens that hold ids (config
+ * Resolves an arbitrary set of product ids to their details - for screens that hold ids (config
  * payloads, imports) and need names/images to show. Each id reuses the same cache entry as
  * `useGetProduct`, so ids already visited elsewhere resolve without another request, and an id whose
  * product was deleted simply stays unresolved instead of failing the batch.

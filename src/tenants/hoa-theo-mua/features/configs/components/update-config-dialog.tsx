@@ -184,7 +184,7 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
         </div>
 
         <DialogFooter className='border-t px-6 py-4'>
-          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+          {/* Config deletion is temporarily disabled for safety - the button stays visible but inert. */}
           <Tooltip>
             <TooltipTrigger asChild>
               <span className='mr-auto inline-flex'>

@@ -15,7 +15,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { PRODUCT_COLLECTION_IMAGE_ASPECT, slugify } from '../product-collection-palette'
 import type { ProductCollectionFormValues } from '../validations'
 import { ChipInput, LocalizedTabs } from './collection-shared'
-// Campaign UI temporarily disabled — see the commented section at the bottom of this file.
+// Campaign UI temporarily disabled - see the commented section at the bottom of this file.
 // import ProductCollectionCampaignsSection from './product-collection-campaigns-section'
 
 type Lang = 'vi' | 'en'

@@ -219,7 +219,7 @@ export interface Product {
 }
 
 /**
- * Slim product shape returned by GET /products-pin — the pinned storefront list.
+ * Slim product shape returned by GET /products-pin - the pinned storefront list.
  * Distinct from the full catalog `Product` row: prices arrive already parsed as numbers
  * and it carries an explicit sort `position`.
  */

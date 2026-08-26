@@ -513,8 +513,8 @@ export const promotionPopupFormSchema = (t: TenantT) =>
       items: z.array(promotionCampaignFormSchema)
     })
     .superRefine((data, ctx) => {
-      // A bad pattern can't be reported by the storefront — it just silently changes where
-      // the popup appears — so it is caught here instead.
+      // A bad pattern can't be reported by the storefront - it just silently changes where
+      // the popup appears - so it is caught here instead.
       const invalidSectionPattern = data.section.pages.find((pattern) => !isValidPagePattern(pattern))
       if (invalidSectionPattern) {
         ctx.addIssue({

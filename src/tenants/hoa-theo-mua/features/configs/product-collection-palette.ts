@@ -24,7 +24,7 @@ export const PRODUCT_COLLECTION_IMAGE_ASPECT = 4 / 5
 export const PRODUCT_COLLECTION_GROUP = 'products'
 export const PRODUCT_COLLECTION_KEY_PREFIX = `${PRODUCT_COLLECTION_GROUP}.`
 
-// `products.signature` is plain json content, not a collection — it stays on the
+// `products.signature` is plain json content, not a collection - it stays on the
 // generic JSON editor rather than the collection dialog.
 const PRODUCT_NON_COLLECTION_KEYS = new Set([`${PRODUCT_COLLECTION_KEY_PREFIX}signature`])
 

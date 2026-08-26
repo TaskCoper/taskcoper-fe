@@ -385,7 +385,7 @@ export default function FeedbacksCollectionDialog({ open, onClose, existingConfi
         </div>
 
         <DialogFooter className='border-t px-6 py-4'>
-          {/* Config deletion is temporarily disabled for safety — the button stays visible but inert. */}
+          {/* Config deletion is temporarily disabled for safety - the button stays visible but inert. */}
           {existingConfig && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -701,7 +701,7 @@ function ItemRow({
             <FieldDescription className='text-xs'>{t('configsPage.feedbacksDialog.item.imageHelp')}</FieldDescription>
           </div>
 
-          {/* Right column — text + filters */}
+          {/* Right column - text + filters */}
           <div className='space-y-4'>
             <div className='grid grid-cols-1 gap-3 md:grid-cols-2'>
               <Field className='gap-1'>
