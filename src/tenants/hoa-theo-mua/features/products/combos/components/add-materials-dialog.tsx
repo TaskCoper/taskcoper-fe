@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -22,10 +23,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { ListFilterIcon, PlusIcon, SearchIcon } from 'lucide-react'
+import { ListFilterIcon, PlusIcon, SearchIcon, TriangleAlertIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
 import type { ComboMaterial, MaterialOption, MaterialProductLabel } from '../types'
+import { createComboMaterialsSchema, type ComboMaterialsFormValues } from '../validations'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
 import { SelectedMaterialCard } from './selected-material-card'
@@ -33,6 +36,7 @@ import type { MaterialDraft } from './selected-material-card'
 
 const MAX_COMBO_MATERIALS = 15
 const MATERIALS_PAGE_SIZE = 10
+type MaterialRoleTab = 'core' | 'support'
 
 export function AddMaterialsDialog({
   open,
@@ -49,68 +53,136 @@ export function AddMaterialsDialog({
 }) {
   const [search, setSearch] = useState('')
   const [productLabel, setProductLabel] = useState<MaterialProductLabel>()
-  const [drafts, setDrafts] = useState<MaterialDraft[]>([])
-  const [materialsPage, setMaterialsPage] = useState(1)
+  const [selectedMaterialDetails, setSelectedMaterialDetails] = useState<Record<string, MaterialOption>>({})
+  const [materialsPageIndex, setMaterialsPageIndex] = useState(1)
+  const [activeRoleTab, setActiveRoleTab] = useState<MaterialRoleTab>('core')
   const [debouncedSearch] = useDebounce(search.trim(), 500)
-  const { materials, isGettingMaterials } = useGetMaterials({
+  const materialsSchema = useMemo(() => createComboMaterialsSchema(t), [t])
+  const materialsForm = useForm<ComboMaterialsFormValues>({
+    resolver: zodResolver(materialsSchema),
+    defaultValues: { items: [] },
+    mode: 'onChange'
+  })
+  const {
+    fields: materialFields,
+    append: appendMaterial,
+    remove: removeMaterial
+  } = useFieldArray({
+    control: materialsForm.control,
+    name: 'items'
+  })
+  const selectedItems = useWatch({ control: materialsForm.control, name: 'items' })
+  const drafts = useMemo<MaterialDraft[]>(
+    () =>
+      selectedItems.map((item) => {
+        const material = selectedMaterialDetails[item.matId]
+
+        return {
+          ...item,
+          materialCode: material?.materialCode ?? '',
+          materialName: material?.materialName ?? item.matId,
+          coverImage: material?.coverImage,
+          unit: material?.unit ?? null
+        }
+      }),
+    [selectedItems, selectedMaterialDetails]
+  )
+  const quantityErrors = Object.fromEntries(
+    materialFields.map((field, index) => [
+      field.matId,
+      materialsForm.formState.errors.items?.[index]?.quantity?.message
+    ])
+  )
+  const existingMaterialIds = useMemo(
+    () => existingMaterials.map((material) => material.materialId),
+    [existingMaterials]
+  )
+  const {
+    materialsPage: materialsResult,
+    materials,
+    isGettingMaterials
+  } = useGetMaterials({
     search: debouncedSearch || undefined,
     productLabel,
+    excludeIds: existingMaterialIds,
+    pageIndex: materialsPageIndex,
+    pageSize: MATERIALS_PAGE_SIZE,
     enabled: open
   })
   const { addComboSpecificationItems, isAddingComboSpecificationItems } = useAddComboSpecificationItems()
-  const existingIds = useMemo(
-    () => new Set(existingMaterials.map((material) => material.materialId)),
-    [existingMaterials]
-  )
-  const selectableMaterials = materials.filter((material) => !existingIds.has(material.materialId))
-  const totalPages = Math.ceil(selectableMaterials.length / MATERIALS_PAGE_SIZE)
-  const currentMaterialsPage = Math.min(materialsPage, Math.max(totalPages, 1))
-  const paginatedMaterials = selectableMaterials.slice(
-    (currentMaterialsPage - 1) * MATERIALS_PAGE_SIZE,
-    currentMaterialsPage * MATERIALS_PAGE_SIZE
-  )
+  const totalPages = Math.ceil((materialsResult?.totalCount ?? 0) / (materialsResult?.pageSize || MATERIALS_PAGE_SIZE))
+  const currentMaterialsPage = Math.min(materialsPageIndex, Math.max(totalPages, 1))
   const coreDrafts = drafts.filter((draft) => draft.isCore)
   const supportDrafts = drafts.filter((draft) => !draft.isCore)
-  const selectedMaterialCount = drafts.length
+  const selectedMaterialCount = drafts.length + existingMaterials.length
 
   const toggleMaterial = (material: MaterialOption, checked: boolean) => {
-    setDrafts((current) =>
-      checked
-        ? current.some((draft) => draft.matId === material.materialId)
-          ? current
-          : [
-              ...current,
-              {
-                matId: material.materialId,
-                materialCode: material.materialCode,
-                materialName: material.materialName,
-                coverImage: material.coverImage,
-                unit: material.unit,
-                quantity: 1,
-                isCore: true,
-                isActive: true
-              }
-            ]
-        : current.filter((draft) => draft.matId !== material.materialId)
-    )
+    const index = selectedItems.findIndex((item) => item.matId === material.materialId)
+
+    if (checked) {
+      if (index >= 0) return
+
+      setSelectedMaterialDetails((current) => ({ ...current, [material.materialId]: material }))
+      appendMaterial({
+        matId: material.materialId,
+        quantity: 1,
+        isCore: activeRoleTab === 'core',
+        isActive: true
+      })
+      return
+    }
+
+    if (index < 0) return
+    removeMaterial(index)
+    setSelectedMaterialDetails((current) => {
+      const next = { ...current }
+      delete next[material.materialId]
+      return next
+    })
   }
-  const removeDraft = (matId: string) => setDrafts((current) => current.filter((draft) => draft.matId !== matId))
-  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) =>
-    setDrafts((current) => current.map((draft) => (draft.matId === matId ? { ...draft, ...updates } : draft)))
+  const removeDraft = (matId: string) => {
+    const index = selectedItems.findIndex((item) => item.matId === matId)
+    if (index < 0) return
+
+    removeMaterial(index)
+    setSelectedMaterialDetails((current) => {
+      const next = { ...current }
+      delete next[matId]
+      return next
+    })
+  }
+  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) => {
+    const index = selectedItems.findIndex((item) => item.matId === matId)
+    if (index < 0) return
+
+    if ('quantity' in updates) {
+      materialsForm.setValue(`items.${index}.quantity`, updates.quantity ?? Number.NaN, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+    }
+    if ('isCore' in updates) {
+      materialsForm.setValue(`items.${index}.isCore`, updates.isCore ?? false, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+    }
+  }
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && !isAddingComboSpecificationItems) {
-      setDrafts([])
+      materialsForm.reset({ items: [] })
+      setSelectedMaterialDetails({})
       setSearch('')
       setProductLabel(undefined)
-      setMaterialsPage(1)
+      setMaterialsPageIndex(1)
+      setActiveRoleTab('core')
     }
     onOpenChange(nextOpen)
   }
-  const handleSave = async () => {
-    if (drafts.length === 0 || drafts.some((draft) => !Number.isFinite(draft.quantity) || draft.quantity <= 0)) return
+  const handleSave = async ({ items }: ComboMaterialsFormValues) => {
     await addComboSpecificationItems({
       comboId,
-      body: { items: drafts.map(({ matId, quantity, isCore, isActive }) => ({ matId, quantity, isCore, isActive })) }
+      body: { items }
     })
     handleOpenChange(false)
   }
@@ -122,7 +194,7 @@ export function AddMaterialsDialog({
           <DialogTitle>{t('products.detail.comboSpecification.addTitle')}</DialogTitle>
           <DialogDescription>{t('products.detail.comboSpecification.addDescription')}</DialogDescription>
         </DialogHeader>
-        <div className='grid h-[75vh] min-h-0 items-stretch gap-4 md:grid-cols-2'>
+        <div className='grid min-h-[45vh] max-h-[75vh] items-stretch gap-4 md:grid-cols-2'>
           <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
             <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.availableMaterials')}</h3>
             <div className='flex gap-2'>
@@ -132,31 +204,32 @@ export function AddMaterialsDialog({
                   value={search}
                   onChange={(event) => {
                     setSearch(event.target.value)
-                    setMaterialsPage(1)
+                    setMaterialsPageIndex(1)
                   }}
                   placeholder={t('products.detail.comboSpecification.searchMaterial')}
                   className='pl-9'
                 />
               </div>
               <Select
-                value={productLabel ?? ''}
+                value={productLabel ?? 'all'}
                 onValueChange={(value) => {
                   if (value === 'all') {
                     setProductLabel(undefined)
-                    setMaterialsPage(1)
+                    setMaterialsPageIndex(1)
                     return
                   }
                   if (value !== 'Thành phần' && value !== 'Phụ liệu') return
                   setProductLabel(value)
-                  setMaterialsPage(1)
+                  setMaterialsPageIndex(1)
                 }}
               >
                 <SelectTrigger
-                  className='w-38 shrink-0'
+                  className='w-38 shrink-0 justify-start'
                   aria-label={t('products.detail.comboSpecification.materialTypeFilter')}
                 >
                   <ListFilterIcon />
                   <SelectValue placeholder={t('products.detail.comboSpecification.materialTypePlaceholder')} />
+                  <div className='flex-1' />
                 </SelectTrigger>
                 <SelectContent align='end'>
                   <SelectItem value='all'>{t('products.detail.comboSpecification.allMaterialTypes')}</SelectItem>
@@ -176,28 +249,34 @@ export function AddMaterialsDialog({
                     <Skeleton key={row} className='h-12 w-full' />
                   ))}
                 </div>
-              ) : selectableMaterials.length === 0 ? (
+              ) : materials.length === 0 ? (
                 <div className='py-8 text-center text-sm text-muted-foreground'>
                   {t('products.detail.comboSpecification.noMaterials')}
                 </div>
               ) : (
-                paginatedMaterials.map((material) => (
+                materials.map((material) => (
                   <label
                     key={material.materialId}
                     className='flex cursor-pointer items-center gap-3 border-b p-3 last:border-b-0'
                   >
                     <Checkbox
-                      checked={drafts.some((draft) => draft.matId === material.materialId)}
+                      checked={selectedItems.some((item) => item.matId === material.materialId)}
                       onCheckedChange={(checked) => toggleMaterial(material, checked === true)}
                       aria-label={material.materialName}
                     />
-                    <MaterialImage
-                      src={material.coverImage}
-                      alt={material.materialName}
-                      emptyLabel={t('products.common.noData')}
-                    />
+                    <MaterialImage src={material.coverImage} alt={material.materialName} />
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium'>{material.materialName}</p>
+                      <div className='flex justify-between items-center gap-2'>
+                        <p className='min-w-0 truncate text-sm font-medium'>{material.materialName}</p>
+                        {material.availableForSale === 0 && (
+                          <Badge
+                            variant='outline'
+                            className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+                          >
+                            {t('products.detail.outOfStock')}
+                          </Badge>
+                        )}
+                      </div>
                       <p className='truncate text-xs text-muted-foreground'>
                         {material.materialCode} · {material.unit || t('products.common.noData')} ·{' '}
                         {t('products.detail.comboSpecification.stock')}:{' '}
@@ -221,7 +300,7 @@ export function AddMaterialsDialog({
                       }
                       onClick={(event) => {
                         event.preventDefault()
-                        setMaterialsPage((current) => Math.max(1, current - 1))
+                        setMaterialsPageIndex((current) => Math.max(1, current - 1))
                       }}
                     />
                   </PaginationItem>
@@ -233,7 +312,7 @@ export function AddMaterialsDialog({
                         aria-label={`Go to page ${page}`}
                         onClick={(event) => {
                           event.preventDefault()
-                          if (!isGettingMaterials) setMaterialsPage(page)
+                          if (!isGettingMaterials) setMaterialsPageIndex(page)
                         }}
                       >
                         {page}
@@ -252,7 +331,7 @@ export function AddMaterialsDialog({
                       }
                       onClick={(event) => {
                         event.preventDefault()
-                        setMaterialsPage((current) => Math.min(totalPages, current + 1))
+                        setMaterialsPageIndex((current) => Math.min(totalPages, current + 1))
                       }}
                     />
                   </PaginationItem>
@@ -261,16 +340,28 @@ export function AddMaterialsDialog({
             )}
           </section>
           <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
-            <div className='flex items-center justify-between '>
+            <div className='flex items-center justify-between'>
               <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.selectedMaterials')}</h3>
               <Badge variant='outline'>{selectedMaterialCount}</Badge>
             </div>
             {selectedMaterialCount >= MAX_COMBO_MATERIALS && (
-              <p className='text-xs font-light text-amber-500'>
-                {t('products.detail.comboSpecification.materialLimitWarning', { count: MAX_COMBO_MATERIALS })}
-              </p>
+              <div
+                role='alert'
+                className='flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+              >
+                <TriangleAlertIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
+                <p className='text-xs font-medium leading-relaxed'>
+                  {t('products.detail.comboSpecification.materialLimitWarning', { count: MAX_COMBO_MATERIALS })}
+                </p>
+              </div>
             )}
-            <Tabs defaultValue='core' className='min-h-0 flex-1'>
+            <Tabs
+              value={activeRoleTab}
+              onValueChange={(value) => {
+                if (value === 'core' || value === 'support') setActiveRoleTab(value)
+              }}
+              className='min-h-0 flex-1'
+            >
               <TabsList className='w-full'>
                 <TabsTrigger value='core'>
                   {t('products.detail.comboSpecification.core')} ({coreDrafts.length})
@@ -291,6 +382,7 @@ export function AddMaterialsDialog({
                     drafts={coreDrafts}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
+                    quantityErrors={quantityErrors}
                     t={t}
                   />
                 )}
@@ -307,6 +399,7 @@ export function AddMaterialsDialog({
                     drafts={supportDrafts}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
+                    quantityErrors={quantityErrors}
                     t={t}
                   />
                 )}
@@ -325,7 +418,7 @@ export function AddMaterialsDialog({
           </Button>
           <Button
             type='button'
-            onClick={() => void handleSave()}
+            onClick={() => void materialsForm.handleSubmit(handleSave)()}
             disabled={drafts.length === 0 || isAddingComboSpecificationItems}
           >
             <PlusIcon data-icon='inline-start' />
@@ -340,11 +433,10 @@ export function AddMaterialsDialog({
 }
 
 function DraftGroup({
-  title,
-  isCore,
   drafts,
   onRemove,
   onUpdate,
+  quantityErrors,
   t
 }: {
   title: string
@@ -352,25 +444,24 @@ function DraftGroup({
   drafts: MaterialDraft[]
   onRemove: (matId: string) => void
   onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
+  quantityErrors: Record<string, string | undefined>
   t: TenantT
 }) {
   return (
     <div className='rounded-lg p-3'>
-      <h4
-        className={`mb-3 rounded-md border px-2 py-1 text-xs font-semibold ${
-          isCore
-            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-            : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
-        }`}
-      >
-        {title}
-      </h4>
       <div className='space-y-3'>
         {drafts.length === 0 ? (
           <p className='text-xs text-muted-foreground'>{t('products.detail.comboSpecification.noSelectedMaterials')}</p>
         ) : (
           drafts.map((draft) => (
-            <SelectedMaterialCard key={draft.matId} draft={draft} onRemove={onRemove} onUpdate={onUpdate} t={t} />
+            <SelectedMaterialCard
+              key={draft.matId}
+              draft={draft}
+              quantityError={quantityErrors[draft.matId]}
+              onRemove={onRemove}
+              onUpdate={onUpdate}
+              t={t}
+            />
           ))
         )}
       </div>
@@ -378,14 +469,10 @@ function DraftGroup({
   )
 }
 
-function MaterialImage({ src, alt, emptyLabel }: { src?: string | null; alt: string; emptyLabel: string }) {
+function MaterialImage({ src, alt }: { src?: string | null; alt: string }) {
   return (
     <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-      {src ? (
-        <img src={src} alt={alt} className='size-full object-cover' />
-      ) : (
-        <span className='text-xs text-muted-foreground'>{emptyLabel}</span>
-      )}
+      <img src={src || '/images/placeholder-cover.png'} alt={alt} className='size-full object-cover' />
     </div>
   )
 }

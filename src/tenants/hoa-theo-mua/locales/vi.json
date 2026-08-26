@@ -394,10 +394,6 @@
     }
   },
   "products": {
-    "categoryNames": {
-      "villa": "Biệt thự",
-      "thatchedHouse": "Nhà lá"
-    },
     "list": {
       "title": "Sản phẩm",
       "description": "Xem và quản lý danh mục sản phẩm đã đồng bộ từ Nhanh.vn."
@@ -583,7 +579,9 @@
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
         "factorHint": "Chỉ số phải lớn hơn 0",
+        "quantityHint": "Định lượng phải là số lớn hơn 0",
         "factorUnconfigured": "Chưa cấu hình kích thước",
+        "factorPlaceholder": "Chưa cấu hình",
         "unconfigured": "Chưa cấu hình",
         "publicationStatus": "Trạng thái",
         "published": "Mở bán",
@@ -596,6 +594,7 @@
         "saveChanges": "Lưu thay đổi",
         "unit": "Đơn vị",
         "availableForSale": "Có thể bán",
+        "remainingComboQuantity": "Số lượng combo còn lại",
         "maxComboPossible": "Combo tối đa",
         "unnamedMaterial": "Thành phần chưa đặt tên",
         "addButton": "Thêm thành phần",
@@ -604,7 +603,7 @@
         "addDescription": "Chọn sản phẩm vật liệu, nhập định lượng và phân loại Core hoặc Support.",
         "availableMaterials": "Danh sách thành phần",
         "selectedMaterials": "Thành phần đã chọn",
-        "materialLimitWarning": "Combo đã chạm ngưỡng tối đa {{count}} thành phần.",
+        "materialLimitWarning": "Combo đã chạm ngưỡng {{count}} thành phần.",
         "noSelectedMaterials": "Chưa chọn thành phần nào",
         "removeMaterial": "Bỏ thành phần",
         "searchMaterial": "Tìm theo tên hoặc mã vật liệu...",
@@ -614,6 +613,7 @@
         "materialProductLabel": "Thành phần",
         "accessoryProductLabel": "Phụ liệu",
         "noMaterials": "Không tìm thấy vật liệu phù hợp",
+        "noRecipe": "Chưa có công thức, vui lòng thêm công thức",
         "stock": "Tồn kho",
         "save": "Lưu công thức",
         "saveSuccess": "Đã lưu công thức combo thành công",

@@ -15,13 +15,15 @@ export const useUpdateComboSpecificationItems = () => {
       productService.updateComboSpecificationItems({ comboId, body }),
     onSuccess: (message) => {
       toast.success(message || t('products.detail.comboSpecification.updateSuccess'))
-      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecificationsRoot() })
-      void queryClient.invalidateQueries({ queryKey: productKeys.detailsRoot() })
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(error.response?.data)
       })
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecificationsRoot() })
+      void queryClient.invalidateQueries({ queryKey: productKeys.detailsRoot() })
     }
   })
 

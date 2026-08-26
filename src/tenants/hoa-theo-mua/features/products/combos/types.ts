@@ -1,11 +1,21 @@
-export type ComboMaterialRole = 1 | 2 | '1' | '2' | 'Core' | 'Support'
+export const ComboRole = {
+  1: '1',
+  2: '2'
+} as const
+
+export type ComboRole = (typeof ComboRole)[keyof typeof ComboRole]
+
+export const ComboRoleLabel = {
+  [ComboRole[1]]: 'products.detail.comboSpecification.core',
+  [ComboRole[2]]: 'products.detail.comboSpecification.support'
+} satisfies Record<ComboRole, string>
 
 export interface ComboMaterial {
   materialId: string
   subId?: string | null
   materialName?: string | null
   coverImage?: string | null
-  role?: ComboMaterialRole | null
+  role?: ComboRole | null
   roleName?: string | null
   isCore: boolean
   quantityPerCombo: number
@@ -19,7 +29,6 @@ export interface ComboSpecification {
   productCode: string
   productName: string
   isActive?: boolean | null
-  factor?: number | null
   materials: ComboMaterial[]
 }
 
@@ -32,14 +41,6 @@ export interface MaterialOption {
   coverImage?: string | null
   unit: string | null
   availableForSale: number | null
-}
-
-export interface MaterialsPage {
-  page: number
-  pageSize: number
-  totalItems: number
-  totalPages: number
-  items: MaterialOption[]
 }
 
 export interface UpdateComboSpecificationMaterial {

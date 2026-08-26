@@ -10,20 +10,22 @@ import PinProductDialog from '../features/products/components/pin-product-dialog
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
+
 import { PRODUCT_TYPE_TAG, type Product, type ProductTypeTag } from '../features/products/types'
 
-const parseProductTypeTag = (value: string | null | undefined): ProductTypeTag | undefined => {
+const resolveProductTypeTag = (value: string | null): ProductTypeTag | undefined => {
   const normalizedValue = value?.trim().toLocaleLowerCase('vi')
 
-  if (normalizedValue === String(PRODUCT_TYPE_TAG.combo) || normalizedValue === 'combo') {
+  if (normalizedValue === 'combo' || normalizedValue === String(PRODUCT_TYPE_TAG.combo)) {
     return PRODUCT_TYPE_TAG.combo
   }
-  if (normalizedValue === String(PRODUCT_TYPE_TAG.product) || normalizedValue === 'sản phẩm') {
+  if (normalizedValue === 'sản phẩm' || normalizedValue === String(PRODUCT_TYPE_TAG.product)) {
     return PRODUCT_TYPE_TAG.product
   }
-  if (normalizedValue === String(PRODUCT_TYPE_TAG.material) || normalizedValue === 'thành phần') {
+  if (normalizedValue === 'thành phần' || normalizedValue === String(PRODUCT_TYPE_TAG.material)) {
     return PRODUCT_TYPE_TAG.material
   }
+
   return undefined
 }
 
@@ -57,11 +59,11 @@ export default function ProductsPage() {
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
   const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
-  const [productTypeFilter] = useQueryState('products_productType', parseAsString)
-  const [legacyTagFilter] = useQueryState('products_tag', parseAsString)
+
+  const [selectedProductType] = useQueryState('products_productType', parseAsString)
 
   // The table stores the product-type filter under its column id; the API calls it `tag`.
-  const tag = parseProductTypeTag(productTypeFilter ?? legacyTagFilter)
+  const tag = resolveProductTypeTag(selectedProductType)
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined

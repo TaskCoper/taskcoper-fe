@@ -9,7 +9,6 @@ import { useState } from 'react'
 import CategoryTreeMultiPicker from '../../categories/components/category-tree-multi-picker'
 import { useGetSortableCategories } from '../../categories/hooks/use-get-sortable-categories'
 import type { Product } from '../types'
-import { localizeProductCategories } from './product-category-labels'
 
 interface CategoriesColumnFilterProps {
   column: Column<Product, unknown>
@@ -20,7 +19,6 @@ export default function CategoriesColumnFilter({ column, title }: CategoriesColu
   const { t } = useTenantTranslation()
   const [open, setOpen] = useState(false)
   const { sortableCategories, isLoadingSortableCategories } = useGetSortableCategories()
-  const localizedCategories = localizeProductCategories(sortableCategories, t)
 
   const filterValue = column.getFilterValue()
   const selectedIds = new Set(Array.isArray(filterValue) ? (filterValue as string[]) : [])
@@ -62,7 +60,7 @@ export default function CategoriesColumnFilter({ column, title }: CategoriesColu
 
       <PopoverContent align='start' sideOffset={8} className='w-96 p-1'>
         <CategoryTreeMultiPicker
-          categories={localizedCategories}
+          categories={sortableCategories}
           selectedIds={selectedIds}
           onToggle={onToggle}
           t={t}
