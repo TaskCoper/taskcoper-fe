@@ -394,10 +394,6 @@
     }
   },
   "products": {
-    "categoryNames": {
-      "villa": "Biệt thự",
-      "thatchedHouse": "Nhà lá"
-    },
     "list": {
       "title": "Sản phẩm",
       "description": "Xem và quản lý danh mục sản phẩm đã đồng bộ từ Nhanh.vn."

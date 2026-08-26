@@ -394,10 +394,6 @@
     }
   },
   "products": {
-    "categoryNames": {
-      "villa": "Villa",
-      "thatchedHouse": "Thatched house"
-    },
     "list": {
       "title": "Products",
       "description": "Browse and manage the product catalog synced from Nhanh.vn."
