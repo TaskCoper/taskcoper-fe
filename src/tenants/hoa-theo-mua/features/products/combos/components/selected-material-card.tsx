@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
@@ -14,11 +15,13 @@ export interface MaterialDraft extends UpdateComboSpecificationMaterial {
 
 export function SelectedMaterialCard({
   draft,
+  quantityError,
   onRemove,
   onUpdate,
   t
 }: {
   draft: MaterialDraft
+  quantityError?: string
   onRemove: (matId: string) => void
   onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
   t: TenantT
@@ -52,9 +55,15 @@ export function SelectedMaterialCard({
             type='number'
             min={0}
             step='any'
-            value={draft.quantity}
-            onChange={(event) => onUpdate(draft.matId, { quantity: Number(event.target.value) })}
+            value={Number.isNaN(draft.quantity) ? '' : draft.quantity}
+            aria-invalid={Boolean(quantityError)}
+            onChange={(event) =>
+              onUpdate(draft.matId, {
+                quantity: event.target.value === '' ? Number.NaN : event.target.valueAsNumber
+              })
+            }
           />
+          <FieldError className='text-xs leading-tight' errors={[{ message: quantityError }]} />
           <p className='text-xs text-muted-foreground'>
             {t('products.detail.comboSpecification.actualQuantity')}:{' '}
             {draft.quantity > 0 ? draft.quantity : t('products.detail.comboSpecification.unconfigured')}

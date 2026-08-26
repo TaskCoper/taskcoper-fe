@@ -12,6 +12,9 @@ import { ComboRole, ComboRoleLabel, type ComboMaterial } from '../types'
 
 const getActualQuantity = (quantity: number, factor: number) => Math.floor(quantity * factor)
 
+const isAccessoryMaterial = (productLabel?: string | null) =>
+  productLabel?.trim().normalize('NFC').toLocaleLowerCase('vi-VN') === 'phụ liệu'
+
 const getActualQuantityDisplay = (quantity: number, factor: number | null, applyFactor: boolean) => {
   if (!Number.isFinite(quantity) || quantity <= 0) return null
   if (!applyFactor) return quantity
@@ -32,6 +35,8 @@ export default function ComboMaterialTable({
   isEditing,
   editValues,
   quantityErrors,
+  productLabelsByMaterialId,
+  isGettingProductLabels,
   onEditChange,
   selectedMaterialIds,
   onToggle,
@@ -44,6 +49,8 @@ export default function ComboMaterialTable({
   isEditing: boolean
   editValues: Record<string, MaterialEditValue>
   quantityErrors: Record<string, string | undefined>
+  productLabelsByMaterialId: Record<string, string | null | undefined>
+  isGettingProductLabels: boolean
   onEditChange: (materialId: string, updates: Partial<MaterialEditValue>) => void
   selectedMaterialIds: Set<string>
   onToggle: (materialId: string) => void
@@ -68,7 +75,9 @@ export default function ComboMaterialTable({
               </TableHead>
               <TableHead>{t('products.detail.comboSpecification.material')}</TableHead>
               <TableHead className='text-right'>{t('products.detail.comboSpecification.baseQuantity')}</TableHead>
-              <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
+              {applyFactor && (
+                <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
+              )}
               <TableHead>{t('products.detail.comboSpecification.unit')}</TableHead>
               <TableHead>{t('products.detail.comboSpecification.role')}</TableHead>
               <TableHead className='text-center'>{t('products.detail.comboSpecification.availableForSale')}</TableHead>
@@ -96,11 +105,18 @@ export default function ComboMaterialTable({
                         className='size-full object-cover'
                       />
                     </div>
-                    <div className='flex min-w-0 flex-col'>
-                      <span className='truncate'>
+                    <div className='flex min-w-0 flex-col items-start gap-1'>
+                      <span className='block truncate'>
                         {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
                       </span>
-                      <span className='font-mono text-xs font-normal text-muted-foreground'>{material.materialId}</span>
+                      {material.availableForSale != null && material.availableForSale <= 0 && (
+                        <Badge
+                          variant='outline'
+                          className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+                        >
+                          {t('products.detail.outOfStock')}
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </TableCell>
@@ -135,13 +151,17 @@ export default function ComboMaterialTable({
                     t('products.detail.comboSpecification.unconfigured')
                   )}
                 </TableCell>
-                <TableCell className='text-right font-semibold tabular-nums text-primary'>
-                  {getActualQuantityDisplay(
-                    editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
-                    factor,
-                    applyFactor
-                  ) ?? t('products.detail.comboSpecification.unconfigured')}
-                </TableCell>
+                {applyFactor && (
+                  <TableCell className='text-right font-semibold tabular-nums text-primary'>
+                    {isGettingProductLabels
+                      ? '...'
+                      : (getActualQuantityDisplay(
+                          editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
+                          factor,
+                          applyFactor && !isAccessoryMaterial(productLabelsByMaterialId[material.materialId])
+                        ) ?? t('products.detail.comboSpecification.unconfigured'))}
+                  </TableCell>
+                )}
                 <TableCell>
                   {material.unit ? (
                     <Badge variant='outline' className='font-normal'>

@@ -19,6 +19,7 @@ import { useDeleteComboSpecificationItems } from '../hooks/use-delete-combo-spec
 import { useUpdateChildQuantity } from '../hooks/use-update-child-quantity'
 import { useUpdateComboSpecificationItems } from '../hooks/use-update-combo-specification-items'
 import { DetailSection } from '../../components/product-detail/parts'
+import { useGetProductsByIds } from '../../hooks/use-get-products-by-ids'
 import { AddMaterialsDialog } from './add-materials-dialog'
 import ComboMaterialTable, { type MaterialEditValue } from './combo-material-table'
 
@@ -30,6 +31,8 @@ export function ComboSpecification({
   stockStatus,
   canEditFactor,
   canManageMaterials,
+  isUpdatingPublication,
+  onEnsureUnpublished,
   materials,
   isLoading,
   isError,
@@ -42,6 +45,8 @@ export function ComboSpecification({
   stockStatus?: string | null
   canEditFactor: boolean
   canManageMaterials: boolean
+  isUpdatingPublication: boolean
+  onEnsureUnpublished: () => Promise<boolean>
   materials: ComboMaterial[]
   isLoading: boolean
   isError: boolean
@@ -55,6 +60,19 @@ export function ComboSpecification({
   const { deleteComboSpecificationItems, isDeletingComboSpecificationItems } = useDeleteComboSpecificationItems()
   const { updateChildQuantity, isUpdatingChildQuantity } = useUpdateChildQuantity()
   const { updateComboSpecificationItems, isUpdatingComboSpecificationItems } = useUpdateComboSpecificationItems()
+  const materialProductIds = useMemo(
+    () => (canEditFactor ? materials.map((material) => material.materialId) : []),
+    [canEditFactor, materials]
+  )
+  const { productsById: materialProductsById, isGettingProductsByIds: isGettingMaterialProducts } =
+    useGetProductsByIds(materialProductIds)
+  const materialProductLabels = useMemo(
+    () =>
+      Object.fromEntries(
+        materialProductIds.map((materialId) => [materialId, materialProductsById[materialId]?.productLabel])
+      ),
+    [materialProductIds, materialProductsById]
+  )
   const factorSchema = useMemo(() => createComboFactorSchema(t), [t])
   const materialsSchema = useMemo(() => createComboMaterialsSchema(t), [t])
   const factorForm = useForm<ComboFactorFormValues>({
@@ -104,7 +122,9 @@ export function ComboSpecification({
   const coreMaterials = materials.filter((material) => material.isCore)
   const supportMaterials = materials.filter((material) => !material.isCore)
 
-  const handleStartEditing = () => {
+  const handleStartEditing = async () => {
+    if (!(await onEnsureUnpublished())) return
+
     replaceMaterials(
       materials.map((material) => ({
         matId: material.materialId,
@@ -115,6 +135,12 @@ export function ComboSpecification({
     )
     materialsForm.clearErrors()
     setIsEditing(true)
+  }
+
+  const handleOpenAddDialog = async () => {
+    if (!(await onEnsureUnpublished())) return
+
+    setIsAddDialogOpen(true)
   }
 
   const handleEditChange = (materialId: string, updates: Partial<MaterialEditValue>) => {
@@ -236,10 +262,22 @@ export function ComboSpecification({
           </form>
         )}
 
-        {!canEditFactor && <ComboAvailability quantity={sellableQuantity} status={stockStatus} t={t} />}
+        {!canEditFactor && (
+          <ComboAvailability
+            quantity={sellableQuantity}
+            status={stockStatus}
+            label={t('products.detail.comboSpecification.remainingComboQuantity')}
+          />
+        )}
 
         <div className='ml-auto flex flex-wrap justify-end gap-2'>
-          {canEditFactor && <ComboAvailability quantity={sellableQuantity} status={stockStatus} t={t} />}
+          {canEditFactor && (
+            <ComboAvailability
+              quantity={sellableQuantity}
+              status={stockStatus}
+              label={t('products.detail.comboSpecification.availableQuantity')}
+            />
+          )}
           {isEditing && canManageMaterials ? (
             <>
               <Button
@@ -269,8 +307,8 @@ export function ComboSpecification({
                   <Button
                     type='button'
                     variant='outline'
-                    onClick={handleStartEditing}
-                    disabled={materials.length === 0}
+                    onClick={() => void handleStartEditing()}
+                    disabled={materials.length === 0 || isUpdatingPublication}
                   >
                     <PencilIcon data-icon='inline-start' />
                     {t('products.detail.comboSpecification.editButton')}
@@ -286,7 +324,7 @@ export function ComboSpecification({
                       {t('products.detail.comboSpecification.deleteButton')} ({selectedMaterialIds.size})
                     </Button>
                   )}
-                  <Button type='button' onClick={() => setIsAddDialogOpen(true)}>
+                  <Button type='button' onClick={() => void handleOpenAddDialog()} disabled={isUpdatingPublication}>
                     <PlusIcon data-icon='inline-start' />
                     {t('products.detail.comboSpecification.addButton')}
                   </Button>
@@ -299,7 +337,7 @@ export function ComboSpecification({
 
       {materials.length === 0 && (
         <div className='rounded-lg border py-8 text-center text-sm text-muted-foreground'>
-          {t('products.common.noData')}
+          {t('products.detail.comboSpecification.noRecipe')}
         </div>
       )}
 
@@ -315,6 +353,8 @@ export function ComboSpecification({
             isEditing={isEditing}
             editValues={editValues}
             quantityErrors={quantityErrors}
+            productLabelsByMaterialId={materialProductLabels}
+            isGettingProductLabels={isGettingMaterialProducts}
             onEditChange={handleEditChange}
             selectedMaterialIds={selectedMaterialIds}
             onToggle={toggleMaterial}
@@ -336,6 +376,8 @@ export function ComboSpecification({
             isEditing={isEditing}
             editValues={editValues}
             quantityErrors={quantityErrors}
+            productLabelsByMaterialId={materialProductLabels}
+            isGettingProductLabels={isGettingMaterialProducts}
             onEditChange={handleEditChange}
             selectedMaterialIds={selectedMaterialIds}
             onToggle={toggleMaterial}
@@ -358,14 +400,22 @@ export function ComboSpecification({
   )
 }
 
-function ComboAvailability({ quantity, status, t }: { quantity?: number | null; status?: string | null; t: TenantT }) {
+function ComboAvailability({
+  quantity,
+  status,
+  label
+}: {
+  quantity?: number | null
+  status?: string | null
+  label: string
+}) {
   // if (quantity == null && !status) return null
   const isInStock = status === 'Còn hàng'
   return (
     <div className='inline-flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-1.5 text-sm'>
       <PackageCheck className='size-4.5 text-muted-foreground' />
 
-      <span className='font-medium'>{t('products.detail.comboSpecification.availableQuantity')}:</span>
+      <span className='font-medium'>{label}:</span>
 
       <span className='font-semibold tabular-nums'>{quantity ?? '--'}</span>
 

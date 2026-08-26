@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -24,8 +25,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { ListFilterIcon, PlusIcon, SearchIcon, TriangleAlertIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
 import type { ComboMaterial, MaterialOption, MaterialProductLabel } from '../types'
+import { createComboMaterialsSchema, type ComboMaterialsFormValues } from '../validations'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
 import { SelectedMaterialCard } from './selected-material-card'
@@ -50,10 +53,46 @@ export function AddMaterialsDialog({
 }) {
   const [search, setSearch] = useState('')
   const [productLabel, setProductLabel] = useState<MaterialProductLabel>()
-  const [drafts, setDrafts] = useState<MaterialDraft[]>([])
+  const [selectedMaterialDetails, setSelectedMaterialDetails] = useState<Record<string, MaterialOption>>({})
   const [materialsPageIndex, setMaterialsPageIndex] = useState(1)
   const [activeRoleTab, setActiveRoleTab] = useState<MaterialRoleTab>('core')
   const [debouncedSearch] = useDebounce(search.trim(), 500)
+  const materialsSchema = useMemo(() => createComboMaterialsSchema(t), [t])
+  const materialsForm = useForm<ComboMaterialsFormValues>({
+    resolver: zodResolver(materialsSchema),
+    defaultValues: { items: [] },
+    mode: 'onChange'
+  })
+  const {
+    fields: materialFields,
+    append: appendMaterial,
+    remove: removeMaterial
+  } = useFieldArray({
+    control: materialsForm.control,
+    name: 'items'
+  })
+  const selectedItems = useWatch({ control: materialsForm.control, name: 'items' })
+  const drafts = useMemo<MaterialDraft[]>(
+    () =>
+      selectedItems.map((item) => {
+        const material = selectedMaterialDetails[item.matId]
+
+        return {
+          ...item,
+          materialCode: material?.materialCode ?? '',
+          materialName: material?.materialName ?? item.matId,
+          coverImage: material?.coverImage,
+          unit: material?.unit ?? null
+        }
+      }),
+    [selectedItems, selectedMaterialDetails]
+  )
+  const quantityErrors = Object.fromEntries(
+    materialFields.map((field, index) => [
+      field.matId,
+      materialsForm.formState.errors.items?.[index]?.quantity?.message
+    ])
+  )
   const existingMaterialIds = useMemo(
     () => existingMaterials.map((material) => material.materialId),
     [existingMaterials]
@@ -78,32 +117,61 @@ export function AddMaterialsDialog({
   const selectedMaterialCount = drafts.length + existingMaterials.length
 
   const toggleMaterial = (material: MaterialOption, checked: boolean) => {
-    setDrafts((current) =>
-      checked
-        ? current.some((draft) => draft.matId === material.materialId)
-          ? current
-          : [
-              ...current,
-              {
-                matId: material.materialId,
-                materialCode: material.materialCode,
-                materialName: material.materialName,
-                coverImage: material.coverImage,
-                unit: material.unit,
-                quantity: 1,
-                isCore: activeRoleTab === 'core',
-                isActive: true
-              }
-            ]
-        : current.filter((draft) => draft.matId !== material.materialId)
-    )
+    const index = selectedItems.findIndex((item) => item.matId === material.materialId)
+
+    if (checked) {
+      if (index >= 0) return
+
+      setSelectedMaterialDetails((current) => ({ ...current, [material.materialId]: material }))
+      appendMaterial({
+        matId: material.materialId,
+        quantity: 1,
+        isCore: activeRoleTab === 'core',
+        isActive: true
+      })
+      return
+    }
+
+    if (index < 0) return
+    removeMaterial(index)
+    setSelectedMaterialDetails((current) => {
+      const next = { ...current }
+      delete next[material.materialId]
+      return next
+    })
   }
-  const removeDraft = (matId: string) => setDrafts((current) => current.filter((draft) => draft.matId !== matId))
-  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) =>
-    setDrafts((current) => current.map((draft) => (draft.matId === matId ? { ...draft, ...updates } : draft)))
+  const removeDraft = (matId: string) => {
+    const index = selectedItems.findIndex((item) => item.matId === matId)
+    if (index < 0) return
+
+    removeMaterial(index)
+    setSelectedMaterialDetails((current) => {
+      const next = { ...current }
+      delete next[matId]
+      return next
+    })
+  }
+  const updateDraft = (matId: string, updates: Partial<MaterialDraft>) => {
+    const index = selectedItems.findIndex((item) => item.matId === matId)
+    if (index < 0) return
+
+    if ('quantity' in updates) {
+      materialsForm.setValue(`items.${index}.quantity`, updates.quantity ?? Number.NaN, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+    }
+    if ('isCore' in updates) {
+      materialsForm.setValue(`items.${index}.isCore`, updates.isCore ?? false, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+    }
+  }
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && !isAddingComboSpecificationItems) {
-      setDrafts([])
+      materialsForm.reset({ items: [] })
+      setSelectedMaterialDetails({})
       setSearch('')
       setProductLabel(undefined)
       setMaterialsPageIndex(1)
@@ -111,11 +179,10 @@ export function AddMaterialsDialog({
     }
     onOpenChange(nextOpen)
   }
-  const handleSave = async () => {
-    if (drafts.length === 0 || drafts.some((draft) => !Number.isFinite(draft.quantity) || draft.quantity <= 0)) return
+  const handleSave = async ({ items }: ComboMaterialsFormValues) => {
     await addComboSpecificationItems({
       comboId,
-      body: { items: drafts }
+      body: { items }
     })
     handleOpenChange(false)
   }
@@ -193,7 +260,7 @@ export function AddMaterialsDialog({
                     className='flex cursor-pointer items-center gap-3 border-b p-3 last:border-b-0'
                   >
                     <Checkbox
-                      checked={drafts.some((draft) => draft.matId === material.materialId)}
+                      checked={selectedItems.some((item) => item.matId === material.materialId)}
                       onCheckedChange={(checked) => toggleMaterial(material, checked === true)}
                       aria-label={material.materialName}
                     />
@@ -315,6 +382,7 @@ export function AddMaterialsDialog({
                     drafts={coreDrafts}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
+                    quantityErrors={quantityErrors}
                     t={t}
                   />
                 )}
@@ -331,6 +399,7 @@ export function AddMaterialsDialog({
                     drafts={supportDrafts}
                     onRemove={removeDraft}
                     onUpdate={updateDraft}
+                    quantityErrors={quantityErrors}
                     t={t}
                   />
                 )}
@@ -349,7 +418,7 @@ export function AddMaterialsDialog({
           </Button>
           <Button
             type='button'
-            onClick={() => void handleSave()}
+            onClick={() => void materialsForm.handleSubmit(handleSave)()}
             disabled={drafts.length === 0 || isAddingComboSpecificationItems}
           >
             <PlusIcon data-icon='inline-start' />
@@ -367,6 +436,7 @@ function DraftGroup({
   drafts,
   onRemove,
   onUpdate,
+  quantityErrors,
   t
 }: {
   title: string
@@ -374,6 +444,7 @@ function DraftGroup({
   drafts: MaterialDraft[]
   onRemove: (matId: string) => void
   onUpdate: (matId: string, updates: Partial<MaterialDraft>) => void
+  quantityErrors: Record<string, string | undefined>
   t: TenantT
 }) {
   return (
@@ -383,7 +454,14 @@ function DraftGroup({
           <p className='text-xs text-muted-foreground'>{t('products.detail.comboSpecification.noSelectedMaterials')}</p>
         ) : (
           drafts.map((draft) => (
-            <SelectedMaterialCard key={draft.matId} draft={draft} onRemove={onRemove} onUpdate={onUpdate} t={t} />
+            <SelectedMaterialCard
+              key={draft.matId}
+              draft={draft}
+              quantityError={quantityErrors[draft.matId]}
+              onRemove={onRemove}
+              onUpdate={onUpdate}
+              t={t}
+            />
           ))
         )}
       </div>

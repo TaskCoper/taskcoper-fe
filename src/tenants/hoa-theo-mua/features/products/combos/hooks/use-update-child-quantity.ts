@@ -10,7 +10,7 @@ export const useUpdateChildQuantity = () => {
   const { t } = useTenantTranslation()
 
   const { mutateAsync: updateChildQuantity, isPending: isUpdatingChildQuantity } = useMutation({
-    mutationFn: ({ productId, factor }: { productId: string; factor: number | null }) =>
+    mutationFn: ({ productId, factor }: { productId: string; factor: number | null; parentId?: string }) =>
       productService.updateChildQuantity({ productId, factor }),
     onSuccess: (message) => {
       toast.success(message || t('products.detail.comboSpecification.saveFactor'))
@@ -20,9 +20,10 @@ export const useUpdateChildQuantity = () => {
         description: getErrorDescription(error.response?.data)
       })
     },
-    onSettled: (_data, _error, { productId }) => {
+    onSettled: (_data, _error, { productId, parentId }) => {
       void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(productId) })
       void queryClient.invalidateQueries({ queryKey: productKeys.detail(productId) })
+      if (parentId) void queryClient.invalidateQueries({ queryKey: productKeys.detail(parentId) })
     }
   })
 

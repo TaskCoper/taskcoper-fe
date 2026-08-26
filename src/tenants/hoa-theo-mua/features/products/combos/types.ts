@@ -29,7 +29,6 @@ export interface ComboSpecification {
   productCode: string
   productName: string
   isActive?: boolean | null
-  factor?: number | null
   materials: ComboMaterial[]
 }
 

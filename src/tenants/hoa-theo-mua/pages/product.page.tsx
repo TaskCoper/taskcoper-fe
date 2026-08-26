@@ -120,7 +120,13 @@ export default function ProductPage() {
   const publicationComboId = id || ''
   const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
   const parent = product.parent
-  const parentName = parent?.productName?.trim() || parent?.productCode?.trim() || t('products.common.unnamed')
+  const parentId = product.parentId?.trim() || parent?.id
+  const parentName =
+    product.parentProductName?.trim() ||
+    parent?.productName?.trim() ||
+    product.parentProductCode?.trim() ||
+    parent?.productCode?.trim() ||
+    t('products.common.unnamed')
 
   const galleryImages = [
     ...(coverImage ? [{ src: coverImage, isCover: true }] : []),
@@ -187,6 +193,18 @@ export default function ProductPage() {
     if (!publicationComboId || isUpdatingComboPublication || publish === isComboPublished) return
 
     await updateComboPublication({ comboId: publicationComboId, publish })
+  }
+
+  const ensureComboUnpublished = async () => {
+    if (!isComboPublished) return true
+    if (!publicationComboId || isUpdatingComboPublication) return false
+
+    try {
+      await updateComboPublication({ comboId: publicationComboId, publish: false })
+      return true
+    } catch {
+      return false
+    }
   }
 
   const TABS = [
@@ -315,9 +333,9 @@ export default function ProductPage() {
           </div>
 
           {/* Parent product notice — this product is a variant/child of another */}
-          {parent && (
+          {parentId && (
             <Link
-              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parent.id}`}
+              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
               className='group flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-2 transition-colors hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/40 dark:hover:bg-blue-950/60'
             >
               <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
@@ -507,14 +525,16 @@ export default function ProductPage() {
                 description={t('products.detail.comboSpecification.description')}
               >
                 <ComboSpecification
-                  key={`${id}-${comboSpecification?.factor ?? 'unconfigured'}`}
+                  key={`${id}-${product.factor ?? 'unconfigured'}`}
                   productId={id ?? ''}
                   comboId={comboId}
-                  factor={comboSpecification?.factor ?? null}
+                  factor={product.factor}
                   sellableQuantity={product.sellableQuantity}
                   stockStatus={product.stockStatus}
                   canEditFactor={canEditFactor}
                   canManageMaterials={canManageComboMaterials}
+                  isUpdatingPublication={isUpdatingComboPublication}
+                  onEnsureUnpublished={ensureComboUnpublished}
                   materials={comboSpecification?.materials ?? []}
                   isLoading={isGettingComboSpecification}
                   isError={isComboSpecificationError}
@@ -543,6 +563,7 @@ export default function ProductPage() {
                         <TableHead className='w-14' />
                         <TableHead>{t('products.column.product')}</TableHead>
                         <TableHead>{t('products.detail.variants.options')}</TableHead>
+                        <TableHead>{t('products.detail.comboSpecification.factor')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.price')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.availableForSale')}</TableHead>
                         <TableHead>{t('products.column.status')}</TableHead>
@@ -550,7 +571,7 @@ export default function ProductPage() {
                     </TableHeader>
                     <TableBody>
                       {variants.map((variant) => (
-                        <VariantRow key={variant.id} variant={variant} t={t} />
+                        <VariantRow key={variant.id} variant={variant} parentId={id ?? ''} t={t} />
                       ))}
                     </TableBody>
                   </Table>

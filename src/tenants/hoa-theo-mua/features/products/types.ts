@@ -18,6 +18,7 @@ export interface Product {
   isPinned: boolean
   categories: ProductCategory[]
   parent: ProductDetail | null
+  parentId: string | null
 
   otherImages: string[] | null
 
@@ -35,6 +36,7 @@ export interface Product {
   // D - Tên sản phẩm cha
   parentProductName: string | null
 
+  factor: number | null
   sellableQuantity: number | null
   stockStatus: string | null
 
