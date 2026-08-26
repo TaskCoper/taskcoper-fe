@@ -1,12 +1,20 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { FieldError } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { PackageIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { CheckIcon, PackageIcon } from 'lucide-react'
+import { useMemo, type ReactNode } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../../config'
+import { useUpdateChildQuantity } from '../../combos/hooks/use-update-child-quantity'
+import { createComboFactorSchema, type ComboFactorFormValues } from '../../combos/validations'
+import { useGetProduct } from '../../hooks/use-get-product'
 import type { Product } from '../../types'
 import { formatPrice, formatQuantity, parseNumber } from '../../utils'
 import { isActiveStatus, type SpecRow } from './fields'
@@ -61,7 +69,8 @@ export function DetailRows({ rows, t }: { rows: SpecRow[]; t: TenantT }) {
   )
 }
 
-export function VariantRow({ variant, t }: { variant: Product; t: TenantT }) {
+export function VariantRow({ variant, parentId, t }: { variant: Product; parentId: string; t: TenantT }) {
+  const { product: variantDetail, isGettingProduct: isGettingVariantDetail } = useGetProduct({ id: variant.id })
   const name = variant.productName?.trim() || t('products.common.unnamed')
   const price = formatPrice(variant.priceWithVatRaw ?? variant.priceRaw)
   const stock = formatQuantity(variant.availableForSaleRaw)
@@ -109,6 +118,19 @@ export function VariantRow({ variant, t }: { variant: Product; t: TenantT }) {
           {!variant.color?.trim() && !variant.size?.trim() && <span className='text-muted-foreground'>-</span>}
         </div>
       </TableCell>
+      <TableCell>
+        {isGettingVariantDetail ? (
+          <Skeleton className='h-9 w-36' />
+        ) : (
+          <VariantFactorEditor
+            key={`${variant.id}-${variantDetail?.factor ?? 'unconfigured'}`}
+            productId={variant.id}
+            parentId={parentId}
+            initialFactor={variantDetail?.factor ?? null}
+            t={t}
+          />
+        )}
+      </TableCell>
       <TableCell className='whitespace-nowrap text-right font-medium'>
         {price ?? t('products.detail.priceUnknown')}
       </TableCell>
@@ -128,6 +150,70 @@ export function VariantRow({ variant, t }: { variant: Product; t: TenantT }) {
         </Badge>
       </TableCell>
     </TableRow>
+  )
+}
+
+function VariantFactorEditor({
+  productId,
+  parentId,
+  initialFactor,
+  t
+}: {
+  productId: string
+  parentId: string
+  initialFactor: number | null
+  t: TenantT
+}) {
+  const factorSchema = useMemo(() => createComboFactorSchema(t), [t])
+  const form = useForm<ComboFactorFormValues>({
+    resolver: zodResolver(factorSchema),
+    defaultValues: { factor: initialFactor },
+    mode: 'onChange'
+  })
+  const { updateChildQuantity, isUpdatingChildQuantity } = useUpdateChildQuantity()
+
+  const handleSave = async ({ factor }: ComboFactorFormValues) => {
+    await updateChildQuantity({ productId, parentId, factor })
+  }
+
+  return (
+    <form className='flex min-w-44 items-start gap-2' onSubmit={form.handleSubmit(handleSave)}>
+      <Controller
+        control={form.control}
+        name='factor'
+        render={({ field, fieldState }) => (
+          <div className='w-28'>
+            <Input
+              ref={field.ref}
+              name={field.name}
+              type='number'
+              min={0}
+              step='any'
+              value={Number.isNaN(field.value) ? '' : (field.value ?? '')}
+              aria-invalid={fieldState.invalid}
+              onBlur={field.onBlur}
+              onChange={(event) => field.onChange(event.target.value === '' ? null : event.target.valueAsNumber)}
+              disabled={isUpdatingChildQuantity}
+            />
+            <FieldError className='mt-1 text-xs leading-tight' errors={[fieldState.error]} />
+            {!fieldState.error && field.value == null && (
+              <p className='mt-1 text-xs leading-tight text-muted-foreground'>
+                {t('products.detail.comboSpecification.factorPlaceholder')}
+              </p>
+            )}
+          </div>
+        )}
+      />
+      <Button
+        type='submit'
+        size='icon'
+        disabled={isUpdatingChildQuantity}
+        aria-label={t('products.detail.comboSpecification.saveFactor')}
+        title={t('products.detail.comboSpecification.saveFactor')}
+      >
+        <CheckIcon />
+      </Button>
+    </form>
   )
 }
 

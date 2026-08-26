@@ -298,12 +298,29 @@ export const getProductColumns = ({
     {
       id: 'productType',
       accessorFn: (row) => row.productType,
-      meta: { label: 'products.column.productType' },
+      meta: {
+        label: 'products.column.productType',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.filter.product'),
+            value: 'Sản phẩm'
+          },
+          {
+            label: t('products.filter.combo'),
+            value: 'Combo'
+          },
+          {
+            label: t('products.filter.material'),
+            value: 'Thành phần'
+          }
+        ]
+      },
       header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.productType' />,
       cell: ({ row }) => renderText(row.original.productType, t),
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 140
     },
     {
