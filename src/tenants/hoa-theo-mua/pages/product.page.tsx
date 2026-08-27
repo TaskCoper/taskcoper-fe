@@ -37,7 +37,6 @@ import {
   BASIC_INFO_FIELDS,
   buildRows,
   INVENTORY_FIELDS,
-  isActiveStatus,
   PRICING_FIELDS,
   PRICING_OVERVIEW_FIELDS,
   SPEC_GROUPS,
@@ -113,11 +112,9 @@ export default function ProductPage() {
     )
   }
 
-  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, status, slug } =
-    product
+  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, slug } = product
 
   const displayName = productName?.trim() || t('products.common.unnamed')
-  const active = isActiveStatus(status)
   const comboId = product.parentProductId?.trim() || id || ''
   const publicationComboId = id || ''
   const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
@@ -145,10 +142,13 @@ export default function ProductPage() {
   const hasDiscount = currentPriceValue !== null && oldPriceValue !== null && oldPriceValue > currentPriceValue
   const discountPct = hasDiscount ? Math.round((1 - currentPriceValue! / oldPriceValue!) * 100) : null
 
-  const available = parseNumber(product.availableForSaleRaw)
-
-  const statusText =
-    status?.trim() || (available && available > 0 ? t('products.detail.inStock') : t('products.detail.outOfStock'))
+  const available = product.sellableQuantity ?? parseNumber(product.availableForSaleRaw)
+  const stockStatusText = product.stockStatus?.trim()
+  const isInStock = available !== null ? available > 0 : stockStatusText?.toLowerCase().includes('còn hàng') === true
+  const statusText = stockStatusText || t(isInStock ? 'products.detail.inStock' : 'products.detail.outOfStock')
+  const saleStatusText = t(
+    product.isActive ? 'products.detail.comboSpecification.published' : 'products.detail.comboSpecification.unpublished'
+  )
   const websiteUrl = slug?.trim()?.startsWith('http') ? slug.trim() : null
 
   const basicInfoRows = buildRows(BASIC_INFO_FIELDS, product)
@@ -260,12 +260,14 @@ export default function ProductPage() {
                   variant='secondary'
                   className={cn(
                     'gap-1.5 font-medium',
-                    active
+                    isInStock
                       ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
                       : ''
                   )}
                 >
-                  <span className={cn('size-1.5 rounded-full', active ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
+                  <span
+                    className={cn('size-1.5 rounded-full', isInStock ? 'bg-emerald-500' : 'bg-muted-foreground/50')}
+                  />
                   {statusText}
                 </Badge>
               </div>
@@ -392,9 +394,9 @@ export default function ProductPage() {
             />
             <StatCard
               title={t('products.column.status')}
-              value={statusText}
+              value={saleStatusText}
               icon={<CircleDotIcon className='size-4 text-white' />}
-              color={active ? 'emerald' : 'slate'}
+              color={product.isActive ? 'emerald' : 'slate'}
             />
           </div>
 
