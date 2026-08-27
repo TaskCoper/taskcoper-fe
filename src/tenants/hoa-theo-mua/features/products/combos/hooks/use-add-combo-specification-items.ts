@@ -15,6 +15,8 @@ export const useAddComboSpecificationItems = () => {
       toast.success(message || t('products.detail.comboSpecification.addSuccess'))
     },
     onError: (error) => {
+      if (error.response?.status === 409) return
+
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(error.response?.data)
       })
