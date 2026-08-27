@@ -137,6 +137,9 @@ export default function ProductPage() {
   const safeImageIndex = Math.min(activeImageIndex, galleryImages.length - 1)
 
   const salePrice = formatPrice(product.priceWithVatRaw ?? product.priceRaw)
+  const availableForSaleDisplay = formatQuantity(
+    product.sellableQuantity == null ? null : String(product.sellableQuantity)
+  )
   const currentPriceValue = parseNumber(product.priceWithVatRaw ?? product.priceRaw)
   const oldPriceValue = parseNumber(product.oldPriceRaw)
   const hasDiscount = currentPriceValue !== null && oldPriceValue !== null && oldPriceValue > currentPriceValue
@@ -227,18 +230,25 @@ export default function ProductPage() {
           <nav className='flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground'>
             <Link
               to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`}
-              className='shrink-0 transition-colors hover:text-foreground'
+              className='shrink-0 whitespace-nowrap transition-colors hover:text-foreground'
             >
               {t('products.list.title')}
             </Link>
-            {categoryName?.trim() && (
+
+            {parentId && (
               <>
-                <ChevronRightIcon className='size-3.5 shrink-0' />
-                <span className='hidden truncate sm:inline'>{categoryName}</span>
+                <ChevronRightIcon className='hidden size-3.5 shrink-0 sm:block' />
+                <Link
+                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
+                  className='hidden max-w-48 shrink truncate whitespace-nowrap transition-colors hover:text-foreground sm:block'
+                >
+                  {parentName}
+                </Link>
               </>
             )}
+
             <ChevronRightIcon className='size-3.5 shrink-0' />
-            <span className='truncate font-medium text-foreground'>{displayName}</span>
+            <span className='min-w-0 truncate whitespace-nowrap font-medium text-foreground'>{displayName}</span>
           </nav>
 
           {/* Title + actions */}
@@ -370,7 +380,7 @@ export default function ProductPage() {
             />
             <StatCard
               title={t('products.field.availableForSale')}
-              value={formatQuantity(product.availableForSaleRaw) ?? '-'}
+              value={availableForSaleDisplay ?? '-'}
               icon={<BoxIcon className='size-4 text-white' />}
               color='green'
             />
@@ -565,10 +575,10 @@ export default function ProductPage() {
                         <TableHead className='w-14' />
                         <TableHead>{t('products.column.product')}</TableHead>
                         <TableHead>{t('products.detail.variants.options')}</TableHead>
-                        <TableHead>{t('products.detail.comboSpecification.factor')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.price')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.availableForSale')}</TableHead>
                         <TableHead>{t('products.column.status')}</TableHead>
+                        <TableHead className='text-center'>{t('products.detail.comboSpecification.factor')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
