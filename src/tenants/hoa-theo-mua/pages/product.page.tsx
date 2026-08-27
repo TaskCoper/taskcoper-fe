@@ -37,7 +37,6 @@ import {
   BASIC_INFO_FIELDS,
   buildRows,
   INVENTORY_FIELDS,
-  isActiveStatus,
   PRICING_FIELDS,
   PRICING_OVERVIEW_FIELDS,
   SPEC_GROUPS,
@@ -113,11 +112,9 @@ export default function ProductPage() {
     )
   }
 
-  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, status, slug } =
-    product
+  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, slug } = product
 
   const displayName = productName?.trim() || t('products.common.unnamed')
-  const active = isActiveStatus(status)
   const comboId = product.parentProductId?.trim() || id || ''
   const publicationComboId = id || ''
   const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
@@ -137,15 +134,21 @@ export default function ProductPage() {
   const safeImageIndex = Math.min(activeImageIndex, galleryImages.length - 1)
 
   const salePrice = formatPrice(product.priceWithVatRaw ?? product.priceRaw)
+  const availableForSaleDisplay = formatQuantity(
+    product.sellableQuantity == null ? null : String(product.sellableQuantity)
+  )
   const currentPriceValue = parseNumber(product.priceWithVatRaw ?? product.priceRaw)
   const oldPriceValue = parseNumber(product.oldPriceRaw)
   const hasDiscount = currentPriceValue !== null && oldPriceValue !== null && oldPriceValue > currentPriceValue
   const discountPct = hasDiscount ? Math.round((1 - currentPriceValue! / oldPriceValue!) * 100) : null
 
-  const available = parseNumber(product.availableForSaleRaw)
-
-  const statusText =
-    status?.trim() || (available && available > 0 ? t('products.detail.inStock') : t('products.detail.outOfStock'))
+  const available = product.sellableQuantity ?? parseNumber(product.availableForSaleRaw)
+  const stockStatusText = product.stockStatus?.trim()
+  const isInStock = available !== null ? available > 0 : stockStatusText?.toLowerCase().includes('còn hàng') === true
+  const statusText = stockStatusText || t(isInStock ? 'products.detail.inStock' : 'products.detail.outOfStock')
+  const saleStatusText = t(
+    product.isActive ? 'products.detail.comboSpecification.published' : 'products.detail.comboSpecification.unpublished'
+  )
   const websiteUrl = slug?.trim()?.startsWith('http') ? slug.trim() : null
 
   const basicInfoRows = buildRows(BASIC_INFO_FIELDS, product)
@@ -227,18 +230,25 @@ export default function ProductPage() {
           <nav className='flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground'>
             <Link
               to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`}
-              className='shrink-0 transition-colors hover:text-foreground'
+              className='shrink-0 whitespace-nowrap transition-colors hover:text-foreground'
             >
               {t('products.list.title')}
             </Link>
-            {categoryName?.trim() && (
+
+            {parentId && (
               <>
-                <ChevronRightIcon className='size-3.5 shrink-0' />
-                <span className='hidden truncate sm:inline'>{categoryName}</span>
+                <ChevronRightIcon className='hidden size-3.5 shrink-0 sm:block' />
+                <Link
+                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
+                  className='hidden max-w-48 shrink truncate whitespace-nowrap transition-colors hover:text-foreground sm:block'
+                >
+                  {parentName}
+                </Link>
               </>
             )}
+
             <ChevronRightIcon className='size-3.5 shrink-0' />
-            <span className='truncate font-medium text-foreground'>{displayName}</span>
+            <span className='min-w-0 truncate whitespace-nowrap font-medium text-foreground'>{displayName}</span>
           </nav>
 
           {/* Title + actions */}
@@ -250,12 +260,14 @@ export default function ProductPage() {
                   variant='secondary'
                   className={cn(
                     'gap-1.5 font-medium',
-                    active
+                    isInStock
                       ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
                       : ''
                   )}
                 >
-                  <span className={cn('size-1.5 rounded-full', active ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
+                  <span
+                    className={cn('size-1.5 rounded-full', isInStock ? 'bg-emerald-500' : 'bg-muted-foreground/50')}
+                  />
                   {statusText}
                 </Badge>
               </div>
@@ -370,7 +382,7 @@ export default function ProductPage() {
             />
             <StatCard
               title={t('products.field.availableForSale')}
-              value={formatQuantity(product.availableForSaleRaw) ?? '-'}
+              value={availableForSaleDisplay ?? '-'}
               icon={<BoxIcon className='size-4 text-white' />}
               color='green'
             />
@@ -382,9 +394,9 @@ export default function ProductPage() {
             />
             <StatCard
               title={t('products.column.status')}
-              value={statusText}
+              value={saleStatusText}
               icon={<CircleDotIcon className='size-4 text-white' />}
-              color={active ? 'emerald' : 'slate'}
+              color={product.isActive ? 'emerald' : 'slate'}
             />
           </div>
 
@@ -565,10 +577,10 @@ export default function ProductPage() {
                         <TableHead className='w-14' />
                         <TableHead>{t('products.column.product')}</TableHead>
                         <TableHead>{t('products.detail.variants.options')}</TableHead>
-                        <TableHead>{t('products.detail.comboSpecification.factor')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.price')}</TableHead>
                         <TableHead className='text-right'>{t('products.field.availableForSale')}</TableHead>
                         <TableHead>{t('products.column.status')}</TableHead>
+                        <TableHead className='text-center'>{t('products.detail.comboSpecification.factor')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

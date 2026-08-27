@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Spinner } from '@/components/ui/spinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -226,6 +227,38 @@ export const getProductColumns = ({
       size: 44
     },
     {
+      id: 'isActive',
+      accessorKey: 'isActive',
+      meta: {
+        label: 'products.column.saleStatus',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.detail.comboSpecification.published'),
+            value: 'true'
+          },
+          {
+            label: t('products.detail.comboSpecification.unpublished'),
+            value: 'false'
+          }
+        ]
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.saleStatus' />,
+      cell: ({ row }) => (
+        <Badge variant={row.original.isActive ? 'default' : 'secondary'} className='whitespace-nowrap font-normal'>
+          {t(
+            row.original.isActive
+              ? 'products.detail.comboSpecification.published'
+              : 'products.detail.comboSpecification.unpublished'
+          )}
+        </Badge>
+      ),
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 140
+    },
+    {
       id: 'category',
       accessorFn: (row) => row.categoryName,
       meta: { label: 'products.column.category' },
@@ -257,14 +290,42 @@ export const getProductColumns = ({
       cell: ({ row }) => {
         const { categories } = row.original
         if (!categories.length) return renderNoData(t)
+        const visibleCategories = categories.slice(0, 2)
+        const remainingCategories = categories.slice(2)
 
         return (
           <div className='flex max-w-72 flex-wrap gap-1'>
-            {categories.map((category) => (
+            {visibleCategories.map((category) => (
               <Badge key={category.categoryId} variant='secondary' className='font-normal'>
                 {category.name}
               </Badge>
             ))}
+            {remainingCategories.length > 0 && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant='outline' className='cursor-help font-medium'>
+                    +{remainingCategories.length}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent
+                  side='bottom'
+                  align='start'
+                  sideOffset={6}
+                  className='max-w-64 rounded-lg border bg-popover p-2 text-popover-foreground shadow-lg [&>svg]:bg-popover [&>svg]:fill-popover'
+                >
+                  <div className='flex flex-col gap-1'>
+                    {remainingCategories.map((category) => (
+                      <div
+                        key={category.categoryId}
+                        className='rounded-md border bg-muted/40 px-2.5 py-1.5 text-xs font-medium'
+                      >
+                        {category.name}
+                      </div>
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         )
       },

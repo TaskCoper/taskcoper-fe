@@ -2,7 +2,7 @@ import { FileTextIcon, InfoIcon, LayersIcon, SlidersHorizontalIcon, type LucideI
 import type { Product } from '../../types'
 import { formatPrice, formatQuantity } from '../../utils'
 
-type FieldFormat = 'text' | 'price' | 'quantity'
+type FieldFormat = 'text' | 'price' | 'quantity' | 'decimal'
 
 type ProductStringKey = { [K in keyof Product]: Product[K] extends string | null ? K : never }[keyof Product]
 
@@ -35,7 +35,7 @@ export const PRICING_OVERVIEW_FIELDS: FieldConfig[] = [
   { key: 'importPriceRaw', label: 'products.field.importPrice', format: 'price' },
   { key: 'importPriceWithVatRaw', label: 'products.field.importPriceWithVat', format: 'price' },
   { key: 'costPriceRaw', label: 'products.field.costPrice', format: 'price' },
-  { key: 'profitPercentageRaw', label: 'products.field.profitPercentage' },
+  { key: 'profitPercentageRaw', label: 'products.field.profitPercentage', format: 'decimal' },
   { key: 'vatRaw', label: 'products.field.vat' },
   { key: 'saleVatMode', label: 'products.field.saleVatMode' },
   { key: 'importVatMode', label: 'products.field.importVatMode' },
@@ -117,7 +117,7 @@ export const PRICING_FIELDS: FieldConfig[] = [
   { key: 'importVatMode', label: 'products.field.importVatMode' },
   { key: 'importPriceWithVatRaw', label: 'products.field.importPriceWithVat', format: 'price' },
   { key: 'costPriceRaw', label: 'products.field.costPrice', format: 'price' },
-  { key: 'profitPercentageRaw', label: 'products.field.profitPercentage' },
+  { key: 'profitPercentageRaw', label: 'products.field.profitPercentage', format: 'decimal' },
   { key: 'vatRaw', label: 'products.field.vat' },
   { key: 'saleVatMode', label: 'products.field.saleVatMode' },
   { key: 'priceLabel', label: 'products.field.priceLabel' },
@@ -156,6 +156,10 @@ export interface SpecRow {
 function formatValue(raw: string | null, format: FieldFormat | undefined): string | null {
   if (format === 'price') return formatPrice(raw)
   if (format === 'quantity') return formatQuantity(raw)
+  if (format === 'decimal') {
+    const value = raw == null ? Number.NaN : Number(raw)
+    return Number.isFinite(value) ? value.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : null
+  }
   return raw?.trim() ? raw.trim() : null
 }
 

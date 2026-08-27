@@ -12,6 +12,7 @@ export interface GetProductsParams {
   priceTo?: number
   sortBy?: string[]
   isPin?: boolean
+  isActive?: boolean
   tag?: ProductTypeTag
 }
 
@@ -24,12 +25,24 @@ export const useGetProducts = ({
   priceTo,
   sortBy,
   isPin,
+  isActive,
   tag
 }: GetProductsParams) => {
   const { data: products, isLoading: isGettingProducts } = useQuery({
-    queryKey: ['products', pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy, isPin, tag],
+    queryKey: ['products', pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy, isPin, isActive, tag],
     queryFn: () =>
-      productService.getProducts({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy, isPin, tag })
+      productService.getProducts({
+        pageIndex,
+        pageSize,
+        search,
+        categoryIds,
+        priceFrom,
+        priceTo,
+        sortBy,
+        isPin,
+        isActive,
+        tag
+      })
   })
 
   return { products, isGettingProducts }

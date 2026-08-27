@@ -64,6 +64,7 @@ export default function ProductsPage() {
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
   const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
+  const [isActiveFilter] = useQueryState('products_isActive', parseAsBoolean)
 
   const [selectedProductType] = useQueryState('products_productType', parseAsString)
 
@@ -74,6 +75,7 @@ export default function ProductsPage() {
   const search = searchFilter ?? undefined
   const categoryIds = categoriesFilter?.length ? categoriesFilter : undefined
   const isPin = isPinFilter ?? undefined
+  const isActive = isActiveFilter ?? undefined
 
   const { products, isGettingProducts } = useGetProducts({
     pageIndex: page,
@@ -83,6 +85,7 @@ export default function ProductsPage() {
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
     priceTo: Number.isFinite(priceTo) ? priceTo : undefined,
     isPin,
+    isActive,
     tag
   })
 
@@ -99,6 +102,7 @@ export default function ProductsPage() {
       // reorders the table display only, so isPinned still sits first, right after the checkbox.
       columnOrder: ['select', 'isPinned'],
       columnVisibility: {
+        isActive: false,
         supplier: false,
         productType: false,
         barcode: false,

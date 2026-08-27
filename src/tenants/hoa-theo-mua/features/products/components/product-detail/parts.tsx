@@ -1,22 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CheckIcon, PackageIcon } from 'lucide-react'
-import { useMemo, type ReactNode } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { PackageIcon } from 'lucide-react'
+import { useEffect, useMemo, useRef, type ReactNode } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { Link } from 'react-router'
+import { useDebounce } from 'use-debounce'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../../config'
 import { useUpdateChildQuantity } from '../../combos/hooks/use-update-child-quantity'
 import { createComboFactorSchema, type ComboFactorFormValues } from '../../combos/validations'
 import { useGetProduct } from '../../hooks/use-get-product'
 import type { Product } from '../../types'
-import { formatPrice, formatQuantity, parseNumber } from '../../utils'
+import { formatPrice, formatQuantity } from '../../utils'
 import { isActiveStatus, type SpecRow } from './fields'
 
 export function DetailSection({
@@ -62,7 +63,7 @@ export function DetailRows({ rows, t }: { rows: SpecRow[]; t: TenantT }) {
           className='grid grid-cols-1 gap-0.5 px-3 py-2 text-sm sm:grid-cols-[minmax(0,16rem)_1fr] sm:items-baseline sm:gap-4'
         >
           <span className='text-muted-foreground'>{t(row.label)}</span>
-          <span className='break-words font-medium'>{row.value}</span>
+          <span className='wrap-break-word font-medium'>{row.value}</span>
         </div>
       ))}
     </div>
@@ -73,8 +74,8 @@ export function VariantRow({ variant, parentId, t }: { variant: Product; parentI
   const { product: variantDetail, isGettingProduct: isGettingVariantDetail } = useGetProduct({ id: variant.id })
   const name = variant.productName?.trim() || t('products.common.unnamed')
   const price = formatPrice(variant.priceWithVatRaw ?? variant.priceRaw)
-  const stock = formatQuantity(variant.availableForSaleRaw)
-  const available = parseNumber(variant.availableForSaleRaw)
+  const available = variantDetail?.sellableQuantity ?? null
+  const sellableQuan = formatQuantity(available == null ? null : String(available))
   const outOfStock = available !== null && available <= 0
   const active = isActiveStatus(variant.status) && !outOfStock
   const statusText = outOfStock
@@ -118,23 +119,13 @@ export function VariantRow({ variant, parentId, t }: { variant: Product; parentI
           {!variant.color?.trim() && !variant.size?.trim() && <span className='text-muted-foreground'>-</span>}
         </div>
       </TableCell>
-      <TableCell>
-        {isGettingVariantDetail ? (
-          <Skeleton className='h-9 w-36' />
-        ) : (
-          <VariantFactorEditor
-            key={`${variant.id}-${variantDetail?.factor ?? 'unconfigured'}`}
-            productId={variant.id}
-            parentId={parentId}
-            initialFactor={variantDetail?.factor ?? null}
-            t={t}
-          />
-        )}
-      </TableCell>
+
       <TableCell className='whitespace-nowrap text-right font-medium'>
         {price ?? t('products.detail.priceUnknown')}
       </TableCell>
-      <TableCell className='whitespace-nowrap text-right tabular-nums'>{stock ?? '-'}</TableCell>
+      <TableCell className='whitespace-nowrap text-right tabular-nums'>
+        {isGettingVariantDetail ? <Skeleton className='ml-auto h-5 w-12' /> : (sellableQuan ?? '-')}
+      </TableCell>
       <TableCell>
         <Badge
           variant='secondary'
@@ -148,6 +139,19 @@ export function VariantRow({ variant, parentId, t }: { variant: Product; parentI
           <span className={cn('size-1.5 rounded-full', active ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
           {statusText}
         </Badge>
+      </TableCell>
+      <TableCell className='text-center'>
+        {isGettingVariantDetail ? (
+          <Skeleton className='mx-auto h-9 w-36' />
+        ) : (
+          <VariantFactorEditor
+            key={`${variant.id}-${variantDetail?.factor ?? 'unconfigured'}`}
+            productId={variant.id}
+            parentId={parentId}
+            initialFactor={variantDetail?.factor ?? null}
+            t={t}
+          />
+        )}
       </TableCell>
     </TableRow>
   )
@@ -171,18 +175,35 @@ function VariantFactorEditor({
     mode: 'onChange'
   })
   const { updateChildQuantity, isUpdatingChildQuantity } = useUpdateChildQuantity()
+  const factor = useWatch({ control: form.control, name: 'factor' })
+  const [debouncedFactor] = useDebounce(factor, 500)
+  const lastAttemptedFactor = useRef<number | null>(initialFactor)
 
-  const handleSave = async ({ factor }: ComboFactorFormValues) => {
-    await updateChildQuantity({ productId, parentId, factor })
-  }
+  useEffect(() => {
+    if (isUpdatingChildQuantity || Object.is(debouncedFactor, lastAttemptedFactor.current)) return
+
+    const updateFactor = async () => {
+      const isValid = await form.trigger('factor')
+      if (!isValid || !Object.is(form.getValues('factor'), debouncedFactor)) return
+
+      lastAttemptedFactor.current = debouncedFactor
+      try {
+        await updateChildQuantity({ productId, parentId, factor: debouncedFactor })
+      } catch {
+        // The mutation displays the API error. Wait for another user change before retrying.
+      }
+    }
+
+    void updateFactor()
+  }, [debouncedFactor, form, isUpdatingChildQuantity, parentId, productId, updateChildQuantity])
 
   return (
-    <form className='flex min-w-44 items-start gap-2' onSubmit={form.handleSubmit(handleSave)}>
+    <div className='mx-auto w-32'>
       <Controller
         control={form.control}
         name='factor'
         render={({ field, fieldState }) => (
-          <div className='w-28'>
+          <div>
             <Input
               ref={field.ref}
               name={field.name}
@@ -196,7 +217,13 @@ function VariantFactorEditor({
               disabled={isUpdatingChildQuantity}
             />
             <FieldError className='mt-1 text-xs leading-tight' errors={[fieldState.error]} />
-            {!fieldState.error && field.value == null && (
+            {!fieldState.error && isUpdatingChildQuantity && (
+              <p className='mt-1 flex items-center justify-center gap-1 text-xs leading-tight text-muted-foreground'>
+                <Spinner className='size-3' />
+                {t('products.detail.comboSpecification.updatingFactor')}
+              </p>
+            )}
+            {!fieldState.error && !isUpdatingChildQuantity && field.value == null && (
               <p className='mt-1 text-xs leading-tight text-muted-foreground'>
                 {t('products.detail.comboSpecification.factorPlaceholder')}
               </p>
@@ -204,16 +231,7 @@ function VariantFactorEditor({
           </div>
         )}
       />
-      <Button
-        type='submit'
-        size='icon'
-        disabled={isUpdatingChildQuantity}
-        aria-label={t('products.detail.comboSpecification.saveFactor')}
-        title={t('products.detail.comboSpecification.saveFactor')}
-      >
-        <CheckIcon />
-      </Button>
-    </form>
+    </div>
   )
 }
 
@@ -228,7 +246,7 @@ export function ProductDetailSkeleton() {
         </div>
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className='h-[82px] w-full rounded-2xl' />
+            <Skeleton key={i} className='h-20.5 w-full rounded-2xl' />
           ))}
         </div>
         <div className='flex gap-2 border-b'>

@@ -48,6 +48,7 @@ class ProductService extends BaseService {
     priceTo,
     sortBy,
     isPin,
+    isActive,
     tag
   }: GetProductsParams) => {
     const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v2/${this.baseUrl}`, {
@@ -60,6 +61,7 @@ class ProductService extends BaseService {
         priceTo,
         sortBy,
         isPin,
+        isActive,
         tag
       }
     })

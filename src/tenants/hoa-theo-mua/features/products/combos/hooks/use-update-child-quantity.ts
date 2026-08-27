@@ -13,7 +13,7 @@ export const useUpdateChildQuantity = () => {
     mutationFn: ({ productId, factor }: { productId: string; factor: number | null; parentId?: string }) =>
       productService.updateChildQuantity({ productId, factor }),
     onSuccess: (message) => {
-      toast.success(message || t('products.detail.comboSpecification.saveFactor'))
+      toast.success(message || t('products.detail.comboSpecification.updateFactorSuccess'))
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
