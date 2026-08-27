@@ -1,4 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -23,7 +32,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { ListFilterIcon, PlusIcon, SearchIcon, TriangleAlertIcon } from 'lucide-react'
+import { getErrorDescription } from '../../error-description'
+import { isAxiosError } from 'axios'
+import { ListFilterIcon, LoaderCircleIcon, PlusIcon, SearchIcon, TriangleAlertIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
@@ -31,12 +42,17 @@ import type { ComboMaterial, MaterialOption, MaterialProductLabel } from '../typ
 import { createComboMaterialsSchema, type ComboMaterialsFormValues } from '../validations'
 import { useAddComboSpecificationItems } from '../hooks/use-add-combo-specification-items'
 import { useGetMaterials } from '../hooks/use-get-materials'
+import { useUpdateComboPublication } from '../hooks/use-update-combo-publication'
 import { SelectedMaterialCard } from './selected-material-card'
 import type { MaterialDraft } from './selected-material-card'
 
 const MAX_COMBO_MATERIALS = 15
 const MATERIALS_PAGE_SIZE = 10
 type MaterialRoleTab = 'core' | 'support'
+type PublicationConflict = {
+  message: string
+  items: ComboMaterialsFormValues['items']
+}
 
 export function AddMaterialsDialog({
   open,
@@ -56,6 +72,7 @@ export function AddMaterialsDialog({
   const [selectedMaterialDetails, setSelectedMaterialDetails] = useState<Record<string, MaterialOption>>({})
   const [materialsPageIndex, setMaterialsPageIndex] = useState(1)
   const [activeRoleTab, setActiveRoleTab] = useState<MaterialRoleTab>('core')
+  const [publicationConflict, setPublicationConflict] = useState<PublicationConflict | null>(null)
   const [debouncedSearch] = useDebounce(search.trim(), 500)
   const materialsSchema = useMemo(() => createComboMaterialsSchema(t), [t])
   const materialsForm = useForm<ComboMaterialsFormValues>({
@@ -110,6 +127,8 @@ export function AddMaterialsDialog({
     enabled: open
   })
   const { addComboSpecificationItems, isAddingComboSpecificationItems } = useAddComboSpecificationItems()
+  const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
+  const isSubmitting = isAddingComboSpecificationItems || isUpdatingComboPublication
   const totalPages = Math.ceil((materialsResult?.totalCount ?? 0) / (materialsResult?.pageSize || MATERIALS_PAGE_SIZE))
   const currentMaterialsPage = Math.min(materialsPageIndex, Math.max(totalPages, 1))
   const coreDrafts = drafts.filter((draft) => draft.isCore)
@@ -169,22 +188,56 @@ export function AddMaterialsDialog({
     }
   }
   const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen && !isAddingComboSpecificationItems) {
+    if (!nextOpen && !isSubmitting) {
       materialsForm.reset({ items: [] })
       setSelectedMaterialDetails({})
       setSearch('')
       setProductLabel(undefined)
       setMaterialsPageIndex(1)
       setActiveRoleTab('core')
+      setPublicationConflict(null)
     }
     onOpenChange(nextOpen)
   }
+  const getPublicationConflictMessage = (error: unknown) => {
+    if (!isAxiosError(error) || error.response?.status !== 409) return null
+
+    return (
+      getErrorDescription(error.response.data) ?? t('products.detail.comboSpecification.publicationConflictFallback')
+    )
+  }
   const handleSave = async ({ items }: ComboMaterialsFormValues) => {
-    await addComboSpecificationItems({
-      comboId,
-      body: { items }
-    })
-    handleOpenChange(false)
+    try {
+      await addComboSpecificationItems({
+        comboId,
+        body: { items }
+      })
+      handleOpenChange(false)
+    } catch (error) {
+      const message = getPublicationConflictMessage(error)
+      if (message) setPublicationConflict({ message, items })
+    }
+  }
+  const handleContinueAdding = async () => {
+    if (!publicationConflict) return
+
+    try {
+      await updateComboPublication({ comboId, publish: false })
+    } catch {
+      return
+    }
+
+    try {
+      await addComboSpecificationItems({
+        comboId,
+        body: { items: publicationConflict.items }
+      })
+      setPublicationConflict(null)
+      handleOpenChange(false)
+    } catch (error) {
+      const message = getPublicationConflictMessage(error)
+      if (message) setPublicationConflict((current) => (current ? { ...current, message } : current))
+    }
   }
 
   return (
@@ -408,26 +461,45 @@ export function AddMaterialsDialog({
           </section>
         </div>
         <DialogFooter>
-          <Button
-            type='button'
-            variant='outline'
-            onClick={() => handleOpenChange(false)}
-            disabled={isAddingComboSpecificationItems}
-          >
+          <Button type='button' variant='outline' onClick={() => handleOpenChange(false)} disabled={isSubmitting}>
             {t('common.button.cancel')}
           </Button>
           <Button
             type='button'
             onClick={() => void materialsForm.handleSubmit(handleSave)()}
-            disabled={drafts.length === 0 || isAddingComboSpecificationItems}
+            disabled={drafts.length === 0 || isSubmitting}
           >
             <PlusIcon data-icon='inline-start' />
-            {isAddingComboSpecificationItems
-              ? t('common.ui.loading')
-              : t('products.detail.comboSpecification.addRecipe')}
+            {isSubmitting ? t('common.ui.loading') : t('products.detail.comboSpecification.addRecipe')}
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      <AlertDialog
+        open={publicationConflict !== null}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen && !isSubmitting) setPublicationConflict(null)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('products.detail.comboSpecification.publicationConflictTitle')}</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className='space-y-2'>
+                <p>{publicationConflict?.message}</p>
+                <p>{t('products.detail.comboSpecification.continueAddingQuestion')}</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>{t('common.button.cancel')}</AlertDialogCancel>
+            <Button type='button' onClick={() => void handleContinueAdding()} disabled={isSubmitting}>
+              {isSubmitting && <LoaderCircleIcon className='animate-spin' />}
+              {t('products.detail.comboSpecification.continueAdding')}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }
