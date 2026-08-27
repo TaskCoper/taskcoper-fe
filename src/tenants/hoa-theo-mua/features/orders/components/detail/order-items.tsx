@@ -29,6 +29,7 @@ function MaterialTable({ materials, t }: { materials: SystemOrderMaterialSnapsho
           <TableHeader>
             <TableRow className='hover:bg-transparent'>
               <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materials')}</TableHead>
+              <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materialType')}</TableHead>
               <TableHead className='h-9 text-right text-xs'>{t('systemOrders.detail.itemQuantity')}</TableHead>
               <TableHead className='h-9 text-right text-xs'>{t('systemOrders.detail.itemPrice')}</TableHead>
             </TableRow>
@@ -43,6 +44,15 @@ function MaterialTable({ materials, t }: { materials: SystemOrderMaterialSnapsho
                   >
                     {material.name?.trim() || empty}
                   </Link>
+                </TableCell>
+                <TableCell className='py-2 text-sm'>
+                  <Badge variant={material.isCore ? 'default' : 'secondary'} className='font-normal'>
+                    {t(
+                      material.isCore
+                        ? 'products.detail.comboSpecification.core'
+                        : 'products.detail.comboSpecification.support'
+                    )}
+                  </Badge>
                 </TableCell>
                 <TableCell className='py-2 text-right text-sm tabular-nums'>
                   {formatNumber(material.quantity, empty)}

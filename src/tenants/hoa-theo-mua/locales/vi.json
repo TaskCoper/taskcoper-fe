@@ -2138,6 +2138,7 @@
       "identityNumber": "Số CCCD",
       "receiptAddress": "Địa chỉ nhận hóa đơn",
       "materials": "Nguyên liệu",
+      "materialType": "Loại",
       "showMaterials": "Xem nguyên liệu",
       "hideMaterials": "Ẩn nguyên liệu",
       "noItems": "Đơn hàng này không có sản phẩm",

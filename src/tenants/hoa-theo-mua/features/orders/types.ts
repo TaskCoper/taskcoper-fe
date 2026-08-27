@@ -222,6 +222,7 @@ export interface SystemOrderMaterialSnapshot {
   name: string | null
   quantity: number | null
   price: number | null
+  isCore: boolean
 }
 
 /** Product snapshot stored on an order line item. */

@@ -2138,6 +2138,7 @@
       "identityNumber": "Identity number",
       "receiptAddress": "Receipt address",
       "materials": "Materials",
+      "materialType": "Type",
       "showMaterials": "Show materials",
       "hideMaterials": "Hide materials",
       "noItems": "This order has no products",
