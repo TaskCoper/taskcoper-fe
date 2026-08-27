@@ -14,16 +14,17 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import {
-  ChevronDownIcon,
-  ChevronRightIcon,
   CopyIcon,
   ExternalLinkIcon,
+  EyeIcon,
   MoreHorizontalIcon,
   PencilIcon,
   QrCodeIcon,
   SearchIcon
 } from 'lucide-react'
+import { Link } from 'react-router'
 import { toast } from 'sonner'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
 import { OrderStatus, OrderStatusLabel, type SystemOrder } from '../types'
 import { vndFormatter } from '../utils'
 
@@ -88,27 +89,6 @@ export const getSystemOrderColumns = ({
       size: 40
     },
     {
-      id: 'expand',
-      header: () => null,
-      cell: ({ row }) => (
-        <Button
-          variant='ghost'
-          size='icon'
-          className='size-6'
-          onClick={() => row.toggleExpanded()}
-          aria-label={t(
-            row.getIsExpanded() ? 'systemOrders.action.collapseDetails' : 'systemOrders.action.showDetails'
-          )}
-        >
-          {row.getIsExpanded() ? <ChevronDownIcon className='size-4' /> : <ChevronRightIcon className='size-4' />}
-        </Button>
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      enableColumnFilter: false,
-      size: 40
-    },
-    {
       id: 'customer',
       accessorFn: (row) => row.fullName,
       meta: {
@@ -124,10 +104,18 @@ export const getSystemOrderColumns = ({
         if (!name && !phone) return renderNoData(t)
 
         return (
-          <div className='flex max-w-48 flex-col'>
-            {name && <span className='truncate font-medium'>{name}</span>}
+          <Link
+            to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${row.original.orderId}`}
+            className='group flex max-w-48 flex-col'
+          >
+            {name && (
+              <span className='inline-flex items-center gap-1 truncate font-medium text-primary group-hover:underline'>
+                {name}
+                <ExternalLinkIcon className='size-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-100' />
+              </span>
+            )}
             {phone && <span className='truncate text-xs text-muted-foreground'>{phone}</span>}
-          </div>
+          </Link>
         )
       },
       enableSorting: false,
@@ -343,6 +331,12 @@ export const getSystemOrderColumns = ({
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
                 <DropdownMenuLabel>{t('systemOrders.action.actions')}</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.orderId}`}>
+                    <EyeIcon className='size-4' />
+                    {t('systemOrders.action.viewDetails')}
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild disabled={!paymentUrl?.trim()}>
                   <a href={paymentUrl} target='_blank' rel='noreferrer'>
                     <ExternalLinkIcon className='size-4' />

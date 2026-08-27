@@ -302,7 +302,18 @@ function ComboboxList<TData>({
         onValueChange={onSearchChange}
         className='h-9'
       />
-      <CommandList className={items.length > 0 ? 'border-t' : ''}>
+      <CommandList className='border-t'>
+        {isLoading && (
+          <div className='flex items-center justify-center gap-1.5 py-6 text-sm text-muted-foreground'>
+            <Spinner className='size-4' />
+            {t('common.ui.loading')}
+          </div>
+        )}
+
+        {!isLoading && items.length === 0 && (
+          <p className='py-6 text-center text-sm text-muted-foreground'>{t('common.ui.infiniteSelect.noResults')}</p>
+        )}
+
         {!isLoading && items.length > 0 && (
           <CommandGroup>
             {items.map((item) => {
