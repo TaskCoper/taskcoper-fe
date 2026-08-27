@@ -7,6 +7,7 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 const OrdersPage = lazy(() => import('./pages/orders.page'))
 const OrderPage = lazy(() => import('./pages/order.page'))
 const SystemOrdersPage = lazy(() => import('./pages/system-orders.page'))
+const SystemOrderPage = lazy(() => import('./pages/system-order.page'))
 
 const ProductPage = lazy(() => import('./pages/product.page'))
 const ProductsPage = lazy(() => import('./pages/products.page'))
@@ -44,6 +45,7 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         children: [
           { path: 'orders', element: <OrdersPage /> },
           { path: 'system-orders', element: <SystemOrdersPage /> },
+          { path: 'system-orders/:id', element: <SystemOrderPage /> },
           { path: 'orders/:id', element: <OrderPage /> }
         ]
       },

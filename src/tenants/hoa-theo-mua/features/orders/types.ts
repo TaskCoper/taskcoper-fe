@@ -215,3 +215,94 @@ export interface SystemOrder
   updateAt: string | null // DateTimeOffset
   userId: string // Guid
 }
+
+/** A material line captured on the product snapshot at the time the order was placed. */
+export interface SystemOrderMaterialSnapshot {
+  matId: string // Guid
+  name: string | null
+  quantity: number | null
+  price: number | null
+}
+
+/** Product snapshot stored on an order line item. */
+export interface SystemOrderItemSnapshot {
+  subId: string | null // Guid
+  materials: SystemOrderMaterialSnapshot[] | null
+}
+
+/** A single line item within a system order. */
+export interface SystemOrderItem {
+  orderDetailsId: string // Guid
+  productId: string | null // Guid
+  parentProductId: string | null // Guid
+  name: string | null
+  parentProductName: string | null
+  coverImage: string | null
+  itemId: number | null
+  number: number | null
+  price: number | null
+  weight: number | null
+  length: number | null
+  width: number | null
+  height: number | null
+  snapshot: SystemOrderItemSnapshot | null
+}
+
+/** Payment transaction attached to a paid system order. */
+export interface SystemOrderTransaction {
+  transferAmount: number | null
+  code: string | null
+  gateway: string | null
+  transactionDate: string | null // DateTimeOffset
+}
+
+/**
+ * A system order returned by GET /v1/orders/{id}.
+ * Shares most of its shape with `SystemOrder` (the list row) but exposes line items,
+ * the receiver contact and the payment transaction instead of the list-only fields.
+ */
+export interface SystemOrderDetail extends SystemOrderCoordinates, SystemOrderFees {
+  orderId: string // Guid
+  status: OrderStatus
+  fullName: string | null
+  phone: string | null
+  fullNameReceiver: string | null
+  phoneReceiver: string | null
+  userId: string // Guid
+  remark: string | null
+  orderTime: number | null
+  tagsId: number[] | null
+  createAt: string // DateTimeOffset
+
+  // Shipping
+  trackNumber: string | null
+  ahahaMoveOrderId: string | null
+  ahahaMoveTrackingUrl: string | null
+
+  // Payment
+  paymentMethod: number | null
+  paymentUrl: string | null
+  sepayUrl: string | null
+  transaction: SystemOrderTransaction | null
+
+  // Invoice
+  isExportInvoice: boolean
+  invoiceType: number | null
+  taxCode: string | null
+  identityNumber: string | null
+  receiptFullName: string | null
+  receiptPhoneNumber: string | null
+  receiptAddress: string | null
+  receiptEmail: string | null
+  vatFee: number | null
+
+  details: SystemOrderItem[] | null
+}
+
+/** Minimal shape needed to edit an order's shipping details - satisfied by both `SystemOrder` and `SystemOrderDetail`. */
+export interface EditableSystemOrder {
+  orderId: string
+  trackNumber: string | null
+  ahahaMoveTrackingUrl: string | null
+  shippingFee: number | null
+}

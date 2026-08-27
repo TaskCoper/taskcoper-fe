@@ -14,10 +14,10 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { SaveIcon } from 'lucide-react'
 import { Controller } from 'react-hook-form'
 import { useUpdateOrder } from '../hooks/use-update-order'
-import type { SystemOrder } from '../types'
+import type { EditableSystemOrder } from '../types'
 
 interface UpdateSystemOrderDialogProps {
-  order: SystemOrder | null
+  order: EditableSystemOrder | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }

@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import orderService from '../services'
-import type { SystemOrder } from '../types'
+import type { EditableSystemOrder } from '../types'
 import { updateOrderFormSchema, type UpdateOrderFormValues } from '../validation'
 
 const defaultValues: UpdateOrderFormValues = {
@@ -15,7 +15,10 @@ const defaultValues: UpdateOrderFormValues = {
   shippingFee: ''
 }
 
-export const useUpdateOrder = ({ order, onSuccess }: { order?: SystemOrder | null; onSuccess?: () => void } = {}) => {
+export const useUpdateOrder = ({
+  order,
+  onSuccess
+}: { order?: EditableSystemOrder | null; onSuccess?: () => void } = {}) => {
   const queryClient = useQueryClient()
   const { t } = useTenantTranslation()
   const schema = useMemo(() => updateOrderFormSchema(t), [t])

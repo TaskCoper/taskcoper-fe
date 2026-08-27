@@ -1,18 +1,17 @@
 import AsyncMultiSelectField from '@/components/async-multi-select-field'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { CornerDownRightIcon, FolderIcon, TagIcon, TagsIcon } from 'lucide-react'
+import { CornerDownRightIcon, FolderIcon, TagIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
-import { useDebounce } from 'use-debounce'
 import { useGetCategories } from '../../categories/hooks/use-get-categories'
 import { useUpdateProductCategories } from '../../categories/hooks/use-update-product-categories'
 import type { Category } from '../../categories/types'
 import { CategoryProductType } from '../../categories/types'
 import type { UpdateProductCategoriesFormValues } from '../../categories/validations'
 import type { Product } from '../types'
+import { DetailSection } from './product-detail/parts'
 
 type CategoryListItem = UpdateProductCategoriesFormValues['categoryProductLists'][number]
 
@@ -21,8 +20,37 @@ interface CategoryOption {
   depth: number
 }
 
+/**
+ * The category tree is small, so the whole thing is fetched once and searched in the browser.
+ * Server-side `keyword` filtering only ever matched root categories, which made child categories
+ * unfindable no matter how exactly their name was typed.
+ */
+const CATEGORY_PAGE_SIZE = 200
+
+/** Lowercase + strip Vietnamese diacritics so "hoa cuoi" matches "Hoa cưới". */
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+
 const flattenCategories = (categories: Category[], depth = 0): CategoryOption[] =>
   categories.flatMap((category) => [{ category, depth }, ...flattenCategories(category.children ?? [], depth + 1)])
+
+/** Keeps a category when it matches, or when any of its descendants does (so the parent stays as context). */
+const filterCategories = (categories: Category[], query: string): Category[] =>
+  categories.reduce<Category[]>((matches, category) => {
+    if (normalizeText(category.name).includes(query)) {
+      matches.push(category)
+      return matches
+    }
+
+    const children = filterCategories(category.children ?? [], query)
+    if (children.length > 0) matches.push({ ...category, children })
+
+    return matches
+  }, [])
 
 interface ProductCategoriesEditorProps {
   product: Product
@@ -32,35 +60,34 @@ export default function ProductCategoriesEditor({ product }: ProductCategoriesEd
   const { t } = useTenantTranslation()
 
   const [search, setSearch] = useState('')
-  const [debouncedSearch] = useDebounce(search.trim(), 300)
 
-  const { categories, isLoadingCategories } = useGetCategories({
-    keyword: debouncedSearch || undefined
-  })
+  const { categories, isLoadingCategories } = useGetCategories({ pageSize: CATEGORY_PAGE_SIZE })
 
-  const options = useMemo(() => flattenCategories(categories.value.items), [categories.value.items])
+  const allOptions = useMemo(() => flattenCategories(categories.value.items), [categories.value.items])
+
+  const options = useMemo(() => {
+    const query = normalizeText(search.trim())
+    if (!query) return allOptions
+
+    return flattenCategories(filterCategories(categories.value.items, query))
+  }, [allOptions, categories.value.items, search])
 
   const categoryNameById = useMemo(() => {
     const map = new Map<string, string>()
     product.categories.forEach((category) => map.set(category.categoryId, category.name))
-    options.forEach(({ category }) => map.set(category.categoryId, category.name))
+    allOptions.forEach(({ category }) => map.set(category.categoryId, category.name))
     return map
-  }, [product.categories, options])
+  }, [product.categories, allOptions])
 
   const { methods, updateProductCategories, isUpdatingProductCategories } = useUpdateProductCategories(product)
 
   const onSubmit = methods.handleSubmit((values) => updateProductCategories(values))
 
   return (
-    <Card className='gap-4 p-5 shadow-none'>
-      <div className='space-y-1'>
-        <div className='flex items-center gap-2'>
-          <TagsIcon className='size-4 text-muted-foreground' />
-          <h2 className='text-sm font-semibold'>{t('products.detail.categories.title')}</h2>
-        </div>
-        <p className='text-xs text-muted-foreground'>{t('products.detail.categories.description')}</p>
-      </div>
-
+    <DetailSection
+      title={t('products.detail.categories.title')}
+      description={t('products.detail.categories.description')}
+    >
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} className='space-y-4'>
           <AsyncMultiSelectField<UpdateProductCategoriesFormValues, CategoryListItem, CategoryOption>
@@ -109,6 +136,6 @@ export default function ProductCategoriesEditor({ product }: ProductCategoriesEd
           </div>
         </form>
       </FormProvider>
-    </Card>
+    </DetailSection>
   )
 }
