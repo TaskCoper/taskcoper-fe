@@ -99,6 +99,9 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "aiCustom": {
+    "comingSoon": "This feature is under development"
+  },
   "navigation": {
     "products": {
       "title": "Product",
@@ -131,6 +134,21 @@
       "articles": "Articles",
       "categories": "Categories",
       "add": "Write article"
+    },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "AI Cards",
+      "flowerDesigns": "AI Flower Designs"
+    },
+    "templateManagement": {
+      "title": "Template Management",
+      "cardTemplates": "Card Templates",
+      "flowerMockups": "Flower Mockups"
+    },
+    "cardConfiguration": {
+      "title": "Card Configuration",
+      "sizes": "Card Sizes",
+      "handwritingSurcharge": "Handwriting Surcharge"
     },
     "systemConfigs": "System configurations"
   },

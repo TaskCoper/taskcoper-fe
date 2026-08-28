@@ -3,10 +3,13 @@ import {
   BriefcaseIcon,
   FlowerIcon,
   FolderTreeIcon,
+  LayoutTemplateIcon,
   MapPinIcon,
   NewspaperIcon,
   PackageIcon,
-  SettingsIcon
+  SettingsIcon,
+  SlidersHorizontalIcon,
+  SparklesIcon
 } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
@@ -147,6 +150,60 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         titleKey: 'navigation.news.add',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/add`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.aiCustom.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`,
+    icon: SparklesIcon,
+    feature: 'custom.aiCustom',
+    items: [
+      {
+        titleKey: 'navigation.aiCustom.cards',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`]
+      },
+      {
+        titleKey: 'navigation.aiCustom.flowerDesigns',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/flower-designs`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/flower-designs`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.templateManagement.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/card-templates`,
+    icon: LayoutTemplateIcon,
+    feature: 'custom.templateManagement',
+    items: [
+      {
+        titleKey: 'navigation.templateManagement.cardTemplates',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/card-templates`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/card-templates`]
+      },
+      {
+        titleKey: 'navigation.templateManagement.flowerMockups',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/flower-mockups`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/flower-mockups`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.cardConfiguration.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`,
+    icon: SlidersHorizontalIcon,
+    feature: 'custom.cardConfiguration',
+    items: [
+      {
+        titleKey: 'navigation.cardConfiguration.sizes',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`]
+      },
+      {
+        titleKey: 'navigation.cardConfiguration.handwritingSurcharge',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/handwriting-surcharge`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/handwriting-surcharge`]
       }
     ]
   }

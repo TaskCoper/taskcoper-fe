@@ -99,6 +99,9 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "aiCustom": {
+    "comingSoon": "Tính năng đang được phát triển"
+  },
   "navigation": {
     "products": {
       "title": "Sản phẩm",
@@ -131,6 +134,21 @@
       "articles": "Bài viết",
       "categories": "Danh mục",
       "add": "Viết bài"
+    },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "Thiệp AI",
+      "flowerDesigns": "Mẫu hoa AI"
+    },
+    "templateManagement": {
+      "title": "Quản lý mẫu",
+      "cardTemplates": "Mẫu thiệp",
+      "flowerMockups": "Mockup mẫu hoa"
+    },
+    "cardConfiguration": {
+      "title": "Cấu hình thiệp",
+      "sizes": "Kích thước thiệp",
+      "handwritingSurcharge": "Phụ phí viết tay"
     },
     "systemConfigs": "Cấu hình hệ thống"
   },
