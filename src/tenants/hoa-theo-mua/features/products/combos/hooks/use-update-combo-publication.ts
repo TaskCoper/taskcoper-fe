@@ -54,10 +54,10 @@ export const useUpdateComboPublication = () => {
       })
     },
     onSettled: (_data, error, { comboId }) => {
+      if (!error) return
+
       void queryClient.invalidateQueries({ queryKey: productKeys.detail(comboId) })
-      if (error) {
-        void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(comboId) })
-      }
+      void queryClient.invalidateQueries({ queryKey: productKeys.comboSpecification(comboId) })
     }
   })
 
