@@ -100,7 +100,41 @@
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
   "aiCustom": {
-    "comingSoon": "Tính năng đang được phát triển"
+    "comingSoon": "Tính năng đang được phát triển",
+    "history": {
+      "title": "Lịch sử thiệp AI",
+      "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "column": {
+        "preview": "Ảnh thiệp",
+        "code": "Mã thiệp",
+        "customer": "Khách hàng",
+        "template": "Template",
+        "size": "Kích thước",
+        "writingMode": "Hình thức",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Gõ máy"
+      },
+      "walkInCustomer": "Khách vãng lai",
+      "previewAlt": "Ảnh thiệp {{code}}",
+      "openPreview": "Xem ảnh thiệp {{code}}",
+      "viewDetail": "Xem chi tiết"
+    },
+    "detail": {
+      "title": "Chi tiết thiệp AI",
+      "description": "Thông tin chi tiết sẽ được bổ sung khi backend hoàn thiện.",
+      "cardId": "Mã bản ghi",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ."
+    },
+    "download": {
+      "action": "Tải ảnh thiệp xuống",
+      "failed": "Tải thiệp thất bại. Vui lòng thử lại"
+    }
   },
   "navigation": {
     "products": {

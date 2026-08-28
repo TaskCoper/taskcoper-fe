@@ -100,7 +100,41 @@
     "categoriesComingSoon": "Categories - Coming Soon"
   },
   "aiCustom": {
-    "comingSoon": "This feature is under development"
+    "comingSoon": "This feature is under development",
+    "history": {
+      "title": "AI card history",
+      "description": "View and search successfully generated AI cards.",
+      "searchPlaceholder": "Search by card code, customer, or template...",
+      "column": {
+        "preview": "Preview",
+        "code": "Card code",
+        "customer": "Customer",
+        "template": "Template",
+        "size": "Size",
+        "writingMode": "Format",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Typed"
+      },
+      "walkInCustomer": "Walk-in customer",
+      "previewAlt": "Card {{code}} preview",
+      "openPreview": "Open card {{code}} preview",
+      "viewDetail": "View details"
+    },
+    "detail": {
+      "title": "AI card details",
+      "description": "Detailed information will be added when the backend is ready.",
+      "cardId": "Record ID",
+      "back": "Back to history",
+      "notFound": "The card was not found or does not have a valid output image."
+    },
+    "download": {
+      "action": "Download card image",
+      "failed": "Failed to download the card. Please try again"
+    }
   },
   "navigation": {
     "products": {

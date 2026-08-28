@@ -162,7 +162,10 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
       {
         titleKey: 'navigation.aiCustom.cards',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`]
+        activePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards/:id`
+        ]
       },
       {
         titleKey: 'navigation.aiCustom.flowerDesigns',

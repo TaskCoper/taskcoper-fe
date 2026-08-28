@@ -5,6 +5,7 @@ import { Outlet, type RouteObject } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
 const AiCardsPage = lazy(() => import('./pages/ai-cards.page'))
+const AiCardDetailPage = lazy(() => import('./pages/ai-card-detail.page'))
 const AiFlowerDesignsPage = lazy(() => import('./pages/ai-flower-designs.page'))
 const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
 const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
@@ -106,6 +107,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           {
             path: 'ai-custom/cards',
             element: <AiCardsPage />
+          },
+          {
+            path: 'ai-custom/cards/:id',
+            element: <AiCardDetailPage />
           },
           {
             path: 'ai-custom/flower-designs',
