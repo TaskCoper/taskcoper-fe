@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon } from 'lucide-react'
+import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon, TagsIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import type { Product } from '../types'
 import { formatPrice, formatQuantity, parseNumber } from '../utils'
@@ -303,25 +303,46 @@ export const getProductColumns = ({
             {remainingCategories.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge variant='outline' className='cursor-help font-medium'>
+                  <Badge
+                    variant='secondary'
+                    className='cursor-help font-normal'
+                    aria-label={`${remainingCategories.length} ${t('products.column.categories')}`}
+                  >
                     +{remainingCategories.length}
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent
                   side='bottom'
                   align='start'
-                  sideOffset={6}
-                  className='max-w-64 rounded-lg border bg-popover p-2 text-popover-foreground shadow-lg [&>svg]:bg-popover [&>svg]:fill-popover'
+                  sideOffset={8}
+                  className='w-72 rounded-xl border bg-popover p-0 text-popover-foreground shadow-xl'
+                  arrowClassName='bg-popover fill-popover'
                 >
-                  <div className='flex flex-col gap-1'>
-                    {remainingCategories.map((category) => (
-                      <div
-                        key={category.categoryId}
-                        className='rounded-md border bg-muted/40 px-2.5 py-1.5 text-xs font-medium'
-                      >
-                        {category.name}
+                  <div className='overflow-hidden rounded-xl'>
+                    <div className='flex items-center justify-between border-b bg-muted/40 px-3 py-2.5'>
+                      <div className='flex items-center gap-2'>
+                        <span className='flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary'>
+                          <TagsIcon className='size-3.5' aria-hidden='true' />
+                        </span>
+                        <span className='text-sm font-semibold'>{t('products.column.categories')}</span>
                       </div>
-                    ))}
+                      <Badge variant='secondary' className='h-5 min-w-5 justify-center px-1.5 text-xs font-semibold'>
+                        {remainingCategories.length}
+                      </Badge>
+                    </div>
+                    <div className='max-h-56 space-y-1 overflow-y-auto p-2'>
+                      {remainingCategories.map((category) => (
+                        <div
+                          key={category.categoryId}
+                          className='flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-muted/60'
+                        >
+                          <span className='size-1.5 shrink-0 rounded-full bg-primary/70' aria-hidden='true' />
+                          <span className='min-w-0 truncate text-sm font-medium' title={category.name}>
+                            {category.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </TooltipContent>
               </Tooltip>

@@ -7,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { ComboRole, ComboRoleLabel, type ComboMaterial } from '../types'
+import { Link } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '@/tenants/hoa-theo-mua/config'
 
 // const CORE_ROLE = '1'
 
@@ -97,28 +99,30 @@ export default function ComboMaterialTable({
                   />
                 </TableCell>
                 <TableCell className='min-w-52 font-medium'>
-                  <div className='flex min-w-0 items-center gap-3'>
-                    <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-                      <img
-                        src={material.coverImage || '/images/placeholder-cover.png'}
-                        alt={material.materialName || material.materialId}
-                        className='size-full object-cover'
-                      />
+                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.materialId}`}>
+                    <div className='flex min-w-0 items-center gap-3'>
+                      <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
+                        <img
+                          src={material.coverImage || '/images/placeholder-cover.png'}
+                          alt={material.materialName || material.materialId}
+                          className='size-full object-cover'
+                        />
+                      </div>
+                      <div className='flex min-w-0 flex-col items-start gap-1'>
+                        <span className='block truncate'>
+                          {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
+                        </span>
+                        {material.availableForSale != null && material.availableForSale <= 0 && (
+                          <Badge
+                            variant='outline'
+                            className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+                          >
+                            {t('products.detail.outOfStock')}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <div className='flex min-w-0 flex-col items-start gap-1'>
-                      <span className='block truncate'>
-                        {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
-                      </span>
-                      {material.availableForSale != null && material.availableForSale <= 0 && (
-                        <Badge
-                          variant='outline'
-                          className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
-                        >
-                          {t('products.detail.outOfStock')}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
+                  </Link>
                 </TableCell>
                 <TableCell className='text-right tabular-nums'>
                   {isEditing ? (
