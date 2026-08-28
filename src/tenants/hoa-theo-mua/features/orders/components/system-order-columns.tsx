@@ -25,7 +25,7 @@ import {
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
-import { OrderStatus, OrderStatusLabel, type SystemOrder } from '../types'
+import { OrderStatus, OrderStatusLabel, OrderStatusStyle, type SystemOrder } from '../types'
 import { vndFormatter } from '../utils'
 
 const renderNoData = (t: TenantT) => (
@@ -174,7 +174,7 @@ export const getSystemOrderColumns = ({
       ),
       cell: ({ row }) => {
         const status = row.original.status
-        const positive = status === OrderStatus.Paid
+        const style = OrderStatusStyle[status] ?? OrderStatusStyle[OrderStatus.Pending]
         const label = OrderStatusLabel[status] ? t(OrderStatusLabel[status]) : status
 
         return (
@@ -182,12 +182,10 @@ export const getSystemOrderColumns = ({
             <span
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
-                positive
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-                  : 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'
+                style.badge
               )}
             >
-              <span className={cn('size-1.5 rounded-full', positive ? 'bg-emerald-500' : 'bg-amber-500')} />
+              <span className={cn('size-1.5 rounded-full', style.dot)} />
               {label}
             </span>
           </div>

@@ -400,7 +400,8 @@
     },
     "status": {
       "paid": "Paid",
-      "pending": "Pending"
+      "pending": "Pending",
+      "cancelled": "Cancelled"
     }
   },
   "products": {

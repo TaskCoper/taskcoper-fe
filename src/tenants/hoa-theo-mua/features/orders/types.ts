@@ -2,14 +2,33 @@ import type { I18nKey } from '@/lib/i18n/types'
 
 export const OrderStatus = {
   Paid: 'Paid',
-  Pending: 'Pending'
+  Pending: 'Pending',
+  Cancelled: 'Cancelled'
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export const OrderStatusLabel: Record<OrderStatus, I18nKey> = {
-  [OrderStatus.Paid]: 'orders.status.paid',
-  [OrderStatus.Pending]: 'orders.status.pending'
+  [OrderStatus.Paid]: 'orders.status.paid' as I18nKey,
+  [OrderStatus.Pending]: 'orders.status.pending' as I18nKey,
+  [OrderStatus.Cancelled]: 'orders.status.cancelled' as I18nKey
+}
+
+export const OrderStatusStyle: Record<OrderStatus, { dot: string; badge: string }> = {
+  [OrderStatus.Paid]: {
+    dot: 'bg-emerald-500',
+    badge:
+      'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+  },
+  [OrderStatus.Pending]: {
+    dot: 'bg-amber-500',
+    badge:
+      'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'
+  },
+  [OrderStatus.Cancelled]: {
+    dot: 'bg-rose-500',
+    badge: 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400'
+  }
 }
 
 /**

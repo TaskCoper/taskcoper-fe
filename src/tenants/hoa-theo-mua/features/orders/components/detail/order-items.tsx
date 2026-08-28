@@ -18,53 +18,84 @@ const formatCurrency = (value: number | null | undefined, empty: string) =>
 const formatNumber = (value: number | null | undefined, empty: string) =>
   value == null ? empty : numberFormatter.format(value)
 
-/** Materials captured on the product snapshot when the order was placed. */
-function MaterialTable({ materials, t }: { materials: SystemOrderMaterialSnapshot[]; t: TenantT }) {
+/** One core/support group of materials, rendered as its own labeled table. */
+function MaterialGroup({
+  title,
+  materials,
+  core,
+  t
+}: {
+  title: string
+  materials: SystemOrderMaterialSnapshot[]
+  core: boolean
+  t: TenantT
+}) {
   const empty = t('systemOrders.common.noDataShort')
 
   return (
-    <div className='p-2'>
-      <div className='overflow-hidden rounded-lg border bg-background'>
-        <Table>
-          <TableHeader>
-            <TableRow className='hover:bg-transparent'>
-              <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materials')}</TableHead>
-              <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materialType')}</TableHead>
-              <TableHead className='h-9 text-right text-xs'>{t('systemOrders.detail.itemQuantity')}</TableHead>
-              <TableHead className='h-9 text-right text-xs'>{t('systemOrders.detail.itemPrice')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {materials.map((material) => (
-              <TableRow key={material.matId}>
-                <TableCell className='py-2 text-sm'>
-                  <Link
-                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.matId}`}
-                    className='hover:underline hover:text-primary'
-                  >
-                    {material.name?.trim() || empty}
-                  </Link>
-                </TableCell>
-                <TableCell className='py-2 text-sm'>
-                  <Badge variant={material.isCore ? 'default' : 'secondary'} className='font-normal'>
-                    {t(
-                      material.isCore
-                        ? 'products.detail.comboSpecification.core'
-                        : 'products.detail.comboSpecification.support'
-                    )}
-                  </Badge>
-                </TableCell>
-                <TableCell className='py-2 text-right text-sm tabular-nums'>
-                  {formatNumber(material.quantity, empty)}
-                </TableCell>
-                <TableCell className='py-2 text-right text-sm tabular-nums'>
-                  {formatCurrency(material.price, empty)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <div className={cn('overflow-hidden rounded-lg border bg-background', core && 'border-primary/30')}>
+      <div
+        className={cn(
+          'flex items-center justify-between gap-2 border-b px-3 py-2',
+          core ? 'border-primary/20 bg-primary/5' : 'bg-muted/30'
+        )}
+      >
+        <span className={cn('text-xs font-semibold', core && 'text-primary')}>{title}</span>
+        <Badge variant={core ? 'default' : 'secondary'} className='font-normal'>
+          {materials.length}
+        </Badge>
       </div>
+      <Table className='table-fixed'>
+        <TableHeader>
+          <TableRow className='hover:bg-transparent'>
+            <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materials')}</TableHead>
+            <TableHead className='h-9 w-24 text-right text-xs'>{t('systemOrders.detail.itemQuantity')}</TableHead>
+            <TableHead className='h-9 w-28 text-right text-xs'>{t('systemOrders.detail.itemPrice')}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {materials.map((material) => (
+            <TableRow key={material.matId}>
+              <TableCell className='truncate py-2 text-sm'>
+                <Link
+                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.matId}`}
+                  className='hover:underline hover:text-primary'
+                >
+                  {material.name?.trim() || empty}
+                </Link>
+              </TableCell>
+              <TableCell className='w-24 py-2 text-right text-sm tabular-nums'>
+                {formatNumber(material.quantity, empty)}
+              </TableCell>
+              <TableCell className='w-28 py-2 text-right text-sm tabular-nums'>
+                {formatCurrency(material.price, empty)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+/** Materials captured on the product snapshot when the order was placed, grouped by core/support. */
+function MaterialTable({ materials, t }: { materials: SystemOrderMaterialSnapshot[]; t: TenantT }) {
+  const coreMaterials = materials.filter((material) => material.isCore)
+  const supportMaterials = materials.filter((material) => !material.isCore)
+
+  return (
+    <div className='space-y-3 p-2'>
+      {coreMaterials.length > 0 && (
+        <MaterialGroup title={t('products.detail.comboSpecification.core')} materials={coreMaterials} core t={t} />
+      )}
+      {supportMaterials.length > 0 && (
+        <MaterialGroup
+          title={t('products.detail.comboSpecification.support')}
+          materials={supportMaterials}
+          core={false}
+          t={t}
+        />
+      )}
     </div>
   )
 }
@@ -108,7 +139,7 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
 
             return (
               <Fragment key={item.orderDetailsId}>
-                <TableRow className='align-top'>
+                <TableRow className={cn('align-top', materials.length > 0 && 'border-b-0')}>
                   <TableCell className='w-10'>
                     {materials.length > 0 && (
                       <Button
@@ -195,7 +226,7 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
                 </TableRow>
 
                 {materials.length > 0 && (
-                  <TableRow className={cn(!isExpanded && 'border-b-0')}>
+                  <TableRow>
                     <TableCell colSpan={COLUMN_COUNT} className='bg-muted/50 p-0'>
                       <div
                         className={cn(

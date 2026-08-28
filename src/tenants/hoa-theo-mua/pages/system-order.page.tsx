@@ -33,7 +33,7 @@ import {
 } from '../features/orders/components/detail/parts'
 import UpdateSystemOrderDialog from '../features/orders/components/update-system-order-dialog'
 import { useGetSystemOrder } from '../features/orders/hooks/use-get-system-order'
-import { OrderStatus, OrderStatusLabel } from '../features/orders/types'
+import { OrderStatus, OrderStatusLabel, OrderStatusStyle } from '../features/orders/types'
 import { numberFormatter, vndFormatter } from '../features/orders/utils'
 
 const TAB_VALUES = ['overview', 'items', 'shipping', 'payment', 'invoice'] as const
@@ -78,6 +78,7 @@ export default function SystemOrderPage() {
   const customerName = order.fullName?.trim() || t('systemOrders.detail.untitled')
   const isPaid = order.status === OrderStatus.Paid
   const statusText = OrderStatusLabel[order.status] ? t(OrderStatusLabel[order.status]) : order.status
+  const statusStyle = OrderStatusStyle[order.status] ?? OrderStatusStyle[OrderStatus.Pending]
   const itemCount = items.reduce((sum, item) => sum + (item.number ?? 0), 0)
   const paymentMethod =
     order.paymentMethod == null
@@ -220,16 +221,8 @@ export default function SystemOrderPage() {
             <div className='min-w-0 space-y-2'>
               <div className='flex flex-wrap items-center gap-2.5'>
                 <h1 className='text-2xl font-bold leading-tight tracking-tight'>{customerName}</h1>
-                <Badge
-                  variant='secondary'
-                  className={cn(
-                    'gap-1.5 font-medium',
-                    isPaid
-                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-                      : 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'
-                  )}
-                >
-                  <span className={cn('size-1.5 rounded-full', isPaid ? 'bg-emerald-500' : 'bg-amber-500')} />
+                <Badge variant='secondary' className={cn('gap-1.5 font-medium', statusStyle.badge)}>
+                  <span className={cn('size-1.5 rounded-full', statusStyle.dot)} />
                   {statusText}
                 </Badge>
               </div>

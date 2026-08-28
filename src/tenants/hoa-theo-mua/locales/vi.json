@@ -400,7 +400,8 @@
     },
     "status": {
       "paid": "Đã thanh toán",
-      "pending": "Chờ thanh toán"
+      "pending": "Chờ thanh toán",
+      "cancelled": "Đã hủy"
     }
   },
   "products": {
