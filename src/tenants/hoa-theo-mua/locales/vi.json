@@ -130,6 +130,12 @@
       "cardId": "Mã bản ghi",
       "back": "Quay lại danh sách",
       "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "customer": "Khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thiết kế & file",
+        "orders": "Order liên kết"
+      },
       "section": {
         "result": "Ảnh kết quả thiệp",
         "customer": "Thông tin khách hàng",

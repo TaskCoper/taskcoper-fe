@@ -130,6 +130,12 @@
       "cardId": "Record ID",
       "back": "Back to history",
       "notFound": "The card was not found or does not have a valid output image.",
+      "tab": {
+        "customer": "Customer",
+        "message": "Card message",
+        "design": "Design & file",
+        "orders": "Linked orders"
+      },
       "section": {
         "result": "Card result",
         "customer": "Customer information",

@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDateTime } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
@@ -15,7 +16,7 @@ import {
   PhoneIcon
 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams, useSearchParams } from 'react-router'
 import Lightbox from 'yet-another-react-lightbox'
 import Captions from 'yet-another-react-lightbox/plugins/captions'
 import Counter from 'yet-another-react-lightbox/plugins/counter'
@@ -29,6 +30,8 @@ import { AiCardOutputImage } from '../features/ai-custom/components/ai-card-outp
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
 import { useGetAiCardDetail } from '../features/ai-custom/hooks/use-get-ai-card-detail'
 import { AiCardFileStatus, AiCardWritingMode } from '../features/ai-custom/types'
+
+const AI_CARD_DETAIL_TABS = ['customer', 'message', 'design', 'orders'] as const
 
 function InformationCard({ children }: { children: ReactNode }) {
   return <dl className='divide-y'>{children}</dl>
@@ -75,6 +78,7 @@ function DetailPanel({
 export default function AiCardDetailPage() {
   const { t } = useTenantTranslation()
   const { id } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number | null>(null)
   const { aiCard, isGettingAiCard } = useGetAiCardDetail(id)
   const { downloadAiCard, downloadingAiCardId } = useDownloadAiCard()
@@ -136,36 +140,47 @@ export default function AiCardDetailPage() {
       description: lightboxCaption
     }))
   ]
+  const rawTab = searchParams.get('tab')
+  const currentTab = AI_CARD_DETAIL_TABS.includes(rawTab as (typeof AI_CARD_DETAIL_TABS)[number]) ? rawTab! : 'customer'
+
+  const handleTabChange = (value: string) => {
+    const nextSearchParams = new URLSearchParams(searchParams)
+    nextSearchParams.set('tab', value)
+    setSearchParams(nextSearchParams, { replace: true })
+  }
 
   return (
     <div className='h-full overflow-auto'>
-      <div className='mx-auto max-w-8xl space-y-8 p-6'>
-        <Button variant='ghost' size='sm' asChild>
-          <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`}>
-            <ArrowLeftIcon data-icon='inline-start' />
-            {t('aiCustom.detail.back')}
-          </Link>
-        </Button>
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='flex flex-col'>
+        <div className='mx-auto w-full max-w-8xl space-y-6 px-6 pt-6'>
+          <Button variant='ghost' size='sm' asChild>
+            <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards`}>
+              <ArrowLeftIcon data-icon='inline-start' />
+              {t('aiCustom.detail.back')}
+            </Link>
+          </Button>
 
-        <div className='flex flex-wrap items-start justify-between gap-4'>
-          <div>
-            <h1 className='text-2xl font-bold'>{t('aiCustom.detail.title')}</h1>
-            <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.description')}</p>
+          <div className='flex flex-wrap items-start justify-between gap-4'>
+            <div>
+              <h1 className='text-2xl font-bold'>{t('aiCustom.detail.title')}</h1>
+              <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.description')}</p>
+            </div>
+
+            {isFileAvailable && (
+              <Button disabled={isDownloading} onClick={() => downloadAiCard(aiCard)}>
+                {isDownloading ? <LoaderCircleIcon className='animate-spin' /> : <DownloadIcon />}
+                {t('aiCustom.download.action')}
+              </Button>
+            )}
           </div>
-
-          {isFileAvailable && (
-            <Button disabled={isDownloading} onClick={() => downloadAiCard(aiCard)}>
-              {isDownloading ? <LoaderCircleIcon className='animate-spin' /> : <DownloadIcon />}
-              {t('aiCustom.download.action')}
-            </Button>
-          )}
         </div>
 
-        <div className='grid items-stretch gap-5 xl:grid-cols-[minmax(20rem,0.85fr)_minmax(0,1.4fr)]'>
+        <div className='mx-auto grid w-full max-w-8xl items-start gap-6 px-6 pt-2 pb-6 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.4fr)]'>
           <DetailPanel
             title={t('aiCustom.detail.section.result')}
             action={<span className='font-mono text-sm font-semibold'>{aiCard.code}</span>}
             contentClassName='flex flex-col justify-center'
+            className='lg:sticky lg:top-6'
           >
             <AiCardOutputImage
               src={aiCard.outputImageUrl}
@@ -175,156 +190,186 @@ export default function AiCardDetailPage() {
             />
           </DetailPanel>
 
-          <div className='grid auto-rows-fr gap-5 sm:grid-cols-2'>
-            <DetailPanel title={t('aiCustom.detail.section.customer')} contentClassName='p-0'>
-              <InformationCard>
-                <InformationRow label={t('aiCustom.detail.field.customerName')}>
-                  {aiCard.customerName || t('aiCustom.history.walkInCustomer')}
-                </InformationRow>
-                <InformationRow label={t('aiCustom.detail.field.phone')}>
-                  {aiCard.customerPhone ? (
-                    <a
-                      className='inline-flex items-center gap-1.5 hover:text-primary'
-                      href={`tel:${aiCard.customerPhone}`}
-                    >
-                      <PhoneIcon className='size-3.5' />
-                      {aiCard.customerPhone}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </InformationRow>
-                <InformationRow label={t('aiCustom.detail.field.email')}>
-                  {aiCard.customerEmail ? (
-                    <a
-                      className='inline-flex items-center gap-1.5 hover:text-primary wrap-break-word'
-                      href={`mailto:${aiCard.customerEmail}`}
-                    >
-                      <MailIcon className='size-3.5' />
-                      {aiCard.customerEmail}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </InformationRow>
-              </InformationCard>
-            </DetailPanel>
+          <div className='min-w-0'>
+            <TabsList className='w-full justify-start gap-2 overflow-x-auto rounded-none border-b bg-transparent p-0 flex-nowrap [&::-webkit-scrollbar]:hidden'>
+              {AI_CARD_DETAIL_TABS.map((tab) => (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  className='relative flex-none shrink-0 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-foreground data-[state=active]:shadow-none'
+                >
+                  {t(`aiCustom.detail.tab.${tab}`)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-            <DetailPanel title={t('aiCustom.detail.section.message')} contentClassName='p-0'>
-              <InformationCard>
-                <InformationRow label={t('aiCustom.detail.field.sender')}>{aiCard.senderName || '-'}</InformationRow>
-                <InformationRow label={t('aiCustom.detail.field.recipient')}>
-                  {aiCard.recipientName || '-'}
-                </InformationRow>
-                <InformationRow label={t('aiCustom.detail.field.greeting')}>
-                  <span className='whitespace-pre-wrap font-normal'>{aiCard.greetingMessage || '-'}</span>
-                </InformationRow>
-              </InformationCard>
-            </DetailPanel>
+            <div className='pt-4'>
+              <TabsContent value='customer' className='mt-0'>
+                <DetailPanel title={t('aiCustom.detail.section.customer')} contentClassName='p-0' className='max-w-4xl'>
+                  <InformationCard>
+                    <InformationRow label={t('aiCustom.detail.field.customerName')}>
+                      {aiCard.customerName || t('aiCustom.history.walkInCustomer')}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.phone')}>
+                      {aiCard.customerPhone ? (
+                        <a
+                          className='inline-flex items-center gap-1.5 hover:text-primary'
+                          href={`tel:${aiCard.customerPhone}`}
+                        >
+                          <PhoneIcon className='size-3.5' />
+                          {aiCard.customerPhone}
+                        </a>
+                      ) : (
+                        '-'
+                      )}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.email')}>
+                      {aiCard.customerEmail ? (
+                        <a
+                          className='inline-flex items-center gap-1.5 hover:text-primary wrap-break-word'
+                          href={`mailto:${aiCard.customerEmail}`}
+                        >
+                          <MailIcon className='size-3.5' />
+                          {aiCard.customerEmail}
+                        </a>
+                      ) : (
+                        '-'
+                      )}
+                    </InformationRow>
+                  </InformationCard>
+                </DetailPanel>
+              </TabsContent>
 
-            <DetailPanel title={t('aiCustom.detail.section.design')} contentClassName='p-0'>
-              <InformationCard>
-                <InformationRow label={t('aiCustom.history.column.template')}>
-                  {aiCard.templateName || '-'}
-                </InformationRow>
-                <InformationRow label={t('aiCustom.history.column.size')}>{aiCard.sizeName || '-'}</InformationRow>
-                <InformationRow label={t('aiCustom.history.column.writingMode')}>{writingModeLabel}</InformationRow>
-                <InformationRow label={t('aiCustom.history.column.createdAt')}>
-                  {formatDateTime(aiCard.createdAt, 'dateTimeShort')}
-                </InformationRow>
-                <InformationRow label={t('aiCustom.detail.field.fileStatus')}>
-                  <Badge variant='outline'>{fileStatusLabel}</Badge>
-                </InformationRow>
-              </InformationCard>
-            </DetailPanel>
+              <TabsContent value='message' className='mt-0'>
+                <DetailPanel title={t('aiCustom.detail.section.message')} contentClassName='p-0' className='max-w-4xl'>
+                  <InformationCard>
+                    <InformationRow label={t('aiCustom.detail.field.sender')}>
+                      {aiCard.senderName || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.recipient')}>
+                      {aiCard.recipientName || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.greeting')}>
+                      <span className='whitespace-pre-wrap font-normal'>{aiCard.greetingMessage || '-'}</span>
+                    </InformationRow>
+                  </InformationCard>
+                </DetailPanel>
+              </TabsContent>
 
-            <DetailPanel title={t('aiCustom.detail.field.attachments')}>
-              {aiCard.attachmentImageUrls.length > 0 ? (
-                <div className='grid grid-cols-2 gap-3'>
-                  {aiCard.attachmentImageUrls.map((imageUrl, index) => (
-                    <button
-                      key={`${imageUrl}-${index}`}
-                      type='button'
-                      aria-label={t('aiCustom.detail.openAttachment', { index: index + 1 })}
-                      onClick={() => setLightboxImageIndex(attachmentImageStartIndex + index)}
-                      className='block rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={t('aiCustom.detail.attachmentAlt', { index: index + 1 })}
-                        loading='lazy'
-                        className='aspect-square w-full rounded-xl border bg-muted/40 object-cover'
-                      />
-                    </button>
-                  ))}
+              <TabsContent value='design' className='mt-0'>
+                <div className='grid items-start gap-5 2xl:grid-cols-2'>
+                  <DetailPanel title={t('aiCustom.detail.section.design')} contentClassName='p-0'>
+                    <InformationCard>
+                      <InformationRow label={t('aiCustom.history.column.template')}>
+                        {aiCard.templateName || '-'}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.history.column.size')}>
+                        {aiCard.sizeName || '-'}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.history.column.writingMode')}>
+                        {writingModeLabel}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.history.column.createdAt')}>
+                        {formatDateTime(aiCard.createdAt, 'dateTimeShort')}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.detail.field.fileStatus')}>
+                        <Badge variant='outline'>{fileStatusLabel}</Badge>
+                      </InformationRow>
+                    </InformationCard>
+                  </DetailPanel>
+
+                  <DetailPanel title={t('aiCustom.detail.field.attachments')}>
+                    {aiCard.attachmentImageUrls.length > 0 ? (
+                      <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2'>
+                        {aiCard.attachmentImageUrls.map((imageUrl, index) => (
+                          <button
+                            key={`${imageUrl}-${index}`}
+                            type='button'
+                            aria-label={t('aiCustom.detail.openAttachment', { index: index + 1 })}
+                            onClick={() => setLightboxImageIndex(attachmentImageStartIndex + index)}
+                            className='block rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                          >
+                            <img
+                              src={imageUrl}
+                              alt={t('aiCustom.detail.attachmentAlt', { index: index + 1 })}
+                              loading='lazy'
+                              className='aspect-square w-full rounded-xl border bg-muted/40 object-cover'
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className='flex min-h-40 items-center justify-center rounded-xl border border-dashed p-5 text-center'>
+                        <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.noAttachments')}</p>
+                      </div>
+                    )}
+                  </DetailPanel>
                 </div>
-              ) : (
-                <div className='flex h-full min-h-28 items-center justify-center rounded-xl border border-dashed p-5 text-center'>
-                  <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.noAttachments')}</p>
-                </div>
-              )}
-            </DetailPanel>
+              </TabsContent>
+
+              <TabsContent value='orders' className='mt-0'>
+                <DetailPanel
+                  title={t('aiCustom.detail.section.orders')}
+                  // description={t('aiCustom.detail.ordersDescription')}
+                  contentClassName='p-0'
+                >
+                  {aiCard.linkedOrders.length > 0 ? (
+                    <div className='overflow-hidden'>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
+                            <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
+                            <TableHead>{t('aiCustom.detail.order.createdAt')}</TableHead>
+                            <TableHead className='w-16' />
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {aiCard.linkedOrders.map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className='px-5'>
+                                <Link
+                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
+                                  className='font-mono font-medium text-primary hover:underline'
+                                >
+                                  {order.code}
+                                </Link>
+                              </TableCell>
+                              <TableCell>
+                                {order.status === 'Paid'
+                                  ? t('orders.status.paid')
+                                  : order.status === 'Pending'
+                                    ? t('orders.status.pending')
+                                    : '-'}
+                              </TableCell>
+                              <TableCell>{formatDateTime(order.createdAt, 'dateTimeShort')}</TableCell>
+                              <TableCell className='text-right'>
+                                <Button variant='ghost' size='icon' asChild>
+                                  <Link
+                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
+                                    aria-label={t('aiCustom.detail.order.open', { code: order.code })}
+                                  >
+                                    <ArrowUpRightIcon />
+                                  </Link>
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  ) : (
+                    <div className='m-5 flex flex-col items-center gap-2 rounded-xl border border-dashed p-8 text-center text-muted-foreground'>
+                      <PackageSearchIcon className='size-8 opacity-60' />
+                      <p className='text-sm'>{t('aiCustom.detail.noOrders')}</p>
+                    </div>
+                  )}
+                </DetailPanel>
+              </TabsContent>
+            </div>
           </div>
         </div>
-
-        <DetailPanel
-          title={t('aiCustom.detail.section.orders')}
-          description={t('aiCustom.detail.ordersDescription')}
-          contentClassName='p-0'
-        >
-          {aiCard.linkedOrders.length > 0 ? (
-            <div className='overflow-hidden'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('aiCustom.detail.order.code')}</TableHead>
-                    <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
-                    <TableHead>{t('aiCustom.detail.order.createdAt')}</TableHead>
-                    <TableHead className='w-16' />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {aiCard.linkedOrders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell>
-                        <Link
-                          to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                          className='font-mono font-medium text-primary hover:underline'
-                        >
-                          {order.code}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        {order.status === 'Paid'
-                          ? t('orders.status.paid')
-                          : order.status === 'Pending'
-                            ? t('orders.status.pending')
-                            : '-'}
-                      </TableCell>
-                      <TableCell>{formatDateTime(order.createdAt, 'dateTimeShort')}</TableCell>
-                      <TableCell className='text-right'>
-                        <Button variant='ghost' size='icon' asChild>
-                          <Link
-                            to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                            aria-label={t('aiCustom.detail.order.open', { code: order.code })}
-                          >
-                            <ArrowUpRightIcon />
-                          </Link>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <div className='m-5 flex flex-col items-center gap-2 rounded-xl border border-dashed p-8 text-center text-muted-foreground'>
-              <PackageSearchIcon className='size-8 opacity-60' />
-              <p className='text-sm'>{t('aiCustom.detail.noOrders')}</p>
-            </div>
-          )}
-        </DetailPanel>
-      </div>
+      </Tabs>
 
       {lightboxImages.length > 0 && (
         <Lightbox
