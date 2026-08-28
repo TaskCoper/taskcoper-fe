@@ -1,4 +1,11 @@
-import { AiCardWritingMode, type AiCardHistoryItem, type AiCardHistoryPage, type GetAiCardHistoryParams } from './types'
+import {
+  AiCardFileStatus,
+  AiCardWritingMode,
+  type AiCardDetail,
+  type AiCardHistoryItem,
+  type AiCardHistoryPage,
+  type GetAiCardHistoryParams
+} from './types'
 
 const customers = [
   { id: 'customer-1', name: 'Nguyễn Minh Anh', phone: '0901 234 567' },
@@ -56,8 +63,34 @@ const mockAiCards: AiCardHistoryItem[] = Array.from({ length: 38 }, (_, index) =
   }
 })
 
-export async function getMockAiCardDetail(id: string): Promise<AiCardHistoryItem | null> {
-  return mockAiCards.find((card) => card.id === id && Boolean(card.outputImageUrl?.trim())) ?? null
+export async function getMockAiCardDetail(id: string): Promise<AiCardDetail | null> {
+  const card = mockAiCards.find((item) => item.id === id && Boolean(item.outputImageUrl?.trim()))
+  if (!card) return null
+
+  const cardNumber = Number(card.id.replace('ai-card-', '')) || 1
+  const linkedOrderCount = cardNumber % 4
+
+  return {
+    ...card,
+    customerEmail: card.customerId ? `khachhang${cardNumber}@example.com` : null,
+    senderName: cardNumber % 5 === 0 ? null : card.customerName,
+    recipientName: cardNumber % 3 === 0 ? 'Người thương' : 'Gia đình thân yêu',
+    greetingMessage:
+      cardNumber % 6 === 0 ? null : 'Chúc bạn luôn rạng rỡ, bình an và gặp thật nhiều điều tốt đẹp trong cuộc sống.',
+    attachmentImageUrls: cardNumber % 3 === 0 ? ['/images/auth-bg.jpg', '/images/placeholder-cover.png'] : [],
+    fileStatus:
+      cardNumber % 7 === 0
+        ? AiCardFileStatus.Expired
+        : cardNumber % 5 === 0
+          ? AiCardFileStatus.Processing
+          : AiCardFileStatus.Available,
+    linkedOrders: Array.from({ length: linkedOrderCount }, (_, index) => ({
+      id: `00000000-0000-4000-8000-${String(cardNumber * 10 + index).padStart(12, '0')}`,
+      code: `NHANH-${String(840000 + cardNumber * 10 + index)}`,
+      status: index % 2 === 0 ? 'Paid' : 'Pending',
+      createdAt: new Date(Date.UTC(2026, 7, 28 - cardNumber - index, 10, 30)).toISOString()
+    }))
+  }
 }
 
 export async function recordMockAiCardDownload(id: string): Promise<boolean> {

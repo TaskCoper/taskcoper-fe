@@ -126,10 +126,58 @@
     },
     "detail": {
       "title": "AI card details",
-      "description": "Detailed information will be added when the backend is ready.",
+      "description": "View the card content, design information, and linked orders.",
       "cardId": "Record ID",
       "back": "Back to history",
-      "notFound": "The card was not found or does not have a valid output image."
+      "notFound": "The card was not found or does not have a valid output image.",
+      "section": {
+        "result": "Card result",
+        "customer": "Customer information",
+        "message": "Card message",
+        "design": "Design and file information",
+        "orders": "Linked orders"
+      },
+      "field": {
+        "customerName": "Full name",
+        "phone": "Phone number",
+        "email": "Email",
+        "sender": "Sender",
+        "recipient": "Recipient",
+        "greeting": "Greeting",
+        "attachments": "User attachments",
+        "fileStatus": "File status"
+      },
+      "fileStatus": {
+        "available": "Available",
+        "processing": "Processing",
+        "expired": "Unavailable"
+      },
+      "attachmentAlt": "Attachment {{index}}",
+      "openAttachment": "Open attachment {{index}}",
+      "noAttachments": "No attachments",
+      "lightbox": {
+        "caption": "Card code: {{code}} · Created at: {{createdAt}}",
+        "previous": "Previous image",
+        "next": "Next image",
+        "close": "Close",
+        "label": "View card images",
+        "gallery": "Card image gallery",
+        "position": "Image {index} of {total}",
+        "showCaptions": "Show captions",
+        "hideCaptions": "Hide captions",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "enterFullscreen": "Enter fullscreen",
+        "exitFullscreen": "Exit fullscreen"
+      },
+      "ordersDescription": "Each order keeps its own billing information on the Order details page.",
+      "noOrders": "This card is not linked to any orders.",
+      "order": {
+        "code": "Order code",
+        "status": "Status",
+        "createdAt": "Created at",
+        "open": "Open order {{code}} details"
+      }
     },
     "download": {
       "action": "Download card image",

@@ -126,10 +126,58 @@
     },
     "detail": {
       "title": "Chi tiết thiệp AI",
-      "description": "Thông tin chi tiết sẽ được bổ sung khi backend hoàn thiện.",
+      "description": "Xem nội dung thiệp, thông tin thiết kế và các đơn hàng liên kết.",
       "cardId": "Mã bản ghi",
       "back": "Quay lại danh sách",
-      "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ."
+      "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ.",
+      "section": {
+        "result": "Ảnh kết quả thiệp",
+        "customer": "Thông tin khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thông tin thiết kế và file",
+        "orders": "Order liên kết"
+      },
+      "field": {
+        "customerName": "Họ tên",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "sender": "Người gửi",
+        "recipient": "Người nhận",
+        "greeting": "Lời chúc",
+        "attachments": "Ảnh người dùng đính kèm",
+        "fileStatus": "Trạng thái file"
+      },
+      "fileStatus": {
+        "available": "Còn khả dụng",
+        "processing": "Đang xử lý",
+        "expired": "Không còn khả dụng"
+      },
+      "attachmentAlt": "Ảnh đính kèm {{index}}",
+      "openAttachment": "Mở ảnh đính kèm {{index}}",
+      "noAttachments": "Không có ảnh đính kèm",
+      "lightbox": {
+        "caption": "Mã thiệp: {{code}} · Ngày tạo: {{createdAt}}",
+        "previous": "Ảnh trước",
+        "next": "Ảnh tiếp theo",
+        "close": "Đóng",
+        "label": "Xem ảnh thiệp",
+        "gallery": "Bộ ảnh thiệp",
+        "position": "Ảnh {index} trên {total}",
+        "showCaptions": "Hiện chú thích",
+        "hideCaptions": "Ẩn chú thích",
+        "zoomIn": "Phóng to",
+        "zoomOut": "Thu nhỏ",
+        "enterFullscreen": "Mở toàn màn hình",
+        "exitFullscreen": "Thoát toàn màn hình"
+      },
+      "ordersDescription": "Mỗi Order giữ thông tin bill riêng tại trang Chi tiết Order.",
+      "noOrders": "Thiệp này chưa liên kết với Order nào.",
+      "order": {
+        "code": "Mã Order",
+        "status": "Trạng thái",
+        "createdAt": "Ngày tạo",
+        "open": "Mở chi tiết Order {{code}}"
+      }
     },
     "download": {
       "action": "Tải ảnh thiệp xuống",

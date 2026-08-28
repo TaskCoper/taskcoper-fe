@@ -7,6 +7,21 @@ export const AiCardWritingMode = {
 
 export type AiCardWritingMode = (typeof AiCardWritingMode)[keyof typeof AiCardWritingMode]
 
+export const AiCardFileStatus = {
+  Available: 'available',
+  Processing: 'processing',
+  Expired: 'expired'
+} as const
+
+export type AiCardFileStatus = (typeof AiCardFileStatus)[keyof typeof AiCardFileStatus]
+
+export interface AiCardLinkedOrder {
+  id: string
+  code: string
+  status: string | null
+  createdAt: string
+}
+
 export interface AiCardHistoryItem {
   id: string
   code: string
@@ -20,6 +35,16 @@ export interface AiCardHistoryItem {
   sizeName: string | null
   writingMode: AiCardWritingMode
   createdAt: string
+}
+
+export interface AiCardDetail extends AiCardHistoryItem {
+  customerEmail: string | null
+  senderName: string | null
+  recipientName: string | null
+  greetingMessage: string | null
+  attachmentImageUrls: string[]
+  fileStatus: AiCardFileStatus
+  linkedOrders: AiCardLinkedOrder[]
 }
 
 export interface GetAiCardHistoryParams {
