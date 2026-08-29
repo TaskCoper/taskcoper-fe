@@ -99,6 +99,167 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "aiCustom": {
+    "comingSoon": "This feature is under development",
+    "history": {
+      "title": "AI card history",
+      "description": "View and search successfully generated AI cards.",
+      "searchPlaceholder": "Type to search...",
+      "column": {
+        "preview": "Preview",
+        "code": "Card code",
+        "customer": "Customer",
+        "template": "Card template",
+        "size": "Size",
+        "writingMode": "Writing Method",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Typed"
+      },
+      "walkInCustomer": "Walk-in customer",
+      "previewAlt": "Card {{code}} preview",
+      "openPreview": "Open card {{code}} preview",
+      "viewDetail": "View details"
+    },
+    "flowerHistory": {
+      "title": "AI flower design history",
+      "description": "View and search successfully generated Custom AI flower designs.",
+      "searchPlaceholder": "Type to search...",
+      "column": {
+        "preview": "Flower preview",
+        "code": "Flower design code",
+        "customer": "Customer",
+        "sourceCombo": "Source Combo",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "previewAlt": "Flower design {{code}} preview",
+      "openPreview": "Open flower design {{code}} preview",
+      "viewDetail": "View details",
+      "comboFilter": {
+        "title": "Select source combos",
+        "description": "Multiple combos can be selected",
+        "searchPlaceholder": "Search by combo name or code...",
+        "clear": "Clear",
+        "empty": "No matching combos found.",
+        "page": "Page {{page}}/{{totalPages}} · {{totalItems}} combos",
+        "itemsPerPage": "Combos per page",
+        "previous": "Previous combo page",
+        "next": "Next combo page"
+      }
+    },
+    "flowerDetail": {
+      "title": "AI flower design details",
+      "description": "View the output, creation-time materials, and linked orders.",
+      "back": "Back to history",
+      "notFound": "The flower design was not found or does not have a valid output image.",
+      "tab": {
+        "overview": "Overview",
+        "materials": "Materials",
+        "source": "Design source",
+        "orders": "Linked orders"
+      },
+      "section": {
+        "customer": "Customer information",
+        "request": "Generation information",
+        "coreMaterials": "Core materials at creation time",
+        "supportMaterials": "Support materials at creation time",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "orders": "Linked orders"
+      },
+      "customRequest": "Request or notes",
+      "noMaterials": "No materials were recorded.",
+      "noMockup": "No source mockup.",
+      "noOrders": "This flower design is not linked to any orders.",
+      "material": {
+        "name": "Material",
+        "quantity": "Quantity",
+        "unit": "Unit"
+      },
+      "combo": {
+        "code": "Combo code",
+        "name": "Combo name",
+        "information": "Combo information"
+      },
+      "mockupAlt": "{{name}} image",
+      "openMockup": "Open {{name}} image",
+      "lightbox": {
+        "label": "View flower design images",
+        "gallery": "Flower design gallery",
+        "resultCaption": "Result image · {{code}}",
+        "mockupCaption": "Source mockup · {{code}}"
+      }
+    },
+    "detail": {
+      "title": "AI card details",
+      "description": "View the card content, design information, and linked orders.",
+      "cardId": "Record ID",
+      "back": "Back to history",
+      "notFound": "The card was not found or does not have a valid output image.",
+      "tab": {
+        "customer": "Customer",
+        "message": "Card message",
+        "design": "Design & file",
+        "orders": "Linked orders"
+      },
+      "section": {
+        "result": "Card result",
+        "customer": "Customer information",
+        "message": "Card message",
+        "design": "Design and file information",
+        "orders": "Linked orders"
+      },
+      "field": {
+        "customerName": "Full name",
+        "phone": "Phone number",
+        "email": "Email",
+        "sender": "Sender",
+        "recipient": "Recipient",
+        "greeting": "Greeting",
+        "attachments": "User attachments",
+        "fileStatus": "File status"
+      },
+      "fileStatus": {
+        "available": "Available",
+        "processing": "Processing",
+        "expired": "Unavailable"
+      },
+      "attachmentAlt": "Attachment {{index}}",
+      "openAttachment": "Open attachment {{index}}",
+      "noAttachments": "No attachments",
+      "lightbox": {
+        "caption": "Card code: {{code}} · Created at: {{createdAt}}",
+        "previous": "Previous image",
+        "next": "Next image",
+        "close": "Close",
+        "label": "View card images",
+        "gallery": "Card image gallery",
+        "position": "Image {index} of {total}",
+        "showCaptions": "Show captions",
+        "hideCaptions": "Hide captions",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "enterFullscreen": "Enter fullscreen",
+        "exitFullscreen": "Exit fullscreen"
+      },
+      "ordersDescription": "Each order keeps its own billing information on the Order details page.",
+      "noOrders": "This card is not linked to any orders.",
+      "order": {
+        "code": "Order code",
+        "status": "Status",
+        "createdAt": "Created at",
+        "open": "Open order {{code}} details"
+      }
+    },
+    "download": {
+      "action": "Download card image",
+      "failed": "Failed to download the card. Please try again"
+    }
+  },
   "navigation": {
     "products": {
       "title": "Product",
@@ -131,6 +292,21 @@
       "articles": "Articles",
       "categories": "Categories",
       "add": "Write article"
+    },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "AI Cards",
+      "flowerDesigns": "AI Flower Designs"
+    },
+    "templateManagement": {
+      "title": "Template Management",
+      "cardTemplates": "Card Templates",
+      "flowerMockups": "Flower Mockups"
+    },
+    "cardConfiguration": {
+      "title": "Card Configuration",
+      "sizes": "Card Sizes",
+      "handwritingSurcharge": "Handwriting Surcharge"
     },
     "systemConfigs": "System configurations"
   },

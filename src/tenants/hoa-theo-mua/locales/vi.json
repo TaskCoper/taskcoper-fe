@@ -99,6 +99,167 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "aiCustom": {
+    "comingSoon": "Tính năng đang được phát triển",
+    "history": {
+      "title": "Lịch sử thiệp AI",
+      "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "column": {
+        "preview": "Ảnh thiệp",
+        "code": "Mã thiệp",
+        "customer": "Khách hàng",
+        "template": "Mẫu thiệp",
+        "size": "Kích thước",
+        "writingMode": "Hình thức viết",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Gõ máy"
+      },
+      "walkInCustomer": "Khách vãng lai",
+      "previewAlt": "Ảnh thiệp {{code}}",
+      "openPreview": "Xem ảnh thiệp {{code}}",
+      "viewDetail": "Xem chi tiết"
+    },
+    "flowerHistory": {
+      "title": "Lịch sử mẫu hoa AI",
+      "description": "Xem và tìm kiếm các mẫu hoa Custom AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
+      "column": {
+        "preview": "Ảnh mẫu hoa",
+        "code": "Mã mẫu hoa",
+        "customer": "Khách hàng",
+        "sourceCombo": "Combo nguồn",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "previewAlt": "Ảnh mẫu hoa {{code}}",
+      "openPreview": "Xem ảnh mẫu hoa {{code}}",
+      "viewDetail": "Xem chi tiết",
+      "comboFilter": {
+        "title": "Chọn Combo nguồn",
+        "description": "Có thể chọn nhiều Combo",
+        "searchPlaceholder": "Tìm theo tên hoặc mã Combo...",
+        "clear": "Bỏ chọn",
+        "empty": "Không tìm thấy Combo phù hợp.",
+        "page": "Trang {{page}}/{{totalPages}} · {{totalItems}} Combo",
+        "itemsPerPage": "Số Combo mỗi trang",
+        "previous": "Trang Combo trước",
+        "next": "Trang Combo tiếp theo"
+      }
+    },
+    "flowerDetail": {
+      "title": "Chi tiết mẫu hoa AI",
+      "description": "Xem ảnh kết quả, thành phần tại thời điểm tạo và các Order liên kết.",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy mẫu hoa hoặc mẫu hoa chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "overview": "Tổng quan",
+        "materials": "Thành phần",
+        "source": "Nguồn thiết kế",
+        "orders": "Order liên kết"
+      },
+      "section": {
+        "customer": "Thông tin khách hàng",
+        "request": "Thông tin tạo mẫu",
+        "coreMaterials": "Thành phần Core tại thời điểm tạo",
+        "supportMaterials": "Thành phần Support tại thời điểm tạo",
+        "sourceCombo": "Combo nguồn",
+        "sourceMockup": "Mockup nguồn",
+        "orders": "Order liên kết"
+      },
+      "customRequest": "Yêu cầu hoặc ghi chú",
+      "noMaterials": "Không có thành phần được ghi nhận.",
+      "noMockup": "Không có Mockup nguồn.",
+      "noOrders": "Mẫu hoa này chưa liên kết với Order nào.",
+      "material": {
+        "name": "Thành phần",
+        "quantity": "Số lượng",
+        "unit": "Đơn vị"
+      },
+      "combo": {
+        "code": "Mã Combo",
+        "name": "Tên Combo",
+        "information": "Thông tin Combo"
+      },
+      "mockupAlt": "Ảnh {{name}}",
+      "openMockup": "Xem ảnh {{name}}",
+      "lightbox": {
+        "label": "Xem ảnh mẫu hoa",
+        "gallery": "Bộ ảnh mẫu hoa",
+        "resultCaption": "Ảnh kết quả · {{code}}",
+        "mockupCaption": "Mockup nguồn · {{code}}"
+      }
+    },
+    "detail": {
+      "title": "Chi tiết thiệp AI",
+      "description": "Xem nội dung thiệp, thông tin thiết kế và các đơn hàng liên kết.",
+      "cardId": "Mã bản ghi",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "customer": "Khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thiết kế & file",
+        "orders": "Order liên kết"
+      },
+      "section": {
+        "result": "Ảnh kết quả thiệp",
+        "customer": "Thông tin khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thông tin thiết kế và file",
+        "orders": "Order liên kết"
+      },
+      "field": {
+        "customerName": "Họ tên",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "sender": "Người gửi",
+        "recipient": "Người nhận",
+        "greeting": "Lời chúc",
+        "attachments": "Ảnh người dùng đính kèm",
+        "fileStatus": "Trạng thái file"
+      },
+      "fileStatus": {
+        "available": "Còn khả dụng",
+        "processing": "Đang xử lý",
+        "expired": "Không còn khả dụng"
+      },
+      "attachmentAlt": "Ảnh đính kèm {{index}}",
+      "openAttachment": "Mở ảnh đính kèm {{index}}",
+      "noAttachments": "Không có ảnh đính kèm",
+      "lightbox": {
+        "caption": "Mã thiệp: {{code}} · Ngày tạo: {{createdAt}}",
+        "previous": "Ảnh trước",
+        "next": "Ảnh tiếp theo",
+        "close": "Đóng",
+        "label": "Xem ảnh thiệp",
+        "gallery": "Bộ ảnh thiệp",
+        "position": "Ảnh {index} trên {total}",
+        "showCaptions": "Hiện chú thích",
+        "hideCaptions": "Ẩn chú thích",
+        "zoomIn": "Phóng to",
+        "zoomOut": "Thu nhỏ",
+        "enterFullscreen": "Mở toàn màn hình",
+        "exitFullscreen": "Thoát toàn màn hình"
+      },
+      "ordersDescription": "Mỗi Order giữ thông tin bill riêng tại trang Chi tiết Order.",
+      "noOrders": "Thiệp này chưa liên kết với Order nào.",
+      "order": {
+        "code": "Mã Order",
+        "status": "Trạng thái",
+        "createdAt": "Ngày tạo",
+        "open": "Mở chi tiết Order {{code}}"
+      }
+    },
+    "download": {
+      "action": "Tải ảnh thiệp xuống",
+      "failed": "Tải thiệp thất bại. Vui lòng thử lại"
+    }
+  },
   "navigation": {
     "products": {
       "title": "Sản phẩm",
@@ -131,6 +292,21 @@
       "articles": "Bài viết",
       "categories": "Danh mục",
       "add": "Viết bài"
+    },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "Thiệp AI",
+      "flowerDesigns": "Mẫu hoa AI"
+    },
+    "templateManagement": {
+      "title": "Quản lý mẫu",
+      "cardTemplates": "Mẫu thiệp",
+      "flowerMockups": "Mockup mẫu hoa"
+    },
+    "cardConfiguration": {
+      "title": "Cấu hình thiệp",
+      "sizes": "Kích thước thiệp",
+      "handwritingSurcharge": "Phụ phí viết tay"
     },
     "systemConfigs": "Cấu hình hệ thống"
   },
