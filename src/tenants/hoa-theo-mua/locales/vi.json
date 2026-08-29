@@ -99,6 +99,29 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "cardTemplates": {
+    "title": "Danh sách mẫu thiệp",
+    "description": "Theo dõi các mẫu thiệp đang được hệ thống sử dụng.",
+    "searchPlaceholder": "Tìm theo tên mẫu thiệp...",
+    "add": "Thêm mẫu thiệp",
+    "createComingSoon": "Tính năng thêm mẫu thiệp sẽ sớm được hoàn thiện.",
+    "column": {
+      "name": "Tên mẫu",
+      "preview": "Ảnh Preview",
+      "description": "Mô tả",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "active": "Đang sử dụng",
+      "inactive": "Ngừng sử dụng"
+    },
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview mẫu {{name}}",
+    "openPreview": "Mở ảnh Preview mẫu {{name}}",
+    "viewPreview": "Xem ảnh Preview",
+    "openMenu": "Mở thao tác mẫu thiệp"
+  },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",
     "history": {

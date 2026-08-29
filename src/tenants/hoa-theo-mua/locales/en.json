@@ -99,6 +99,29 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "cardTemplates": {
+    "title": "Card templates",
+    "description": "Track the card templates currently available in the system.",
+    "searchPlaceholder": "Search by template name...",
+    "add": "Add card template",
+    "createComingSoon": "The card template creation flow will be available soon.",
+    "column": {
+      "name": "Template name",
+      "preview": "Preview",
+      "description": "Description",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "In use",
+      "inactive": "Not in use"
+    },
+    "noDescription": "No description",
+    "previewAlt": "{{name}} template preview",
+    "openPreview": "Open {{name}} preview",
+    "viewPreview": "View preview",
+    "openMenu": "Open card template actions"
+  },
   "aiCustom": {
     "comingSoon": "This feature is under development",
     "history": {
