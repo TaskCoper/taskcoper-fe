@@ -1311,6 +1311,52 @@
     "customPalette": {
       "title": "Custom palettes"
     },
+    "checkoutMethodsPalette": {
+      "title": "Checkout",
+      "payment": "Payment methods",
+      "delivery": "Delivery methods"
+    },
+    "checkoutMethodsDialog": {
+      "description": "Choose which supported methods customers can use, their order, default, and checkout copy.",
+      "registryHint": "Methods and technical identifiers are controlled by code. This editor only changes availability, order, default selection, and customer-facing copy.",
+      "configLabel": "Config label",
+      "configLabelHelp": "Used to identify this configuration in the admin list.",
+      "summary": "Current setup",
+      "enabledCount": "{{enabled}} of {{total}} enabled",
+      "defaultSummary": "Default: {{method}}",
+      "methodsTitle": "Supported methods",
+      "methodsSubtitle": "Expand a row to customize its checkout presentation.",
+      "enabled": "Enabled",
+      "default": "Default",
+      "defaultHelp": "Customers see this method selected first.",
+      "defaultSelected": "Selected",
+      "makeDefault": "Make default",
+      "label": "Label",
+      "methodDescription": "Description",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "status": {
+        "enabled": "Visible",
+        "disabled": "Hidden"
+      },
+      "errors": {
+        "oneRequired": "Enable at least one method before saving.",
+        "labelRequired": "Enter a config label before saving."
+      },
+      "gateway": "Gateway",
+      "payment": {
+        "title": "Payment methods",
+        "configLabel": "Checkout payment methods",
+        "gatewayField": "paymentGateway",
+        "gatewayHelp": "Sent as paymentGateway when creating an order, paired with its matching gateway name."
+      },
+      "delivery": {
+        "title": "Delivery methods",
+        "configLabel": "Checkout delivery methods",
+        "gatewayField": "shippingGateway",
+        "gatewayHelp": "Sent as shippingGateway when creating an order. Carrier parameters are set by the backend."
+      }
+    },
     "ahamovePalette": {
       "title": "Ahamove Shipping Request",
       "empty": "No shipping requests available"

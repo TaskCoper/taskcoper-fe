@@ -1331,8 +1331,7 @@
       "saleName": "Search by sale name..."
     },
     "status": {
-      "paid": "Paid",
-      "pending": "Pending"
+      "paid": "Paid"
     }
   },
   "packageBooking": {

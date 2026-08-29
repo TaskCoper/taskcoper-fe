@@ -2,7 +2,9 @@ import { Separator } from '@/components/ui/separator'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import {
+  Bike,
   Briefcase,
+  CreditCard,
   GalleryHorizontalEnd,
   LayoutDashboard,
   Megaphone,
@@ -41,6 +43,8 @@ interface Props {
   b2bServicesConfigs: Config[]
   b2bOverviewConfig: Config | null
   promotionPopupConfig: Config | null
+  checkoutPaymentMethodsConfig: Config | null
+  checkoutDeliveryMethodsConfig: Config | null
   onCreateLocked: (item: LockedPaletteItem) => void
   onOpenProductCollection: (config: Config | null) => void
   onOpenFeedbacks: (config: Config | null) => void
@@ -49,6 +53,8 @@ interface Props {
   // The B2B overview editor is a dedicated page; the button just navigates there.
   onOpenB2BOverview: () => void
   onOpenPromotionPopup: () => void
+  onOpenCheckoutPaymentMethods: () => void
+  onOpenCheckoutDeliveryMethods: () => void
 }
 
 export default function ConfigPaletteSidebar({
@@ -61,13 +67,17 @@ export default function ConfigPaletteSidebar({
   b2bServicesConfigs,
   b2bOverviewConfig,
   promotionPopupConfig,
+  checkoutPaymentMethodsConfig,
+  checkoutDeliveryMethodsConfig,
   onCreateLocked,
   onOpenProductCollection,
   onOpenFeedbacks,
   onOpenBanners,
   onOpenB2BService,
   onOpenB2BOverview,
-  onOpenPromotionPopup
+  onOpenPromotionPopup,
+  onOpenCheckoutPaymentMethods,
+  onOpenCheckoutDeliveryMethods
 }: Props) {
   const { t } = useTenantTranslation()
 
@@ -161,6 +171,26 @@ export default function ConfigPaletteSidebar({
 
         <Separator className='my-5' />
 
+        {/* Checkout methods (registry-backed singletons) */}
+        <PaletteSection title={t('configsPage.checkoutMethodsPalette.title')}>
+          <SingletonPaletteItem
+            label={t('configsPage.checkoutMethodsPalette.payment')}
+            icon={<CreditCard className='size-4' />}
+            tone='violet'
+            configured={checkoutPaymentMethodsConfig !== null}
+            onSelect={onOpenCheckoutPaymentMethods}
+          />
+          <SingletonPaletteItem
+            label={t('configsPage.checkoutMethodsPalette.delivery')}
+            icon={<Bike className='size-4' />}
+            tone='sky'
+            configured={checkoutDeliveryMethodsConfig !== null}
+            onSelect={onOpenCheckoutDeliveryMethods}
+          />
+        </PaletteSection>
+
+        <Separator className='my-5' />
+
         {/* Promotional popup (singleton) */}
         <PaletteSection title={t('configsPage.promotionPopupPalette.title')}>
           <button
@@ -220,6 +250,37 @@ export default function ConfigPaletteSidebar({
         </div>
       </div>
     </div>
+  )
+}
+
+function SingletonPaletteItem({
+  label,
+  icon,
+  tone,
+  configured,
+  onSelect
+}: {
+  label: string
+  icon: ReactNode
+  tone: Tone
+  configured: boolean
+  onSelect: () => void
+}) {
+  return (
+    <button
+      type='button'
+      className='flex w-full cursor-pointer items-center gap-2.5 rounded-md border border-dashed px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground'
+      onClick={onSelect}
+      title={label}
+    >
+      <span className={cn('flex size-6 shrink-0 items-center justify-center rounded-md', TONES[tone].iconBg)}>
+        {icon}
+      </span>
+      <span className='flex-1 truncate'>{label}</span>
+      {configured ? (
+        <span className={cn('size-1.5 shrink-0 rounded-full', TONES[tone].dot)} aria-hidden='true' />
+      ) : null}
+    </button>
   )
 }
 

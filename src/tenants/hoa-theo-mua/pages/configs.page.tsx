@@ -20,8 +20,17 @@ import {
   type B2BServiceSlug
 } from '../features/configs/b2b-service-detail-palette'
 import { bannerKeySuffix, matchesBannerKey } from '../features/configs/banners-palette'
+import {
+  CHECKOUT_CONFIG_GROUP,
+  CHECKOUT_DELIVERY_METHODS_KEY,
+  CHECKOUT_PAYMENT_METHODS_KEY,
+  checkoutMethodKindFromKey,
+  matchesCheckoutMethodsKey,
+  type CheckoutMethodKind
+} from '../features/configs/checkout-methods-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
+import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
@@ -116,6 +125,7 @@ export default function ConfigsPage() {
   })
 
   const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
+  const { contentConfigs: checkoutGroupConfigs = [] } = useGetContentConfigs({ groupName: CHECKOUT_CONFIG_GROUP })
 
   const { depots } = useGetDepots()
   const { orderTags } = useGetOrderTags()
@@ -153,6 +163,7 @@ export default function ConfigsPage() {
   const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
   const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
+  const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
   const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
@@ -288,6 +299,14 @@ export default function ConfigsPage() {
     () => promotionsGroupConfigs.find((c) => c.key === PROMOTION_POPUP_KEY) ?? null,
     [promotionsGroupConfigs]
   )
+  const checkoutPaymentMethodsConfig = useMemo(
+    () => checkoutGroupConfigs.find((config) => config.key === CHECKOUT_PAYMENT_METHODS_KEY) ?? null,
+    [checkoutGroupConfigs]
+  )
+  const checkoutDeliveryMethodsConfig = useMemo(
+    () => checkoutGroupConfigs.find((config) => config.key === CHECKOUT_DELIVERY_METHODS_KEY) ?? null,
+    [checkoutGroupConfigs]
+  )
 
   const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
   // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
@@ -337,6 +356,10 @@ export default function ConfigsPage() {
 
   const openEdit = useCallback(
     (config: Config) => {
+      if (matchesCheckoutMethodsKey(config.key)) {
+        setCheckoutMethodsKind(checkoutMethodKindFromKey(config.key))
+        return
+      }
       if (isPromotionPopupKey(config.key)) {
         setPromotionPopupDialogOpen(true)
         return
@@ -385,6 +408,8 @@ export default function ConfigsPage() {
   const openPromotionPopupDialog = useCallback(() => {
     setPromotionPopupDialogOpen(true)
   }, [])
+  const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
+  const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
   const closeEdit = useCallback(() => {
     setEditOpen(false)
   }, [])
@@ -507,7 +532,7 @@ export default function ConfigsPage() {
         </div>
       </div>
 
-      <ConfigPaletteSidebar
+      {/* <ConfigPaletteSidebar
         className='hidden lg:block'
         depotOptions={depotOptions}
         orderTagOptions={orderTagOptions}
@@ -517,6 +542,8 @@ export default function ConfigsPage() {
         b2bServicesConfigs={b2bServiceDocs}
         b2bOverviewConfig={b2bOverviewConfig}
         promotionPopupConfig={promotionPopupConfig}
+        checkoutPaymentMethodsConfig={checkoutPaymentMethodsConfig}
+        checkoutDeliveryMethodsConfig={checkoutDeliveryMethodsConfig}
         onCreateLocked={openLockedPaletteCreate}
         onOpenProductCollection={openProductCollectionDialog}
         onOpenFeedbacks={openFeedbacksDialog}
@@ -524,7 +551,9 @@ export default function ConfigsPage() {
         onOpenB2BService={openB2BServiceEditor}
         onOpenB2BOverview={openB2BOverviewEditor}
         onOpenPromotionPopup={openPromotionPopupDialog}
-      />
+        onOpenCheckoutPaymentMethods={openCheckoutPaymentMethods}
+        onOpenCheckoutDeliveryMethods={openCheckoutDeliveryMethods}
+      /> */}
 
       <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
         <SheetContent side='right' className='w-4/5 gap-0 p-0 sm:max-w-sm'>
@@ -541,6 +570,8 @@ export default function ConfigsPage() {
             b2bServicesConfigs={b2bServiceDocs}
             b2bOverviewConfig={b2bOverviewConfig}
             promotionPopupConfig={promotionPopupConfig}
+            checkoutPaymentMethodsConfig={checkoutPaymentMethodsConfig}
+            checkoutDeliveryMethodsConfig={checkoutDeliveryMethodsConfig}
             onCreateLocked={(item) => {
               setPaletteSheetOpen(false)
               openLockedPaletteCreate(item)
@@ -568,6 +599,14 @@ export default function ConfigsPage() {
             onOpenPromotionPopup={() => {
               setPaletteSheetOpen(false)
               openPromotionPopupDialog()
+            }}
+            onOpenCheckoutPaymentMethods={() => {
+              setPaletteSheetOpen(false)
+              openCheckoutPaymentMethods()
+            }}
+            onOpenCheckoutDeliveryMethods={() => {
+              setPaletteSheetOpen(false)
+              openCheckoutDeliveryMethods()
             }}
           />
         </SheetContent>
@@ -622,6 +661,15 @@ export default function ConfigsPage() {
         open={promotionPopupDialogOpen}
         onClose={() => setPromotionPopupDialogOpen(false)}
         existingConfig={promotionPopupConfig}
+      />
+
+      <CheckoutMethodsDialog
+        open={checkoutMethodsKind !== null}
+        kind={checkoutMethodsKind ?? 'payment'}
+        existingConfig={
+          checkoutMethodsKind === 'delivery' ? checkoutDeliveryMethodsConfig : checkoutPaymentMethodsConfig
+        }
+        onClose={() => setCheckoutMethodsKind(null)}
       />
     </div>
   )

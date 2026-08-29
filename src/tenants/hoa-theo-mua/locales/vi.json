@@ -1311,6 +1311,52 @@
     "customPalette": {
       "title": "Bảng tuỳ chỉnh"
     },
+    "checkoutMethodsPalette": {
+      "title": "Thanh toán & giao hàng",
+      "payment": "Phương thức thanh toán",
+      "delivery": "Phương thức giao hàng"
+    },
+    "checkoutMethodsDialog": {
+      "description": "Chọn phương thức khách hàng có thể sử dụng, thứ tự hiển thị, lựa chọn mặc định và nội dung tại trang thanh toán.",
+      "registryHint": "Phương thức và mã kỹ thuật được quản lý trong code. Trình chỉnh sửa này chỉ thay đổi trạng thái, thứ tự, lựa chọn mặc định và nội dung hiển thị cho khách hàng.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelHelp": "Dùng để nhận biết cấu hình này trong danh sách quản trị.",
+      "summary": "Thiết lập hiện tại",
+      "enabledCount": "Đang bật {{enabled}}/{{total}}",
+      "defaultSummary": "Mặc định: {{method}}",
+      "methodsTitle": "Phương thức được hỗ trợ",
+      "methodsSubtitle": "Mở từng dòng để tuỳ chỉnh nội dung hiển thị tại checkout.",
+      "enabled": "Bật",
+      "default": "Mặc định",
+      "defaultHelp": "Khách hàng sẽ thấy phương thức này được chọn trước.",
+      "defaultSelected": "Đang chọn",
+      "makeDefault": "Đặt mặc định",
+      "label": "Tên hiển thị",
+      "methodDescription": "Mô tả",
+      "moveUp": "Di chuyển lên",
+      "moveDown": "Di chuyển xuống",
+      "status": {
+        "enabled": "Đang hiện",
+        "disabled": "Đang ẩn"
+      },
+      "errors": {
+        "oneRequired": "Cần bật ít nhất một phương thức trước khi lưu.",
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu."
+      },
+      "gateway": "Cổng dịch vụ",
+      "payment": {
+        "title": "Phương thức thanh toán",
+        "configLabel": "Phương thức thanh toán tại checkout",
+        "gatewayField": "paymentGateway",
+        "gatewayHelp": "Được gửi khi tạo đơn dưới dạng paymentGateway, kèm tên gateway tương ứng."
+      },
+      "delivery": {
+        "title": "Phương thức giao hàng",
+        "configLabel": "Phương thức giao hàng tại checkout",
+        "gatewayField": "shippingGateway",
+        "gatewayHelp": "Được gửi khi tạo đơn dưới dạng shippingGateway. Tham số hãng vận chuyển do backend cấu hình."
+      }
+    },
     "ahamovePalette": {
       "title": "Yêu cầu giao hàng Ahamove",
       "empty": "Chưa có yêu cầu giao hàng khả dụng"

@@ -1316,8 +1316,7 @@
       "saleName": "Tìm theo người bán..."
     },
     "status": {
-      "paid": "Đã thanh toán",
-      "pending": "Đang xử lý"
+      "paid": "Đã thanh toán"
     }
   },
   "packageBooking": {
