@@ -7,6 +7,7 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 const AiCardsPage = lazy(() => import('./pages/ai-cards.page'))
 const AiCardDetailPage = lazy(() => import('./pages/ai-card-detail.page'))
 const AiFlowerDesignsPage = lazy(() => import('./pages/ai-flower-designs.page'))
+const AiFlowerDesignDetailPage = lazy(() => import('./pages/ai-flower-design-detail.page'))
 const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
 const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
 const CardSizesPage = lazy(() => import('./pages/card-sizes.page'))
@@ -115,6 +116,10 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           {
             path: 'ai-custom/flower-designs',
             element: <AiFlowerDesignsPage />
+          },
+          {
+            path: 'ai-custom/flower-designs/:id',
+            element: <AiFlowerDesignDetailPage />
           }
         ]
       },

@@ -7,7 +7,7 @@ const IMAGE_EXTENSION_BY_MIME_TYPE: Record<string, string> = {
 
 const sanitizeFileName = (value: string) => value.replace(/[<>:"/\\|?*]/g, '-').trim()
 
-export async function downloadAiCardImage(imageUrl: string, cardCode: string) {
+export const downloadAiCardImage = async (imageUrl: string, cardCode: string) => {
   const normalizedUrl = imageUrl.trim()
   if (!normalizedUrl) throw new Error('Missing AI card output image')
 

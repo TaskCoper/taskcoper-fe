@@ -26,7 +26,7 @@ import 'yet-another-react-lightbox/plugins/captions.css'
 import 'yet-another-react-lightbox/plugins/counter.css'
 import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
-import { AiCardOutputImage } from '../features/ai-custom/components/ai-card-output-image'
+import AiCardOutputImage from '../features/ai-custom/components/ai-card-output-image'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
 import { useGetAiCardDetail } from '../features/ai-custom/hooks/use-get-ai-card-detail'
 import { AiCardFileStatus, AiCardWritingMode } from '../features/ai-custom/types'
@@ -165,30 +165,60 @@ export default function AiCardDetailPage() {
               <h1 className='text-2xl font-bold'>{t('aiCustom.detail.title')}</h1>
               <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.description')}</p>
             </div>
-
-            {isFileAvailable && (
-              <Button disabled={isDownloading} onClick={() => downloadAiCard(aiCard)}>
-                {isDownloading ? <LoaderCircleIcon className='animate-spin' /> : <DownloadIcon />}
-                {t('aiCustom.download.action')}
-              </Button>
-            )}
           </div>
         </div>
 
         <div className='mx-auto grid w-full max-w-8xl items-start gap-6 px-6 pt-2 pb-6 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.4fr)]'>
-          <DetailPanel
-            title={t('aiCustom.detail.section.result')}
-            action={<span className='font-mono text-sm font-semibold'>{aiCard.code}</span>}
-            contentClassName='flex flex-col justify-center'
-            className='lg:sticky lg:top-6'
-          >
-            <AiCardOutputImage
-              src={aiCard.outputImageUrl}
-              alt={t('aiCustom.history.previewAlt', { code: aiCard.code })}
-              openLabel={t('aiCustom.history.openPreview', { code: aiCard.code })}
-              onOpen={resultImageIndex === undefined ? undefined : () => setLightboxImageIndex(resultImageIndex)}
-            />
-          </DetailPanel>
+          <section className='overflow-hidden rounded-2xl border bg-card shadow-sm lg:sticky lg:top-6'>
+            <h2 className='sr-only'>{t('aiCustom.detail.section.result')}</h2>
+
+            <div className='relative flex min-h-96 items-center justify-center bg-muted/20 p-5 pt-16'>
+              <div className='absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-3'>
+                <Badge
+                  variant='outline'
+                  className='max-w-[65%] truncate bg-background/90 font-mono shadow-sm backdrop-blur-sm'
+                >
+                  {aiCard.code}
+                </Badge>
+                <Badge
+                  variant='outline'
+                  className={cn(
+                    'bg-background/90 shadow-sm backdrop-blur-sm',
+                    aiCard.fileStatus === AiCardFileStatus.Available &&
+                      'border-emerald-200 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400',
+                    aiCard.fileStatus === AiCardFileStatus.Processing &&
+                      'border-amber-200 text-amber-700 dark:border-amber-800 dark:text-amber-400'
+                  )}
+                >
+                  {fileStatusLabel}
+                </Badge>
+              </div>
+
+              <AiCardOutputImage
+                src={aiCard.outputImageUrl}
+                alt={t('aiCustom.history.previewAlt', { code: aiCard.code })}
+                openLabel={t('aiCustom.history.openPreview', { code: aiCard.code })}
+                onOpen={resultImageIndex === undefined ? undefined : () => setLightboxImageIndex(resultImageIndex)}
+                className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
+                imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
+                showZoomOverlay
+              />
+            </div>
+
+            <div className='flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3'>
+              <div className='min-w-0'>
+                <p className='text-xs text-muted-foreground'>{t('aiCustom.history.column.createdAt')}</p>
+                <p className='truncate text-sm font-medium'>{formatDateTime(aiCard.createdAt, 'dateTimeShort')}</p>
+              </div>
+
+              {isFileAvailable && (
+                <Button size='sm' disabled={isDownloading} onClick={() => downloadAiCard(aiCard)}>
+                  {isDownloading ? <LoaderCircleIcon className='animate-spin' /> : <DownloadIcon />}
+                  {t('aiCustom.download.action')}
+                </Button>
+              )}
+            </div>
+          </section>
 
           <div className='min-w-0'>
             <TabsList className='w-full justify-start gap-2 overflow-x-auto rounded-none border-b bg-transparent p-0 flex-nowrap [&::-webkit-scrollbar]:hidden'>
@@ -329,8 +359,8 @@ export default function AiCardDetailPage() {
                             <TableRow key={order.id}>
                               <TableCell className='px-5'>
                                 <Link
-                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                                  className='font-mono font-medium text-primary hover:underline'
+                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/${order.id}`}
+                                  className='font-mono font-medium hover:underline'
                                 >
                                   {order.code}
                                 </Link>

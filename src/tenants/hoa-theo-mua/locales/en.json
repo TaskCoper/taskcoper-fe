@@ -104,14 +104,14 @@
     "history": {
       "title": "AI card history",
       "description": "View and search successfully generated AI cards.",
-      "searchPlaceholder": "Search by card code, customer, or template...",
+      "searchPlaceholder": "Type to search...",
       "column": {
         "preview": "Preview",
         "code": "Card code",
         "customer": "Customer",
-        "template": "Template",
+        "template": "Card template",
         "size": "Size",
-        "writingMode": "Format",
+        "writingMode": "Writing Method",
         "createdAt": "Created at",
         "actions": "Actions"
       },
@@ -123,6 +123,76 @@
       "previewAlt": "Card {{code}} preview",
       "openPreview": "Open card {{code}} preview",
       "viewDetail": "View details"
+    },
+    "flowerHistory": {
+      "title": "AI flower design history",
+      "description": "View and search successfully generated Custom AI flower designs.",
+      "searchPlaceholder": "Type to search...",
+      "column": {
+        "preview": "Flower preview",
+        "code": "Flower design code",
+        "customer": "Customer",
+        "sourceCombo": "Source Combo",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "previewAlt": "Flower design {{code}} preview",
+      "openPreview": "Open flower design {{code}} preview",
+      "viewDetail": "View details",
+      "comboFilter": {
+        "title": "Select source combos",
+        "description": "Multiple combos can be selected",
+        "searchPlaceholder": "Search by combo name or code...",
+        "clear": "Clear",
+        "empty": "No matching combos found.",
+        "page": "Page {{page}}/{{totalPages}} · {{totalItems}} combos",
+        "itemsPerPage": "Combos per page",
+        "previous": "Previous combo page",
+        "next": "Next combo page"
+      }
+    },
+    "flowerDetail": {
+      "title": "AI flower design details",
+      "description": "View the output, creation-time materials, and linked orders.",
+      "back": "Back to history",
+      "notFound": "The flower design was not found or does not have a valid output image.",
+      "tab": {
+        "overview": "Overview",
+        "materials": "Materials",
+        "source": "Design source",
+        "orders": "Linked orders"
+      },
+      "section": {
+        "customer": "Customer information",
+        "request": "Generation information",
+        "coreMaterials": "Core materials at creation time",
+        "supportMaterials": "Support materials at creation time",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "orders": "Linked orders"
+      },
+      "customRequest": "Request or notes",
+      "noMaterials": "No materials were recorded.",
+      "noMockup": "No source mockup.",
+      "noOrders": "This flower design is not linked to any orders.",
+      "material": {
+        "name": "Material",
+        "quantity": "Quantity",
+        "unit": "Unit"
+      },
+      "combo": {
+        "code": "Combo code",
+        "name": "Combo name",
+        "information": "Combo information"
+      },
+      "mockupAlt": "{{name}} image",
+      "openMockup": "Open {{name}} image",
+      "lightbox": {
+        "label": "View flower design images",
+        "gallery": "Flower design gallery",
+        "resultCaption": "Result image · {{code}}",
+        "mockupCaption": "Source mockup · {{code}}"
+      }
     },
     "detail": {
       "title": "AI card details",

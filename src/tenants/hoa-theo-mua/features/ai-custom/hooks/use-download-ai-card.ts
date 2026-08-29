@@ -5,7 +5,7 @@ import { recordMockAiCardDownload } from '../mock-data'
 import type { AiCardHistoryItem } from '../types'
 import { downloadAiCardImage } from '../utils/download-ai-card-image'
 
-export function useDownloadAiCard() {
+export const useDownloadAiCard = () => {
   const { t } = useTenantTranslation()
   const {
     mutate: downloadAiCard,

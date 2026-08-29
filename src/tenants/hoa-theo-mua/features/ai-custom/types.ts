@@ -56,3 +56,76 @@ export interface GetAiCardHistoryParams {
 }
 
 export type AiCardHistoryPage = BasePaginationResponse<AiCardHistoryItem>['value']
+
+export interface AiFlowerDesignHistoryItem {
+  id: string
+  code: string
+  outputImageUrl: string | null
+  customerId: string | null
+  customerName: string | null
+  customerPhone: string | null
+  orderCode: string | null
+  sourceComboId: string
+  sourceComboCode: string | null
+  sourceComboName: string | null
+  createdAt: string
+}
+
+export interface AiFlowerDesignComboOption {
+  id: string
+  code: string | null
+  name: string
+  imageUrl: string | null
+}
+
+export interface GetAiFlowerDesignComboOptionsParams {
+  pageIndex?: number
+  pageSize?: number
+  search?: string
+}
+
+export type AiFlowerDesignComboOptionsPage = BasePaginationResponse<AiFlowerDesignComboOption>['value']
+
+export interface AiFlowerDesignMaterialSnapshot {
+  id: string
+  code: string | null
+  name: string
+  imageUrl: string | null
+  unit: string | null
+  quantity: number
+}
+
+export interface AiFlowerDesignSourceCombo {
+  id: string
+  code: string | null
+  name: string
+  description: string | null
+  imageUrl: string | null
+}
+
+export interface AiFlowerDesignSourceMockup {
+  id: string
+  code: string | null
+  name: string
+  imageUrl: string | null
+}
+
+export interface AiFlowerDesignDetail extends AiFlowerDesignHistoryItem {
+  customerEmail: string | null
+  sourceCombo: AiFlowerDesignSourceCombo
+  coreMaterials: AiFlowerDesignMaterialSnapshot[]
+  supportMaterials: AiFlowerDesignMaterialSnapshot[]
+  sourceMockup: AiFlowerDesignSourceMockup | null
+  customRequest: string | null
+  fileStatus: AiCardFileStatus
+  linkedOrders: AiCardLinkedOrder[]
+}
+
+export interface GetAiFlowerDesignHistoryParams {
+  pageIndex?: number
+  pageSize?: number
+  search?: string
+  comboIds?: string[]
+}
+
+export type AiFlowerDesignHistoryPage = BasePaginationResponse<AiFlowerDesignHistoryItem>['value']

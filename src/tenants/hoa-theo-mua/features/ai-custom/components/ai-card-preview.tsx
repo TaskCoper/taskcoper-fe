@@ -1,7 +1,7 @@
 import { ImageOffIcon } from 'lucide-react'
 import { useState } from 'react'
 
-export function AiCardPreview({
+const AiCardPreview = ({
   src,
   alt,
   openLabel,
@@ -11,7 +11,7 @@ export function AiCardPreview({
   alt: string
   openLabel: string
   onOpen: () => void
-}) {
+}) => {
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const hasError = Boolean(src && failedSrc === src)
 
@@ -44,3 +44,5 @@ export function AiCardPreview({
     </button>
   )
 }
+
+export default AiCardPreview

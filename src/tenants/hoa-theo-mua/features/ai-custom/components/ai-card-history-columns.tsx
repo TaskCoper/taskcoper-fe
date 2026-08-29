@@ -17,7 +17,7 @@ import { DownloadIcon, EyeIcon, LoaderCircleIcon, MoreHorizontalIcon, SearchIcon
 import { Link } from 'react-router'
 import { aiCardSizeOptions } from '../mock-data'
 import { AiCardWritingMode, type AiCardHistoryItem } from '../types'
-import { AiCardPreview } from './ai-card-preview'
+import AiCardPreview from './ai-card-preview'
 
 export const getAiCardHistoryColumns = ({
   t,
@@ -80,7 +80,11 @@ export const getAiCardHistoryColumns = ({
       icon: SearchIcon
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.code' />,
-    cell: ({ row }) => <span className='whitespace-nowrap font-mono text-sm font-medium'>{row.original.code}</span>,
+    cell: ({ row }) => (
+      <Link to={row.original.id} className='whitespace-nowrap font-mono text-sm font-medium hover:underline'>
+        {row.original.code}
+      </Link>
+    ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,

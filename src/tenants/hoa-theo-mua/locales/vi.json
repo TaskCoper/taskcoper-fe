@@ -109,9 +109,9 @@
         "preview": "Ảnh thiệp",
         "code": "Mã thiệp",
         "customer": "Khách hàng",
-        "template": "Template",
+        "template": "Mẫu thiệp",
         "size": "Kích thước",
-        "writingMode": "Hình thức",
+        "writingMode": "Hình thức viết",
         "createdAt": "Ngày tạo",
         "actions": "Thao tác"
       },
@@ -123,6 +123,76 @@
       "previewAlt": "Ảnh thiệp {{code}}",
       "openPreview": "Xem ảnh thiệp {{code}}",
       "viewDetail": "Xem chi tiết"
+    },
+    "flowerHistory": {
+      "title": "Lịch sử mẫu hoa AI",
+      "description": "Xem và tìm kiếm các mẫu hoa Custom AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
+      "column": {
+        "preview": "Ảnh mẫu hoa",
+        "code": "Mã mẫu hoa",
+        "customer": "Khách hàng",
+        "sourceCombo": "Combo nguồn",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "previewAlt": "Ảnh mẫu hoa {{code}}",
+      "openPreview": "Xem ảnh mẫu hoa {{code}}",
+      "viewDetail": "Xem chi tiết",
+      "comboFilter": {
+        "title": "Chọn Combo nguồn",
+        "description": "Có thể chọn nhiều Combo",
+        "searchPlaceholder": "Tìm theo tên hoặc mã Combo...",
+        "clear": "Bỏ chọn",
+        "empty": "Không tìm thấy Combo phù hợp.",
+        "page": "Trang {{page}}/{{totalPages}} · {{totalItems}} Combo",
+        "itemsPerPage": "Số Combo mỗi trang",
+        "previous": "Trang Combo trước",
+        "next": "Trang Combo tiếp theo"
+      }
+    },
+    "flowerDetail": {
+      "title": "Chi tiết mẫu hoa AI",
+      "description": "Xem ảnh kết quả, thành phần tại thời điểm tạo và các Order liên kết.",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy mẫu hoa hoặc mẫu hoa chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "overview": "Tổng quan",
+        "materials": "Thành phần",
+        "source": "Nguồn thiết kế",
+        "orders": "Order liên kết"
+      },
+      "section": {
+        "customer": "Thông tin khách hàng",
+        "request": "Thông tin tạo mẫu",
+        "coreMaterials": "Thành phần Core tại thời điểm tạo",
+        "supportMaterials": "Thành phần Support tại thời điểm tạo",
+        "sourceCombo": "Combo nguồn",
+        "sourceMockup": "Mockup nguồn",
+        "orders": "Order liên kết"
+      },
+      "customRequest": "Yêu cầu hoặc ghi chú",
+      "noMaterials": "Không có thành phần được ghi nhận.",
+      "noMockup": "Không có Mockup nguồn.",
+      "noOrders": "Mẫu hoa này chưa liên kết với Order nào.",
+      "material": {
+        "name": "Thành phần",
+        "quantity": "Số lượng",
+        "unit": "Đơn vị"
+      },
+      "combo": {
+        "code": "Mã Combo",
+        "name": "Tên Combo",
+        "information": "Thông tin Combo"
+      },
+      "mockupAlt": "Ảnh {{name}}",
+      "openMockup": "Xem ảnh {{name}}",
+      "lightbox": {
+        "label": "Xem ảnh mẫu hoa",
+        "gallery": "Bộ ảnh mẫu hoa",
+        "resultCaption": "Ảnh kết quả · {{code}}",
+        "mockupCaption": "Mockup nguồn · {{code}}"
+      }
     },
     "detail": {
       "title": "Chi tiết thiệp AI",

@@ -29,10 +29,14 @@ export const aiCardSizeOptions = [
 ]
 
 const previewImages = [
-  '/images/auth-bg.jpg',
-  '/images/taskcoper.png',
-  '/images/placeholder-cover.png',
-  '/images/taskcoper-white.png'
+  'https://casolia.com/img/image18_best-friend-card-ideas_layered-cutouts.jpg',
+  'https://casolia.com/img/image10_flower-mothers-day-card-ideas_origami-flower-card.jpg',
+  'https://i.pinimg.com/736x/74/4a/02/744a0278421fbc76f2ce8cd551456029.jpg',
+  'https://i.pinimg.com/474x/0d/5b/39/0d5b39c9be79efac6465f217dc6f35f2.jpg',
+  'https://i.etsystatic.com/53192557/r/il/9da53e/6526748319/il_1140xN.6526748319_4yge.jpg',
+  'https://thiepgialong.com/kcfinder/upload/images/thiep-moi-tan-gia-online-03.jpg',
+  'https://thiep.softvn.com/data/cards/92723516/92723516.png',
+  'https://i.etsystatic.com/37698047/r/il/3eaff9/5473765179/il_fullxfull.5473765179_qj85.jpg'
 ]
 
 const mockAiCards: AiCardHistoryItem[] = Array.from({ length: 38 }, (_, index) => {
@@ -63,7 +67,7 @@ const mockAiCards: AiCardHistoryItem[] = Array.from({ length: 38 }, (_, index) =
   }
 })
 
-export async function getMockAiCardDetail(id: string): Promise<AiCardDetail | null> {
+export const getMockAiCardDetail = async (id: string): Promise<AiCardDetail | null> => {
   const card = mockAiCards.find((item) => item.id === id && Boolean(item.outputImageUrl?.trim()))
   if (!card) return null
 
@@ -77,7 +81,13 @@ export async function getMockAiCardDetail(id: string): Promise<AiCardDetail | nu
     recipientName: cardNumber % 3 === 0 ? 'Người thương' : 'Gia đình thân yêu',
     greetingMessage:
       cardNumber % 6 === 0 ? null : 'Chúc bạn luôn rạng rỡ, bình an và gặp thật nhiều điều tốt đẹp trong cuộc sống.',
-    attachmentImageUrls: cardNumber % 3 === 0 ? ['/images/auth-bg.jpg', '/images/placeholder-cover.png'] : [],
+    attachmentImageUrls:
+      cardNumber % 3 === 0
+        ? [
+            'https://i.etsystatic.com/53192557/r/il/9da53e/6526748319/il_1140xN.6526748319_4yge.jpg',
+            'https://thiepgialong.com/kcfinder/upload/images/thiep-moi-tan-gia-online-03.jpg'
+          ]
+        : [],
     fileStatus:
       cardNumber % 7 === 0
         ? AiCardFileStatus.Expired
@@ -93,7 +103,7 @@ export async function getMockAiCardDetail(id: string): Promise<AiCardDetail | nu
   }
 }
 
-export async function recordMockAiCardDownload(id: string): Promise<boolean> {
+export const recordMockAiCardDownload = async (id: string): Promise<boolean> => {
   return mockAiCards.some((card) => card.id === id && Boolean(card.outputImageUrl?.trim()))
 }
 
@@ -105,13 +115,13 @@ const normalizeSearch = (value: string) =>
     .toLowerCase()
     .trim()
 
-export async function getMockAiCardHistory({
+export const getMockAiCardHistory = async ({
   pageIndex = 1,
   pageSize = 10,
   search,
   sizeId,
   writingMode
-}: GetAiCardHistoryParams): Promise<AiCardHistoryPage> {
+}: GetAiCardHistoryParams): Promise<AiCardHistoryPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
   const validOutputCards = mockAiCards.filter((card) => Boolean(card.outputImageUrl?.trim()))
   const filteredCards = validOutputCards.filter((card) => {
