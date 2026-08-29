@@ -1,4 +1,10 @@
-import type { CardTemplateListItem, CardTemplatesPage, GetCardTemplatesParams } from './types'
+import type {
+  CardTemplateListItem,
+  CardTemplatesPage,
+  CreateCardTemplatePayload,
+  GetCardTemplatesParams,
+  UpdateCardTemplatePayload
+} from './types'
 
 const previewImages = [
   'https://casolia.com/img/image18_best-friend-card-ideas_layered-cutouts.jpg',
@@ -42,7 +48,7 @@ const templatePresets = [
   }
 ]
 
-const mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_, index) => {
+let mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_, index) => {
   const number = index + 1
   const preset = templatePresets[index % templatePresets.length]
 
@@ -55,6 +61,46 @@ const mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_,
     isActive: index % 4 !== 0
   }
 })
+
+const readFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read card template image'))
+    reader.readAsDataURL(file)
+  })
+
+export const createMockCardTemplate = async (payload: CreateCardTemplatePayload): Promise<CardTemplateListItem> => {
+  const template: CardTemplateListItem = {
+    id: `card-template-${crypto.randomUUID()}`,
+    name: payload.name.trim(),
+    description: payload.description?.trim() || null,
+    previewImageUrl: await readFileAsDataUrl(payload.imageFile),
+    isActive: payload.isActive
+  }
+
+  mockCardTemplates = [template, ...mockCardTemplates]
+  return template
+}
+
+export const updateMockCardTemplate = async (payload: UpdateCardTemplatePayload): Promise<CardTemplateListItem> => {
+  const templateIndex = mockCardTemplates.findIndex((template) => template.id === payload.id)
+  if (templateIndex < 0) throw new Error('Card template not found')
+
+  const currentTemplate = mockCardTemplates[templateIndex]
+  const updatedTemplate: CardTemplateListItem = {
+    ...currentTemplate,
+    name: payload.name.trim(),
+    description: payload.description?.trim() || null,
+    previewImageUrl: payload.imageFile ? await readFileAsDataUrl(payload.imageFile) : currentTemplate.previewImageUrl
+  }
+
+  mockCardTemplates = mockCardTemplates.map((template) =>
+    template.id === updatedTemplate.id ? updatedTemplate : template
+  )
+  return updatedTemplate
+}
 
 export const getMockCardTemplates = async ({
   pageIndex = 1,

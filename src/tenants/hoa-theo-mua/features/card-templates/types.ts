@@ -15,4 +15,18 @@ export interface GetCardTemplatesParams {
   isActive?: boolean
 }
 
+export interface CreateCardTemplatePayload {
+  name: string
+  description: string | null
+  imageFile: File
+  isActive: boolean
+}
+
+export interface UpdateCardTemplatePayload {
+  id: string
+  name: string
+  description: string | null
+  imageFile: File | null
+}
+
 export type CardTemplatesPage = BasePaginationResponse<CardTemplateListItem>['value']

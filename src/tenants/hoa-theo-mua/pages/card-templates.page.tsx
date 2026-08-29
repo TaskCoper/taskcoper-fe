@@ -4,14 +4,17 @@ import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useQueryClient } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getCardTemplateColumns } from '../features/card-templates/components/card-template-columns'
+import CreateCardTemplateDialog from '../features/card-templates/components/create-card-template-dialog'
+import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
+import { cardTemplateKeys } from '../features/card-templates/query-keys'
 import type { CardTemplateListItem } from '../features/card-templates/types'
 
 const FILTER_PREFIX = 'cardTemplates'
@@ -19,8 +22,14 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
 
 export default function CardTemplatesPage() {
   const { t } = useTenantTranslation()
+  const queryClient = useQueryClient()
   const [previewTemplate, setPreviewTemplate] = useState<CardTemplateListItem | null>(null)
-  const columns = useMemo(() => getCardTemplateColumns({ t, onPreview: setPreviewTemplate }), [t])
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [editingTemplate, setEditingTemplate] = useState<CardTemplateListItem | null>(null)
+  const columns = useMemo(
+    () => getCardTemplateColumns({ t, onPreview: setPreviewTemplate, onEdit: setEditingTemplate }),
+    [t]
+  )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)
   const [statusFilter] = useQueryState(`${FILTER_PREFIX}_isActive`, parseAsString)
@@ -51,6 +60,11 @@ export default function CardTemplatesPage() {
     }
   })
 
+  const handleCreateDialogOpenChange = (open: boolean) => {
+    setIsCreateDialogOpen(open)
+    if (!open) void queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
+  }
+
   return (
     <div className='h-full overflow-auto'>
       <div className='space-y-6 p-6'>
@@ -61,7 +75,7 @@ export default function CardTemplatesPage() {
 
         <DataTable table={table} isLoading={isGettingCardTemplates} pageSizeOptions={PAGE_SIZE_OPTIONS}>
           <DataTableToolbar table={table}>
-            <Button size='sm' onClick={() => toast.info(t('cardTemplates.createComingSoon'))}>
+            <Button size='sm' onClick={() => setIsCreateDialogOpen(true)}>
               <PlusIcon />
               {t('cardTemplates.add')}
             </Button>
@@ -83,6 +97,19 @@ export default function CardTemplatesPage() {
           render={{ buttonPrev: () => null, buttonNext: () => null }}
         />
       )}
+
+      <CreateCardTemplateDialog
+        open={isCreateDialogOpen}
+        onOpenChange={handleCreateDialogOpenChange}
+        onCreated={() => table.setPageIndex(0)}
+      />
+      <UpdateCardTemplateDialog
+        template={editingTemplate}
+        open={Boolean(editingTemplate)}
+        onOpenChange={(open) => {
+          if (!open) setEditingTemplate(null)
+        }}
+      />
     </div>
   )
 }

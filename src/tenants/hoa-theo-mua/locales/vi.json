@@ -104,7 +104,6 @@
     "description": "Theo dõi các mẫu thiệp đang được hệ thống sử dụng.",
     "searchPlaceholder": "Tìm theo tên mẫu thiệp...",
     "add": "Thêm mẫu thiệp",
-    "createComingSoon": "Tính năng thêm mẫu thiệp sẽ sớm được hoàn thiện.",
     "column": {
       "name": "Tên mẫu",
       "preview": "Ảnh Preview",
@@ -120,7 +119,41 @@
     "previewAlt": "Ảnh Preview mẫu {{name}}",
     "openPreview": "Mở ảnh Preview mẫu {{name}}",
     "viewPreview": "Xem ảnh Preview",
-    "openMenu": "Mở thao tác mẫu thiệp"
+    "edit": "Sửa mẫu thiệp",
+    "openMenu": "Mở thao tác mẫu thiệp",
+    "form": {
+      "title": "Thêm mẫu thiệp",
+      "description": "Tạo mẫu mới để khách hàng sử dụng khi tạo thiệp.",
+      "name": "Tên mẫu",
+      "namePlaceholder": "Nhập tên mẫu thiệp...",
+      "templateDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh template mẫu thiệp",
+      "imageHint": "Định dạng PNG hoặc JPG, dung lượng tối đa 10 MB.",
+      "imagePreviewAlt": "Ảnh xem trước của mẫu thiệp đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "dropzoneHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB",
+      "status": "Trạng thái sử dụng",
+      "statusHint": "Mẫu thiệp mới mặc định ở trạng thái Đang sử dụng.",
+      "submit": "Thêm mẫu thiệp",
+      "updateTitle": "Sửa mẫu thiệp",
+      "updateDescription": "Cập nhật tên, mô tả hoặc ảnh mẫu thiệp mà không thay đổi trạng thái sử dụng.",
+      "updateImageHint": "Giữ ảnh hiện tại hoặc chọn ảnh PNG/JPG mới có dung lượng tối đa 10 MB.",
+      "updateSubmit": "Lưu thay đổi",
+      "words": "từ",
+      "createSuccess": "Thêm mẫu thiệp thành công.",
+      "createFailed": "Không thể thêm mẫu thiệp. Vui lòng thử lại.",
+      "updateSuccess": "Cập nhật mẫu thiệp thành công.",
+      "updateFailed": "Không thể cập nhật mẫu thiệp. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên mẫu thiệp.",
+        "imageRequired": "Vui lòng chọn ảnh template mẫu thiệp.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh không được vượt quá 10 MB.",
+        "nameWords": "Tên mẫu không được vượt quá {{max}} từ."
+      }
+    }
   },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",

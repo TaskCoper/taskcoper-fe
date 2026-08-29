@@ -104,7 +104,6 @@
     "description": "Track the card templates currently available in the system.",
     "searchPlaceholder": "Search by template name...",
     "add": "Add card template",
-    "createComingSoon": "The card template creation flow will be available soon.",
     "column": {
       "name": "Template name",
       "preview": "Preview",
@@ -120,7 +119,41 @@
     "previewAlt": "{{name}} template preview",
     "openPreview": "Open {{name}} preview",
     "viewPreview": "View preview",
-    "openMenu": "Open card template actions"
+    "edit": "Edit card template",
+    "openMenu": "Open card template actions",
+    "form": {
+      "title": "Add card template",
+      "description": "Create a new template for customers to use when generating cards.",
+      "name": "Template name",
+      "namePlaceholder": "Enter template name...",
+      "templateDescription": "Description",
+      "descriptionPlaceholder": "Enter an optional description...",
+      "image": "Template image",
+      "imageHint": "PNG or JPG, up to 10 MB.",
+      "imagePreviewAlt": "Selected template preview",
+      "dropzoneTitle": "Drop an image here or click to select",
+      "dropzoneActive": "Drop the image to upload",
+      "dropzoneHint": "PNG, JPG or JPEG · Maximum 10 MB",
+      "status": "Usage status",
+      "statusHint": "New templates are in use by default.",
+      "submit": "Add template",
+      "updateTitle": "Edit card template",
+      "updateDescription": "Update the template name, description, or image without changing its usage status.",
+      "updateImageHint": "Keep the current image or select a new PNG/JPG image up to 10 MB.",
+      "updateSubmit": "Save changes",
+      "words": "words",
+      "createSuccess": "Card template added successfully.",
+      "createFailed": "Could not add the card template. Please try again.",
+      "updateSuccess": "Card template updated successfully.",
+      "updateFailed": "Could not update the card template. Please try again.",
+      "validation": {
+        "nameRequired": "Template name is required.",
+        "imageRequired": "Template image is required.",
+        "imageType": "Only PNG, JPG or JPEG images are accepted.",
+        "imageSize": "The image must not exceed 10 MB.",
+        "nameWords": "Template name must not exceed {{max}} words."
+      }
+    }
   },
   "aiCustom": {
     "comingSoon": "This feature is under development",
