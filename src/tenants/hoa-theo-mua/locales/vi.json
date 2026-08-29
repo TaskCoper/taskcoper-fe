@@ -153,6 +153,19 @@
         "imageSize": "Ảnh không được vượt quá 10 MB.",
         "nameWords": "Tên mẫu không được vượt quá {{max}} từ."
       }
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Đang sử dụng",
+      "deactivate": "Chuyển sang Ngừng sử dụng",
+      "activateTitle": "Chuyển mẫu thiệp sang Đang sử dụng?",
+      "deactivateTitle": "Chuyển mẫu thiệp sang Ngừng sử dụng?",
+      "activateDescription": "Mẫu {{name}} sẽ được hiển thị cho khách hàng khi tạo thiệp mới.",
+      "deactivateDescription": "Mẫu {{name}} sẽ không còn hiển thị cho khách hàng khi tạo thiệp mới.",
+      "activateConfirm": "Chuyển sang Đang sử dụng",
+      "deactivateConfirm": "Chuyển sang Ngừng sử dụng",
+      "activateSuccess": "Mẫu thiệp đã chuyển sang Đang sử dụng.",
+      "deactivateSuccess": "Mẫu thiệp đã chuyển sang Ngừng sử dụng.",
+      "failed": "Không thể chuyển trạng thái mẫu thiệp. Vui lòng thử lại."
     }
   },
   "aiCustom": {

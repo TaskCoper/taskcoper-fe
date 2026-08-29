@@ -1,6 +1,7 @@
 import type {
   CardTemplateListItem,
   CardTemplatesPage,
+  ChangeCardTemplateStatusPayload,
   CreateCardTemplatePayload,
   GetCardTemplatesParams,
   UpdateCardTemplatePayload
@@ -99,6 +100,17 @@ export const updateMockCardTemplate = async (payload: UpdateCardTemplatePayload)
   mockCardTemplates = mockCardTemplates.map((template) =>
     template.id === updatedTemplate.id ? updatedTemplate : template
   )
+  return updatedTemplate
+}
+
+export const changeMockCardTemplateStatus = async (
+  payload: ChangeCardTemplateStatusPayload
+): Promise<CardTemplateListItem> => {
+  const template = mockCardTemplates.find((item) => item.id === payload.id)
+  if (!template) throw new Error('Card template not found')
+
+  const updatedTemplate = { ...template, isActive: payload.isActive }
+  mockCardTemplates = mockCardTemplates.map((item) => (item.id === payload.id ? updatedTemplate : item))
   return updatedTemplate
 }
 

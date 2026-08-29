@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getCardTemplateColumns } from '../features/card-templates/components/card-template-columns'
+import ChangeCardTemplateStatusDialog from '../features/card-templates/components/change-card-template-status-dialog'
 import CreateCardTemplateDialog from '../features/card-templates/components/create-card-template-dialog'
 import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
@@ -26,8 +27,15 @@ export default function CardTemplatesPage() {
   const [previewTemplate, setPreviewTemplate] = useState<CardTemplateListItem | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [editingTemplate, setEditingTemplate] = useState<CardTemplateListItem | null>(null)
+  const [statusTemplate, setStatusTemplate] = useState<CardTemplateListItem | null>(null)
   const columns = useMemo(
-    () => getCardTemplateColumns({ t, onPreview: setPreviewTemplate, onEdit: setEditingTemplate }),
+    () =>
+      getCardTemplateColumns({
+        t,
+        onPreview: setPreviewTemplate,
+        onEdit: setEditingTemplate,
+        onToggleStatus: setStatusTemplate
+      }),
     [t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
@@ -108,6 +116,13 @@ export default function CardTemplatesPage() {
         open={Boolean(editingTemplate)}
         onOpenChange={(open) => {
           if (!open) setEditingTemplate(null)
+        }}
+      />
+      <ChangeCardTemplateStatusDialog
+        template={statusTemplate}
+        open={Boolean(statusTemplate)}
+        onOpenChange={(open) => {
+          if (!open) setStatusTemplate(null)
         }}
       />
     </div>

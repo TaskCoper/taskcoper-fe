@@ -153,6 +153,19 @@
         "imageSize": "The image must not exceed 10 MB.",
         "nameWords": "Template name must not exceed {{max}} words."
       }
+    },
+    "statusAction": {
+      "activate": "Set as in use",
+      "deactivate": "Set as not in use",
+      "activateTitle": "Set this template as in use?",
+      "deactivateTitle": "Set this template as not in use?",
+      "activateDescription": "{{name}} will be available to customers when creating new cards.",
+      "deactivateDescription": "{{name}} will no longer be available to customers when creating new cards.",
+      "activateConfirm": "Set as in use",
+      "deactivateConfirm": "Set as not in use",
+      "activateSuccess": "The card template is now in use.",
+      "deactivateSuccess": "The card template is no longer in use.",
+      "failed": "Could not change the card template status. Please try again."
     }
   },
   "aiCustom": {

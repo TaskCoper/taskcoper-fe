@@ -29,4 +29,9 @@ export interface UpdateCardTemplatePayload {
   imageFile: File | null
 }
 
+export interface ChangeCardTemplateStatusPayload {
+  id: string
+  isActive: boolean
+}
+
 export type CardTemplatesPage = BasePaginationResponse<CardTemplateListItem>['value']
