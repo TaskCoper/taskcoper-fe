@@ -28,6 +28,7 @@ package-lock.json
 
 # Env
 .env*
+!.docker/.env.sample
 
 # Yarn
 .yarn/install-state.gz

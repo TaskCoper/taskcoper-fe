@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - dev
+      - hoa-theo-mua-prod
   workflow_dispatch:
 
 jobs:
