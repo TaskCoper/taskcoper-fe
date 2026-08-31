@@ -99,6 +99,45 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "floralMockups": {
+    "title": "Flower Mockups",
+    "description": "View and manage the mockups used to generate AI flower designs.",
+    "column": {
+      "name": "Mockup name",
+      "description": "Description",
+      "preview": "Preview",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noDescription": "No description",
+    "previewAlt": "{{name}} preview",
+    "openPreview": "Open {{name}} preview",
+    "openMenu": "Open mockup actions",
+    "viewDetail": "View details",
+    "loadFailed": "Unable to load the mockup list",
+    "loadFailedDescription": "An error occurred while loading data. Please try again.",
+    "retry": "Retry",
+    "detail": {
+      "description": "View the flower mockup information and preview."
+    },
+    "statusAction": {
+      "activate": "Set as Active",
+      "deactivate": "Set as Inactive",
+      "activateTitle": "Set this mockup as Active?",
+      "deactivateTitle": "Set this mockup as Inactive?",
+      "activateDescription": "{{name}} will be available for generating AI flower designs.",
+      "deactivateDescription": "{{name}} will no longer be available for generating AI flower designs.",
+      "activateConfirm": "Set as Active",
+      "deactivateConfirm": "Set as Inactive",
+      "activateSuccess": "The mockup is now Active.",
+      "deactivateSuccess": "The mockup is now Inactive.",
+      "failed": "Could not change the mockup status. Please try again."
+    }
+  },
   "aiCustom": {
     "comingSoon": "This feature is under development",
     "history": {

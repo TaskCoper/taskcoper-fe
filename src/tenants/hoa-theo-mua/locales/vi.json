@@ -99,6 +99,45 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "floralMockups": {
+    "title": "Danh sách Mockup mẫu hoa",
+    "description": "Theo dõi và quản lý các Mockup được sử dụng để tạo mẫu hoa AI.",
+    "column": {
+      "name": "Tên Mockup",
+      "description": "Mô tả",
+      "preview": "Ảnh Preview",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview của {{name}}",
+    "openPreview": "Mở ảnh Preview của {{name}}",
+    "openMenu": "Mở thao tác Mockup",
+    "viewDetail": "Xem chi tiết",
+    "loadFailed": "Không thể tải danh sách Mockup",
+    "loadFailedDescription": "Đã xảy ra lỗi trong quá trình tải dữ liệu. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "detail": {
+      "description": "Xem thông tin và ảnh Preview của Mockup mẫu hoa."
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Active",
+      "deactivate": "Chuyển sang Inactive",
+      "activateTitle": "Chuyển Mockup sang Active?",
+      "deactivateTitle": "Chuyển Mockup sang Inactive?",
+      "activateDescription": "Mockup {{name}} sẽ được sử dụng để tạo mẫu hoa AI.",
+      "deactivateDescription": "Mockup {{name}} sẽ ngừng được sử dụng để tạo mẫu hoa AI.",
+      "activateConfirm": "Chuyển sang Active",
+      "deactivateConfirm": "Chuyển sang Inactive",
+      "activateSuccess": "Mockup đã chuyển sang Active.",
+      "deactivateSuccess": "Mockup đã chuyển sang Inactive.",
+      "failed": "Không thể chuyển trạng thái Mockup. Vui lòng thử lại."
+    }
+  },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",
     "history": {
