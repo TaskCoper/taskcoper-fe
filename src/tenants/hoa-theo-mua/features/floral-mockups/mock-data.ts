@@ -1,5 +1,6 @@
 import type {
   ChangeFloralMockupStatusPayload,
+  CreateFloralMockupPayload,
   FloralMockupListItem,
   FloralMockupsPage,
   GetFloralMockupsParams
@@ -24,6 +25,14 @@ const descriptions = [
   'Mockup hiện đại với nền studio, phù hợp cho nhiều kích thước bó hoa và các chiến dịch quảng bá theo mùa.'
 ]
 
+const normalizeSearch = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLocaleLowerCase('vi')
+    .trim()
+
 let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, index) => ({
   id: `floral-mockup-${index + 1}`,
   name: `Mockup mẫu hoa ${String(index + 1).padStart(2, '0')}`,
@@ -33,18 +42,49 @@ let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, i
   isActive: index % 4 !== 0
 }))
 
+const readFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read floral mockup image'))
+    reader.readAsDataURL(file)
+  })
+
+export const createMockFloralMockup = async (payload: CreateFloralMockupPayload): Promise<FloralMockupListItem> => {
+  const mockup: FloralMockupListItem = {
+    id: `floral-mockup-${crypto.randomUUID()}`,
+    name: payload.name.trim(),
+    description: payload.description?.trim() || null,
+    previewImageUrl: await readFileAsDataUrl(payload.imageFile),
+    isActive: payload.isActive
+  }
+
+  mockFloralMockups = [mockup, ...mockFloralMockups]
+  return mockup
+}
+
 export const getMockFloralMockups = async ({
   pageIndex = 1,
-  pageSize = 10
+  pageSize = 10,
+  search,
+  isActive
 }: GetFloralMockupsParams): Promise<FloralMockupsPage> => {
+  const normalizedSearch = search ? normalizeSearch(search) : ''
+  const filteredMockups = mockFloralMockups.filter((mockup) => {
+    const matchesSearch = !normalizedSearch || normalizeSearch(mockup.name).includes(normalizedSearch)
+    const matchesStatus = isActive === undefined || mockup.isActive === isActive
+
+    return matchesSearch && matchesStatus
+  })
   const safePageSize = Math.max(1, pageSize)
-  const totalCount = mockFloralMockups.length
+  const totalCount = filteredMockups.length
   const totalPages = Math.max(1, Math.ceil(totalCount / safePageSize))
   const safePageIndex = Math.min(Math.max(1, pageIndex), totalPages)
   const startIndex = (safePageIndex - 1) * safePageSize
 
   return {
-    items: mockFloralMockups.slice(startIndex, startIndex + safePageSize),
+    items: filteredMockups.slice(startIndex, startIndex + safePageSize),
     pageIndex: safePageIndex,
     pageSize: safePageSize,
     totalCount,

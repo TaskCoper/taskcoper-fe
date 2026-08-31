@@ -6,9 +6,11 @@ import type { GetFloralMockupsParams } from '../types'
 
 export const useGetFloralMockups = ({
   pageIndex = DEFAULT_PAGE_INDEX,
-  pageSize = DEFAULT_PAGE_SIZE
+  pageSize = DEFAULT_PAGE_SIZE,
+  search,
+  isActive
 }: GetFloralMockupsParams) => {
-  const params = { pageIndex, pageSize }
+  const params = { pageIndex, pageSize, search, isActive }
   const {
     data: floralMockups,
     isLoading: isGettingFloralMockups,

@@ -11,11 +11,20 @@ export interface FloralMockupListItem {
 export interface GetFloralMockupsParams {
   pageIndex?: number
   pageSize?: number
+  search?: string
+  isActive?: boolean
 }
 
 export interface ChangeFloralMockupStatusPayload {
   id: string
   isActive: boolean
+}
+
+export interface CreateFloralMockupPayload {
+  name: string
+  description: string | null
+  imageFile: File
+  isActive: true
 }
 
 export type FloralMockupsPage = BasePaginationResponse<FloralMockupListItem>['value']

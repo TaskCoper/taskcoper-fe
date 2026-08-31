@@ -5,11 +5,13 @@ import { Spinner } from '@/components/ui/spinner'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { AlertCircleIcon, RotateCcwIcon } from 'lucide-react'
+import { AlertCircleIcon, PlusIcon, RotateCcwIcon } from 'lucide-react'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import ChangeFloralMockupStatusDialog from '../features/floral-mockups/components/change-floral-mockup-status-dialog'
+import CreateFloralMockupDialog from '../features/floral-mockups/components/create-floral-mockup-dialog'
 import { getFloralMockupColumns } from '../features/floral-mockups/components/floral-mockup-columns'
 import FloralMockupDetailDialog from '../features/floral-mockups/components/floral-mockup-detail-dialog'
 import { useGetFloralMockups } from '../features/floral-mockups/hooks/use-get-floral-mockups'
@@ -23,6 +25,7 @@ export default function FlowerMockupsPage() {
   const [previewMockup, setPreviewMockup] = useState<FloralMockupListItem | null>(null)
   const [detailMockup, setDetailMockup] = useState<FloralMockupListItem | null>(null)
   const [statusMockup, setStatusMockup] = useState<FloralMockupListItem | null>(null)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const columns = useMemo(
     () =>
       getFloralMockupColumns({
@@ -34,13 +37,21 @@ export default function FlowerMockupsPage() {
     [t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
+  const [searchFilter] = useQueryState(`${FILTER_PREFIX}_name`, parseAsString)
+  const [statusFilter] = useQueryState(`${FILTER_PREFIX}_isActive`, parseAsString)
+  const activeStatus = statusFilter === 'true' ? true : statusFilter === 'false' ? false : undefined
   const {
     floralMockups,
     isGettingFloralMockups,
     isFetchingFloralMockups,
     isGetFloralMockupsError,
     refetchFloralMockups
-  } = useGetFloralMockups({ pageIndex: page, pageSize: limit })
+  } = useGetFloralMockups({
+    pageIndex: page,
+    pageSize: limit,
+    search: searchFilter?.trim() || undefined,
+    isActive: activeStatus
+  })
 
   const { table } = useDataTable({
     data: floralMockups?.items ?? [],
@@ -88,7 +99,12 @@ export default function FlowerMockupsPage() {
           </div>
         ) : (
           <DataTable table={table} isLoading={isGettingFloralMockups} pageSizeOptions={PAGE_SIZE_OPTIONS}>
-            <DataTableToolbar table={table} />
+            <DataTableToolbar table={table}>
+              <Button size='sm' onClick={() => setIsCreateDialogOpen(true)}>
+                <PlusIcon />
+                {t('floralMockups.form.add')}
+              </Button>
+            </DataTableToolbar>
           </DataTable>
         )}
       </div>
@@ -122,6 +138,11 @@ export default function FlowerMockupsPage() {
         onOpenChange={(open) => {
           if (!open) setStatusMockup(null)
         }}
+      />
+      <CreateFloralMockupDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onCreated={() => table.setPageIndex(0)}
       />
     </div>
   )

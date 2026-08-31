@@ -110,9 +110,10 @@
       "actions": "Thao tác"
     },
     "status": {
-      "active": "Active",
-      "inactive": "Inactive"
+      "active": "Hoạt động",
+      "inactive": "Dừng hoạt động"
     },
+    "searchPlaceholder": "Tìm theo tên Mockup...",
     "noDescription": "Không có mô tả",
     "previewAlt": "Ảnh Preview của {{name}}",
     "openPreview": "Mở ảnh Preview của {{name}}",
@@ -121,20 +122,47 @@
     "loadFailed": "Không thể tải danh sách Mockup",
     "loadFailedDescription": "Đã xảy ra lỗi trong quá trình tải dữ liệu. Vui lòng thử lại.",
     "retry": "Thử lại",
+    "form": {
+      "add": "Thêm Mockup",
+      "title": "Thêm Mockup mẫu hoa",
+      "description": "Tạo Mockup mới để sử dụng trong quy trình tạo mẫu hoa AI.",
+      "name": "Tên Mockup",
+      "namePlaceholder": "Nhập tên Mockup...",
+      "mockupDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh Mockup",
+      "imageHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB · Không giới hạn kích thước hoặc tỷ lệ ảnh",
+      "imagePreviewAlt": "Ảnh xem trước của Mockup đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "removeImage": "Xóa ảnh đã chọn",
+      "activeHint": "Mockup mới sẽ được tạo với trạng thái Hoạt động.",
+      "submit": "Thêm",
+      "createSuccess": "Thêm Mockup thành công.",
+      "createFailed": "Không thể thêm Mockup. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên Mockup.",
+        "nameLength": "Tên Mockup không được vượt quá 50 ký tự.",
+        "descriptionLength": "Mô tả không được vượt quá 200 ký tự.",
+        "imageRequired": "Vui lòng chọn ảnh Mockup.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh Mockup không được vượt quá 10 MB."
+      }
+    },
     "detail": {
       "description": "Xem thông tin và ảnh Preview của Mockup mẫu hoa."
     },
     "statusAction": {
-      "activate": "Chuyển sang Active",
-      "deactivate": "Chuyển sang Inactive",
-      "activateTitle": "Chuyển Mockup sang Active?",
-      "deactivateTitle": "Chuyển Mockup sang Inactive?",
-      "activateDescription": "Mockup {{name}} sẽ được sử dụng để tạo mẫu hoa AI.",
-      "deactivateDescription": "Mockup {{name}} sẽ ngừng được sử dụng để tạo mẫu hoa AI.",
-      "activateConfirm": "Chuyển sang Active",
-      "deactivateConfirm": "Chuyển sang Inactive",
-      "activateSuccess": "Mockup đã chuyển sang Active.",
-      "deactivateSuccess": "Mockup đã chuyển sang Inactive.",
+      "activate": "Chuyển sang Hoạt động",
+      "deactivate": "Chuyển sang Dừng hoạt động",
+      "activateTitle": "Chuyển Mockup sang Hoạt động?",
+      "deactivateTitle": "Chuyển Mockup sang Dừng hoạt động?",
+      "activateDescription": "Mockup {{name}} sẽ khả dụng và có thể được hiển thị cho khách hàng khi chọn Mockup.",
+      "deactivateDescription": "Mockup {{name}} sẽ không còn khả dụng cho yêu cầu mới và không hiển thị để khách hàng lựa chọn.",
+      "activateConfirm": "Chuyển sang Hoạt động",
+      "deactivateConfirm": "Chuyển sang Dừng hoạt động",
+      "activateSuccess": "Mockup đã chuyển sang Hoạt động.",
+      "deactivateSuccess": "Mockup đã chuyển sang Dừng hoạt động.",
       "failed": "Không thể chuyển trạng thái Mockup. Vui lòng thử lại."
     }
   },

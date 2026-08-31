@@ -113,6 +113,7 @@
       "active": "Active",
       "inactive": "Inactive"
     },
+    "searchPlaceholder": "Search by Mockup name...",
     "noDescription": "No description",
     "previewAlt": "{{name}} preview",
     "openPreview": "Open {{name}} preview",
@@ -121,6 +122,33 @@
     "loadFailed": "Unable to load the mockup list",
     "loadFailedDescription": "An error occurred while loading data. Please try again.",
     "retry": "Retry",
+    "form": {
+      "add": "Add Mockup",
+      "title": "Add flower Mockup",
+      "description": "Create a new Mockup for use in the AI flower design workflow.",
+      "name": "Mockup name",
+      "namePlaceholder": "Enter the Mockup name...",
+      "mockupDescription": "Description",
+      "descriptionPlaceholder": "Enter an optional description...",
+      "image": "Mockup image",
+      "imageHint": "PNG, JPG or JPEG · Up to 10 MB · No dimension or aspect ratio restrictions",
+      "imagePreviewAlt": "Selected Mockup image preview",
+      "dropzoneTitle": "Drag an image here or click to browse",
+      "dropzoneActive": "Drop the image to upload",
+      "removeImage": "Remove selected image",
+      "activeHint": "New Mockups are created with Active status.",
+      "submit": "Add",
+      "createSuccess": "Mockup added successfully.",
+      "createFailed": "Could not add the Mockup. Please try again.",
+      "validation": {
+        "nameRequired": "Mockup name is required.",
+        "nameLength": "Mockup name must not exceed 50 characters.",
+        "descriptionLength": "Description must not exceed 200 characters.",
+        "imageRequired": "Mockup image is required.",
+        "imageType": "Only PNG, JPG or JPEG images are accepted.",
+        "imageSize": "The Mockup image must not exceed 10 MB."
+      }
+    },
     "detail": {
       "description": "View the flower mockup information and preview."
     },

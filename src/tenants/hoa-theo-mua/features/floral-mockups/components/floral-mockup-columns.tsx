@@ -10,7 +10,7 @@ import {
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, MoreHorizontalIcon, PowerIcon } from 'lucide-react'
+import { EyeIcon, MoreHorizontalIcon, PowerIcon, SearchIcon } from 'lucide-react'
 import type { FloralMockupListItem } from '../types'
 import FloralMockupDescription from './floral-mockup-description'
 import FloralMockupPreview from './floral-mockup-preview'
@@ -29,12 +29,17 @@ export const getFloralMockupColumns = ({
   {
     id: 'name',
     accessorKey: 'name',
-    meta: { label: 'floralMockups.column.name' },
+    meta: {
+      label: 'floralMockups.column.name',
+      placeholder: 'floralMockups.searchPlaceholder',
+      variant: 'text',
+      icon: SearchIcon
+    },
     header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.name' />,
     cell: ({ row }) => <span className='min-w-48 text-sm font-medium'>{row.original.name}</span>,
     enableSorting: false,
     enableHiding: true,
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     size: 230
   },
   {
@@ -70,7 +75,14 @@ export const getFloralMockupColumns = ({
   {
     id: 'isActive',
     accessorKey: 'isActive',
-    meta: { label: 'floralMockups.column.status' },
+    meta: {
+      label: 'floralMockups.column.status',
+      variant: 'radio',
+      options: [
+        { label: t('floralMockups.status.active'), value: 'true' },
+        { label: t('floralMockups.status.inactive'), value: 'false' }
+      ]
+    },
     header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.status' />,
     cell: ({ row }) => (
       <span
@@ -89,7 +101,7 @@ export const getFloralMockupColumns = ({
     ),
     enableSorting: false,
     enableHiding: true,
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     size: 130
   },
   {
