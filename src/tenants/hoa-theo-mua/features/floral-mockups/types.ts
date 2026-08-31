@@ -6,6 +6,7 @@ export interface FloralMockupListItem {
   description: string | null
   previewImageUrl: string | null
   isActive: boolean
+  isDelete: boolean
 }
 
 export interface GetFloralMockupsParams {
@@ -18,6 +19,10 @@ export interface GetFloralMockupsParams {
 export interface ChangeFloralMockupStatusPayload {
   id: string
   isActive: boolean
+}
+
+export interface DeleteFloralMockupPayload {
+  id: string
 }
 
 export interface CreateFloralMockupPayload {

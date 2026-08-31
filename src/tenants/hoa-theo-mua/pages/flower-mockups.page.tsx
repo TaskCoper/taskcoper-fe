@@ -12,6 +12,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import ChangeFloralMockupStatusDialog from '../features/floral-mockups/components/change-floral-mockup-status-dialog'
 import CreateFloralMockupDialog from '../features/floral-mockups/components/create-floral-mockup-dialog'
+import DeleteFloralMockupDialog from '../features/floral-mockups/components/delete-floral-mockup-dialog'
 import { getFloralMockupColumns } from '../features/floral-mockups/components/floral-mockup-columns'
 import FloralMockupDetailDialog from '../features/floral-mockups/components/floral-mockup-detail-dialog'
 import { useGetFloralMockups } from '../features/floral-mockups/hooks/use-get-floral-mockups'
@@ -25,6 +26,7 @@ export default function FlowerMockupsPage() {
   const [previewMockup, setPreviewMockup] = useState<FloralMockupListItem | null>(null)
   const [detailMockup, setDetailMockup] = useState<FloralMockupListItem | null>(null)
   const [statusMockup, setStatusMockup] = useState<FloralMockupListItem | null>(null)
+  const [deletingMockup, setDeletingMockup] = useState<FloralMockupListItem | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const columns = useMemo(
     () =>
@@ -32,7 +34,8 @@ export default function FlowerMockupsPage() {
         t,
         onPreview: setPreviewMockup,
         onViewDetail: setDetailMockup,
-        onToggleStatus: setStatusMockup
+        onToggleStatus: setStatusMockup,
+        onDelete: setDeletingMockup
       }),
     [t]
   )
@@ -143,6 +146,18 @@ export default function FlowerMockupsPage() {
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         onCreated={() => table.setPageIndex(0)}
+      />
+      <DeleteFloralMockupDialog
+        mockup={deletingMockup}
+        open={Boolean(deletingMockup)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingMockup(null)
+        }}
+        onDeleted={() => {
+          if (table.getRowModel().rows.length === 1 && table.getState().pagination.pageIndex > 0) {
+            table.previousPage()
+          }
+        }}
       />
     </div>
   )

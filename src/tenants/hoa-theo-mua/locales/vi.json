@@ -164,6 +164,15 @@
       "activateSuccess": "Mockup đã chuyển sang Hoạt động.",
       "deactivateSuccess": "Mockup đã chuyển sang Dừng hoạt động.",
       "failed": "Không thể chuyển trạng thái Mockup. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa Mockup",
+      "title": "Bạn chắc chắn muốn xóa Mockup này không?",
+      "description": "Mockup {{name}} sẽ không còn hiển thị trong danh sách quản lý hoặc cho khách hàng lựa chọn. Dữ liệu và ảnh Preview vẫn được giữ lại để xem lịch sử.",
+      "confirm": "Xóa Mockup",
+      "retry": "Thử lại",
+      "success": "Xóa Mockup thành công.",
+      "failed": "Không thể xóa Mockup. Vui lòng thử lại."
     }
   },
   "aiCustom": {

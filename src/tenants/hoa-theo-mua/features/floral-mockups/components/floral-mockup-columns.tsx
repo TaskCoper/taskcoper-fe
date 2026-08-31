@@ -10,7 +10,7 @@ import {
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, MoreHorizontalIcon, PowerIcon, SearchIcon } from 'lucide-react'
+import { EyeIcon, MoreHorizontalIcon, PowerIcon, SearchIcon, Trash2Icon } from 'lucide-react'
 import type { FloralMockupListItem } from '../types'
 import FloralMockupDescription from './floral-mockup-description'
 import FloralMockupPreview from './floral-mockup-preview'
@@ -19,12 +19,14 @@ export const getFloralMockupColumns = ({
   t,
   onPreview,
   onViewDetail,
-  onToggleStatus
+  onToggleStatus,
+  onDelete
 }: {
   t: TenantT
   onPreview: (mockup: FloralMockupListItem) => void
   onViewDetail: (mockup: FloralMockupListItem) => void
   onToggleStatus: (mockup: FloralMockupListItem) => void
+  onDelete: (mockup: FloralMockupListItem) => void
 }): ColumnDef<FloralMockupListItem>[] => [
   {
     id: 'name',
@@ -128,6 +130,10 @@ export const getFloralMockupColumns = ({
             <DropdownMenuItem onClick={() => onToggleStatus(row.original)}>
               <PowerIcon />
               {t(`floralMockups.statusAction.${row.original.isActive ? 'deactivate' : 'activate'}`)}
+            </DropdownMenuItem>
+            <DropdownMenuItem variant='destructive' onClick={() => onDelete(row.original)}>
+              <Trash2Icon />
+              {t('floralMockups.deleteAction.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

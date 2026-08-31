@@ -47,7 +47,8 @@ const CreateFloralMockupDialog = ({
   const isSubmittingRef = useRef(false)
   const { control, handleSubmit, reset, setError, clearErrors } = useForm<CreateFloralMockupFormValues>({
     resolver: zodResolver(schema),
-    defaultValues
+    defaultValues,
+    mode: 'onChange'
   })
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -79,18 +80,18 @@ const CreateFloralMockupDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-2xl'>
+      <DialogContent className='w-[calc(100%-2rem)] min-w-0 overflow-x-hidden sm:max-w-2xl'>
         <DialogHeader>
           <DialogTitle>{t('floralMockups.form.title')}</DialogTitle>
           <DialogDescription>{t('floralMockups.form.description')}</DialogDescription>
         </DialogHeader>
 
-        <form noValidate className='space-y-5' onSubmit={onSubmit}>
+        <form noValidate className='min-w-0 space-y-5' onSubmit={onSubmit}>
           <Controller
             name='name'
             control={control}
             render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className='gap-1.5'>
+              <Field data-invalid={fieldState.invalid} className='min-w-0 gap-1.5'>
                 <div className='flex items-center justify-between gap-3'>
                   <FieldLabel htmlFor={field.name}>
                     {t('floralMockups.form.name')}
@@ -102,7 +103,6 @@ const CreateFloralMockupDialog = ({
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
-                  maxLength={50}
                   autoComplete='off'
                   autoFocus
                   placeholder={t('floralMockups.form.namePlaceholder')}
@@ -116,7 +116,7 @@ const CreateFloralMockupDialog = ({
             name='description'
             control={control}
             render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className='gap-1.5'>
+              <Field data-invalid={fieldState.invalid} className='min-w-0 gap-1.5'>
                 <div className='flex items-center justify-between gap-3'>
                   <FieldLabel htmlFor={field.name}>{t('floralMockups.form.mockupDescription')}</FieldLabel>
                   <span className='text-xs tabular-nums text-muted-foreground'>{field.value.length}/200</span>
@@ -125,9 +125,8 @@ const CreateFloralMockupDialog = ({
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
-                  maxLength={200}
                   rows={3}
-                  className='resize-none'
+                  className='field-sizing-fixed min-w-0 max-w-full resize-none overflow-x-hidden break-all'
                   placeholder={t('floralMockups.form.descriptionPlaceholder')}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -139,7 +138,7 @@ const CreateFloralMockupDialog = ({
             name='imageFile'
             control={control}
             render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className='gap-1.5'>
+              <Field data-invalid={fieldState.invalid} className='min-w-0 gap-1.5'>
                 <FieldLabel>
                   {t('floralMockups.form.image')}
                   <span className='text-destructive'>*</span>

@@ -1,6 +1,7 @@
 import type {
   ChangeFloralMockupStatusPayload,
   CreateFloralMockupPayload,
+  DeleteFloralMockupPayload,
   FloralMockupListItem,
   FloralMockupsPage,
   GetFloralMockupsParams
@@ -39,7 +40,8 @@ let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, i
   description: index % 9 === 0 ? null : descriptions[index % descriptions.length],
   previewImageUrl:
     index === 12 ? '/images/floral-mockup-preview-not-found.jpg' : previewImages[index % previewImages.length],
-  isActive: index % 4 !== 0
+  isActive: index % 4 !== 0,
+  isDelete: false
 }))
 
 const readFileAsDataUrl = (file: File) =>
@@ -57,7 +59,8 @@ export const createMockFloralMockup = async (payload: CreateFloralMockupPayload)
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
     previewImageUrl: await readFileAsDataUrl(payload.imageFile),
-    isActive: payload.isActive
+    isActive: payload.isActive,
+    isDelete: false
   }
 
   mockFloralMockups = [mockup, ...mockFloralMockups]
@@ -72,6 +75,8 @@ export const getMockFloralMockups = async ({
 }: GetFloralMockupsParams): Promise<FloralMockupsPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
   const filteredMockups = mockFloralMockups.filter((mockup) => {
+    if (mockup.isDelete) return false
+
     const matchesSearch = !normalizedSearch || normalizeSearch(mockup.name).includes(normalizedSearch)
     const matchesStatus = isActive === undefined || mockup.isActive === isActive
 
@@ -97,9 +102,18 @@ export const changeMockFloralMockupStatus = async (
   payload: ChangeFloralMockupStatusPayload
 ): Promise<FloralMockupListItem> => {
   const mockup = mockFloralMockups.find((item) => item.id === payload.id)
-  if (!mockup) throw new Error('Floral mockup not found')
+  if (!mockup || mockup.isDelete) throw new Error('Floral mockup not found')
 
   const updatedMockup = { ...mockup, isActive: payload.isActive }
   mockFloralMockups = mockFloralMockups.map((item) => (item.id === payload.id ? updatedMockup : item))
   return updatedMockup
+}
+
+export const softDeleteMockFloralMockup = async (payload: DeleteFloralMockupPayload): Promise<FloralMockupListItem> => {
+  const mockup = mockFloralMockups.find((item) => item.id === payload.id)
+  if (!mockup || mockup.isDelete) throw new Error('Floral mockup not found')
+
+  const deletedMockup = { ...mockup, isDelete: true }
+  mockFloralMockups = mockFloralMockups.map((item) => (item.id === payload.id ? deletedMockup : item))
+  return deletedMockup
 }
