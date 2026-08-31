@@ -166,6 +166,15 @@
       "activateSuccess": "The card template is now in use.",
       "deactivateSuccess": "The card template is no longer in use.",
       "failed": "Could not change the card template status. Please try again."
+    },
+    "deleteAction": {
+      "delete": "Delete",
+      "title": "Are you sure you want to delete this card template?",
+      "description": "Once deleted, this template will no longer be available for customers to select.",
+      "confirm": "Delete template",
+      "retry": "Retry",
+      "success": "Card template deleted successfully.",
+      "failed": "Could not delete the card template. Please try again."
     }
   },
   "aiCustom": {

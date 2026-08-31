@@ -10,7 +10,7 @@ import {
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, MoreHorizontalIcon, PencilIcon, PowerIcon, SearchIcon } from 'lucide-react'
+import { EyeIcon, MoreHorizontalIcon, PencilIcon, PowerIcon, SearchIcon, Trash2Icon } from 'lucide-react'
 import type { CardTemplateListItem } from '../types'
 import CardTemplateDescription from './card-template-description'
 import CardTemplatePreview from './card-template-preview'
@@ -19,12 +19,14 @@ export const getCardTemplateColumns = ({
   t,
   onPreview,
   onEdit,
-  onToggleStatus
+  onToggleStatus,
+  onDelete
 }: {
   t: TenantT
   onPreview: (template: CardTemplateListItem) => void
   onEdit: (template: CardTemplateListItem) => void
   onToggleStatus: (template: CardTemplateListItem) => void
+  onDelete: (template: CardTemplateListItem) => void
 }): ColumnDef<CardTemplateListItem>[] => [
   {
     id: 'search',
@@ -136,6 +138,10 @@ export const getCardTemplateColumns = ({
             <DropdownMenuItem onClick={() => onToggleStatus(row.original)}>
               <PowerIcon />
               {t(`cardTemplates.statusAction.${row.original.isActive ? 'deactivate' : 'activate'}`)}
+            </DropdownMenuItem>
+            <DropdownMenuItem variant='destructive' onClick={() => onDelete(row.original)}>
+              <Trash2Icon />
+              {t('cardTemplates.deleteAction.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

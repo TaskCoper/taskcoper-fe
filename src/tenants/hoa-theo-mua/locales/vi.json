@@ -166,6 +166,15 @@
       "activateSuccess": "Mẫu thiệp đã chuyển sang Đang sử dụng.",
       "deactivateSuccess": "Mẫu thiệp đã chuyển sang Ngừng sử dụng.",
       "failed": "Không thể chuyển trạng thái mẫu thiệp. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa",
+      "title": "Bạn chắc chắn muốn xóa mẫu thiệp này không?",
+      "description": "Mẫu thiệp sau khi xóa sẽ không còn hiển thị để khách hàng lựa chọn.",
+      "confirm": "Xóa mẫu thiệp",
+      "retry": "Thử lại",
+      "success": "Xóa mẫu thiệp thành công.",
+      "failed": "Không thể xóa mẫu thiệp. Vui lòng thử lại."
     }
   },
   "aiCustom": {

@@ -13,6 +13,7 @@ import 'yet-another-react-lightbox/styles.css'
 import { getCardTemplateColumns } from '../features/card-templates/components/card-template-columns'
 import ChangeCardTemplateStatusDialog from '../features/card-templates/components/change-card-template-status-dialog'
 import CreateCardTemplateDialog from '../features/card-templates/components/create-card-template-dialog'
+import DeleteCardTemplateDialog from '../features/card-templates/components/delete-card-template-dialog'
 import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
 import { cardTemplateKeys } from '../features/card-templates/query-keys'
@@ -28,13 +29,15 @@ export default function CardTemplatesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [editingTemplate, setEditingTemplate] = useState<CardTemplateListItem | null>(null)
   const [statusTemplate, setStatusTemplate] = useState<CardTemplateListItem | null>(null)
+  const [deletingTemplate, setDeletingTemplate] = useState<CardTemplateListItem | null>(null)
   const columns = useMemo(
     () =>
       getCardTemplateColumns({
         t,
         onPreview: setPreviewTemplate,
         onEdit: setEditingTemplate,
-        onToggleStatus: setStatusTemplate
+        onToggleStatus: setStatusTemplate,
+        onDelete: setDeletingTemplate
       }),
     [t]
   )
@@ -123,6 +126,18 @@ export default function CardTemplatesPage() {
         open={Boolean(statusTemplate)}
         onOpenChange={(open) => {
           if (!open) setStatusTemplate(null)
+        }}
+      />
+      <DeleteCardTemplateDialog
+        template={deletingTemplate}
+        open={Boolean(deletingTemplate)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingTemplate(null)
+        }}
+        onDeleted={() => {
+          if (table.getRowModel().rows.length === 1 && table.getState().pagination.pageIndex > 0) {
+            table.previousPage()
+          }
         }}
       />
     </div>

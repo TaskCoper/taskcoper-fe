@@ -114,6 +114,13 @@ export const changeMockCardTemplateStatus = async (
   return updatedTemplate
 }
 
+export const deleteMockCardTemplate = async (id: string): Promise<void> => {
+  const templateExists = mockCardTemplates.some((template) => template.id === id)
+  if (!templateExists) throw new Error('Card template not found')
+
+  mockCardTemplates = mockCardTemplates.filter((template) => template.id !== id)
+}
+
 export const getMockCardTemplates = async ({
   pageIndex = 1,
   pageSize = 10,
