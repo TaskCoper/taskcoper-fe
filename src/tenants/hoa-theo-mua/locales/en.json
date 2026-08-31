@@ -1516,7 +1516,6 @@
         "disabled": "Hidden"
       },
       "errors": {
-        "oneRequired": "Enable at least one method before saving.",
         "labelRequired": "Enter a config label before saving."
       },
       "gateway": "Gateway",

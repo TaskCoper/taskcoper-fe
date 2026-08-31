@@ -1516,7 +1516,6 @@
         "disabled": "Đang ẩn"
       },
       "errors": {
-        "oneRequired": "Cần bật ít nhất một phương thức trước khi lưu.",
         "labelRequired": "Nhập nhãn cấu hình trước khi lưu."
       },
       "gateway": "Cổng dịch vụ",

@@ -11,7 +11,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { ArrowDown, ArrowUp, Bike, Check, ChevronsUpDown, CreditCard, Info, SaveIcon } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import {
   CHECKOUT_CONFIG_GROUP,
@@ -41,8 +41,6 @@ export default function CheckoutMethodsDialog({ open, kind, existingConfig, onCl
   const [isSaving, setIsSaving] = useState(false)
 
   const fallbackConfigLabel = t(`configsPage.checkoutMethodsDialog.${kind}.configLabel`)
-  const enabledItems = useMemo(() => items.filter((item) => item.enabled), [items])
-  // const defaultItem = enabledItems.find((item) => item.isDefault) ?? null
   const MethodIcon = kind === 'payment' ? CreditCard : Bike
 
   useEffect(() => {
@@ -94,10 +92,6 @@ export default function CheckoutMethodsDialog({ open, kind, existingConfig, onCl
   const save = async () => {
     if (!configLabel.trim()) {
       toast.error(t('configsPage.checkoutMethodsDialog.errors.labelRequired'))
-      return
-    }
-    if (enabledItems.length === 0) {
-      toast.error(t('configsPage.checkoutMethodsDialog.errors.oneRequired'))
       return
     }
 

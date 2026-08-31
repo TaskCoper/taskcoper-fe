@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ChevronDown, FileText, KeyRound, PanelRight, Plus, Settings2 } from 'lucide-react'
+import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
 import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
@@ -32,7 +31,6 @@ import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-cr
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
 import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
-import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
 import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
@@ -62,13 +60,13 @@ import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
 type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
 
-interface LockedPaletteItem {
-  key: string
-  label: string
-  inputType: InputType
-  options: InputOption[]
-  defaultValue: unknown
-}
+// interface LockedPaletteItem {
+//   key: string
+//   label: string
+//   inputType: InputType
+//   options: InputOption[]
+//   defaultValue: unknown
+// }
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
@@ -164,7 +162,7 @@ export default function ConfigsPage() {
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
   const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
   const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
-  const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
+  // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(
     () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
@@ -244,34 +242,34 @@ export default function ConfigsPage() {
     [openCreate, currentGroup, currentKind]
   )
 
-  const openLockedPaletteCreate = useCallback(
-    (item: LockedPaletteItem) => {
-      const existing = allLoadedConfigs.find((c) => c.key === item.key)
-      if (existing) {
-        setEditingConfig(existing)
-        setEditOpen(true)
-        return
-      }
-      const [group] = item.key.split('.')
-      openCreate(
-        {
-          key: item.key,
-          kind: ConfigKind.setting,
-          value: {
-            group,
-            label: item.label,
-            inputType: item.inputType,
-            value: item.defaultValue,
-            required: false,
-            options: item.options,
-            validations: []
-          }
-        },
-        { key: true, options: true, kind: true }
-      )
-    },
-    [allLoadedConfigs, openCreate]
-  )
+  // const openLockedPaletteCreate = useCallback(
+  //   (item: LockedPaletteItem) => {
+  //     const existing = allLoadedConfigs.find((c) => c.key === item.key)
+  //     if (existing) {
+  //       setEditingConfig(existing)
+  //       setEditOpen(true)
+  //       return
+  //     }
+  //     const [group] = item.key.split('.')
+  //     openCreate(
+  //       {
+  //         key: item.key,
+  //         kind: ConfigKind.setting,
+  //         value: {
+  //           group,
+  //           label: item.label,
+  //           inputType: item.inputType,
+  //           value: item.defaultValue,
+  //           required: false,
+  //           options: item.options,
+  //           validations: []
+  //         }
+  //       },
+  //       { key: true, options: true, kind: true }
+  //     )
+  //   },
+  //   [allLoadedConfigs, openCreate]
+  // )
 
   const productCollectionConfigs = useMemo(
     () => allLoadedConfigs.filter(matchesProductCollectionConfig),
@@ -311,10 +309,10 @@ export default function ConfigsPage() {
   const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
   // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
   const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
-  const b2bOverviewConfig = useMemo(
-    () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
-    [b2bServicesConfigs]
-  )
+  // const b2bOverviewConfig = useMemo(
+  //   () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
+  //   [b2bServicesConfigs]
+  // )
   const usedB2BSlugs = useMemo(() => new Set(b2bServiceDocs.map((c) => b2bServicesKeySuffix(c.key))), [b2bServiceDocs])
   const availableB2BSlugs = useMemo<B2BServiceSlug[]>(
     () => B2B_SERVICE_SLUGS.filter((slug) => !usedB2BSlugs.has(slug)),
@@ -393,23 +391,23 @@ export default function ConfigsPage() {
     [openB2BOverviewEditor, openB2BServiceEditor]
   )
 
-  const openProductCollectionDialog = useCallback((config: Config | null) => {
-    setEditingProductCollectionConfig(config)
-    setProductCollectionDialogOpen(true)
-  }, [])
-  const openFeedbacksDialog = useCallback((config: Config | null) => {
-    setEditingFeedbacksConfig(config)
-    setFeedbacksDialogOpen(true)
-  }, [])
-  const openBannersDialog = useCallback((config: Config | null) => {
-    setEditingBannersConfig(config)
-    setBannersDialogOpen(true)
-  }, [])
-  const openPromotionPopupDialog = useCallback(() => {
-    setPromotionPopupDialogOpen(true)
-  }, [])
-  const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
-  const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
+  // const openProductCollectionDialog = useCallback((config: Config | null) => {
+  //   setEditingProductCollectionConfig(config)
+  //   setProductCollectionDialogOpen(true)
+  // }, [])
+  // const openFeedbacksDialog = useCallback((config: Config | null) => {
+  //   setEditingFeedbacksConfig(config)
+  //   setFeedbacksDialogOpen(true)
+  // }, [])
+  // const openBannersDialog = useCallback((config: Config | null) => {
+  //   setEditingBannersConfig(config)
+  //   setBannersDialogOpen(true)
+  // }, [])
+  // const openPromotionPopupDialog = useCallback(() => {
+  //   setPromotionPopupDialogOpen(true)
+  // }, [])
+  // const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
+  // const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
   const closeEdit = useCallback(() => {
     setEditOpen(false)
   }, [])
@@ -431,7 +429,7 @@ export default function ConfigsPage() {
 
         <div className='flex items-start justify-between gap-2'>
           <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
-          <Button
+          {/* <Button
             type='button'
             variant='outline'
             size='icon'
@@ -440,7 +438,7 @@ export default function ConfigsPage() {
           >
             <PanelRight className='size-4' />
             <span className='sr-only'>{t('configsPage.palette.title')}</span>
-          </Button>
+          </Button> */}
         </div>
 
         <div className='flex flex-1 flex-col gap-4 min-h-0'>
@@ -555,7 +553,7 @@ export default function ConfigsPage() {
         onOpenCheckoutDeliveryMethods={openCheckoutDeliveryMethods}
       /> */}
 
-      <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
+      {/* <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
         <SheetContent side='right' className='w-4/5 gap-0 p-0 sm:max-w-sm'>
           <SheetHeader className='border-b'>
             <SheetTitle>{t('configsPage.palette.title')}</SheetTitle>
@@ -610,7 +608,7 @@ export default function ConfigsPage() {
             }}
           />
         </SheetContent>
-      </Sheet>
+      </Sheet> */}
 
       <CreateConfigDialog
         open={createOpen}
