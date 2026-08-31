@@ -1,5 +1,5 @@
 import { Calendar } from '@/components/ui/calendar'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useDateFormat } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { softInsetSurfaceClasses } from '@/shared/effects'
@@ -89,22 +89,20 @@ function HeatmapLegend() {
     { className: heatmapClassNames.four, label: t('projectPerformance.heatmap.legendThirtyPlus') }
   ]
   return (
-    <TooltipProvider delayDuration={100}>
-      <div className='flex space-x-2'>
-        <p className='text-muted-foreground text-sm'>{t('projectPerformance.heatmap.less')}</p>
-        <div className='flex items-center space-x-1'>
-          {legendItems.map((item) => (
-            <Tooltip key={item.label}>
-              <TooltipTrigger asChild>
-                <div className={cn('w-(--box-size) h-(--box-size) rounded-xs cursor-default', item.className)} />
-              </TooltipTrigger>
-              <TooltipContent>{item.label}</TooltipContent>
-            </Tooltip>
-          ))}
-        </div>
-        <p className='text-muted-foreground text-sm'>{t('projectPerformance.heatmap.more')}</p>
+    <div className='flex space-x-2'>
+      <p className='text-muted-foreground text-sm'>{t('projectPerformance.heatmap.less')}</p>
+      <div className='flex items-center space-x-1'>
+        {legendItems.map((item) => (
+          <Tooltip key={item.label}>
+            <TooltipTrigger asChild>
+              <div className={cn('w-(--box-size) h-(--box-size) rounded-xs cursor-default', item.className)} />
+            </TooltipTrigger>
+            <TooltipContent>{item.label}</TooltipContent>
+          </Tooltip>
+        ))}
       </div>
-    </TooltipProvider>
+      <p className='text-muted-foreground text-sm'>{t('projectPerformance.heatmap.more')}</p>
+    </div>
   )
 }
 

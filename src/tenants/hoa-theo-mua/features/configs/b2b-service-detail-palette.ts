@@ -202,7 +202,7 @@ export interface B2BServiceDetail {
     keywords: LocalizedText // comma-separated per locale
     ogAlt: LocalizedText
     breadcrumb: LocalizedText
-    serviceType: string // schema.org serviceType — locale-neutral
+    serviceType: string // schema.org serviceType - locale-neutral
   }
 
   // sections (optional = not rendered)

@@ -75,7 +75,7 @@ function CaseStudyCard({ item, locale }: { item: CaseStudyItem; locale: PreviewL
               >
                 <img
                   src={src}
-                  alt={`${hotelName} — ${index + 1}`}
+                  alt={`${hotelName} - ${index + 1}`}
                   loading='lazy'
                   className='h-full w-auto object-cover transition-transform duration-500 hover:scale-105'
                 />

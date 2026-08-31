@@ -1,3 +1,5 @@
+import { ImageViewportUrlButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import RichTextEditor from '@/components/rich-text-editor'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -11,11 +13,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { releaseStagedUpload, resolveStagedImages, stageUpload } from '@/lib/staged-uploads'
 import { cn } from '@/shared/utils'
 import { ImageOffIcon, UploadIcon } from 'lucide-react'
 import { useRef } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
 import { useGetCompanyAddress } from '../../company-addresses/hooks/use-get-company-address'
+import { JOB_AVATAR_ASPECT, JOB_COVER_ASPECT } from '../job-image-aspects'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
 interface EditJobDescriptionFormProps {
@@ -25,14 +29,18 @@ interface EditJobDescriptionFormProps {
 }
 
 function ImagePreview({ src, alt }: { src: string; alt: string }) {
-  if (!src) {
-    return (
-      <div className='size-full flex items-center justify-center bg-muted rounded-xl'>
-        <ImageOffIcon className='size-5 text-muted-foreground' />
-      </div>
-    )
-  }
-  return <img src={src} alt={alt} className='size-full object-cover rounded-xl' />
+  return (
+    <ImageWithViewport
+      src={src}
+      alt={alt}
+      className='size-full rounded-xl'
+      fallback={
+        <div className='size-full flex items-center justify-center bg-muted rounded-xl'>
+          <ImageOffIcon className='size-5 text-muted-foreground' />
+        </div>
+      }
+    />
+  )
 }
 
 export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }: EditJobDescriptionFormProps) {
@@ -43,8 +51,7 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
   const coverImageUrl = useWatch({ control, name: 'coverImageUrl' })
   const salaryNegotiable = useWatch({ control, name: 'salaryNegotiable' })
 
-  const { uploadFileWithToast: uploadAvatar, isUploading: isUploadingAvatar } = useUploadFileWithToast()
-  const { uploadFileWithToast: uploadCover, isUploading: isUploadingCover } = useUploadFileWithToast()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const avatarFileInputRef = useRef<HTMLInputElement>(null)
   const coverFileInputRef = useRef<HTMLInputElement>(null)
   const { companyAddress } = useGetCompanyAddress()
@@ -95,12 +102,13 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                       accept='image/*'
                       className='hidden'
                       ref={avatarFileInputRef}
-                      onChange={async (e) => {
+                      onChange={(e) => {
                         const file = e.target.files?.[0]
                         if (!file) return
                         e.target.value = ''
-                        const url = await uploadAvatar({ file, showSuccessToast: false })
-                        if (url) field.onChange(url)
+                        // Staged until saved, so backing out leaves no orphan.
+                        releaseStagedUpload(field.value)
+                        field.onChange(stageUpload(file))
                       }}
                     />
                     <div
@@ -112,13 +120,23 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                     >
                       <ImagePreview src={avatarUrl ?? ''} alt='Avatar preview' />
                       <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity'>
-                        {isUploadingAvatar ? (
+                        {isUploading ? (
                           <Spinner className='size-4 text-white' />
                         ) : (
                           <UploadIcon className='size-4 text-white' />
                         )}
                       </div>
                     </div>
+
+                    {field.value && (
+                      <div className='flex justify-end'>
+                        <ImageViewportUrlButton
+                          value={field.value}
+                          onChange={field.onChange}
+                          aspectRatio={JOB_AVATAR_ASPECT}
+                        />
+                      </div>
+                    )}
                     <Field data-invalid={fieldState.invalid} className='gap-0.5'>
                       <FieldLabel className='gap-0.5 text-xs'>
                         {t('recruitment.jobs.form.field.avatarUrl.label')}
@@ -141,12 +159,13 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                       accept='image/*'
                       className='hidden'
                       ref={coverFileInputRef}
-                      onChange={async (e) => {
+                      onChange={(e) => {
                         const file = e.target.files?.[0]
                         if (!file) return
                         e.target.value = ''
-                        const url = await uploadCover({ file, showSuccessToast: false })
-                        if (url) field.onChange(url)
+                        // Staged until saved, so backing out leaves no orphan.
+                        releaseStagedUpload(field.value)
+                        field.onChange(stageUpload(file))
                       }}
                     />
                     <div
@@ -158,13 +177,23 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
                     >
                       <ImagePreview src={coverImageUrl ?? ''} alt='Cover preview' />
                       <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity'>
-                        {isUploadingCover ? (
+                        {isUploading ? (
                           <Spinner className='size-4 text-white' />
                         ) : (
                           <UploadIcon className='size-4 text-white' />
                         )}
                       </div>
                     </div>
+
+                    {field.value && (
+                      <div className='flex justify-end'>
+                        <ImageViewportUrlButton
+                          value={field.value}
+                          onChange={field.onChange}
+                          aspectRatio={JOB_COVER_ASPECT}
+                        />
+                      </div>
+                    )}
                     <Field data-invalid={fieldState.invalid} className='gap-0.5'>
                       <FieldLabel className='gap-0.5 text-xs'>
                         {t('recruitment.jobs.form.field.coverImageUrl.label')}
@@ -205,7 +234,18 @@ export default function EditJobDescriptionForm({ onSubmit, onCancel, isLoading }
           <Button type='button' variant='outline' onClick={onCancel} disabled={isLoading}>
             {t('common.button.cancel')}
           </Button>
-          <Button type='button' onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+          <Button
+            type='button'
+            onClick={handleSubmit(async (values) => {
+              const resolved = await resolveStagedImages(values, (file) =>
+                uploadFileWithToast({ file, showSuccessToast: false })
+              )
+              // The upload failure was already reported; don't submit blob: URLs.
+              if (!resolved.ok) return
+              await onSubmit(resolved.value)
+            })}
+            disabled={isLoading}
+          >
             {isLoading ? <Spinner /> : null}
             {t('common.button.save')}
           </Button>

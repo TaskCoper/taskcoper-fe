@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 /* eslint-disable react-refresh/only-export-components */
 import { cn } from '@/shared/utils'
 import type { ReactNode } from 'react'
@@ -126,7 +127,7 @@ export function ServiceImageDivider({
         className
       )}
     >
-      <img src={src} alt={alt} className='absolute inset-0 size-full object-cover' />
+      <ImageWithViewport src={src} alt={alt} className='absolute inset-0 size-full' />
       <span
         aria-hidden='true'
         className='pointer-events-none absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent'
@@ -166,7 +167,7 @@ export function ServiceImageSplit({
             reverse ? 'rounded-tr-[0.5rem]' : 'rounded-tl-[0.5rem]'
           )}
         >
-          <img src={src} alt={alt} className='absolute inset-0 size-full object-cover' />
+          <ImageWithViewport src={src} alt={alt} className='absolute inset-0 size-full' />
         </figure>
       </div>
       <div className={cn('min-w-0', reverse ? 'md:order-1' : 'md:order-2')}>{children}</div>

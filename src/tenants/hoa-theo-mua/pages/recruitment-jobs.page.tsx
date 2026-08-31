@@ -22,14 +22,14 @@ export default function RecruitmentJobsPage() {
   const { deleteJobDescription } = useDeleteJobDescription()
 
   const handleDeleteJob = useCallback(
-    async (id: string, title: string) => {
+    async (identifier: string, title: string) => {
       const confirmed = await confirm({
         title: t('recruitment.jobs.delete.title'),
         description: t('recruitment.jobs.delete.description', { title }),
         variant: 'destructive'
       })
 
-      if (confirmed) deleteJobDescription({ id })
+      if (confirmed) deleteJobDescription({ identifier })
     },
     [confirm, deleteJobDescription, t]
   )

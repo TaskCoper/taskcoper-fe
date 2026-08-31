@@ -8,7 +8,6 @@ export const InputType = {
   select: 'select',
   multiSelect: 'multiSelect',
   json: 'json',
-  image: 'image',
   file: 'file',
   address: 'address'
 } as const
@@ -25,7 +24,6 @@ export const InputTypeLabel: Record<InputType, string> = {
   [InputType.select]: 'Select',
   [InputType.multiSelect]: 'Multi-Select',
   [InputType.json]: 'JSON',
-  [InputType.image]: 'Image',
   [InputType.file]: 'File',
   [InputType.address]: 'Address'
 } as const
@@ -95,7 +93,6 @@ export const INPUT_TYPE_COLOR: Record<InputType, string> = {
   [InputType.select]: 'text-indigo-500 bg-indigo-50',
   [InputType.multiSelect]: 'text-pink-500 bg-pink-50',
   [InputType.json]: 'text-gray-500 bg-gray-50',
-  [InputType.image]: 'text-sky-500 bg-sky-50',
   [InputType.file]: 'text-orange-500 bg-orange-50',
   [InputType.address]: 'text-red-500 bg-red-50'
 }

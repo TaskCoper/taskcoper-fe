@@ -11,14 +11,14 @@ const CATEGORY_I18N_PREFIX = 'productCategories' as const
 
 interface SortableCategoryNodeProps {
   category: SortableCategory
-  /** Effective nesting level — drives both indentation and styling. While a row is dragged this is
+  /** Effective nesting level - drives both indentation and styling. While a row is dragged this is
    *  the *projected* depth, so the placeholder and overlay preview the level it will drop into. */
   depth: number
   indentationWidth: number
   t: TenantT
   disabled?: boolean
   isOverlay?: boolean
-  /** Whether this node is the last child among its siblings — decides the connector's shape (└ vs ├). */
+  /** Whether this node is the last child among its siblings - decides the connector's shape (└ vs ├). */
   isLast?: boolean
   /** For each ancestor depth, whether that ancestor's guide column still has a line running through it. */
   ancestorLines?: boolean[]

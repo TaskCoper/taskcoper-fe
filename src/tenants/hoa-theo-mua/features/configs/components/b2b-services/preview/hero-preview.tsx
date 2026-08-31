@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import { ArrowRight, Leaf, Sparkles } from 'lucide-react'
 import { memo } from 'react'
 import type { OverviewHero } from '../../../b2b-overview-palette'
@@ -11,7 +12,7 @@ export const HeroPreview = memo(function HeroPreview({ hero, locale }: { hero: O
     <section className='relative isolate overflow-hidden px-4 pt-6 pb-10 sm:pt-10 sm:pb-14 lg:min-h-[36rem] lg:pt-24 lg:pb-28'>
       {imageSrc ? (
         <div aria-label={imageAlt} className='absolute inset-0 -z-10 hidden lg:block'>
-          <img src={imageSrc} alt={imageAlt} className='size-full object-cover object-center' />
+          <ImageWithViewport src={imageSrc} alt={imageAlt} className='size-full' loading='eager' />
           <span
             aria-hidden='true'
             className='absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/70 to-primary/15'
@@ -89,7 +90,7 @@ export const HeroPreview = memo(function HeroPreview({ hero, locale }: { hero: O
 
         {imageSrc ? (
           <div className='relative aspect-4/3 w-full overflow-hidden rounded-[2rem] bg-card shadow-[0_1.5rem_3rem_rgb(81_108_108/22%)] ring-1 ring-primary/10 lg:hidden'>
-            <img src={imageSrc} alt={imageAlt} className='size-full object-cover' />
+            <ImageWithViewport src={imageSrc} alt={imageAlt} className='size-full' loading='eager' />
             <span
               aria-hidden='true'
               className='absolute inset-0 bg-gradient-to-t from-primary/35 via-primary/0 to-primary/0'

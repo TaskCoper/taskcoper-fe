@@ -21,7 +21,8 @@
     "i18n:unused": "node scripts/i18n-find-unused.mjs",
     "i18n:unused:fix": "node scripts/i18n-find-unused.mjs --fix",
     "i18n:verify": "yarn run i18n:extract:check && yarn run i18n:status && yarn run i18n:check && yarn run i18n:lint && yarn run i18n:types",
-    "check": "yarn run lint && yarn run i18n:verify && tsc -b",
+    "verify:image-viewport": "node scripts/verify-image-viewport.mjs",
+    "check": "yarn run lint && yarn run i18n:verify && yarn run verify:image-viewport && tsc -b",
     "docker:build": "docker compose -f .docker/docker-compose.yml build --no-cache && docker compose -f .docker/docker-compose.yml up -d"
   },
   "lint-staged": {
@@ -100,6 +101,7 @@
     "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.0",
     "react-dropzone": "^14.3.8",
+    "react-easy-crop": "^6.2.3",
     "react-hook-form": "^7.71.2",
     "react-hotkeys-hook": "^5.2.1",
     "react-i18next": "^16.4.1",

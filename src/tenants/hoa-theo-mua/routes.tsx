@@ -4,8 +4,18 @@ import { lazy } from 'react'
 import { Outlet, type RouteObject } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
+const AiCardsPage = lazy(() => import('./pages/ai-cards.page'))
+const AiCardDetailPage = lazy(() => import('./pages/ai-card-detail.page'))
+const AiFlowerDesignsPage = lazy(() => import('./pages/ai-flower-designs.page'))
+const AiFlowerDesignDetailPage = lazy(() => import('./pages/ai-flower-design-detail.page'))
+const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
+const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
+const CardSizesPage = lazy(() => import('./pages/card-sizes.page'))
+const HandwritingSurchargePage = lazy(() => import('./pages/handwriting-surcharge.page'))
 const OrdersPage = lazy(() => import('./pages/orders.page'))
 const OrderPage = lazy(() => import('./pages/order.page'))
+const SystemOrdersPage = lazy(() => import('./pages/system-orders.page'))
+const SystemOrderPage = lazy(() => import('./pages/system-order.page'))
 
 const ProductPage = lazy(() => import('./pages/product.page'))
 const ProductsPage = lazy(() => import('./pages/products.page'))
@@ -42,6 +52,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         element: <FeatureFlagGuardLayout requires='custom.orderManagement' />,
         children: [
           { path: 'orders', element: <OrdersPage /> },
+          { path: 'system-orders', element: <SystemOrdersPage /> },
+          { path: 'system-orders/:id', element: <SystemOrderPage /> },
           { path: 'orders/:id', element: <OrderPage /> }
         ]
       },
@@ -78,8 +90,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'news', element: <NewsArticlesPage /> },
           { path: 'news/categories', element: <NewsCategoriesPage /> },
           { path: 'news/add', element: <NewsAddPage /> },
-          { path: 'news/:id/update', element: <NewsUpdatePage /> },
-          { path: 'news/:id', element: <NewsDetailPage /> }
+          { path: 'news/:slug/update', element: <NewsUpdatePage /> },
+          { path: 'news/:slug', element: <NewsDetailPage /> }
         ]
       },
       {
@@ -88,6 +100,53 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           { path: 'configs', element: <SystemConfigsPage /> },
           { path: 'configs/b2b-overview', element: <B2BOverviewEditorPage /> },
           { path: 'configs/b2b-service/:slug', element: <B2BServiceEditorPage /> }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.aiCustom' />,
+        children: [
+          {
+            path: 'ai-custom/cards',
+            element: <AiCardsPage />
+          },
+          {
+            path: 'ai-custom/cards/:id',
+            element: <AiCardDetailPage />
+          },
+          {
+            path: 'ai-custom/flower-designs',
+            element: <AiFlowerDesignsPage />
+          },
+          {
+            path: 'ai-custom/flower-designs/:id',
+            element: <AiFlowerDesignDetailPage />
+          }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.templateManagement' />,
+        children: [
+          {
+            path: 'template-management/card-templates',
+            element: <CardTemplatesPage />
+          },
+          {
+            path: 'template-management/flower-mockups',
+            element: <FlowerMockupsPage />
+          }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.cardConfiguration' />,
+        children: [
+          {
+            path: 'card-configuration/sizes',
+            element: <CardSizesPage />
+          },
+          {
+            path: 'card-configuration/handwriting-surcharge',
+            element: <HandwritingSurchargePage />
+          }
         ]
       }
     ]

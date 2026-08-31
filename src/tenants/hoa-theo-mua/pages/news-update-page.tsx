@@ -1,4 +1,7 @@
+import { releaseStagedUpload, resolveStagedImages, stageUpload } from '@/lib/staged-uploads'
 import AsyncMultiSelectField from '@/components/async-multi-select-field'
+import { ImageViewportUrlButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Badge } from '@/components/ui/badge'
@@ -28,6 +31,7 @@ import { useGetArticle } from '../features/article/hooks/use-get-article'
 import { useGetCategoryNews } from '../features/article/hooks/use-get-category-news'
 import { useUpdateArticle } from '../features/article/hooks/use-update-article'
 import { ArticleStatus, type CategoryResponse } from '../features/article/types'
+import { ARTICLE_COVER_ASPECT } from '../features/article/validations'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
 
 const ARTICLE_FORM_PREFIX = 'articles.form' as const
@@ -49,10 +53,10 @@ const getArticleCategories = (article: { categories: CategoryResponse[] }): Cate
 
 export default function NewsUpdatePage() {
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
   const { t } = useTenantTranslation()
-  const { article } = useGetArticle(id)
-  const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.id)
+  const { article } = useGetArticle(slug)
+  const { methods, onSubmit, isUpdatingArticle } = useUpdateArticle(article?.slug ?? article?.id)
   const { categoryNews, isLoadingCategory } = useGetCategoryNews()
   const [categorySearch, setCategorySearch] = useState('')
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
@@ -92,7 +96,7 @@ export default function NewsUpdatePage() {
   }
 
   const statusLabel = status === 1 ? t(`${ARTICLE_STATUS_PREFIX}.published`) : t(`${ARTICLE_STATUS_PREFIX}.draft`)
-  const isSubmitDisabled = isUpdatingArticle || !id || isUploading
+  const isSubmitDisabled = isUpdatingArticle || !slug || isUploading
 
   return (
     <div className='h-full overflow-y-auto flex flex-col gap-4 p-4 max-w-5xl mx-auto'>
@@ -110,7 +114,14 @@ export default function NewsUpdatePage() {
 
       <FormProvider {...methods}>
         <form
-          onSubmit={methods.handleSubmit(onSubmit)}
+          onSubmit={methods.handleSubmit(async (body) => {
+            const resolved = await resolveStagedImages(body, (file) =>
+              uploadFileWithToast({ file, showSuccessToast: false })
+            )
+            // The upload failure was already reported; don't submit blob: URLs.
+            if (!resolved.ok) return
+            await onSubmit(resolved.value)
+          })}
           className='grid min-h-0 flex-1 gap-10 xl:grid-cols-[minmax(0,1fr)_360px]'
         >
           <FieldGroup className='gap-2'>
@@ -245,12 +256,13 @@ export default function NewsUpdatePage() {
                           accept='image/*'
                           className='hidden'
                           ref={pictureFileInputRef}
-                          onChange={async (e) => {
+                          onChange={(e) => {
                             const file = e.target.files?.[0]
                             if (!file) return
                             e.target.value = ''
-                            const url = await uploadFileWithToast({ file, showSuccessToast: false })
-                            if (url) field.onChange(url)
+                            // Staged until saved, so backing out leaves no orphan.
+                            releaseStagedUpload(field.value)
+                            field.onChange(stageUpload(file))
                           }}
                         />
                         <button
@@ -258,14 +270,14 @@ export default function NewsUpdatePage() {
                           className={cn(
                             'relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed transition-colors',
                             fieldState.invalid ? 'border-destructive' : 'border-border',
-                            field.value ? 'aspect-video p-0' : 'h-24 hover:bg-muted/50'
+                            field.value ? 'aspect-[16/10] p-0' : 'h-24 hover:bg-muted/50'
                           )}
                           onClick={() => pictureFileInputRef.current?.click()}
                           disabled={isUploading}
                         >
                           {field.value ? (
                             <>
-                              <img src={field.value} alt='' className='size-full object-cover' />
+                              <ImageWithViewport src={field.value} className='size-full' />
                               <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
                                 {isUploading ? (
                                   <Spinner className='size-5 text-white' />
@@ -283,6 +295,16 @@ export default function NewsUpdatePage() {
                             </div>
                           )}
                         </button>
+                        {/* Outside the picker button: nesting it would fire the file dialog on click. */}
+                        {field.value && (
+                          <div className='flex justify-end'>
+                            <ImageViewportUrlButton
+                              value={field.value}
+                              onChange={field.onChange}
+                              aspectRatio={ARTICLE_COVER_ASPECT}
+                            />
+                          </div>
+                        )}
                         <div className='min-h-4'>
                           {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                         </div>
@@ -308,13 +330,13 @@ export default function NewsUpdatePage() {
 
                     <div className='flex flex-col gap-4'>
                       {pictureUrl ? (
-                        <img
+                        <ImageWithViewport
                           src={pictureUrl}
                           alt={t(`${ARTICLE_FORM_PREFIX}.previewImageAlt`)}
-                          className='aspect-video w-full rounded-lg border object-cover'
+                          className='aspect-[16/10] w-full rounded-lg border'
                         />
                       ) : (
-                        <div className='flex aspect-video w-full items-center justify-center rounded-lg border bg-muted text-muted-foreground'>
+                        <div className='flex aspect-[16/10] w-full items-center justify-center rounded-lg border bg-muted text-muted-foreground'>
                           <ImageIcon />
                         </div>
                       )}

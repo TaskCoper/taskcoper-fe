@@ -15,8 +15,12 @@ import { cn } from '@/shared/utils'
 import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
+import { isProductSignatureKey } from '../signature-landing-palette'
 import { ConfigKind, ConfigKindLabel, InputType, InputTypeLabel, type InputOption, type ValidationRule } from '../types'
 import type { CreateConfigFormInput, CreateConfigFormValues } from '../validations'
+import DurationMinutesInput from './duration-minutes-input'
+import SignatureLandingEditor from './signature-landing-editor'
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'bmp', 'ico'])
 
@@ -45,7 +49,6 @@ const AVAILABLE_VALIDATIONS: Partial<Record<InputType, RuleKey[]>> = {
   [InputType.text]: ['minLength', 'maxLength', 'pattern', 'email', 'url'],
   [InputType.textarea]: ['minLength', 'maxLength', 'pattern'],
   [InputType.number]: ['min', 'max', 'integer'],
-  [InputType.image]: ['url'],
   [InputType.file]: ['url']
 }
 
@@ -56,9 +59,14 @@ const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
 export interface CreateConfigFormProps {
   lockedFields?: { key?: boolean; options?: boolean; kind?: boolean }
   onPendingFileChange?: (file: File | null) => void
+  valueLocked?: boolean
 }
 
-export default function CreateConfigForm({ lockedFields, onPendingFileChange }: CreateConfigFormProps = {}) {
+export default function CreateConfigForm({
+  lockedFields,
+  onPendingFileChange,
+  valueLocked
+}: CreateConfigFormProps = {}) {
   const { t } = useTenantTranslation()
   const lockKey = !!lockedFields?.key
   const lockOptions = !!lockedFields?.options
@@ -84,6 +92,10 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
 
   const inputType = (watch('value.inputType') ?? InputType.text) as InputType
   const availableRules = AVAILABLE_VALIDATIONS[inputType] ?? []
+  const configKey = watch('key')
+  const isDurationInSeconds = isSecondsAsMinutesConfigKey(configKey)
+  // `products.signature` is a product → landing-page map; it gets a dedicated editor instead of raw JSON.
+  const isSignatureLanding = inputType === InputType.json && isProductSignatureKey(configKey)
 
   const {
     fields: optionFields,
@@ -172,6 +184,25 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
           />
         )
       case InputType.number:
+        if (isDurationInSeconds) {
+          return (
+            <Controller
+              name='value.value'
+              control={control}
+              render={({ field }) => (
+                <div className='flex items-center gap-2'>
+                  <DurationMinutesInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    placeholder='0'
+                  />
+                  <span className='shrink-0 text-xs text-muted-foreground'>{t('configsPage.dialog.minutesUnit')}</span>
+                </div>
+              )}
+            />
+          )
+        }
         return <Input type='number' {...register('value.value', { valueAsNumber: true })} placeholder='0' />
       case InputType.date:
         return (
@@ -187,6 +218,16 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
       case InputType.text:
         return <Textarea rows={3} {...register('value.value')} />
       case InputType.json:
+        if (isSignatureLanding) {
+          return (
+            <Controller
+              name='value.value'
+              control={control}
+              render={({ field }) => <SignatureLandingEditor value={field.value} onChange={field.onChange} />}
+            />
+          )
+        }
+        return <Textarea rows={4} placeholder='{}' {...register('value.value')} />
       case InputType.address:
         return <Textarea rows={4} placeholder='{}' {...register('value.value')} />
       case InputType.select:
@@ -436,8 +477,18 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
       </div>
 
       {/* Default Value */}
-      {defaultValueNode &&
-        (inputType === InputType.date ? (
+      {valueLocked ? (
+        <FieldGroup className='gap-1'>
+          <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
+          <div className='flex h-9 items-center gap-2 rounded-md border border-dashed bg-muted/30 px-2.5 text-xs text-muted-foreground'>
+            <span className='flex-1 truncate font-mono tracking-widest'>••••••••</span>
+          </div>
+          <span className='text-xs text-muted-foreground'>{t('configsPage.dialog.secretHint')}</span>
+        </FieldGroup>
+      ) : (
+        defaultValueNode &&
+        // The date picker and the signature editor render their own labels.
+        (inputType === InputType.date || isSignatureLanding ? (
           defaultValueNode
         ) : (
           <FieldGroup className='gap-1'>
@@ -445,7 +496,8 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
             {defaultValueNode}
             {errors.value?.value && <FieldError className='text-xs' errors={[errors.value.value as never]} />}
           </FieldGroup>
-        ))}
+        ))
+      )}
 
       {/* Description */}
       <Controller
@@ -469,7 +521,7 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
         )}
       />
 
-      {/* Options — select & multiSelect share the editor (hidden when sourced from an async API) */}
+      {/* Options - select & multiSelect share the editor (hidden when sourced from an async API) */}
       {(inputType === InputType.select || inputType === InputType.multiSelect) && !lockOptions && (
         <FieldGroup className='gap-2'>
           <div className='flex items-center justify-between'>
@@ -514,8 +566,8 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
         </FieldGroup>
       )}
 
-      {/* Default Value — select (single value) */}
-      {inputType === InputType.select && (
+      {/* Default Value - select (single value) */}
+      {!valueLocked && inputType === InputType.select && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValueField')}</FieldLabel>
           <Controller
@@ -568,8 +620,8 @@ export default function CreateConfigForm({ lockedFields, onPendingFileChange }: 
         </FieldGroup>
       )}
 
-      {/* Default Values — multiSelect (array) */}
-      {inputType === InputType.multiSelect && (
+      {/* Default Values - multiSelect (array) */}
+      {!valueLocked && inputType === InputType.multiSelect && (
         <FieldGroup className='gap-1'>
           <FieldLabel>{t('configsPage.dialog.defaultValuesField')}</FieldLabel>
           <Controller

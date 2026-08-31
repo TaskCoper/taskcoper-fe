@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -43,7 +44,7 @@ export default function RecruitmentJobPage() {
   const { jobDescription, isGettingJobDescription } = useGetJobDescription({ id })
 
   const { methods, updateJobDescription, isUpdating } = useUpdateJobDescription({
-    id,
+    identifier: jobDescription?.slug,
     jobDescription,
     onSuccess: () => setIsEditing(false)
   })
@@ -129,31 +130,31 @@ export default function RecruitmentJobPage() {
             <div className='col-span-1 lg:col-span-8'>
               <div className='relative h-48 sm:h-52'>
                 <div className='size-full group/cover relative'>
-                  {jobDescription?.coverImageUrl ? (
-                    <img
-                      src={jobDescription.coverImageUrl}
-                      alt={t('recruitment.jobs.detail.coverImageAlt', { title: jobDescription.title })}
-                      className='size-full object-cover rounded-2xl shadow-sm border border-border'
-                    />
-                  ) : (
-                    <div className='size-full rounded-2xl bg-muted flex items-center justify-center'>
-                      <ImageOffIcon className='size-10 text-muted-foreground' />
-                    </div>
-                  )}
+                  <ImageWithViewport
+                    src={jobDescription?.coverImageUrl ?? ''}
+                    alt={t('recruitment.jobs.detail.coverImageAlt', { title: jobDescription?.title ?? '' })}
+                    className='size-full rounded-2xl shadow-sm border border-border'
+                    loading='eager'
+                    fallback={
+                      <div className='size-full rounded-2xl bg-muted flex items-center justify-center'>
+                        <ImageOffIcon className='size-10 text-muted-foreground' />
+                      </div>
+                    }
+                  />
                 </div>
 
                 <div className='absolute -bottom-12 left-1/2 -translate-x-1/2 lg:left-6 lg:translate-x-0 size-28 lg:size-32 z-20 group/logo rounded-2xl bg-muted shadow-sm'>
-                  {jobDescription?.avatarUrl ? (
-                    <img
-                      src={jobDescription.avatarUrl}
-                      alt={t('recruitment.jobs.detail.logoImageAlt', { title: jobDescription.title })}
-                      className='size-full object-cover rounded-xl shadow-sm border border-border'
-                    />
-                  ) : (
-                    <div className='size-full flex items-center justify-center'>
-                      <ImageOffIcon className='size-8 text-muted-foreground' />
-                    </div>
-                  )}
+                  <ImageWithViewport
+                    src={jobDescription?.avatarUrl ?? ''}
+                    alt={t('recruitment.jobs.detail.logoImageAlt', { title: jobDescription?.title ?? '' })}
+                    className='size-full rounded-xl shadow-sm border border-border'
+                    loading='eager'
+                    fallback={
+                      <div className='size-full flex items-center justify-center'>
+                        <ImageOffIcon className='size-8 text-muted-foreground' />
+                      </div>
+                    }
+                  />
                 </div>
               </div>
 

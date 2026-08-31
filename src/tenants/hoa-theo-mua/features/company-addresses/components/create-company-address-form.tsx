@@ -3,18 +3,26 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import AddressAutocomplete from './address-autocomplete'
+import { matchShippingLocation } from '../../../utils/match-shipping-location'
 import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import type { CreateCompanyAddressFormValues } from '../validations'
+import AddressAutocomplete from './address-autocomplete'
+import AddressMapField from './address-map-field'
 
 export default function CreateCompanyAddressForm() {
   const { t } = useTenantTranslation()
   const { control, setValue, watch } = useFormContext<CreateCompanyAddressFormValues>()
+  // The coordinate the typed address resolved to - map picks are constrained to
+  // a radius around it so the pin can be fine-tuned but not moved to a new area.
+  const [mapAnchor, setMapAnchor] = useState<{ latitude: number; longitude: number } | null>(null)
 
   const cityCodeForm = watch('cityCode')
   const wardForm = watch('ward')
   const cityForm = watch('city')
+  const latitudeForm = watch('latitude')
+  const longitudeForm = watch('longitude')
 
   const { shippingLocations: cities, isLoadingShippingLocations: isLoadingCities } = useGetShippingLocations({
     type: 'CITY'
@@ -24,6 +32,22 @@ export default function CreateCompanyAddressForm() {
     parentId: cityCodeForm,
     enabled: cityCodeForm !== -1
   })
+
+  // Ward name lifted from a picked address, resolved to a selector option once
+  // the newly-set city's ward list has finished loading.
+  const pendingWardRef = useRef<string | null>(null)
+  const resolvePendingWard = useCallback(() => {
+    if (pendingWardRef.current === null || isLoadingWards || wards.length === 0) return
+    const matchedWard = matchShippingLocation(wards, pendingWardRef.current)
+    if (matchedWard) {
+      setValue('wardCode', matchedWard.id, { shouldDirty: true })
+      setValue('ward', matchedWard.name, { shouldDirty: true })
+    }
+    pendingWardRef.current = null
+  }, [wards, isLoadingWards, setValue])
+  useEffect(() => {
+    resolvePendingWard()
+  }, [resolvePendingWard])
 
   return (
     <div className='space-y-2'>
@@ -88,24 +112,39 @@ export default function CreateCompanyAddressForm() {
               id={field.name}
               value={field.value ?? ''}
               onValueChange={field.onChange}
-              onResolve={({ latitude, longitude, mapId }) => {
+              onResolve={({ latitude, longitude, mapId, ward, city }) => {
                 setValue('latitude', latitude, { shouldDirty: true })
                 setValue('longitude', longitude, { shouldDirty: true })
                 setValue('mapId', mapId, { shouldDirty: true })
+                // This resolved point becomes the anchor the map pin is
+                // constrained to; subsequent drags are measured from here.
+                setMapAnchor({ latitude, longitude })
+
+                // Lift the resolved ward/city into their own selectors.
+                const matchedCity = matchShippingLocation(cities, city)
+                const cityChanged = Boolean(matchedCity && matchedCity.id !== cityCodeForm)
+                if (cityChanged && matchedCity) {
+                  setValue('cityCode', matchedCity.id, { shouldDirty: true })
+                  setValue('city', matchedCity.name, { shouldDirty: true })
+                  setValue('wardCode', -1, { shouldDirty: true })
+                  setValue('ward', '', { shouldDirty: true })
+                }
+                pendingWardRef.current = ward || null
+                // Same city → its ward list is already loaded, resolve now;
+                // a changed city resolves via the effect once wards reload.
+                if (!cityChanged) resolvePendingWard()
               }}
               onClear={() => {
                 setValue('latitude', 0, { shouldDirty: true })
                 setValue('longitude', 0, { shouldDirty: true })
                 setValue('mapId', '', { shouldDirty: true })
+                setMapAnchor(null)
               }}
               ward={wardForm ?? ''}
               city={cityForm ?? ''}
-              placeholder={
-                wardForm && cityForm
-                  ? t('companyAddress.field.addressLine.placeholder')
-                  : t('companyAddress.field.addressLine.disabledPlaceholder')
-              }
-              disabled={!wardForm || !cityForm}
+              placeholder={t('companyAddress.field.addressLine.placeholder')}
+              searchingLabel={t('companyAddress.field.addressLine.searching')}
+              emptyLabel={t('companyAddress.field.addressLine.empty')}
               invalid={fieldState.invalid}
             />
             <div className='min-h-4'>
@@ -178,6 +217,44 @@ export default function CreateCompanyAddressForm() {
           modal
         />
       </div>
+
+      {/* Always mounted: the map itself only renders once a point exists, but the
+          "use my location" control stays available so a pin can be dropped first. */}
+      <AddressMapField
+        latitude={latitudeForm}
+        longitude={longitudeForm}
+        onResolve={({ latitude, longitude, mapId, addressLine, ward, city }) => {
+          // Sync every field to whatever the reverse geocode landed on:
+          // coordinate, address line, and the ward/city selectors.
+          setValue('latitude', latitude, { shouldDirty: true })
+          setValue('longitude', longitude, { shouldDirty: true })
+          setValue('mapId', mapId, { shouldDirty: true })
+          if (addressLine) {
+            setValue('addressLine', addressLine, { shouldDirty: true })
+          }
+
+          // Lift the resolved ward/city into their own selectors.
+          const matchedCity = matchShippingLocation(cities, city)
+          const cityChanged = Boolean(matchedCity && matchedCity.id !== cityCodeForm)
+          if (cityChanged && matchedCity) {
+            setValue('cityCode', matchedCity.id, { shouldDirty: true })
+            setValue('city', matchedCity.name, { shouldDirty: true })
+            setValue('wardCode', -1, { shouldDirty: true })
+            setValue('ward', '', { shouldDirty: true })
+          }
+          pendingWardRef.current = ward || null
+          // Same city → its ward list is already loaded, resolve now;
+          // a changed city resolves via the effect once wards reload.
+          if (!cityChanged) resolvePendingWard()
+        }}
+        anchorLatitude={mapAnchor?.latitude}
+        anchorLongitude={mapAnchor?.longitude}
+        hint={t('companyAddress.field.map.hint')}
+        useLocationLabel={t('companyAddress.field.map.useLocation')}
+        resolvingLabel={t('companyAddress.field.map.resolving')}
+        locationErrorLabel={t('companyAddress.field.map.locationError')}
+        tooFarLabel={t('companyAddress.field.map.tooFar')}
+      />
 
       <Controller
         name='remarks'

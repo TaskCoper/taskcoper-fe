@@ -79,7 +79,7 @@ export default function ProjectGeneralSection({
             </div>
 
             <p className='text-xs font-semibold max-w-[70%] truncate' title={String(item.value)}>
-              {item.value ?? <span className='text-muted-foreground/40'>—</span>}
+              {item.value ?? <span className='text-muted-foreground/40'>-</span>}
             </p>
           </div>
         ))}

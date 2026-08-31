@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import articleService from '../services'
 
-export const useGetArticle = (id?: string) => {
+export const useGetArticle = (identifier?: string) => {
   const {
     data: articleResponse,
     isError,
@@ -9,9 +9,9 @@ export const useGetArticle = (id?: string) => {
     isFetching,
     isLoading: isLoadingArticle
   } = useQuery({
-    queryKey: ['article', id],
-    queryFn: () => articleService.getArticle({ id }),
-    enabled: !!id
+    queryKey: ['article', identifier],
+    queryFn: () => articleService.getArticle({ identifier }),
+    enabled: !!identifier
   })
 
   return {

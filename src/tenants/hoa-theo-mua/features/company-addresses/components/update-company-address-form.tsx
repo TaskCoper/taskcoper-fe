@@ -3,18 +3,17 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { lazy, Suspense, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
+import { matchShippingLocation } from '../../../utils/match-shipping-location'
 import { useGetShippingLocations } from '../../orders/hooks/use-get-shipping-locations'
 import { useUpdateCompanyAddress } from '../hooks/use-update-company-address'
 import type { CompanyAddress } from '../types'
 import type { UpdateCompanyAddressFormValues } from '../validations'
 import AddressAutocomplete from './address-autocomplete'
-
-const VietmapAddressMap = lazy(() => import('./vietmap-address-map'))
+import AddressMapField from './address-map-field'
 
 interface UpdateCompanyAddressFormProps {
   companyAddress: CompanyAddress
@@ -32,9 +31,15 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     formState: { isDirty }
   } = methods
 
+  // The coordinate the typed address (or the saved point) resolved to - map
+  // picks are constrained to a radius around it.
+  const [mapAnchor, setMapAnchor] = useState<{ latitude: number; longitude: number } | null>(null)
+
   const cityCodeForm = watch('cityCode')
   const wardForm = watch('ward')
   const cityForm = watch('city')
+  const latitudeForm = watch('latitude')
+  const longitudeForm = watch('longitude')
 
   const { shippingLocations: cities, isLoadingShippingLocations: isLoadingCities } = useGetShippingLocations({
     type: 'CITY'
@@ -44,6 +49,22 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
     parentId: cityCodeForm,
     enabled: cityCodeForm !== -1
   })
+
+  // Ward name lifted from a picked address, resolved to a selector option once
+  // the newly-set city's ward list has finished loading.
+  const pendingWardRef = useRef<string | null>(null)
+  const resolvePendingWard = useCallback(() => {
+    if (pendingWardRef.current === null || isLoadingWards || wards.length === 0) return
+    const matchedWard = matchShippingLocation(wards, pendingWardRef.current)
+    if (matchedWard) {
+      setValue('wardCode', matchedWard.id, { shouldDirty: true })
+      setValue('ward', matchedWard.name, { shouldDirty: true })
+    }
+    pendingWardRef.current = null
+  }, [wards, isLoadingWards, setValue])
+  useEffect(() => {
+    resolvePendingWard()
+  }, [resolvePendingWard])
 
   const hydratedAddressId = useRef<string | null>(null)
   useEffect(() => {
@@ -75,6 +96,14 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
       longitude: companyAddress.longitude,
       mapId: companyAddress.mapId
     })
+    // Anchor the pin to the saved coordinate so it can be fine-tuned but not
+    // moved to a new area.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration once companyAddress/cities/wards resolve, guarded above
+    setMapAnchor(
+      companyAddress.latitude !== 0 && companyAddress.longitude !== 0
+        ? { latitude: companyAddress.latitude, longitude: companyAddress.longitude }
+        : null
+    )
     hydratedAddressId.current = companyAddress.id
   }, [companyAddress, cities, wards, isLoadingWards, cityCodeForm, setValue, reset])
 
@@ -153,24 +182,39 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
                 id={field.name}
                 value={field.value ?? ''}
                 onValueChange={field.onChange}
-                onResolve={({ latitude, longitude, mapId }) => {
+                onResolve={({ latitude, longitude, mapId, ward, city }) => {
                   setValue('latitude', latitude, { shouldDirty: true })
                   setValue('longitude', longitude, { shouldDirty: true })
                   setValue('mapId', mapId, { shouldDirty: true })
+                  // This resolved point becomes the anchor the map pin is
+                  // constrained to; subsequent drags are measured from here.
+                  setMapAnchor({ latitude, longitude })
+
+                  // Lift the resolved ward/city into their own selectors.
+                  const matchedCity = matchShippingLocation(cities, city)
+                  const cityChanged = Boolean(matchedCity && matchedCity.id !== cityCodeForm)
+                  if (cityChanged && matchedCity) {
+                    setValue('cityCode', matchedCity.id, { shouldDirty: true })
+                    setValue('city', matchedCity.name, { shouldDirty: true })
+                    setValue('wardCode', -1, { shouldDirty: true })
+                    setValue('ward', '', { shouldDirty: true })
+                  }
+                  pendingWardRef.current = ward || null
+                  // Same city → its ward list is already loaded, resolve now;
+                  // a changed city resolves via the effect once wards reload.
+                  if (!cityChanged) resolvePendingWard()
                 }}
                 onClear={() => {
                   setValue('latitude', 0, { shouldDirty: true })
                   setValue('longitude', 0, { shouldDirty: true })
                   setValue('mapId', '', { shouldDirty: true })
+                  setMapAnchor(null)
                 }}
                 ward={wardForm ?? ''}
                 city={cityForm ?? ''}
-                placeholder={
-                  wardForm && cityForm
-                    ? t('companyAddress.field.addressLine.placeholder')
-                    : t('companyAddress.field.addressLine.disabledPlaceholder')
-                }
-                disabled={!wardForm || !cityForm}
+                placeholder={t('companyAddress.field.addressLine.placeholder')}
+                searchingLabel={t('companyAddress.field.addressLine.searching')}
+                emptyLabel={t('companyAddress.field.addressLine.empty')}
                 invalid={fieldState.invalid}
               />
               <div className='min-h-4'>
@@ -244,6 +288,44 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
           />
         </div>
 
+        {/* Always mounted: the map itself only renders once a point exists, but the
+            "use my location" control stays available so a pin can be dropped first. */}
+        <AddressMapField
+          latitude={latitudeForm}
+          longitude={longitudeForm}
+          onResolve={({ latitude, longitude, mapId, addressLine, ward, city }) => {
+            // Sync every field to whatever the reverse geocode landed on:
+            // coordinate, address line, and the ward/city selectors.
+            setValue('latitude', latitude, { shouldDirty: true })
+            setValue('longitude', longitude, { shouldDirty: true })
+            setValue('mapId', mapId, { shouldDirty: true })
+            if (addressLine) {
+              setValue('addressLine', addressLine, { shouldDirty: true })
+            }
+
+            // Lift the resolved ward/city into their own selectors.
+            const matchedCity = matchShippingLocation(cities, city)
+            const cityChanged = Boolean(matchedCity && matchedCity.id !== cityCodeForm)
+            if (cityChanged && matchedCity) {
+              setValue('cityCode', matchedCity.id, { shouldDirty: true })
+              setValue('city', matchedCity.name, { shouldDirty: true })
+              setValue('wardCode', -1, { shouldDirty: true })
+              setValue('ward', '', { shouldDirty: true })
+            }
+            pendingWardRef.current = ward || null
+            // Same city → its ward list is already loaded, resolve now;
+            // a changed city resolves via the effect once wards reload.
+            if (!cityChanged) resolvePendingWard()
+          }}
+          anchorLatitude={mapAnchor?.latitude}
+          anchorLongitude={mapAnchor?.longitude}
+          hint={t('companyAddress.field.map.hint')}
+          useLocationLabel={t('companyAddress.field.map.useLocation')}
+          resolvingLabel={t('companyAddress.field.map.resolving')}
+          locationErrorLabel={t('companyAddress.field.map.locationError')}
+          tooFarLabel={t('companyAddress.field.map.tooFar')}
+        />
+
         <Controller
           name='remarks'
           control={control}
@@ -276,10 +358,6 @@ export default function UpdateCompanyAddressForm({ companyAddress }: UpdateCompa
             </Field>
           )}
         />
-
-        <Suspense fallback={<Skeleton className='h-80 w-full rounded-xl' />}>
-          <VietmapAddressMap latitude={companyAddress.latitude} longitude={companyAddress.longitude} />
-        </Suspense>
 
         <div className='flex items-center justify-end gap-2 mt-2'>
           <Button

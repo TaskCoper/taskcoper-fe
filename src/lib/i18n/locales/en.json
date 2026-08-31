@@ -393,6 +393,7 @@
       "pleaseUploadSmallerFile": "Please upload a smaller file.",
       "pleaseUploadValidFileFormat": "Please upload a valid file format.",
       "pleaseWait": "Please wait...",
+      "remove": "Remove",
       "search": "Search...",
       "selected": "selected",
       "selectPlaceholder": "Select option",
@@ -843,6 +844,12 @@
       "uptime": "Uptime"
     }
   },
+  "imageViewport": {
+    "adjust": "Adjust framing",
+    "description": "Drag the image and zoom to choose which part stays visible.",
+    "useFullImage": "Use full image",
+    "zoom": "Zoom"
+  },
   "language": {
     "english": "English",
     "vietnamese": "Vietnamese"
@@ -955,7 +962,7 @@
       "dropzoneAddMore": "Drop or click to add more files",
       "dropzoneAddMoreActive": "Drop to add more files",
       "dropzoneEmpty": "Drag & drop files here, or click to browse",
-      "dropzoneHint": "Supports PDF and DOCX — up to 10 files",
+      "dropzoneHint": "Supports PDF and DOCX - up to 10 files",
       "portfolioFiles": "Portfolio Files",
       "removeFile": "Remove {{name}}",
       "shortBio": "Short Bio",
@@ -1263,7 +1270,7 @@
     "allCategories": "All",
     "empty": "No articles in this category yet.",
     "eyebrow": "The Edition · Startup",
-    "heroSubtitle": "Curated reporting from VnExpress, CafeBiz, and TheLEADER — read in five minutes, applied for a year.",
+    "heroSubtitle": "Curated reporting from VnExpress, CafeBiz, and TheLEADER - read in five minutes, applied for a year.",
     "heroTitle": "Reading for Vietnamese founders",
     "latest": "Latest stories",
     "liveUpdated": "Updated weekly",
@@ -1324,8 +1331,7 @@
       "saleName": "Search by sale name..."
     },
     "status": {
-      "paid": "Paid",
-      "pending": "Pending"
+      "paid": "Paid"
     }
   },
   "packageBooking": {

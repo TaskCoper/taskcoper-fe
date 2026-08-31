@@ -1,5 +1,13 @@
 import type { Category } from '../categories/types'
 
+export const PRODUCT_TYPE_TAG = {
+  combo: 1,
+  product: 2,
+  material: 3
+} as const
+
+export type ProductTypeTag = (typeof PRODUCT_TYPE_TAG)[keyof typeof PRODUCT_TYPE_TAG]
+
 /** A product's category membership plus whether that specific product ↔ category pair is pinned. */
 export interface ProductCategory extends Category {
   isPinned: boolean
@@ -9,6 +17,10 @@ export interface Product {
   id: string
   isPinned: boolean
   categories: ProductCategory[]
+  parent: ProductDetail | null
+  parentId: string | null
+
+  otherImages: string[] | null
 
   sourceRowNumber: number
 
@@ -23,6 +35,10 @@ export interface Product {
 
   // D - Tên sản phẩm cha
   parentProductName: string | null
+
+  factor: number | null
+  sellableQuantity: number | null
+  stockStatus: string | null
 
   // E - Mã vạch
   barcode: string | null
@@ -141,6 +157,9 @@ export interface Product {
   // AQ - Trạng thái
   status: string | null
 
+  // Combo storefront publication status
+  isActive: boolean | null
+
   // AR - Mã danh mục
   categoryCode: string | null
 
@@ -200,7 +219,7 @@ export interface Product {
 }
 
 /**
- * Slim product shape returned by GET /products-pin — the pinned storefront list.
+ * Slim product shape returned by GET /products-pin - the pinned storefront list.
  * Distinct from the full catalog `Product` row: prices arrive already parsed as numbers
  * and it carries an explicit sort `position`.
  */
@@ -299,4 +318,6 @@ export interface ProductDetail extends Omit<Product, ProductRawFieldKey> {
 
   createdAt: string
   updatedAt: string | null
+
+  children: ProductDetail[] | null
 }

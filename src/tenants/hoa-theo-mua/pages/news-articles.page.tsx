@@ -28,7 +28,7 @@ export default function NewsArticlesPage() {
   }
 
   const handleDeleteArticle = useCallback(
-    async (id: string) => {
+    async (identifier: string) => {
       const confirmed = await confirm({
         title: t('articles.confirm.deleteTitle'),
         description: t('articles.confirm.deleteDescription'),
@@ -39,7 +39,7 @@ export default function NewsArticlesPage() {
 
       if (!confirmed) return
 
-      deleteArticle({ id: id })
+      deleteArticle({ identifier })
     },
     [confirm, deleteArticle, t]
   )

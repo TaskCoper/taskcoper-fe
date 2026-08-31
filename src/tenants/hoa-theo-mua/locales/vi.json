@@ -77,6 +77,13 @@
         "searching": "Đang tìm kiếm...",
         "empty": "Không tìm thấy địa chỉ phù hợp"
       },
+      "map": {
+        "hint": "Kéo ghim hoặc chạm vào bản đồ để chọn chính xác vị trí.",
+        "useLocation": "Vị trí của tôi",
+        "resolving": "Đang tìm địa chỉ…",
+        "locationError": "Không lấy được vị trí của bạn. Vui lòng chọn điểm trên bản đồ.",
+        "tooFar": "Điểm này quá xa địa chỉ của bạn. Vui lòng kéo ghim lại gần hơn."
+      },
       "remarks": {
         "label": "Ghi chú",
         "placeholder": "Ghi chú nội bộ về địa chỉ này (giờ mở cửa, hướng dẫn lấy hàng, v.v.)"
@@ -92,6 +99,167 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "aiCustom": {
+    "comingSoon": "Tính năng đang được phát triển",
+    "history": {
+      "title": "Lịch sử thiệp AI",
+      "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "column": {
+        "preview": "Ảnh thiệp",
+        "code": "Mã thiệp",
+        "customer": "Khách hàng",
+        "template": "Mẫu thiệp",
+        "size": "Kích thước",
+        "writingMode": "Hình thức viết",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Gõ máy"
+      },
+      "walkInCustomer": "Khách vãng lai",
+      "previewAlt": "Ảnh thiệp {{code}}",
+      "openPreview": "Xem ảnh thiệp {{code}}",
+      "viewDetail": "Xem chi tiết"
+    },
+    "flowerHistory": {
+      "title": "Lịch sử mẫu hoa AI",
+      "description": "Xem và tìm kiếm các mẫu hoa Custom AI đã tạo thành công.",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
+      "column": {
+        "preview": "Ảnh mẫu hoa",
+        "code": "Mã mẫu hoa",
+        "customer": "Khách hàng",
+        "sourceCombo": "Combo nguồn",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "previewAlt": "Ảnh mẫu hoa {{code}}",
+      "openPreview": "Xem ảnh mẫu hoa {{code}}",
+      "viewDetail": "Xem chi tiết",
+      "comboFilter": {
+        "title": "Chọn Combo nguồn",
+        "description": "Có thể chọn nhiều Combo",
+        "searchPlaceholder": "Tìm theo tên hoặc mã Combo...",
+        "clear": "Bỏ chọn",
+        "empty": "Không tìm thấy Combo phù hợp.",
+        "page": "Trang {{page}}/{{totalPages}} · {{totalItems}} Combo",
+        "itemsPerPage": "Số Combo mỗi trang",
+        "previous": "Trang Combo trước",
+        "next": "Trang Combo tiếp theo"
+      }
+    },
+    "flowerDetail": {
+      "title": "Chi tiết mẫu hoa AI",
+      "description": "Xem ảnh kết quả, thành phần tại thời điểm tạo và các Order liên kết.",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy mẫu hoa hoặc mẫu hoa chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "overview": "Tổng quan",
+        "materials": "Thành phần",
+        "source": "Nguồn thiết kế",
+        "orders": "Order liên kết"
+      },
+      "section": {
+        "customer": "Thông tin khách hàng",
+        "request": "Thông tin tạo mẫu",
+        "coreMaterials": "Thành phần Core tại thời điểm tạo",
+        "supportMaterials": "Thành phần Support tại thời điểm tạo",
+        "sourceCombo": "Combo nguồn",
+        "sourceMockup": "Mockup nguồn",
+        "orders": "Order liên kết"
+      },
+      "customRequest": "Yêu cầu hoặc ghi chú",
+      "noMaterials": "Không có thành phần được ghi nhận.",
+      "noMockup": "Không có Mockup nguồn.",
+      "noOrders": "Mẫu hoa này chưa liên kết với Order nào.",
+      "material": {
+        "name": "Thành phần",
+        "quantity": "Số lượng",
+        "unit": "Đơn vị"
+      },
+      "combo": {
+        "code": "Mã Combo",
+        "name": "Tên Combo",
+        "information": "Thông tin Combo"
+      },
+      "mockupAlt": "Ảnh {{name}}",
+      "openMockup": "Xem ảnh {{name}}",
+      "lightbox": {
+        "label": "Xem ảnh mẫu hoa",
+        "gallery": "Bộ ảnh mẫu hoa",
+        "resultCaption": "Ảnh kết quả · {{code}}",
+        "mockupCaption": "Mockup nguồn · {{code}}"
+      }
+    },
+    "detail": {
+      "title": "Chi tiết thiệp AI",
+      "description": "Xem nội dung thiệp, thông tin thiết kế và các đơn hàng liên kết.",
+      "cardId": "Mã bản ghi",
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy thiệp hoặc thiệp chưa có ảnh đầu ra hợp lệ.",
+      "tab": {
+        "customer": "Khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thiết kế & file",
+        "orders": "Order liên kết"
+      },
+      "section": {
+        "result": "Ảnh kết quả thiệp",
+        "customer": "Thông tin khách hàng",
+        "message": "Nội dung thiệp",
+        "design": "Thông tin thiết kế và file",
+        "orders": "Order liên kết"
+      },
+      "field": {
+        "customerName": "Họ tên",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "sender": "Người gửi",
+        "recipient": "Người nhận",
+        "greeting": "Lời chúc",
+        "attachments": "Ảnh người dùng đính kèm",
+        "fileStatus": "Trạng thái file"
+      },
+      "fileStatus": {
+        "available": "Còn khả dụng",
+        "processing": "Đang xử lý",
+        "expired": "Không còn khả dụng"
+      },
+      "attachmentAlt": "Ảnh đính kèm {{index}}",
+      "openAttachment": "Mở ảnh đính kèm {{index}}",
+      "noAttachments": "Không có ảnh đính kèm",
+      "lightbox": {
+        "caption": "Mã thiệp: {{code}} · Ngày tạo: {{createdAt}}",
+        "previous": "Ảnh trước",
+        "next": "Ảnh tiếp theo",
+        "close": "Đóng",
+        "label": "Xem ảnh thiệp",
+        "gallery": "Bộ ảnh thiệp",
+        "position": "Ảnh {index} trên {total}",
+        "showCaptions": "Hiện chú thích",
+        "hideCaptions": "Ẩn chú thích",
+        "zoomIn": "Phóng to",
+        "zoomOut": "Thu nhỏ",
+        "enterFullscreen": "Mở toàn màn hình",
+        "exitFullscreen": "Thoát toàn màn hình"
+      },
+      "ordersDescription": "Mỗi Order giữ thông tin bill riêng tại trang Chi tiết Order.",
+      "noOrders": "Thiệp này chưa liên kết với Order nào.",
+      "order": {
+        "code": "Mã Order",
+        "status": "Trạng thái",
+        "createdAt": "Ngày tạo",
+        "open": "Mở chi tiết Order {{code}}"
+      }
+    },
+    "download": {
+      "action": "Tải ảnh thiệp xuống",
+      "failed": "Tải thiệp thất bại. Vui lòng thử lại"
+    }
+  },
   "navigation": {
     "products": {
       "title": "Sản phẩm",
@@ -105,7 +273,8 @@
     },
     "orders": {
       "title": "Đơn hàng",
-      "list": "Danh sách đơn hàng"
+      "list": "Đơn hàng Nhanh.vn",
+      "system": "Đơn hàng hệ thống"
     },
     "recruitment": {
       "title": "Tuyển dụng",
@@ -124,6 +293,21 @@
       "categories": "Danh mục",
       "add": "Viết bài"
     },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "Thiệp AI",
+      "flowerDesigns": "Mẫu hoa AI"
+    },
+    "templateManagement": {
+      "title": "Quản lý mẫu",
+      "cardTemplates": "Mẫu thiệp",
+      "flowerMockups": "Mockup mẫu hoa"
+    },
+    "cardConfiguration": {
+      "title": "Cấu hình thiệp",
+      "sizes": "Kích thước thiệp",
+      "handwritingSurcharge": "Phụ phí viết tay"
+    },
     "systemConfigs": "Cấu hình hệ thống"
   },
   "common": {
@@ -135,13 +319,20 @@
       "next": "Sau"
     },
     "ui": {
-      "selectOptions": "Chọn nhiều tùy chọn..."
+      "selectOptions": "Chọn nhiều tùy chọn...",
+      "selectPlaceholder": "Chọn...",
+      "selected": "đã chọn",
+      "optional": "không bắt buộc",
+      "search": "Tìm kiếm",
+      "loading": "Đang tải...",
+      "remove": "Xóa"
     },
     "validation": {
       "maxLength": "Tối đa {{max}} ký tự",
       "number": {
         "integer": "Phải là số nguyên",
-        "invalid": "Phải là số hợp lệ"
+        "invalid": "Phải là số hợp lệ",
+        "min": "Phải lớn hơn hoặc bằng {{min}}"
       },
       "url": {
         "invalid": "URL không hợp lệ"
@@ -169,8 +360,8 @@
     "dashboardComingSoon": "Tổng quan đơn hàng - Sắp ra mắt",
     "listComingSoon": "Danh sách đơn hàng - Sắp ra mắt",
     "list": {
-      "title": "Đơn hàng",
-      "description": "Xem và quản lý các đơn hàng Nhanh.vn đã đồng bộ vào Hoa Theo Mùa."
+      "title": "Đơn hàng Nhanh.vn",
+      "description": "Xem và quản lý các đơn hàng đồng bộ từ Nhanh.vn."
     },
     "action": {
       "actions": "Thao tác",
@@ -352,6 +543,14 @@
       "giaVon": "Giá vốn"
     },
     "detail": {
+      "tab": {
+        "overview": "Tổng quan",
+        "items": "Sản phẩm",
+        "shipping": "Vận chuyển",
+        "financial": "Tài chính",
+        "status": "Trạng thái",
+        "invoice": "Hóa đơn"
+      },
       "section": {
         "orderInfo": "Thông tin đơn hàng",
         "customer": "Khách hàng",
@@ -371,7 +570,14 @@
       "backToList": "Quay lại danh sách",
       "untitled": "Đơn chưa có mã",
       "itemCount": "Số mặt hàng",
-      "noItems": "Không có sản phẩm"
+      "noItems": "Không có sản phẩm",
+      "copied": "Đã sao chép",
+      "share": "Chia sẻ"
+    },
+    "status": {
+      "paid": "Đã thanh toán",
+      "pending": "Chờ thanh toán",
+      "cancelled": "Đã hủy"
     }
   },
   "products": {
@@ -381,12 +587,81 @@
     },
     "pinned": {
       "title": "Sản phẩm ghim",
-      "description": "Kéo để sắp xếp lại thứ tự sản phẩm nổi bật trên gian hàng.",
+      "description": "Thêm sản phẩm và kéo để sắp xếp thứ tự hiển thị trên gian hàng.",
       "empty": "Chưa có sản phẩm nào được ghim.",
+      "emptyDescription": "Thêm sản phẩm để chúng hiển thị nổi bật trên gian hàng.",
+      "count": "Đã ghim {{count}} sản phẩm",
+      "filteredCount": "Hiển thị {{count}}/{{total}}",
+      "loadFailed": "Không tải được danh sách sản phẩm ghim.",
+      "retry": "Thử lại",
+      "searchPlaceholder": "Tìm trong danh sách đã ghim...",
+      "searchEmpty": "Không có sản phẩm ghim nào khớp với \"{{query}}\".",
+      "clearSearch": "Xóa tìm kiếm",
+      "dragDisabledWhileSearching": "Xóa tìm kiếm để kéo sắp xếp. Bạn vẫn có thể dùng menu ⋮ để chuyển vị trí.",
+      "dragHint": "Kéo thẻ bằng tay cầm ⠿, hoặc chọn tay cầm rồi nhấn Space và dùng phím mũi tên.",
+      "dragHandle": "Kéo để sắp xếp",
+      "positionBadge": "#{{position}}",
       "categoryFilter": {
-        "label": "Danh mục",
-        "all": "Tất cả (toàn cục)",
-        "empty": "Chưa có danh mục nào."
+        "label": "Phạm vi ghim",
+        "all": "Trang chủ (toàn cục)",
+        "empty": "Chưa có danh mục nào.",
+        "hintGlobal": "Đây là danh sách ghim của trang chủ. Chọn một danh mục để xem danh sách ghim riêng của danh mục đó.",
+        "hintCategory": "Danh sách ghim riêng của danh mục \"{{name}}\"."
+      },
+      "view": {
+        "grid": "Dạng lưới",
+        "list": "Dạng danh sách",
+        "label": "Kiểu hiển thị"
+      },
+      "fold": {
+        "label": "Giới hạn hiển thị trên gian hàng - {{count}} sản phẩm đầu tiên",
+        "below": "Sản phẩm bên dưới đường này sẽ không hiển thị trên gian hàng."
+      },
+      "card": {
+        "actions": "Thao tác với sản phẩm ghim",
+        "openProduct": "Mở trang sản phẩm"
+      },
+      "move": {
+        "top": "Đưa lên đầu",
+        "bottom": "Đưa xuống cuối",
+        "up": "Lên một vị trí",
+        "down": "Xuống một vị trí",
+        "toPosition": "Chuyển đến vị trí...",
+        "positionLabel": "Vị trí (1–{{max}})",
+        "apply": "Chuyển",
+        "invalid": "Nhập số từ 1 đến {{max}}."
+      },
+      "reorder": {
+        "failed": "Không lưu được thứ tự mới. Đã khôi phục thứ tự cũ."
+      },
+      "unpin": {
+        "action": "Bỏ ghim",
+        "success": "Đã bỏ ghim \"{{name}}\".",
+        "undo": "Hoàn tác",
+        "undone": "Đã ghim lại \"{{name}}\" về vị trí cũ.",
+        "undoFailed": "Không hoàn tác được. Vui lòng thử lại."
+      },
+      "add": {
+        "trigger": "Thêm sản phẩm",
+        "title": "Thêm sản phẩm ghim",
+        "descriptionGlobal": "Chọn sản phẩm để ghim lên trang chủ. Sản phẩm mới được thêm vào cuối danh sách.",
+        "descriptionCategory": "Chọn sản phẩm để ghim trong danh mục \"{{name}}\". Sản phẩm mới được thêm vào cuối danh sách.",
+        "searchPlaceholder": "Tìm theo tên hoặc mã sản phẩm...",
+        "sourceCategory": "Trong danh mục này",
+        "sourceAll": "Tất cả sản phẩm",
+        "sourceAllHint": "Sản phẩm chưa thuộc danh mục sẽ được thêm vào \"{{name}}\" trước khi ghim.",
+        "alreadyPinned": "Đã ghim",
+        "notInCategory": "Chưa thuộc danh mục",
+        "selectedCount": "Đã chọn {{count}}",
+        "clearSelection": "Bỏ chọn tất cả",
+        "noProducts": "Không tìm thấy sản phẩm nào.",
+        "endOfList": "Đã hiển thị toàn bộ {{count}} sản phẩm.",
+        "submit": "Ghim {{count}} sản phẩm",
+        "submitEmpty": "Ghim sản phẩm",
+        "success": "Đã ghim {{count}} sản phẩm.",
+        "partial": "Đã ghim {{succeeded}}/{{total}} sản phẩm, {{failed}} sản phẩm lỗi.",
+        "membershipFailed": "Không thêm được sản phẩm vào danh mục. Hãy gán danh mục cho sản phẩm rồi ghim lại.",
+        "limitReached": "Chỉ chọn tối đa {{count}} sản phẩm mỗi lần."
       }
     },
     "pinDialog": {
@@ -398,7 +673,10 @@
       "categoriesLabel": "Danh mục sản phẩm",
       "noCategories": "Sản phẩm chưa thuộc danh mục nào.",
       "apply": "Áp dụng",
-      "cancel": "Hủy"
+      "cancel": "Hủy",
+      "addCategory": "Ghim vào danh mục khác",
+      "addCategoryHint": "Chọn một danh mục chưa có sản phẩm này. Sản phẩm sẽ được thêm vào danh mục trước khi ghim.",
+      "willJoinCategory": "Sẽ thêm vào danh mục"
     },
     "common": {
       "noData": "Không có",
@@ -411,10 +689,19 @@
       "pin": "Ghim sản phẩm",
       "unpin": "Bỏ ghim sản phẩm"
     },
+    "filter": {
+      "pinned": "Đã ghim",
+      "notPinned": "Chưa ghim",
+      "product": "Sản phẩm",
+      "combo": "Combo",
+      "material": "Thành phần"
+    },
     "column": {
       "selectAll": "Chọn tất cả sản phẩm",
       "selectRow": "Chọn sản phẩm",
       "pin": "Ghim",
+      "isPinned": "Trạng thái ghim",
+      "saleStatus": "Trạng thái mở bán",
       "nhanhProductId": "Mã Nhanh.vn",
       "image": "Ảnh",
       "product": "Sản phẩm",
@@ -484,18 +771,126 @@
       "linkCopied": "Đã sao chép liên kết",
       "suppliedBy": "Nhà cung cấp",
       "totalUnits": "tổng số lượng",
+      "parent": {
+        "title": "Đây là một phiên bản của sản phẩm khác",
+        "description": "Thuộc sản phẩm “{{name}}”. Mở sản phẩm cha để xem tất cả phiên bản.",
+        "view": "Xem sản phẩm cha"
+      },
+      "categories": {
+        "title": "Danh mục",
+        "description": "Chọn các danh mục mà sản phẩm này thuộc về.",
+        "placeholder": "Chọn danh mục",
+        "save": "Lưu danh mục",
+        "updated": "Đã cập nhật danh mục sản phẩm"
+      },
       "tab": {
         "specifications": "Thông số",
         "pricing": "Giá",
-        "inventory": "Tồn kho"
+        "inventory": "Tồn kho",
+        "overview": "Tổng quan",
+        "quantity": "Định lượng"
       },
       "section": {
+        "basicInfo": "Thông tin cơ bản",
+        "images": "Ảnh sản phẩm",
         "identity": "Định danh",
         "classification": "Phân loại",
         "attributes": "Thuộc tính",
         "pricing": "Giá",
         "inventory": "Tồn kho",
         "meta": "Khác"
+      },
+      "sectionDesc": {
+        "basicInfo": "Thông tin và mã định danh cơ bản của sản phẩm.",
+        "images": "Ảnh đại diện và ảnh phụ của sản phẩm.",
+        "identity": "Mã sản phẩm, mã vạch và tham chiếu sản phẩm cha.",
+        "classification": "Danh mục, thương hiệu và nhãn phân loại.",
+        "attributes": "Tùy chọn biến thể và kích thước vật lý.",
+        "pricing": "Giá bán, giá nhập và giá sỉ.",
+        "inventory": "Số lượng tồn theo kho và trạng thái.",
+        "meta": "Ngày tạo và thứ tự hiển thị trên website.",
+        "variants": "Các sản phẩm con thuộc sản phẩm này."
+      },
+      "information": "Thông tin sản phẩm",
+      "table": {
+        "field": "Trường",
+        "value": "Giá trị"
+      },
+      "gallery": {
+        "cover": "Ảnh đại diện",
+        "previous": "Ảnh trước",
+        "next": "Ảnh tiếp theo"
+      },
+      "variants": {
+        "title": "Biến thể",
+        "options": "Tùy chọn"
+      },
+      "comboSpecification": {
+        "title": "Định lượng combo",
+        "description": "Các thành phần và số lượng cần thiết để tạo một combo.",
+        "core": "Thành phần Core",
+        "coreDescription": "Các thành phần chính của combo.",
+        "support": "Thành phần Support",
+        "supportDescription": "Các thành phần hỗ trợ hoặc phụ kiện của combo.",
+        "material": "Thành phần",
+        "quantityPerCombo": "Số lượng / combo",
+        "baseQuantity": "Định lượng gốc",
+        "actualQuantity": "Định lượng thực tế",
+        "role": "Vai trò",
+        "factor": "Chỉ số kích thước",
+        "factorHint": "Chỉ số phải lớn hơn 0",
+        "quantityHint": "Định lượng phải là số lớn hơn 0",
+        "factorUnconfigured": "Chưa cấu hình kích thước",
+        "factorPlaceholder": "Chưa cấu hình",
+        "unconfigured": "Chưa cấu hình",
+        "publicationStatus": "Trạng thái",
+        "published": "Mở bán",
+        "unpublished": "Chưa mở bán",
+        "publishSuccess": "Đã mở bán combo",
+        "unpublishSuccess": "Đã ngừng bán combo",
+        "saveFactor": "Lưu chỉ số",
+        "updatingFactor": "Đang cập nhật...",
+        "updateFactorSuccess": "Cập nhật chỉ số kích thước thành công",
+        "availableQuantity": "Có thể bán",
+        "editButton": "Chỉnh sửa",
+        "saveChanges": "Lưu thay đổi",
+        "unit": "Đơn vị",
+        "availableForSale": "Có thể bán",
+        "remainingComboQuantity": "Số lượng combo còn lại",
+        "maxComboPossible": "Combo tối đa",
+        "unnamedMaterial": "Thành phần chưa đặt tên",
+        "addButton": "Thêm thành phần",
+        "addRecipe": "Thêm công thức",
+        "addTitle": "Thêm thành phần vào công thức",
+        "addDescription": "Chọn sản phẩm vật liệu, nhập định lượng và phân loại Core hoặc Support.",
+        "availableMaterials": "Danh sách thành phần",
+        "selectedMaterials": "Thành phần đã chọn",
+        "materialLimitWarning": "Combo đã chạm ngưỡng {{count}} thành phần.",
+        "noSelectedMaterials": "Chưa chọn thành phần nào",
+        "removeMaterial": "Bỏ thành phần",
+        "searchMaterial": "Tìm theo tên hoặc mã vật liệu...",
+        "materialTypeFilter": "Lọc theo loại vật liệu",
+        "materialTypePlaceholder": "Loại vật liệu",
+        "allMaterialTypes": "Tất cả",
+        "materialProductLabel": "Thành phần",
+        "accessoryProductLabel": "Phụ liệu",
+        "noMaterials": "Không tìm thấy vật liệu phù hợp",
+        "noRecipe": "Chưa có công thức, vui lòng thêm công thức",
+        "stock": "Tồn kho",
+        "save": "Lưu công thức",
+        "saveSuccess": "Đã lưu công thức combo thành công",
+        "addSuccess": "Đã thêm thành phần vào công thức combo thành công",
+        "publicationConflictTitle": "Combo đang được mở bán",
+        "publicationConflictFallback": "Combo đã được mở bán bởi một quản trị viên khác.",
+        "continueAddingQuestion": "Bạn có muốn tiếp tục thêm công thức không? Combo sẽ được chuyển sang trạng thái Chưa mở bán.",
+        "continueAdding": "Tiếp tục thêm công thức",
+        "selectAll": "Chọn tất cả thành phần",
+        "selectMaterial": "Chọn thành phần {{name}}",
+        "deleteButton": "Xóa vật liệu",
+        "deleteTitle": "Xóa vật liệu khỏi công thức?",
+        "deleteDescription": "Bạn có chắc muốn xóa {{count}} vật liệu đã chọn khỏi công thức combo không?",
+        "deleteConfirm": "Xóa vật liệu",
+        "deleteSuccess": "Đã xóa vật liệu khỏi công thức combo"
       }
     },
     "field": {
@@ -953,6 +1348,7 @@
       "createTitle": "Thêm trường",
       "editTitle": "Chỉnh sửa trường",
       "delete": "Xóa",
+      "deleteDisabledTooltip": "Chức năng xóa cấu hình tạm thời bị vô hiệu hóa vì lý do an toàn",
       "keyField": "Khóa",
       "keyPlaceholder": "vd. general.api_key",
       "groupField": "Nhóm",
@@ -962,10 +1358,11 @@
       "inputTypeField": "Loại đầu vào",
       "defaultValueField": "Giá trị mặc định",
       "defaultValuesField": "Giá trị mặc định",
+      "minutesUnit": "phút",
       "keyLockedHint": "Khóa cấu hình này được khóa cố định",
       "kindLockedHint": "Loại cấu hình này được khóa cố định",
       "revealSecret": "Hiển thị bí mật",
-      "secretHint": "Giá trị hiện tại đang được ẩn. Nhấn hiển thị để chỉnh sửa.",
+      "secretHint": "Nhấn hiển thị để chỉnh sửa.",
       "optionsLockedHint": "{{count}} lựa chọn được quản lý bởi API",
       "descriptionField": "Mô tả",
       "descriptionPlaceholder": "Mô tả tùy chọn",
@@ -999,6 +1396,28 @@
         "integer": "Số nguyên"
       }
     },
+    "signatureLanding": {
+      "title": "Landing page câu chuyện",
+      "subtitle": "{{products}} sản phẩm · {{pages}} landing page",
+      "empty": "Chưa có landing page nào. Thêm một landing page rồi gán sản phẩm vào.",
+      "addGroup": "Thêm landing page",
+      "removeGroup": "Xóa landing page",
+      "urlPlaceholder": "https://hoatheomua.net/cau-chuyen-...",
+      "openUrl": "Mở liên kết",
+      "addProduct": "Thêm sản phẩm",
+      "removeProduct": "Bỏ sản phẩm khỏi landing page",
+      "searchPlaceholder": "Tìm theo tên hoặc mã sản phẩm",
+      "noResults": "Không tìm thấy sản phẩm",
+      "moreResults": "Còn {{count}} sản phẩm khác - nhập từ khóa để lọc",
+      "assignedElsewhere": "Đang thuộc landing page khác",
+      "unknownProduct": "Sản phẩm không còn trong danh mục",
+      "missingUrl": "Chưa có đường dẫn - nhóm này sẽ không được lưu",
+      "missingProducts": "Chưa gán sản phẩm - nhóm này sẽ không được lưu",
+      "rawMode": "Chỉnh JSON",
+      "visualMode": "Chỉnh trực quan",
+      "rawHint": "Dạng { \"id sản phẩm\": \"đường dẫn landing page\" }",
+      "invalidJson": "JSON không hợp lệ - thay đổi chưa được áp dụng"
+    },
     "breadcrumb": "Quản lý cấu hình",
     "fallbackTitle": "Cấu hình",
     "country": {
@@ -1029,9 +1448,11 @@
       "revealing": "Đang tải...",
       "required": "Bắt buộc",
       "noFile": "Chưa có tệp",
+      "minutesUnit": "phút",
       "multiSelectPlaceholder": "Chọn các lựa chọn...",
       "public": "Công khai",
       "publicTooltip": "Cho phép client truy cập config này",
+      "secretLockedTooltip": "Hiển thị bí mật trước khi thay đổi",
       "complexValue": "Giá trị phức hợp",
       "openEditor": "Mở trình chỉnh sửa",
       "hints": {
@@ -1066,6 +1487,51 @@
     "customPalette": {
       "title": "Bảng tuỳ chỉnh"
     },
+    "checkoutMethodsPalette": {
+      "title": "Thanh toán & giao hàng",
+      "payment": "Phương thức thanh toán",
+      "delivery": "Phương thức giao hàng"
+    },
+    "checkoutMethodsDialog": {
+      "description": "Chọn phương thức khách hàng có thể sử dụng, thứ tự hiển thị, lựa chọn mặc định và nội dung tại trang thanh toán.",
+      "registryHint": "Phương thức và mã kỹ thuật được quản lý trong code. Trình chỉnh sửa này chỉ thay đổi trạng thái, thứ tự, lựa chọn mặc định và nội dung hiển thị cho khách hàng.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelHelp": "Dùng để nhận biết cấu hình này trong danh sách quản trị.",
+      "summary": "Thiết lập hiện tại",
+      "enabledCount": "Đang bật {{enabled}}/{{total}}",
+      "defaultSummary": "Mặc định: {{method}}",
+      "methodsTitle": "Phương thức được hỗ trợ",
+      "methodsSubtitle": "Mở từng dòng để tuỳ chỉnh nội dung hiển thị tại checkout.",
+      "enabled": "Bật",
+      "default": "Mặc định",
+      "defaultHelp": "Khách hàng sẽ thấy phương thức này được chọn trước.",
+      "defaultSelected": "Đang chọn",
+      "makeDefault": "Đặt mặc định",
+      "label": "Tên hiển thị",
+      "methodDescription": "Mô tả",
+      "moveUp": "Di chuyển lên",
+      "moveDown": "Di chuyển xuống",
+      "status": {
+        "enabled": "Đang hiện",
+        "disabled": "Đang ẩn"
+      },
+      "errors": {
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu."
+      },
+      "gateway": "Cổng dịch vụ",
+      "payment": {
+        "title": "Phương thức thanh toán",
+        "configLabel": "Phương thức thanh toán tại checkout",
+        "gatewayField": "paymentGateway",
+        "gatewayHelp": "Được gửi khi tạo đơn dưới dạng paymentGateway, kèm tên gateway tương ứng."
+      },
+      "delivery": {
+        "title": "Phương thức giao hàng",
+        "configLabel": "Phương thức giao hàng tại checkout",
+        "gatewayField": "shippingGateway",
+        "gatewayHelp": "Được gửi khi tạo đơn dưới dạng shippingGateway. Tham số hãng vận chuyển do backend cấu hình."
+      }
+    },
     "ahamovePalette": {
       "title": "Yêu cầu giao hàng Ahamove",
       "empty": "Chưa có yêu cầu giao hàng khả dụng"
@@ -1093,6 +1559,11 @@
       "openEditor": "Mở trình soạn thảo",
       "emptyHint": "Chưa có banner nào - bấm để bắt đầu",
       "existsHint": "Đã thiết lập - bấm để xem & chỉnh sửa"
+    },
+    "promotionPopupPalette": {
+      "title": "Popup khuyến mãi",
+      "emptyHint": "Chưa thiết lập - bấm để tạo",
+      "existsHint": "Đã thiết lập - bấm để chỉnh sửa"
     },
     "b2bServicesPalette": {
       "title": "Dịch vụ B2B",
@@ -1312,7 +1783,7 @@
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá banner",
         "image": "Ảnh banner",
-        "imageHelp": "Khuyến nghị tỉ lệ 16:9 hoặc theo vị trí hiển thị.",
+        "imageHelp": "Ảnh ngang, khuyến nghị tỉ lệ {{ratio}} (vd {{example}}px) theo vị trí hiển thị.",
         "uploadImage": "Tải ảnh lên",
         "replaceImage": "Đổi ảnh",
         "slotField": "Vị trí (slot)",
@@ -1329,6 +1800,88 @@
         "slotRequired": "Banner #{{index}}: vui lòng nhập vị trí (slot).",
         "imageRequired": "Banner #{{index}}: vui lòng chọn ảnh.",
         "hrefRequired": "Banner #{{index}}: vui lòng nhập đường dẫn khi bấm."
+      }
+    },
+    "promotionPopupDialog": {
+      "title": "Popup khuyến mãi",
+      "subtitle": "Hiển thị đè lên các trang công khai ngay sau khi trang tải xong. Nhiều chiến dịch đang chạy sẽ trở thành slideshow cho khách bấm qua lại.",
+      "configLabel": "Popup khuyến mãi",
+      "publicWarning": "Cấu hình này công khai: ảnh và đường dẫn có thể bị xem trước cả khi chiến dịch bắt đầu. Đừng đưa thông tin chưa được phép công bố vào đây.",
+      "locale": {
+        "vi": "Tiếng Việt",
+        "en": "English"
+      },
+      "section": {
+        "title": "Cấu hình chung",
+        "subtitle": "Tắt để ẩn toàn bộ popup mà không cần xoá chiến dịch.",
+        "enabled": "Hiển thị",
+        "frequencyField": "Tần suất hiện lại",
+        "frequency": {
+          "once-per-session": "Một lần mỗi lượt truy cập",
+          "every-load": "Mỗi lần tải trang"
+        },
+        "frequencyHelp": {
+          "once-per-session": "Chỉ hiện một lần cho mỗi tab. Tải lại trang sẽ không hiện nữa; đóng tab rồi quay lại thì có.",
+          "every-load": "Hiện lại mỗi lần tải trang và mỗi tab mới. Khá làm phiền - chỉ nên dùng cho chiến dịch ngắn hoặc để tự kiểm tra, sau đó đổi lại."
+        },
+        "pagesField": "Hiển thị ở trang nào",
+        "pagesHelp": "Áp dụng cho mọi chiến dịch không tự chọn phạm vi riêng. Mẫu loại trừ (!) luôn được ưu tiên. Để trống nghĩa là hiện ở mọi trang."
+      },
+      "items": {
+        "title": "Danh sách chiến dịch",
+        "subtitle": "{{count}} chiến dịch, {{active}} đang chạy hôm nay. Đổi thứ tự bằng nút mũi tên.",
+        "add": "Thêm chiến dịch",
+        "empty": "Chưa có chiến dịch nào. Bấm \"Thêm chiến dịch\" để bắt đầu."
+      },
+      "activeWarning": "Đang có {{count}} chiến dịch chạy cùng lúc. Web chỉ hiển thị {{max}} chiến dịch đầu tiên.",
+      "item": {
+        "untitled": "Chiến dịch #{{index}} (chưa có mô tả ảnh)",
+        "noHref": "(không có đường dẫn - ảnh không bấm được)",
+        "hasErrors": "Thiếu thông tin",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống",
+        "remove": "Xoá chiến dịch",
+        "image": "Ảnh chiến dịch",
+        "imageHelp": "Khuyến nghị ảnh dọc tỉ lệ 4:5 (vd 1000x1250px), tối đa 5MB.",
+        "uploadImage": "Tải ảnh lên",
+        "replaceImage": "Đổi ảnh",
+        "startDate": "Ngày bắt đầu",
+        "endDate": "Ngày kết thúc",
+        "datePlaceholder": "Chọn ngày",
+        "datesHelp": "Để trống nếu không giới hạn. Ngày kết thúc tính cả ngày đó. Giờ theo múi giờ Việt Nam.",
+        "hrefField": "Đường dẫn khi bấm vào",
+        "hrefPlaceholder": "/products/... hoặc https://...",
+        "hrefHelp": "Đường dẫn nội bộ (/products/...) hoặc URL đầy đủ (https://...). Để trống nếu chỉ muốn hiện ảnh thông báo.",
+        "openInNewTabToggle": "Mở link ở tab mới",
+        "altField": "Mô tả ảnh (alt)",
+        "altPlaceholder": "vd: Ưu đãi Tết 2026 - giảm 20%",
+        "altHelp": "Bắt buộc. Hiển thị khi ảnh lỗi, phục vụ trợ năng, và dùng làm tên chiến dịch trong danh sách này.",
+        "status": {
+          "active": "Đang chạy",
+          "scheduled": "Chờ đến ngày",
+          "expired": "Đã kết thúc",
+          "disabled": "Đang tắt",
+          "incomplete": "Ảnh hoặc ngày chưa hợp lệ"
+        },
+        "pagesField": "Chiến dịch này hiện ở trang nào",
+        "pagesHelp": "Để trống để dùng theo phạm vi chung ở trên. Chỉ cần thêm một mẫu là chiến dịch này sẽ dùng danh sách riêng, không cộng dồn."
+      },
+      "errors": {
+        "imageRequired": "Chiến dịch #{{index}}: vui lòng chọn ảnh.",
+        "altRequired": "Chiến dịch #{{index}}: vui lòng nhập mô tả ảnh tiếng Việt.",
+        "hrefInvalid": "Chiến dịch #{{index}}: đường dẫn không hợp lệ. Chỉ chấp nhận /duong-dan hoặc https://...",
+        "datesInvalid": "Chiến dịch #{{index}}: ngày kết thúc phải sau ngày bắt đầu.",
+        "imageTooLarge": "Ảnh vượt quá {{max}}MB. Vui lòng chọn ảnh nhỏ hơn.",
+        "pagePatternInvalid": "Mẫu trang \"{{pattern}}\" trong phạm vi chung không hợp lệ.",
+        "itemPagePatternInvalid": "Chiến dịch #{{index}}: mẫu trang \"{{pattern}}\" không hợp lệ."
+      },
+      "pages": {
+        "placeholder": "Nhập mẫu rồi nhấn Enter",
+        "remove": "Xoá {{pattern}}",
+        "invalid": "Dùng *, /duong-dan, /duong-dan/* cho các trang bên trong, hoặc !/duong-dan để loại trừ.",
+        "inherits": "Theo phạm vi chung: {{patterns}}",
+        "everywhere": "mọi trang",
+        "emptyMeansEverywhere": "Mọi trang. Thêm mẫu để giới hạn lại."
       }
     },
     "b2bServicesDialog": {
@@ -1581,7 +2134,9 @@
       "about": "Giới thiệu",
       "news": "Tin tức",
       "recruitment": "Tuyển dụng",
-      "contact": "Liên hệ"
+      "contact": "Liên hệ",
+      "mainline": "Các dòng sản phẩm chính",
+      "featured": "Sản phẩm nổi bật"
     },
     "status": {
       "active": "Đang hiển thị",
@@ -1596,7 +2151,11 @@
       "manageProducts": "Quản lý sản phẩm",
       "update": "Cập nhật",
       "delete": "Xóa",
-      "reorder": "Kéo để sắp xếp"
+      "reorder": "Kéo để sắp xếp",
+      "copyId": "Sao chép ID"
+    },
+    "copyId": {
+      "success": "Đã sao chép ID danh mục"
     },
     "column": {
       "selectAll": "Chọn tất cả danh mục",
@@ -1608,6 +2167,10 @@
       "page": "Trang hiển thị",
       "window": "Thời gian áp dụng",
       "status": "Trạng thái",
+      "filters": "Bộ lọc",
+      "grid": "Lưới",
+      "gridRow": "Dòng",
+      "gridCol": "Cột",
       "productCount": "Số sản phẩm",
       "subcategoryCount": "({{count}} danh mục con)",
       "noChildren": "Không có danh mục con"
@@ -1649,6 +2212,8 @@
       "filterByNameHint": "Hiển thị ô tìm kiếm theo tên trên trang danh mục này.",
       "filterByPriceLabel": "Lọc theo giá",
       "filterByPriceHint": "Hiển thị ô lọc khoảng giá trên trang danh mục này.",
+      "rowsLabel": "Số hàng",
+      "colsLabel": "Số cột",
       "isFilterableLabel": "Hiển thị làm bộ lọc",
       "isFilterableHint": "Đưa danh mục con này vào danh sách bộ lọc hiển thị cho khách hàng.",
       "activeLabel": "Hiển thị danh mục",
@@ -1674,6 +2239,160 @@
       "pageInfo": "Trang {{page}}/{{pageCount}}",
       "submit": "Lưu thay đổi",
       "success": "Cập nhật sản phẩm cho danh mục thành công."
+    }
+  },
+  "systemOrders": {
+    "list": {
+      "title": "Đơn hàng hệ thống",
+      "description": "Xem và quản lý các đơn hàng được tạo trên hệ thống."
+    },
+    "column": {
+      "selectAll": "Chọn tất cả đơn hàng",
+      "selectRow": "Chọn đơn hàng",
+      "customer": "Khách hàng",
+      "createdAt": "Ngày tạo",
+      "address": "Địa chỉ giao hàng",
+      "status": "Trạng thái",
+      "amount": "Tổng tiền",
+      "tracking": "Mã vận đơn",
+      "shippingFee": "Phí vận chuyển",
+      "productFee": "Tiền hàng",
+      "invoice": "Hóa đơn",
+      "remarks": "Ghi chú"
+    },
+    "filter": {
+      "searchPlaceholder": "Tìm theo tên khách hàng"
+    },
+    "action": {
+      "edit": "Chỉnh sửa đơn hàng",
+      "viewDetails": "Xem chi tiết",
+      "openMenu": "Mở menu thao tác đơn hàng",
+      "actions": "Thao tác",
+      "openPayment": "Mở trang thanh toán",
+      "openQr": "Mở mã QR",
+      "copyTracking": "Sao chép mã vận đơn"
+    },
+    "copyTracking": {
+      "success": "Đã sao chép mã vận đơn"
+    },
+    "update": {
+      "success": "Đã cập nhật đơn hàng"
+    },
+    "edit": {
+      "title": "Chỉnh sửa đơn hàng",
+      "description": "Cập nhật mã vận đơn, liên kết Ahamove và phí vận chuyển.",
+      "trackingNumber": "Mã vận đơn",
+      "trackingNumberPlaceholder": "ví dụ: TRK123456",
+      "ahaMoveTrackingUrl": "Liên kết theo dõi Ahamove",
+      "ahaMoveTrackingUrlPlaceholder": "https://...",
+      "shippingFee": "Phí vận chuyển",
+      "shippingFeePlaceholder": "ví dụ: 30000",
+      "invalidUrl": "Nhập URL hợp lệ hoặc để trống",
+      "invalidFee": "Nhập số tiền hợp lệ (từ 0 trở lên)",
+      "save": "Lưu thay đổi",
+      "cancel": "Hủy"
+    },
+    "common": {
+      "noData": "Không có dữ liệu",
+      "noDataShort": "-",
+      "yes": "Có",
+      "no": "Không"
+    },
+    "invoice": {
+      "export": "Xuất hóa đơn"
+    },
+    "paymentMethod": {
+      "1": "VA (BaoKim)",
+      "6": "VNPayQR (SePay)"
+    },
+    "detail": {
+      "tab": {
+        "overview": "Tổng quan",
+        "items": "Sản phẩm",
+        "shipping": "Vận chuyển",
+        "payment": "Thanh toán",
+        "invoice": "Hóa đơn"
+      },
+      "section": {
+        "order": "Thông tin đơn hàng",
+        "customer": "Khách hàng",
+        "delivery": "Vị trí giao hàng",
+        "fees": "Chi tiết chi phí",
+        "items": "Sản phẩm",
+        "shipping": "Vận chuyển",
+        "payment": "Thanh toán",
+        "transaction": "Giao dịch",
+        "invoice": "Hóa đơn"
+      },
+      "sectionDesc": {
+        "order": "Mã đơn, trạng thái và ghi chú được lưu khi đặt hàng.",
+        "customer": "Người đặt hàng và người nhận hàng.",
+        "delivery": "Địa điểm giao hàng của đơn.",
+        "fees": "Cách tổng tiền của đơn được cấu thành.",
+        "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
+        "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
+        "payment": "Phương thức và liên kết thanh toán của đơn.",
+        "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
+        "invoice": "Thông tin yêu cầu xuất hóa đơn và người nhận hóa đơn."
+      },
+      "notFound": "Không tìm thấy đơn hàng",
+      "notFoundDescription": "Đơn hàng có thể đã bị xóa hoặc đường dẫn không đúng.",
+      "backToList": "Quay lại danh sách đơn hàng",
+      "untitled": "Đơn hàng chưa có tên",
+      "copyOrderId": "Sao chép mã đơn hàng",
+      "copied": "Đã sao chép",
+      "share": "Chia sẻ",
+      "itemCount": "Số sản phẩm",
+      "orderId": "Mã đơn hàng",
+      "paymentMethod": "Phương thức thanh toán",
+      "paymentUrl": "Liên kết thanh toán",
+      "sepayUrl": "Liên kết SePay",
+      "remark": "Ghi chú",
+      "orderTime": "Thời gian đặt",
+      "tags": "Thẻ",
+      "customerName": "Tên khách hàng",
+      "customerPhone": "SĐT khách hàng",
+      "receiverName": "Tên người nhận",
+      "receiverPhone": "SĐT người nhận",
+      "userId": "Mã người dùng",
+      "ward": "Mã phường/xã",
+      "city": "Mã tỉnh/thành",
+      "ahamoveOrderId": "Mã đơn Ahamove",
+      "transactionGateway": "Cổng thanh toán",
+      "transactionCode": "Mã giao dịch",
+      "transactionAmount": "Số tiền chuyển",
+      "transactionDate": "Thời gian giao dịch",
+      "noTransaction": "Đơn hàng chưa có giao dịch nào",
+      "invoiceType": "Loại hóa đơn",
+      "identityNumber": "Số CCCD",
+      "receiptAddress": "Địa chỉ nhận hóa đơn",
+      "materials": "Nguyên liệu",
+      "materialType": "Loại",
+      "showMaterials": "Xem nguyên liệu",
+      "hideMaterials": "Ẩn nguyên liệu",
+      "noItems": "Đơn hàng này không có sản phẩm",
+      "itemName": "Sản phẩm",
+      "itemParent": "Sản phẩm cha",
+      "itemWeight": "Khối lượng",
+      "itemQuantity": "Số lượng",
+      "itemPrice": "Đơn giá",
+      "itemTotal": "Thành tiền",
+      "trackNumber": "Mã vận đơn",
+      "ahamoveTracking": "Theo dõi Ahamove",
+      "openLink": "Mở liên kết",
+      "address": "Địa chỉ",
+      "shortAddress": "Địa chỉ rút gọn",
+      "deliverTo": "Giao đến",
+      "copyAddress": "Sao chép địa chỉ",
+      "exportInvoice": "Xuất hóa đơn",
+      "taxCode": "Mã số thuế",
+      "receiptName": "Người nhận hóa đơn",
+      "receiptPhone": "SĐT nhận hóa đơn",
+      "receiptEmail": "Email nhận hóa đơn",
+      "vat": "VAT",
+      "mapTitle": "Bản đồ vị trí giao hàng",
+      "noLocation": "Không có vị trí giao hàng",
+      "openInMaps": "Mở Google Maps"
     }
   }
 }

@@ -33,10 +33,10 @@ interface CategoryProductFormDialogProps {
   open: boolean
   methods: UseFormReturn<CategoryProductFormValues>
   parentCategories: CategoryTreeLikeNode[]
-  /** On edit, the category being edited and all its descendants — a category can't parent itself or a descendant. */
+  /** On edit, the category being edited and all its descendants - a category can't parent itself or a descendant. */
   excludeParentIds?: Set<string>
   isSubmitting: boolean
-  /** True while the category detail is being fetched for edit — renders a skeleton instead of stale/default field values. */
+  /** True while the category detail is being fetched for edit - renders a skeleton instead of stale/default field values. */
   isLoading?: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: SubmitHandler<CategoryProductFormValues>
@@ -100,9 +100,11 @@ export default function CategoryProductFormDialog({
   const isCreateMode = mode === 'create'
   const type = methods.watch('type')
   const isCampaign = type === CategoryProductType.Campaign
-  // A category with a parent is a child (renders `isFilterable`); a top-level one is a parent
-  // (renders the name/price filter toggles). §filter metadata.
+
   const isChild = !!methods.watch('parentId')
+  const { errors } = methods.formState
+  const isViTabInvalid = !!(errors.name || errors.description)
+  const isEnTabInvalid = !!(errors.name_En || errors.description_En)
 
   const pageOptions = useMemo(
     () => Object.values(CategoryProductPage).map((page) => ({ value: page, label: t(CategoryProductPageLabel[page]) })),
@@ -127,8 +129,20 @@ export default function CategoryProductFormDialog({
               <FieldGroup className='gap-3'>
                 <Tabs defaultValue='vi' className='gap-3'>
                   <TabsList className='w-full'>
-                    <TabsTrigger value='vi'>{t(`${CATEGORY_FORM_PREFIX}.langVi`)}</TabsTrigger>
-                    <TabsTrigger value='en'>{t(`${CATEGORY_FORM_PREFIX}.langEn`)}</TabsTrigger>
+                    <TabsTrigger
+                      value='vi'
+                      data-invalid={isViTabInvalid}
+                      className='data-[invalid=true]:text-destructive data-[invalid=true]:bg-destructive/10'
+                    >
+                      {t(`${CATEGORY_FORM_PREFIX}.langVi`)}
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='en'
+                      data-invalid={isEnTabInvalid}
+                      className='data-[invalid=true]:text-destructive data-[invalid=true]:bg-destructive/10'
+                    >
+                      {t(`${CATEGORY_FORM_PREFIX}.langEn`)}
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value='vi' className='flex flex-col gap-3'>
@@ -162,7 +176,6 @@ export default function CategoryProductFormDialog({
                         <Field data-invalid={fieldState.invalid} className='gap-1'>
                           <FieldLabel htmlFor={field.name} className='gap-0.5'>
                             {t(`${CATEGORY_FORM_PREFIX}.descriptionLabel`)}
-                            <span className='font-semibold text-destructive'>*</span>
                           </FieldLabel>
                           <Textarea
                             {...field}
@@ -211,7 +224,6 @@ export default function CategoryProductFormDialog({
                         <Field data-invalid={fieldState.invalid} className='gap-1'>
                           <FieldLabel htmlFor={field.name} className='gap-0.5'>
                             {t(`${CATEGORY_FORM_PREFIX}.descriptionEnLabel`)}
-                            <span className='font-semibold text-destructive'>*</span>
                           </FieldLabel>
                           <Textarea
                             {...field}
@@ -322,6 +334,7 @@ export default function CategoryProductFormDialog({
                     placeholder={`${CATEGORY_FORM_PREFIX}.pagesPlaceholder` as I18nKey}
                     searchPlaceholder={`${CATEGORY_FORM_PREFIX}.pagesSearchPlaceholder` as I18nKey}
                     emptyMessage={`${CATEGORY_FORM_PREFIX}.pagesEmpty` as I18nKey}
+                    modal
                   />
                 )}
 
@@ -380,6 +393,60 @@ export default function CategoryProductFormDialog({
                     />
                   </>
                 )}
+
+                {/* Grid layout applies to both node kinds: a parent lays out its own section, a child lays
+                    out the grid shown when that child is picked as a filter. §filter metadata. */}
+                <div className='grid grid-cols-2 gap-3'>
+                  <Controller
+                    name='metaData.rows'
+                    control={methods.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid} className='gap-1'>
+                        <FieldLabel htmlFor={field.name}>{t(`${CATEGORY_FORM_PREFIX}.rowsLabel`)}</FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          inputMode='numeric'
+                          value={field.value ?? ''}
+                          aria-invalid={fieldState.invalid}
+                          onBlur={(e) => {
+                            field.onBlur()
+                            const val = e.target.value
+                            field.onChange(val === '' ? null : Number(val))
+                          }}
+                        />
+                        <div className='min-h-4'>
+                          {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                        </div>
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name='metaData.cols'
+                    control={methods.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid} className='gap-1'>
+                        <FieldLabel htmlFor={field.name}>{t(`${CATEGORY_FORM_PREFIX}.colsLabel`)}</FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          inputMode='numeric'
+                          value={field.value ?? ''}
+                          aria-invalid={fieldState.invalid}
+                          onBlur={(e) => {
+                            field.onBlur()
+                            const val = e.target.value
+                            field.onChange(val === '' ? null : Number(val))
+                          }}
+                        />
+                        <div className='min-h-4'>
+                          {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                        </div>
+                      </Field>
+                    )}
+                  />
+                </div>
 
                 <Controller
                   name='isActive'

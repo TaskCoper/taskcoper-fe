@@ -4,27 +4,49 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { RangeValue } from '@/types/data-table.type'
-import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
+import { parseAsArrayOf, parseAsBoolean, parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import PinProductDialog from '../features/products/components/pin-product-dialog'
 import { getProductColumns } from '../features/products/components/product-columns'
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
-import type { Product } from '../features/products/types'
+import { useUpdatingProductPinId } from '../features/products/hooks/use-update-product-pins'
+import { PRODUCT_TYPE_TAG, type Product, type ProductTypeTag } from '../features/products/types'
+
+const resolveProductTypeTag = (value: string | null): ProductTypeTag | undefined => {
+  const normalizedValue = value?.trim().toLocaleLowerCase('vi')
+
+  if (normalizedValue === 'combo' || normalizedValue === String(PRODUCT_TYPE_TAG.combo)) {
+    return PRODUCT_TYPE_TAG.combo
+  }
+
+  if (normalizedValue === 'sản phẩm' || normalizedValue === String(PRODUCT_TYPE_TAG.product)) {
+    return PRODUCT_TYPE_TAG.product
+  }
+
+  if (normalizedValue === 'thành phần' || normalizedValue === String(PRODUCT_TYPE_TAG.material)) {
+    return PRODUCT_TYPE_TAG.material
+  }
+
+  return undefined
+}
 
 export default function ProductsPage() {
   const { t } = useTenantTranslation()
   const { maxPrice } = useGetMaxPriceProduct()
 
   const [pinTarget, setPinTarget] = useState<Product | null>(null)
+  // The dialog owns the mutation, so the pending row is read from the mutation cache.
+  const pinningProductId = useUpdatingProductPinId()
 
   const columns = useMemo(
     () =>
       getProductColumns({
         t,
-        onTogglePin: (product) => setPinTarget(product)
+        onTogglePin: (product) => setPinTarget(product),
+        pinningProductId
       }),
-    [t]
+    [t, pinningProductId]
   )
 
   const filterOptionOverrides = useMemo(() => {
@@ -41,11 +63,19 @@ export default function ProductsPage() {
   const [priceFilter] = useQueryState('products_price', parseAsArrayOf(parseAsString, ','))
   const [searchFilter] = useQueryState('products_product', parseAsString)
   const [categoriesFilter] = useQueryState('products_categories', parseAsArrayOf(parseAsString, ','))
+  const [isPinFilter] = useQueryState('products_isPinned', parseAsBoolean)
+  const [isActiveFilter] = useQueryState('products_isActive', parseAsBoolean)
 
+  const [selectedProductType] = useQueryState('products_productType', parseAsString)
+
+  // The table stores the product-type filter under its column id; the API calls it `tag`.
+  const tag = resolveProductTypeTag(selectedProductType)
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined
   const categoryIds = categoriesFilter?.length ? categoriesFilter : undefined
+  const isPin = isPinFilter ?? undefined
+  const isActive = isActiveFilter ?? undefined
 
   const { products, isGettingProducts } = useGetProducts({
     pageIndex: page,
@@ -53,7 +83,10 @@ export default function ProductsPage() {
     search,
     categoryIds,
     priceFrom: Number.isFinite(priceFrom) ? priceFrom : undefined,
-    priceTo: Number.isFinite(priceTo) ? priceTo : undefined
+    priceTo: Number.isFinite(priceTo) ? priceTo : undefined,
+    isPin,
+    isActive,
+    tag
   })
 
   const items = products?.value.items ?? []
@@ -65,7 +98,11 @@ export default function ProductsPage() {
     pageCount: Math.ceil(totalCount / limit) || 1,
     initialState: {
       columnPinning: { right: ['actions'] },
+      // Filters render in column-definition order (isPinned after the product search input); this
+      // reorders the table display only, so isPinned still sits first, right after the checkbox.
+      columnOrder: ['select', 'isPinned'],
       columnVisibility: {
+        isActive: false,
         supplier: false,
         productType: false,
         barcode: false,

@@ -99,7 +99,7 @@ export const FEATURED_ARTICLES: NewsArticle[] = [
     slug: 'de-che-1-8-ty-usd-2-nhan-vien-ai',
     title: 'Đế chế 1,8 tỷ USD chỉ có 2 nhân viên: khi AI không còn là công cụ mà là "linh hồn" doanh nghiệp',
     excerpt:
-      'Startup Medvi chỉ có 2 nhân viên nhưng đạt doanh thu dự kiến 1,8 tỷ USD trong năm 2026 nhờ AI thay thế toàn bộ các phòng ban truyền thống — minh chứng sống cho dự đoán của Sam Altman về các công ty "một thành viên" trị giá tỷ USD.',
+      'Startup Medvi chỉ có 2 nhân viên nhưng đạt doanh thu dự kiến 1,8 tỷ USD trong năm 2026 nhờ AI thay thế toàn bộ các phòng ban truyền thống - minh chứng sống cho dự đoán của Sam Altman về các công ty "một thành viên" trị giá tỷ USD.',
     coverUrl:
       'https://cafebiz.cafebizcdn.vn/162123310254002176/2026/5/8/screenshot-2026-05-08-142927-1778225547159-1778225547782176967511.png',
     source: SOURCES.cafebiz,
@@ -114,7 +114,7 @@ export const FEATURED_ARTICLES: NewsArticle[] = [
     title:
       'CEO Coolmate Phạm Chí Nhu: startup gọi vốn nhiều nhất 2025 và tham vọng đưa thời trang Việt sánh ngang Uniqlo',
     excerpt:
-      'Phạm Chí Nhu, CEO sinh năm 1991 của Coolmate, hoàn thành vòng Series B+ trị giá 22,34 triệu USD — vòng gọi vốn lớn nhất năm 2025. Coolmate hiện phục vụ 1,2 triệu khách hàng và bắt đầu mở rộng ra thị trường quốc tế.',
+      'Phạm Chí Nhu, CEO sinh năm 1991 của Coolmate, hoàn thành vòng Series B+ trị giá 22,34 triệu USD - vòng gọi vốn lớn nhất năm 2025. Coolmate hiện phục vụ 1,2 triệu khách hàng và bắt đầu mở rộng ra thị trường quốc tế.',
     coverUrl:
       'https://cafebiz.cafebizcdn.vn/162123310254002176/2026/2/24/thiet-ke-chua-co-ten-2026-02-24t092613-167-17718999865861353211167-1771901347266-17719013479502048865661.png',
     source: SOURCES.cafebiz,
@@ -128,7 +128,7 @@ export const FEATURED_ARTICLES: NewsArticle[] = [
     slug: 'startup-ai-top-10-he-sinh-thai-tp-hcm',
     title: 'Startup AI Hay lọt top 10 hệ sinh thái khởi nghiệp TP HCM',
     excerpt:
-      'AI Hay — phần mềm do kỹ sư Việt phát triển — đạt 489 điểm trong bảng xếp hạng StartupBlink 2026, đứng top 10 hệ sinh thái khởi nghiệp TP HCM và dẫn đầu mảng AI tại thành phố.',
+      'AI Hay - phần mềm do kỹ sư Việt phát triển - đạt 489 điểm trong bảng xếp hạng StartupBlink 2026, đứng top 10 hệ sinh thái khởi nghiệp TP HCM và dẫn đầu mảng AI tại thành phố.',
     coverUrl:
       'https://i2-vnexpress.vnecdn.net/2026/01/27/DSC01247-5612-1769449166.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=kib6b7h0Q3uYopQwtjQ0fg',
     source: SOURCES.vnexpress,
@@ -156,7 +156,7 @@ export const FEATURED_ARTICLES: NewsArticle[] = [
     slug: 'sao-mai-education-vietnam-2026',
     title: 'Từ Education Vietnam 2026 đến thị trường thật: câu chuyện của Sao Mai Education Group',
     excerpt:
-      'Sau triển lãm Education Vietnam 2026, thị trường edtech Việt Nam chuyển dịch từ mua sắm thiết bị sang đầu tư hệ sinh thái giáo dục thông minh tích hợp AI — đặt ra yêu cầu cao hơn về năng lực triển khai dài hạn.',
+      'Sau triển lãm Education Vietnam 2026, thị trường edtech Việt Nam chuyển dịch từ mua sắm thiết bị sang đầu tư hệ sinh thái giáo dục thông minh tích hợp AI - đặt ra yêu cầu cao hơn về năng lực triển khai dài hạn.',
     coverUrl:
       'https://cafebiz.cafebizcdn.vn/thumb_w/640/162123310254002176/2026/5/9/photo1778318064248-1778318064415499069031-1778338265064933581128.jpg',
     source: SOURCES.cafebiz,
@@ -173,7 +173,7 @@ export const LATEST_ARTICLES: NewsArticle[] = [
     slug: '7-mo-hinh-kinh-doanh-nho-von-thap-2026',
     title: '7 mô hình kinh doanh nhỏ vốn thấp năm 2026: không cần kinh nghiệm vẫn có thể tạo dòng tiền',
     excerpt:
-      'Trong bối cảnh chi phí sinh hoạt ngày càng tăng, nhiều người tìm cách tạo thêm thu nhập mà không cần vốn lớn hay kinh nghiệm trước đó — bài viết liệt kê 7 hướng đi khả thi.',
+      'Trong bối cảnh chi phí sinh hoạt ngày càng tăng, nhiều người tìm cách tạo thêm thu nhập mà không cần vốn lớn hay kinh nghiệm trước đó - bài viết liệt kê 7 hướng đi khả thi.',
     coverUrl:
       'https://cafebiz.cafebizcdn.vn/162123310254002176/2026/4/13/chatgpt-image-104803-10-thg-4-2026-17757929325831706369684-1775814327631-1775814327833952929233-1776053953224-1776053953497172719342.png',
     source: SOURCES.cafebiz,
@@ -214,7 +214,7 @@ export const LATEST_ARTICLES: NewsArticle[] = [
     slug: 'startup-nen-hoi-doanh-nghiep-can-gi-de-khoi-nghiep-ai',
     title: '"Startup nên hỏi doanh nghiệp cần gì để khởi nghiệp AI"',
     excerpt:
-      'Các chuyên gia khuyên startup AI nên tiếp cận trực tiếp doanh nghiệp để giải quyết bài toán thực tế — vừa tạo doanh thu sớm vừa hiểu nhu cầu thị trường thay vì xây sản phẩm chưa chắc hợp lệ.',
+      'Các chuyên gia khuyên startup AI nên tiếp cận trực tiếp doanh nghiệp để giải quyết bài toán thực tế - vừa tạo doanh thu sớm vừa hiểu nhu cầu thị trường thay vì xây sản phẩm chưa chắc hợp lệ.',
     coverUrl:
       'https://i1-kinhdoanh.vnecdn.net/2025/07/23/1753172861977-qdi-0271-jpg-175-7433-1440-1753210506.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=huoKPOs-MpKG41-k5LKRCQ',
     source: SOURCES.vnexpress,
@@ -256,7 +256,7 @@ export const LATEST_ARTICLES: NewsArticle[] = [
     slug: 'nu-founder-goi-von-may-man',
     title: 'Nữ founder đi gọi vốn: làm việc 16 tiếng/ngày suốt 3–4 năm vẫn bị coi là do "may mắn"?',
     excerpt:
-      'Nữ founder Annie Vũ chia sẻ những thách thức riêng phụ nữ gặp phải khi gọi vốn và phát triển startup — bao gồm việc nỗ lực bị quy về "may mắn" thay vì công lao thực sự.',
+      'Nữ founder Annie Vũ chia sẻ những thách thức riêng phụ nữ gặp phải khi gọi vốn và phát triển startup - bao gồm việc nỗ lực bị quy về "may mắn" thay vì công lao thực sự.',
     coverUrl: 'https://cafebiz.cafebizcdn.vn/thumb_w/640/162123310254002176/2024/5/21/ye-ye-1716315293815526726549.jpg',
     source: SOURCES.cafebiz,
     category: CATEGORIES.story,

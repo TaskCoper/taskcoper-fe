@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import {
@@ -14,7 +15,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { CheckIcon, ChevronsUpDown, SearchIcon } from 'lucide-react'
+import { CheckIcon, ChevronsUpDown, SearchIcon, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { type Control, Controller, type FieldValues, type Path, useFormContext } from 'react-hook-form'
 import { useInView } from 'react-intersection-observer'
@@ -47,6 +48,10 @@ interface MultiSelectComboboxFieldProps<TForm extends FieldValues, TValue, TData
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
   fetchNextPage?: () => void
+  // Keep the dropdown open after selecting so multiple items can be picked in one go. Defaults to true (close).
+  closeOnSelect?: boolean
+  // When provided, render a removable badge per selected value below the trigger.
+  renderSelectedLabel?: (item: TValue) => React.ReactNode
 }
 
 export default function AsyncMultiSelectField<TForm extends FieldValues, TValue, TData>({
@@ -68,7 +73,9 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
   onChange: customOnChange,
   isFetchingNextPage,
   hasNextPage,
-  fetchNextPage
+  fetchNextPage,
+  closeOnSelect = true,
+  renderSelectedLabel
 }: MultiSelectComboboxFieldProps<TForm, TValue, TData>) {
   const { t } = useTenantTranslation()
   const [open, setOpen] = useState(false)
@@ -107,8 +114,19 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
             field.onChange(newValues)
           }
 
-          setOpen(false)
-          onSearchChange('')
+          if (closeOnSelect) {
+            setOpen(false)
+            onSearchChange('')
+          }
+        }
+
+        const handleRemove = (valueId: string) => {
+          const newValues = currentValues.filter((v) => getValueId(v) !== valueId)
+          if (customOnChange) {
+            customOnChange(newValues)
+          } else {
+            field.onChange(newValues)
+          }
         }
 
         const getButtonText = () => {
@@ -123,7 +141,6 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
           onSelect: handleSelect,
           onSearchChange,
           searchValue,
-          setOpen,
           getId,
           getLabel,
           renderOption,
@@ -208,6 +225,27 @@ export default function AsyncMultiSelectField<TForm extends FieldValues, TValue,
               </Drawer>
             )}
 
+            {renderSelectedLabel && currentValues.length > 0 && (
+              <div className='flex flex-wrap gap-1.5 pt-1'>
+                {currentValues.map((item) => {
+                  const valueId = getValueId(item)
+                  return (
+                    <Badge key={valueId} variant='secondary' className='max-w-full gap-1 py-1 pr-1 pl-2 font-normal'>
+                      <span className='truncate'>{renderSelectedLabel(item)}</span>
+                      <button
+                        type='button'
+                        onClick={() => handleRemove(valueId)}
+                        aria-label={t('common.ui.remove')}
+                        className='shrink-0 rounded-sm p-0.5 text-muted-foreground transition-colors hover:bg-muted-foreground/20 hover:text-foreground'
+                      >
+                        <XIcon className='size-3' />
+                      </button>
+                    </Badge>
+                  )
+                })}
+              </div>
+            )}
+
             {displayError && (
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -227,9 +265,7 @@ interface ComboboxListProps<TData> {
   onSelect: (item: TData) => void
   onSearchChange: (value: string) => void
   searchValue: string
-  setOpen: (open: boolean) => void
   getId: (item: TData) => string
-  getLabel: (item: TData) => string
   renderOption: (item: TData) => React.ReactNode
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
@@ -243,9 +279,7 @@ function ComboboxList<TData>({
   onSelect,
   onSearchChange,
   searchValue,
-  setOpen,
   getId,
-  getLabel,
   renderOption,
   isFetchingNextPage,
   hasNextPage,
@@ -260,12 +294,6 @@ function ComboboxList<TData>({
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  const handleSelect = (item: TData) => {
-    onSelect(item)
-    setOpen(false)
-    onSearchChange('')
-  }
-
   return (
     <Command shouldFilter={false} className='w-full'>
       <CommandInput
@@ -274,19 +302,25 @@ function ComboboxList<TData>({
         onValueChange={onSearchChange}
         className='h-9'
       />
-      <CommandList className={items.length > 0 ? 'border-t' : ''}>
+      <CommandList className='border-t'>
+        {isLoading && (
+          <div className='flex items-center justify-center gap-1.5 py-6 text-sm text-muted-foreground'>
+            <Spinner className='size-4' />
+            {t('common.ui.loading')}
+          </div>
+        )}
+
+        {!isLoading && items.length === 0 && (
+          <p className='py-6 text-center text-sm text-muted-foreground'>{t('common.ui.infiniteSelect.noResults')}</p>
+        )}
+
         {!isLoading && items.length > 0 && (
           <CommandGroup>
             {items.map((item) => {
               const id = getId(item)
               const isSelected = selectedIds.includes(id)
               return (
-                <CommandItem
-                  key={id}
-                  value={getLabel(item)}
-                  onSelect={() => handleSelect(item)}
-                  className='cursor-pointer gap-3'
-                >
+                <CommandItem key={id} value={id} onSelect={() => onSelect(item)} className='cursor-pointer gap-3'>
                   <div className='flex-1 overflow-hidden flex items-center gap-2'>{renderOption(item)}</div>
 
                   <CheckIcon

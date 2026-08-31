@@ -21,27 +21,32 @@ const requiredText = (t: TenantT, max: number, requiredMessage: string) =>
 
 /**
  * Per-category filter settings. Which keys are meaningful depends on the node:
- * - parent (no `parentId`): `filterByName` / `filterByPrice` — render name/price filter inputs on its page.
- * - child (has `parentId`): `isFilterable` — whether it shows up as a filter option on the client.
- * All three are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant pair.
+ * - parent (no `parentId`): `filterByName` / `filterByPrice` - render name/price filter inputs.
+ * - child (has `parentId`): `isFilterable` - whether it shows up as a filter option on the client.
+ * - both: `rows` / `cols` - the product grid layout (and thus page size, `rows × cols`); a parent's
+ *   applies to its section, a child's to the grid shown when that child is picked as a filter.
+ * All keys are kept on the form for simplicity; `toCategoryPayload` narrows to the relevant subset.
  */
-export const categoryMetadataSchema = z.object({
-  filterByName: z.boolean(),
-  filterByPrice: z.boolean(),
-  isFilterable: z.boolean()
-})
+export const categoryMetadataSchema = (t: TenantT) =>
+  z.object({
+    filterByName: z.boolean(),
+    filterByPrice: z.boolean(),
+    isFilterable: z.boolean(),
+    rows: z
+      .number({ message: t('common.validation.number.invalid') })
+      .int({ message: t('common.validation.number.integer') })
+      .min(1, t('common.validation.number.min', { min: 1 }))
+      .nullable(),
+    cols: z
+      .number({ message: t('common.validation.number.invalid') })
+      .int({ message: t('common.validation.number.integer') })
+      .min(1, t('common.validation.number.min', { min: 1 }))
+      .nullable()
+  })
 
-export type CategoryMetadataFormValues = z.infer<typeof categoryMetadataSchema>
+export type CategoryMetadataFormValues = z.infer<ReturnType<typeof categoryMetadataSchema>>
 
-const categoryPageSchema = z.enum([
-  CategoryProductPage.Home,
-  CategoryProductPage.Products,
-  CategoryProductPage.Business,
-  CategoryProductPage.About,
-  CategoryProductPage.News,
-  CategoryProductPage.Recruitment,
-  CategoryProductPage.Contact
-])
+const categoryPageSchema = z.enum(CategoryProductPage)
 
 export const categoryProductSchema = (t: TenantT) => {
   return z
@@ -52,8 +57,16 @@ export const categoryProductSchema = (t: TenantT) => {
         .min(1, t('task.validation.name.minLength'))
         .max(NAME_MAX, t('common.validation.maxLength', { max: NAME_MAX })),
       name_En: requiredText(t, NAME_MAX, t(`${CATEGORY_FORM_PREFIX}.nameEnRequired`)),
-      description: requiredText(t, DESCRIPTION_MAX, t(`${CATEGORY_FORM_PREFIX}.descriptionRequired`)),
-      description_En: requiredText(t, DESCRIPTION_MAX, t(`${CATEGORY_FORM_PREFIX}.descriptionEnRequired`)),
+      description: z
+        .string()
+        .trim()
+        .max(DESCRIPTION_MAX, t('common.validation.maxLength', { max: DESCRIPTION_MAX }))
+        .nullish(),
+      description_En: z
+        .string()
+        .trim()
+        .max(DESCRIPTION_MAX, t('common.validation.maxLength', { max: DESCRIPTION_MAX }))
+        .nullish(),
       type: z.enum([CategoryProductType.Fix, CategoryProductType.Campaign]),
       isActive: z.boolean(),
       // ISO 8601 strings from the date picker; only meaningful for Campaign categories.
@@ -62,7 +75,7 @@ export const categoryProductSchema = (t: TenantT) => {
       parentId: optionalUuid(t),
       // Sort order, managed outside this form (no field rendered); nullable when unset.
       position: z.number().nullable(),
-      metaData: categoryMetadataSchema,
+      metaData: categoryMetadataSchema(t),
       page: z.array(categoryPageSchema)
     })
     .strict()
@@ -93,4 +106,16 @@ export const categoryProductSchema = (t: TenantT) => {
     })
 }
 
+const categorySchema = z.object({
+  categoryProductId: z.uuid(),
+  isPin: z.boolean(),
+  position: z.number()
+})
+
+export const updateProductCategoriesSchema = z.object({
+  productId: z.uuid(),
+  categoryProductLists: z.array(categorySchema)
+})
+
 export type CategoryProductFormValues = z.infer<ReturnType<typeof categoryProductSchema>>
+export type UpdateProductCategoriesFormValues = z.infer<typeof updateProductCategoriesSchema>

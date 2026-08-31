@@ -17,8 +17,9 @@ export const useDeleteJobDescription = () => {
         description: error.response?.data?.detail
       })
     },
-    onSettled: () => {
+    onSettled: (_, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: ['job-descriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['job-description', variables.identifier] })
     }
   })
 

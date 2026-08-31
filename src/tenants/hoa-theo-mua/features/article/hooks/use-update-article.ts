@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import articleService from '../services'
 import { addArticleSchema, type AddArticleForm } from '../validations'
 
-export const useUpdateArticle = (id?: string) => {
+export const useUpdateArticle = (identifier?: string) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTenantTranslation()
@@ -25,10 +25,10 @@ export const useUpdateArticle = (id?: string) => {
   })
 
   const { mutate: updateArticle, isPending: isUpdatingArticle } = useMutation({
-    mutationFn: ({ body }: { body: AddArticleForm }) => articleService.updateArticle({ id, body }),
+    mutationFn: ({ body }: { body: AddArticleForm }) => articleService.updateArticle({ identifier, body }),
     onSuccess: (message) => {
       toast.success(message)
-      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${id}`)
+      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${identifier}`)
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {

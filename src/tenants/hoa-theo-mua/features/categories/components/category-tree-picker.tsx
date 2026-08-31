@@ -7,7 +7,7 @@ import { useState, type ReactNode } from 'react'
 import { CategoryProductType } from '../types'
 import { CategoryTypeBadge, CategoryWindow } from './category-product-badges'
 
-/** The minimal shape a tree needs to render in the picker — satisfied by both `Category` and `SortableCategory`. */
+/** The minimal shape a tree needs to render in the picker - satisfied by both `Category` and `SortableCategory`. */
 export interface CategoryTreeLikeNode {
   categoryId: string
   name: string
@@ -22,9 +22,6 @@ export interface CategoryTreeRootOption {
   label: string
 }
 
-const collectIds = (categories: CategoryTreeLikeNode[]): string[] =>
-  categories.flatMap((category) => [category.categoryId, ...collectIds(category.children ?? [])])
-
 const findCategoryName = (categories: CategoryTreeLikeNode[], categoryId: string): string | null => {
   for (const category of categories) {
     if (category.categoryId === categoryId) return category.name
@@ -34,7 +31,7 @@ const findCategoryName = (categories: CategoryTreeLikeNode[], categoryId: string
   return null
 }
 
-/** Drops excluded nodes — and their whole subtree — from the tree, e.g. a category can't parent itself or a descendant. */
+/** Drops excluded nodes - and their whole subtree - from the tree, e.g. a category can't parent itself or a descendant. */
 const pruneExcluded = (categories: CategoryTreeLikeNode[], excludeIds: Set<string>): CategoryTreeLikeNode[] =>
   categories
     .filter((category) => !excludeIds.has(category.categoryId))
@@ -50,9 +47,9 @@ interface CategoryTreePickerProps {
   emptyLabel: string
   disabled?: boolean
   isLoading?: boolean
-  /** Ids to hide entirely (with their descendants) — e.g. a category being edited can't become its own parent. */
+  /** Ids to hide entirely (with their descendants) - e.g. a category being edited can't become its own parent. */
   excludeIds?: Set<string>
-  /** A pinned first row selecting `null` — e.g. "All (global)" or "No parent". */
+  /** A pinned first row selecting `null` - e.g. "All (global)" or "No parent". */
   rootOption?: CategoryTreeRootOption
   triggerId?: string
   invalid?: boolean
@@ -73,16 +70,15 @@ export default function CategoryTreePicker({
   invalid
 }: CategoryTreePickerProps) {
   const [open, setOpen] = useState(false)
-  // `null` means "not yet customized" - the tree renders fully expanded by default until the user
-  // collapses/expands a node, at which point we materialize a concrete set to track from there.
-  const [expandedIds, setExpandedIds] = useState<Set<string> | null>(null)
+  // Nodes start collapsed; the set holds only the IDs the user has explicitly expanded.
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
   const visibleCategories = excludeIds ? pruneExcluded(categories, excludeIds) : categories
-  const effectiveExpandedIds = expandedIds ?? new Set(collectIds(visibleCategories))
+  const effectiveExpandedIds = expandedIds
 
   const toggleExpanded = (categoryId: string) =>
     setExpandedIds((previous) => {
-      const next = new Set(previous ?? collectIds(visibleCategories))
+      const next = new Set(previous)
       if (next.has(categoryId)) next.delete(categoryId)
       else next.add(categoryId)
       return next
@@ -106,7 +102,7 @@ export default function CategoryTreePicker({
           aria-expanded={open}
           aria-invalid={invalid}
           disabled={disabled || isLoading}
-          className='h-9 w-full justify-between px-2 py-2 font-normal'
+          className='justify-between px-2 py-2 font-normal'
         >
           <span className='truncate'>{selectedLabel}</span>
           <ChevronsUpDownIcon className='size-4 shrink-0 opacity-50' />

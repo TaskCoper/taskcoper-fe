@@ -86,12 +86,16 @@ export default function CreateConfigDialog({ open, onClose, initialValues, locke
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-      <DialogContent position='top-center' className='flex max-w-xl flex-col gap-0 p-0' showCloseButton={false}>
+      <DialogContent
+        position='top-center'
+        className='flex max-w-xl flex-col gap-0 p-0 overflow-hidden'
+        showCloseButton={false}
+      >
         <DialogHeader className='px-6 pt-6 pb-4'>
           <DialogTitle>{t('configsPage.dialog.createTitle')}</DialogTitle>
         </DialogHeader>
 
-        <div className='flex-1 overflow-y-auto px-6'>
+        <div className='min-h-0 flex-1 overflow-y-auto px-6'>
           <FormProvider {...methods}>
             <form id='create-config-form' onSubmit={methods.handleSubmit(onSubmit)} className='pb-4'>
               <CreateConfigForm lockedFields={lockedFields} onPendingFileChange={setPendingFile} />

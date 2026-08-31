@@ -1,3 +1,4 @@
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -199,12 +200,12 @@ function AuthorProfileCard({
 
 export default function NewsDetailPage() {
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
 
   const { t } = useTenantTranslation()
-  const { article, isError, isLoadingArticle } = useGetArticle(id)
+  const { article, isError, isLoadingArticle } = useGetArticle(slug)
 
-  if (!id) {
+  if (!slug) {
     return (
       <DetailState
         title={t(`${ARTICLE_DETAIL_PREFIX}.missingIdTitle`)}
@@ -230,8 +231,7 @@ export default function NewsDetailPage() {
 
   const statusLabel = t(ArticleStatusLabel[article.status])
   const authorEmail = article.user.email.trim()
-  const authorFullName = `${article.user.userFirstName} ${article.user.userLastName}`.trim()
-  const authorName = authorFullName || authorEmail || t(`${ARTICLE_DETAIL_PREFIX}.unknownAuthor`)
+  const authorName = article.user.userFullName || authorEmail || t(`${ARTICLE_DETAIL_PREFIX}.unknownAuthor`)
   const authorAvatarUrl = article.user.userAvatar
 
   return (
@@ -254,17 +254,17 @@ export default function NewsDetailPage() {
           <div className='col-span-1 lg:col-span-8'>
             <div className='relative h-48 sm:h-52'>
               <div className='relative size-full'>
-                {article.pictureUrl ? (
-                  <img
-                    src={article.pictureUrl}
-                    alt={article.title}
-                    className='size-full rounded-2xl border border-border object-cover shadow-sm'
-                  />
-                ) : (
-                  <div className='flex size-full items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
-                    <ImageIcon className='size-10' />
-                  </div>
-                )}
+                <ImageWithViewport
+                  src={article.pictureUrl ?? ''}
+                  alt={article.title}
+                  className='size-full rounded-2xl border border-border shadow-sm'
+                  loading='eager'
+                  fallback={
+                    <div className='flex size-full items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
+                      <ImageIcon className='size-10' />
+                    </div>
+                  }
+                />
               </div>
             </div>
 
@@ -295,7 +295,7 @@ export default function NewsDetailPage() {
 
           <aside className='col-span-1 mt-8 space-y-6 lg:col-span-4 lg:mt-0'>
             <Button asChild className='w-full justify-center' aria-label={t(`${ARTICLE_DETAIL_PREFIX}.edit`)}>
-              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${id}/update`}>
+              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/news/${slug}/update`}>
                 {t('articles.action.updateDetails')}
                 <PencilIcon className='size-4' />
               </Link>

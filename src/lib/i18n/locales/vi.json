@@ -391,6 +391,7 @@
       "pleaseUploadSmallerFile": "Vui lòng tải lên tệp nhỏ hơn.",
       "pleaseUploadValidFileFormat": "Vui lòng tải lên định dạng tệp hợp lệ.",
       "pleaseWait": "Vui lòng đợi...",
+      "remove": "Xóa",
       "search": "Tìm kiếm...",
       "selected": "đã chọn",
       "selectPlaceholder": "Chọn tùy chọn",
@@ -833,6 +834,12 @@
       "uptime": "Thời gian hoạt động"
     }
   },
+  "imageViewport": {
+    "adjust": "Điều chỉnh khung hình",
+    "description": "Kéo ảnh và thu phóng để chọn phần hiển thị.",
+    "useFullImage": "Dùng toàn bộ ảnh",
+    "zoom": "Thu phóng"
+  },
   "language": {
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt"
@@ -944,7 +951,7 @@
       "dropzoneAddMore": "Thả hoặc nhấp để thêm tệp",
       "dropzoneAddMoreActive": "Thả để thêm tệp",
       "dropzoneEmpty": "Kéo thả tệp vào đây hoặc nhấp để chọn",
-      "dropzoneHint": "Hỗ trợ PDF và DOCX — tối đa 10 tệp",
+      "dropzoneHint": "Hỗ trợ PDF và DOCX - tối đa 10 tệp",
       "portfolioFiles": "Tệp Portfolio",
       "removeFile": "Xóa {{name}}",
       "shortBio": "Tiểu sử ngắn",
@@ -1249,7 +1256,7 @@
     "allCategories": "Tất cả",
     "empty": "Chưa có bài viết nào ở chuyên mục này.",
     "eyebrow": "Chuyên trang · Khởi nghiệp",
-    "heroSubtitle": "Tuyển chọn từ VnExpress, CafeBiz và TheLEADER — đọc trong năm phút, dùng được cả năm.",
+    "heroSubtitle": "Tuyển chọn từ VnExpress, CafeBiz và TheLEADER - đọc trong năm phút, dùng được cả năm.",
     "heroTitle": "Bài đọc dành cho founder Việt",
     "latest": "Bài mới",
     "liveUpdated": "Cập nhật hàng tuần",
@@ -1309,8 +1316,7 @@
       "saleName": "Tìm theo người bán..."
     },
     "status": {
-      "paid": "Đã thanh toán",
-      "pending": "Đang xử lý"
+      "paid": "Đã thanh toán"
     }
   },
   "packageBooking": {

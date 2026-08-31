@@ -1,7 +1,7 @@
 {
   "addresses": {
-    "listComingSoon": "Delivery Addresses — Coming Soon",
-    "zonesComingSoon": "Delivery Zones — Coming Soon"
+    "listComingSoon": "Delivery Addresses - Coming Soon",
+    "zonesComingSoon": "Delivery Zones - Coming Soon"
   },
   "articleCategories": {
     "page": {
@@ -55,7 +55,7 @@
     "createButton": "Add company address",
     "createDialog": {
       "title": "Company Address",
-      "description": "Add a company address so it shows on the company info page and can be used elsewhere — geolocation, maps, etc.",
+      "description": "Add a company address so it shows on the company info page and can be used elsewhere - geolocation, maps, etc.",
       "submit": "Add address"
     },
     "update": {
@@ -77,6 +77,13 @@
         "searching": "Searching...",
         "empty": "No matching address found"
       },
+      "map": {
+        "hint": "Drag the pin or tap the map to set the exact location.",
+        "useLocation": "My location",
+        "resolving": "Finding address…",
+        "locationError": "Couldn't get your location. Please pick the point on the map.",
+        "tooFar": "That point is too far from your address. Move the pin closer."
+      },
       "remarks": {
         "label": "Remarks",
         "placeholder": "Internal notes about this address (opening hours, pickup instructions, etc.)"
@@ -89,8 +96,169 @@
     }
   },
   "customNews": {
-    "articlesComingSoon": "Articles — Coming Soon",
-    "categoriesComingSoon": "Categories — Coming Soon"
+    "articlesComingSoon": "Articles - Coming Soon",
+    "categoriesComingSoon": "Categories - Coming Soon"
+  },
+  "aiCustom": {
+    "comingSoon": "This feature is under development",
+    "history": {
+      "title": "AI card history",
+      "description": "View and search successfully generated AI cards.",
+      "searchPlaceholder": "Type to search...",
+      "column": {
+        "preview": "Preview",
+        "code": "Card code",
+        "customer": "Customer",
+        "template": "Card template",
+        "size": "Size",
+        "writingMode": "Writing Method",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "writingMode": {
+        "calligraphy": "Calligraphy",
+        "typed": "Typed"
+      },
+      "walkInCustomer": "Walk-in customer",
+      "previewAlt": "Card {{code}} preview",
+      "openPreview": "Open card {{code}} preview",
+      "viewDetail": "View details"
+    },
+    "flowerHistory": {
+      "title": "AI flower design history",
+      "description": "View and search successfully generated Custom AI flower designs.",
+      "searchPlaceholder": "Type to search...",
+      "column": {
+        "preview": "Flower preview",
+        "code": "Flower design code",
+        "customer": "Customer",
+        "sourceCombo": "Source Combo",
+        "createdAt": "Created at",
+        "actions": "Actions"
+      },
+      "previewAlt": "Flower design {{code}} preview",
+      "openPreview": "Open flower design {{code}} preview",
+      "viewDetail": "View details",
+      "comboFilter": {
+        "title": "Select source combos",
+        "description": "Multiple combos can be selected",
+        "searchPlaceholder": "Search by combo name or code...",
+        "clear": "Clear",
+        "empty": "No matching combos found.",
+        "page": "Page {{page}}/{{totalPages}} · {{totalItems}} combos",
+        "itemsPerPage": "Combos per page",
+        "previous": "Previous combo page",
+        "next": "Next combo page"
+      }
+    },
+    "flowerDetail": {
+      "title": "AI flower design details",
+      "description": "View the output, creation-time materials, and linked orders.",
+      "back": "Back to history",
+      "notFound": "The flower design was not found or does not have a valid output image.",
+      "tab": {
+        "overview": "Overview",
+        "materials": "Materials",
+        "source": "Design source",
+        "orders": "Linked orders"
+      },
+      "section": {
+        "customer": "Customer information",
+        "request": "Generation information",
+        "coreMaterials": "Core materials at creation time",
+        "supportMaterials": "Support materials at creation time",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "orders": "Linked orders"
+      },
+      "customRequest": "Request or notes",
+      "noMaterials": "No materials were recorded.",
+      "noMockup": "No source mockup.",
+      "noOrders": "This flower design is not linked to any orders.",
+      "material": {
+        "name": "Material",
+        "quantity": "Quantity",
+        "unit": "Unit"
+      },
+      "combo": {
+        "code": "Combo code",
+        "name": "Combo name",
+        "information": "Combo information"
+      },
+      "mockupAlt": "{{name}} image",
+      "openMockup": "Open {{name}} image",
+      "lightbox": {
+        "label": "View flower design images",
+        "gallery": "Flower design gallery",
+        "resultCaption": "Result image · {{code}}",
+        "mockupCaption": "Source mockup · {{code}}"
+      }
+    },
+    "detail": {
+      "title": "AI card details",
+      "description": "View the card content, design information, and linked orders.",
+      "cardId": "Record ID",
+      "back": "Back to history",
+      "notFound": "The card was not found or does not have a valid output image.",
+      "tab": {
+        "customer": "Customer",
+        "message": "Card message",
+        "design": "Design & file",
+        "orders": "Linked orders"
+      },
+      "section": {
+        "result": "Card result",
+        "customer": "Customer information",
+        "message": "Card message",
+        "design": "Design and file information",
+        "orders": "Linked orders"
+      },
+      "field": {
+        "customerName": "Full name",
+        "phone": "Phone number",
+        "email": "Email",
+        "sender": "Sender",
+        "recipient": "Recipient",
+        "greeting": "Greeting",
+        "attachments": "User attachments",
+        "fileStatus": "File status"
+      },
+      "fileStatus": {
+        "available": "Available",
+        "processing": "Processing",
+        "expired": "Unavailable"
+      },
+      "attachmentAlt": "Attachment {{index}}",
+      "openAttachment": "Open attachment {{index}}",
+      "noAttachments": "No attachments",
+      "lightbox": {
+        "caption": "Card code: {{code}} · Created at: {{createdAt}}",
+        "previous": "Previous image",
+        "next": "Next image",
+        "close": "Close",
+        "label": "View card images",
+        "gallery": "Card image gallery",
+        "position": "Image {index} of {total}",
+        "showCaptions": "Show captions",
+        "hideCaptions": "Hide captions",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "enterFullscreen": "Enter fullscreen",
+        "exitFullscreen": "Exit fullscreen"
+      },
+      "ordersDescription": "Each order keeps its own billing information on the Order details page.",
+      "noOrders": "This card is not linked to any orders.",
+      "order": {
+        "code": "Order code",
+        "status": "Status",
+        "createdAt": "Created at",
+        "open": "Open order {{code}} details"
+      }
+    },
+    "download": {
+      "action": "Download card image",
+      "failed": "Failed to download the card. Please try again"
+    }
   },
   "navigation": {
     "products": {
@@ -105,7 +273,8 @@
     },
     "orders": {
       "title": "Order",
-      "list": "Order list"
+      "list": "Nhanh.vn orders",
+      "system": "System orders"
     },
     "recruitment": {
       "title": "Recruitment",
@@ -124,6 +293,21 @@
       "categories": "Categories",
       "add": "Write article"
     },
+    "aiCustom": {
+      "title": "AI Custom",
+      "cards": "AI Cards",
+      "flowerDesigns": "AI Flower Designs"
+    },
+    "templateManagement": {
+      "title": "Template Management",
+      "cardTemplates": "Card Templates",
+      "flowerMockups": "Flower Mockups"
+    },
+    "cardConfiguration": {
+      "title": "Card Configuration",
+      "sizes": "Card Sizes",
+      "handwritingSurcharge": "Handwriting Surcharge"
+    },
     "systemConfigs": "System configurations"
   },
   "common": {
@@ -135,13 +319,20 @@
       "next": "Next"
     },
     "ui": {
-      "selectOptions": "Select options..."
+      "selectOptions": "Select options...",
+      "selectPlaceholder": "Select...",
+      "selected": "selected",
+      "optional": "optional",
+      "search": "Search",
+      "loading": "Loading...",
+      "remove": "Remove"
     },
     "validation": {
       "maxLength": "Maximum {{max}} characters allowed",
       "number": {
         "integer": "Must be an integer",
-        "invalid": "Must be a valid number"
+        "invalid": "Must be a valid number",
+        "min": "Must be at least {{min}}"
       },
       "url": {
         "invalid": "Invalid URL"
@@ -165,12 +356,12 @@
     }
   },
   "orders": {
-    "customersComingSoon": "Customers — Coming Soon",
-    "dashboardComingSoon": "Orders Dashboard — Coming Soon",
-    "listComingSoon": "Orders List — Coming Soon",
+    "customersComingSoon": "Customers - Coming Soon",
+    "dashboardComingSoon": "Orders Dashboard - Coming Soon",
+    "listComingSoon": "Orders List - Coming Soon",
     "list": {
-      "title": "Orders",
-      "description": "Review and manage Nhanh.vn orders synced into Hoa Theo Mua."
+      "title": "Nhanh.vn Orders",
+      "description": "Review and manage orders synced from Nhanh.vn."
     },
     "action": {
       "actions": "Actions",
@@ -208,7 +399,7 @@
     },
     "common": {
       "noData": "No data",
-      "noDataShort": "—",
+      "noDataShort": "-",
       "noOrders": "No orders found"
     },
     "copyOrderId": {
@@ -352,6 +543,14 @@
       "giaVon": "Cost price"
     },
     "detail": {
+      "tab": {
+        "overview": "Overview",
+        "items": "Line items",
+        "shipping": "Shipping",
+        "financial": "Financials",
+        "status": "Status",
+        "invoice": "Invoice"
+      },
       "section": {
         "orderInfo": "Order information",
         "customer": "Customer",
@@ -371,7 +570,14 @@
       "backToList": "Back to orders",
       "untitled": "Untitled order",
       "itemCount": "Items",
-      "noItems": "No line items"
+      "noItems": "No line items",
+      "copied": "Copied",
+      "share": "Share"
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
     }
   },
   "products": {
@@ -381,12 +587,81 @@
     },
     "pinned": {
       "title": "Pinned products",
-      "description": "Drag to reorder the products featured on the storefront.",
+      "description": "Add products and drag to order how they appear on the storefront.",
       "empty": "No pinned products yet.",
+      "emptyDescription": "Add products to feature them on the storefront.",
+      "count": "{{count}} pinned",
+      "filteredCount": "Showing {{count}} of {{total}}",
+      "loadFailed": "Couldn't load the pinned products.",
+      "retry": "Retry",
+      "searchPlaceholder": "Search pinned products…",
+      "searchEmpty": "No pinned products match \"{{query}}\".",
+      "clearSearch": "Clear search",
+      "dragDisabledWhileSearching": "Clear the search to drag. You can still reposition from the ⋮ menu.",
+      "dragHint": "Drag a card by its ⠿ handle, or focus the handle and press Space, then use the arrow keys.",
+      "dragHandle": "Drag to reorder",
+      "positionBadge": "#{{position}}",
       "categoryFilter": {
-        "label": "Category",
-        "all": "All (global)",
-        "empty": "No categories yet."
+        "label": "Pin scope",
+        "all": "Homepage (global)",
+        "empty": "No categories yet.",
+        "hintGlobal": "This is the homepage pin list. Pick a category to see that category's own pin list.",
+        "hintCategory": "Pins that belong to the \"{{name}}\" category."
+      },
+      "view": {
+        "grid": "Grid",
+        "list": "List",
+        "label": "View"
+      },
+      "fold": {
+        "label": "Storefront cut-off - first {{count}} products",
+        "below": "Products below this line don't appear on the storefront."
+      },
+      "card": {
+        "actions": "Pinned product actions",
+        "openProduct": "Open product page"
+      },
+      "move": {
+        "top": "Move to top",
+        "bottom": "Move to bottom",
+        "up": "Move up",
+        "down": "Move down",
+        "toPosition": "Move to position…",
+        "positionLabel": "Position (1–{{max}})",
+        "apply": "Move",
+        "invalid": "Enter a number between 1 and {{max}}."
+      },
+      "reorder": {
+        "failed": "Couldn't save the new order. The previous order was restored."
+      },
+      "unpin": {
+        "action": "Unpin",
+        "success": "Unpinned \"{{name}}\".",
+        "undo": "Undo",
+        "undone": "Restored \"{{name}}\" to its previous position.",
+        "undoFailed": "Couldn't undo. Please try again."
+      },
+      "add": {
+        "trigger": "Add products",
+        "title": "Add pinned products",
+        "descriptionGlobal": "Pick products to pin to the homepage. New products are appended to the end of the list.",
+        "descriptionCategory": "Pick products to pin in \"{{name}}\". New products are appended to the end of the list.",
+        "searchPlaceholder": "Search by product name or code…",
+        "sourceCategory": "In this category",
+        "sourceAll": "All products",
+        "sourceAllHint": "Products that aren't in the category yet will be added to \"{{name}}\" before being pinned.",
+        "alreadyPinned": "Pinned",
+        "notInCategory": "Not in this category",
+        "selectedCount": "{{count}} selected",
+        "clearSelection": "Clear selection",
+        "noProducts": "No products found.",
+        "endOfList": "All {{count}} products shown.",
+        "submit": "Pin {{count}} products",
+        "submitEmpty": "Pin products",
+        "success": "Pinned {{count}} products.",
+        "partial": "Pinned {{succeeded}} of {{total}}; {{failed}} failed.",
+        "membershipFailed": "Couldn't add the products to the category. Assign the category to them first, then pin.",
+        "limitReached": "Select at most {{count}} products at a time."
       }
     },
     "pinDialog": {
@@ -398,7 +673,10 @@
       "categoriesLabel": "Product categories",
       "noCategories": "This product isn't in any category.",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "addCategory": "Pin to another category",
+      "addCategoryHint": "Pick a category this product isn't in yet. It will be added to the category before being pinned.",
+      "willJoinCategory": "Will join category"
     },
     "common": {
       "noData": "None",
@@ -411,10 +689,19 @@
       "pin": "Pin product",
       "unpin": "Unpin product"
     },
+    "filter": {
+      "pinned": "Pinned",
+      "notPinned": "Not pinned",
+      "product": "Product",
+      "combo": "Combo",
+      "material": "Material"
+    },
     "column": {
       "selectAll": "Select all products",
       "selectRow": "Select product",
       "pin": "Pin",
+      "isPinned": "Pinned status",
+      "saleStatus": "Sale status",
       "nhanhProductId": "Nhanh.vn ID",
       "image": "Image",
       "product": "Product",
@@ -484,18 +771,126 @@
       "linkCopied": "Link copied to clipboard",
       "suppliedBy": "Supplier",
       "totalUnits": "total units",
+      "parent": {
+        "title": "This is a variant of another product",
+        "description": "Part of “{{name}}”. Open the parent product to see all of its variants.",
+        "view": "View parent product"
+      },
+      "categories": {
+        "title": "Categories",
+        "description": "Choose which categories this product belongs to.",
+        "placeholder": "Select categories",
+        "save": "Save categories",
+        "updated": "Product categories updated"
+      },
       "tab": {
         "specifications": "Specifications",
         "pricing": "Pricing",
-        "inventory": "Inventory"
+        "inventory": "Inventory",
+        "overview": "Overview",
+        "quantity": "Quantity"
       },
       "section": {
+        "basicInfo": "Basic information",
+        "images": "Product images",
         "identity": "Identity",
         "classification": "Classification",
         "attributes": "Attributes",
         "pricing": "Pricing",
         "inventory": "Inventory",
         "meta": "Other"
+      },
+      "sectionDesc": {
+        "basicInfo": "Core product details and identifiers.",
+        "images": "Cover and additional product photos.",
+        "identity": "Product codes, barcode and parent references.",
+        "classification": "Category, brand and label classification.",
+        "attributes": "Variant options and physical dimensions.",
+        "pricing": "Selling, import and wholesale prices.",
+        "inventory": "Stock levels across warehouses and states.",
+        "meta": "Creation date and web ordering.",
+        "variants": "Child products belonging to this product."
+      },
+      "information": "Product information",
+      "table": {
+        "field": "Field",
+        "value": "Value"
+      },
+      "gallery": {
+        "cover": "Cover",
+        "previous": "Previous image",
+        "next": "Next image"
+      },
+      "variants": {
+        "title": "Variants",
+        "options": "Options"
+      },
+      "comboSpecification": {
+        "title": "Combo quantity",
+        "description": "The components and quantities required to make one combo.",
+        "core": "Core materials",
+        "coreDescription": "The main materials in this combo.",
+        "support": "Support materials",
+        "supportDescription": "Supporting materials or accessories in this combo.",
+        "material": "Material",
+        "quantityPerCombo": "Quantity / combo",
+        "baseQuantity": "Base quantity",
+        "actualQuantity": "Actual quantity",
+        "role": "Role",
+        "factor": "Size factor",
+        "factorHint": "Factor must be greater than 0",
+        "quantityHint": "Quantity must be a number greater than 0",
+        "factorUnconfigured": "Size factor has not been configured",
+        "factorPlaceholder": "Not configured",
+        "unconfigured": "Not configured",
+        "publicationStatus": "Status",
+        "published": "On sale",
+        "unpublished": "Not on sale",
+        "publishSuccess": "Combo is now available for sale",
+        "unpublishSuccess": "Combo is no longer available for sale",
+        "saveFactor": "Save factor",
+        "updatingFactor": "Updating...",
+        "updateFactorSuccess": "Size factor updated successfully",
+        "availableQuantity": "Available to sell",
+        "editButton": "Edit",
+        "saveChanges": "Save changes",
+        "unit": "Unit",
+        "availableForSale": "Available",
+        "remainingComboQuantity": "Remaining combo quantity",
+        "maxComboPossible": "Max combos",
+        "unnamedMaterial": "Unnamed material",
+        "addButton": "Add material",
+        "addRecipe": "Add recipe",
+        "addTitle": "Add material to recipe",
+        "addDescription": "Choose material products, enter quantities, and assign Core or Support roles.",
+        "availableMaterials": "Available materials",
+        "selectedMaterials": "Selected materials",
+        "materialLimitWarning": "This combo has reached the maximum limit of {{count}} materials.",
+        "noSelectedMaterials": "No materials selected",
+        "removeMaterial": "Remove material",
+        "searchMaterial": "Search by material name or code...",
+        "materialTypeFilter": "Filter by material type",
+        "materialTypePlaceholder": "Material type",
+        "allMaterialTypes": "All types",
+        "materialProductLabel": "Component",
+        "accessoryProductLabel": "Accessory",
+        "noMaterials": "No matching materials found",
+        "noRecipe": "No recipe configured. Please add a recipe",
+        "stock": "Stock",
+        "save": "Save recipe",
+        "saveSuccess": "Combo recipe saved successfully",
+        "addSuccess": "Material added to combo recipe successfully",
+        "publicationConflictTitle": "Combo is currently on sale",
+        "publicationConflictFallback": "The combo was published by another administrator.",
+        "continueAddingQuestion": "Do you want to continue adding the recipe? The combo will be taken off sale.",
+        "continueAdding": "Continue adding recipe",
+        "selectAll": "Select all materials",
+        "selectMaterial": "Select material {{name}}",
+        "deleteButton": "Delete materials",
+        "deleteTitle": "Delete materials from recipe?",
+        "deleteDescription": "Are you sure you want to delete {{count}} selected materials from this combo recipe?",
+        "deleteConfirm": "Delete materials",
+        "deleteSuccess": "Materials removed from combo recipe"
       }
     },
     "field": {
@@ -561,8 +956,8 @@
     }
   },
   "recruitment": {
-    "applicantsComingSoon": "Applicants — Coming Soon",
-    "jobsComingSoon": "Job Postings — Coming Soon",
+    "applicantsComingSoon": "Applicants - Coming Soon",
+    "jobsComingSoon": "Job Postings - Coming Soon",
     "applicants": {
       "title": "Applicants",
       "description": "Review and manage all received job applications.",
@@ -953,6 +1348,7 @@
       "createTitle": "Add field",
       "editTitle": "Edit field",
       "delete": "Delete",
+      "deleteDisabledTooltip": "Deleting configs is temporarily disabled for safety",
       "keyField": "Key",
       "keyPlaceholder": "e.g. general.api_key",
       "groupField": "Group",
@@ -962,10 +1358,11 @@
       "inputTypeField": "Input type",
       "defaultValueField": "Default value",
       "defaultValuesField": "Default values",
+      "minutesUnit": "minutes",
       "keyLockedHint": "Key is fixed for this config",
       "kindLockedHint": "Kind is fixed for this config",
       "revealSecret": "Reveal secret",
-      "secretHint": "The current value is hidden. Reveal it to edit.",
+      "secretHint": "Reveal the current value to update.",
       "optionsLockedHint": "{{count}} options are managed by the live API",
       "descriptionField": "Description",
       "descriptionPlaceholder": "Optional description",
@@ -999,6 +1396,28 @@
         "integer": "Integer only"
       }
     },
+    "signatureLanding": {
+      "title": "Story landing pages",
+      "subtitle": "{{products}} products · {{pages}} landing pages",
+      "empty": "No landing page yet. Add one, then assign products to it.",
+      "addGroup": "Add landing page",
+      "removeGroup": "Remove landing page",
+      "urlPlaceholder": "https://hoatheomua.net/cau-chuyen-...",
+      "openUrl": "Open link",
+      "addProduct": "Add product",
+      "removeProduct": "Remove product from this landing page",
+      "searchPlaceholder": "Search by product name or code",
+      "noResults": "No product found",
+      "moreResults": "{{count}} more products - type to filter",
+      "assignedElsewhere": "Currently on another landing page",
+      "unknownProduct": "Product no longer in the catalog",
+      "missingUrl": "No URL yet - this group won't be saved",
+      "missingProducts": "No product assigned - this group won't be saved",
+      "rawMode": "Edit JSON",
+      "visualMode": "Visual editor",
+      "rawHint": "Shape: { \"productId\": \"landing page url\" }",
+      "invalidJson": "Invalid JSON - changes are not applied"
+    },
     "breadcrumb": "Manage Configuration",
     "fallbackTitle": "Configurations",
     "country": {
@@ -1029,9 +1448,11 @@
       "revealing": "Revealing...",
       "required": "Required",
       "noFile": "No file uploaded",
+      "minutesUnit": "minutes",
       "multiSelectPlaceholder": "Pick options...",
       "public": "Public",
       "publicTooltip": "Expose this config to client-side consumers",
+      "secretLockedTooltip": "Reveal the secret before changing it",
       "complexValue": "Complex value",
       "openEditor": "Open editor",
       "hints": {
@@ -1066,6 +1487,51 @@
     "customPalette": {
       "title": "Custom palettes"
     },
+    "checkoutMethodsPalette": {
+      "title": "Checkout",
+      "payment": "Payment methods",
+      "delivery": "Delivery methods"
+    },
+    "checkoutMethodsDialog": {
+      "description": "Choose which supported methods customers can use, their order, default, and checkout copy.",
+      "registryHint": "Methods and technical identifiers are controlled by code. This editor only changes availability, order, default selection, and customer-facing copy.",
+      "configLabel": "Config label",
+      "configLabelHelp": "Used to identify this configuration in the admin list.",
+      "summary": "Current setup",
+      "enabledCount": "{{enabled}} of {{total}} enabled",
+      "defaultSummary": "Default: {{method}}",
+      "methodsTitle": "Supported methods",
+      "methodsSubtitle": "Expand a row to customize its checkout presentation.",
+      "enabled": "Enabled",
+      "default": "Default",
+      "defaultHelp": "Customers see this method selected first.",
+      "defaultSelected": "Selected",
+      "makeDefault": "Make default",
+      "label": "Label",
+      "methodDescription": "Description",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "status": {
+        "enabled": "Visible",
+        "disabled": "Hidden"
+      },
+      "errors": {
+        "labelRequired": "Enter a config label before saving."
+      },
+      "gateway": "Gateway",
+      "payment": {
+        "title": "Payment methods",
+        "configLabel": "Checkout payment methods",
+        "gatewayField": "paymentGateway",
+        "gatewayHelp": "Sent as paymentGateway when creating an order, paired with its matching gateway name."
+      },
+      "delivery": {
+        "title": "Delivery methods",
+        "configLabel": "Checkout delivery methods",
+        "gatewayField": "shippingGateway",
+        "gatewayHelp": "Sent as shippingGateway when creating an order. Carrier parameters are set by the backend."
+      }
+    },
     "ahamovePalette": {
       "title": "Ahamove Shipping Request",
       "empty": "No shipping requests available"
@@ -1093,6 +1559,11 @@
       "openEditor": "Open editor",
       "emptyHint": "No banners yet - click to start",
       "existsHint": "Configured - click to view & edit"
+    },
+    "promotionPopupPalette": {
+      "title": "Promotional popup",
+      "emptyHint": "Not set up yet - click to create",
+      "existsHint": "Configured - click to edit"
     },
     "b2bServicesPalette": {
       "title": "B2B Services",
@@ -1204,7 +1675,7 @@
     },
     "feedbacksDialog": {
       "title": "Customer feedbacks",
-      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google — placeholders must be replaced before launch.",
+      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google - placeholders must be replaced before launch.",
       "configLabel": "Customer feedbacks",
       "locale": {
         "vi": "Vietnamese",
@@ -1287,7 +1758,7 @@
     },
     "bannersDialog": {
       "title": "Promotional banners",
-      "subtitle": "Each banner has its own slot key — reuse the same slot across multiple banners to show a slideshow at one spot on the site.",
+      "subtitle": "Each banner has its own slot key - reuse the same slot across multiple banners to show a slideshow at one spot on the site.",
       "configLabel": "Promotional banners",
       "locale": {
         "vi": "Vietnamese",
@@ -1312,12 +1783,12 @@
         "moveDown": "Move down",
         "remove": "Remove banner",
         "image": "Banner image",
-        "imageHelp": "Recommend 16:9 or match the intended slot's size.",
+        "imageHelp": "Wide image - {{ratio}} recommended (e.g. {{example}}px) for this slot.",
         "uploadImage": "Upload image",
         "replaceImage": "Replace image",
         "slotField": "Slot key",
         "slotPlaceholder": "e.g. hero, sidebar-top",
-        "slotHelp": "Free-form key — frontend filters banners by this string. Existing slots are suggested.",
+        "slotHelp": "Free-form key - frontend filters banners by this string. Existing slots are suggested.",
         "hrefField": "Click destination",
         "hrefHelp": "Internal path (/products/...) or full URL (https://...).",
         "openInNewTabToggle": "Open link in a new tab",
@@ -1329,6 +1800,88 @@
         "slotRequired": "Banner #{{index}}: slot key is required.",
         "imageRequired": "Banner #{{index}}: image is required.",
         "hrefRequired": "Banner #{{index}}: click destination is required."
+      }
+    },
+    "promotionPopupDialog": {
+      "title": "Promotional popup",
+      "subtitle": "Shown over public storefront pages a moment after they load. Several running campaigns turn the popup into a slideshow visitors can page through.",
+      "configLabel": "Promotional popup",
+      "publicWarning": "This config is public: images and links are readable before a campaign starts. Do not put embargoed information here.",
+      "locale": {
+        "vi": "Vietnamese",
+        "en": "English"
+      },
+      "section": {
+        "title": "General",
+        "subtitle": "Turn off to hide every popup without deleting any campaign.",
+        "enabled": "Enabled",
+        "frequencyField": "How often it comes back",
+        "frequency": {
+          "once-per-session": "Once per visit",
+          "every-load": "Every page load"
+        },
+        "frequencyHelp": {
+          "once-per-session": "Shown once per browser tab. Reloading does not bring it back; closing the tab and returning does.",
+          "every-load": "Shown on every reload and every new tab. Intrusive - use for short campaigns or to preview your own changes, then switch back."
+        },
+        "pagesField": "Where it appears",
+        "pagesHelp": "Applies to every campaign that has no scope of its own. Exclusions (!) always win. Leave empty to show it everywhere."
+      },
+      "items": {
+        "title": "Campaigns",
+        "subtitle": "{{count}} campaign(s), {{active}} running today. Reorder with the arrow buttons.",
+        "add": "Add campaign",
+        "empty": "No campaigns yet. Click \"Add campaign\" to start."
+      },
+      "activeWarning": "{{count}} campaigns run at the same time. The site only shows the first {{max}}.",
+      "item": {
+        "untitled": "Campaign #{{index}} (no alt text yet)",
+        "noHref": "(no link - image is not clickable)",
+        "hasErrors": "Needs attention",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove campaign",
+        "image": "Campaign image",
+        "imageHelp": "Recommend 4:5 portrait (e.g. 1000x1250px), max 5MB.",
+        "uploadImage": "Upload image",
+        "replaceImage": "Replace image",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "datePlaceholder": "Pick a date",
+        "datesHelp": "Leave empty for no bound. The end date is inclusive. Evaluated in Vietnam time.",
+        "hrefField": "Click destination",
+        "hrefPlaceholder": "/products/... or https://...",
+        "hrefHelp": "Internal path (/products/...) or full URL (https://...). Leave empty for an announcement-only image.",
+        "openInNewTabToggle": "Open link in a new tab",
+        "altField": "Alt text",
+        "altPlaceholder": "e.g. Tet 2026 sale - 20% off",
+        "altHelp": "Required. Shown when the image fails, used by screen readers, and used as the campaign name in this list.",
+        "status": {
+          "active": "Running",
+          "scheduled": "Scheduled",
+          "expired": "Ended",
+          "disabled": "Off",
+          "incomplete": "Image or dates invalid"
+        },
+        "pagesField": "Where this campaign appears",
+        "pagesHelp": "Leave empty to follow the general scope above. Adding any pattern replaces it entirely for this campaign."
+      },
+      "errors": {
+        "imageRequired": "Campaign #{{index}}: image is required.",
+        "altRequired": "Campaign #{{index}}: Vietnamese alt text is required.",
+        "hrefInvalid": "Campaign #{{index}}: invalid destination. Use /a-path or https://...",
+        "datesInvalid": "Campaign #{{index}}: the end date must be on or after the start date.",
+        "imageTooLarge": "Image exceeds {{max}}MB. Please choose a smaller file.",
+        "pagePatternInvalid": "Invalid page pattern \"{{pattern}}\" in the general scope.",
+        "itemPagePatternInvalid": "Campaign #{{index}}: invalid page pattern \"{{pattern}}\"."
+      },
+      "pages": {
+        "placeholder": "Type a pattern, press Enter",
+        "remove": "Remove {{pattern}}",
+        "invalid": "Use *, /a-path, /a-path/* for pages under it, or !/a-path to exclude.",
+        "inherits": "Follows the general scope: {{patterns}}",
+        "everywhere": "every page",
+        "emptyMeansEverywhere": "Every page. Add a pattern to narrow it down."
       }
     },
     "b2bServicesDialog": {
@@ -1581,7 +2134,9 @@
       "about": "About",
       "news": "News",
       "recruitment": "Recruitment",
-      "contact": "Contact"
+      "contact": "Contact",
+      "mainline": "Mainline products",
+      "featured": "Featured products"
     },
     "status": {
       "active": "Visible",
@@ -1596,7 +2151,11 @@
       "manageProducts": "Manage products",
       "update": "Update",
       "delete": "Delete",
-      "reorder": "Drag to reorder"
+      "reorder": "Drag to reorder",
+      "copyId": "Copy ID"
+    },
+    "copyId": {
+      "success": "Category ID copied"
     },
     "column": {
       "selectAll": "Select all categories",
@@ -1608,6 +2167,10 @@
       "page": "Pages",
       "window": "Active window",
       "status": "Status",
+      "filters": "Filters",
+      "grid": "Grid",
+      "gridRow": "Row",
+      "gridCol": "Col",
       "productCount": "Products",
       "subcategoryCount": "({{count}} subcategories)",
       "noChildren": "No subcategories"
@@ -1649,6 +2212,8 @@
       "filterByNameHint": "Show a name search input on this category's page.",
       "filterByPriceLabel": "Filter by price",
       "filterByPriceHint": "Show a price range input on this category's page.",
+      "rowsLabel": "Rows",
+      "colsLabel": "Columns",
       "isFilterableLabel": "Show as filter option",
       "isFilterableHint": "Include this subcategory in the filter selection on the client.",
       "activeLabel": "Category visible",
@@ -1674,6 +2239,160 @@
       "pageInfo": "Page {{page}} of {{pageCount}}",
       "submit": "Save changes",
       "success": "Category products updated successfully."
+    }
+  },
+  "systemOrders": {
+    "list": {
+      "title": "System Orders",
+      "description": "Review and manage orders created on the system."
+    },
+    "column": {
+      "selectAll": "Select all orders",
+      "selectRow": "Select order",
+      "customer": "Customer",
+      "createdAt": "Created at",
+      "address": "Shipping address",
+      "status": "Status",
+      "amount": "Total",
+      "tracking": "Tracking code",
+      "shippingFee": "Shipping fee",
+      "productFee": "Product fee",
+      "invoice": "Invoice",
+      "remarks": "Remarks"
+    },
+    "filter": {
+      "searchPlaceholder": "Search by customer name"
+    },
+    "action": {
+      "edit": "Edit order",
+      "viewDetails": "View details",
+      "openMenu": "Open order actions",
+      "actions": "Actions",
+      "openPayment": "Open payment page",
+      "openQr": "Open QR code",
+      "copyTracking": "Copy tracking code"
+    },
+    "copyTracking": {
+      "success": "Tracking code copied"
+    },
+    "update": {
+      "success": "Order updated"
+    },
+    "edit": {
+      "title": "Edit order",
+      "description": "Update the tracking code, Ahamove link and shipping fee.",
+      "trackingNumber": "Tracking code",
+      "trackingNumberPlaceholder": "e.g. TRK123456",
+      "ahaMoveTrackingUrl": "Ahamove tracking link",
+      "ahaMoveTrackingUrlPlaceholder": "https://...",
+      "shippingFee": "Shipping fee",
+      "shippingFeePlaceholder": "e.g. 30000",
+      "invalidUrl": "Enter a valid URL or leave it empty",
+      "invalidFee": "Enter a valid amount (0 or more)",
+      "save": "Save changes",
+      "cancel": "Cancel"
+    },
+    "common": {
+      "noData": "No data",
+      "noDataShort": "-",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "invoice": {
+      "export": "Invoice"
+    },
+    "paymentMethod": {
+      "1": "VA (BaoKim)",
+      "6": "VNPayQR (SePay)"
+    },
+    "detail": {
+      "tab": {
+        "overview": "Overview",
+        "items": "Products",
+        "shipping": "Shipping",
+        "payment": "Payment",
+        "invoice": "Invoice"
+      },
+      "section": {
+        "order": "Order information",
+        "customer": "Customer",
+        "delivery": "Delivery location",
+        "fees": "Fee breakdown",
+        "items": "Products",
+        "shipping": "Shipping",
+        "payment": "Payment",
+        "transaction": "Transaction",
+        "invoice": "Invoice"
+      },
+      "sectionDesc": {
+        "order": "Identifiers, status and notes recorded when the order was placed.",
+        "customer": "Who placed the order and who receives it.",
+        "delivery": "Where the order is delivered to.",
+        "fees": "How the order total is made up.",
+        "items": "Products in this order and the materials captured at checkout.",
+        "shipping": "Tracking codes and carrier links for this order.",
+        "payment": "Payment method and links used to settle this order.",
+        "transaction": "The settled payment transaction, if any.",
+        "invoice": "Invoice request and receipt details."
+      },
+      "notFound": "Order not found",
+      "notFoundDescription": "This order may have been removed or the link is incorrect.",
+      "backToList": "Back to orders",
+      "untitled": "Untitled order",
+      "copyOrderId": "Copy order ID",
+      "copied": "Copied",
+      "share": "Share",
+      "itemCount": "Items",
+      "orderId": "Order ID",
+      "paymentMethod": "Payment method",
+      "paymentUrl": "Payment link",
+      "sepayUrl": "SePay link",
+      "remark": "Remark",
+      "orderTime": "Order time",
+      "tags": "Tags",
+      "customerName": "Customer name",
+      "customerPhone": "Customer phone",
+      "receiverName": "Receiver name",
+      "receiverPhone": "Receiver phone",
+      "userId": "User ID",
+      "ward": "Ward code",
+      "city": "City code",
+      "ahamoveOrderId": "Ahamove order ID",
+      "transactionGateway": "Gateway",
+      "transactionCode": "Transaction code",
+      "transactionAmount": "Transferred amount",
+      "transactionDate": "Transaction date",
+      "noTransaction": "No transaction recorded for this order",
+      "invoiceType": "Invoice type",
+      "identityNumber": "Identity number",
+      "receiptAddress": "Receipt address",
+      "materials": "Materials",
+      "materialType": "Type",
+      "showMaterials": "Show materials",
+      "hideMaterials": "Hide materials",
+      "noItems": "This order has no products",
+      "itemName": "Product",
+      "itemParent": "Parent product",
+      "itemWeight": "Weight",
+      "itemQuantity": "Quantity",
+      "itemPrice": "Unit price",
+      "itemTotal": "Line total",
+      "trackNumber": "Tracking code",
+      "ahamoveTracking": "Ahamove tracking",
+      "openLink": "Open link",
+      "address": "Address",
+      "shortAddress": "Short address",
+      "deliverTo": "Deliver to",
+      "copyAddress": "Copy address",
+      "exportInvoice": "Export invoice",
+      "taxCode": "Tax code",
+      "receiptName": "Receipt name",
+      "receiptPhone": "Receipt phone",
+      "receiptEmail": "Receipt email",
+      "vat": "VAT",
+      "mapTitle": "Delivery location map",
+      "noLocation": "No delivery location",
+      "openInMaps": "Open in Maps"
     }
   }
 }

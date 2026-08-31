@@ -23,7 +23,6 @@ import {
   EyeIcon,
   FileIcon,
   HashIcon,
-  ImageIcon,
   ListChecksIcon,
   MapPinIcon,
   PencilIcon,
@@ -36,10 +35,12 @@ import { useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
+import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
 import { useRevealConfig } from '../hooks/use-reveal-config'
 import configService from '../services'
 import { ConfigKind, INPUT_TYPE_COLOR, InputType, type Config, type ConfigDefinition } from '../types'
 import { buildValueValidator } from '../validations'
+import DurationMinutesInput from './duration-minutes-input'
 
 interface ConfigFieldRowProps {
   config: Config
@@ -56,7 +57,6 @@ const INPUT_TYPE_ICON: Record<InputType, React.ReactNode> = {
   [InputType.select]: <ChevronDownIcon className='size-3' />,
   [InputType.multiSelect]: <ListChecksIcon className='size-3' />,
   [InputType.json]: <Code2Icon className='size-3' />,
-  [InputType.image]: <ImageIcon className='size-3' />,
   [InputType.file]: <FileIcon className='size-3' />,
   [InputType.address]: <MapPinIcon className='size-3' />
 }
@@ -118,10 +118,8 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
 
-  const { uploadFileWithToast: uploadImageWithToast, isUploading: isUploadingImage } = useUploadFileWithToast()
   const { uploadFileWithToast: uploadFileWithToastFn, isUploading: isUploadingFile } = useUploadFileWithToast()
 
-  const imageFileInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const initialValue =
@@ -158,13 +156,19 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
 
+  const isSecret = config.kind === ConfigKind.secret
+  const [isRevealed, setIsRevealed] = useState(false)
+  const [revealedValue, setRevealedValue] = useState<unknown>(undefined)
+  const { revealConfig, isRevealingConfig } = useRevealConfig()
+
   const { mutate: togglePublic, isPending: isTogglingPublic } = useMutation({
     mutationFn: (isPublic: boolean) => {
       const group = getGroupFromKey(config.key) || config.value.group
+      const value = isSecret && isRevealed ? revealedValue : config.value.value
 
       return configService.updateConfig({
         id: config.id,
-        body: { key: config.key, group, kind: config.kind, isPublic, value: { ...config.value, group } }
+        body: { key: config.key, group, kind: config.kind, isPublic, value: { ...config.value, group, value } }
       })
     },
     onSuccess: () => toast.success(t('configKeys.toast.updated')),
@@ -172,11 +176,9 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['configs'] })
   })
 
-  const onSave = form.handleSubmit(({ value }) => saveValue(value))
-
-  const isSecret = config.kind === ConfigKind.secret
-  const [isRevealed, setIsRevealed] = useState(false)
-  const { revealConfig, isRevealingConfig } = useRevealConfig()
+  const onSave = form.handleSubmit(({ value }) => {
+    saveValue(value)
+  })
 
   const handleReveal = () => {
     revealConfig(
@@ -184,6 +186,7 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
       {
         onSuccess: (revealed) => {
           form.reset({ value: revealed.value.value })
+          setRevealedValue(revealed.value.value)
           setIsRevealed(true)
         },
         onError: () => toast.error(t('configKeys.toast.error'))
@@ -227,6 +230,26 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       case InputType.number:
+        if (isSecondsAsMinutesConfigKey(config.key)) {
+          return (
+            <Controller
+              name='value'
+              control={form.control}
+              render={({ field }) => (
+                <div className='flex items-center gap-2'>
+                  <DurationMinutesInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    className='h-8 text-sm'
+                    ariaInvalid={!!errors.value}
+                  />
+                  <span className='shrink-0 text-xs text-muted-foreground'>{t('configsPage.card.minutesUnit')}</span>
+                </div>
+              )}
+            />
+          )
+        }
         return (
           <Input
             type='number'
@@ -321,46 +344,6 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
           />
         )
       }
-      case InputType.image:
-        return (
-          <Controller
-            name='value'
-            control={form.control}
-            render={({ field }) => (
-              <div className='flex items-center gap-2'>
-                <input
-                  type='file'
-                  accept='image/*'
-                  className='hidden'
-                  ref={imageFileInputRef}
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0]
-                    if (!file) return
-                    e.target.value = ''
-                    const url = await uploadImageWithToast({ file, showSuccessToast: false })
-                    if (url) field.onChange(url)
-                  }}
-                />
-                {field.value ? (
-                  <div className='h-8 w-8 shrink-0 overflow-hidden rounded border'>
-                    <img src={String(field.value)} alt='' className='size-full object-cover' />
-                  </div>
-                ) : null}
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  className={cn('h-8 flex-1 text-xs', !!errors.value && 'border-destructive')}
-                  onClick={() => imageFileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                >
-                  {isUploadingImage ? <Spinner data-icon='inline-start' /> : <UploadIcon data-icon='inline-start' />}
-                  {isUploadingImage ? t('common.ui.uploading') : t('common.button.upload')}
-                </Button>
-              </div>
-            )}
-          />
-        )
       case InputType.file:
         return (
           <Controller
@@ -477,14 +460,16 @@ export default function ConfigFieldRow({ config, onEdit }: ConfigFieldRowProps) 
         <Label
           htmlFor={`pub-${config.id}`}
           className='flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground'
-          title={t('configsPage.card.publicTooltip')}
+          title={
+            isSecret && !isRevealed ? t('configsPage.card.secretLockedTooltip') : t('configsPage.card.publicTooltip')
+          }
         >
           {t('configsPage.card.public')}
           <Switch
             id={`pub-${config.id}`}
             checked={config.isPublic}
             onCheckedChange={(checked) => togglePublic(checked)}
-            disabled={isTogglingPublic}
+            disabled={isTogglingPublic || (isSecret && !isRevealed)}
           />
         </Label>
 

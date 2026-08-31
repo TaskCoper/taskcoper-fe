@@ -1,4 +1,6 @@
 import AsyncMultiSelectField from '@/components/async-multi-select-field'
+import { ImageViewportUrlButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import RichTextEditor from '@/components/rich-text-editor'
 import SanitizedHtml from '@/components/sanitized-html'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +20,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Spinner } from '@/components/ui/spinner'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { releaseStagedUpload, resolveStagedImages, stageUpload } from '@/lib/staged-uploads'
 import { cn } from '@/shared/utils'
 import { ArrowLeftIcon, EyeIcon, FileTextIcon, ImageIcon, SendIcon, UploadIcon, XIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -27,6 +30,7 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { useAddArticle } from '../features/article/hooks/use-add-article'
 import { useGetCategoryNews } from '../features/article/hooks/use-get-category-news'
 import type { AddArticleForm, CategoryFormItem } from '../features/article/validations'
+import { ARTICLE_COVER_ASPECT } from '../features/article/validations'
 
 const ARTICLE_FORM_PREFIX = 'articles.form' as const
 const ARTICLE_STATUS_PREFIX = 'articles.status' as const
@@ -63,8 +67,11 @@ export default function NewsAddPage() {
     }))
   )
 
-  const onSubmit: SubmitHandler<AddArticleForm> = (body) => {
-    addArticle({ body })
+  const onSubmit: SubmitHandler<AddArticleForm> = async (body) => {
+    const resolved = await resolveStagedImages(body, (file) => uploadFileWithToast({ file, showSuccessToast: false }))
+    // The upload failure was already reported; don't submit blob: URLs.
+    if (!resolved.ok) return
+    addArticle({ body: resolved.value })
   }
 
   const onBackToArticles = () => {
@@ -220,12 +227,13 @@ export default function NewsAddPage() {
                           accept='image/*'
                           className='hidden'
                           ref={pictureFileInputRef}
-                          onChange={async (e) => {
+                          onChange={(e) => {
                             const file = e.target.files?.[0]
                             if (!file) return
                             e.target.value = ''
-                            const url = await uploadFileWithToast({ file, showSuccessToast: false })
-                            if (url) field.onChange(url)
+                            // Staged until saved, so backing out leaves no orphan.
+                            releaseStagedUpload(field.value)
+                            field.onChange(stageUpload(file))
                           }}
                         />
                         <button
@@ -233,14 +241,14 @@ export default function NewsAddPage() {
                           className={cn(
                             'relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed transition-colors',
                             fieldState.invalid ? 'border-destructive' : 'border-border',
-                            field.value ? 'aspect-video p-0' : 'h-24 hover:bg-muted/50'
+                            field.value ? 'aspect-[16/10] p-0' : 'h-24 hover:bg-muted/50'
                           )}
                           onClick={() => pictureFileInputRef.current?.click()}
                           disabled={isUploading}
                         >
                           {field.value ? (
                             <>
-                              <img src={field.value} alt='' className='size-full object-cover' />
+                              <ImageWithViewport src={field.value} className='size-full' />
                               <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
                                 {isUploading ? (
                                   <Spinner className='size-5 text-white' />
@@ -258,6 +266,16 @@ export default function NewsAddPage() {
                             </div>
                           )}
                         </button>
+                        {/* Outside the picker button: nesting it would fire the file dialog on click. */}
+                        {field.value && (
+                          <div className='flex justify-end'>
+                            <ImageViewportUrlButton
+                              value={field.value}
+                              onChange={field.onChange}
+                              aspectRatio={ARTICLE_COVER_ASPECT}
+                            />
+                          </div>
+                        )}
                         <div className='min-h-4'>
                           {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                         </div>
@@ -283,13 +301,13 @@ export default function NewsAddPage() {
 
                     <div className='flex flex-col gap-4'>
                       {pictureUrl ? (
-                        <img
+                        <ImageWithViewport
                           src={pictureUrl}
                           alt={t(`${ARTICLE_FORM_PREFIX}.previewImageAlt`)}
-                          className='aspect-video w-full rounded-lg border object-cover'
+                          className='aspect-[16/10] w-full rounded-lg border'
                         />
                       ) : (
-                        <div className='flex aspect-video w-full items-center justify-center rounded-lg border bg-muted text-muted-foreground'>
+                        <div className='flex aspect-[16/10] w-full items-center justify-center rounded-lg border bg-muted text-muted-foreground'>
                           <ImageIcon />
                         </div>
                       )}

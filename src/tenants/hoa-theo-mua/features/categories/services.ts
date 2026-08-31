@@ -9,7 +9,7 @@ import type {
   SortableCategory
 } from './types'
 import { CategoryProductType } from './types'
-import type { CategoryProductFormValues } from './validations'
+import type { CategoryProductFormValues, UpdateProductCategoriesFormValues } from './validations'
 
 type MessageResponse = string | { message?: string }
 
@@ -27,10 +27,14 @@ const toCategoryPayload = ({
 }: CategoryProductFormValues): CreateCategoryPayload => {
   const isCampaign = type === CategoryProductType.Campaign
 
-  // A child category (has a parent) only carries `isFilterable`; a parent carries the filter inputs.
   const scopedMetadata = parentId
-    ? { isFilterable: metaData.isFilterable }
-    : { filterByName: metaData.filterByName, filterByPrice: metaData.filterByPrice }
+    ? { isFilterable: metaData.isFilterable, rows: metaData.rows, cols: metaData.cols }
+    : {
+        filterByName: metaData.filterByName,
+        filterByPrice: metaData.filterByPrice,
+        rows: metaData.rows,
+        cols: metaData.cols
+      }
 
   return {
     ...rest,
@@ -82,11 +86,13 @@ class CategoryService extends BaseService {
   reorderCategory = async ({
     category,
     position,
-    parentId
+    parentId,
+    page
   }: {
     category: SortableCategory
     position: number
     parentId?: string | null
+    page?: CategoryProductPage[]
   }) => {
     const nextParentId = parentId !== undefined ? parentId : category.parentId
 
@@ -101,6 +107,7 @@ class CategoryService extends BaseService {
       isActive: true,
       startTime: category.startTime,
       endTime: category.endTime,
+      page: nextParentId ? [] : category.page?.length ? category.page : (page ?? []),
       ...(nextParentId ? { parentId: nextParentId } : {})
     }
 
@@ -124,9 +131,15 @@ class CategoryService extends BaseService {
   getSortableCategories = async ({ page }: { page?: CategoryProductPage[] }) => {
     const { data } = await this.get<BaseResponse<SortableCategory[]>>(`/v1/${this.baseUrl}/with-children`, {
       params: {
-        Page: page
+        page
       }
     })
+
+    return data.value
+  }
+
+  updateProductCategories = async ({ body }: { body: UpdateProductCategoriesFormValues }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/detail`, body)
 
     return data.value
   }

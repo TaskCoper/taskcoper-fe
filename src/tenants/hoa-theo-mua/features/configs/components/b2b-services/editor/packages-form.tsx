@@ -25,7 +25,7 @@ function PackageItemList({
   const { t } = useTenantTranslation()
   const { update, remove, move } = useListOps(items, onChange)
 
-  // Highlighting is exclusive — picking one clears the flag on every other package.
+  // Highlighting is exclusive - picking one clears the flag on every other package.
   const setHighlighted = (index: number, highlighted: boolean) =>
     onChange(items.map((it, i) => ({ ...it, highlighted: i === index ? highlighted : false })))
 

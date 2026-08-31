@@ -38,7 +38,7 @@ export default function ProductCategoriesSortPage() {
     onDragOver,
     onDragEnd,
     onDragCancel
-  } = useCategorySortDnd({ categories: sortableCategories })
+  } = useCategorySortDnd({ categories: sortableCategories, page: [pageFilter] })
 
   return (
     <div className='h-full overflow-auto'>

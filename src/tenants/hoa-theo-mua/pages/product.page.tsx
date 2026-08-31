@@ -1,226 +1,97 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { TenantT } from '@/lib/i18n/use-tenant-translation'
+import StatCard from '@/features/projects/core/components/stat-card'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { primaryButtonEffectClasses } from '@/shared/effects'
 import { cn } from '@/shared/utils'
 import {
   BoxIcon,
   CheckIcon,
   ChevronRightIcon,
+  CircleDotIcon,
+  ExternalLinkIcon,
+  GitBranchIcon,
   ImageIcon,
   Link2Icon,
   PackageIcon,
   ScanBarcodeIcon,
-  StoreIcon,
+  ShoppingCartIcon,
+  StarIcon,
+  TagIcon,
   ZoomInIcon
 } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
-import { Link, useParams } from 'react-router'
+import { useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
+import { ComboSpecification } from '../features/products/combos/components/combo-specification'
+import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
+import { useUpdateComboPublication } from '../features/products/combos/hooks/use-update-combo-publication'
+import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
+import {
+  ATTRIBUTE_OVERVIEW_FIELDS,
+  BASIC_INFO_FIELDS,
+  buildRows,
+  INVENTORY_FIELDS,
+  PRICING_FIELDS,
+  PRICING_OVERVIEW_FIELDS,
+  SPEC_GROUPS,
+  TAB_VALUES
+} from '../features/products/components/product-detail/fields'
+import {
+  DetailRows,
+  DetailSection,
+  ProductDetailSkeleton,
+  VariantRow
+} from '../features/products/components/product-detail/parts'
 import { useGetProduct } from '../features/products/hooks/use-get-product'
-import type { Product } from '../features/products/types'
 import { formatPrice, formatQuantity, parseNumber, productDetailToProduct } from '../features/products/utils'
-
-type FieldFormat = 'text' | 'price' | 'quantity'
-
-/** Keys of Product whose value is a string (or null) — excludes numeric fields like sourceRowNumber. */
-type ProductStringKey = { [K in keyof Product]: Product[K] extends string | null ? K : never }[keyof Product]
-
-interface FieldConfig {
-  key: ProductStringKey
-  label: string
-  format?: FieldFormat
-}
-
-const SPECIFICATION_FIELDS: FieldConfig[] = [
-  { key: 'productType', label: 'products.field.productType' },
-  { key: 'categoryName', label: 'products.field.categoryName' },
-  { key: 'categoryCode', label: 'products.field.categoryCode' },
-  { key: 'internalCategoryCode', label: 'products.field.internalCategoryCode' },
-  { key: 'brand', label: 'products.field.brand' },
-  { key: 'supplier', label: 'products.field.supplier' },
-  { key: 'productLabel', label: 'products.field.productLabel' },
-  { key: 'unit', label: 'products.field.unit' },
-  { key: 'size', label: 'products.field.size' },
-  { key: 'color', label: 'products.field.color' },
-  { key: 'origin', label: 'products.field.origin' },
-  { key: 'weightRaw', label: 'products.field.weight', format: 'quantity' },
-  { key: 'lengthRaw', label: 'products.field.length', format: 'quantity' },
-  { key: 'widthRaw', label: 'products.field.width', format: 'quantity' },
-  { key: 'heightRaw', label: 'products.field.height', format: 'quantity' },
-  { key: 'warrantyMonthsRaw', label: 'products.field.warrantyMonths', format: 'quantity' },
-  { key: 'warrantyAddress', label: 'products.field.warrantyAddress' },
-  { key: 'nhanhProductId', label: 'products.field.nhanhProductId' },
-  { key: 'productCode', label: 'products.field.productCode' },
-  { key: 'barcode', label: 'products.field.barcode' },
-  { key: 'parentProductId', label: 'products.field.parentProductId' },
-  { key: 'parentProductCode', label: 'products.field.parentProductCode' },
-  { key: 'parentProductName', label: 'products.field.parentProductName' },
-  { key: 'otherName', label: 'products.field.otherName' },
-  { key: 'slug', label: 'products.field.slug' },
-  { key: 'nhanhCreatedAtRaw', label: 'products.field.createdAt' },
-  { key: 'webOrderRaw', label: 'products.field.webOrder' }
-]
-
-const PRICING_FIELDS: FieldConfig[] = [
-  { key: 'priceRaw', label: 'products.field.price', format: 'price' },
-  { key: 'priceWithVatRaw', label: 'products.field.priceWithVat', format: 'price' },
-  { key: 'oldPriceRaw', label: 'products.field.oldPrice', format: 'price' },
-  { key: 'importPriceRaw', label: 'products.field.importPrice', format: 'price' },
-  { key: 'importVatRaw', label: 'products.field.importVat' },
-  { key: 'importVatMode', label: 'products.field.importVatMode' },
-  { key: 'importPriceWithVatRaw', label: 'products.field.importPriceWithVat', format: 'price' },
-  { key: 'costPriceRaw', label: 'products.field.costPrice', format: 'price' },
-  { key: 'profitPercentageRaw', label: 'products.field.profitPercentage' },
-  { key: 'vatRaw', label: 'products.field.vat' },
-  { key: 'saleVatMode', label: 'products.field.saleVatMode' },
-  { key: 'priceLabel', label: 'products.field.priceLabel' },
-  { key: 'branchPriceRaw', label: 'products.field.branchPrice', format: 'price' },
-  { key: 'branchPriceWithVatRaw', label: 'products.field.branchPriceWithVat', format: 'price' },
-  { key: 'branchPriceDuplicateRaw', label: 'products.field.branchPriceDuplicate', format: 'price' },
-  { key: 'wholesalePriceRaw', label: 'products.field.wholesalePrice', format: 'price' },
-  { key: 'wholesalePriceWithVatRaw', label: 'products.field.wholesalePriceWithVat', format: 'price' },
-  { key: 'wholesaleBranchPriceRaw', label: 'products.field.wholesaleBranchPrice', format: 'price' },
-  { key: 'wholesaleBranchPriceWithVatRaw', label: 'products.field.wholesaleBranchPriceWithVat', format: 'price' },
-  { key: 'wholesaleBranchPriceDuplicateRaw', label: 'products.field.wholesaleBranchPriceDuplicate', format: 'price' }
-]
-
-const INVENTORY_FIELDS: FieldConfig[] = [
-  { key: 'totalStockRaw', label: 'products.field.totalStock', format: 'quantity' },
-  { key: 'stockRaw', label: 'products.field.stock', format: 'quantity' },
-  { key: 'warehouseStockRaw', label: 'products.field.warehouseStock', format: 'quantity' },
-  { key: 'availableForSaleRaw', label: 'products.field.availableForSale', format: 'quantity' },
-  { key: 'deliveringStockRaw', label: 'products.field.deliveringStock', format: 'quantity' },
-  { key: 'stockTransferringRaw', label: 'products.field.stockTransferring', format: 'quantity' },
-  { key: 'heldRaw', label: 'products.field.held', format: 'quantity' },
-  { key: 'heldComponentsRaw', label: 'products.field.heldComponents', format: 'quantity' },
-  { key: 'preOrderRaw', label: 'products.field.preOrder', format: 'quantity' },
-  { key: 'pendingImportStockRaw', label: 'products.field.pendingImportStock', format: 'quantity' },
-  { key: 'warrantyStockRaw', label: 'products.field.warrantyStock', format: 'quantity' },
-  { key: 'stockErrorRaw', label: 'products.field.stockError', format: 'quantity' }
-]
-
-/** Inventory rows shown as breakdown bars in the inventory tab. */
-const INVENTORY_BAR_FIELDS: { key: ProductStringKey; label: string }[] = [
-  { key: 'availableForSaleRaw', label: 'products.field.availableForSale' },
-  { key: 'stockRaw', label: 'products.field.stock' },
-  { key: 'warehouseStockRaw', label: 'products.field.warehouseStock' },
-  { key: 'deliveringStockRaw', label: 'products.field.deliveringStock' },
-  { key: 'heldRaw', label: 'products.field.held' },
-  { key: 'preOrderRaw', label: 'products.field.preOrder' }
-]
-
-/** Below the threshold we surface a "only N left" nudge, mirroring the storefront layout. */
-const LOW_STOCK_THRESHOLD = 10
-
-function formatValue(raw: string | null, format: FieldFormat | undefined): string | null {
-  if (format === 'price') return formatPrice(raw)
-  if (format === 'quantity') return formatQuantity(raw)
-  return raw?.trim() ? raw.trim() : null
-}
-
-function isActiveStatus(status: string | null) {
-  if (!status) return false
-  const normalized = status.toLowerCase()
-  return normalized.includes('bán') || normalized.includes('active') || normalized.includes('kinh doanh')
-}
-
-interface SpecRow {
-  label: string
-  value: string
-}
-
-function buildRows(fields: FieldConfig[], product: Product): SpecRow[] {
-  return fields
-    .map((field) => ({ label: field.label, value: formatValue(product[field.key], field.format) }))
-    .filter((row): row is SpecRow => row.value !== null)
-}
-
-/** Storefront-style two-column check list of key/value facts. */
-function SpecList({ rows, t }: { rows: SpecRow[]; t: TenantT }) {
-  if (rows.length === 0) {
-    return <p className='py-8 text-center text-sm text-muted-foreground'>{t('products.common.noData')}</p>
-  }
-
-  return (
-    <ul className='grid gap-x-10 gap-y-3.5 sm:grid-cols-2'>
-      {rows.map((row) => (
-        <li key={row.label} className='flex items-start gap-2.5'>
-          <span className='mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'>
-            <CheckIcon className='size-3' strokeWidth={3} />
-          </span>
-          <span className='text-sm leading-relaxed'>
-            <span className='text-muted-foreground'>{t(row.label)}: </span>
-            <span className='font-medium'>{row.value}</span>
-          </span>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-function InfoRow({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className='flex items-center justify-between gap-3'>
-      <dt className='text-sm text-muted-foreground'>{label}</dt>
-      <dd className='text-right text-sm font-medium'>{value}</dd>
-    </div>
-  )
-}
-
-function OptionPill({ label }: { label: string }) {
-  return (
-    <span className='inline-flex items-center rounded-full border-2 border-primary bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary'>
-      {label}
-    </span>
-  )
-}
-
-function ProductDetailSkeleton() {
-  return (
-    <div className='mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8'>
-      <Skeleton className='mb-6 h-5 w-72' />
-      <div className='grid gap-10 lg:grid-cols-2'>
-        <div className='space-y-4'>
-          <Skeleton className='aspect-square w-full rounded-2xl' />
-          <div className='flex gap-3'>
-            <Skeleton className='size-20 rounded-xl' />
-            <Skeleton className='size-20 rounded-xl' />
-            <Skeleton className='size-20 rounded-xl' />
-          </div>
-        </div>
-        <div className='space-y-4'>
-          <Skeleton className='h-9 w-3/4' />
-          <Skeleton className='h-5 w-40' />
-          <Skeleton className='h-10 w-52' />
-          <Skeleton className='h-11 w-full' />
-          <Skeleton className='h-24 w-full rounded-2xl' />
-        </div>
-      </div>
-    </div>
-  )
-}
 
 export default function ProductPage() {
   const { t } = useTenantTranslation()
   const { id } = useParams<{ id: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const { product: fetchedDetail, isGettingProduct } = useGetProduct({
     id: id ?? ''
   })
 
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [copied, setCopied] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
 
+  const [imageResetId, setImageResetId] = useState(id)
+  if (id !== imageResetId) {
+    setImageResetId(id)
+    setActiveImageIndex(0)
+  }
+
   const product = fetchedDetail ? productDetailToProduct(fetchedDetail) : undefined
+  const variants = fetchedDetail?.children?.map((child) => productDetailToProduct(child)) ?? []
+  const isCombo = product?.productType?.trim().toLowerCase() === 'combo'
+  const hasVariants = variants.length > 0
+  const areAllVariantsCombos =
+    hasVariants && variants.every((variant) => variant.productType?.trim().toLowerCase() === 'combo')
+  const isVariant = Boolean(product?.parentProductId?.trim())
+  const canEditFactor = isVariant
+  const canManageComboSpecification = isCombo || areAllVariantsCombos
+  const canManageComboMaterials = !isVariant
+  const isComboSpecificationRequested = searchParams.get('tab') === 'quantity'
+
+  const {
+    comboSpecification,
+    isGettingComboSpecification,
+    isError: isComboSpecificationError
+  } = useGetComboSpecification({
+    id: id ?? '',
+    enabled: canManageComboSpecification && isComboSpecificationRequested
+  })
+  const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
   if (isGettingProduct) return <ProductDetailSkeleton />
 
@@ -241,40 +112,64 @@ export default function ProductPage() {
     )
   }
 
-  const { coverImage, productName, otherName, productCode, categoryName, brand, supplier, productLabel, status } =
-    product
+  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, slug } = product
 
   const displayName = productName?.trim() || t('products.common.unnamed')
-  const active = isActiveStatus(status)
+  const comboId = product.parentProductId?.trim() || id || ''
+  const publicationComboId = id || ''
+  const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
+  const parent = product.parent
+  const parentId = product.parentId?.trim() || parent?.id
+  const parentName =
+    product.parentProductName?.trim() ||
+    parent?.productName?.trim() ||
+    product.parentProductCode?.trim() ||
+    parent?.productCode?.trim() ||
+    t('products.common.unnamed')
+
+  const galleryImages = [
+    ...(coverImage ? [{ src: coverImage, isCover: true }] : []),
+    ...(otherImages ?? []).filter((src): src is string => Boolean(src?.trim())).map((src) => ({ src, isCover: false }))
+  ]
+  const safeImageIndex = Math.min(activeImageIndex, galleryImages.length - 1)
 
   const salePrice = formatPrice(product.priceWithVatRaw ?? product.priceRaw)
+  const availableForSaleDisplay = formatQuantity(
+    product.sellableQuantity == null ? null : String(product.sellableQuantity)
+  )
   const currentPriceValue = parseNumber(product.priceWithVatRaw ?? product.priceRaw)
   const oldPriceValue = parseNumber(product.oldPriceRaw)
-  const oldPrice = formatPrice(product.oldPriceRaw)
   const hasDiscount = currentPriceValue !== null && oldPriceValue !== null && oldPriceValue > currentPriceValue
   const discountPct = hasDiscount ? Math.round((1 - currentPriceValue! / oldPriceValue!) * 100) : null
 
-  const available = parseNumber(product.availableForSaleRaw)
-  const lowStock = available !== null && available > 0 && available <= LOW_STOCK_THRESHOLD
+  const available = product.sellableQuantity ?? parseNumber(product.availableForSaleRaw)
+  const stockStatusText = product.stockStatus?.trim()
+  const isInStock = available !== null ? available > 0 : stockStatusText?.toLowerCase().includes('còn hàng') === true
+  const statusText = stockStatusText || t(isInStock ? 'products.detail.inStock' : 'products.detail.outOfStock')
+  const saleStatusText = t(
+    product.isActive ? 'products.detail.comboSpecification.published' : 'products.detail.comboSpecification.unpublished'
+  )
+  const websiteUrl = slug?.trim()?.startsWith('http') ? slug.trim() : null
 
-  // Compact key facts shown in the purchase panel — only real, non-empty fields.
-  const infoRows: SpecRow[] = [
-    { label: 'products.field.origin', value: product.origin?.trim() ?? '' },
-    { label: 'products.field.brand', value: brand?.trim() ?? '' },
-    { label: 'products.field.unit', value: product.unit?.trim() ?? '' },
-    { label: 'products.field.warrantyMonths', value: formatQuantity(product.warrantyMonthsRaw) ?? '' }
-  ].filter((row): row is SpecRow => row.value !== '')
-
-  const specRows = buildRows(SPECIFICATION_FIELDS, product)
+  const basicInfoRows = buildRows(BASIC_INFO_FIELDS, product)
+  const pricingOverviewRows = buildRows(PRICING_OVERVIEW_FIELDS, product)
+  const attributeRows = buildRows(ATTRIBUTE_OVERVIEW_FIELDS, product)
   const pricingRows = buildRows(PRICING_FIELDS, product)
   const inventoryRows = buildRows(INVENTORY_FIELDS, product)
 
-  const totalStock = parseNumber(product.totalStockRaw)
-  const inventoryBars = INVENTORY_BAR_FIELDS.map((field) => ({
-    label: field.label,
-    value: parseNumber(product[field.key])
-  })).filter((bar): bar is { label: string; value: number } => bar.value !== null)
-  const barDenominator = Math.max(totalStock ?? 0, ...inventoryBars.map((bar) => bar.value), 1)
+  const rawTab = searchParams.get('tab')
+  const isComboSpecificationTab = rawTab === 'quantity'
+  const isValidTab =
+    TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) &&
+    (rawTab !== 'variants' || variants.length > 0) &&
+    (!isComboSpecificationTab || canManageComboSpecification)
+  const currentTab = isValidTab ? rawTab! : 'overview'
+
+  const handleTabChange = (value: string) => {
+    const next = new URLSearchParams(searchParams)
+    next.set('tab', value)
+    setSearchParams(next, { replace: true })
+  }
 
   const handleCopyCode = async () => {
     const code = productCode?.trim()
@@ -285,7 +180,7 @@ export default function ProductPage() {
       setCopied(true)
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
-      /* clipboard unavailable — silently ignore */
+      /* clipboard unavailable - silently ignore */
     }
   }
 
@@ -295,152 +190,100 @@ export default function ProductPage() {
       setLinkCopied(true)
       window.setTimeout(() => setLinkCopied(false), 2000)
     } catch {
-      /* clipboard unavailable — silently ignore */
+      /* clipboard unavailable - silently ignore */
     }
   }
 
+  const handleUpdateComboPublication = async (publish: boolean) => {
+    if (!publicationComboId || isUpdatingComboPublication || publish === isComboPublished) return
+
+    await updateComboPublication({ comboId: publicationComboId, publish })
+  }
+
+  const ensureComboUnpublished = async () => {
+    if (!isComboPublished) return true
+    if (!publicationComboId || isUpdatingComboPublication) return false
+
+    try {
+      await updateComboPublication({ comboId: publicationComboId, publish: false })
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const TABS = [
+    { value: 'overview', label: t('products.detail.tab.overview') },
+    { value: 'specifications', label: t('products.detail.tab.specifications') },
+    { value: 'pricing', label: t('products.detail.tab.pricing') },
+    { value: 'inventory', label: t('products.detail.tab.inventory') },
+    ...(canManageComboSpecification ? [{ value: 'quantity', label: t('products.detail.tab.quantity') }] : []),
+    ...(variants.length > 0 ? [{ value: 'variants', label: t('products.detail.variants.title') }] : [])
+  ]
+
   return (
-    <div className='absolute inset-0 overflow-y-auto'>
-      <div className='mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8'>
-        {/* Breadcrumb + code chip */}
-        <div className='mb-6 flex items-center justify-between gap-4'>
+    <div className='absolute inset-0 overflow-y-auto bg-muted/30'>
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='flex flex-col'>
+        {/* Dashboard header */}
+        <div className='space-y-5 px-4 pt-6 sm:px-6 lg:px-8'>
+          {/* Breadcrumb */}
           <nav className='flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground'>
             <Link
               to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products`}
-              className='shrink-0 transition-colors hover:text-foreground'
+              className='shrink-0 whitespace-nowrap transition-colors hover:text-foreground'
             >
               {t('products.list.title')}
             </Link>
-            {categoryName?.trim() && (
+
+            {parentId && (
               <>
-                <ChevronRightIcon className='size-3.5 shrink-0' />
-                <span className='hidden truncate sm:inline'>{categoryName}</span>
+                <ChevronRightIcon className='hidden size-3.5 shrink-0 sm:block' />
+                <Link
+                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
+                  className='hidden max-w-48 shrink truncate whitespace-nowrap transition-colors hover:text-foreground sm:block'
+                >
+                  {parentName}
+                </Link>
               </>
             )}
+
             <ChevronRightIcon className='size-3.5 shrink-0' />
-            <span className='truncate font-medium text-foreground'>{displayName}</span>
+            <span className='min-w-0 truncate whitespace-nowrap font-medium text-foreground'>{displayName}</span>
           </nav>
-          {productCode?.trim() && (
-            <span className='hidden shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:inline'>
-              {productCode}
-            </span>
-          )}
-        </div>
 
-        {/* Hero: gallery + purchase panel */}
-        <div className='grid gap-10 lg:grid-cols-2'>
-          {/* Left — gallery */}
-          <div className='space-y-3'>
-            <button
-              type='button'
-              onClick={() => coverImage && setLightboxOpen(true)}
-              disabled={!coverImage}
-              className={cn(
-                'group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border bg-muted/30',
-                coverImage && 'cursor-zoom-in'
-              )}
-              aria-label={t('products.detail.viewImage')}
-            >
-              {coverImage ? (
-                <>
-                  <img src={coverImage} alt={displayName} className='size-full object-contain p-8' />
-                  <span className='absolute right-4 top-4 flex size-9 items-center justify-center rounded-full bg-background/80 text-foreground opacity-0 shadow-sm backdrop-blur transition-opacity group-hover:opacity-100'>
-                    <ZoomInIcon className='size-4' />
-                  </span>
-                </>
-              ) : (
-                <span className='flex flex-col items-center gap-2 text-muted-foreground/50'>
-                  <ImageIcon className='size-16' />
-                  <span className='text-xs'>{t('products.common.noData')}</span>
-                </span>
-              )}
-              {discountPct !== null && (
-                <span className='absolute left-4 top-4 rounded-full bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm'>
-                  -{discountPct}%
-                </span>
-              )}
-            </button>
-
-            {/* Thumbnail rail */}
-            {coverImage && (
-              <div className='flex gap-3'>
-                <button
-                  type='button'
-                  onClick={() => setLightboxOpen(true)}
-                  className='size-20 overflow-hidden rounded-xl border-2 border-primary bg-muted/30'
-                  aria-label={t('products.detail.viewImage')}
-                >
-                  <img src={coverImage} alt={displayName} className='size-full object-cover' />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Right — purchase / info panel */}
-          <div className='space-y-5'>
-            {/* Category + labels */}
-            <div className='flex flex-wrap items-center gap-2'>
-              {categoryName?.trim() && (
-                <Badge variant='secondary' className='font-normal'>
-                  {categoryName}
-                </Badge>
-              )}
-              {productLabel?.trim() && (
-                <Badge className='border-amber-200 bg-amber-50 font-medium text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'>
-                  {productLabel}
-                </Badge>
-              )}
-            </div>
-
-            {/* Title + share */}
-            <div className='flex items-start justify-between gap-4'>
-              <div className='min-w-0 space-y-1'>
+          {/* Title + actions */}
+          <div className='flex flex-wrap items-start justify-between gap-4'>
+            <div className='min-w-0 space-y-2'>
+              <div className='flex flex-wrap items-center gap-2.5'>
                 <h1 className='text-2xl font-bold leading-tight tracking-tight'>{displayName}</h1>
-                {otherName?.trim() && <p className='text-sm text-muted-foreground'>{otherName}</p>}
+                <Badge
+                  variant='secondary'
+                  className={cn(
+                    'gap-1.5 font-medium',
+                    isInStock
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+                      : ''
+                  )}
+                >
+                  <span
+                    className={cn('size-1.5 rounded-full', isInStock ? 'bg-emerald-500' : 'bg-muted-foreground/50')}
+                  />
+                  {statusText}
+                </Badge>
               </div>
-              <button
-                type='button'
-                onClick={handleCopyLink}
-                className='flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground'
-                title={t('products.detail.share')}
-              >
-                {linkCopied ? (
-                  <>
-                    <CheckIcon className='size-3.5 text-emerald-500' />
-                    {t('products.detail.copied')}
-                  </>
-                ) : (
-                  <>
-                    <Link2Icon className='size-3.5' />
-                    {t('products.detail.share')}
-                  </>
+              {otherName?.trim() && <p className='text-sm text-muted-foreground'>{otherName}</p>}
+              <div className='flex flex-wrap items-center gap-2'>
+                {categoryName?.trim() && (
+                  <Badge variant='secondary' className='font-normal'>
+                    {categoryName}
+                  </Badge>
                 )}
-              </button>
-            </div>
-
-            {/* Status + availability (storefront rating slot) */}
-            <div className='flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm'>
-              <span
-                className={cn(
-                  'inline-flex items-center gap-1.5 font-medium',
-                  active ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'
+                {productLabel?.trim() && (
+                  <Badge className='border-amber-200 bg-amber-50 font-medium text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'>
+                    {productLabel}
+                  </Badge>
                 )}
-              >
-                <span className={cn('size-1.5 rounded-full', active ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
-                {status?.trim() ||
-                  (available && available > 0 ? t('products.detail.inStock') : t('products.detail.outOfStock'))}
-              </span>
-              {available !== null && (
-                <>
-                  <span className='text-muted-foreground/40'>•</span>
-                  <span className='text-muted-foreground'>
-                    {t('products.detail.availableCount', { count: available })}
-                  </span>
-                </>
-              )}
-              {productCode?.trim() && (
-                <>
-                  <span className='text-muted-foreground/40'>•</span>
+                {productCode?.trim() && (
                   <button
                     type='button'
                     onClick={handleCopyCode}
@@ -454,176 +297,314 @@ export default function ProductPage() {
                     )}
                     {productCode}
                   </button>
-                </>
-              )}
-            </div>
-
-            <Separator />
-
-            {/* Price */}
-            <div className='space-y-1'>
-              {salePrice ? (
-                <div className='flex flex-wrap items-baseline gap-x-3 gap-y-1'>
-                  <span className='text-3xl font-bold tracking-tight'>{salePrice}</span>
-                  {hasDiscount && oldPrice && (
-                    <>
-                      <span className='text-base text-muted-foreground line-through'>{oldPrice}</span>
-                      <span className='text-sm font-semibold text-rose-600 dark:text-rose-400'>
-                        ({discountPct}% {t('products.detail.off')})
-                      </span>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <span className='text-lg font-semibold text-muted-foreground'>{t('products.detail.priceUnknown')}</span>
-              )}
-              <p className='text-xs text-emerald-600 dark:text-emerald-400'>{t('products.detail.vatIncluded')}</p>
-            </div>
-
-            {/* Attribute options */}
-            {(product.color?.trim() || product.size?.trim()) && (
-              <div className='space-y-4'>
-                {product.color?.trim() && (
-                  <div className='space-y-2'>
-                    <p className='text-sm font-medium'>{t('products.field.color')}</p>
-                    <OptionPill label={product.color} />
-                  </div>
-                )}
-                {product.size?.trim() && (
-                  <div className='space-y-2'>
-                    <p className='text-sm font-medium'>{t('products.field.size')}</p>
-                    <OptionPill label={product.size} />
-                  </div>
                 )}
               </div>
-            )}
+            </div>
 
-            {/* Stock nudge (storefront quantity slot) */}
-            {available !== null && (
-              <div className='flex flex-wrap items-center gap-3'>
-                <span className='inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm'>
-                  <span className='text-muted-foreground'>{t('products.field.availableForSale')}</span>
-                  <span className='font-semibold tabular-nums'>{formatQuantity(product.availableForSaleRaw)}</span>
+            <div className='flex shrink-0 items-center gap-2'>
+              {websiteUrl && (
+                <Button variant='outline' size='sm' asChild>
+                  <a href={websiteUrl} target='_blank' rel='noreferrer'>
+                    <ExternalLinkIcon className='size-3.5' />
+                    {t('products.detail.viewOnWebsite')}
+                  </a>
+                </Button>
+              )}
+              <div className='flex items-center gap-2'>
+                <span className='whitespace-nowrap text-sm font-medium text-muted-foreground'>
+                  {t('products.detail.comboSpecification.publicationStatus')}:
                 </span>
-                {available <= 0 ? (
-                  <span className='text-sm font-medium text-rose-600 dark:text-rose-400'>
-                    {t('products.detail.outOfStock')}
-                  </span>
-                ) : lowStock ? (
-                  <span className='text-sm font-medium text-amber-600 dark:text-amber-400'>
-                    {t('products.detail.onlyLeft', { count: available })}
-                  </span>
-                ) : null}
+                <Select
+                  value={isComboPublished ? 'published' : 'unpublished'}
+                  onValueChange={(value) => void handleUpdateComboPublication(value === 'published')}
+                  disabled={isUpdatingComboPublication}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      'h-9 min-w-36 gap-2 rounded-lg px-3 font-semibold shadow-sm transition-colors',
+                      isComboPublished
+                        ? cn(
+                            primaryButtonEffectClasses,
+                            'border-primary bg-none! ring-primary! [&_svg]:text-primary-foreground!'
+                          )
+                        : 'border-input bg-background text-foreground hover:bg-muted'
+                    )}
+                  >
+                    {isComboPublished && <ShoppingCartIcon className='size-4 shrink-0' />}
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align='end'>
+                    <SelectItem value='published'>{t('products.detail.comboSpecification.published')}</SelectItem>
+                    <SelectItem value='unpublished'>{t('products.detail.comboSpecification.unpublished')}</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            )}
-
-            {/* Supplier card (storefront seller slot) */}
-            {(supplier?.trim() || brand?.trim()) && (
-              <Card className='flex-row items-center justify-between gap-4 bg-muted/40 p-4 shadow-none'>
-                <div className='flex min-w-0 items-center gap-3'>
-                  <span className='flex size-10 shrink-0 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm'>
-                    <StoreIcon className='size-5' />
-                  </span>
-                  <div className='min-w-0'>
-                    <p className='truncate text-sm font-semibold'>{supplier?.trim() || brand?.trim()}</p>
-                    <p className='text-xs text-muted-foreground'>{t('products.detail.suppliedBy')}</p>
-                  </div>
-                </div>
-                {brand?.trim() && supplier?.trim() && (
-                  <Badge variant='secondary' className='shrink-0 font-normal'>
-                    {brand}
-                  </Badge>
-                )}
-              </Card>
-            )}
-
-            {/* Key facts */}
-            {infoRows.length > 0 && (
-              <>
-                <Separator />
-                <dl className='space-y-2.5'>
-                  {infoRows.map((row) => (
-                    <InfoRow key={row.label} label={t(row.label)} value={row.value} />
-                  ))}
-                </dl>
-              </>
-            )}
+              <Button variant='outline' size='sm' onClick={handleCopyLink}>
+                {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
+                {linkCopied ? t('products.detail.copied') : t('products.detail.share')}
+              </Button>
+            </div>
           </div>
+
+          {/* Parent product notice — this product is a variant/child of another */}
+          {parentId && (
+            <Link
+              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${parentId}`}
+              className='group flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-2 transition-colors hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/40 dark:hover:bg-blue-950/60'
+            >
+              <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
+                <GitBranchIcon className='size-4' />
+              </span>
+
+              <div className='min-w-0 flex-1'>
+                <p className='text-sm font-bold text-blue-900 dark:text-blue-200'>
+                  {t('products.detail.parent.title')}
+                </p>
+                <p className='truncate text-xs text-blue-700/80 dark:text-blue-300/80'>
+                  {t('products.detail.parent.description', { name: parentName })}
+                </p>
+              </div>
+
+              <Button size='sm'>
+                <p>{t('products.detail.parent.view')}</p>
+                <ChevronRightIcon />
+              </Button>
+            </Link>
+          )}
+
+          {/* Stat cards */}
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <StatCard
+              title={t('products.field.price')}
+              value={salePrice ?? t('products.detail.priceUnknown')}
+              icon={<TagIcon className='size-4 text-white' />}
+              color='blue'
+            />
+            <StatCard
+              title={t('products.field.availableForSale')}
+              value={availableForSaleDisplay ?? '-'}
+              icon={<BoxIcon className='size-4 text-white' />}
+              color='green'
+            />
+            <StatCard
+              title={t('products.field.totalStock')}
+              value={formatQuantity(product.totalStockRaw) ?? '-'}
+              icon={<PackageIcon className='size-4 text-white' />}
+              color='purple'
+            />
+            <StatCard
+              title={t('products.column.status')}
+              value={saleStatusText}
+              icon={<CircleDotIcon className='size-4 text-white' />}
+              color={product.isActive ? 'emerald' : 'slate'}
+            />
+          </div>
+
+          {/* Tabs */}
+          <TabsList className='w-full justify-start gap-2 overflow-x-auto rounded-none border-b bg-transparent p-0 flex-nowrap [&::-webkit-scrollbar]:hidden'>
+            {TABS.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className='relative flex-none shrink-0 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-foreground data-[state=active]:shadow-none'
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
         </div>
 
-        {/* Detail tabs */}
-        <Tabs defaultValue='specifications' className='mt-12'>
-          <TabsList className='h-11 w-full justify-start rounded-none border-b bg-transparent p-0'>
-            <TabsTrigger
-              value='specifications'
-              className='rounded-none border-0 border-b-2 border-transparent px-4 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none'
+        {/* Content */}
+        <div className='w-full px-4 pt-2 pb-6 sm:px-6 lg:px-8'>
+          {/* Overview */}
+          <TabsContent value='overview' className='mt-0 space-y-8'>
+            <DetailSection
+              title={t('products.detail.section.basicInfo')}
+              description={t('products.detail.sectionDesc.basicInfo')}
             >
-              {t('products.detail.tab.specifications')}
-            </TabsTrigger>
-            <TabsTrigger
-              value='pricing'
-              className='rounded-none border-0 border-b-2 border-transparent px-4 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none'
+              <DetailRows rows={basicInfoRows} t={t} />
+            </DetailSection>
+
+            <DetailSection
+              title={t('products.detail.section.pricing')}
+              description={t('products.detail.sectionDesc.pricing')}
             >
-              {t('products.detail.tab.pricing')}
-            </TabsTrigger>
-            <TabsTrigger
-              value='inventory'
-              className='rounded-none border-0 border-b-2 border-transparent px-4 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none'
+              <DetailRows rows={pricingOverviewRows} t={t} />
+            </DetailSection>
+
+            <DetailSection
+              title={t('products.detail.section.images')}
+              description={t('products.detail.sectionDesc.images')}
+              action={
+                galleryImages.length > 0 ? (
+                  <Badge variant='secondary' className='font-normal'>
+                    {galleryImages.length}
+                  </Badge>
+                ) : undefined
+              }
             >
-              {t('products.detail.tab.inventory')}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value='specifications' className='pt-8'>
-            <h2 className='mb-6 text-lg font-semibold'>{t('products.detail.section.attributes')}</h2>
-            <SpecList rows={specRows} t={t} />
-          </TabsContent>
-
-          <TabsContent value='pricing' className='pt-8'>
-            <h2 className='mb-6 text-lg font-semibold'>{t('products.detail.section.pricing')}</h2>
-            <SpecList rows={pricingRows} t={t} />
-          </TabsContent>
-
-          <TabsContent value='inventory' className='space-y-8 pt-8'>
-            {inventoryBars.length > 0 && (
-              <Card className='gap-4 p-5 shadow-none'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-2'>
-                    <BoxIcon className='size-4 text-muted-foreground' />
-                    <h2 className='text-sm font-semibold'>{t('products.detail.section.inventory')}</h2>
-                  </div>
-                  {totalStock !== null && (
-                    <span className='text-sm text-muted-foreground'>
-                      <span className='font-semibold text-foreground'>{formatQuantity(product.totalStockRaw)}</span>{' '}
-                      {t('products.detail.totalUnits')}
-                    </span>
-                  )}
-                </div>
-                <div className='grid gap-x-8 gap-y-3 sm:grid-cols-2'>
-                  {inventoryBars.map((bar) => (
-                    <div key={bar.label} className='space-y-1'>
-                      <div className='flex items-center justify-between text-xs'>
-                        <span className='text-muted-foreground'>{t(bar.label)}</span>
-                        <span className='font-medium tabular-nums'>{formatQuantity(String(bar.value))}</span>
-                      </div>
-                      <Progress value={Math.min(100, Math.round((bar.value / barDenominator) * 100))} />
-                    </div>
+              {galleryImages.length > 0 ? (
+                <div className='flex gap-3 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden'>
+                  {galleryImages.map((image, index) => (
+                    <button
+                      key={image.src + index}
+                      type='button'
+                      onClick={() => {
+                        setActiveImageIndex(index)
+                        setLightboxOpen(true)
+                      }}
+                      className='group relative size-60 shrink-0 overflow-hidden rounded-lg border bg-muted/30'
+                      aria-label={t('products.detail.viewImage')}
+                    >
+                      <img src={image.src} alt={displayName} className='size-full object-cover' />
+                      <span className='absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100'>
+                        <ZoomInIcon className='size-6 text-white' />
+                      </span>
+                      {image.isCover && (
+                        <span className='absolute left-2 top-2 flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm'>
+                          <StarIcon className='size-3 fill-current' />
+                          {t('products.detail.gallery.cover')}
+                        </span>
+                      )}
+                      {image.isCover && discountPct !== null && (
+                        <span className='absolute right-2 top-2 rounded-full bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm'>
+                          -{discountPct}%
+                        </span>
+                      )}
+                    </button>
                   ))}
                 </div>
-              </Card>
-            )}
-            <SpecList rows={inventoryRows} t={t} />
-          </TabsContent>
-        </Tabs>
-      </div>
+              ) : (
+                <div className='flex size-60 flex-col items-center justify-center gap-2 rounded-lg border bg-muted/30 text-muted-foreground/50'>
+                  <ImageIcon className='size-16' />
+                  <span className='text-xs'>{t('products.common.noData')}</span>
+                </div>
+              )}
+            </DetailSection>
 
-      {coverImage && (
+            {attributeRows.length > 0 && (
+              <DetailSection
+                title={t('products.detail.section.attributes')}
+                description={t('products.detail.sectionDesc.attributes')}
+              >
+                <DetailRows rows={attributeRows} t={t} />
+              </DetailSection>
+            )}
+
+            {/* Category membership editor */}
+            <ProductCategoriesEditor product={product} />
+          </TabsContent>
+
+          {/* Specifications */}
+          <TabsContent value='specifications' className='mt-0 space-y-8'>
+            {SPEC_GROUPS.map((group) => {
+              const rows = buildRows(group.fields, product)
+              if (rows.length === 0) return null
+              return (
+                <DetailSection
+                  key={group.section}
+                  title={t(group.label)}
+                  description={t(`products.detail.sectionDesc.${group.section}`)}
+                >
+                  <DetailRows rows={rows} t={t} />
+                </DetailSection>
+              )
+            })}
+          </TabsContent>
+
+          {/* Pricing */}
+          <TabsContent value='pricing' className='mt-0'>
+            <DetailSection
+              title={t('products.detail.section.pricing')}
+              description={t('products.detail.sectionDesc.pricing')}
+            >
+              <DetailRows rows={pricingRows} t={t} />
+            </DetailSection>
+          </TabsContent>
+
+          {/* Inventory */}
+          <TabsContent value='inventory' className='mt-0'>
+            <DetailSection
+              title={t('products.detail.section.inventory')}
+              description={t('products.detail.sectionDesc.inventory')}
+            >
+              <DetailRows rows={inventoryRows} t={t} />
+            </DetailSection>
+          </TabsContent>
+
+          {canManageComboSpecification && (
+            <TabsContent value='quantity' className='mt-0'>
+              <DetailSection
+                title={t('products.detail.comboSpecification.title')}
+                description={t('products.detail.comboSpecification.description')}
+              >
+                <ComboSpecification
+                  key={`${id}-${product.factor ?? 'unconfigured'}`}
+                  productId={id ?? ''}
+                  comboId={comboId}
+                  factor={product.factor}
+                  sellableQuantity={product.sellableQuantity}
+                  stockStatus={product.stockStatus}
+                  canEditFactor={canEditFactor}
+                  canManageMaterials={canManageComboMaterials}
+                  isUpdatingPublication={isUpdatingComboPublication}
+                  onEnsureUnpublished={ensureComboUnpublished}
+                  materials={comboSpecification?.materials ?? []}
+                  isLoading={isGettingComboSpecification}
+                  isError={isComboSpecificationError}
+                  t={t}
+                />
+              </DetailSection>
+            </TabsContent>
+          )}
+
+          {/* Variants */}
+          {variants.length > 0 && (
+            <TabsContent value='variants' className='mt-0'>
+              <DetailSection
+                title={t('products.detail.variants.title')}
+                description={t('products.detail.sectionDesc.variants')}
+                action={
+                  <Badge variant='secondary' className='font-normal'>
+                    {variants.length}
+                  </Badge>
+                }
+              >
+                <div className='overflow-x-auto rounded-lg border'>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className='w-14' />
+                        <TableHead>{t('products.column.product')}</TableHead>
+                        <TableHead>{t('products.detail.variants.options')}</TableHead>
+                        <TableHead className='text-right'>{t('products.field.price')}</TableHead>
+                        <TableHead className='text-right'>{t('products.field.availableForSale')}</TableHead>
+                        <TableHead>{t('products.column.status')}</TableHead>
+                        <TableHead className='text-center'>{t('products.detail.comboSpecification.factor')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {variants.map((variant) => (
+                        <VariantRow key={variant.id} variant={variant} parentId={id ?? ''} t={t} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </DetailSection>
+            </TabsContent>
+          )}
+        </div>
+      </Tabs>
+
+      {galleryImages.length > 0 && (
         <Lightbox
           open={lightboxOpen}
           close={() => setLightboxOpen(false)}
-          slides={[{ src: coverImage, alt: displayName }]}
-          carousel={{ finite: true }}
-          render={{ buttonPrev: () => null, buttonNext: () => null }}
+          index={safeImageIndex}
+          on={{ view: ({ index }) => setActiveImageIndex(index) }}
+          slides={galleryImages.map((image) => ({ src: image.src, alt: displayName }))}
+          carousel={{ finite: galleryImages.length === 1 }}
+          render={galleryImages.length === 1 ? { buttonPrev: () => null, buttonNext: () => null } : undefined}
         />
       )}
     </div>

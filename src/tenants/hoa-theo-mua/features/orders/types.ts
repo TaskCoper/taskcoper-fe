@@ -2,14 +2,33 @@ import type { I18nKey } from '@/lib/i18n/types'
 
 export const OrderStatus = {
   Paid: 'Paid',
-  Pending: 'Pending'
+  Pending: 'Pending',
+  Cancelled: 'Cancelled'
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export const OrderStatusLabel: Record<OrderStatus, I18nKey> = {
-  [OrderStatus.Paid]: 'orders.status.paid',
-  [OrderStatus.Pending]: 'orders.status.pending'
+  [OrderStatus.Paid]: 'orders.status.paid' as I18nKey,
+  [OrderStatus.Pending]: 'orders.status.pending' as I18nKey,
+  [OrderStatus.Cancelled]: 'orders.status.cancelled' as I18nKey
+}
+
+export const OrderStatusStyle: Record<OrderStatus, { dot: string; badge: string }> = {
+  [OrderStatus.Paid]: {
+    dot: 'bg-emerald-500',
+    badge:
+      'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+  },
+  [OrderStatus.Pending]: {
+    dot: 'bg-amber-500',
+    badge:
+      'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-400'
+  },
+  [OrderStatus.Cancelled]: {
+    dot: 'bg-rose-500',
+    badge: 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400'
+  }
 }
 
 /**
@@ -161,4 +180,149 @@ export type ShippingLocationType = 'CITY' | 'WARD'
 export interface ShippingLocation {
   id: number
   name: string
+}
+
+interface SystemOrderCoordinates {
+  latitude: number
+  longitude: number
+  ward: number
+  city: number
+  address: string
+  shortAddress: string
+}
+
+interface SystemOrderShippingTracking {
+  trackNumber: string
+  nhanhOrderId: number | null
+  nhanhTrackingUrl: string | null
+  ahahaMoveOrderId: string | null
+  ahahaMoveTrackingUrl: string | null
+}
+
+interface SystemOrderFees {
+  shippingFee: number
+  productFee: number
+  totalFee: number
+}
+
+interface SystemOrderInvoice {
+  taxCode: string | null
+  identityNumber: string | null
+  receiptFullName: string | null
+  receiptPhoneNumber: string | null
+  receiptAddress: string | null
+  receiptEmail: string | null
+  isExportInvoice: boolean
+  vat: number
+  invoiceType: number | null
+}
+
+/** A system order returned by GET /v1/orders/admin. */
+export interface SystemOrder
+  extends SystemOrderCoordinates, SystemOrderShippingTracking, SystemOrderFees, SystemOrderInvoice {
+  orderId: string // Guid
+  fullName: string
+  phone: string
+  remarks: string
+  status: OrderStatus
+  paymentUrl: string
+  qrUrl: string | null
+  orderTime: number
+  tagIds: number[]
+  paymentMethod: number
+  createAt: string // DateTimeOffset
+  updateAt: string | null // DateTimeOffset
+  userId: string // Guid
+}
+
+/** A material line captured on the product snapshot at the time the order was placed. */
+export interface SystemOrderMaterialSnapshot {
+  matId: string // Guid
+  name: string | null
+  quantity: number | null
+  price: number | null
+  isCore: boolean
+}
+
+/** Product snapshot stored on an order line item. */
+export interface SystemOrderItemSnapshot {
+  subId: string | null // Guid
+  materials: SystemOrderMaterialSnapshot[] | null
+}
+
+/** A single line item within a system order. */
+export interface SystemOrderItem {
+  orderDetailsId: string // Guid
+  productId: string | null // Guid
+  parentProductId: string | null // Guid
+  name: string | null
+  parentProductName: string | null
+  coverImage: string | null
+  itemId: number | null
+  number: number | null
+  price: number | null
+  weight: number | null
+  length: number | null
+  width: number | null
+  height: number | null
+  snapshot: SystemOrderItemSnapshot | null
+}
+
+/** Payment transaction attached to a paid system order. */
+export interface SystemOrderTransaction {
+  transferAmount: number | null
+  code: string | null
+  gateway: string | null
+  transactionDate: string | null // DateTimeOffset
+}
+
+/**
+ * A system order returned by GET /v1/orders/{id}.
+ * Shares most of its shape with `SystemOrder` (the list row) but exposes line items,
+ * the receiver contact and the payment transaction instead of the list-only fields.
+ */
+export interface SystemOrderDetail extends SystemOrderCoordinates, SystemOrderFees {
+  orderId: string // Guid
+  status: OrderStatus
+  fullName: string | null
+  phone: string | null
+  fullNameReceiver: string | null
+  phoneReceiver: string | null
+  userId: string // Guid
+  remark: string | null
+  orderTime: number | null
+  tagsId: number[] | null
+  createAt: string // DateTimeOffset
+
+  // Shipping
+  trackNumber: string | null
+  ahahaMoveOrderId: string | null
+  ahahaMoveTrackingUrl: string | null
+
+  // Payment
+  paymentMethod: number | null
+  paymentUrl: string | null
+  sepayUrl: string | null
+  transaction: SystemOrderTransaction | null
+
+  // Invoice
+  isExportInvoice: boolean
+  invoiceType: number | null
+  taxCode: string | null
+  identityNumber: string | null
+  receiptFullName: string | null
+  receiptPhoneNumber: string | null
+  receiptAddress: string | null
+  receiptEmail: string | null
+  vatFee: number | null
+
+  details: SystemOrderItem[] | null
+}
+
+/** Minimal shape needed to edit an order's shipping details - satisfied by both `SystemOrder` and `SystemOrderDetail`. */
+export interface EditableSystemOrder {
+  orderId: string
+  trackNumber: string | null
+  ahahaMoveTrackingUrl: string | null
+  shippingFee: number | null
 }

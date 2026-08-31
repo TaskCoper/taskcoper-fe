@@ -1,3 +1,5 @@
+import { ImageViewportUrlButton } from '@/components/image-viewport-editor'
+import { ImageWithViewport } from '@/components/image-with-viewport'
 import RichTextEditor from '@/components/rich-text-editor'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -10,11 +12,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { releaseStagedUpload, resolveStagedImages, stageUpload } from '@/lib/staged-uploads'
 import { cn } from '@/shared/utils'
 import { CheckIcon, Circle, ImageIcon, UploadIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Controller, useFormContext, useWatch, type SubmitHandler } from 'react-hook-form'
 import { useGetCompanyAddress } from '../../company-addresses/hooks/use-get-company-address'
+import { JOB_AVATAR_ASPECT, JOB_COVER_ASPECT } from '../job-image-aspects'
 import type { CreateJobDescriptionFormValues } from '../validations'
 
 interface CreateJobDescriptionFormProps {
@@ -236,8 +240,6 @@ function StepDetails() {
 function StepJobDescription() {
   const { t } = useTenantTranslation()
   const { control } = useFormContext<CreateJobDescriptionFormValues>()
-  const { uploadFileWithToast: uploadAvatar, isUploading: isUploadingAvatar } = useUploadFileWithToast()
-  const { uploadFileWithToast: uploadCover, isUploading: isUploadingCover } = useUploadFileWithToast()
   const avatarFileInputRef = useRef<HTMLInputElement>(null)
   const coverFileInputRef = useRef<HTMLInputElement>(null)
 
@@ -258,12 +260,13 @@ function StepJobDescription() {
                 accept='image/*'
                 className='hidden'
                 ref={avatarFileInputRef}
-                onChange={async (e) => {
+                onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (!file) return
                   e.target.value = ''
-                  const url = await uploadAvatar({ file, showSuccessToast: false })
-                  if (url) field.onChange(url)
+                  // Staged until saved, so backing out leaves no orphan.
+                  releaseStagedUpload(field.value)
+                  field.onChange(stageUpload(file))
                 }}
               />
               <button
@@ -274,28 +277,31 @@ function StepJobDescription() {
                   !field.value && 'hover:bg-muted/50'
                 )}
                 onClick={() => avatarFileInputRef.current?.click()}
-                disabled={isUploadingAvatar}
               >
                 {field.value ? (
                   <>
-                    <img src={field.value} alt='' className='size-full object-cover' />
+                    <ImageWithViewport src={field.value} className='size-full' />
                     <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
-                      {isUploadingAvatar ? (
-                        <Spinner className='size-5 text-white' />
-                      ) : (
-                        <UploadIcon className='size-5 text-white' />
-                      )}
+                      <UploadIcon className='size-5 text-white' />
                     </div>
                   </>
                 ) : (
                   <div className='flex flex-col items-center gap-1 text-muted-foreground'>
-                    {isUploadingAvatar ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
-                    <span className='text-xs'>
-                      {isUploadingAvatar ? t('common.ui.uploading') : t('common.button.upload')}
-                    </span>
+                    <ImageIcon className='size-5' />
+                    <span className='text-xs'>{t('common.button.upload')}</span>
                   </div>
                 )}
               </button>
+              {/* Outside the picker button: nesting it would fire the file dialog on click. */}
+              {field.value && (
+                <div className='flex justify-end'>
+                  <ImageViewportUrlButton
+                    value={field.value}
+                    onChange={field.onChange}
+                    aspectRatio={JOB_AVATAR_ASPECT}
+                  />
+                </div>
+              )}
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
@@ -317,12 +323,13 @@ function StepJobDescription() {
                 accept='image/*'
                 className='hidden'
                 ref={coverFileInputRef}
-                onChange={async (e) => {
+                onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (!file) return
                   e.target.value = ''
-                  const url = await uploadCover({ file, showSuccessToast: false })
-                  if (url) field.onChange(url)
+                  // Staged until saved, so backing out leaves no orphan.
+                  releaseStagedUpload(field.value)
+                  field.onChange(stageUpload(file))
                 }}
               />
               <button
@@ -333,28 +340,31 @@ function StepJobDescription() {
                   !field.value && 'hover:bg-muted/50'
                 )}
                 onClick={() => coverFileInputRef.current?.click()}
-                disabled={isUploadingCover}
               >
                 {field.value ? (
                   <>
-                    <img src={field.value} alt='' className='size-full object-cover' />
+                    <ImageWithViewport src={field.value} className='size-full' />
                     <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity'>
-                      {isUploadingCover ? (
-                        <Spinner className='size-5 text-white' />
-                      ) : (
-                        <UploadIcon className='size-5 text-white' />
-                      )}
+                      <UploadIcon className='size-5 text-white' />
                     </div>
                   </>
                 ) : (
                   <div className='flex flex-col items-center gap-1 text-muted-foreground'>
-                    {isUploadingCover ? <Spinner className='size-5' /> : <ImageIcon className='size-5' />}
-                    <span className='text-xs'>
-                      {isUploadingCover ? t('common.ui.uploading') : t('common.button.upload')}
-                    </span>
+                    <ImageIcon className='size-5' />
+                    <span className='text-xs'>{t('common.button.upload')}</span>
                   </div>
                 )}
               </button>
+
+              {field.value && (
+                <div className='flex justify-end'>
+                  <ImageViewportUrlButton
+                    value={field.value}
+                    onChange={field.onChange}
+                    aspectRatio={JOB_COVER_ASPECT}
+                  />
+                </div>
+              )}
               <div className='min-h-4'>
                 {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
               </div>
@@ -612,6 +622,7 @@ function StepReview() {
 }
 
 export default function CreateJobDescriptionForm({ onSubmit, isLoading }: CreateJobDescriptionFormProps) {
+  const { uploadFileWithToast } = useUploadFileWithToast()
   const { t } = useTenantTranslation()
   const { trigger, handleSubmit } = useFormContext<CreateJobDescriptionFormValues>()
   const [step, setStep] = useState(0)
@@ -648,7 +659,18 @@ export default function CreateJobDescriptionForm({ onSubmit, isLoading }: Create
           </Button>
 
           {isLastStep ? (
-            <Button type='button' onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+            <Button
+              type='button'
+              onClick={handleSubmit(async (values) => {
+                const resolved = await resolveStagedImages(values, (file) =>
+                  uploadFileWithToast({ file, showSuccessToast: false })
+                )
+                // The upload failure was already reported; don't submit blob: URLs.
+                if (!resolved.ok) return
+                await onSubmit(resolved.value)
+              })}
+              disabled={isLoading}
+            >
               {isLoading ? <Spinner /> : null}
               {t('recruitment.jobs.form.action.publish')}
             </Button>

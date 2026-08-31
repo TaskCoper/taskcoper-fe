@@ -1,14 +1,57 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
 import type { GetProductsParams } from './hooks/use-get-products'
+import type {
+  ComboSpecification,
+  DeleteComboSpecificationItemsPayload,
+  MaterialProductLabel,
+  MaterialOption,
+  AddComboSpecificationItemsPayload,
+  UpdateComboSpecificationItemsPayload,
+  UpdateComboSpecificationPayload
+} from './combos/types'
 import type { PinnedProduct, ProductDetail } from './types'
 import { productDetailToProduct } from './utils'
 
 class ProductService extends BaseService {
   private readonly baseUrl = 'products'
+  private readonly baseComboUrl = 'combo-specification'
 
-  getProducts = async ({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy }: GetProductsParams) => {
-    const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
+  // getProducts = async ({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy }: GetProductsParams) => {
+  //   const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v1/${this.baseUrl}`, {
+  //     params: {
+  //       pageIndex,
+  //       pageSize,
+  //       search,
+  //       categoryIds,
+  //       priceFrom,
+  //       priceTo,
+  //       sortBy
+  //     }
+  //   })
+
+  //   return {
+  //     ...data,
+  //     value: {
+  //       ...data.value,
+  //       items: data.value.items.map(productDetailToProduct)
+  //     }
+  //   }
+  // }
+
+  getProducts = async ({
+    pageIndex,
+    pageSize,
+    search,
+    categoryIds,
+    priceFrom,
+    priceTo,
+    sortBy,
+    isPin,
+    isActive,
+    tag
+  }: GetProductsParams) => {
+    const { data } = await this.get<BasePaginationResponse<ProductDetail>>(`/v2/${this.baseUrl}`, {
       params: {
         pageIndex,
         pageSize,
@@ -16,7 +59,10 @@ class ProductService extends BaseService {
         categoryIds,
         priceFrom,
         priceTo,
-        sortBy
+        sortBy,
+        isPin,
+        isActive,
+        tag
       }
     })
 
@@ -41,6 +87,95 @@ class ProductService extends BaseService {
 
   getProduct = async ({ id }: { id: string | number }) => {
     const { data } = await this.get<BaseResponse<ProductDetail>>(`/v1/${this.baseUrl}/${id}`)
+
+    return data.value
+  }
+
+  getComboSpecification = async ({ id }: { id: string | number }) => {
+    const { data } = await this.get<BaseResponse<ComboSpecification>>(`/v1/products/${id}/${this.baseComboUrl}`)
+    return data.value
+  }
+
+  getMaterials = async ({
+    search,
+    productLabel,
+    excludeIds,
+    pageIndex = 1,
+    pageSize = 20
+  }: {
+    search?: string
+    productLabel?: MaterialProductLabel
+    excludeIds?: string[]
+    pageIndex?: number
+    pageSize?: number
+  }) => {
+    const { data } = await this.get<BasePaginationResponse<MaterialOption>>(`/v1/materials`, {
+      params: { search, productLabel, excludeIds, pageIndex, pageSize }
+    })
+
+    return data.value
+  }
+
+  updateChildQuantity = async ({ productId, factor }: { productId: string | number; factor: number | null }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseComboUrl}/child-quantity`, {
+      productId,
+      factor
+    })
+
+    return data.value
+  }
+
+  addComboSpecificationItems = async ({
+    comboId,
+    body
+  }: {
+    comboId: string | number
+    body: AddComboSpecificationItemsPayload
+  }) => {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseComboUrl}/${comboId}`, body)
+
+    return data.value
+  }
+
+  //Update factor and rule
+  updateComboSpecification = async ({ id, body }: { id: string | number; body: UpdateComboSpecificationPayload }) => {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/combo-specification`, body)
+
+    return data.value
+  }
+
+  deleteComboSpecificationItems = async ({
+    id,
+    body
+  }: {
+    id: string | number
+    body: DeleteComboSpecificationItemsPayload
+  }) => {
+    const { data } = await this.delete<BaseResponse<string>>(`/v1/${this.baseComboUrl}/${id}`, { data: body })
+
+    return data.value
+  }
+
+  updateComboSpecificationItems = async ({
+    comboId,
+    body
+  }: {
+    comboId: string | number
+    body: UpdateComboSpecificationItemsPayload
+  }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseComboUrl}/${comboId}`, body)
+
+    return data.value
+  }
+
+  publishCombo = async ({ comboId }: { comboId: string | number }) => {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseComboUrl}/${comboId}/publish`)
+
+    return data.value
+  }
+
+  unpublishCombo = async ({ comboId }: { comboId: string | number }) => {
+    const { data } = await this.post<BaseResponse<string>>(`/v1/${this.baseComboUrl}/${comboId}/unpublish`)
 
     return data.value
   }

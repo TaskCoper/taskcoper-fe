@@ -10,10 +10,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Spinner } from '@/components/ui/spinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
-import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon } from 'lucide-react'
+import { EyeIcon, ImageIcon, MoreHorizontalIcon, PinIcon, SearchIcon, TagsIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import type { Product } from '../types'
 import { formatPrice, formatQuantity, parseNumber } from '../utils'
@@ -43,13 +44,12 @@ function isProductPinned(product: Product) {
 export const getProductColumns = ({
   t,
   onTogglePin,
-  pinningProductId,
-  isTogglingPin
+  pinningProductId
 }: {
   t: TenantT
   onTogglePin: (product: Product) => void
+  /** The one row whose pin batch is in flight - see `useUpdatingProductPinId`. */
   pinningProductId?: string | null
-  isTogglingPin?: boolean
 }): ColumnDef<Product>[] => {
   const moneyColumn = (id: string, field: keyof Product): ColumnDef<Product> => ({
     id,
@@ -96,42 +96,6 @@ export const getProductColumns = ({
       enableHiding: false,
       enableColumnFilter: false,
       size: 40
-    },
-    {
-      id: 'pin',
-      header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
-      cell: ({ row }) => {
-        const isPin = isProductPinned(row.original)
-        const isPinning = pinningProductId === row.original.id
-
-        return (
-          <Button
-            variant='ghost'
-            className='size-8 p-0'
-            // Disable every row's toggle while any pin/move is in flight; only the active row spins.
-            disabled={isTogglingPin}
-            aria-pressed={isPin}
-            aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
-            title={isPin ? t('products.action.unpin') : t('products.action.pin')}
-            onClick={() => onTogglePin(row.original)}
-          >
-            {isPinning ? (
-              <Spinner className='size-4' />
-            ) : (
-              <PinIcon
-                className={cn(
-                  'size-4 transition-colors',
-                  isPin ? 'fill-primary text-primary' : 'text-muted-foreground'
-                )}
-              />
-            )}
-          </Button>
-        )
-      },
-      enableSorting: false,
-      enableHiding: false,
-      enableColumnFilter: false,
-      size: 44
     },
     {
       id: 'nhanhProductId',
@@ -212,6 +176,89 @@ export const getProductColumns = ({
       size: 260
     },
     {
+      id: 'isPinned',
+      accessorKey: 'isPinned',
+      meta: {
+        label: 'products.column.isPinned',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.filter.pinned'),
+            value: 'true'
+          },
+          {
+            label: t('products.filter.notPinned'),
+            value: 'false'
+          }
+        ]
+      },
+      header: () => <span className='sr-only'>{t('products.column.pin')}</span>,
+      cell: ({ row }) => {
+        const isPin = isProductPinned(row.original)
+        const isPinning = pinningProductId === row.original.id
+
+        return (
+          <Button
+            variant='ghost'
+            className='size-8 p-0'
+            // Per-row only: locking the whole column while one product writes made the table feel frozen.
+            disabled={isPinning}
+            aria-pressed={isPin}
+            aria-label={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            title={isPin ? t('products.action.unpin') : t('products.action.pin')}
+            onClick={() => onTogglePin(row.original)}
+          >
+            {isPinning ? (
+              <Spinner className='size-4' />
+            ) : (
+              <PinIcon
+                className={cn(
+                  'size-4 transition-colors',
+                  isPin ? 'fill-primary text-primary' : 'text-muted-foreground'
+                )}
+              />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: false,
+      enableHiding: false,
+      enableColumnFilter: true,
+      size: 44
+    },
+    {
+      id: 'isActive',
+      accessorKey: 'isActive',
+      meta: {
+        label: 'products.column.saleStatus',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.detail.comboSpecification.published'),
+            value: 'true'
+          },
+          {
+            label: t('products.detail.comboSpecification.unpublished'),
+            value: 'false'
+          }
+        ]
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.saleStatus' />,
+      cell: ({ row }) => (
+        <Badge variant={row.original.isActive ? 'default' : 'secondary'} className='whitespace-nowrap font-normal'>
+          {t(
+            row.original.isActive
+              ? 'products.detail.comboSpecification.published'
+              : 'products.detail.comboSpecification.unpublished'
+          )}
+        </Badge>
+      ),
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: true,
+      size: 140
+    },
+    {
       id: 'category',
       accessorFn: (row) => row.categoryName,
       meta: { label: 'products.column.category' },
@@ -243,14 +290,63 @@ export const getProductColumns = ({
       cell: ({ row }) => {
         const { categories } = row.original
         if (!categories.length) return renderNoData(t)
+        const visibleCategories = categories.slice(0, 2)
+        const remainingCategories = categories.slice(2)
 
         return (
           <div className='flex max-w-72 flex-wrap gap-1'>
-            {categories.map((category) => (
+            {visibleCategories.map((category) => (
               <Badge key={category.categoryId} variant='secondary' className='font-normal'>
                 {category.name}
               </Badge>
             ))}
+            {remainingCategories.length > 0 && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge
+                    variant='secondary'
+                    className='cursor-help font-normal'
+                    aria-label={`${remainingCategories.length} ${t('products.column.categories')}`}
+                  >
+                    +{remainingCategories.length}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent
+                  side='bottom'
+                  align='start'
+                  sideOffset={8}
+                  className='w-72 rounded-xl border bg-popover p-0 text-popover-foreground shadow-xl'
+                  arrowClassName='bg-popover fill-popover'
+                >
+                  <div className='overflow-hidden rounded-xl'>
+                    <div className='flex items-center justify-between border-b bg-muted/40 px-3 py-2.5'>
+                      <div className='flex items-center gap-2'>
+                        <span className='flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary'>
+                          <TagsIcon className='size-3.5' aria-hidden='true' />
+                        </span>
+                        <span className='text-sm font-semibold'>{t('products.column.categories')}</span>
+                      </div>
+                      <Badge variant='secondary' className='h-5 min-w-5 justify-center px-1.5 text-xs font-semibold'>
+                        {remainingCategories.length}
+                      </Badge>
+                    </div>
+                    <div className='max-h-56 space-y-1 overflow-y-auto p-2'>
+                      {remainingCategories.map((category) => (
+                        <div
+                          key={category.categoryId}
+                          className='flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-muted/60'
+                        >
+                          <span className='size-1.5 shrink-0 rounded-full bg-primary/70' aria-hidden='true' />
+                          <span className='min-w-0 truncate text-sm font-medium' title={category.name}>
+                            {category.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         )
       },
@@ -284,12 +380,29 @@ export const getProductColumns = ({
     {
       id: 'productType',
       accessorFn: (row) => row.productType,
-      meta: { label: 'products.column.productType' },
+      meta: {
+        label: 'products.column.productType',
+        variant: 'radio',
+        options: [
+          {
+            label: t('products.filter.product'),
+            value: 'Sản phẩm'
+          },
+          {
+            label: t('products.filter.combo'),
+            value: 'Combo'
+          },
+          {
+            label: t('products.filter.material'),
+            value: 'Thành phần'
+          }
+        ]
+      },
       header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.productType' />,
       cell: ({ row }) => renderText(row.original.productType, t),
       enableSorting: false,
       enableHiding: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       size: 140
     },
     {

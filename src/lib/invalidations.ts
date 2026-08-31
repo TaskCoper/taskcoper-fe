@@ -15,13 +15,13 @@ export interface TaskScope {
 
 /**
  * Refreshes every cached query downstream of a mutation that touched a task:
- * - the task itself + its comments/subtasks/attachments/members (one prefix —
+ * - the task itself + its comments/subtasks/attachments/members (one prefix -
  *   they all nest under tasks.detail(id) in the hierarchical key shape)
  * - the containing milestone's task list and the milestone-grouped view
  * - the "my assigned tasks" panel for the current user
  *
  * Stat queries (task-status-stats, priority-stats, member-stats, label-stats)
- * are intentionally NOT included — they're selectively invalidated inline by
+ * are intentionally NOT included - they're selectively invalidated inline by
  * each mutation depending on what actually changed.
  */
 export function invalidateTaskTree(qc: QueryClient, scope: TaskScope) {

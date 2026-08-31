@@ -24,7 +24,9 @@ export const categoryFormDefaultValues: CategoryProductFormValues = {
   metaData: {
     filterByName: false,
     filterByPrice: false,
-    isFilterable: false
+    isFilterable: false,
+    rows: 1,
+    cols: 4
   },
   page: []
 }

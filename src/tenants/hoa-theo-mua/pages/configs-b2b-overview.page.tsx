@@ -71,7 +71,7 @@ export default function B2BOverviewEditorPage() {
   const cards = useMemo<Record<string, ServiceCardData>>(() => {
     const result: Record<string, ServiceCardData> = {}
     for (const slug of B2B_SERVICE_SLUGS) {
-      result[slug] = { tag: { vi: '—', en: '—' }, name: { vi: slug, en: slug }, description: { vi: '', en: '' } }
+      result[slug] = { tag: { vi: '-', en: '-' }, name: { vi: slug, en: slug }, description: { vi: '', en: '' } }
     }
     for (const config of b2bServicesConfigs) {
       if (isB2BOverviewKey(config.key)) continue

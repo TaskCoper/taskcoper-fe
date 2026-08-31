@@ -1,3 +1,5 @@
+export const ARTICLE_COVER_ASPECT = 16 / 10
+
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
 

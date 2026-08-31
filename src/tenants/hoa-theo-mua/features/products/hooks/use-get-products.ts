@@ -1,6 +1,7 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { useQuery } from '@tanstack/react-query'
 import productService from '../services'
+import type { ProductTypeTag } from '../types'
 
 export interface GetProductsParams {
   pageIndex?: number
@@ -10,6 +11,9 @@ export interface GetProductsParams {
   priceFrom?: number
   priceTo?: number
   sortBy?: string[]
+  isPin?: boolean
+  isActive?: boolean
+  tag?: ProductTypeTag
 }
 
 export const useGetProducts = ({
@@ -19,11 +23,26 @@ export const useGetProducts = ({
   categoryIds,
   priceFrom,
   priceTo,
-  sortBy
+  sortBy,
+  isPin,
+  isActive,
+  tag
 }: GetProductsParams) => {
   const { data: products, isLoading: isGettingProducts } = useQuery({
-    queryKey: ['products', pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy],
-    queryFn: () => productService.getProducts({ pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy })
+    queryKey: ['products', pageIndex, pageSize, search, categoryIds, priceFrom, priceTo, sortBy, isPin, isActive, tag],
+    queryFn: () =>
+      productService.getProducts({
+        pageIndex,
+        pageSize,
+        search,
+        categoryIds,
+        priceFrom,
+        priceTo,
+        sortBy,
+        isPin,
+        isActive,
+        tag
+      })
   })
 
   return { products, isGettingProducts }

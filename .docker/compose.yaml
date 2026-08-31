@@ -66,7 +66,7 @@ networks:
       driver: default
 
   # htm-dev shares hoatheomua-be's dev network so the gateway can reach htm-taskcoper-client-dev.
-  # Owned/created by hoatheomua-be's dev compose — must already exist before `up` of the htm-dev profile.
+  # Owned/created by hoatheomua-be's dev compose - must already exist before `up` of the htm-dev profile.
   hoatheomua-network-dev:
     name: hoatheomua-network-dev
     external: true

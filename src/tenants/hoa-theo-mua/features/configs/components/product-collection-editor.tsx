@@ -1,3 +1,4 @@
+import { encodeImageViewport, type ImageViewport } from '@/lib/image-viewport'
 import { Accordion } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
@@ -6,16 +7,17 @@ import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useConfirmStore } from '@/lib/zustand/confirm.store'
+// import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus, SaveIcon, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { toast } from 'sonner'
-import { useDeleteConfig } from '../hooks/use-delete-config'
+// import { useDeleteConfig } from '../hooks/use-delete-config'
 import {
   defaultProductCollection,
   defaultProductCollectionCard,
@@ -57,8 +59,8 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
-  const { confirm } = useConfirmStore()
-  const { deleteConfig, isDeletingConfig } = useDeleteConfig()
+  // const { confirm } = useConfirmStore()
+  // const { deleteConfig, isDeletingConfig } = useDeleteConfig()
 
   const schema = useMemo(
     () =>
@@ -89,12 +91,15 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
   // so an entry auto-orphans when the associated card is removed via useFieldArray.remove().
   const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({})
   const [pendingPreviews, setPendingPreviews] = useState<Record<string, string>>({})
+  // Staged files only have a blob: URL, which can't carry a viewport, so it's held here until upload.
+  const [pendingViewports, setPendingViewports] = useState<Record<string, ImageViewport | null>>({})
   const [openCardIds, setOpenCardIds] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     reset(toFormValues(existingConfig))
     setPendingFiles({})
+    setPendingViewports({})
     setPendingPreviews((prev) => {
       Object.values(prev).forEach(URL.revokeObjectURL)
       return {}
@@ -127,6 +132,8 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
 
   const setPendingFileForCard = (fieldId: string, file: File) => {
     setPendingFiles((prev) => ({ ...prev, [fieldId]: file }))
+    // A new picture resets the viewport rather than reusing the old one's framing.
+    setPendingViewports((prev) => ({ ...prev, [fieldId]: null }))
     setPendingPreviews((prev) => {
       if (prev[fieldId]) URL.revokeObjectURL(prev[fieldId])
       return { ...prev, [fieldId]: URL.createObjectURL(file) }
@@ -141,6 +148,11 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
       return next
     })
     setPendingFiles((prev) => {
+      const next = { ...prev }
+      delete next[fieldId]
+      return next
+    })
+    setPendingViewports((prev) => {
       const next = { ...prev }
       delete next[fieldId]
       return next
@@ -170,7 +182,7 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
             setIsSaving(false)
             return
           }
-          uploadedCards[i] = { ...uploadedCards[i], image: url }
+          uploadedCards[i] = { ...uploadedCards[i], image: encodeImageViewport(url, pendingViewports[fieldId] ?? null) }
         }
 
         const resolved: ProductCollection = {
@@ -218,28 +230,29 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
     }
   )
 
-  const handleDelete = async () => {
-    if (!existingConfig) return
-    const confirmed = await confirm({
-      title: t('configsPage.confirm.deleteTitle'),
-      description: t('configsPage.confirm.deleteDescription'),
-      confirmText: t('configsPage.confirm.deleteConfirm'),
-      cancelText: t('configsPage.confirm.deleteCancel'),
-      variant: 'destructive'
-    })
-    if (!confirmed) return
-    deleteConfig(
-      { id: existingConfig.id },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['configs'] })
-          onSaved?.(undefined)
-        }
-      }
-    )
-  }
+  // Config deletion is temporarily disabled.
+  // const handleDelete = async () => {
+  //   if (!existingConfig) return
+  //   const confirmed = await confirm({
+  //     title: t('configsPage.confirm.deleteTitle'),
+  //     description: t('configsPage.confirm.deleteDescription'),
+  //     confirmText: t('configsPage.confirm.deleteConfirm'),
+  //     cancelText: t('configsPage.confirm.deleteCancel'),
+  //     variant: 'destructive'
+  //   })
+  //   if (!confirmed) return
+  //   deleteConfig(
+  //     { id: existingConfig.id },
+  //     {
+  //       onSuccess: () => {
+  //         queryClient.invalidateQueries({ queryKey: ['configs'] })
+  //         onSaved?.(undefined)
+  //       }
+  //     }
+  //   )
+  // }
 
-  const submitting = isSaving || isUploading || isDeletingConfig
+  const submitting = isSaving || isUploading
 
   return (
     <FormProvider {...methods}>
@@ -266,7 +279,10 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
 
         <ConfigLabelField suffix={existingConfig ? productCollectionKeySuffix(existingConfig.key) : undefined} />
 
-        <CampaignsToggle />
+        {/* Campaign UI is temporarily disabled (products.mainline / products.featured).
+            The `hasCampaigns` flag and per-card campaigns are still parsed and re-saved
+            untouched, so nothing is lost while the toggle is hidden. */}
+        {/* <CampaignsToggle /> */}
 
         <SectionHeaderForm />
 
@@ -301,6 +317,10 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
                 index={index}
                 total={cardFields.length}
                 pendingPreviewUrl={pendingPreviews[field.id]}
+                pendingViewport={pendingViewports[field.id] ?? null}
+                onPendingViewportChange={(viewport) =>
+                  setPendingViewports((prev) => ({ ...prev, [field.id]: viewport }))
+                }
                 onRemove={() => removeCard(index)}
                 onMove={(dir) => moveCard(index, index + dir)}
                 onPickFile={(file) => setPendingFileForCard(field.id, file)}
@@ -311,15 +331,19 @@ export default function ProductCollectionEditor({ existingConfig, onSaved, onCan
         )}
 
         <div className='flex items-center justify-between gap-2 border-t pt-4'>
+          {/* Config deletion is temporarily disabled for safety - the button stays visible but inert. */}
           {existingConfig ? (
-            <Button type='button' variant='destructive' disabled={submitting} onClick={handleDelete}>
-              {isDeletingConfig ? (
-                <Spinner data-icon='inline-start' />
-              ) : (
-                <Trash2 className='size-3.5' data-icon='inline-start' />
-              )}
-              {t('configsPage.dialog.delete')}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className='inline-flex'>
+                  <Button type='button' variant='destructive' disabled className='pointer-events-none'>
+                    <Trash2 className='size-3.5' data-icon='inline-start' />
+                    {t('configsPage.dialog.delete')}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{t('configsPage.dialog.deleteDisabledTooltip')}</TooltipContent>
+            </Tooltip>
           ) : (
             <span />
           )}
@@ -372,32 +396,33 @@ function ConfigLabelField({ suffix }: { suffix?: string }) {
   )
 }
 
-function CampaignsToggle() {
-  const { t } = useTenantTranslation()
-  const { control } = useFormContext<ProductCollectionFormValues>()
-  return (
-    <Controller
-      control={control}
-      name='hasCampaigns'
-      render={({ field }) => (
-        <Field className='flex-row items-center justify-between rounded-xl border bg-muted/30 p-4'>
-          <div>
-            <div className='text-sm font-semibold'>
-              {t('configsPage.productCollectionDialog.campaignsToggle.title')}
-            </div>
-            <FieldDescription className='text-xs w-full'>
-              {t('configsPage.productCollectionDialog.campaignsToggle.description')}
-            </FieldDescription>
-          </div>
-          <Label className='flex items-center gap-2 text-xs text-muted-foreground justify-end'>
-            {t('configsPage.productCollectionDialog.campaignsToggle.label')}
-            <Switch checked={field.value} onCheckedChange={field.onChange} />
-          </Label>
-        </Field>
-      )}
-    />
-  )
-}
+// Campaign UI temporarily disabled - see the commented <CampaignsToggle /> above.
+// function CampaignsToggle() {
+//   const { t } = useTenantTranslation()
+//   const { control } = useFormContext<ProductCollectionFormValues>()
+//   return (
+//     <Controller
+//       control={control}
+//       name='hasCampaigns'
+//       render={({ field }) => (
+//         <Field className='flex-row items-center justify-between rounded-xl border bg-muted/30 p-4'>
+//           <div>
+//             <div className='text-sm font-semibold'>
+//               {t('configsPage.productCollectionDialog.campaignsToggle.title')}
+//             </div>
+//             <FieldDescription className='text-xs w-full'>
+//               {t('configsPage.productCollectionDialog.campaignsToggle.description')}
+//             </FieldDescription>
+//           </div>
+//           <Label className='flex items-center gap-2 text-xs text-muted-foreground justify-end'>
+//             {t('configsPage.productCollectionDialog.campaignsToggle.label')}
+//             <Switch checked={field.value} onCheckedChange={field.onChange} />
+//           </Label>
+//         </Field>
+//       )}
+//     />
+//   )
+// }
 
 function SectionHeaderForm() {
   const { t } = useTenantTranslation()

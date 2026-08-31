@@ -35,11 +35,11 @@ const toFormValues = (job: JobDescriptionDetail): CreateJobDescriptionFormValues
 })
 
 export const useUpdateJobDescription = ({
-  id,
+  identifier,
   jobDescription,
   onSuccess
 }: {
-  id?: string
+  identifier?: string
   jobDescription?: JobDescriptionDetail
   onSuccess?: () => void
 }) => {
@@ -60,7 +60,8 @@ export const useUpdateJobDescription = ({
   }, [jobDescription, reset])
 
   const { mutate: updateJobDescription, isPending: isUpdating } = useMutation({
-    mutationFn: (body: CreateJobDescriptionFormValues) => jobDescriptionService.updateJobDescription({ id: id!, body }),
+    mutationFn: (body: CreateJobDescriptionFormValues) =>
+      jobDescriptionService.updateJobDescription({ identifier: identifier!, body }),
     onSuccess: () => {
       onSuccess?.()
     },
@@ -70,7 +71,7 @@ export const useUpdateJobDescription = ({
       })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['job-description', id] })
+      queryClient.invalidateQueries({ queryKey: ['job-description'] })
       queryClient.invalidateQueries({ queryKey: ['job-descriptions'] })
     }
   })
