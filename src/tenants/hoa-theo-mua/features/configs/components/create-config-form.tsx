@@ -7,12 +7,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { FileIcon, Plus, Trash2, UploadIcon } from 'lucide-react'
+import { FileIcon, Plus, RefreshCw, Trash2, UploadIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { isSecondsAsMinutesConfigKey } from '../duration-config-keys'
@@ -60,12 +61,17 @@ export interface CreateConfigFormProps {
   lockedFields?: { key?: boolean; options?: boolean; kind?: boolean }
   onPendingFileChange?: (file: File | null) => void
   valueLocked?: boolean
+  /** Provided for API-sourced options; renders a sync button next to the locked options hint. */
+  onSyncOptions?: () => void
+  isSyncingOptions?: boolean
 }
 
 export default function CreateConfigForm({
   lockedFields,
   onPendingFileChange,
-  valueLocked
+  valueLocked,
+  onSyncOptions,
+  isSyncingOptions
 }: CreateConfigFormProps = {}) {
   const { t } = useTenantTranslation()
   const lockKey = !!lockedFields?.key
@@ -559,10 +565,26 @@ export default function CreateConfigForm({
 
       {(inputType === InputType.select || inputType === InputType.multiSelect) && lockOptions && (
         <FieldGroup className='gap-1 mb-4'>
-          <FieldLabel className='font-semibold'>{t('configsPage.dialog.optionsSection')}</FieldLabel>
-          <p className='text-xs text-muted-foreground'>
-            {t('configsPage.dialog.optionsLockedHint', { count: watchedOptions.length })}
-          </p>
+          <div className='flex items-center justify-between gap-2'>
+            <div className='space-y-1'>
+              <FieldLabel className='font-semibold'>{t('configsPage.dialog.optionsSection')}</FieldLabel>
+              <p className='text-xs text-muted-foreground'>
+                {t('configsPage.dialog.optionsLockedHint', { count: watchedOptions.length })}
+                {onSyncOptions && ` ${t('configsPage.dialog.syncOptionsHint')}`}
+              </p>
+            </div>
+
+            {onSyncOptions && (
+              <Button type='button' size='sm' disabled={isSyncingOptions} onClick={onSyncOptions}>
+                {isSyncingOptions ? (
+                  <Spinner data-icon='inline-start' />
+                ) : (
+                  <RefreshCw data-icon='inline-start' className='size-3.5' />
+                )}
+                {t('configsPage.dialog.syncOptions')}
+              </Button>
+            )}
+          </div>
         </FieldGroup>
       )}
 

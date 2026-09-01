@@ -70,6 +70,9 @@ type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
+const toNamedOptions = (rows: { id: number; name: string }[]): InputOption[] =>
+  rows.map((row) => ({ label: row.name, value: row.id }))
+
 // Legacy `b2bservices` rows predate the `b2bServices` casing convention; fold them into
 // one tab instead of splitting the group across two casings.
 const B2B_SERVICES_GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
@@ -125,9 +128,9 @@ export default function ConfigsPage() {
   const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
   const { contentConfigs: checkoutGroupConfigs = [] } = useGetContentConfigs({ groupName: CHECKOUT_CONFIG_GROUP })
 
-  const { depots } = useGetDepots()
-  const { orderTags } = useGetOrderTags()
-  const { orderSources } = useGetOrderSources()
+  const { depots, refetchDepots } = useGetDepots()
+  const { orderTags, refetchOrderTags } = useGetOrderTags()
+  const { orderSources, refetchOrderSources } = useGetOrderSources()
   // const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
 
   const currentKindConfigs =
@@ -164,20 +167,11 @@ export default function ConfigsPage() {
   const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
   // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
-  const depotOptions = useMemo<InputOption[]>(
-    () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
-    [depots]
-  )
+  const depotOptions = useMemo<InputOption[]>(() => toNamedOptions(depots), [depots])
 
-  const orderTagOptions = useMemo<InputOption[]>(
-    () => orderTags.map((tag) => ({ label: tag.name, value: tag.id })),
-    [orderTags]
-  )
+  const orderTagOptions = useMemo<InputOption[]>(() => toNamedOptions(orderTags), [orderTags])
 
-  const orderSourceOptions = useMemo<InputOption[]>(
-    () => orderSources.map((source) => ({ label: source.name, value: source.id })),
-    [orderSources]
-  )
+  const orderSourceOptions = useMemo<InputOption[]>(() => toNamedOptions(orderSources), [orderSources])
 
   const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
     () => ({
@@ -186,6 +180,30 @@ export default function ConfigsPage() {
       [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions
     }),
     [depotOptions, orderTagOptions, orderSourceOptions]
+  )
+
+  // The edit dialog calls this to pull the upstream list again; returns `null` for keys that aren't
+  // API-backed so the dialog can hide the sync affordance.
+  const syncLiveOptions = useCallback(
+    async (key: string): Promise<InputOption[] | null> => {
+      switch (key) {
+        case LOCKED_ASYNC_CONFIG_KEYS.defaultDepot: {
+          const { data } = await refetchDepots({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        case LOCKED_ASYNC_CONFIG_KEYS.orderTags: {
+          const { data } = await refetchOrderTags({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        case LOCKED_ASYNC_CONFIG_KEYS.orderSources: {
+          const { data } = await refetchOrderSources({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        default:
+          return null
+      }
+    },
+    [refetchDepots, refetchOrderTags, refetchOrderSources]
   )
 
   const groups = useMemo(() => {
@@ -632,6 +650,7 @@ export default function ConfigsPage() {
         config={editingConfig}
         onClose={closeEdit}
         liveOptionsByKey={liveOptionsByKey}
+        onSyncOptions={syncLiveOptions}
       />
 
       <ProductCollectionDialog

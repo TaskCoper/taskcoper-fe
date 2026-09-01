@@ -8,14 +8,15 @@ import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { EyeIcon, SaveIcon, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, type SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 // import { useDeleteConfig } from '../hooks/use-delete-config'
 import { useRevealConfig } from '../hooks/use-reveal-config'
 import { useUpdateConfig } from '../hooks/use-update-config'
 import { isLockedAsyncConfigKey } from '../locked-config-keys'
 import { isProductSignatureKey } from '../signature-landing-palette'
-import { ConfigKind, InputType, type Config } from '../types'
+import { ConfigKind, InputType, type Config, type InputOption } from '../types'
 import type { CreateConfigFormValues } from '../validations'
 import UpdateConfigForm from './update-config-form'
 
@@ -23,12 +24,20 @@ interface UpdateConfigDialogProps {
   open: boolean
   config: Config | null
   onClose: () => void
-  liveOptionsByKey?: Record<string, { label: string; value: string | number }[]>
+  liveOptionsByKey?: Record<string, InputOption[]>
+  /** Refetches the upstream API backing this config's options; `null` when the key isn't API-sourced. */
+  onSyncOptions?: (key: string) => Promise<InputOption[] | null>
 }
 
 const getGroupFromKey = (key: string): string => key.split('.')[0] ?? ''
 
-export default function UpdateConfigDialog({ open, config, onClose, liveOptionsByKey }: UpdateConfigDialogProps) {
+export default function UpdateConfigDialog({
+  open,
+  config,
+  onClose,
+  liveOptionsByKey,
+  onSyncOptions
+}: UpdateConfigDialogProps) {
   const { t } = useTenantTranslation()
   const { methods, updateConfig, isUpdatingConfig } = useUpdateConfig(config?.id)
   // const { deleteConfig, isDeletingConfig } = useDeleteConfig()
@@ -36,9 +45,11 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
   const { revealConfig, isRevealingConfig } = useRevealConfig()
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const [isRevealed, setIsRevealed] = useState(false)
+  const [isSyncingOptions, setIsSyncingOptions] = useState(false)
 
   const isLocked = isLockedAsyncConfigKey(config?.key)
   const isSecret = config?.kind === ConfigKind.secret
+  const canSyncOptions = !!onSyncOptions && !!config && isLocked
 
   const isWideEditor = isProductSignatureKey(config?.key) && config?.value.inputType === InputType.json
 
@@ -55,9 +66,14 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
     )
   }
 
+  // Read through a ref: a background refetch of the live options must not re-run the reset below and
+  // wipe in-progress edits. Refreshing options mid-edit goes through the explicit sync button instead.
+  const liveOptionsRef = useRef(liveOptionsByKey)
+  liveOptionsRef.current = liveOptionsByKey
+
   useEffect(() => {
     if (open && config) {
-      const liveOptions = config.key ? liveOptionsByKey?.[config.key] : undefined
+      const liveOptions = config.key ? liveOptionsRef.current?.[config.key] : undefined
       const group = getGroupFromKey(config.key) || config.value.group
       methods.reset({
         key: config.key,
@@ -71,11 +87,52 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
         }
       })
     }
-  }, [open, config, methods, liveOptionsByKey])
+  }, [open, config, methods])
+
+  const handleSyncOptions = async () => {
+    if (!config || !onSyncOptions) {
+      return
+    }
+    setIsSyncingOptions(true)
+
+    try {
+      const freshOptions = await onSyncOptions(config.key)
+      if (!freshOptions) return
+
+      methods.setValue('value.options', freshOptions, { shouldDirty: true, shouldValidate: true })
+
+      const allowed = new Set(freshOptions.map((option) => String(option.value)))
+      const current = methods.getValues('value.value')
+      let droppedCount = 0
+
+      if (Array.isArray(current)) {
+        const kept = current.filter((item) => allowed.has(String(item)))
+        droppedCount = current.length - kept.length
+
+        if (droppedCount > 0) {
+          methods.setValue('value.value', kept, { shouldDirty: true, shouldValidate: true })
+        }
+      } else if (current != null && current !== '' && !allowed.has(String(current))) {
+        droppedCount = 1
+        methods.setValue('value.value', undefined, { shouldDirty: true, shouldValidate: true })
+      }
+
+      if (droppedCount > 0) {
+        toast.warning(t('configsPage.dialog.syncOptionsDropped', { count: droppedCount }))
+      } else {
+        toast.success(t('configsPage.dialog.syncOptionsSuccess', { count: freshOptions.length }))
+      }
+    } catch {
+      toast.error(t('configsPage.dialog.syncOptionsError'))
+    } finally {
+      setIsSyncingOptions(false)
+    }
+  }
 
   const handleClose = () => {
     setPendingFile(null)
     setIsRevealed(false)
+    setIsSyncingOptions(false)
     onClose()
   }
 
@@ -121,7 +178,7 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
   //   deleteConfig({ id: config.id }, { onSuccess: handleClose })
   // }
 
-  const isSubmitting = isUpdatingConfig || isUploading
+  const isSubmitting = isUpdatingConfig || isUploading || isSyncingOptions
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
@@ -153,6 +210,8 @@ export default function UpdateConfigDialog({ open, config, onClose, liveOptionsB
                 lockedFields={isLocked ? { key: true, options: true, kind: true } : undefined}
                 onPendingFileChange={setPendingFile}
                 valueLocked={isSecret && !isRevealed}
+                onSyncOptions={canSyncOptions ? handleSyncOptions : undefined}
+                isSyncingOptions={isSyncingOptions}
               />
               <Controller
                 name='isPublic'
