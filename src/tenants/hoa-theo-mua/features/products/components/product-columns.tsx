@@ -394,7 +394,7 @@ export const getProductColumns = ({
           },
           {
             label: t('products.filter.material'),
-            value: 'Thành phần'
+            value: 'Vật liệu'
           }
         ]
       },
