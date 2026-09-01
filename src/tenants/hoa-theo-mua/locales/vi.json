@@ -710,6 +710,7 @@
       "brand": "Thương hiệu",
       "supplier": "Nhà cung cấp",
       "productType": "Loại sản phẩm",
+      "productLabel": "Nhãn sản phẩm",
       "unit": "Đơn vị",
       "barcode": "Mã vạch",
       "price": "Giá bán",

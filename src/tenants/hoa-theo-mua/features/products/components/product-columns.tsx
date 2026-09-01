@@ -406,6 +406,17 @@ export const getProductColumns = ({
       size: 140
     },
     {
+      id: 'productLabel',
+      accessorFn: (row) => row.productLabel,
+      meta: { label: 'products.column.productLabel' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.productLabel' />,
+      cell: ({ row }) => renderText(row.original.productLabel, t),
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: false,
+      size: 140
+    },
+    {
       id: 'unit',
       accessorFn: (row) => row.unit,
       meta: { label: 'products.column.unit' },

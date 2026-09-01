@@ -710,6 +710,7 @@
       "brand": "Brand",
       "supplier": "Supplier",
       "productType": "Product type",
+      "productLabel": "Product label",
       "unit": "Unit",
       "barcode": "Barcode",
       "price": "Sale price",
