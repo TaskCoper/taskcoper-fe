@@ -1442,6 +1442,11 @@
       "revealSecret": "Reveal secret",
       "secretHint": "Reveal the current value to update.",
       "optionsLockedHint": "{{count}} options are managed by the live API",
+      "syncOptions": "Sync",
+      "syncOptionsHint": "Sync to pull the latest list before saving.",
+      "syncOptionsSuccess": "Synced {{count}} options from the live API",
+      "syncOptionsDropped": "Synced. {{count}} selected option(s) no longer exist and were removed",
+      "syncOptionsError": "Could not sync options from the live API",
       "descriptionField": "Description",
       "descriptionPlaceholder": "Optional description",
       "requiredField": "Required",
@@ -1594,7 +1599,6 @@
         "disabled": "Hidden"
       },
       "errors": {
-        "oneRequired": "Enable at least one method before saving.",
         "labelRequired": "Enter a config label before saving."
       },
       "gateway": "Gateway",

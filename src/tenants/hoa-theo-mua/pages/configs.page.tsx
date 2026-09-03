@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { ChevronDown, FileText, KeyRound, PanelRight, Plus, Settings2 } from 'lucide-react'
+import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
 import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs'
 import type { ComponentType, SVGProps } from 'react'
 import { useCallback, useMemo, useState } from 'react'
@@ -32,7 +31,6 @@ import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-cr
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
 import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
-import ConfigPaletteSidebar from '../features/configs/components/config-palette-sidebar'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
 import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
@@ -62,15 +60,18 @@ import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
 type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
 
-interface LockedPaletteItem {
-  key: string
-  label: string
-  inputType: InputType
-  options: InputOption[]
-  defaultValue: unknown
-}
+// interface LockedPaletteItem {
+//   key: string
+//   label: string
+//   inputType: InputType
+//   options: InputOption[]
+//   defaultValue: unknown
+// }
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
+
+const toNamedOptions = (rows: { id: number; name: string }[]): InputOption[] =>
+  rows.map((row) => ({ label: row.name, value: row.id }))
 
 // Legacy `b2bservices` rows predate the `b2bServices` casing convention; fold them into
 // one tab instead of splitting the group across two casings.
@@ -127,9 +128,9 @@ export default function ConfigsPage() {
   const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
   const { contentConfigs: checkoutGroupConfigs = [] } = useGetContentConfigs({ groupName: CHECKOUT_CONFIG_GROUP })
 
-  const { depots } = useGetDepots()
-  const { orderTags } = useGetOrderTags()
-  const { orderSources } = useGetOrderSources()
+  const { depots, refetchDepots } = useGetDepots()
+  const { orderTags, refetchOrderTags } = useGetOrderTags()
+  const { orderSources, refetchOrderSources } = useGetOrderSources()
   // const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
 
   const currentKindConfigs =
@@ -164,22 +165,13 @@ export default function ConfigsPage() {
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
   const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
   const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
-  const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
+  // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
-  const depotOptions = useMemo<InputOption[]>(
-    () => depots.map((depot) => ({ label: depot.name, value: depot.id })),
-    [depots]
-  )
+  const depotOptions = useMemo<InputOption[]>(() => toNamedOptions(depots), [depots])
 
-  const orderTagOptions = useMemo<InputOption[]>(
-    () => orderTags.map((tag) => ({ label: tag.name, value: tag.id })),
-    [orderTags]
-  )
+  const orderTagOptions = useMemo<InputOption[]>(() => toNamedOptions(orderTags), [orderTags])
 
-  const orderSourceOptions = useMemo<InputOption[]>(
-    () => orderSources.map((source) => ({ label: source.name, value: source.id })),
-    [orderSources]
-  )
+  const orderSourceOptions = useMemo<InputOption[]>(() => toNamedOptions(orderSources), [orderSources])
 
   const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
     () => ({
@@ -188,6 +180,30 @@ export default function ConfigsPage() {
       [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions
     }),
     [depotOptions, orderTagOptions, orderSourceOptions]
+  )
+
+  // The edit dialog calls this to pull the upstream list again; returns `null` for keys that aren't
+  // API-backed so the dialog can hide the sync affordance.
+  const syncLiveOptions = useCallback(
+    async (key: string): Promise<InputOption[] | null> => {
+      switch (key) {
+        case LOCKED_ASYNC_CONFIG_KEYS.defaultDepot: {
+          const { data } = await refetchDepots({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        case LOCKED_ASYNC_CONFIG_KEYS.orderTags: {
+          const { data } = await refetchOrderTags({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        case LOCKED_ASYNC_CONFIG_KEYS.orderSources: {
+          const { data } = await refetchOrderSources({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
+        default:
+          return null
+      }
+    },
+    [refetchDepots, refetchOrderTags, refetchOrderSources]
   )
 
   const groups = useMemo(() => {
@@ -244,34 +260,34 @@ export default function ConfigsPage() {
     [openCreate, currentGroup, currentKind]
   )
 
-  const openLockedPaletteCreate = useCallback(
-    (item: LockedPaletteItem) => {
-      const existing = allLoadedConfigs.find((c) => c.key === item.key)
-      if (existing) {
-        setEditingConfig(existing)
-        setEditOpen(true)
-        return
-      }
-      const [group] = item.key.split('.')
-      openCreate(
-        {
-          key: item.key,
-          kind: ConfigKind.setting,
-          value: {
-            group,
-            label: item.label,
-            inputType: item.inputType,
-            value: item.defaultValue,
-            required: false,
-            options: item.options,
-            validations: []
-          }
-        },
-        { key: true, options: true, kind: true }
-      )
-    },
-    [allLoadedConfigs, openCreate]
-  )
+  // const openLockedPaletteCreate = useCallback(
+  //   (item: LockedPaletteItem) => {
+  //     const existing = allLoadedConfigs.find((c) => c.key === item.key)
+  //     if (existing) {
+  //       setEditingConfig(existing)
+  //       setEditOpen(true)
+  //       return
+  //     }
+  //     const [group] = item.key.split('.')
+  //     openCreate(
+  //       {
+  //         key: item.key,
+  //         kind: ConfigKind.setting,
+  //         value: {
+  //           group,
+  //           label: item.label,
+  //           inputType: item.inputType,
+  //           value: item.defaultValue,
+  //           required: false,
+  //           options: item.options,
+  //           validations: []
+  //         }
+  //       },
+  //       { key: true, options: true, kind: true }
+  //     )
+  //   },
+  //   [allLoadedConfigs, openCreate]
+  // )
 
   const productCollectionConfigs = useMemo(
     () => allLoadedConfigs.filter(matchesProductCollectionConfig),
@@ -311,10 +327,10 @@ export default function ConfigsPage() {
   const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
   // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
   const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
-  const b2bOverviewConfig = useMemo(
-    () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
-    [b2bServicesConfigs]
-  )
+  // const b2bOverviewConfig = useMemo(
+  //   () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
+  //   [b2bServicesConfigs]
+  // )
   const usedB2BSlugs = useMemo(() => new Set(b2bServiceDocs.map((c) => b2bServicesKeySuffix(c.key))), [b2bServiceDocs])
   const availableB2BSlugs = useMemo<B2BServiceSlug[]>(
     () => B2B_SERVICE_SLUGS.filter((slug) => !usedB2BSlugs.has(slug)),
@@ -393,23 +409,23 @@ export default function ConfigsPage() {
     [openB2BOverviewEditor, openB2BServiceEditor]
   )
 
-  const openProductCollectionDialog = useCallback((config: Config | null) => {
-    setEditingProductCollectionConfig(config)
-    setProductCollectionDialogOpen(true)
-  }, [])
-  const openFeedbacksDialog = useCallback((config: Config | null) => {
-    setEditingFeedbacksConfig(config)
-    setFeedbacksDialogOpen(true)
-  }, [])
-  const openBannersDialog = useCallback((config: Config | null) => {
-    setEditingBannersConfig(config)
-    setBannersDialogOpen(true)
-  }, [])
-  const openPromotionPopupDialog = useCallback(() => {
-    setPromotionPopupDialogOpen(true)
-  }, [])
-  const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
-  const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
+  // const openProductCollectionDialog = useCallback((config: Config | null) => {
+  //   setEditingProductCollectionConfig(config)
+  //   setProductCollectionDialogOpen(true)
+  // }, [])
+  // const openFeedbacksDialog = useCallback((config: Config | null) => {
+  //   setEditingFeedbacksConfig(config)
+  //   setFeedbacksDialogOpen(true)
+  // }, [])
+  // const openBannersDialog = useCallback((config: Config | null) => {
+  //   setEditingBannersConfig(config)
+  //   setBannersDialogOpen(true)
+  // }, [])
+  // const openPromotionPopupDialog = useCallback(() => {
+  //   setPromotionPopupDialogOpen(true)
+  // }, [])
+  // const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
+  // const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
   const closeEdit = useCallback(() => {
     setEditOpen(false)
   }, [])
@@ -431,7 +447,7 @@ export default function ConfigsPage() {
 
         <div className='flex items-start justify-between gap-2'>
           <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
-          <Button
+          {/* <Button
             type='button'
             variant='outline'
             size='icon'
@@ -440,7 +456,7 @@ export default function ConfigsPage() {
           >
             <PanelRight className='size-4' />
             <span className='sr-only'>{t('configsPage.palette.title')}</span>
-          </Button>
+          </Button> */}
         </div>
 
         <div className='flex flex-1 flex-col gap-4 min-h-0'>
@@ -555,7 +571,7 @@ export default function ConfigsPage() {
         onOpenCheckoutDeliveryMethods={openCheckoutDeliveryMethods}
       /> */}
 
-      <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
+      {/* <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
         <SheetContent side='right' className='w-4/5 gap-0 p-0 sm:max-w-sm'>
           <SheetHeader className='border-b'>
             <SheetTitle>{t('configsPage.palette.title')}</SheetTitle>
@@ -610,7 +626,7 @@ export default function ConfigsPage() {
             }}
           />
         </SheetContent>
-      </Sheet>
+      </Sheet> */}
 
       <CreateConfigDialog
         open={createOpen}
@@ -634,6 +650,7 @@ export default function ConfigsPage() {
         config={editingConfig}
         onClose={closeEdit}
         liveOptionsByKey={liveOptionsByKey}
+        onSyncOptions={syncLiveOptions}
       />
 
       <ProductCollectionDialog

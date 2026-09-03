@@ -5,7 +5,13 @@ on:
       - main
       - dev
       - hoa-theo-mua-dev
+      - hoa-theo-mua-prod
   workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-client-dev:
     name: Build / Client / Dev
@@ -46,12 +52,25 @@ jobs:
       repository: ${{ github.repository }}
       environment: prod
 
+  build-client-htm-prod:
+    name: Build / Client / Htm-Prod
+    if: ${{ github.ref == 'refs/heads/hoa-theo-mua-prod' }}
+    uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      environment: htm-prod
+
   deploy-client-dev:
     name: Deploy / Dev / Client
     needs: build-client-dev
     permissions:
       contents: read
-      packages: write
+      packages: read
     if: ${{ github.ref == 'refs/heads/dev' }}
     uses: ./.github/workflows/deploy-application.yaml
     with:
@@ -66,7 +85,7 @@ jobs:
     needs: build-client-prod
     permissions:
       contents: read
-      packages: write
+      packages: read
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/deploy-application.yaml
     with:
@@ -76,12 +95,29 @@ jobs:
       tag: prod-latest
     secrets: inherit
 
+  deploy-client-htm-prod:
+    name: Deploy / Htm-Prod / Client
+    needs: build-client-htm-prod
+    permissions:
+      contents: read
+      packages: read
+    if: ${{ github.ref == 'refs/heads/hoa-theo-mua-prod' }}
+    uses: ./.github/workflows/deploy-application.yaml
+    with:
+      actor: ${{ github.actor }}
+      repository: ${{ github.repository }}
+      profile: htm-prod
+      tag: htm-prod-latest
+      # htm-prod shares the HoaTheoMua production host/network.
+      run-on: hoatheomua
+    secrets: inherit
+
   deploy-client-htm-dev:
     name: Deploy / Htm-Dev / Client
     needs: build-client-htm-dev
     permissions:
       contents: read
-      packages: write
+      packages: read
     if: ${{ github.ref == 'refs/heads/hoa-theo-mua-dev' }}
     uses: ./.github/workflows/deploy-application.yaml
     with:

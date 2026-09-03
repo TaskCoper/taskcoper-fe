@@ -1442,6 +1442,11 @@
       "revealSecret": "Hiển thị bí mật",
       "secretHint": "Nhấn hiển thị để chỉnh sửa.",
       "optionsLockedHint": "{{count}} lựa chọn được quản lý bởi API",
+      "syncOptions": "Đồng bộ",
+      "syncOptionsHint": "Đồng bộ để lấy danh sách mới nhất trước khi lưu.",
+      "syncOptionsSuccess": "Đã đồng bộ {{count}} lựa chọn từ API",
+      "syncOptionsDropped": "Đã đồng bộ. {{count}} lựa chọn đã chọn không còn tồn tại và đã bị xoá",
+      "syncOptionsError": "Không thể đồng bộ lựa chọn từ API",
       "descriptionField": "Mô tả",
       "descriptionPlaceholder": "Mô tả tùy chọn",
       "requiredField": "Bắt buộc",
@@ -1594,7 +1599,6 @@
         "disabled": "Đang ẩn"
       },
       "errors": {
-        "oneRequired": "Cần bật ít nhất một phương thức trước khi lưu.",
         "labelRequired": "Nhập nhãn cấu hình trước khi lưu."
       },
       "gateway": "Cổng dịch vụ",

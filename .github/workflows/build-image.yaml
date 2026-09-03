@@ -16,14 +16,19 @@ jobs:
   build-service-image:
     name: Build Service Image
     runs-on: [ubuntu-latest]
+    timeout-minutes: 30
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+      packages: write
     env:
       REGISTRY: ghcr.io/${{ inputs.repository }}
+      TAG: ${{ inputs.environment }}-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -34,19 +39,9 @@ jobs:
         run: |
           REPO_LOWER=$(echo "${{ inputs.repository }}" | tr '[:upper:]' '[:lower:]')
           echo "REGISTRY=ghcr.io/$REPO_LOWER" >> $GITHUB_ENV
-      - name: Set TAG environment variable base on commit brand
-        run: |
-          if [ "${GITHUB_REF_NAME}" = "dev" ]; then
-            echo "TAG=dev-latest" >> $GITHUB_ENV
-          elif [ "${GITHUB_REF_NAME}" = "hoa-theo-mua-dev" ]; then
-            echo "TAG=htm-dev-latest" >> $GITHUB_ENV
-          else
-            echo "TAG=prod-latest" >> $GITHUB_ENV
-          fi
       - name: Build and Push Image
         env:
           PROFILE: ${{ inputs.environment }}
-          TAG: ${{ env.TAG }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           FILE_BASE_URL: ${{ secrets.FILE_BASE_URL }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
@@ -54,7 +49,6 @@ jobs:
           GOONG_MAP_TILE_API_KEY: ${{ secrets.GOONG_MAP_TILE_API_KEY }}
           VIETMAP_API_KEY: ${{ secrets.VIETMAP_API_KEY }}
           VIETMAP_MAP_API_KEY: ${{ secrets.VIETMAP_MAP_API_KEY }}
-
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
           docker compose -f .docker/compose.yaml --profile "$PROFILE" push
