@@ -14,6 +14,7 @@ import { EyeIcon, MoreHorizontalIcon, PowerIcon, SearchIcon, Trash2Icon } from '
 import type { FloralMockupListItem } from '../types'
 import FloralMockupDescription from './floral-mockup-description'
 import FloralMockupPreview from './floral-mockup-preview'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export const getFloralMockupColumns = ({
   t,
@@ -28,6 +29,46 @@ export const getFloralMockupColumns = ({
   onToggleStatus: (mockup: FloralMockupListItem) => void
   onDelete: (mockup: FloralMockupListItem) => void
 }): ColumnDef<FloralMockupListItem>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        aria-label={t('floralMockups.column.selectAll')}
+        className='translate-y-0.5'
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        aria-label={t('floralMockups.column.selectRow')}
+        className='translate-y-0.5'
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 40
+  },
+  {
+    id: 'preview',
+    meta: { label: 'floralMockups.column.preview' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.preview' />,
+    cell: ({ row }) => (
+      <FloralMockupPreview
+        src={row.original.previewImageUrl}
+        alt={t('floralMockups.previewAlt', { name: row.original.name })}
+        openLabel={t('floralMockups.openPreview', { name: row.original.name })}
+        onOpen={() => onPreview(row.original)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 120
+  },
   {
     id: 'name',
     accessorKey: 'name',
@@ -56,23 +97,6 @@ export const getFloralMockupColumns = ({
     enableHiding: true,
     enableColumnFilter: false,
     size: 400
-  },
-  {
-    id: 'preview',
-    meta: { label: 'floralMockups.column.preview' },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.preview' />,
-    cell: ({ row }) => (
-      <FloralMockupPreview
-        src={row.original.previewImageUrl}
-        alt={t('floralMockups.previewAlt', { name: row.original.name })}
-        openLabel={t('floralMockups.openPreview', { name: row.original.name })}
-        onOpen={() => onPreview(row.original)}
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    enableColumnFilter: false,
-    size: 140
   },
   {
     id: 'isActive',
