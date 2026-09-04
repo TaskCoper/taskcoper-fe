@@ -30,3 +30,13 @@ export interface OrderTag {
   textColor: string
   createdAt: number
 }
+
+export interface ProductLabel {
+  id: number
+  businessId: number
+  name: string
+  status: number
+  bgColor: string | null
+  textColor: string | null
+  createdAt: number
+}
