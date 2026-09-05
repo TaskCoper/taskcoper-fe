@@ -31,6 +31,7 @@ import {
   type DetailRow
 } from '../features/orders/components/detail/parts'
 import { useGetOrder } from '../features/orders/hooks/use-get-order'
+import { resolveNhanhOrderStatus } from '../features/orders/nhanh-order-status'
 import type { Order, OrderDetailRow } from '../features/orders/types'
 import { numberFormatter, vndFormatter } from '../features/orders/utils'
 
@@ -234,32 +235,25 @@ function formatValue(value: unknown, format: FieldFormat | undefined): string | 
   return text ? text : null
 }
 
-// The order status is a free-text Vietnamese label from Nhanh.vn; treat "successful/paid" states as positive.
-function isPositiveStatus(status: string | null) {
-  if (!status) return false
-  const normalized = status.toLowerCase()
-  return (
-    normalized.includes('thành công') ||
-    normalized.includes('hoàn thành') ||
-    normalized.includes('đã thanh toán') ||
-    normalized.includes('success') ||
-    normalized.includes('complete') ||
-    normalized.includes('paid')
-  )
-}
-
-function buildRows(fields: FieldConfig<Order>[], order: Order): DetailRow[] {
+function buildRows(fields: FieldConfig<Order>[], order: Order, t: TenantT): DetailRow[] {
   return fields
-    .map((field) => ({
-      label: `orders.field.${String(field.key)}`,
-      value: formatValue(order[field.key], field.format)
-    }))
+    .map((field) => {
+      const value =
+        field.key === 'trangThaiDonHang'
+          ? (resolveNhanhOrderStatus(order.trangThaiDonHang, t)?.label ?? null)
+          : formatValue(order[field.key], field.format)
+
+      return {
+        label: `orders.field.${String(field.key)}`,
+        value
+      }
+    })
     .filter((row) => row.value !== null)
 }
 
 /** Renders a field group, skipping it entirely when the order carries no value for any of its fields. */
 function OrderSection({ section, order, t }: { section: Section; order: Order; t: TenantT }) {
-  const rows = buildRows(section.fields, order)
+  const rows = buildRows(section.fields, order, t)
   if (rows.length === 0) return null
 
   return (
@@ -302,8 +296,8 @@ export default function OrderPage() {
   const currency = (value: number | null) => (value == null ? emptyValue : vndFormatter.format(value))
 
   const orderCode = order.idDonHangNhanh?.trim() || t('orders.detail.untitled')
-  const status = order.trangThaiDonHang?.trim() ?? null
-  const positive = isPositiveStatus(status)
+  const status = resolveNhanhOrderStatus(order.trangThaiDonHang, t)
+  const positive = status?.isSuccess ?? false
   const details = order.orderNhanhVnDetails ?? []
   const customerName = order.tenKhachHang?.trim()
 
@@ -376,19 +370,9 @@ export default function OrderPage() {
               <div className='flex flex-wrap items-center gap-2.5'>
                 <h1 className='font-mono text-2xl font-bold leading-tight tracking-tight'>{orderCode}</h1>
                 {status && (
-                  <Badge
-                    variant='secondary'
-                    className={cn(
-                      'gap-1.5 font-medium',
-                      positive
-                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-                        : ''
-                    )}
-                  >
-                    <span
-                      className={cn('size-1.5 rounded-full', positive ? 'bg-emerald-500' : 'bg-muted-foreground/50')}
-                    />
-                    {status}
+                  <Badge variant='secondary' className={cn('gap-1.5 font-medium', status.badge)}>
+                    <span className={cn('size-1.5 rounded-full', status.dot)} />
+                    {status.label}
                   </Badge>
                 )}
               </div>

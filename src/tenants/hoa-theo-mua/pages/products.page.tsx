@@ -24,7 +24,7 @@ const resolveProductTypeTag = (value: string | null): ProductTypeTag | undefined
     return PRODUCT_TYPE_TAG.product
   }
 
-  if (normalizedValue === 'thành phần' || normalizedValue === String(PRODUCT_TYPE_TAG.material)) {
+  if (normalizedValue === 'vật liệu' || normalizedValue === String(PRODUCT_TYPE_TAG.material)) {
     return PRODUCT_TYPE_TAG.material
   }
 
