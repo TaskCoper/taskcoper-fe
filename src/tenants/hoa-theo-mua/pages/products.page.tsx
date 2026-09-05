@@ -11,21 +11,21 @@ import { getProductColumns } from '../features/products/components/product-colum
 import { useGetMaxPriceProduct } from '../features/products/hooks/use-get-max-price-product'
 import { useGetProducts } from '../features/products/hooks/use-get-products'
 import { useUpdatingProductPinId } from '../features/products/hooks/use-update-product-pins'
-import { PRODUCT_TYPE_TAG, type Product, type ProductTypeTag } from '../features/products/types'
+import { PRODUCT_TYPE_FILTER, type Product, type ProductTypeFilterValue } from '../features/products/types'
 
-const resolveProductTypeTag = (value: string | null): ProductTypeTag | undefined => {
+const resolveProductType = (value: string | null): ProductTypeFilterValue | undefined => {
   const normalizedValue = value?.trim().toLocaleLowerCase('vi')
 
-  if (normalizedValue === 'combo' || normalizedValue === String(PRODUCT_TYPE_TAG.combo)) {
-    return PRODUCT_TYPE_TAG.combo
+  if (normalizedValue === 'combo' || normalizedValue === String(PRODUCT_TYPE_FILTER.combo)) {
+    return PRODUCT_TYPE_FILTER.combo
   }
 
-  if (normalizedValue === 'sản phẩm' || normalizedValue === String(PRODUCT_TYPE_TAG.product)) {
-    return PRODUCT_TYPE_TAG.product
+  if (normalizedValue === 'sản phẩm' || normalizedValue === String(PRODUCT_TYPE_FILTER.product)) {
+    return PRODUCT_TYPE_FILTER.product
   }
 
-  if (normalizedValue === 'vật liệu' || normalizedValue === String(PRODUCT_TYPE_TAG.material)) {
-    return PRODUCT_TYPE_TAG.material
+  if (normalizedValue === 'vật liệu' || normalizedValue === String(PRODUCT_TYPE_FILTER.material)) {
+    return PRODUCT_TYPE_FILTER.material
   }
 
   return undefined
@@ -68,8 +68,7 @@ export default function ProductsPage() {
 
   const [selectedProductType] = useQueryState('products_productType', parseAsString)
 
-  // The table stores the product-type filter under its column id; the API calls it `tag`.
-  const tag = resolveProductTypeTag(selectedProductType)
+  const productType = resolveProductType(selectedProductType)
   const priceFrom = priceFilter?.[0] ? Number(priceFilter[0]) : undefined
   const priceTo = priceFilter?.[1] ? Number(priceFilter[1]) : undefined
   const search = searchFilter ?? undefined
@@ -86,7 +85,7 @@ export default function ProductsPage() {
     priceTo: Number.isFinite(priceTo) ? priceTo : undefined,
     isPin,
     isActive,
-    tag
+    productType
   })
 
   const items = products?.value.items ?? []

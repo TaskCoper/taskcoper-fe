@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import productService from '../../services'
 import type { MaterialProductLabel } from '../types'
 
@@ -17,10 +17,11 @@ export const useGetMaterials = ({
   pageSize?: number
   enabled?: boolean
 } = {}) => {
-  const { data: materialsPage, isLoading: isGettingMaterials } = useQuery({
+  const { data: materialsPage, isFetching: isGettingMaterials } = useQuery({
     queryKey: ['materials', search, productLabel, excludeIds, pageIndex, pageSize],
     queryFn: () => productService.getMaterials({ search, productLabel, excludeIds, pageIndex, pageSize }),
-    enabled
+    enabled,
+    placeholderData: keepPreviousData
   })
 
   return { materialsPage, materials: materialsPage?.items ?? [], isGettingMaterials }
