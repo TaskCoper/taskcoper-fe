@@ -1,4 +1,5 @@
 import type { I18nKey } from '@/lib/i18n/types'
+import type { NhanhOrderStatusValue } from './nhanh-order-status'
 
 export const OrderStatus = {
   Paid: 'Paid',
@@ -90,7 +91,7 @@ export interface Order {
   soHoaDonDienTu: string | null
   ngayXuatHoaDonDienTu: string | null // DateTimeOffset
   maCoQuanThueHoaDonDienTu: string | null
-  trangThaiDonHang: string | null
+  trangThaiDonHang: NhanhOrderStatusValue
   lyDoHuy: string | null
   nhanVienChamSocKhachHang: string | null
   ngayXacNhan: string | null // DateTimeOffset

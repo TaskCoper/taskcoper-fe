@@ -1,7 +1,8 @@
 export const LOCKED_ASYNC_CONFIG_KEYS = {
   defaultDepot: 'nhanhvn.default_depot',
   orderTags: 'nhanhvn.order_tags',
-  orderSources: 'nhanhvn.order_sources'
+  orderSources: 'nhanhvn.order_sources',
+  productLabels: 'nhanhvn.product_labels'
 } as const
 
 export const LOCKED_ASYNC_KEY_SET: ReadonlySet<string> = new Set(Object.values(LOCKED_ASYNC_CONFIG_KEYS))

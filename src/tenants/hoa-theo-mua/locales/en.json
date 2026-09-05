@@ -478,6 +478,27 @@
       "noDataShort": "-",
       "noOrders": "No orders found"
     },
+    "nhanhStatus": {
+      "packed": "Packed",
+      "packing": "Packing",
+      "awaitingPickup": "Awaiting pickup",
+      "new": "New order",
+      "confirming": "Confirming",
+      "confirmed": "Confirmed",
+      "awaitingCustomerConfirmation": "Awaiting customer confirmation",
+      "carrierCancelled": "Carrier cancelled",
+      "shipping": "Shipping",
+      "success": "Successful",
+      "failed": "Failed",
+      "customerCancelled": "Customer cancelled",
+      "systemCancelled": "System cancelled",
+      "outOfStock": "Out of stock",
+      "returning": "Returning",
+      "returned": "Returned",
+      "changingWarehouse": "Changing fulfillment warehouse",
+      "returnConfirmed": "Return confirmed",
+      "unknown": "Status #{{status}}"
+    },
     "copyOrderId": {
       "success": "Order ID copied"
     },
@@ -786,6 +807,7 @@
       "brand": "Brand",
       "supplier": "Supplier",
       "productType": "Product type",
+      "productLabel": "Product label",
       "unit": "Unit",
       "barcode": "Barcode",
       "price": "Sale price",

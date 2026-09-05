@@ -56,6 +56,7 @@ import type { CreateConfigFormInput } from '../features/configs/validations'
 import { useGetDepots } from '../hooks/use-get-depots'
 import { useGetOrderSources } from '../hooks/use-get-order-sources'
 import { useGetOrderTags } from '../hooks/use-get-order-tags'
+import { useGetProductLabels } from '../hooks/use-get-product-labels'
 import type { AhamoveServiceRequest } from '../types/ahamove.type'
 
 type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
@@ -131,6 +132,7 @@ export default function ConfigsPage() {
   const { depots, refetchDepots } = useGetDepots()
   const { orderTags, refetchOrderTags } = useGetOrderTags()
   const { orderSources, refetchOrderSources } = useGetOrderSources()
+  const { productLabels, refetchProductLabels } = useGetProductLabels()
   // const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
 
   const currentKindConfigs =
@@ -173,13 +175,16 @@ export default function ConfigsPage() {
 
   const orderSourceOptions = useMemo<InputOption[]>(() => toNamedOptions(orderSources), [orderSources])
 
+  const productLabelOptions = useMemo<InputOption[]>(() => toNamedOptions(productLabels), [productLabels])
+
   const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
     () => ({
       [LOCKED_ASYNC_CONFIG_KEYS.defaultDepot]: depotOptions,
       [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions,
-      [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions
+      [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions,
+      [LOCKED_ASYNC_CONFIG_KEYS.productLabels]: productLabelOptions
     }),
-    [depotOptions, orderTagOptions, orderSourceOptions]
+    [depotOptions, orderTagOptions, orderSourceOptions, productLabelOptions]
   )
 
   // The edit dialog calls this to pull the upstream list again; returns `null` for keys that aren't
@@ -199,11 +204,15 @@ export default function ConfigsPage() {
           const { data } = await refetchOrderSources({ throwOnError: true })
           return toNamedOptions(data ?? [])
         }
+        case LOCKED_ASYNC_CONFIG_KEYS.productLabels: {
+          const { data } = await refetchProductLabels({ throwOnError: true })
+          return toNamedOptions(data ?? [])
+        }
         default:
           return null
       }
     },
-    [refetchDepots, refetchOrderTags, refetchOrderSources]
+    [refetchDepots, refetchOrderTags, refetchOrderSources, refetchProductLabels]
   )
 
   const groups = useMemo(() => {
@@ -309,8 +318,6 @@ export default function ConfigsPage() {
     [bannersConfigs]
   )
 
-  // Own query, not `allLoadedConfigs`: content configs only load on the Content tab, so
-  // deriving it there would read as "not created yet" and make the editor POST a duplicate.
   const promotionPopupConfig = useMemo(
     () => promotionsGroupConfigs.find((c) => c.key === PROMOTION_POPUP_KEY) ?? null,
     [promotionsGroupConfigs]

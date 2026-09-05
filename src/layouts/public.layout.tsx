@@ -192,11 +192,12 @@ export default function PublicLayout() {
                   {t('home.header.signIn')}
                 </Button>
               </Link>
-              <Link to='/sign-up'>
+
+              {/* <Link to='/sign-up'>
                 <Button size='sm' className='shadow-lg shadow-primary/20 text-xs sm:text-sm'>
                   {t('home.header.getStarted')}
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
