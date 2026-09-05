@@ -32,7 +32,7 @@ export interface ComboSpecification {
   materials: ComboMaterial[]
 }
 
-export type MaterialProductLabel = 'Thành phần' | 'Phụ liệu'
+export type MaterialProductLabel = 'Vật liệu' | 'Phụ liệu'
 
 export interface MaterialOption {
   materialId: string

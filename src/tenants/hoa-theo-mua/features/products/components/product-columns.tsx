@@ -394,7 +394,7 @@ export const getProductColumns = ({
           },
           {
             label: t('products.filter.material'),
-            value: 'Thành phần'
+            value: 'Vật liệu'
           }
         ]
       },
@@ -403,6 +403,17 @@ export const getProductColumns = ({
       enableSorting: false,
       enableHiding: true,
       enableColumnFilter: true,
+      size: 140
+    },
+    {
+      id: 'productLabel',
+      accessorFn: (row) => row.productLabel,
+      meta: { label: 'products.column.productLabel' },
+      header: ({ column }) => <DataTableColumnHeader column={column} label='products.column.productLabel' />,
+      cell: ({ row }) => renderText(row.original.productLabel, t),
+      enableSorting: false,
+      enableHiding: true,
+      enableColumnFilter: false,
       size: 140
     },
     {
