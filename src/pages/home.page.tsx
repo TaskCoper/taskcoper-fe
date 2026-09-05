@@ -1,12 +1,12 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import type { I18nKey } from '@/lib/i18n/types'
 import {
-  ArrowRight,
+  // ArrowRight,
   CalendarCheck,
   CheckCircle2,
   MessageSquareIcon,
@@ -459,7 +459,8 @@ export default function HomePage() {
                 {t('home.hero.description')}
               </p>
 
-              <div className='animate-[fadeIn_0.8s_ease-out]'>
+              {/* Sign-up flow disabled */}
+              {/* <div className='animate-[fadeIn_0.8s_ease-out]'>
                 <Link to='/sign-up'>
                   <Button
                     size='lg'
@@ -469,7 +470,7 @@ export default function HomePage() {
                     <ArrowRight className='size-4 group-hover:translate-x-1 transition-transform' />
                   </Button>
                 </Link>
-              </div>
+              </div> */}
 
               {/* Stats - Responsive Grid */}
               <div className='mt-10 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 sm:gap-8 animate-[fadeIn_1s_ease-out]'>

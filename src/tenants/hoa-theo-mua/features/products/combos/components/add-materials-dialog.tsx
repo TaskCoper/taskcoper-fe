@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/input'
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -48,10 +49,23 @@ import type { MaterialDraft } from './selected-material-card'
 
 const MAX_COMBO_MATERIALS = 15
 const MATERIALS_PAGE_SIZE = 10
+const MAX_VISIBLE_PAGE_ITEMS = 7
 type MaterialRoleTab = 'core' | 'support'
 type PublicationConflict = {
   message: string
   items: ComboMaterialsFormValues['items']
+}
+
+type MaterialsPaginationItem = number | 'start-ellipsis' | 'end-ellipsis'
+
+const getMaterialsPaginationItems = (currentPage: number, totalPages: number): MaterialsPaginationItem[] => {
+  if (totalPages <= MAX_VISIBLE_PAGE_ITEMS) return Array.from({ length: totalPages }, (_, index) => index + 1)
+  if (currentPage <= 4) return [1, 2, 3, 4, 5, 'end-ellipsis', totalPages]
+  if (currentPage >= totalPages - 3) {
+    return [1, 'start-ellipsis', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
+  }
+
+  return [1, 'start-ellipsis', currentPage - 1, currentPage, currentPage + 1, 'end-ellipsis', totalPages]
 }
 
 export function AddMaterialsDialog({
@@ -131,6 +145,7 @@ export function AddMaterialsDialog({
   const isSubmitting = isAddingComboSpecificationItems || isUpdatingComboPublication
   const totalPages = Math.ceil((materialsResult?.totalCount ?? 0) / (materialsResult?.pageSize || MATERIALS_PAGE_SIZE))
   const currentMaterialsPage = Math.min(materialsPageIndex, Math.max(totalPages, 1))
+  const materialsPaginationItems = getMaterialsPaginationItems(currentMaterialsPage, totalPages)
   const coreDrafts = drafts.filter((draft) => draft.isCore)
   const supportDrafts = drafts.filter((draft) => !draft.isCore)
   const selectedMaterialCount = drafts.length + existingMaterials.length
@@ -242,12 +257,15 @@ export function AddMaterialsDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='w-[90vw] sm:max-w-6xl' position='top-center'>
+      <DialogContent
+        className='w-[calc(100vw-2rem)] min-w-0 overflow-x-hidden sm:max-w-6xl md:flex md:h-[calc(100vh-3rem)] md:flex-col md:overflow-hidden'
+        position='top-center'
+      >
         <DialogHeader>
           <DialogTitle>{t('products.detail.comboSpecification.addTitle')}</DialogTitle>
           <DialogDescription>{t('products.detail.comboSpecification.addDescription')}</DialogDescription>
         </DialogHeader>
-        <div className='grid min-h-[45vh] max-h-[75vh] items-stretch gap-4 md:grid-cols-2'>
+        <div className='grid min-h-[45vh] min-w-0 items-stretch gap-4 md:min-h-0 md:flex-1 md:grid-cols-2'>
           <section className='flex h-full min-h-0 min-w-0 flex-col space-y-3 rounded-lg border p-3'>
             <h3 className='text-sm font-semibold'>{t('products.detail.comboSpecification.availableMaterials')}</h3>
             <div className='flex gap-2'>
@@ -271,7 +289,7 @@ export function AddMaterialsDialog({
                     setMaterialsPageIndex(1)
                     return
                   }
-                  if (value !== 'Thành phần' && value !== 'Phụ liệu') return
+                  if (value !== 'Vật liệu' && value !== 'Phụ liệu') return
                   setProductLabel(value)
                   setMaterialsPageIndex(1)
                 }}
@@ -286,7 +304,7 @@ export function AddMaterialsDialog({
                 </SelectTrigger>
                 <SelectContent align='end'>
                   <SelectItem value='all'>{t('products.detail.comboSpecification.allMaterialTypes')}</SelectItem>
-                  <SelectItem value='Thành phần'>
+                  <SelectItem value='Vật liệu'>
                     {t('products.detail.comboSpecification.materialProductLabel')}
                   </SelectItem>
                   <SelectItem value='Phụ liệu'>
@@ -341,8 +359,8 @@ export function AddMaterialsDialog({
               )}
             </div>
             {totalPages > 1 && (
-              <Pagination>
-                <PaginationContent>
+              <Pagination className='shrink-0 overflow-hidden'>
+                <PaginationContent className='max-w-full'>
                   <PaginationItem>
                     <PaginationPrevious
                       href='#'
@@ -357,21 +375,27 @@ export function AddMaterialsDialog({
                       }}
                     />
                   </PaginationItem>
-                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href='#'
-                        isActive={page === currentMaterialsPage}
-                        aria-label={`Go to page ${page}`}
-                        onClick={(event) => {
-                          event.preventDefault()
-                          if (!isGettingMaterials) setMaterialsPageIndex(page)
-                        }}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
+                  {materialsPaginationItems.map((item) =>
+                    typeof item === 'number' ? (
+                      <PaginationItem key={item}>
+                        <PaginationLink
+                          href='#'
+                          isActive={item === currentMaterialsPage}
+                          aria-label={`Go to page ${item}`}
+                          onClick={(event) => {
+                            event.preventDefault()
+                            if (!isGettingMaterials) setMaterialsPageIndex(item)
+                          }}
+                        >
+                          {item}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={item}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    )
+                  )}
                   <PaginationItem>
                     <PaginationNext
                       href='#'

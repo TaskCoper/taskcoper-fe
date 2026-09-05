@@ -24,6 +24,7 @@ import {
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
+import { resolveNhanhOrderStatus } from '../nhanh-order-status'
 import type { Order } from '../types'
 import { numberFormatter, vndFormatter } from '../utils'
 
@@ -93,20 +94,6 @@ const renderBadgeCell = (value: string | null, t: TenantT) => {
         {text}
       </Badge>
     </div>
-  )
-}
-
-// The order status is a free-text Vietnamese label from Nhanh.vn; treat "successful/paid" states as positive.
-function isPositiveStatus(status: string | null) {
-  if (!status) return false
-  const normalized = status.toLowerCase()
-  return (
-    normalized.includes('thành công') ||
-    normalized.includes('hoàn thành') ||
-    normalized.includes('đã thanh toán') ||
-    normalized.includes('success') ||
-    normalized.includes('complete') ||
-    normalized.includes('paid')
   )
 }
 
@@ -259,22 +246,19 @@ export const getColumns = ({ t }: { t: TenantT }): ColumnDef<Order>[] => {
         <DataTableColumnHeader column={column} label='orders.column.status' className='mx-auto' />
       ),
       cell: ({ row }) => {
-        const value = row.original.trangThaiDonHang?.trim()
-        if (!value) return <div className='text-center'>{renderNoData(t)}</div>
+        const status = resolveNhanhOrderStatus(row.original.trangThaiDonHang, t)
+        if (!status) return <div className='text-center'>{renderNoData(t)}</div>
 
-        const positive = isPositiveStatus(value)
         return (
           <div className='flex justify-center'>
             <span
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
-                positive
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-                  : 'border-muted-foreground/20 bg-muted text-muted-foreground'
+                status.badge
               )}
             >
-              <span className={cn('size-1.5 rounded-full', positive ? 'bg-emerald-500' : 'bg-muted-foreground/50')} />
-              {value}
+              <span className={cn('size-1.5 rounded-full', status.dot)} />
+              {status.label}
             </span>
           </div>
         )

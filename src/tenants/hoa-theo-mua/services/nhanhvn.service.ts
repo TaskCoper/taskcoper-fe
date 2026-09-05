@@ -1,5 +1,5 @@
 import type { BaseResponse } from '@/lib/axios'
-import type { Depot, OrderTag } from '../types/nhanhvn.type'
+import type { Depot, OrderTag, ProductLabel } from '../types/nhanhvn.type'
 import { BaseService } from './base.service'
 
 class NhanhVNService extends BaseService {
@@ -45,6 +45,20 @@ class NhanhVNService extends BaseService {
       paginator: {
         size: 100
       }
+    })
+
+    return data.value.data
+  }
+
+  getProductLabels = async () => {
+    const { data } = await this.post<
+      BaseResponse<{
+        code: number
+        paginator: { next: number | null }
+        data: ProductLabel[]
+      }>
+    >(`/v1/${this.baseUrl}/products/label`, {
+      filters: {}
     })
 
     return data.value.data

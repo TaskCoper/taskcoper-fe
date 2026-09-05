@@ -1,6 +1,6 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
-import type { SignInFormValues, SignUpFormValues, VerifyEmailFormValues } from '../auth/validations'
+import type { SignInFormValues, VerifyEmailFormValues } from '../auth/validations'
 import type { GetUsersParams } from './hooks/use-get-users'
 import type { Me, User, UserDetail } from './types'
 import type {
@@ -14,10 +14,10 @@ import type {
 class UserService extends BaseService {
   private readonly baseUrl = 'users'
 
-  signUp = async ({ body }: { body: SignUpFormValues }) => {
-    const { data } = await this.post(`/v1/${this.baseUrl}/register`, body)
-    return data
-  }
+  // signUp = async ({ body }: { body: SignUpFormValues }) => {
+  //   const { data } = await this.post(`/v1/${this.baseUrl}/register`, body)
+  //   return data
+  // }
 
   signIn = async ({ body }: { body: SignInFormValues }) => {
     const { data } = await this.post<BaseResponse<{ accessToken: string; refreshToken: string }>>(

@@ -55,9 +55,10 @@ export default function NavUser({ user }: NavUserProps) {
         <Button asChild variant='ghost' size='sm'>
           <Link to='/sign-in'>{t('auth.signIn.label')}</Link>
         </Button>
-        <Button asChild size='sm'>
+
+        {/* <Button asChild size='sm'>
           <Link to='/sign-up'>{t('auth.signUp.label')}</Link>
-        </Button>
+        </Button> */}
       </div>
     )
   }

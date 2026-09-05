@@ -41,7 +41,7 @@ const PUBLIC_ROUTE_PATHS = new Set([
   '/forgot-password',
   '/redirect',
   '/sign-in',
-  '/sign-up',
+  // '/sign-up',
   '/terms-of-service',
   '/privacy-policy'
 ])
