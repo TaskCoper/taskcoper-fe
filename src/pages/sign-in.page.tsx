@@ -6,7 +6,7 @@ import { useSignIn } from '@/features/auth/hooks/use-sign-in'
 import type { SignInFormValues } from '@/features/auth/validations'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+// import { Link } from 'react-router'
 
 export default function SignInDialogPage() {
   const { t } = useTranslation()
@@ -46,12 +46,13 @@ export default function SignInDialogPage() {
                   {t('auth.signIn.button')}
                 </Button>
 
-                <p className='text-sm mt-4 text-center'>
+                {/* Sign-up flow disabled */}
+                {/* <p className='text-sm mt-4 text-center'>
                   {t('auth.signIn.noAccount')}{' '}
                   <Link className='text-primary underline font-medium' to='/sign-up'>
                     {t('auth.signUp.label')}
                   </Link>
-                </p>
+                </p> */}
               </div>
             </form>
           </FormProvider>
