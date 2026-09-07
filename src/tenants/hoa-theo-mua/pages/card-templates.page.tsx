@@ -17,14 +17,13 @@ import DeleteCardTemplateDialog from '../features/card-templates/components/dele
 import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
 import { cardTemplateKeys } from '../features/card-templates/query-keys'
-import type { CardTemplateListItem, CardTemplateType } from '../features/card-templates/types'
+import { isCardTemplateType, type CardTemplateListItem, type CardTemplateType } from '../features/card-templates/types'
 
 const FILTER_PREFIX = 'cardTemplates'
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
 
 const resolveTemplateType = (value: string | null): CardTemplateType | undefined => {
-  if (value === 'readyMade' || value === 'ai') return value
-  return undefined
+  return isCardTemplateType(value) ? value : undefined
 }
 
 export default function CardTemplatesPage() {

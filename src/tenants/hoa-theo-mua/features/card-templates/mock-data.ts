@@ -1,10 +1,11 @@
-import type {
-  CardTemplateListItem,
-  CardTemplatesPage,
-  ChangeCardTemplateStatusPayload,
-  CreateCardTemplatePayload,
-  GetCardTemplatesParams,
-  UpdateCardTemplatePayload
+import {
+  CardTemplateType,
+  type CardTemplateListItem,
+  type CardTemplatesPage,
+  type ChangeCardTemplateStatusPayload,
+  type CreateCardTemplatePayload,
+  type GetCardTemplatesParams,
+  type UpdateCardTemplatePayload
 } from './types'
 
 const previewImages = [
@@ -59,7 +60,7 @@ let mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_, i
     imageUrl: index === 8 ? '/images/card-template-preview-not-found.jpg' : previewImages[index % previewImages.length],
     description: preset.description,
     isActive: index % 4 !== 0,
-    templateType: 'ai',
+    templateType: CardTemplateType.Ai,
     createdAt: new Date(Date.now() - index * 86400000).toISOString(),
     updatedAt: new Date(Date.now() - index * 3600000).toISOString()
   }

@@ -1,6 +1,15 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 
-export type CardTemplateType = 'readyMade' | 'ai'
+export const CardTemplateType = {
+  Handmade: 'handmade',
+  Ai: 'ai'
+} as const
+
+export type CardTemplateType = (typeof CardTemplateType)[keyof typeof CardTemplateType]
+
+export const isCardTemplateType = (value: unknown): value is CardTemplateType =>
+  Object.values(CardTemplateType).includes(value as CardTemplateType)
+
 export interface CardTemplateListItem {
   id: string
   name: string

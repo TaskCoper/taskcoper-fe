@@ -11,7 +11,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { EyeIcon, MoreHorizontalIcon, PencilIcon, PowerIcon, SearchIcon, Trash2Icon } from 'lucide-react'
-import type { CardTemplateListItem } from '../types'
+import { CardTemplateType, type CardTemplateListItem } from '../types'
 import CardTemplateDescription from './card-template-description'
 import CardTemplatePreview from './card-template-preview'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -110,8 +110,11 @@ export const getCardTemplateColumns = ({
       label: 'cardTemplates.column.type',
       variant: 'radio',
       options: [
-        { label: t('cardTemplates.type.readyMade'), value: 'readyMade' },
-        { label: t('cardTemplates.type.ai'), value: 'ai' }
+        {
+          label: t(`cardTemplates.type.${CardTemplateType.Handmade}`),
+          value: CardTemplateType.Handmade
+        },
+        { label: t(`cardTemplates.type.${CardTemplateType.Ai}`), value: CardTemplateType.Ai }
       ]
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='cardTemplates.column.type' />,

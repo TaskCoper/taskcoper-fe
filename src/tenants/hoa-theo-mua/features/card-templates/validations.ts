@@ -1,5 +1,6 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
+import { CardTemplateType } from './types'
 
 export const CARD_TEMPLATE_NAME_MAX_LENGTH = 100
 export const CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH = 200
@@ -22,6 +23,7 @@ export const createCardTemplateSchema = (t: TenantT) =>
         CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
         t('common.validation.maxLength', { max: CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH })
       ),
+    templateType: z.enum(CardTemplateType),
     imageFile: z
       .custom<File>((value) => value instanceof File, {
         message: t('cardTemplates.form.validation.imageRequired')

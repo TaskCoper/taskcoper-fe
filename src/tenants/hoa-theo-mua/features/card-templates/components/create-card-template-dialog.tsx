@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
@@ -19,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ImageIcon, UploadCloudIcon } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useCreateCardTemplate } from '../hooks/use-create-card-template'
+import { CardTemplateType } from '../types'
 import {
   CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
   CARD_TEMPLATE_IMAGE_MAX_SIZE,
@@ -31,7 +33,8 @@ const DEFAULT_VALUES: CreateCardTemplateFormValues = {
   name: '',
   description: '',
   imageFile: undefined as unknown as File,
-  isActive: true
+  isActive: true,
+  templateType: CardTemplateType.Handmade
 }
 
 const CreateCardTemplateDialog = ({
@@ -63,7 +66,7 @@ const CreateCardTemplateDialog = ({
         description: values.description.trim() || null,
         imageFile: values.imageFile,
         isActive: values.isActive,
-        templateType: 'readyMade'
+        templateType: values.templateType
       },
       {
         onSuccess: () => {
@@ -105,6 +108,35 @@ const CreateCardTemplateDialog = ({
                   disabled={isCreatingCardTemplate}
                   autoFocus
                 />
+                <div className='min-h-5'>
+                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                </div>
+              </Field>
+            )}
+          />
+
+          <Controller
+            name='templateType'
+            control={methods.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-1.5'>
+                <FieldLabel htmlFor={field.name}>
+                  {t('cardTemplates.column.type')}
+                  <span className='text-destructive'>*</span>
+                </FieldLabel>
+                <Select value={field.value} onValueChange={field.onChange} disabled={isCreatingCardTemplate}>
+                  <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} className='w-full'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={CardTemplateType.Handmade}>
+                      {t(`cardTemplates.type.${CardTemplateType.Handmade}`)}
+                    </SelectItem>
+                    <SelectItem value={CardTemplateType.Ai}>
+                      {t(`cardTemplates.type.${CardTemplateType.Ai}`)}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 <div className='min-h-5'>
                   {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                 </div>

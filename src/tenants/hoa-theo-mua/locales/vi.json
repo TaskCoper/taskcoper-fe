@@ -114,7 +114,7 @@
       "actions": "Thao tác"
     },
     "type": {
-      "readyMade": "Thiệp có sẵn",
+      "handmade": "Thiệp có sẵn",
       "ai": "Thiệp AI"
     },
     "status": {
