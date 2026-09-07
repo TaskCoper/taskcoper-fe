@@ -12,6 +12,7 @@ import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -41,6 +42,7 @@ const UpdateCardTemplateDialog = ({
 }) => {
   const { t } = useTenantTranslation()
   const { updateCardTemplate, isUpdatingCardTemplate } = useUpdateCardTemplate()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const methods = useForm<UpdateCardTemplateFormValues>({
     resolver: zodResolver(updateCardTemplateSchema(t)),
     defaultValues: {
@@ -68,21 +70,30 @@ const UpdateCardTemplateDialog = ({
     onOpenChange(nextOpen)
   }
 
-  const handleSubmit = (values: UpdateCardTemplateFormValues) => {
+  const handleSubmit = async (values: UpdateCardTemplateFormValues) => {
     if (!template) return
+
+    let imageUrl: string | undefined
+    if (values.imageFile) {
+      const uploadedImageUrl = await uploadFileWithToast({ file: values.imageFile, showSuccessToast: false })
+      if (!uploadedImageUrl) return
+      imageUrl = uploadedImageUrl
+    }
 
     updateCardTemplate(
       {
         id: template.id,
         name: values.name.trim(),
         description: values.description.trim() || null,
-        imageFile: values.imageFile
+        ...(imageUrl ? { imageUrl } : {})
       },
       {
         onSuccess: () => handleOpenChange(false)
       }
     )
   }
+
+  const isSubmitting = isUploading || isUpdatingCardTemplate
 
   if (!template) return null
 
@@ -114,7 +125,7 @@ const UpdateCardTemplateDialog = ({
                   id={field.name}
                   placeholder={t('cardTemplates.form.namePlaceholder')}
                   aria-invalid={fieldState.invalid}
-                  disabled={isUpdatingCardTemplate}
+                  disabled={isSubmitting}
                   autoFocus
                 />
                 <div className='min-h-5'>
@@ -142,7 +153,7 @@ const UpdateCardTemplateDialog = ({
                   placeholder={t('cardTemplates.form.descriptionPlaceholder')}
                   aria-invalid={fieldState.invalid}
                   className='resize-none whitespace-normal break-words'
-                  disabled={isUpdatingCardTemplate}
+                  disabled={isSubmitting}
                 />
                 <div className='min-h-5'>
                   {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -165,7 +176,7 @@ const UpdateCardTemplateDialog = ({
                     'image/jpeg': ['.jpg', '.jpeg']
                   }}
                   maxSize={CARD_TEMPLATE_IMAGE_MAX_SIZE}
-                  disabled={isUpdatingCardTemplate}
+                  disabled={isSubmitting}
                 >
                   {({ preview, isDragActive }) => (
                     <div
@@ -204,16 +215,11 @@ const UpdateCardTemplateDialog = ({
           />
 
           <DialogFooter>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={isUpdatingCardTemplate}
-              onClick={() => handleOpenChange(false)}
-            >
+            <Button type='button' variant='outline' disabled={isSubmitting} onClick={() => handleOpenChange(false)}>
               {t('common.button.cancel')}
             </Button>
-            <Button type='submit' disabled={isUpdatingCardTemplate}>
-              {isUpdatingCardTemplate && <Spinner />}
+            <Button type='submit' disabled={isSubmitting}>
+              {isSubmitting && <Spinner />}
               {t('cardTemplates.form.updateSubmit')}
             </Button>
           </DialogFooter>

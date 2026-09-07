@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,6 +49,7 @@ const CreateCardTemplateDialog = ({
 }) => {
   const { t } = useTenantTranslation()
   const { createCardTemplate, isCreatingCardTemplate } = useCreateCardTemplate()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const methods = useForm<CreateCardTemplateFormValues>({
     resolver: zodResolver(createCardTemplateSchema(t)),
     defaultValues: DEFAULT_VALUES
@@ -59,12 +61,15 @@ const CreateCardTemplateDialog = ({
     onOpenChange(nextOpen)
   }
 
-  const handleSubmit = (values: CreateCardTemplateFormValues) => {
+  const handleSubmit = async (values: CreateCardTemplateFormValues) => {
+    const imageUrl = await uploadFileWithToast({ file: values.imageFile, showSuccessToast: false })
+    if (!imageUrl) return
+
     createCardTemplate(
       {
         name: values.name.trim(),
         description: values.description.trim() || null,
-        imageFile: values.imageFile,
+        imageUrl,
         isActive: values.isActive,
         templateType: values.templateType
       },
@@ -76,6 +81,8 @@ const CreateCardTemplateDialog = ({
       }
     )
   }
+
+  const isSubmitting = isUploading || isCreatingCardTemplate
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -105,7 +112,7 @@ const CreateCardTemplateDialog = ({
                   id={field.name}
                   placeholder={t('cardTemplates.form.namePlaceholder')}
                   aria-invalid={fieldState.invalid}
-                  disabled={isCreatingCardTemplate}
+                  disabled={isSubmitting}
                   autoFocus
                 />
                 <div className='min-h-5'>
@@ -124,7 +131,7 @@ const CreateCardTemplateDialog = ({
                   {t('cardTemplates.column.type')}
                   <span className='text-destructive'>*</span>
                 </FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange} disabled={isCreatingCardTemplate}>
+                <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
                   <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} className='w-full'>
                     <SelectValue />
                   </SelectTrigger>
@@ -162,7 +169,7 @@ const CreateCardTemplateDialog = ({
                   placeholder={t('cardTemplates.form.descriptionPlaceholder')}
                   aria-invalid={fieldState.invalid}
                   className='resize-none whitespace-normal break-words'
-                  disabled={isCreatingCardTemplate}
+                  disabled={isSubmitting}
                 />
                 <div className='min-h-5'>
                   {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
@@ -188,7 +195,7 @@ const CreateCardTemplateDialog = ({
                     'image/jpeg': ['.jpg', '.jpeg']
                   }}
                   maxSize={CARD_TEMPLATE_IMAGE_MAX_SIZE}
-                  disabled={isCreatingCardTemplate}
+                  disabled={isSubmitting}
                 >
                   {({ preview, isDragActive }) => (
                     <div
@@ -246,23 +253,18 @@ const CreateCardTemplateDialog = ({
                   id={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  disabled={isCreatingCardTemplate}
+                  disabled={isSubmitting}
                 />
               </Field>
             )}
           />
 
           <DialogFooter>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={isCreatingCardTemplate}
-              onClick={() => handleOpenChange(false)}
-            >
+            <Button type='button' variant='outline' disabled={isSubmitting} onClick={() => handleOpenChange(false)}>
               {t('common.button.cancel')}
             </Button>
-            <Button type='submit' disabled={isCreatingCardTemplate}>
-              {isCreatingCardTemplate && <Spinner />}
+            <Button type='submit' disabled={isSubmitting}>
+              {isSubmitting && <Spinner />}
               {t('cardTemplates.form.submit')}
             </Button>
           </DialogFooter>

@@ -66,21 +66,12 @@ let mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_, i
   }
 })
 
-const readFileAsDataUrl = (file: File) =>
-  new Promise<string>((resolve, reject) => {
-    const reader = new FileReader()
-
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(reader.error ?? new Error('Failed to read card template image'))
-    reader.readAsDataURL(file)
-  })
-
 export const createMockCardTemplate = async (payload: CreateCardTemplatePayload): Promise<CardTemplateListItem> => {
   const template: CardTemplateListItem = {
     id: `card-template-${crypto.randomUUID()}`,
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
-    imageUrl: await readFileAsDataUrl(payload.imageFile),
+    imageUrl: payload.imageUrl,
     isActive: payload.isActive,
     templateType: payload.templateType,
     createdAt: new Date().toISOString(),
@@ -100,7 +91,7 @@ export const updateMockCardTemplate = async (payload: UpdateCardTemplatePayload)
     ...currentTemplate,
     name: payload.name?.trim() || currentTemplate.name,
     description: payload.description === undefined ? currentTemplate.description : payload.description?.trim() || null,
-    imageUrl: payload.imageFile ? await readFileAsDataUrl(payload.imageFile) : currentTemplate.imageUrl,
+    imageUrl: payload.imageUrl ?? currentTemplate.imageUrl,
     updatedAt: new Date().toISOString()
   }
 

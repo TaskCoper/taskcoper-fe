@@ -32,7 +32,7 @@ export interface GetCardTemplatesParams {
 export interface CreateCardTemplatePayload {
   name: string
   description: string | null
-  imageFile: File
+  imageUrl: string
   isActive: boolean
   templateType: CardTemplateType
 }
@@ -41,7 +41,7 @@ export interface UpdateCardTemplatePayload {
   id: string
   name?: string
   description?: string | null
-  imageFile?: File | null
+  imageUrl?: string
   isActive?: boolean
 }
 
