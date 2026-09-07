@@ -158,7 +158,7 @@ const UpdateCardTemplateDialog = ({
               <Field data-invalid={fieldState.invalid} className='gap-1.5'>
                 <FieldLabel>{t('cardTemplates.form.image')}</FieldLabel>
                 <FileDropzone
-                  value={field.value ?? template.previewImageUrl}
+                  value={field.value ?? template.imageUrl}
                   onFileChange={(file) => field.onChange(file)}
                   accept={{
                     'image/png': ['.png'],

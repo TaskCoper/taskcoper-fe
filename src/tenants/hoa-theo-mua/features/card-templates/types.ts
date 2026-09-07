@@ -1,11 +1,15 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 
+export type CardTemplateType = 'readyMade' | 'ai'
 export interface CardTemplateListItem {
   id: string
   name: string
-  previewImageUrl: string | null
+  imageUrl: string | null
   description: string | null
   isActive: boolean
+  templateType: CardTemplateType
+  createdAt: string
+  updatedAt: string
 }
 
 export interface GetCardTemplatesParams {
@@ -13,6 +17,7 @@ export interface GetCardTemplatesParams {
   pageSize?: number
   search?: string
   isActive?: boolean
+  templateType?: CardTemplateType
 }
 
 export interface CreateCardTemplatePayload {
@@ -20,13 +25,15 @@ export interface CreateCardTemplatePayload {
   description: string | null
   imageFile: File
   isActive: boolean
+  templateType: CardTemplateType
 }
 
 export interface UpdateCardTemplatePayload {
   id: string
-  name: string
-  description: string | null
-  imageFile: File | null
+  name?: string
+  description?: string | null
+  imageFile?: File | null
+  isActive?: boolean
 }
 
 export interface ChangeCardTemplateStatusPayload {

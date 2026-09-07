@@ -17,10 +17,15 @@ import DeleteCardTemplateDialog from '../features/card-templates/components/dele
 import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
 import { cardTemplateKeys } from '../features/card-templates/query-keys'
-import type { CardTemplateListItem } from '../features/card-templates/types'
+import type { CardTemplateListItem, CardTemplateType } from '../features/card-templates/types'
 
 const FILTER_PREFIX = 'cardTemplates'
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
+
+const resolveTemplateType = (value: string | null): CardTemplateType | undefined => {
+  if (value === 'readyMade' || value === 'ai') return value
+  return undefined
+}
 
 export default function CardTemplatesPage() {
   const { t } = useTenantTranslation()
@@ -44,12 +49,15 @@ export default function CardTemplatesPage() {
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)
   const [statusFilter] = useQueryState(`${FILTER_PREFIX}_isActive`, parseAsString)
+  const [templateTypeFilter] = useQueryState(`${FILTER_PREFIX}_templateType`, parseAsString)
   const activeStatus = statusFilter === 'true' ? true : statusFilter === 'false' ? false : undefined
+  const templateType = resolveTemplateType(templateTypeFilter)
   const { cardTemplates, isGettingCardTemplates } = useGetCardTemplates({
     pageIndex: page,
     pageSize: limit,
     search: searchFilter?.trim() || undefined,
-    isActive: activeStatus
+    isActive: activeStatus,
+    templateType
   })
 
   const { table } = useDataTable({
@@ -58,7 +66,8 @@ export default function CardTemplatesPage() {
     pageCount: Math.ceil((cardTemplates?.totalCount ?? 0) / limit) || 1,
     initialState: {
       pagination: { pageIndex: 0, pageSize: 10 },
-      columnPinning: { right: ['actions'] }
+      columnPinning: { right: ['actions'] },
+      columnVisibility: { templateType: false }
     },
     getRowId: (row) => row.id,
     shallow: false,
@@ -94,13 +103,13 @@ export default function CardTemplatesPage() {
         </DataTable>
       </div>
 
-      {previewTemplate?.previewImageUrl && (
+      {previewTemplate?.imageUrl && (
         <Lightbox
           open
           close={() => setPreviewTemplate(null)}
           slides={[
             {
-              src: previewTemplate.previewImageUrl,
+              src: previewTemplate.imageUrl,
               alt: t('cardTemplates.previewAlt', { name: previewTemplate.name })
             }
           ]}

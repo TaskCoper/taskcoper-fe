@@ -62,7 +62,8 @@ const CreateCardTemplateDialog = ({
         name: values.name.trim(),
         description: values.description.trim() || null,
         imageFile: values.imageFile,
-        isActive: values.isActive
+        isActive: values.isActive,
+        templateType: 'readyMade'
       },
       {
         onSuccess: () => {

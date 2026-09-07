@@ -108,8 +108,14 @@
       "name": "Tên mẫu",
       "preview": "Ảnh Preview",
       "description": "Mô tả",
+      "type": "Loại mẫu",
       "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
       "actions": "Thao tác"
+    },
+    "type": {
+      "readyMade": "Thiệp có sẵn",
+      "ai": "Thiệp AI"
     },
     "status": {
       "active": "Đang sử dụng",

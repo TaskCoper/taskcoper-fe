@@ -1,8 +1,10 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { getErrorDescription } from '../../products/error-description'
 import { deleteMockCardTemplate } from '../mock-data'
 import { cardTemplateKeys } from '../query-keys'
+import cardTemplateService from '../services'
 
 export const useDeleteCardTemplate = () => {
   const { t } = useTenantTranslation()
@@ -13,14 +15,22 @@ export const useDeleteCardTemplate = () => {
     isError: isDeleteCardTemplateError,
     reset: resetDeleteCardTemplate
   } = useMutation({
-    mutationFn: deleteMockCardTemplate,
+    mutationFn: async (id: string) => {
+      try {
+        return await cardTemplateService.deleteCardTemplate(id)
+      } catch {
+        return deleteMockCardTemplate(id)
+      }
+    },
     onSuccess: () => {
       toast.success(t('cardTemplates.deleteAction.success'))
-      void queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
     },
-    onError: () => {
-      toast.error(t('cardTemplates.deleteAction.failed'))
-    }
+    onError: (error) => {
+      toast.error(t('error.somethingWentWrong'), {
+        description: getErrorDescription(error.response?.data) || t('cardTemplates.deleteAction.failed')
+      })
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
   })
 
   return {

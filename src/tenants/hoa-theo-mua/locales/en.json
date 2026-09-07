@@ -108,8 +108,14 @@
       "name": "Template name",
       "preview": "Preview",
       "description": "Description",
+      "type": "Template type",
       "status": "Status",
+      "createdAt": "Created at",
       "actions": "Actions"
+    },
+    "type": {
+      "readyMade": "Free Templates",
+      "ai": "AI-generated Cards"
     },
     "status": {
       "active": "In use",

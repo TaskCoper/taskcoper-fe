@@ -56,10 +56,12 @@ let mockCardTemplates: CardTemplateListItem[] = Array.from({ length: 27 }, (_, i
   return {
     id: `card-template-${number}`,
     name: `${preset.name} ${String(number).padStart(2, '0')}`,
-    previewImageUrl:
-      index === 8 ? '/images/card-template-preview-not-found.jpg' : previewImages[index % previewImages.length],
+    imageUrl: index === 8 ? '/images/card-template-preview-not-found.jpg' : previewImages[index % previewImages.length],
     description: preset.description,
-    isActive: index % 4 !== 0
+    isActive: index % 4 !== 0,
+    templateType: 'ai',
+    createdAt: new Date(Date.now() - index * 86400000).toISOString(),
+    updatedAt: new Date(Date.now() - index * 3600000).toISOString()
   }
 })
 
@@ -77,8 +79,11 @@ export const createMockCardTemplate = async (payload: CreateCardTemplatePayload)
     id: `card-template-${crypto.randomUUID()}`,
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
-    previewImageUrl: await readFileAsDataUrl(payload.imageFile),
-    isActive: payload.isActive
+    imageUrl: await readFileAsDataUrl(payload.imageFile),
+    isActive: payload.isActive,
+    templateType: payload.templateType,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 
   mockCardTemplates = [template, ...mockCardTemplates]
@@ -92,9 +97,10 @@ export const updateMockCardTemplate = async (payload: UpdateCardTemplatePayload)
   const currentTemplate = mockCardTemplates[templateIndex]
   const updatedTemplate: CardTemplateListItem = {
     ...currentTemplate,
-    name: payload.name.trim(),
-    description: payload.description?.trim() || null,
-    previewImageUrl: payload.imageFile ? await readFileAsDataUrl(payload.imageFile) : currentTemplate.previewImageUrl
+    name: payload.name?.trim() || currentTemplate.name,
+    description: payload.description === undefined ? currentTemplate.description : payload.description?.trim() || null,
+    imageUrl: payload.imageFile ? await readFileAsDataUrl(payload.imageFile) : currentTemplate.imageUrl,
+    updatedAt: new Date().toISOString()
   }
 
   mockCardTemplates = mockCardTemplates.map((template) =>
@@ -125,14 +131,16 @@ export const getMockCardTemplates = async ({
   pageIndex = 1,
   pageSize = 10,
   search,
-  isActive
+  isActive,
+  templateType
 }: GetCardTemplatesParams): Promise<CardTemplatesPage> => {
   const normalizedSearch = search?.trim().toLocaleLowerCase('vi') ?? ''
   const filteredTemplates = mockCardTemplates.filter((template) => {
     const matchesSearch = !normalizedSearch || template.name.toLocaleLowerCase('vi').includes(normalizedSearch)
     const matchesStatus = isActive === undefined || template.isActive === isActive
+    const matchesTemplateType = templateType === undefined || template.templateType === templateType
 
-    return matchesSearch && matchesStatus
+    return matchesSearch && matchesStatus && matchesTemplateType
   })
   const safePageSize = Math.max(1, pageSize)
   const totalCount = filteredTemplates.length

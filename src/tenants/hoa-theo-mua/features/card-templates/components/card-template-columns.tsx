@@ -14,6 +14,8 @@ import { EyeIcon, MoreHorizontalIcon, PencilIcon, PowerIcon, SearchIcon, Trash2I
 import type { CardTemplateListItem } from '../types'
 import CardTemplateDescription from './card-template-description'
 import CardTemplatePreview from './card-template-preview'
+import { Checkbox } from '@/components/ui/checkbox'
+import { formatDateTime } from '@/lib/date'
 
 export const getCardTemplateColumns = ({
   t,
@@ -28,6 +30,46 @@ export const getCardTemplateColumns = ({
   onToggleStatus: (template: CardTemplateListItem) => void
   onDelete: (template: CardTemplateListItem) => void
 }): ColumnDef<CardTemplateListItem>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        aria-label={t('products.column.selectAll')}
+        className='translate-y-0.5'
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        aria-label={t('products.column.selectRow')}
+        className='translate-y-0.5'
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 40
+  },
+  {
+    id: 'preview',
+    meta: { label: 'cardTemplates.column.preview' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='cardTemplates.column.preview' />,
+    cell: ({ row }) => (
+      <CardTemplatePreview
+        src={row.original.imageUrl}
+        alt={t('cardTemplates.previewAlt', { name: row.original.name })}
+        openLabel={t('cardTemplates.openPreview', { name: row.original.name })}
+        onOpen={() => onPreview(row.original)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 145
+  },
   {
     id: 'search',
     accessorKey: 'name',
@@ -45,23 +87,6 @@ export const getCardTemplateColumns = ({
     size: 220
   },
   {
-    id: 'preview',
-    meta: { label: 'cardTemplates.column.preview' },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='cardTemplates.column.preview' />,
-    cell: ({ row }) => (
-      <CardTemplatePreview
-        src={row.original.previewImageUrl}
-        alt={t('cardTemplates.previewAlt', { name: row.original.name })}
-        openLabel={t('cardTemplates.openPreview', { name: row.original.name })}
-        onOpen={() => onPreview(row.original)}
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    enableColumnFilter: false,
-    size: 145
-  },
-  {
     id: 'description',
     accessorKey: 'description',
     meta: { label: 'cardTemplates.column.description' },
@@ -77,6 +102,28 @@ export const getCardTemplateColumns = ({
     enableHiding: true,
     enableColumnFilter: false,
     size: 320
+  },
+  {
+    id: 'templateType',
+    accessorKey: 'templateType',
+    meta: {
+      label: 'cardTemplates.column.type',
+      variant: 'radio',
+      options: [
+        { label: t('cardTemplates.type.readyMade'), value: 'readyMade' },
+        { label: t('cardTemplates.type.ai'), value: 'ai' }
+      ]
+    },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='cardTemplates.column.type' />,
+    cell: ({ row }) => (
+      <span className='inline-flex rounded-md border bg-muted/30 px-2 py-0.5 text-xs font-medium'>
+        {t(`cardTemplates.type.${row.original.templateType}`)}
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: true,
+    size: 130
   },
   {
     id: 'isActive',
@@ -109,6 +156,21 @@ export const getCardTemplateColumns = ({
     enableHiding: true,
     enableColumnFilter: true,
     size: 140
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    meta: { label: 'cardTemplates.column.createdAt' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='cardTemplates.column.createdAt' />,
+    cell: ({ row }) => (
+      <span className='whitespace-nowrap text-sm tabular-nums'>
+        {formatDateTime(row.original.createdAt, 'dateTimeShort')}
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 150
   },
   {
     id: 'actions',
