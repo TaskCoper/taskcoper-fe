@@ -112,13 +112,13 @@ export default function FlowerMockupsPage() {
         )}
       </div>
 
-      {previewMockup?.previewImageUrl && (
+      {previewMockup?.imageUrl && (
         <Lightbox
           open
           close={() => setPreviewMockup(null)}
           slides={[
             {
-              src: previewMockup.previewImageUrl,
+              src: previewMockup.imageUrl,
               alt: t('floralMockups.previewAlt', { name: previewMockup.name })
             }
           ]}

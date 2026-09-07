@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getMockFloralMockups } from '../mock-data'
 import { floralMockupKeys } from '../query-keys'
 import type { GetFloralMockupsParams } from '../types'
+import floralMockupService from '../services'
 
 export const useGetFloralMockups = ({
   pageIndex = DEFAULT_PAGE_INDEX,
@@ -19,7 +20,13 @@ export const useGetFloralMockups = ({
     refetch: refetchFloralMockups
   } = useQuery({
     queryKey: floralMockupKeys.list(params),
-    queryFn: () => getMockFloralMockups(params),
+    queryFn: async () => {
+      try {
+        return await floralMockupService.getFloralMockups(params)
+      } catch {
+        return getMockFloralMockups(params)
+      }
+    },
     placeholderData: keepPreviousData,
     retry: false
   })

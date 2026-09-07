@@ -19,7 +19,7 @@ const FloralMockupDetailDialog = ({
 }) => {
   const { t } = useTenantTranslation()
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
-  const hasImageError = Boolean(mockup?.previewImageUrl && failedSrc === mockup.previewImageUrl)
+  const hasImageError = Boolean(mockup?.imageUrl && failedSrc === mockup.imageUrl)
 
   if (!mockup) return null
 
@@ -31,7 +31,7 @@ const FloralMockupDetailDialog = ({
           <DialogDescription>{t('floralMockups.detail.description')}</DialogDescription>
         </DialogHeader>
 
-        {mockup.previewImageUrl && !hasImageError ? (
+        {mockup.imageUrl && !hasImageError ? (
           <button
             type='button'
             className='group relative mx-auto max-h-96 w-fit overflow-hidden rounded-xl border bg-muted/30 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
@@ -39,10 +39,10 @@ const FloralMockupDetailDialog = ({
             onClick={() => onPreview(mockup)}
           >
             <img
-              src={mockup.previewImageUrl}
+              src={mockup.imageUrl}
               alt={t('floralMockups.previewAlt', { name: mockup.name })}
               className='max-h-96 w-auto object-contain'
-              onError={() => setFailedSrc(mockup.previewImageUrl)}
+              onError={() => setFailedSrc(mockup.imageUrl)}
             />
             <span className='absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30'>
               <span className='flex size-11 scale-90 items-center justify-center rounded-full bg-background/95 opacity-0 shadow-lg transition-all group-hover:scale-100 group-hover:opacity-100'>

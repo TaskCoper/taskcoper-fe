@@ -107,6 +107,7 @@
       "description": "Mô tả",
       "preview": "Ảnh Preview",
       "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
       "actions": "Thao tác"
     },
     "status": {

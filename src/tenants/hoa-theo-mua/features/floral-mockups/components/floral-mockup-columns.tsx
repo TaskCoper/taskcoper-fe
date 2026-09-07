@@ -15,6 +15,7 @@ import type { FloralMockupListItem } from '../types'
 import FloralMockupDescription from './floral-mockup-description'
 import FloralMockupPreview from './floral-mockup-preview'
 import { Checkbox } from '@/components/ui/checkbox'
+import { formatDateTime } from '@/lib/date'
 
 export const getFloralMockupColumns = ({
   t,
@@ -58,7 +59,7 @@ export const getFloralMockupColumns = ({
     header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.preview' />,
     cell: ({ row }) => (
       <FloralMockupPreview
-        src={row.original.previewImageUrl}
+        src={row.original.imageUrl}
         alt={t('floralMockups.previewAlt', { name: row.original.name })}
         openLabel={t('floralMockups.openPreview', { name: row.original.name })}
         onOpen={() => onPreview(row.original)}
@@ -129,6 +130,21 @@ export const getFloralMockupColumns = ({
     enableHiding: true,
     enableColumnFilter: true,
     size: 130
+  },
+  {
+    id: 'createdAt',
+    accessorFn: (row) => row.createAt,
+    meta: { label: 'floralMockups.column.createdAt' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.createdAt' />,
+    cell: ({ row }) => (
+      <span className='whitespace-nowrap text-sm tabular-nums'>
+        {formatDateTime(row.original.createAt, 'dateTimeShort')}
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 150
   },
   {
     id: 'actions',

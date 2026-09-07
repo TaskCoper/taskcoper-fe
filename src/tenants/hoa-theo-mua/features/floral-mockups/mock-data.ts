@@ -38,10 +38,11 @@ let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, i
   id: `floral-mockup-${index + 1}`,
   name: `Mockup mẫu hoa ${String(index + 1).padStart(2, '0')}`,
   description: index % 9 === 0 ? null : descriptions[index % descriptions.length],
-  previewImageUrl:
-    index === 12 ? '/images/floral-mockup-preview-not-found.jpg' : previewImages[index % previewImages.length],
+  imageUrl: index === 12 ? '/images/floral-mockup-preview-not-found.jpg' : previewImages[index % previewImages.length],
   isActive: index % 4 !== 0,
-  isDelete: false
+  isDelete: false,
+  createAt: new Date(Date.now() - index * 86400000).toISOString(),
+  updateAt: new Date(Date.now() - index * 3600000).toISOString()
 }))
 
 const readFileAsDataUrl = (file: File) =>
@@ -58,9 +59,11 @@ export const createMockFloralMockup = async (payload: CreateFloralMockupPayload)
     id: `floral-mockup-${crypto.randomUUID()}`,
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
-    previewImageUrl: await readFileAsDataUrl(payload.imageFile),
+    imageUrl: await readFileAsDataUrl(payload.imageFile),
     isActive: payload.isActive,
-    isDelete: false
+    isDelete: false,
+    createAt: new Date().toISOString(),
+    updateAt: new Date().toISOString()
   }
 
   mockFloralMockups = [mockup, ...mockFloralMockups]

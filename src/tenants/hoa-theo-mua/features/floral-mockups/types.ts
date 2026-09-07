@@ -4,9 +4,11 @@ export interface FloralMockupListItem {
   id: string
   name: string
   description: string | null
-  previewImageUrl: string | null
+  imageUrl: string | null
   isActive: boolean
   isDelete: boolean
+  createAt: string
+  updateAt: string
 }
 
 export interface GetFloralMockupsParams {
