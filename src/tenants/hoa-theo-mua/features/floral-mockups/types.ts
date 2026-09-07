@@ -6,9 +6,9 @@ export interface FloralMockupListItem {
   description: string | null
   imageUrl: string | null
   isActive: boolean
-  isDelete: boolean
-  createAt: string
-  updateAt: string
+  isDeleted: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export interface GetFloralMockupsParams {
@@ -30,7 +30,7 @@ export interface DeleteFloralMockupPayload {
 export interface CreateFloralMockupPayload {
   name: string
   description: string | null
-  imageFile: File
+  imageUrl: string
   isActive: true
 }
 

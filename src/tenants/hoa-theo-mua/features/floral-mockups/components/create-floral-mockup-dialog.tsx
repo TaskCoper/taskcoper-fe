@@ -12,6 +12,7 @@ import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
+import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -44,6 +45,7 @@ const CreateFloralMockupDialog = ({
   const { t } = useTenantTranslation()
   const schema = useMemo(() => createFloralMockupSchema(t), [t])
   const { createFloralMockup, isCreatingFloralMockup } = useCreateFloralMockup()
+  const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
   const isSubmittingRef = useRef(false)
   const { control, handleSubmit, reset, setError, clearErrors } = useForm<CreateFloralMockupFormValues>({
     resolver: zodResolver(schema),
@@ -62,10 +64,13 @@ const CreateFloralMockupDialog = ({
 
     isSubmittingRef.current = true
     try {
+      const imageUrl = await uploadFileWithToast({ file: values.imageFile, showSuccessToast: false })
+      if (!imageUrl) return
+
       await createFloralMockup({
         name: values.name,
         description: values.description || null,
-        imageFile: values.imageFile,
+        imageUrl,
         isActive: true
       })
       reset(defaultValues)
@@ -77,6 +82,8 @@ const CreateFloralMockupDialog = ({
       isSubmittingRef.current = false
     }
   })
+
+  const isSubmitting = isUploading || isCreatingFloralMockup
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -106,6 +113,7 @@ const CreateFloralMockupDialog = ({
                   autoComplete='off'
                   autoFocus
                   placeholder={t('floralMockups.form.namePlaceholder')}
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
@@ -128,6 +136,7 @@ const CreateFloralMockupDialog = ({
                   rows={3}
                   className='field-sizing-fixed min-w-0 max-w-full resize-none overflow-x-hidden break-all'
                   placeholder={t('floralMockups.form.descriptionPlaceholder')}
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
@@ -147,6 +156,7 @@ const CreateFloralMockupDialog = ({
                   value={field.value}
                   accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] }}
                   maxSize={MAX_FLORAL_MOCKUP_IMAGE_SIZE}
+                  disabled={isSubmitting}
                   onFileChange={(file) => {
                     field.onChange(file)
                     if (file) clearErrors('imageFile')
@@ -216,16 +226,11 @@ const CreateFloralMockupDialog = ({
           </div>
 
           <DialogFooter>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={isCreatingFloralMockup}
-              onClick={() => handleOpenChange(false)}
-            >
+            <Button type='button' variant='outline' disabled={isSubmitting} onClick={() => handleOpenChange(false)}>
               {t('common.button.cancel')}
             </Button>
-            <Button type='submit' disabled={isCreatingFloralMockup}>
-              {isCreatingFloralMockup && <Spinner />}
+            <Button type='submit' disabled={isSubmitting}>
+              {isSubmitting && <Spinner />}
               {t('floralMockups.form.submit')}
             </Button>
           </DialogFooter>

@@ -40,30 +40,21 @@ let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, i
   description: index % 9 === 0 ? null : descriptions[index % descriptions.length],
   imageUrl: index === 12 ? '/images/floral-mockup-preview-not-found.jpg' : previewImages[index % previewImages.length],
   isActive: index % 4 !== 0,
-  isDelete: false,
-  createAt: new Date(Date.now() - index * 86400000).toISOString(),
-  updateAt: new Date(Date.now() - index * 3600000).toISOString()
+  isDeleted: false,
+  createdAt: new Date(Date.now() - index * 86400000).toISOString(),
+  updatedAt: new Date(Date.now() - index * 3600000).toISOString()
 }))
-
-const readFileAsDataUrl = (file: File) =>
-  new Promise<string>((resolve, reject) => {
-    const reader = new FileReader()
-
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(reader.error ?? new Error('Failed to read floral mockup image'))
-    reader.readAsDataURL(file)
-  })
 
 export const createMockFloralMockup = async (payload: CreateFloralMockupPayload): Promise<FloralMockupListItem> => {
   const mockup: FloralMockupListItem = {
     id: `floral-mockup-${crypto.randomUUID()}`,
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
-    imageUrl: await readFileAsDataUrl(payload.imageFile),
+    imageUrl: payload.imageUrl,
     isActive: payload.isActive,
-    isDelete: false,
-    createAt: new Date().toISOString(),
-    updateAt: new Date().toISOString()
+    isDeleted: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 
   mockFloralMockups = [mockup, ...mockFloralMockups]
@@ -78,7 +69,7 @@ export const getMockFloralMockups = async ({
 }: GetFloralMockupsParams): Promise<FloralMockupsPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
   const filteredMockups = mockFloralMockups.filter((mockup) => {
-    if (mockup.isDelete) return false
+    if (mockup.isDeleted) return false
 
     const matchesSearch = !normalizedSearch || normalizeSearch(mockup.name).includes(normalizedSearch)
     const matchesStatus = isActive === undefined || mockup.isActive === isActive
@@ -105,7 +96,7 @@ export const changeMockFloralMockupStatus = async (
   payload: ChangeFloralMockupStatusPayload
 ): Promise<FloralMockupListItem> => {
   const mockup = mockFloralMockups.find((item) => item.id === payload.id)
-  if (!mockup || mockup.isDelete) throw new Error('Floral mockup not found')
+  if (!mockup || mockup.isDeleted) throw new Error('Floral mockup not found')
 
   const updatedMockup = { ...mockup, isActive: payload.isActive }
   mockFloralMockups = mockFloralMockups.map((item) => (item.id === payload.id ? updatedMockup : item))
@@ -114,7 +105,7 @@ export const changeMockFloralMockupStatus = async (
 
 export const softDeleteMockFloralMockup = async (payload: DeleteFloralMockupPayload): Promise<FloralMockupListItem> => {
   const mockup = mockFloralMockups.find((item) => item.id === payload.id)
-  if (!mockup || mockup.isDelete) throw new Error('Floral mockup not found')
+  if (!mockup || mockup.isDeleted) throw new Error('Floral mockup not found')
 
   const deletedMockup = { ...mockup, isDelete: true }
   mockFloralMockups = mockFloralMockups.map((item) => (item.id === payload.id ? deletedMockup : item))

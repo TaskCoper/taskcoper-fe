@@ -133,12 +133,12 @@ export const getFloralMockupColumns = ({
   },
   {
     id: 'createdAt',
-    accessorFn: (row) => row.createAt,
+    accessorFn: (row) => row.createdAt,
     meta: { label: 'floralMockups.column.createdAt' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.createdAt' />,
     cell: ({ row }) => (
       <span className='whitespace-nowrap text-sm tabular-nums'>
-        {formatDateTime(row.original.createAt, 'dateTimeShort')}
+        {formatDateTime(row.original.createdAt, 'dateTimeShort')}
       </span>
     ),
     enableSorting: false,
