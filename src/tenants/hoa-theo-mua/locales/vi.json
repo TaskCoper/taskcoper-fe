@@ -214,6 +214,7 @@
         "orders": "Order liên kết"
       },
       "field": {
+        "customerId": "Mã khách hàng",
         "customerName": "Họ tên",
         "phone": "Số điện thoại",
         "email": "Email",
@@ -221,7 +222,8 @@
         "recipient": "Người nhận",
         "greeting": "Lời chúc",
         "attachments": "Ảnh người dùng đính kèm",
-        "fileStatus": "Trạng thái file"
+        "fileStatus": "Trạng thái file",
+        "cardType": "Loại thiệp"
       },
       "fileStatus": {
         "available": "Còn khả dụng",
@@ -252,6 +254,7 @@
         "code": "Mã Order",
         "status": "Trạng thái",
         "createdAt": "Ngày tạo",
+        "totalFee": "Tổng tiền",
         "open": "Mở chi tiết Order {{code}}"
       }
     },

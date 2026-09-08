@@ -1,9 +1,24 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
-import { recordMockAiCardDownload } from '../mock-data'
-import type { AiCardHistoryItem } from '../types'
+import generateAiService from '../services'
+import type { GeneratedCardHistoryItem } from '../types'
 import { downloadAiCardImage } from '../utils/download-ai-card-image'
+
+const getDownloadErrorDescription = (error: unknown) => {
+  if (!isAxiosError(error) || !error.response?.data || typeof error.response.data !== 'object') return undefined
+
+  const responseData = error.response.data as Record<string, unknown>
+  const apiError = responseData.error
+
+  if (apiError && typeof apiError === 'object') {
+    const message = (apiError as Record<string, unknown>).message
+    if (typeof message === 'string') return message
+  }
+
+  return typeof responseData.detail === 'string' ? responseData.detail : undefined
+}
 
 export const useDownloadAiCard = () => {
   const { t } = useTenantTranslation()
@@ -12,23 +27,20 @@ export const useDownloadAiCard = () => {
     isPending,
     variables
   } = useMutation({
-    mutationFn: async (card: AiCardHistoryItem) => {
-      if (!card.outputImageUrl?.trim()) throw new Error('Missing AI card output image')
-
-      await downloadAiCardImage(card.outputImageUrl, card.code)
-
-      // Replace this mock recorder with the download-tracking API once its contract is available.
-      const isRecorded = await recordMockAiCardDownload(card.id)
-      if (!isRecorded) throw new Error('AI card download was not recorded')
+    mutationFn: async (card: GeneratedCardHistoryItem) => {
+      const download = await generateAiService.getAiCardDownload(card.generatedCardId)
+      await downloadAiCardImage(download.imageUrl, download.fileName, download.contentType)
     },
-    onError: () => {
-      toast.error(t('aiCustom.download.failed'))
+    onError: (error) => {
+      toast.error(t('aiCustom.download.failed'), {
+        description: getDownloadErrorDescription(error)
+      })
     }
   })
 
   return {
     downloadAiCard,
     isDownloadingAiCard: isPending,
-    downloadingAiCardId: isPending ? variables?.id : undefined
+    downloadingAiCardId: isPending ? variables?.generatedCardId : undefined
   }
 }

@@ -5,16 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDateTime } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { cn } from '@/shared/utils'
-import {
-  ArrowLeftIcon,
-  ArrowUpRightIcon,
-  DownloadIcon,
-  LoaderCircleIcon,
-  MailIcon,
-  PackageSearchIcon,
-  PhoneIcon
-} from 'lucide-react'
+import { cn, formatCurrency } from '@/shared/utils'
+import { ArrowLeftIcon, ArrowUpRightIcon, DownloadIcon, LoaderCircleIcon, PackageSearchIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import Lightbox from 'yet-another-react-lightbox'
@@ -29,7 +21,7 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import AiCardOutputImage from '../features/ai-custom/components/ai-card-output-image'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
 import { useGetAiCardDetail } from '../features/ai-custom/hooks/use-get-ai-card-detail'
-import { AiCardFileStatus, AiCardWritingMode } from '../features/ai-custom/types'
+import { AiCardWritingMode } from '../features/ai-custom/types'
 
 const AI_CARD_DETAIL_TABS = ['customer', 'message', 'design', 'orders'] as const
 
@@ -82,8 +74,8 @@ export default function AiCardDetailPage() {
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number | null>(null)
   const { aiCard, isGettingAiCard } = useGetAiCardDetail(id)
   const { downloadAiCard, downloadingAiCardId } = useDownloadAiCard()
-  const isDownloading = downloadingAiCardId === aiCard?.id
-  const isFileAvailable = aiCard?.fileStatus === AiCardFileStatus.Available && Boolean(aiCard.outputImageUrl?.trim())
+  const isDownloading = downloadingAiCardId === aiCard?.generatedCardId
+  const isFileAvailable = Boolean(aiCard?.imageUrl?.trim())
 
   if (isGettingAiCard) {
     return (
@@ -112,29 +104,29 @@ export default function AiCardDetailPage() {
     )
   }
 
-  const fileStatusLabel = t(`aiCustom.detail.fileStatus.${aiCard.fileStatus}`)
   const writingModeLabel = t(
-    aiCard.writingMode === AiCardWritingMode.Calligraphy
+    aiCard.formType === AiCardWritingMode.Calligraphy
       ? 'aiCustom.history.writingMode.calligraphy'
       : 'aiCustom.history.writingMode.typed'
   )
-  const resultImageIndex = aiCard.outputImageUrl ? 0 : undefined
-  const attachmentImageStartIndex = aiCard.outputImageUrl ? 1 : 0
+  const resultImageIndex = aiCard.imageUrl ? 0 : undefined
+  const attachmentImageStartIndex = aiCard.imageUrl ? 1 : 0
+  const attachmentImageUrls = aiCard.attachedImageUrl ? [aiCard.attachedImageUrl] : []
   const lightboxCaption = t('aiCustom.detail.lightbox.caption', {
-    code: aiCard.code,
+    code: aiCard.generatedCardId,
     createdAt: formatDateTime(aiCard.createdAt, 'dateTimeShort')
   })
   const lightboxImages = [
-    ...(aiCard.outputImageUrl
+    ...(aiCard.imageUrl
       ? [
           {
-            src: aiCard.outputImageUrl,
-            alt: t('aiCustom.history.previewAlt', { code: aiCard.code }),
+            src: aiCard.imageUrl,
+            alt: t('aiCustom.history.previewAlt', { code: aiCard.generatedCardId }),
             description: lightboxCaption
           }
         ]
       : []),
-    ...aiCard.attachmentImageUrls.map((src, index) => ({
+    ...attachmentImageUrls.map((src, index) => ({
       src,
       alt: t('aiCustom.detail.attachmentAlt', { index: index + 1 }),
       description: lightboxCaption
@@ -178,26 +170,17 @@ export default function AiCardDetailPage() {
                   variant='outline'
                   className='max-w-[65%] truncate bg-background/90 font-mono shadow-sm backdrop-blur-sm'
                 >
-                  {aiCard.code}
+                  {aiCard.generatedCardId}
                 </Badge>
-                <Badge
-                  variant='outline'
-                  className={cn(
-                    'bg-background/90 shadow-sm backdrop-blur-sm',
-                    aiCard.fileStatus === AiCardFileStatus.Available &&
-                      'border-emerald-200 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400',
-                    aiCard.fileStatus === AiCardFileStatus.Processing &&
-                      'border-amber-200 text-amber-700 dark:border-amber-800 dark:text-amber-400'
-                  )}
-                >
-                  {fileStatusLabel}
+                <Badge variant='outline' className='bg-background/90 shadow-sm backdrop-blur-sm'>
+                  {writingModeLabel}
                 </Badge>
               </div>
 
               <AiCardOutputImage
-                src={aiCard.outputImageUrl}
-                alt={t('aiCustom.history.previewAlt', { code: aiCard.code })}
-                openLabel={t('aiCustom.history.openPreview', { code: aiCard.code })}
+                src={aiCard.imageUrl}
+                alt={t('aiCustom.history.previewAlt', { code: aiCard.generatedCardId })}
+                openLabel={t('aiCustom.history.openPreview', { code: aiCard.generatedCardId })}
                 onOpen={resultImageIndex === undefined ? undefined : () => setLightboxImageIndex(resultImageIndex)}
                 className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
                 imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
@@ -237,34 +220,8 @@ export default function AiCardDetailPage() {
               <TabsContent value='customer' className='mt-0'>
                 <DetailPanel title={t('aiCustom.detail.section.customer')} contentClassName='p-0' className='max-w-4xl'>
                   <InformationCard>
-                    <InformationRow label={t('aiCustom.detail.field.customerName')}>
-                      {aiCard.customerName || t('aiCustom.history.walkInCustomer')}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.phone')}>
-                      {aiCard.customerPhone ? (
-                        <a
-                          className='inline-flex items-center gap-1.5 hover:text-primary'
-                          href={`tel:${aiCard.customerPhone}`}
-                        >
-                          <PhoneIcon className='size-3.5' />
-                          {aiCard.customerPhone}
-                        </a>
-                      ) : (
-                        '-'
-                      )}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.email')}>
-                      {aiCard.customerEmail ? (
-                        <a
-                          className='inline-flex items-center gap-1.5 hover:text-primary wrap-break-word'
-                          href={`mailto:${aiCard.customerEmail}`}
-                        >
-                          <MailIcon className='size-3.5' />
-                          {aiCard.customerEmail}
-                        </a>
-                      ) : (
-                        '-'
-                      )}
+                    <InformationRow label={t('aiCustom.detail.field.customerId')}>
+                      <span className='font-mono text-xs'>{aiCard.userId || '-'}</span>
                     </InformationRow>
                   </InformationCard>
                 </DetailPanel>
@@ -277,10 +234,10 @@ export default function AiCardDetailPage() {
                       {aiCard.senderName || '-'}
                     </InformationRow>
                     <InformationRow label={t('aiCustom.detail.field.recipient')}>
-                      {aiCard.recipientName || '-'}
+                      {aiCard.receiverName || '-'}
                     </InformationRow>
                     <InformationRow label={t('aiCustom.detail.field.greeting')}>
-                      <span className='whitespace-pre-wrap font-normal'>{aiCard.greetingMessage || '-'}</span>
+                      <span className='whitespace-pre-wrap font-normal'>{aiCard.messageContent || '-'}</span>
                     </InformationRow>
                   </InformationCard>
                 </DetailPanel>
@@ -302,16 +259,16 @@ export default function AiCardDetailPage() {
                       <InformationRow label={t('aiCustom.history.column.createdAt')}>
                         {formatDateTime(aiCard.createdAt, 'dateTimeShort')}
                       </InformationRow>
-                      <InformationRow label={t('aiCustom.detail.field.fileStatus')}>
-                        <Badge variant='outline'>{fileStatusLabel}</Badge>
+                      <InformationRow label={t('aiCustom.detail.field.cardType')}>
+                        <Badge variant='outline'>{aiCard.cardType}</Badge>
                       </InformationRow>
                     </InformationCard>
                   </DetailPanel>
 
                   <DetailPanel title={t('aiCustom.detail.field.attachments')}>
-                    {aiCard.attachmentImageUrls.length > 0 ? (
+                    {attachmentImageUrls.length > 0 ? (
                       <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2'>
-                        {aiCard.attachmentImageUrls.map((imageUrl, index) => (
+                        {attachmentImageUrls.map((imageUrl, index) => (
                           <button
                             key={`${imageUrl}-${index}`}
                             type='button'
@@ -343,26 +300,26 @@ export default function AiCardDetailPage() {
                   // description={t('aiCustom.detail.ordersDescription')}
                   contentClassName='p-0'
                 >
-                  {aiCard.linkedOrders.length > 0 ? (
+                  {aiCard.orders.length > 0 ? (
                     <div className='overflow-hidden'>
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
                             <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
-                            <TableHead>{t('aiCustom.detail.order.createdAt')}</TableHead>
+                            <TableHead>{t('aiCustom.detail.order.totalFee')}</TableHead>
                             <TableHead className='w-16' />
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {aiCard.linkedOrders.map((order) => (
-                            <TableRow key={order.id}>
+                          {aiCard.orders.map((order) => (
+                            <TableRow key={order.orderId}>
                               <TableCell className='px-5'>
                                 <Link
-                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/${order.id}`}
+                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/${order.orderId}`}
                                   className='font-mono font-medium hover:underline'
                                 >
-                                  {order.code}
+                                  {order.orderId}
                                 </Link>
                               </TableCell>
                               <TableCell>
@@ -372,12 +329,12 @@ export default function AiCardDetailPage() {
                                     ? t('orders.status.pending')
                                     : '-'}
                               </TableCell>
-                              <TableCell>{formatDateTime(order.createdAt, 'dateTimeShort')}</TableCell>
+                              <TableCell>{formatCurrency(order.totalFee)}</TableCell>
                               <TableCell className='text-right'>
                                 <Button variant='ghost' size='icon' asChild>
                                   <Link
-                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                                    aria-label={t('aiCustom.detail.order.open', { code: order.code })}
+                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.orderId}`}
+                                    aria-label={t('aiCustom.detail.order.open', { code: order.orderId })}
                                   >
                                     <ArrowUpRightIcon />
                                   </Link>

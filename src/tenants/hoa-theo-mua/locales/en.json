@@ -214,6 +214,7 @@
         "orders": "Linked orders"
       },
       "field": {
+        "customerId": "Customer ID",
         "customerName": "Full name",
         "phone": "Phone number",
         "email": "Email",
@@ -221,7 +222,8 @@
         "recipient": "Recipient",
         "greeting": "Greeting",
         "attachments": "User attachments",
-        "fileStatus": "File status"
+        "fileStatus": "File status",
+        "cardType": "Card type"
       },
       "fileStatus": {
         "available": "Available",
@@ -252,6 +254,7 @@
         "code": "Order code",
         "status": "Status",
         "createdAt": "Created at",
+        "totalFee": "Total fee",
         "open": "Open order {{code}} details"
       }
     },

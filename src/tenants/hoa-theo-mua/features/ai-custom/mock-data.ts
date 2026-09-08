@@ -1,9 +1,9 @@
 import {
   AiCardFileStatus,
   AiCardWritingMode,
-  type AiCardDetail,
-  type AiCardHistoryItem,
   type AiCardHistoryPage,
+  type GeneratedCardDetailItem,
+  type GeneratedCardHistoryItem,
   type GetAiCardHistoryParams
 } from './types'
 
@@ -39,7 +39,7 @@ const previewImages = [
   'https://i.etsystatic.com/37698047/r/il/3eaff9/5473765179/il_fullxfull.5473765179_qj85.jpg'
 ]
 
-const mockAiCards: AiCardHistoryItem[] = Array.from({ length: 38 }, (_, index) => {
+const mockAiCards = Array.from({ length: 38 }, (_, index) => {
   const customer = customers[index % customers.length]
   const template = templates[index % templates.length]
   const size = aiCardSizeOptions[index % aiCardSizeOptions.length]
@@ -62,12 +62,112 @@ const mockAiCards: AiCardHistoryItem[] = Array.from({ length: 38 }, (_, index) =
     templateName: template.name,
     sizeId: size.id,
     sizeName: size.name,
-    writingMode: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.Typed,
+    writingMode: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.Printed,
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString()
   }
 })
 
-export const getMockAiCardDetail = async (id: string): Promise<AiCardDetail | null> => {
+const mockGeneratedCards: GeneratedCardHistoryItem[] = Array.from({ length: 38 }, (_, index) => {
+  const number = index + 1
+  const customer = customers[index % customers.length]
+  const template = templates[index % templates.length]
+  const size = aiCardSizeOptions[index % aiCardSizeOptions.length]
+  const [sizeWidth, sizeHeight] = size.id.split('x').map(Number)
+
+  return {
+    historyId: `00000000-0000-4000-8000-${String(1000 + number).padStart(12, '0')}`,
+    generatedCardId: `00000000-0000-4000-9000-${String(number).padStart(12, '0')}`,
+    content: `AI card ${String(number).padStart(2, '0')}`,
+    imageUrl:
+      index % 11 === 0
+        ? null
+        : index === 7
+          ? '/images/ai-card-preview-not-found.jpg'
+          : previewImages[index % previewImages.length],
+    rawImage: null,
+    userId: customer.id,
+    createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString(),
+    cardType: 'AI',
+    formType: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.Printed,
+    sizeKey: size.id,
+    senderName: customer.name,
+    receiverName: index % 3 === 0 ? 'Receiver' : 'Loved one',
+    messageContent: 'Wishing you happiness and many wonderful moments.',
+    attachedImageUrl: null,
+    sizeName: size.name,
+    sizeWidth,
+    sizeHeight,
+    sizeBasePrice: 20000 + (index % 3) * 10000,
+    sizeMaxWords: 30,
+    wordCount: 10 + (index % 15),
+    wordConfigSnapshot: null,
+    basePrice: 20000 + (index % 3) * 10000,
+    extraPrice: index % 2 === 0 ? 10000 : 0,
+    totalPrice: 30000 + (index % 3) * 10000,
+    templateName: template.name
+  }
+})
+
+export const getMockGeneratedCardDetail = async (generatedCardId: string): Promise<GeneratedCardDetailItem | null> => {
+  const card = mockGeneratedCards.find((item) => item.generatedCardId === generatedCardId && item.imageUrl?.trim())
+  if (!card) return null
+
+  const cardNumber = Number(card.generatedCardId.slice(-12)) || 1
+  return {
+    ...card,
+    orders: Array.from({ length: cardNumber % 4 }, (_, index) => ({
+      orderId: `0a000000-0000-4000-8000-${String(cardNumber * 10 + index).padStart(12, '0')}`,
+      status: index % 2 === 0 ? 'Paid' : 'Pending',
+      totalFee: 520000 + index * 240000
+    }))
+  }
+}
+
+const normalizeSearch = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+export const getMockAiCardHistory = async ({
+  pageIndex = 1,
+  pageSize = 10,
+  search,
+  sizeKey,
+  formType
+}: GetAiCardHistoryParams): Promise<AiCardHistoryPage> => {
+  const normalizedSearch = search ? normalizeSearch(search) : ''
+  const filteredCards = mockGeneratedCards.filter((card) => {
+    if (!card.imageUrl?.trim()) return false
+
+    const matchesSearch =
+      !normalizedSearch ||
+      [card.generatedCardId, card.content, card.senderName, card.receiverName, card.templateName]
+        .filter((value): value is string => Boolean(value))
+        .some((value) => normalizeSearch(value).includes(normalizedSearch))
+    const matchesSize = !sizeKey || card.sizeKey === sizeKey
+    const matchesFormType = !formType || card.formType === formType
+
+    return matchesSearch && matchesSize && matchesFormType
+  })
+  const safePageSize = Math.max(1, pageSize)
+  const totalCount = filteredCards.length
+  const totalPages = Math.max(1, Math.ceil(totalCount / safePageSize))
+  const safePageIndex = Math.min(Math.max(1, pageIndex), totalPages)
+  const startIndex = (safePageIndex - 1) * safePageSize
+
+  return {
+    items: filteredCards.slice(startIndex, startIndex + safePageSize),
+    pageIndex: safePageIndex,
+    pageSize: safePageSize,
+    totalCount,
+    hasNextPage: safePageIndex < totalPages,
+    hasPreviousPage: safePageIndex > 1
+  }
+}
+
+export const getLegacyMockAiCardDetail = async (id: string) => {
   const card = mockAiCards.find((item) => item.id === id && Boolean(item.outputImageUrl?.trim()))
   if (!card) return null
 
@@ -100,54 +200,5 @@ export const getMockAiCardDetail = async (id: string): Promise<AiCardDetail | nu
       status: index % 2 === 0 ? 'Paid' : 'Pending',
       createdAt: new Date(Date.UTC(2026, 7, 28 - cardNumber - index, 10, 30)).toISOString()
     }))
-  }
-}
-
-export const recordMockAiCardDownload = async (id: string): Promise<boolean> => {
-  return mockAiCards.some((card) => card.id === id && Boolean(card.outputImageUrl?.trim()))
-}
-
-const normalizeSearch = (value: string) =>
-  value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/gi, 'd')
-    .toLowerCase()
-    .trim()
-
-export const getMockAiCardHistory = async ({
-  pageIndex = 1,
-  pageSize = 10,
-  search,
-  sizeId,
-  writingMode
-}: GetAiCardHistoryParams): Promise<AiCardHistoryPage> => {
-  const normalizedSearch = search ? normalizeSearch(search) : ''
-  const validOutputCards = mockAiCards.filter((card) => Boolean(card.outputImageUrl?.trim()))
-  const filteredCards = validOutputCards.filter((card) => {
-    const matchesSearch =
-      !normalizedSearch ||
-      [card.code, card.customerName, card.customerPhone, card.templateName]
-        .filter((value): value is string => Boolean(value))
-        .some((value) => normalizeSearch(value).includes(normalizedSearch))
-    const matchesSize = !sizeId || card.sizeId === sizeId
-    const matchesWritingMode = !writingMode || card.writingMode === writingMode
-
-    return matchesSearch && matchesSize && matchesWritingMode
-  })
-
-  const safePageSize = Math.max(1, pageSize)
-  const totalCount = filteredCards.length
-  const totalPages = Math.max(1, Math.ceil(totalCount / safePageSize))
-  const safePageIndex = Math.min(Math.max(1, pageIndex), totalPages)
-  const startIndex = (safePageIndex - 1) * safePageSize
-
-  return {
-    items: filteredCards.slice(startIndex, startIndex + safePageSize),
-    pageIndex: safePageIndex,
-    pageSize: safePageSize,
-    totalCount,
-    hasNextPage: safePageIndex < totalPages,
-    hasPreviousPage: safePageIndex > 1
   }
 }

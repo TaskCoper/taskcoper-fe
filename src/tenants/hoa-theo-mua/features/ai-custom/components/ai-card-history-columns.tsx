@@ -16,7 +16,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DownloadIcon, EyeIcon, LoaderCircleIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { aiCardSizeOptions } from '../mock-data'
-import { AiCardWritingMode, type AiCardHistoryItem } from '../types'
+import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../types'
 import AiCardPreview from './ai-card-preview'
 
 export const getAiCardHistoryColumns = ({
@@ -26,10 +26,10 @@ export const getAiCardHistoryColumns = ({
   downloadingCardId
 }: {
   t: TenantT
-  onPreview: (card: AiCardHistoryItem) => void
-  onDownload: (card: AiCardHistoryItem) => void
+  onPreview: (card: GeneratedCardHistoryItem) => void
+  onDownload: (card: GeneratedCardHistoryItem) => void
   downloadingCardId?: string
-}): ColumnDef<AiCardHistoryItem>[] => [
+}): ColumnDef<GeneratedCardHistoryItem>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -59,9 +59,9 @@ export const getAiCardHistoryColumns = ({
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.preview' />,
     cell: ({ row }) => (
       <AiCardPreview
-        src={row.original.outputImageUrl}
-        alt={t('aiCustom.history.previewAlt', { code: row.original.code })}
-        openLabel={t('aiCustom.history.openPreview', { code: row.original.code })}
+        src={row.original.imageUrl}
+        alt={t('aiCustom.history.previewAlt', { code: row.original.generatedCardId })}
+        openLabel={t('aiCustom.history.openPreview', { code: row.original.generatedCardId })}
         onOpen={() => onPreview(row.original)}
       />
     ),
@@ -71,8 +71,8 @@ export const getAiCardHistoryColumns = ({
     size: 120
   },
   {
-    id: 'code',
-    accessorKey: 'code',
+    id: 'search',
+    accessorKey: 'generatedCardId',
     meta: {
       label: 'aiCustom.history.column.code',
       placeholder: 'aiCustom.history.searchPlaceholder',
@@ -81,8 +81,11 @@ export const getAiCardHistoryColumns = ({
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.code' />,
     cell: ({ row }) => (
-      <Link to={row.original.id} className='whitespace-nowrap font-mono text-sm font-medium hover:underline'>
-        {row.original.code}
+      <Link
+        to={row.original.generatedCardId}
+        className='whitespace-nowrap font-mono text-sm font-medium hover:underline'
+      >
+        {row.original.generatedCardId}
       </Link>
     ),
     enableSorting: false,
@@ -92,16 +95,13 @@ export const getAiCardHistoryColumns = ({
   },
   {
     id: 'customer',
-    accessorFn: (row) => row.customerName,
+    accessorFn: (row) => row.userId,
     meta: { label: 'aiCustom.history.column.customer' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
     cell: ({ row }) => (
-      <div className='min-w-40'>
-        <p className='truncate text-sm font-medium'>
-          {row.original.customerName?.trim() || t('aiCustom.history.walkInCustomer')}
-        </p>
-        <p className='mt-0.5 truncate text-xs text-muted-foreground'>{row.original.customerPhone?.trim() || '-'}</p>
-      </div>
+      <span className='block max-w-48 truncate font-mono text-xs' title={row.original.userId ?? undefined}>
+        {row.original.userId || '-'}
+      </span>
     ),
     enableSorting: false,
     enableHiding: true,
@@ -120,8 +120,8 @@ export const getAiCardHistoryColumns = ({
     size: 180
   },
   {
-    id: 'sizeId',
-    accessorKey: 'sizeId',
+    id: 'sizeKey',
+    accessorKey: 'sizeKey',
     meta: {
       label: 'aiCustom.history.column.size',
       variant: 'radio',
@@ -139,19 +139,19 @@ export const getAiCardHistoryColumns = ({
     size: 130
   },
   {
-    id: 'writingMode',
-    accessorKey: 'writingMode',
+    id: 'formType',
+    accessorKey: 'formType',
     meta: {
       label: 'aiCustom.history.column.writingMode',
       variant: 'radio',
       options: [
         { label: t('aiCustom.history.writingMode.calligraphy'), value: AiCardWritingMode.Calligraphy },
-        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.Typed }
+        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.Printed }
       ]
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.writingMode' />,
     cell: ({ row }) => {
-      const isCalligraphy = row.original.writingMode === AiCardWritingMode.Calligraphy
+      const isCalligraphy = row.original.formType === AiCardWritingMode.Calligraphy
 
       return (
         <Badge
@@ -194,7 +194,7 @@ export const getAiCardHistoryColumns = ({
       <DataTableColumnHeader column={column} label='aiCustom.history.column.actions' className='justify-end' />
     ),
     cell: ({ row }) => {
-      const isDownloading = downloadingCardId === row.original.id
+      const isDownloading = downloadingCardId === row.original.generatedCardId
 
       return (
         <div className='flex justify-end'>
@@ -208,7 +208,7 @@ export const getAiCardHistoryColumns = ({
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>{t('products.action.actions')}</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link to={row.original.id}>
+                <Link to={row.original.generatedCardId}>
                   <EyeIcon />
                   {t('aiCustom.history.viewDetail')}
                 </Link>

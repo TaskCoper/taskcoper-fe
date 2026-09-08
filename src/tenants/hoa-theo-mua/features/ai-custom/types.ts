@@ -1,8 +1,8 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 
 export const AiCardWritingMode = {
-  Calligraphy: 'calligraphy',
-  Typed: 'typed'
+  Calligraphy: 'Calligraphy',
+  Printed: 'Printed'
 } as const
 
 export type AiCardWritingMode = (typeof AiCardWritingMode)[keyof typeof AiCardWritingMode]
@@ -22,40 +22,60 @@ export interface AiCardLinkedOrder {
   createdAt: string
 }
 
-export interface AiCardHistoryItem {
-  id: string
-  code: string
-  outputImageUrl: string | null
-  customerId: string | null
-  customerName: string | null
-  customerPhone: string | null
-  templateId: string | null
-  templateName: string | null
-  sizeId: string | null
-  sizeName: string | null
-  writingMode: AiCardWritingMode
+export interface GeneratedCardHistoryItem {
+  historyId: string
+  generatedCardId: string
+  content: string
+  imageUrl: string | null
+  rawImage: string | null
+  userId: string | null
   createdAt: string
+  cardType: string
+  formType: AiCardWritingMode
+  sizeKey: string | null
+  senderName: string | null
+  receiverName: string | null
+  messageContent: string | null
+  attachedImageUrl: string | null
+  sizeName: string | null
+  sizeWidth: number | null
+  sizeHeight: number | null
+  sizeBasePrice: number | null
+  sizeMaxWords: number | null
+  wordCount: number
+  wordConfigSnapshot: unknown
+  basePrice: number
+  extraPrice: number
+  totalPrice: number
+  templateName: string | null
 }
 
-export interface AiCardDetail extends AiCardHistoryItem {
-  customerEmail: string | null
-  senderName: string | null
-  recipientName: string | null
-  greetingMessage: string | null
-  attachmentImageUrls: string[]
-  fileStatus: AiCardFileStatus
-  linkedOrders: AiCardLinkedOrder[]
+export interface GeneratedCardOrder {
+  orderId: string
+  status: string | null
+  totalFee: number
+}
+
+export interface GeneratedCardDetailItem extends GeneratedCardHistoryItem {
+  orders: GeneratedCardOrder[]
+}
+
+export interface GeneratedCardDownload {
+  generatedCardId: string
+  imageUrl: string
+  fileName: string
+  contentType: string
 }
 
 export interface GetAiCardHistoryParams {
   pageIndex?: number
   pageSize?: number
   search?: string
-  sizeId?: string
-  writingMode?: AiCardWritingMode
+  sizeKey?: string
+  formType?: AiCardWritingMode
 }
 
-export type AiCardHistoryPage = BasePaginationResponse<AiCardHistoryItem>['value']
+export type AiCardHistoryPage = BasePaginationResponse<GeneratedCardHistoryItem>['value']
 
 export interface AiFlowerDesignHistoryItem {
   id: string
