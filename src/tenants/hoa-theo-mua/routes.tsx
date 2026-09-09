@@ -12,6 +12,7 @@ const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
 const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
 const CardSizesPage = lazy(() => import('./pages/card-sizes.page'))
 const HandwritingSurchargePage = lazy(() => import('./pages/handwriting-surcharge.page'))
+const SystemPromptsPage = lazy(() => import('./pages/system-prompts.page'))
 const OrdersPage = lazy(() => import('./pages/orders.page'))
 const OrderPage = lazy(() => import('./pages/order.page'))
 const SystemOrdersPage = lazy(() => import('./pages/system-orders.page'))
@@ -99,7 +100,8 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         children: [
           { path: 'configs', element: <SystemConfigsPage /> },
           { path: 'configs/b2b-overview', element: <B2BOverviewEditorPage /> },
-          { path: 'configs/b2b-service/:slug', element: <B2BServiceEditorPage /> }
+          { path: 'configs/b2b-service/:slug', element: <B2BServiceEditorPage /> },
+          { path: 'ai-settings/system-prompts', element: <SystemPromptsPage /> }
         ]
       },
       {

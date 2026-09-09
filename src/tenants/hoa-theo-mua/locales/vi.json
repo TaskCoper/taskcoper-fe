@@ -95,6 +95,68 @@
       }
     }
   },
+  "systemPrompts": {
+    "title": "System Prompt",
+    "description": "Quản lý nội dung hướng dẫn AI cho từng chức năng của hệ thống.",
+    "contentLabel": "Nội dung System Prompt",
+    "markdownSupported": "Hỗ trợ Markdown",
+    "tabs": {
+      "flower": {
+        "label": "Tạo mẫu hoa",
+        "title": "Tạo mẫu hoa",
+        "description": "System Prompt định hướng AI khi tạo mẫu hoa và phối hợp các loại hoa tự nhiên."
+      },
+      "card": {
+        "label": "Tạo thiệp hoa",
+        "title": "Tạo thiệp hoa",
+        "description": "System Prompt định hướng AI khi tạo nội dung và hình ảnh thiệp hoa."
+      },
+      "content": {
+        "label": "Viết content",
+        "title": "Viết content",
+        "description": "System Prompt hỗ trợ AI tạo nội dung truyền thông."
+      },
+      "backgroundRule": {
+        "label": "Rule theo nền ảnh",
+        "title": "Rule theo nền ảnh",
+        "description": "Quy tắc hướng dẫn AI xử lý nội dung theo nền ảnh."
+      },
+      "imageToImage": {
+        "label": "Tạo ảnh từ ảnh gốc",
+        "title": "Tạo ảnh từ ảnh gốc",
+        "description": "System Prompt hướng dẫn AI tạo ảnh mới dựa trên ảnh gốc."
+      }
+    },
+    "actions": {
+      "copy": "Sao chép",
+      "edit": "Chỉnh sửa",
+      "save": "Lưu thay đổi",
+      "retry": "Thử lại"
+    },
+    "edit": {
+      "title": "Chỉnh sửa System Prompt",
+      "description": "Cập nhật nội dung hướng dẫn AI. Khoảng trắng và xuống dòng sẽ được giữ nguyên."
+    },
+    "validation": {
+      "required": "Nội dung System Prompt không được để trống.",
+      "maxLength": "Nội dung không được vượt quá {{count}} ký tự.",
+      "controlCharacter": "Nội dung chứa ký tự điều khiển không được phép."
+    },
+    "state": {
+      "comingSoon": "Chức năng đang được phát triển",
+      "comingSoonDescription": "API cho nội dung này chưa khả dụng và sẽ được bổ sung trong tương lai.",
+      "listError": "Không thể tải danh sách System Prompt.",
+      "detailError": "Không thể tải nội dung System Prompt.",
+      "notConfigured": "Chưa cấu hình System Prompt cho chức năng này.",
+      "emptyContent": "Chưa có nội dung System Prompt."
+    },
+    "toast": {
+      "copySuccess": "Đã sao chép System Prompt.",
+      "copyFailed": "Không thể sao chép System Prompt.",
+      "updateSuccess": "Cập nhật System Prompt thành công.",
+      "updateFailed": "Không thể cập nhật System Prompt."
+    }
+  },
   "customNews": {
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
@@ -307,6 +369,10 @@
       "title": "Cấu hình thiệp",
       "sizes": "Kích thước thiệp",
       "handwritingSurcharge": "Phụ phí viết tay"
+    },
+    "aiSettings": {
+      "title": "Cấu hình AI",
+      "systemPrompts": "System Prompt"
     },
     "systemConfigs": "Cấu hình hệ thống"
   },

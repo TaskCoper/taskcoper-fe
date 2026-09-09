@@ -209,6 +209,19 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/handwriting-surcharge`]
       }
     ]
+  },
+  {
+    titleKey: 'navigation.aiSettings.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-settings/system-prompts`,
+    icon: SettingsIcon,
+    feature: 'custom.systemConfigs',
+    items: [
+      {
+        titleKey: 'navigation.aiSettings.systemPrompts',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-settings/system-prompts`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-settings/system-prompts`]
+      }
+    ]
   }
 ]
 

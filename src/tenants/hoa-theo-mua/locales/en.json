@@ -95,6 +95,68 @@
       }
     }
   },
+  "systemPrompts": {
+    "title": "System Prompt",
+    "description": "Manage AI instructions for each system feature.",
+    "contentLabel": "System Prompt content",
+    "markdownSupported": "Markdown supported",
+    "tabs": {
+      "flower": {
+        "label": "Create flower design",
+        "title": "Create flower design",
+        "description": "The System Prompt guides AI when creating flower designs and arranging natural flowers."
+      },
+      "card": {
+        "label": "Create flower card",
+        "title": "Create flower card",
+        "description": "The System Prompt guides AI when creating flower card content and imagery."
+      },
+      "content": {
+        "label": "Write content",
+        "title": "Write content",
+        "description": "The System Prompt helps AI produce marketing content."
+      },
+      "backgroundRule": {
+        "label": "Background rules",
+        "title": "Background rules",
+        "description": "Rules that guide AI content processing based on the image background."
+      },
+      "imageToImage": {
+        "label": "Create from source image",
+        "title": "Create from source image",
+        "description": "The System Prompt guides AI when generating a new image from a source image."
+      }
+    },
+    "actions": {
+      "copy": "Copy",
+      "edit": "Edit",
+      "save": "Save changes",
+      "retry": "Retry"
+    },
+    "edit": {
+      "title": "Edit System Prompt",
+      "description": "Update the AI instructions. Whitespace and line breaks are preserved."
+    },
+    "validation": {
+      "required": "System Prompt content is required.",
+      "maxLength": "Content must not exceed {{count}} characters.",
+      "controlCharacter": "Content contains a control character that is not allowed."
+    },
+    "state": {
+      "comingSoon": "This feature is under development",
+      "comingSoonDescription": "The API for this content is not available yet and will be added in the future.",
+      "listError": "Unable to load System Prompts.",
+      "detailError": "Unable to load the System Prompt content.",
+      "notConfigured": "No System Prompt is configured for this feature.",
+      "emptyContent": "No System Prompt content is available."
+    },
+    "toast": {
+      "copySuccess": "System Prompt copied.",
+      "copyFailed": "Unable to copy the System Prompt.",
+      "updateSuccess": "System Prompt updated successfully.",
+      "updateFailed": "Unable to update the System Prompt."
+    }
+  },
   "customNews": {
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
@@ -307,6 +369,10 @@
       "title": "Card Configuration",
       "sizes": "Card Sizes",
       "handwritingSurcharge": "Handwriting Surcharge"
+    },
+    "aiSettings": {
+      "title": "AI Settings",
+      "systemPrompts": "System Prompt"
     },
     "systemConfigs": "System configurations"
   },
