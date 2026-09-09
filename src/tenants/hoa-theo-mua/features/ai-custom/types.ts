@@ -2,7 +2,7 @@ import type { BasePaginationResponse } from '@/lib/axios'
 
 export const AiCardWritingMode = {
   Calligraphy: 'Calligraphy',
-  Printed: 'Printed'
+  GoMay: 'GoMay'
 } as const
 
 export type AiCardWritingMode = (typeof AiCardWritingMode)[keyof typeof AiCardWritingMode]
@@ -79,7 +79,6 @@ export type AiCardHistoryPage = BasePaginationResponse<GeneratedCardHistoryItem>
 
 export interface AiFlowerDesignHistoryItem {
   id: string
-  code: string
   outputImageUrl: string | null
   customerId: string | null
   customerName: string | null

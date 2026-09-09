@@ -13,7 +13,7 @@ export const aiCardKeys = {
 }
 
 export const aiFlowerDesignKeys = {
-  all: ['ai-flower-designs', 'mock-v3'] as const,
+  all: ['ai-flower-designs'] as const,
   lists: () => [...aiFlowerDesignKeys.all, 'list'] as const,
   list: (params: GetAiFlowerDesignHistoryParams) => [...aiFlowerDesignKeys.lists(), params] as const,
   comboOptions: (params: GetAiFlowerDesignComboOptionsParams) =>

@@ -47,7 +47,6 @@ const mockAiFlowerDesigns: AiFlowerDesignHistoryItem[] = Array.from({ length: 42
 
   return {
     id: `ai-flower-design-${number}`,
-    code: `FLOWER-${String(number).padStart(5, '0')}`,
     // Empty outputs are unfinished generations; the broken URL verifies per-preview fallback behavior.
     outputImageUrl:
       index % 13 === 0
@@ -193,9 +192,7 @@ export const getMockAiFlowerDesignHistory = async ({
   const filteredDesigns = validOutputDesigns.filter((design) => {
     const matchesSearch =
       !normalizedSearch ||
-      [design.customerName, design.orderCode, design.code]
-        .filter((value): value is string => Boolean(value))
-        .some((value) => normalizeSearch(value).includes(normalizedSearch))
+      Boolean(design.customerName && normalizeSearch(design.customerName).includes(normalizedSearch))
     const matchesCombo = selectedComboIds.size === 0 || selectedComboIds.has(design.sourceComboId)
 
     return matchesSearch && matchesCombo

@@ -67,7 +67,7 @@ export default function AiFlowerDesignsPage() {
           slides={[
             {
               src: previewDesign.outputImageUrl,
-              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.code })
+              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.id })
             }
           ]}
           carousel={{ finite: true }}

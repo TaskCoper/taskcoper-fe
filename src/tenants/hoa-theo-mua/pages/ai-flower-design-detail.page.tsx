@@ -142,8 +142,8 @@ export default function AiFlowerDesignDetailPage() {
       ? [
           {
             src: aiFlowerDesign.outputImageUrl,
-            alt: t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.code }),
-            description: t('aiCustom.flowerDetail.lightbox.resultCaption', { code: aiFlowerDesign.code })
+            alt: t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.id }),
+            description: t('aiCustom.flowerDetail.lightbox.resultCaption', { code: aiFlowerDesign.id })
           }
         ]
       : []),
@@ -194,7 +194,7 @@ export default function AiFlowerDesignDetailPage() {
             <div className='flex flex-wrap items-center gap-2'>
               <h1 className='text-2xl font-bold'>{t('aiCustom.flowerDetail.title')}</h1>
               <Badge variant='outline' className='font-mono'>
-                {aiFlowerDesign.code}
+                {aiFlowerDesign.id}
               </Badge>
             </div>
             <p className='text-sm text-muted-foreground'>{t('aiCustom.flowerDetail.description')}</p>
@@ -206,7 +206,7 @@ export default function AiFlowerDesignDetailPage() {
             <div className='relative flex w-fit max-w-full items-center justify-center bg-muted/20 p-4 pt-16'>
               <div className='absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-3'>
                 <Badge variant='outline' className='bg-background/90 font-mono shadow-sm backdrop-blur-sm'>
-                  {aiFlowerDesign.code}
+                  {aiFlowerDesign.id}
                 </Badge>
                 <Badge
                   variant='outline'
@@ -221,8 +221,8 @@ export default function AiFlowerDesignDetailPage() {
               </div>
               <AiCardOutputImage
                 src={aiFlowerDesign.outputImageUrl}
-                alt={t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.code })}
-                openLabel={t('aiCustom.flowerHistory.openPreview', { code: aiFlowerDesign.code })}
+                alt={t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.id })}
+                openLabel={t('aiCustom.flowerHistory.openPreview', { code: aiFlowerDesign.id })}
                 onOpen={resultImageIndex === undefined ? undefined : () => setLightboxImageIndex(resultImageIndex)}
                 className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
                 imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg border-0 bg-transparent object-contain'

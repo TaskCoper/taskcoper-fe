@@ -54,8 +54,8 @@ export const getAiFlowerDesignHistoryColumns = ({
     cell: ({ row }) => (
       <AiCardPreview
         src={row.original.outputImageUrl}
-        alt={t('aiCustom.flowerHistory.previewAlt', { code: row.original.code })}
-        openLabel={t('aiCustom.flowerHistory.openPreview', { code: row.original.code })}
+        alt={t('aiCustom.flowerHistory.previewAlt', { code: row.original.id })}
+        openLabel={t('aiCustom.flowerHistory.openPreview', { code: row.original.id })}
         onOpen={() => onPreview(row.original)}
       />
     ),
@@ -66,28 +66,13 @@ export const getAiFlowerDesignHistoryColumns = ({
   },
   {
     id: 'search',
-    accessorKey: 'code',
+    accessorFn: (row) => row.customerName,
     meta: {
-      label: 'aiCustom.flowerHistory.column.code',
+      label: 'aiCustom.flowerHistory.column.customer',
       placeholder: 'aiCustom.flowerHistory.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.code' />,
-    cell: ({ row }) => (
-      <Link to={row.original.id} className='whitespace-nowrap font-mono text-sm font-medium hover:underline'>
-        {row.original.code}
-      </Link>
-    ),
-    enableSorting: false,
-    enableHiding: true,
-    enableColumnFilter: true,
-    size: 160
-  },
-  {
-    id: 'customer',
-    accessorFn: (row) => row.customerName,
-    meta: { label: 'aiCustom.flowerHistory.column.customer' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.customer' />,
     cell: ({ row }) => (
       <div className='min-w-40'>
@@ -99,7 +84,7 @@ export const getAiFlowerDesignHistoryColumns = ({
     ),
     enableSorting: false,
     enableHiding: true,
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     size: 190
   },
   {

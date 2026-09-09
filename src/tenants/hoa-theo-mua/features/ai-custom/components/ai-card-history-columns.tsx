@@ -146,7 +146,7 @@ export const getAiCardHistoryColumns = ({
       variant: 'radio',
       options: [
         { label: t('aiCustom.history.writingMode.calligraphy'), value: AiCardWritingMode.Calligraphy },
-        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.Printed }
+        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.GoMay }
       ]
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.writingMode' />,

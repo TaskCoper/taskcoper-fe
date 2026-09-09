@@ -62,7 +62,7 @@ const mockAiCards = Array.from({ length: 38 }, (_, index) => {
     templateName: template.name,
     sizeId: size.id,
     sizeName: size.name,
-    writingMode: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.Printed,
+    writingMode: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.GoMay,
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString()
   }
 })
@@ -88,7 +88,7 @@ const mockGeneratedCards: GeneratedCardHistoryItem[] = Array.from({ length: 38 }
     userId: customer.id,
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString(),
     cardType: 'AI',
-    formType: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.Printed,
+    formType: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.GoMay,
     sizeKey: size.id,
     senderName: customer.name,
     receiverName: index % 3 === 0 ? 'Receiver' : 'Loved one',

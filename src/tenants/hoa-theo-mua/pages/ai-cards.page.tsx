@@ -15,7 +15,7 @@ import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../features/ai
 const FILTER_PREFIX = 'aiCards'
 
 const resolveFormType = (value: string | null) => {
-  if (value === AiCardWritingMode.Calligraphy || value === AiCardWritingMode.Printed) return value
+  if (value === AiCardWritingMode.Calligraphy || value === AiCardWritingMode.GoMay) return value
 
   return undefined
 }
