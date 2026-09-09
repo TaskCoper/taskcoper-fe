@@ -1,10 +1,9 @@
 import {
-  AiCardFileStatus,
-  type AiFlowerDesignDetail,
   type AiFlowerDesignComboOption,
   type AiFlowerDesignComboOptionsPage,
-  type AiFlowerDesignHistoryItem,
   type AiFlowerDesignHistoryPage,
+  type GeneratedFlowerDetail,
+  type GeneratedFlowerHistoryItem,
   type GetAiFlowerDesignComboOptionsParams,
   type GetAiFlowerDesignHistoryParams
 } from './types'
@@ -40,27 +39,27 @@ const previewImages = [
   'https://i.pinimg.com/originals/6e/26/1b/6e261b04aefd60a2c4e86e72b4a8143d.jpg'
 ]
 
-const mockAiFlowerDesigns: AiFlowerDesignHistoryItem[] = Array.from({ length: 42 }, (_, index) => {
+const mockAiFlowerDesigns: GeneratedFlowerHistoryItem[] = Array.from({ length: 42 }, (_, index) => {
   const number = index + 1
   const customer = customers[index % customers.length]
   const combo = mockAiFlowerDesignComboOptions[index % mockAiFlowerDesignComboOptions.length]
 
   return {
-    id: `ai-flower-design-${number}`,
+    historyId: `ai-flower-history-${number}`,
+    generatedFlowerId: `ai-flower-design-${number}`,
     // Empty outputs are unfinished generations; the broken URL verifies per-preview fallback behavior.
-    outputImageUrl:
+    imageUrl:
       index % 13 === 0
         ? null
         : index === 8
           ? '/images/ai-flower-preview-not-found.jpg'
           : previewImages[(index - 1 + previewImages.length) % previewImages.length],
-    customerId: customer.id,
-    customerName: customer.name,
-    customerPhone: customer.phone,
-    orderCode: `ORDER-${String(920000 + number)}`,
-    sourceComboId: combo.id,
-    sourceComboCode: combo.code,
-    sourceComboName: combo.name,
+    nameCustomer: customer.name,
+    phoneCustomer: customer.phone,
+    addressCustomer: customer.id ? `${number} Nguyễn Huệ, Quận 1, TP.HCM` : null,
+    comboId: combo.id,
+    comboName: combo.name,
+    productCode: combo.code,
     createdAt: new Date(Date.UTC(2026, 7, 29 - index, 8 + (index % 9), 30)).toISOString()
   }
 })
@@ -102,80 +101,66 @@ export const getMockAiFlowerDesignComboOptions = async ({
   }
 }
 
-export const getMockAiFlowerDesignDetail = async (id: string): Promise<AiFlowerDesignDetail | null> => {
-  const design = mockAiFlowerDesigns.find((item) => item.id === id && Boolean(item.outputImageUrl?.trim()))
+export const getMockAiFlowerDesignDetail = async (id: string): Promise<GeneratedFlowerDetail | null> => {
+  const design = mockAiFlowerDesigns.find((item) => item.generatedFlowerId === id && Boolean(item.imageUrl?.trim()))
   if (!design) return null
 
-  const designNumber = Number(design.id.replace('ai-flower-design-', '')) || 1
+  const designNumber = Number(design.generatedFlowerId.replace('ai-flower-design-', '')) || 1
   const linkedOrderCount = designNumber % 4
 
   return {
-    ...design,
-    customerEmail: design.customerId ? `khachhang${designNumber}@example.com` : null,
+    historyId: design.historyId,
+    generatedFlowerId: design.generatedFlowerId,
+    nameCustomer: design.nameCustomer,
+    phoneCustomer: design.phoneCustomer,
+    addressCustomer: design.addressCustomer,
+    imageUrl: design.imageUrl,
     sourceCombo: {
-      id: design.sourceComboId,
-      code: design.sourceComboCode,
-      name: design.sourceComboName ?? '-',
+      code: design.productCode,
+      name: design.comboName ?? '-',
       description: 'Combo hoa được lưu tại thời điểm khách hàng tạo mẫu Custom AI.',
-      imageUrl: previewImages[(designNumber + 1) % previewImages.length]
+      imageCombo: previewImages[(designNumber + 1) % previewImages.length]
     },
-    coreMaterials: [
-      {
-        id: `core-${designNumber}-1`,
-        code: 'HH-HONG-001',
-        name: 'Hoa hồng Juliet',
-        imageUrl: '/images/placeholder-cover.png',
-        unit: 'Cành',
-        quantity: 12 + (designNumber % 5)
-      },
-      {
-        id: `core-${designNumber}-2`,
-        code: 'HH-CUCA-002',
-        name: 'Hoa cúc mẫu đơn',
-        imageUrl: '/images/auth-bg.jpg',
-        unit: 'Cành',
-        quantity: 6 + (designNumber % 3)
-      }
-    ],
-    supportMaterials: [
-      {
-        id: `support-${designNumber}-1`,
-        code: 'PL-LA-001',
-        name: 'Lá bạc',
-        imageUrl: '/images/placeholder-cover.png',
-        unit: 'Cành',
-        quantity: 5
-      },
-      {
-        id: `support-${designNumber}-2`,
-        code: 'PL-RUYBANG-002',
-        name: 'Ruy băng satin',
-        imageUrl: null,
-        unit: 'Mét',
-        quantity: 1.5
-      }
-    ],
-    sourceMockup: {
-      id: `mockup-${(designNumber % 4) + 1}`,
-      code: `MOCKUP-${String((designNumber % 4) + 1).padStart(3, '0')}`,
+    mockup: {
       name: `Mockup hoa phong cách ${(designNumber % 4) + 1}`,
       imageUrl: previewImages[(designNumber + 2) % previewImages.length]
     },
-    customRequest:
-      designNumber % 5 === 0
-        ? null
-        : 'Ưu tiên tông màu nhẹ, bố cục tự nhiên và giữ phong cách thanh lịch của Combo nguồn.',
-    fileStatus:
-      designNumber % 7 === 0
-        ? AiCardFileStatus.Expired
-        : designNumber % 5 === 0
-          ? AiCardFileStatus.Processing
-          : AiCardFileStatus.Available,
-    linkedOrders: Array.from({ length: linkedOrderCount }, (_, index) => ({
+    materials: [
+      {
+        code: 'HH-HONG-001',
+        name: 'Hoa hồng Juliet',
+        unit: 'Cành',
+        quantity: 12 + (designNumber % 5),
+        isCore: true
+      },
+      {
+        code: 'HH-CUCA-002',
+        name: 'Hoa cúc mẫu đơn',
+        unit: 'Cành',
+        quantity: 6 + (designNumber % 3),
+        isCore: true
+      },
+      {
+        code: 'PL-LA-001',
+        name: 'Lá bạc',
+        unit: 'Cành',
+        quantity: 5,
+        isCore: false
+      },
+      {
+        code: 'PL-RUYBANG-002',
+        name: 'Ruy băng satin',
+        unit: 'Mét',
+        quantity: 1.5,
+        isCore: false
+      }
+    ],
+    createdAt: design.createdAt,
+    orders: Array.from({ length: linkedOrderCount }, (_, index) => ({
       id: `00000000-0000-4000-8000-${String(designNumber * 20 + index).padStart(12, '0')}`,
-      code: `ORDER-${String(920000 + designNumber * 10 + index)}`,
       status: index % 2 === 0 ? 'Paid' : 'Pending',
-      createdAt: new Date(Date.UTC(2026, 7, 29 - designNumber - index, 10, 30)).toISOString()
+      createdAt: new Date(Date.UTC(2026, 7, 29 - designNumber - index, 10, 30)).toISOString(),
+      totalFee: 520000 + index * 240000
     }))
   }
 }
@@ -188,12 +173,12 @@ export const getMockAiFlowerDesignHistory = async ({
 }: GetAiFlowerDesignHistoryParams): Promise<AiFlowerDesignHistoryPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
   const selectedComboIds = new Set(comboIds ?? [])
-  const validOutputDesigns = mockAiFlowerDesigns.filter((design) => Boolean(design.outputImageUrl?.trim()))
+  const validOutputDesigns = mockAiFlowerDesigns.filter((design) => Boolean(design.imageUrl?.trim()))
   const filteredDesigns = validOutputDesigns.filter((design) => {
     const matchesSearch =
       !normalizedSearch ||
-      Boolean(design.customerName && normalizeSearch(design.customerName).includes(normalizedSearch))
-    const matchesCombo = selectedComboIds.size === 0 || selectedComboIds.has(design.sourceComboId)
+      Boolean(design.nameCustomer && normalizeSearch(design.nameCustomer).includes(normalizedSearch))
+    const matchesCombo = selectedComboIds.size === 0 || selectedComboIds.has(design.comboId)
 
     return matchesSearch && matchesCombo
   })

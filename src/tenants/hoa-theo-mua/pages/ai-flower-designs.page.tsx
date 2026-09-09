@@ -9,13 +9,13 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getAiFlowerDesignHistoryColumns } from '../features/ai-custom/components/ai-flower-design-history-columns'
 import { useGetAiFlowerDesignHistory } from '../features/ai-custom/hooks/use-get-ai-flower-design-history'
-import type { AiFlowerDesignHistoryItem } from '../features/ai-custom/types'
+import type { GeneratedFlowerHistoryItem } from '../features/ai-custom/types'
 
 const FILTER_PREFIX = 'aiFlowerDesigns'
 
 export default function AiFlowerDesignsPage() {
   const { t } = useTenantTranslation()
-  const [previewDesign, setPreviewDesign] = useState<AiFlowerDesignHistoryItem | null>(null)
+  const [previewDesign, setPreviewDesign] = useState<GeneratedFlowerHistoryItem | null>(null)
 
   const columns = useMemo(() => getAiFlowerDesignHistoryColumns({ t, onPreview: setPreviewDesign }), [t])
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX })
@@ -36,7 +36,7 @@ export default function AiFlowerDesignsPage() {
     initialState: {
       columnPinning: { right: ['actions'] }
     },
-    getRowId: (row) => row.id,
+    getRowId: (row) => row.historyId,
     shallow: false,
     clearOnDefault: true,
     filterPrefix: FILTER_PREFIX,
@@ -60,14 +60,14 @@ export default function AiFlowerDesignsPage() {
         </DataTable>
       </div>
 
-      {previewDesign?.outputImageUrl && (
+      {previewDesign?.imageUrl && (
         <Lightbox
           open
           close={() => setPreviewDesign(null)}
           slides={[
             {
-              src: previewDesign.outputImageUrl,
-              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.id })
+              src: previewDesign.imageUrl,
+              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.generatedFlowerId })
             }
           ]}
           carousel={{ finite: true }}

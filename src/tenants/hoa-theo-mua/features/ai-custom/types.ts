@@ -79,16 +79,16 @@ export interface GetAiCardHistoryParams {
 
 export type AiCardHistoryPage = BasePaginationResponse<GeneratedCardHistoryItem>['value']
 
-export interface AiFlowerDesignHistoryItem {
-  id: string
-  outputImageUrl: string | null
-  customerId: string | null
-  customerName: string | null
-  customerPhone: string | null
-  orderCode: string | null
-  sourceComboId: string
-  sourceComboCode: string | null
-  sourceComboName: string | null
+export interface GeneratedFlowerHistoryItem {
+  historyId: string
+  generatedFlowerId: string
+  nameCustomer: string | null
+  phoneCustomer: string | null
+  addressCustomer: string | null
+  comboId: string
+  comboName: string | null
+  productCode: string | null
+  imageUrl: string | null
   createdAt: string
 }
 
@@ -107,39 +107,45 @@ export interface GetAiFlowerDesignComboOptionsParams {
 
 export type AiFlowerDesignComboOptionsPage = BasePaginationResponse<AiFlowerDesignComboOption>['value']
 
-export interface AiFlowerDesignMaterialSnapshot {
-  id: string
+export interface GeneratedFlowerMaterial {
   code: string | null
   name: string
-  imageUrl: string | null
   unit: string | null
   quantity: number
+  isCore: boolean
 }
 
-export interface AiFlowerDesignSourceCombo {
-  id: string
+export interface GeneratedFlowerSourceCombo {
   code: string | null
   name: string
   description: string | null
-  imageUrl: string | null
+  imageCombo: string | null
 }
 
-export interface AiFlowerDesignSourceMockup {
-  id: string
-  code: string | null
+export interface GeneratedFlowerMockup {
   name: string
   imageUrl: string | null
 }
 
-export interface AiFlowerDesignDetail extends AiFlowerDesignHistoryItem {
-  customerEmail: string | null
-  sourceCombo: AiFlowerDesignSourceCombo
-  coreMaterials: AiFlowerDesignMaterialSnapshot[]
-  supportMaterials: AiFlowerDesignMaterialSnapshot[]
-  sourceMockup: AiFlowerDesignSourceMockup | null
-  customRequest: string | null
-  fileStatus: AiCardFileStatus
-  linkedOrders: AiCardLinkedOrder[]
+export interface GeneratedFlowerOrder {
+  id: string
+  status: string | null
+  createdAt: string
+  totalFee: number
+}
+
+export interface GeneratedFlowerDetail {
+  historyId: string
+  generatedFlowerId: string
+  nameCustomer: string | null
+  phoneCustomer: string | null
+  addressCustomer: string | null
+  sourceCombo: GeneratedFlowerSourceCombo
+  imageUrl: string | null
+  mockup: GeneratedFlowerMockup | null
+  materials: GeneratedFlowerMaterial[]
+  createdAt: string
+  orders: GeneratedFlowerOrder[]
 }
 
 export interface GetAiFlowerDesignHistoryParams {
@@ -149,4 +155,4 @@ export interface GetAiFlowerDesignHistoryParams {
   comboIds?: string[]
 }
 
-export type AiFlowerDesignHistoryPage = BasePaginationResponse<AiFlowerDesignHistoryItem>['value']
+export type AiFlowerDesignHistoryPage = BasePaginationResponse<GeneratedFlowerHistoryItem>['value']

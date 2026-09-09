@@ -5,8 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDateTime } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { cn } from '@/shared/utils'
-import { ArrowLeftIcon, ArrowUpRightIcon, MailIcon, PackageSearchIcon, PhoneIcon } from 'lucide-react'
+import { cn, formatCurrency } from '@/shared/utils'
+import { ArrowLeftIcon, ArrowUpRightIcon, MapPinIcon, PackageSearchIcon, PhoneIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import Lightbox from 'yet-another-react-lightbox'
@@ -20,7 +20,7 @@ import 'yet-another-react-lightbox/styles.css'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import AiCardOutputImage from '../features/ai-custom/components/ai-card-output-image'
 import { useGetAiFlowerDesignDetail } from '../features/ai-custom/hooks/use-get-ai-flower-design-detail'
-import { AiCardFileStatus, type AiFlowerDesignMaterialSnapshot } from '../features/ai-custom/types'
+import type { GeneratedFlowerMaterial } from '../features/ai-custom/types'
 
 const DETAIL_TABS = ['overview', 'materials', 'source', 'orders'] as const
 
@@ -54,7 +54,7 @@ function InformationRow({ label, children }: { label: string; children: ReactNod
   )
 }
 
-function MaterialTable({ materials }: { materials: AiFlowerDesignMaterialSnapshot[] }) {
+function MaterialTable({ materials }: { materials: GeneratedFlowerMaterial[] }) {
   const { t } = useTenantTranslation()
 
   if (materials.length === 0) {
@@ -72,11 +72,11 @@ function MaterialTable({ materials }: { materials: AiFlowerDesignMaterialSnapsho
       </TableHeader>
       <TableBody>
         {materials.map((material) => (
-          <TableRow key={material.id}>
+          <TableRow key={`${material.code ?? material.name}-${material.isCore}`}>
             <TableCell className='px-5'>
               <div className='flex min-w-56 items-center gap-3'>
                 <img
-                  src={material.imageUrl || '/images/placeholder-cover.png'}
+                  src='/images/placeholder-cover.png'
                   alt={material.name}
                   className='size-10 shrink-0 rounded-lg border bg-muted/40 object-cover'
                 />
@@ -132,36 +132,39 @@ export default function AiFlowerDesignDetailPage() {
     )
   }
 
-  const fileStatusLabel = t(`aiCustom.detail.fileStatus.${aiFlowerDesign.fileStatus}`)
-  const resultImageIndex = aiFlowerDesign.outputImageUrl ? 0 : undefined
-  const mockupImageIndex = aiFlowerDesign.outputImageUrl ? 1 : 0
+  const coreMaterials = aiFlowerDesign.materials.filter((material) => material.isCore)
+  const supportMaterials = aiFlowerDesign.materials.filter((material) => !material.isCore)
+  const resultImageIndex = aiFlowerDesign.imageUrl ? 0 : undefined
+  const mockupImageIndex = aiFlowerDesign.imageUrl ? 1 : 0
   const sourceComboImageIndex =
-    Number(Boolean(aiFlowerDesign.outputImageUrl)) + Number(Boolean(aiFlowerDesign.sourceMockup?.imageUrl))
+    Number(Boolean(aiFlowerDesign.imageUrl)) + Number(Boolean(aiFlowerDesign.mockup?.imageUrl))
   const lightboxImages = [
-    ...(aiFlowerDesign.outputImageUrl
+    ...(aiFlowerDesign.imageUrl
       ? [
           {
-            src: aiFlowerDesign.outputImageUrl,
-            alt: t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.id }),
-            description: t('aiCustom.flowerDetail.lightbox.resultCaption', { code: aiFlowerDesign.id })
-          }
-        ]
-      : []),
-    ...(aiFlowerDesign.sourceMockup?.imageUrl
-      ? [
-          {
-            src: aiFlowerDesign.sourceMockup.imageUrl,
-            alt: t('aiCustom.flowerDetail.mockupAlt', { name: aiFlowerDesign.sourceMockup.name }),
-            description: t('aiCustom.flowerDetail.lightbox.mockupCaption', {
-              code: aiFlowerDesign.sourceMockup.code || '-'
+            src: aiFlowerDesign.imageUrl,
+            alt: t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.generatedFlowerId }),
+            description: t('aiCustom.flowerDetail.lightbox.resultCaption', {
+              code: aiFlowerDesign.generatedFlowerId
             })
           }
         ]
       : []),
-    ...(aiFlowerDesign.sourceCombo?.imageUrl
+    ...(aiFlowerDesign.mockup?.imageUrl
       ? [
           {
-            src: aiFlowerDesign.sourceCombo.imageUrl,
+            src: aiFlowerDesign.mockup.imageUrl,
+            alt: t('aiCustom.flowerDetail.mockupAlt', { name: aiFlowerDesign.mockup.name }),
+            description: t('aiCustom.flowerDetail.lightbox.mockupCaption', {
+              code: aiFlowerDesign.mockup.name
+            })
+          }
+        ]
+      : []),
+    ...(aiFlowerDesign.sourceCombo.imageCombo
+      ? [
+          {
+            src: aiFlowerDesign.sourceCombo.imageCombo,
             alt: t('aiCustom.flowerDetail.mockupAlt', { name: aiFlowerDesign.sourceCombo.name }),
             description: t('aiCustom.flowerDetail.lightbox.mockupCaption', {
               code: aiFlowerDesign.sourceCombo.code || '-'
@@ -194,7 +197,7 @@ export default function AiFlowerDesignDetailPage() {
             <div className='flex flex-wrap items-center gap-2'>
               <h1 className='text-2xl font-bold'>{t('aiCustom.flowerDetail.title')}</h1>
               <Badge variant='outline' className='font-mono'>
-                {aiFlowerDesign.id}
+                {aiFlowerDesign.generatedFlowerId}
               </Badge>
             </div>
             <p className='text-sm text-muted-foreground'>{t('aiCustom.flowerDetail.description')}</p>
@@ -206,23 +209,13 @@ export default function AiFlowerDesignDetailPage() {
             <div className='relative flex w-fit max-w-full items-center justify-center bg-muted/20 p-4 pt-16'>
               <div className='absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-3'>
                 <Badge variant='outline' className='bg-background/90 font-mono shadow-sm backdrop-blur-sm'>
-                  {aiFlowerDesign.id}
-                </Badge>
-                <Badge
-                  variant='outline'
-                  className={cn(
-                    'bg-background/90 shadow-sm backdrop-blur-sm',
-                    aiFlowerDesign.fileStatus === AiCardFileStatus.Available && 'border-emerald-300 text-emerald-700',
-                    aiFlowerDesign.fileStatus === AiCardFileStatus.Processing && 'border-amber-300 text-amber-700'
-                  )}
-                >
-                  {fileStatusLabel}
+                  {aiFlowerDesign.generatedFlowerId}
                 </Badge>
               </div>
               <AiCardOutputImage
-                src={aiFlowerDesign.outputImageUrl}
-                alt={t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.id })}
-                openLabel={t('aiCustom.flowerHistory.openPreview', { code: aiFlowerDesign.id })}
+                src={aiFlowerDesign.imageUrl}
+                alt={t('aiCustom.flowerHistory.previewAlt', { code: aiFlowerDesign.generatedFlowerId })}
+                openLabel={t('aiCustom.flowerHistory.openPreview', { code: aiFlowerDesign.generatedFlowerId })}
                 onOpen={resultImageIndex === undefined ? undefined : () => setLightboxImageIndex(resultImageIndex)}
                 className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
                 imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg border-0 bg-transparent object-contain'
@@ -254,47 +247,30 @@ export default function AiFlowerDesignDetailPage() {
                 <DetailPanel title={t('aiCustom.flowerDetail.section.customer')} contentClassName='p-0'>
                   <dl>
                     <InformationRow label={t('aiCustom.detail.field.customerName')}>
-                      {aiFlowerDesign.customerName || t('aiCustom.history.walkInCustomer')}
+                      {aiFlowerDesign.nameCustomer || t('aiCustom.history.walkInCustomer')}
                     </InformationRow>
                     <InformationRow label={t('aiCustom.detail.field.phone')}>
-                      {aiFlowerDesign.customerPhone ? (
+                      {aiFlowerDesign.phoneCustomer ? (
                         <a
-                          href={`tel:${aiFlowerDesign.customerPhone}`}
+                          href={`tel:${aiFlowerDesign.phoneCustomer}`}
                           className='inline-flex items-center gap-1.5 hover:text-primary'
                         >
                           <PhoneIcon className='size-3.5' />
-                          {aiFlowerDesign.customerPhone}
+                          {aiFlowerDesign.phoneCustomer}
                         </a>
                       ) : (
                         '-'
                       )}
                     </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.email')}>
-                      {aiFlowerDesign.customerEmail ? (
-                        <a
-                          href={`mailto:${aiFlowerDesign.customerEmail}`}
-                          className='inline-flex items-center gap-1.5 hover:text-primary'
-                        >
-                          <MailIcon className='size-3.5' />
-                          {aiFlowerDesign.customerEmail}
-                        </a>
+                    <InformationRow label={t('aiCustom.detail.field.address')}>
+                      {aiFlowerDesign.addressCustomer ? (
+                        <span className='inline-flex items-start gap-1.5'>
+                          <MapPinIcon className='mt-0.5 size-3.5 shrink-0' />
+                          {aiFlowerDesign.addressCustomer}
+                        </span>
                       ) : (
                         '-'
                       )}
-                    </InformationRow>
-                  </dl>
-                </DetailPanel>
-
-                <DetailPanel title={t('aiCustom.flowerDetail.section.request')} contentClassName='p-0'>
-                  <dl>
-                    <InformationRow label={t('aiCustom.flowerDetail.customRequest')}>
-                      <span className='whitespace-pre-wrap font-normal'>{aiFlowerDesign.customRequest || '-'}</span>
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.flowerHistory.column.createdAt')}>
-                      {formatDateTime(aiFlowerDesign.createdAt, 'dateTimeShort')}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.fileStatus')}>
-                      <Badge variant='outline'>{fileStatusLabel}</Badge>
                     </InformationRow>
                   </dl>
                 </DetailPanel>
@@ -302,10 +278,10 @@ export default function AiFlowerDesignDetailPage() {
 
               <TabsContent value='materials' className='mt-0 space-y-5'>
                 <DetailPanel title={t('aiCustom.flowerDetail.section.coreMaterials')} contentClassName='p-0'>
-                  <MaterialTable materials={aiFlowerDesign.coreMaterials} />
+                  <MaterialTable materials={coreMaterials} />
                 </DetailPanel>
                 <DetailPanel title={t('aiCustom.flowerDetail.section.supportMaterials')} contentClassName='p-0'>
-                  <MaterialTable materials={aiFlowerDesign.supportMaterials} />
+                  <MaterialTable materials={supportMaterials} />
                 </DetailPanel>
               </TabsContent>
 
@@ -314,13 +290,13 @@ export default function AiFlowerDesignDetailPage() {
                   <DetailPanel title={t('aiCustom.flowerDetail.section.sourceCombo')} contentClassName='p-0'>
                     <div className='border-b p-5'>
                       <AiCardOutputImage
-                        src={aiFlowerDesign.sourceCombo.imageUrl || '/images/placeholder-cover.png'}
+                        src={aiFlowerDesign.sourceCombo.imageCombo || '/images/placeholder-cover.png'}
                         alt={aiFlowerDesign.sourceCombo.name}
                         className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
                         imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
                         placeholderClassName='w-full min-w-72 border bg-muted/40'
                         onOpen={
-                          aiFlowerDesign.sourceCombo.imageUrl
+                          aiFlowerDesign.sourceCombo.imageCombo
                             ? () => setLightboxImageIndex(sourceComboImageIndex)
                             : undefined
                         }
@@ -341,27 +317,22 @@ export default function AiFlowerDesignDetailPage() {
                   </DetailPanel>
 
                   <DetailPanel title={t('aiCustom.flowerDetail.section.sourceMockup')}>
-                    {aiFlowerDesign.sourceMockup ? (
+                    {aiFlowerDesign.mockup ? (
                       <div className='space-y-3'>
                         <AiCardOutputImage
                           className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
                           imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
                           placeholderClassName='w-full min-w-72 border bg-muted/40'
-                          src={aiFlowerDesign.sourceMockup.imageUrl}
-                          alt={t('aiCustom.flowerDetail.mockupAlt', { name: aiFlowerDesign.sourceMockup.name })}
-                          openLabel={t('aiCustom.flowerDetail.openMockup', { name: aiFlowerDesign.sourceMockup.name })}
+                          src={aiFlowerDesign.mockup.imageUrl}
+                          alt={t('aiCustom.flowerDetail.mockupAlt', { name: aiFlowerDesign.mockup.name })}
+                          openLabel={t('aiCustom.flowerDetail.openMockup', { name: aiFlowerDesign.mockup.name })}
                           onOpen={
-                            aiFlowerDesign.sourceMockup.imageUrl
-                              ? () => setLightboxImageIndex(mockupImageIndex)
-                              : undefined
+                            aiFlowerDesign.mockup.imageUrl ? () => setLightboxImageIndex(mockupImageIndex) : undefined
                           }
                           showZoomOverlay
                         />
                         <div>
-                          <p className='font-medium'>{aiFlowerDesign.sourceMockup.name}</p>
-                          <p className='font-mono text-xs text-muted-foreground'>
-                            {aiFlowerDesign.sourceMockup.code || '-'}
-                          </p>
+                          <p className='font-medium'>{aiFlowerDesign.mockup.name}</p>
                         </div>
                       </div>
                     ) : (
@@ -373,25 +344,26 @@ export default function AiFlowerDesignDetailPage() {
 
               <TabsContent value='orders' className='mt-0'>
                 <DetailPanel title={t('aiCustom.flowerDetail.section.orders')} contentClassName='p-0'>
-                  {aiFlowerDesign.linkedOrders.length > 0 ? (
+                  {aiFlowerDesign.orders.length > 0 ? (
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
                           <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
                           <TableHead>{t('aiCustom.detail.order.createdAt')}</TableHead>
+                          <TableHead>{t('aiCustom.detail.order.totalFee')}</TableHead>
                           <TableHead className='w-16' />
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {aiFlowerDesign.linkedOrders.map((order) => (
+                        {aiFlowerDesign.orders.map((order) => (
                           <TableRow key={order.id}>
                             <TableCell className='px-5'>
                               <Link
-                                to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/${order.id}`}
+                                to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
                                 className='font-mono font-medium hover:underline'
                               >
-                                {order.code}
+                                {order.id}
                               </Link>
                             </TableCell>
                             <TableCell>
@@ -402,11 +374,12 @@ export default function AiFlowerDesignDetailPage() {
                                   : '-'}
                             </TableCell>
                             <TableCell>{formatDateTime(order.createdAt, 'dateTimeShort')}</TableCell>
+                            <TableCell>{formatCurrency(order.totalFee)}</TableCell>
                             <TableCell className='text-right'>
                               <Button variant='ghost' size='icon' asChild>
                                 <Link
                                   to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                                  aria-label={t('aiCustom.detail.order.open', { code: order.code })}
+                                  aria-label={t('aiCustom.detail.order.open', { code: order.id })}
                                 >
                                   <ArrowUpRightIcon />
                                 </Link>
