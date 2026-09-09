@@ -2208,6 +2208,71 @@
       "priceField": "Giá (VNĐ)",
       "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
       "jsonPreview": "Bản xem trước JSON"
+    },
+    "cardConfigTempActions": {
+      "editCardSizes": "Kích thước thiệp",
+      "editCalligraphy": "Giá calligraphy"
+    },
+    "calligraphyDialog": {
+      "title": "Bậc giá calligraphy",
+      "description": "Toàn bộ khoảng giá calligraphy được lưu trong một record card_config.prices.",
+      "hint": "Hệ thống đếm số từ rồi tìm bậc thoả min_words <= số từ <= max_words. Giá thiệp = giá cơ bản + phụ phí. Thiệp gõ máy luôn có phụ phí bằng 0.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelFallback": "Bậc giá calligraphy",
+      "rulesTitle": "Các bậc giá",
+      "rulesSubtitle": "Các bậc phải phủ liên tục từ 0 và không chồng lấn nhau.",
+      "addRule": "Thêm bậc",
+      "removeRule": "Xoá bậc",
+      "emptyRules": "Chưa có bậc giá nào.",
+      "fields": {
+        "min_words": "Từ (số từ)",
+        "max_words": "Đến (số từ)",
+        "extra_price": "Phụ phí (VND)"
+      },
+      "coverageWarning": "Bậc giá mới phủ tới {{covered}} từ, trong khi kích thước thiệp cho phép tối đa {{required}} từ.",
+      "previewTitle": "Thử tính phụ phí",
+      "previewResult": "Phụ phí: {{price}}",
+      "previewNoMatch": "Không có bậc nào khớp số từ này.",
+      "errors": {
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu.",
+        "empty": "Cần ít nhất một bậc giá.",
+        "negative": "Số từ và phụ phí không được âm.",
+        "reversed": "Số từ bắt đầu phải nhỏ hơn hoặc bằng số từ kết thúc.",
+        "notStartingAtZero": "Bậc đầu tiên phải bắt đầu từ 0 từ.",
+        "overlap": "Các bậc giá đang chồng lấn nhau.",
+        "gap": "Các bậc giá đang bị hở khoảng, sẽ có số từ không tính được giá.",
+        "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.prices."
+      }
+    },
+    "cardSizesDialog": {
+      "title": "Kích thước thiệp",
+      "description": "Toàn bộ kích thước được lưu trong một record card_config.sizes.",
+      "hint": "Mỗi dòng là một kích thước thiệp. Giá cuối = giá cơ bản + phụ phí calligraphy theo số từ.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelFallback": "Kích thước thiệp",
+      "sizesTitle": "Danh sách kích thước",
+      "sizesSubtitle": "Tên kích thước là định danh, không được trùng nhau.",
+      "addSize": "Thêm kích thước",
+      "removeSize": "Xoá kích thước",
+      "emptySizes": "Chưa có kích thước nào.",
+      "namePlaceholder": "A",
+      "fields": {
+        "name": "Tên kích thước",
+        "width": "Chiều rộng (cm)",
+        "height": "Chiều cao (cm)",
+        "base_price": "Giá cơ bản (VND)",
+        "max_words": "Số từ tối đa"
+      },
+      "errors": {
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu.",
+        "empty": "Cần ít nhất một kích thước.",
+        "nameRequired": "Vui lòng nhập tên cho tất cả kích thước.",
+        "duplicateName": "Tên kích thước bị trùng.",
+        "dimensionInvalid": "Chiều rộng và chiều cao phải lớn hơn 0.",
+        "basePriceInvalid": "Giá cơ bản không được âm.",
+        "maxWordsInvalid": "Số từ tối đa phải là số nguyên lớn hơn 0.",
+        "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.sizes."
+      }
     }
   },
   "productCategories": {

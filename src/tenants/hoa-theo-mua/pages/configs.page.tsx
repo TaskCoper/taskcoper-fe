@@ -20,6 +20,15 @@ import {
 } from '../features/configs/b2b-service-detail-palette'
 import { bannerKeySuffix, matchesBannerKey } from '../features/configs/banners-palette'
 import {
+  CARD_CONFIG_GROUP,
+  CARD_PRICES_KEY,
+  CARD_SIZES_KEY,
+  isCardPricesKey,
+  isCardSizesKey,
+  maxWordsOfSizes,
+  parseCardSizes
+} from '../features/configs/card-config-palette'
+import {
   CHECKOUT_CONFIG_GROUP,
   CHECKOUT_DELIVERY_METHODS_KEY,
   CHECKOUT_PAYMENT_METHODS_KEY,
@@ -29,6 +38,8 @@ import {
 } from '../features/configs/checkout-methods-palette'
 import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
+import CalligraphyPricingDialog from '../features/configs/components/calligraphy-pricing-dialog'
+import CardSizesDialog from '../features/configs/components/card-sizes-dialog'
 import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
@@ -128,6 +139,7 @@ export default function ConfigsPage() {
 
   const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
   const { contentConfigs: checkoutGroupConfigs = [] } = useGetContentConfigs({ groupName: CHECKOUT_CONFIG_GROUP })
+  const { settingConfigs: cardConfigGroupConfigs = [] } = useGetSettingConfigs({ groupName: CARD_CONFIG_GROUP })
 
   const { depots, refetchDepots } = useGetDepots()
   const { orderTags, refetchOrderTags } = useGetOrderTags()
@@ -167,6 +179,8 @@ export default function ConfigsPage() {
   const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
   const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
   const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
+  const [cardSizesDialogOpen, setCardSizesDialogOpen] = useState(false)
+  const [calligraphyDialogOpen, setCalligraphyDialogOpen] = useState(false)
   // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(() => toNamedOptions(depots), [depots])
@@ -331,6 +345,19 @@ export default function ConfigsPage() {
     [checkoutGroupConfigs]
   )
 
+  const cardSizesConfig = useMemo(
+    () => cardConfigGroupConfigs.find((config) => config.key === CARD_SIZES_KEY) ?? null,
+    [cardConfigGroupConfigs]
+  )
+  const cardPricesConfig = useMemo(
+    () => cardConfigGroupConfigs.find((config) => config.key === CARD_PRICES_KEY) ?? null,
+    [cardConfigGroupConfigs]
+  )
+  const maxWordsAcrossSizes = useMemo(
+    () => (cardSizesConfig ? maxWordsOfSizes(parseCardSizes(cardSizesConfig.value.value)) : 0),
+    [cardSizesConfig]
+  )
+
   const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
   // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
   const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
@@ -400,6 +427,14 @@ export default function ConfigsPage() {
       if (matchesBannerKey(config.key)) {
         setEditingBannersConfig(config)
         setBannersDialogOpen(true)
+        return
+      }
+      if (isCardSizesKey(config.key)) {
+        setCardSizesDialogOpen(true)
+        return
+      }
+      if (isCardPricesKey(config.key)) {
+        setCalligraphyDialogOpen(true)
         return
       }
       if (matchesB2BServicesConfig(config)) {
@@ -685,6 +720,19 @@ export default function ConfigsPage() {
         open={promotionPopupDialogOpen}
         onClose={() => setPromotionPopupDialogOpen(false)}
         existingConfig={promotionPopupConfig}
+      />
+
+      <CardSizesDialog
+        open={cardSizesDialogOpen}
+        onClose={() => setCardSizesDialogOpen(false)}
+        existingConfig={cardSizesConfig}
+      />
+
+      <CalligraphyPricingDialog
+        open={calligraphyDialogOpen}
+        onClose={() => setCalligraphyDialogOpen(false)}
+        existingConfig={cardPricesConfig}
+        maxWordsAcrossSizes={maxWordsAcrossSizes}
       />
 
       <CheckoutMethodsDialog
