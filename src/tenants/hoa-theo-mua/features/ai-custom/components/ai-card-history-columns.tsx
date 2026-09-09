@@ -15,7 +15,7 @@ import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DownloadIcon, EyeIcon, LoaderCircleIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
-import { aiCardSizeOptions } from '../mock-data'
+import type { CardSize } from '../../configs/card-config-palette'
 import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../types'
 import AiCardPreview from './ai-card-preview'
 
@@ -23,12 +23,14 @@ export const getAiCardHistoryColumns = ({
   t,
   onPreview,
   onDownload,
-  downloadingCardId
+  downloadingCardId,
+  sizeOptions
 }: {
   t: TenantT
   onPreview: (card: GeneratedCardHistoryItem) => void
   onDownload: (card: GeneratedCardHistoryItem) => void
   downloadingCardId?: string
+  sizeOptions: CardSize[]
 }): ColumnDef<GeneratedCardHistoryItem>[] => [
   {
     id: 'select',
@@ -72,31 +74,13 @@ export const getAiCardHistoryColumns = ({
   },
   {
     id: 'search',
-    accessorKey: 'generatedCardId',
+    accessorFn: (row) => row.userId,
     meta: {
-      label: 'aiCustom.history.column.code',
+      label: 'aiCustom.history.column.customer',
       placeholder: 'aiCustom.history.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.code' />,
-    cell: ({ row }) => (
-      <Link
-        to={row.original.generatedCardId}
-        className='whitespace-nowrap font-mono text-sm font-medium hover:underline'
-      >
-        {row.original.generatedCardId}
-      </Link>
-    ),
-    enableSorting: false,
-    enableHiding: true,
-    enableColumnFilter: true,
-    size: 150
-  },
-  {
-    id: 'customer',
-    accessorFn: (row) => row.userId,
-    meta: { label: 'aiCustom.history.column.customer' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
     cell: ({ row }) => (
       <span className='block max-w-48 truncate font-mono text-xs' title={row.original.userId ?? undefined}>
@@ -105,7 +89,7 @@ export const getAiCardHistoryColumns = ({
     ),
     enableSorting: false,
     enableHiding: true,
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     size: 190
   },
   {
@@ -125,7 +109,10 @@ export const getAiCardHistoryColumns = ({
     meta: {
       label: 'aiCustom.history.column.size',
       variant: 'radio',
-      options: aiCardSizeOptions.map((size) => ({ label: size.name, value: size.id }))
+      options: sizeOptions.map((size) => ({
+        label: `${size.width} x ${size.height} cm · ${size.name}`,
+        value: size.name
+      }))
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.size' />,
     cell: ({ row }) => (

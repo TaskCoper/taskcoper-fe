@@ -9,6 +9,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getAiCardHistoryColumns } from '../features/ai-custom/components/ai-card-history-columns'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
+import { useGetAiCardSizes } from '../features/ai-custom/hooks/use-get-ai-card-sizes'
 import { useGetAiCardHistory } from '../features/ai-custom/hooks/use-get-ai-card-history'
 import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../features/ai-custom/types'
 
@@ -24,6 +25,7 @@ export default function AiCardsPage() {
   const { t } = useTenantTranslation()
   const [previewCard, setPreviewCard] = useState<GeneratedCardHistoryItem | null>(null)
   const { downloadAiCard, downloadingAiCardId } = useDownloadAiCard()
+  const { aiCardSizes } = useGetAiCardSizes()
 
   const columns = useMemo(
     () =>
@@ -31,9 +33,10 @@ export default function AiCardsPage() {
         t,
         onPreview: setPreviewCard,
         onDownload: downloadAiCard,
-        downloadingCardId: downloadingAiCardId
+        downloadingCardId: downloadingAiCardId,
+        sizeOptions: aiCardSizes
       }),
-    [downloadAiCard, downloadingAiCardId, t]
+    [aiCardSizes, downloadAiCard, downloadingAiCardId, t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)

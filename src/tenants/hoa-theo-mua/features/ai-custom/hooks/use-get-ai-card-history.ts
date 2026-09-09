@@ -15,14 +15,10 @@ export const useGetAiCardHistory = ({
   const params = { pageIndex, pageSize, search, sizeKey, formType }
   const { data: aiCardHistory, isLoading: isGettingAiCardHistory } = useQuery({
     queryKey: aiCardKeys.list(params),
-    queryFn: async () => {
-      try {
-        return await generateAiService.getAiCardHistory(params)
-      } catch {
-        return getMockAiCardHistory(params)
-      }
-    },
-    placeholderData: keepPreviousData
+    queryFn: async () =>
+      (await generateAiService.getAiCardHistory(params).catch(() => null)) ?? getMockAiCardHistory(params),
+    placeholderData: keepPreviousData,
+    throwOnError: false
   })
 
   return { aiCardHistory, isGettingAiCardHistory }

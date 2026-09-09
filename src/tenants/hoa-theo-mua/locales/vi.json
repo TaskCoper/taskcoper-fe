@@ -104,10 +104,9 @@
     "history": {
       "title": "Lịch sử thiệp AI",
       "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
-      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "searchPlaceholder": "Tìm theo tên khách hàng hoặc mẫu thiệp...",
       "column": {
         "preview": "Ảnh thiệp",
-        "code": "Mã thiệp",
         "customer": "Khách hàng",
         "template": "Mẫu thiệp",
         "size": "Kích thước",

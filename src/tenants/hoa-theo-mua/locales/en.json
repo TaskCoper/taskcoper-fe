@@ -104,10 +104,9 @@
     "history": {
       "title": "AI card history",
       "description": "View and search successfully generated AI cards.",
-      "searchPlaceholder": "Type to search...",
+      "searchPlaceholder": "Search by customer or card template...",
       "column": {
         "preview": "Preview",
-        "code": "Card code",
         "customer": "Customer",
         "template": "Card template",
         "size": "Size",

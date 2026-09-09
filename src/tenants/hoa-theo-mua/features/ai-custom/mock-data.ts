@@ -6,6 +6,7 @@ import {
   type GeneratedCardHistoryItem,
   type GetAiCardHistoryParams
 } from './types'
+import type { CardSize } from '../configs/card-config-palette'
 
 const customers = [
   { id: 'customer-1', name: 'Nguyễn Minh Anh', phone: '0901 234 567' },
@@ -22,10 +23,11 @@ const templates = [
   { id: 'template-4', name: 'Cổ điển sang trọng' }
 ]
 
-export const aiCardSizeOptions = [
-  { id: '10x15', name: '10 × 15 cm' },
-  { id: '12x18', name: '12 × 18 cm' },
-  { id: '15x20', name: '15 × 20 cm' }
+export const mockAiCardSizes: CardSize[] = [
+  { name: 'S', width: 10, height: 20, base_price: 10000, max_words: 100 },
+  { name: 'M', width: 15, height: 25, base_price: 15000, max_words: 150 },
+  { name: 'L', width: 20, height: 30, base_price: 20000, max_words: 200 },
+  { name: 'XL', width: 25, height: 35, base_price: 25000, max_words: 250 }
 ]
 
 const previewImages = [
@@ -42,7 +44,7 @@ const previewImages = [
 const mockAiCards = Array.from({ length: 38 }, (_, index) => {
   const customer = customers[index % customers.length]
   const template = templates[index % templates.length]
-  const size = aiCardSizeOptions[index % aiCardSizeOptions.length]
+  const size = mockAiCardSizes[index % mockAiCardSizes.length]
   const number = index + 1
 
   return {
@@ -60,8 +62,8 @@ const mockAiCards = Array.from({ length: 38 }, (_, index) => {
     customerPhone: customer.phone,
     templateId: template.id,
     templateName: template.name,
-    sizeId: size.id,
-    sizeName: size.name,
+    sizeId: size.name,
+    sizeName: `${size.width} × ${size.height} cm · ${size.name}`,
     writingMode: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.GoMay,
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString()
   }
@@ -71,9 +73,7 @@ const mockGeneratedCards: GeneratedCardHistoryItem[] = Array.from({ length: 38 }
   const number = index + 1
   const customer = customers[index % customers.length]
   const template = templates[index % templates.length]
-  const size = aiCardSizeOptions[index % aiCardSizeOptions.length]
-  const [sizeWidth, sizeHeight] = size.id.split('x').map(Number)
-
+  const size = mockAiCardSizes[index % mockAiCardSizes.length]
   return {
     historyId: `00000000-0000-4000-8000-${String(1000 + number).padStart(12, '0')}`,
     generatedCardId: `00000000-0000-4000-9000-${String(number).padStart(12, '0')}`,
@@ -89,14 +89,14 @@ const mockGeneratedCards: GeneratedCardHistoryItem[] = Array.from({ length: 38 }
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString(),
     cardType: 'AI',
     formType: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.GoMay,
-    sizeKey: size.id,
+    sizeKey: size.name,
     senderName: customer.name,
     receiverName: index % 3 === 0 ? 'Receiver' : 'Loved one',
     messageContent: 'Wishing you happiness and many wonderful moments.',
     attachedImageUrl: null,
-    sizeName: size.name,
-    sizeWidth,
-    sizeHeight,
+    sizeName: `${size.width} × ${size.height} cm · ${size.name}`,
+    sizeWidth: size.width,
+    sizeHeight: size.height,
     sizeBasePrice: 20000 + (index % 3) * 10000,
     sizeMaxWords: 30,
     wordCount: 10 + (index % 15),
@@ -143,7 +143,7 @@ export const getMockAiCardHistory = async ({
 
     const matchesSearch =
       !normalizedSearch ||
-      [card.generatedCardId, card.content, card.senderName, card.receiverName, card.templateName]
+      [card.senderName, card.templateName]
         .filter((value): value is string => Boolean(value))
         .some((value) => normalizeSearch(value).includes(normalizedSearch))
     const matchesSize = !sizeKey || card.sizeKey === sizeKey

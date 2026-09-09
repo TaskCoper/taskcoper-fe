@@ -1,4 +1,5 @@
-import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
+import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import type { CardSize } from '../configs/card-config-palette'
 import { BaseService } from '../../services/base.service'
 import type {
   AiFlowerDesignHistoryItem,
@@ -26,6 +27,11 @@ class GenerateAiCustomService extends BaseService {
   getAiCardDownload = async (generatedCardId: string) => {
     const { data } = await this.get<BaseResponse<GeneratedCardDownload>>(`${this.baseUrl}/${generatedCardId}/download`)
     return data.value
+  }
+
+  getAiCardSizes = async () => {
+    const { data } = await api.get<{ items: CardSize[] }>('/api/card-config/sizes')
+    return data.items
   }
 
   getAiFlowerDesignHistory = async (params: GetAiFlowerDesignHistoryParams) => {
