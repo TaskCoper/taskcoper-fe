@@ -1,12 +1,12 @@
 import type { Category } from '../categories/types'
 
-export const PRODUCT_TYPE_TAG = {
+export const PRODUCT_TYPE_FILTER = {
   combo: 1,
   product: 2,
   material: 3
 } as const
 
-export type ProductTypeTag = (typeof PRODUCT_TYPE_TAG)[keyof typeof PRODUCT_TYPE_TAG]
+export type ProductTypeFilterValue = (typeof PRODUCT_TYPE_FILTER)[keyof typeof PRODUCT_TYPE_FILTER]
 
 /** A product's category membership plus whether that specific product ↔ category pair is pinned. */
 export interface ProductCategory extends Category {

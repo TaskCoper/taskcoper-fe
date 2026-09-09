@@ -2134,6 +2134,71 @@
       "priceField": "Price (VND)",
       "priceHelp": "Declared item value in Vietnamese đồng. Used by Ahamove for compensation.",
       "jsonPreview": "JSON preview"
+    },
+    "cardConfigTempActions": {
+      "editCardSizes": "Card sizes",
+      "editCalligraphy": "Calligraphy pricing"
+    },
+    "calligraphyDialog": {
+      "title": "Calligraphy pricing tiers",
+      "description": "All calligraphy price ranges live in a single card_config.prices record.",
+      "hint": "The system counts words and picks the tier where min_words <= count <= max_words. Card price = base price + surcharge. Machine-typed cards always have a 0 surcharge.",
+      "configLabel": "Config label",
+      "configLabelFallback": "Calligraphy pricing tiers",
+      "rulesTitle": "Pricing tiers",
+      "rulesSubtitle": "Tiers must cover a continuous range starting at 0, with no overlap.",
+      "addRule": "Add tier",
+      "removeRule": "Remove tier",
+      "emptyRules": "No pricing tier yet.",
+      "fields": {
+        "min_words": "From (words)",
+        "max_words": "To (words)",
+        "extra_price": "Surcharge (VND)"
+      },
+      "coverageWarning": "Tiers only cover up to {{covered}} words, but card sizes allow up to {{required}} words.",
+      "previewTitle": "Try a word count",
+      "previewResult": "Surcharge: {{price}}",
+      "previewNoMatch": "No tier matches this word count.",
+      "errors": {
+        "labelRequired": "Enter a config label before saving.",
+        "empty": "At least one pricing tier is required.",
+        "negative": "Word counts and surcharges cannot be negative.",
+        "reversed": "The starting word count must be less than or equal to the ending one.",
+        "notStartingAtZero": "The first tier must start at 0 words.",
+        "overlap": "Pricing tiers overlap each other.",
+        "gap": "Pricing tiers have a gap, so some word counts cannot be priced.",
+        "ambiguous": "Another config already uses the card_config.prices key."
+      }
+    },
+    "cardSizesDialog": {
+      "title": "Card sizes",
+      "description": "All sizes live in a single card_config.sizes record.",
+      "hint": "Each row is one card size. Final price = base price + calligraphy surcharge by word count.",
+      "configLabel": "Config label",
+      "configLabelFallback": "Card sizes",
+      "sizesTitle": "Size list",
+      "sizesSubtitle": "The size name is the identifier and must be unique.",
+      "addSize": "Add size",
+      "removeSize": "Remove size",
+      "emptySizes": "No size yet.",
+      "namePlaceholder": "A",
+      "fields": {
+        "name": "Size name",
+        "width": "Width (cm)",
+        "height": "Height (cm)",
+        "base_price": "Base price (VND)",
+        "max_words": "Max words"
+      },
+      "errors": {
+        "labelRequired": "Enter a config label before saving.",
+        "empty": "At least one size is required.",
+        "nameRequired": "Please name every size.",
+        "duplicateName": "Duplicate size name.",
+        "dimensionInvalid": "Width and height must be greater than 0.",
+        "basePriceInvalid": "Base price cannot be negative.",
+        "maxWordsInvalid": "Max words must be an integer greater than 0.",
+        "ambiguous": "Another config already uses the card_config.sizes key."
+      }
     }
   },
   "productCategories": {
