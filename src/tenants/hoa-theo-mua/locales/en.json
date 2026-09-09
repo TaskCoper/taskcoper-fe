@@ -213,9 +213,9 @@
         "orders": "Linked orders"
       },
       "field": {
-        "customerId": "Customer ID",
         "customerName": "Full name",
         "phone": "Phone number",
+        "address": "Address",
         "email": "Email",
         "sender": "Sender",
         "recipient": "Recipient",

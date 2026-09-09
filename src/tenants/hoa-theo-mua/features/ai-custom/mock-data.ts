@@ -85,16 +85,17 @@ const mockGeneratedCards: GeneratedCardHistoryItem[] = Array.from({ length: 38 }
           ? '/images/ai-card-preview-not-found.jpg'
           : previewImages[index % previewImages.length],
     rawImage: null,
-    userId: customer.id,
     createdAt: new Date(Date.UTC(2026, 7, 28 - index, 9 + (index % 8), 15)).toISOString(),
     cardType: 'AI',
     formType: index % 2 === 0 ? AiCardWritingMode.Calligraphy : AiCardWritingMode.GoMay,
-    sizeKey: size.name,
     senderName: customer.name,
     receiverName: index % 3 === 0 ? 'Receiver' : 'Loved one',
+    nameCustomer: customer.name,
+    phoneCustomer: customer.phone,
+    addressCustomer: customer.id ? `${number} Nguyễn Huệ, Quận 1, TP.HCM` : null,
     messageContent: 'Wishing you happiness and many wonderful moments.',
     attachedImageUrl: null,
-    sizeName: `${size.width} × ${size.height} cm · ${size.name}`,
+    sizeName: size.name,
     sizeWidth: size.width,
     sizeHeight: size.height,
     sizeBasePrice: 20000 + (index % 3) * 10000,
@@ -116,8 +117,9 @@ export const getMockGeneratedCardDetail = async (generatedCardId: string): Promi
   return {
     ...card,
     orders: Array.from({ length: cardNumber % 4 }, (_, index) => ({
-      orderId: `0a000000-0000-4000-8000-${String(cardNumber * 10 + index).padStart(12, '0')}`,
+      id: `0a000000-0000-4000-8000-${String(cardNumber * 10 + index).padStart(12, '0')}`,
       status: index % 2 === 0 ? 'Paid' : 'Pending',
+      createdAt: new Date(Date.UTC(2026, 8, 5 + index, 11, index * 15)).toISOString(),
       totalFee: 520000 + index * 240000
     }))
   }
@@ -134,7 +136,7 @@ export const getMockAiCardHistory = async ({
   pageIndex = 1,
   pageSize = 10,
   search,
-  sizeKey,
+  sizeName,
   formType
 }: GetAiCardHistoryParams): Promise<AiCardHistoryPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
@@ -143,10 +145,10 @@ export const getMockAiCardHistory = async ({
 
     const matchesSearch =
       !normalizedSearch ||
-      [card.senderName, card.templateName]
+      [card.nameCustomer, card.templateName]
         .filter((value): value is string => Boolean(value))
         .some((value) => normalizeSearch(value).includes(normalizedSearch))
-    const matchesSize = !sizeKey || card.sizeKey === sizeKey
+    const matchesSize = !sizeName || card.sizeName === sizeName
     const matchesFormType = !formType || card.formType === formType
 
     return matchesSearch && matchesSize && matchesFormType

@@ -74,7 +74,7 @@ export const getAiCardHistoryColumns = ({
   },
   {
     id: 'search',
-    accessorFn: (row) => row.userId,
+    accessorFn: (row) => row.nameCustomer,
     meta: {
       label: 'aiCustom.history.column.customer',
       placeholder: 'aiCustom.history.searchPlaceholder',
@@ -82,11 +82,22 @@ export const getAiCardHistoryColumns = ({
       icon: SearchIcon
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
-    cell: ({ row }) => (
-      <span className='block max-w-48 truncate font-mono text-xs' title={row.original.userId ?? undefined}>
-        {row.original.userId || '-'}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const { nameCustomer, phoneCustomer } = row.original
+
+      return (
+        <div className='min-w-0 max-w-48'>
+          <p className='truncate font-medium' title={nameCustomer ?? undefined}>
+            {nameCustomer?.trim() || t('aiCustom.history.walkInCustomer')}
+          </p>
+          {phoneCustomer?.trim() && (
+            <p className='mt-0.5 truncate text-xs text-muted-foreground' title={phoneCustomer}>
+              {phoneCustomer}
+            </p>
+          )}
+        </div>
+      )
+    },
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,
@@ -104,8 +115,8 @@ export const getAiCardHistoryColumns = ({
     size: 180
   },
   {
-    id: 'sizeKey',
-    accessorKey: 'sizeKey',
+    id: 'sizeName',
+    accessorKey: 'sizeName',
     meta: {
       label: 'aiCustom.history.column.size',
       variant: 'radio',
@@ -115,11 +126,17 @@ export const getAiCardHistoryColumns = ({
       }))
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.size' />,
-    cell: ({ row }) => (
-      <Badge variant='secondary' className='whitespace-nowrap font-normal'>
-        {row.original.sizeName || '-'}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const { sizeWidth, sizeHeight, sizeName } = row.original
+      const dimensions = sizeWidth != null && sizeHeight != null ? `${sizeWidth} x ${sizeHeight} cm` : null
+      const displaySize = [dimensions, sizeName?.trim()].filter(Boolean).join(' · ')
+
+      return (
+        <Badge variant='secondary' className='whitespace-nowrap font-normal'>
+          {displaySize || '-'}
+        </Badge>
+      )
+    },
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,

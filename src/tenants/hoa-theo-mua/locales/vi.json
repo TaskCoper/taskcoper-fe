@@ -213,9 +213,9 @@
         "orders": "Order liên kết"
       },
       "field": {
-        "customerId": "Mã khách hàng",
         "customerName": "Họ tên",
         "phone": "Số điện thoại",
+        "address": "Địa chỉ",
         "email": "Email",
         "sender": "Người gửi",
         "recipient": "Người nhận",

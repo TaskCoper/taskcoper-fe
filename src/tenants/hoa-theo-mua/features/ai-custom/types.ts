@@ -28,13 +28,14 @@ export interface GeneratedCardHistoryItem {
   content: string
   imageUrl: string | null
   rawImage: string | null
-  userId: string | null
   createdAt: string
   cardType: string
   formType: AiCardWritingMode
-  sizeKey: string | null
   senderName: string | null
   receiverName: string | null
+  nameCustomer: string | null
+  phoneCustomer: string | null
+  addressCustomer: string | null
   messageContent: string | null
   attachedImageUrl: string | null
   sizeName: string | null
@@ -51,8 +52,9 @@ export interface GeneratedCardHistoryItem {
 }
 
 export interface GeneratedCardOrder {
-  orderId: string
+  id: string
   status: string | null
+  createdAt: string
   totalFee: number
 }
 
@@ -71,7 +73,7 @@ export interface GetAiCardHistoryParams {
   pageIndex?: number
   pageSize?: number
   search?: string
-  sizeKey?: string
+  sizeName?: string
   formType?: AiCardWritingMode
 }
 

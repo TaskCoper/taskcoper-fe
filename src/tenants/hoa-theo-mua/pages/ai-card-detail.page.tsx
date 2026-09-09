@@ -220,8 +220,14 @@ export default function AiCardDetailPage() {
               <TabsContent value='customer' className='mt-0'>
                 <DetailPanel title={t('aiCustom.detail.section.customer')} contentClassName='p-0' className='max-w-4xl'>
                   <InformationCard>
-                    <InformationRow label={t('aiCustom.detail.field.customerId')}>
-                      <span className='font-mono text-xs'>{aiCard.userId || '-'}</span>
+                    <InformationRow label={t('aiCustom.detail.field.customerName')}>
+                      {aiCard.nameCustomer || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.phone')}>
+                      {aiCard.phoneCustomer || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.address')}>
+                      {aiCard.addressCustomer || '-'}
                     </InformationRow>
                   </InformationCard>
                 </DetailPanel>
@@ -307,19 +313,20 @@ export default function AiCardDetailPage() {
                           <TableRow>
                             <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
                             <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
+                            <TableHead>{t('aiCustom.history.column.createdAt')}</TableHead>
                             <TableHead>{t('aiCustom.detail.order.totalFee')}</TableHead>
                             <TableHead className='w-16' />
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {aiCard.orders.map((order) => (
-                            <TableRow key={order.orderId}>
+                            <TableRow key={order.id}>
                               <TableCell className='px-5'>
                                 <Link
-                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/orders/${order.orderId}`}
+                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
                                   className='font-mono font-medium hover:underline'
                                 >
-                                  {order.orderId}
+                                  {order.id}
                                 </Link>
                               </TableCell>
                               <TableCell>
@@ -329,12 +336,15 @@ export default function AiCardDetailPage() {
                                     ? t('orders.status.pending')
                                     : '-'}
                               </TableCell>
+                              <TableCell className='whitespace-nowrap'>
+                                {formatDateTime(order.createdAt, 'dateTimeShort')}
+                              </TableCell>
                               <TableCell>{formatCurrency(order.totalFee)}</TableCell>
                               <TableCell className='text-right'>
                                 <Button variant='ghost' size='icon' asChild>
                                   <Link
-                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.orderId}`}
-                                    aria-label={t('aiCustom.detail.order.open', { code: order.orderId })}
+                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
+                                    aria-label={t('aiCustom.detail.order.open', { code: order.id })}
                                   >
                                     <ArrowUpRightIcon />
                                   </Link>

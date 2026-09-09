@@ -9,10 +9,10 @@ export const useGetAiCardHistory = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   search,
-  sizeKey,
+  sizeName,
   formType
 }: GetAiCardHistoryParams) => {
-  const params = { pageIndex, pageSize, search, sizeKey, formType }
+  const params = { pageIndex, pageSize, search, sizeName, formType }
   const { data: aiCardHistory, isLoading: isGettingAiCardHistory } = useQuery({
     queryKey: aiCardKeys.list(params),
     queryFn: async () =>

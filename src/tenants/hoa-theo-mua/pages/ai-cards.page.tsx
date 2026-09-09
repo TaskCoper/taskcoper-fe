@@ -40,14 +40,14 @@ export default function AiCardsPage() {
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)
-  const [sizeFilter] = useQueryState(`${FILTER_PREFIX}_sizeKey`, parseAsString)
+  const [sizeFilter] = useQueryState(`${FILTER_PREFIX}_sizeName`, parseAsString)
   const [formTypeFilter] = useQueryState(`${FILTER_PREFIX}_formType`, parseAsString)
 
   const { aiCardHistory, isGettingAiCardHistory } = useGetAiCardHistory({
     pageIndex: page,
     pageSize: limit,
     search: searchFilter?.trim() || undefined,
-    sizeKey: sizeFilter || undefined,
+    sizeName: sizeFilter || undefined,
     formType: resolveFormType(formTypeFilter)
   })
 
