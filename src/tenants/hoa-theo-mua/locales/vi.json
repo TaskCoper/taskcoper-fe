@@ -99,7 +99,7 @@
     "title": "System Prompt",
     "description": "Quản lý nội dung hướng dẫn AI cho từng chức năng của hệ thống.",
     "contentLabel": "Nội dung System Prompt",
-    "markdownSupported": "Hỗ trợ Markdown",
+    "richTextSupported": "Hỗ trợ định dạng văn bản",
     "tabs": {
       "flower": {
         "label": "Tạo mẫu hoa",
@@ -135,7 +135,8 @@
     },
     "edit": {
       "title": "Chỉnh sửa System Prompt",
-      "description": "Cập nhật nội dung hướng dẫn AI. Khoảng trắng và xuống dòng sẽ được giữ nguyên."
+      "description": "Cập nhật và định dạng nội dung hướng dẫn AI được gửi tới hệ thống.",
+      "placeholder": "Nhập nội dung System Prompt..."
     },
     "validation": {
       "required": "Nội dung System Prompt không được để trống.",

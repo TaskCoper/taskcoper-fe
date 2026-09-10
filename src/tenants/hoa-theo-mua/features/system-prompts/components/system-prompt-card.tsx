@@ -1,3 +1,4 @@
+import SanitizedHtml from '@/components/sanitized-html'
 import { Button } from '@/components/ui/button'
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -105,12 +106,19 @@ export default function SystemPromptCard({
           <div>
             <div className='flex items-center justify-between border-b bg-muted/20 px-5 py-3'>
               <p className='text-sm font-medium'>{t('systemPrompts.contentLabel')}</p>
-              <span className='text-xs text-muted-foreground'>{t('systemPrompts.markdownSupported')}</span>
+              <span className='text-xs text-muted-foreground'>{t('systemPrompts.richTextSupported')}</span>
             </div>
             <div className='p-5'>
-              <pre className='min-h-72 overflow-auto whitespace-pre-wrap wrap-break-word rounded-lg border bg-muted/20 p-5 font-mono text-sm leading-7 text-foreground'>
-                {systemPrompt?.content || t('systemPrompts.state.emptyContent')}
-              </pre>
+              {systemPrompt?.content ? (
+                <SanitizedHtml
+                  html={systemPrompt.content}
+                  className='min-h-72 max-w-none rounded-lg border bg-muted/20 p-5 text-sm leading-7 text-foreground'
+                />
+              ) : (
+                <div className='min-h-72 rounded-lg border bg-muted/20 p-5 text-sm text-muted-foreground'>
+                  {t('systemPrompts.state.emptyContent')}
+                </div>
+              )}
             </div>
           </div>
         )}

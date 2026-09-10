@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
-import { Textarea } from '@/components/ui/textarea'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
@@ -17,6 +16,7 @@ import { SaveIcon } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useUpdateSystemPrompt } from '../hooks/use-update-system-prompt'
+import SystemPromptEditor from './system-prompt-editor'
 import type { SystemPromptDetail } from '../types'
 import { SYSTEM_PROMPT_MAX_LENGTH, systemPromptSchema, type SystemPromptFormValues } from '../validations'
 
@@ -83,7 +83,7 @@ export default function EditSystemPromptDialog({ systemPrompt, open, onOpenChang
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className='gap-1.5'>
                 <div className='flex items-center justify-between gap-4'>
-                  <FieldLabel htmlFor={field.name}>{t('systemPrompts.contentLabel')}</FieldLabel>
+                  <FieldLabel>{t('systemPrompts.contentLabel')}</FieldLabel>
                   <span
                     className={
                       content.length > SYSTEM_PROMPT_MAX_LENGTH
@@ -94,13 +94,10 @@ export default function EditSystemPromptDialog({ systemPrompt, open, onOpenChang
                     {content.length.toLocaleString()}/{SYSTEM_PROMPT_MAX_LENGTH.toLocaleString()}
                   </span>
                 </div>
-                <Textarea
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  className='h-[min(52vh,32rem)] resize-y field-sizing-fixed font-mono leading-6'
-                  spellCheck={false}
-                  autoFocus
+                <SystemPromptEditor
+                  content={field.value}
+                  onChange={field.onChange}
+                  className='min-h-[min(42vh,26rem)] max-h-[min(52vh,32rem)] max-w-none text-sm'
                 />
                 <div className='min-h-5'>
                   {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}

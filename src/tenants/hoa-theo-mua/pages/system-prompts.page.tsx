@@ -65,6 +65,17 @@ const PROMPT_TABS: PromptTabDefinition[] = [
   }
 ]
 
+const htmlToPlainText = (html: string) => {
+  const document = new DOMParser().parseFromString(html, 'text/html')
+
+  document.querySelectorAll('br').forEach((node) => node.replaceWith('\n'))
+  document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, pre').forEach((node) => {
+    node.insertAdjacentText('afterend', '\n')
+  })
+
+  return (document.body.textContent ?? '').replace(/\n{3,}/g, '\n\n').trim()
+}
+
 export default function SystemPromptsPage() {
   const { t } = useTenantTranslation()
   const [activeTab, setActiveTab] = useState<SystemPromptTab>(SystemPromptTab.Flower)
@@ -86,7 +97,7 @@ export default function SystemPromptsPage() {
     if (!systemPrompt?.content) return
 
     try {
-      await navigator.clipboard.writeText(systemPrompt.content)
+      await navigator.clipboard.writeText(htmlToPlainText(systemPrompt.content))
       setHasCopied(true)
       toast.success(t('systemPrompts.toast.copySuccess'))
       window.setTimeout(() => setHasCopied(false), 1500)

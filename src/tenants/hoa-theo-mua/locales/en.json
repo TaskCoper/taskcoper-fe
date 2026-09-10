@@ -99,7 +99,7 @@
     "title": "System Prompt",
     "description": "Manage AI instructions for each system feature.",
     "contentLabel": "System Prompt content",
-    "markdownSupported": "Markdown supported",
+    "richTextSupported": "Markdown supported",
     "tabs": {
       "flower": {
         "label": "Create flower design",
@@ -135,7 +135,8 @@
     },
     "edit": {
       "title": "Edit System Prompt",
-      "description": "Update the AI instructions. Whitespace and line breaks are preserved."
+      "description": "Update and format the AI instructions sent to the system.",
+      "placeholder": "Write the System Prompt content..."
     },
     "validation": {
       "required": "System Prompt content is required.",
