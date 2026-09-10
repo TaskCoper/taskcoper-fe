@@ -70,7 +70,7 @@ export default function EditSystemPromptDialog({ systemPrompt, open, onOpenChang
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-4xl'>
+      <DialogContent position='top-center' className='sm:max-w-4xl'>
         <DialogHeader>
           <DialogTitle>{t('systemPrompts.edit.title')}</DialogTitle>
           <DialogDescription>{t('systemPrompts.edit.description')}</DialogDescription>
