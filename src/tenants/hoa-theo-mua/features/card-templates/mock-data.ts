@@ -72,7 +72,7 @@ export const createMockCardTemplate = async (payload: CreateCardTemplatePayload)
     name: payload.name.trim(),
     description: payload.description?.trim() || null,
     imageUrl: payload.imageUrl,
-    isActive: payload.isActive,
+    isActive: false,
     templateType: payload.templateType,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

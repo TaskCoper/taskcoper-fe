@@ -33,8 +33,7 @@ export const createCardTemplateSchema = (t: TenantT) =>
       })
       .refine((file) => file.size <= CARD_TEMPLATE_IMAGE_MAX_SIZE, {
         message: t('cardTemplates.form.validation.imageSize')
-      }),
-    isActive: z.boolean()
+      })
   })
 
 export type CreateCardTemplateFormValues = z.infer<ReturnType<typeof createCardTemplateSchema>>

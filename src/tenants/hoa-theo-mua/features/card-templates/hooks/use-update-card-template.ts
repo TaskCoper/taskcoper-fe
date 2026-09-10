@@ -2,7 +2,6 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { getErrorDescription } from '../../products/error-description'
-import { updateMockCardTemplate } from '../mock-data'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
 import type { UpdateCardTemplatePayload } from '../types'
@@ -11,13 +10,7 @@ export const useUpdateCardTemplate = () => {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
   const { mutate: updateCardTemplate, isPending: isUpdatingCardTemplate } = useMutation({
-    mutationFn: async (payload: UpdateCardTemplatePayload) => {
-      try {
-        return await cardTemplateService.updateCardTemplate(payload.id, payload)
-      } catch {
-        return updateMockCardTemplate(payload)
-      }
-    },
+    mutationFn: (payload: UpdateCardTemplatePayload) => cardTemplateService.updateCardTemplate(payload.id, payload),
     onSuccess: () => {
       toast.success(t('cardTemplates.form.updateSuccess'))
     },

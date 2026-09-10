@@ -2,7 +2,6 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { getErrorDescription } from '../../products/error-description'
-import { changeMockCardTemplateStatus } from '../mock-data'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
 import type { ChangeCardTemplateStatusPayload } from '../types'
@@ -12,13 +11,8 @@ export const useChangeCardTemplateStatus = () => {
   const queryClient = useQueryClient()
   const { mutate: changeCardTemplateStatus, isPending: isChangingCardTemplateStatus } = useMutation({
     mutationFn: async (payload: ChangeCardTemplateStatusPayload) => {
-      try {
-        await cardTemplateService.changeCardTemplateStatus(payload.id, payload)
-        return payload
-      } catch {
-        const template = await changeMockCardTemplateStatus(payload)
-        return { id: template.id, isActive: template.isActive }
-      }
+      await cardTemplateService.changeCardTemplateStatus(payload.id, payload)
+      return payload
     },
     onSuccess: ({ isActive }) => {
       toast.success(t(`cardTemplates.statusAction.${isActive ? 'activateSuccess' : 'deactivateSuccess'}`))

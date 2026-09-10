@@ -33,7 +33,6 @@ export interface CreateCardTemplatePayload {
   name: string
   description: string | null
   imageUrl: string
-  isActive: boolean
   templateType: CardTemplateType
 }
 

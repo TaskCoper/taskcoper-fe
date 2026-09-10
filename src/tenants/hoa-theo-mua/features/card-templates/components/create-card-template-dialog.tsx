@@ -12,7 +12,6 @@ import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
-import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
@@ -34,7 +33,6 @@ const DEFAULT_VALUES: CreateCardTemplateFormValues = {
   name: '',
   description: '',
   imageFile: undefined as unknown as File,
-  isActive: true,
   templateType: CardTemplateType.Handmade
 }
 
@@ -70,7 +68,6 @@ const CreateCardTemplateDialog = ({
         name: values.name.trim(),
         description: values.description.trim() || null,
         imageUrl,
-        isActive: values.isActive,
         templateType: values.templateType
       },
       {
@@ -236,25 +233,6 @@ const CreateCardTemplateDialog = ({
                 <div className='min-h-5'>
                   {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
                 </div>
-              </Field>
-            )}
-          />
-
-          <Controller
-            name='isActive'
-            control={methods.control}
-            render={({ field }) => (
-              <Field orientation='horizontal' className='rounded-xl border p-3'>
-                <div className='flex-1 space-y-0.5'>
-                  <FieldLabel htmlFor={field.name}>{t('cardTemplates.form.status')}</FieldLabel>
-                  <FieldDescription className='text-xs'>{t('cardTemplates.form.statusHint')}</FieldDescription>
-                </div>
-                <Switch
-                  id={field.name}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={isSubmitting}
-                />
               </Field>
             )}
           />
