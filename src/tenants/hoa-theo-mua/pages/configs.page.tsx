@@ -40,6 +40,7 @@ import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-cr
 import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
 import CalligraphyPricingDialog from '../features/configs/components/calligraphy-pricing-dialog'
 import CardSizesDialog from '../features/configs/components/card-sizes-dialog'
+import AiCustomSizeConfigDialog from '../features/configs/components/ai-custom-size-config-dialog'
 import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
@@ -47,6 +48,11 @@ import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-
 import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
 import PromotionPopupDialog from '../features/configs/components/promotion-popup-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
+import {
+  AI_CUSTOM_SIZE_CONFIG_GROUP,
+  AI_CUSTOM_SIZE_CONFIG_KEY,
+  isAiCustomSizeConfig
+} from '../features/configs/ai-custom-size-config-palette'
 import { feedbacksKeySuffix, matchesFeedbacksKey } from '../features/configs/feedbacks-palette'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
 import { useGetSecretConfigs } from '../features/configs/hooks/use-get-secret-configs'
@@ -90,6 +96,8 @@ const toNamedOptions = (rows: { id: number; name: string }[]): InputOption[] =>
 const B2B_SERVICES_GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
 const resolveGroupKey = (group: string): string =>
   group.toLowerCase() === B2B_SERVICES_GROUP_LC ? B2B_SERVICES_GROUP : group
+const getConfigGroup = (config: Config): string =>
+  resolveGroupKey(config.value?.group || config.group || config.key.split('.')[0] || '')
 
 // const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
 //   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
@@ -133,6 +141,9 @@ export default function ConfigsPage() {
   const { settingConfigs = [], isGettingSettingConfigs } = useGetSettingConfigs({
     enabled: currentKind === ConfigKind.setting
   })
+  const { settingConfigs: aiCustomSizeConfigs = [] } = useGetSettingConfigs({
+    groupName: AI_CUSTOM_SIZE_CONFIG_GROUP
+  })
   const { secretConfigs = [], isGettingSecretConfigs } = useGetSecretConfigs({
     enabled: currentKind === ConfigKind.secret
   })
@@ -160,8 +171,8 @@ export default function ConfigsPage() {
     (currentKind === ConfigKind.secret && isGettingSecretConfigs)
 
   const allLoadedConfigs = useMemo<Config[]>(
-    () => [...contentConfigs, ...settingConfigs, ...secretConfigs],
-    [contentConfigs, settingConfigs, secretConfigs]
+    () => [...contentConfigs, ...settingConfigs, ...secretConfigs, ...aiCustomSizeConfigs],
+    [contentConfigs, settingConfigs, secretConfigs, aiCustomSizeConfigs]
   )
 
   const [createOpen, setCreateOpen] = useState(false)
@@ -181,6 +192,7 @@ export default function ConfigsPage() {
   const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
   const [cardSizesDialogOpen, setCardSizesDialogOpen] = useState(false)
   const [calligraphyDialogOpen, setCalligraphyDialogOpen] = useState(false)
+  const [aiCustomSizeDialogOpen, setAiCustomSizeDialogOpen] = useState(false)
   // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
 
   const depotOptions = useMemo<InputOption[]>(() => toNamedOptions(depots), [depots])
@@ -234,7 +246,7 @@ export default function ConfigsPage() {
     const result: string[] = []
 
     for (const config of currentKindConfigs) {
-      const group = resolveGroupKey(config.value.group)
+      const group = getConfigGroup(config)
       if (!seen.has(group)) {
         seen.add(group)
         result.push(group)
@@ -250,7 +262,7 @@ export default function ConfigsPage() {
   const groupedConfigs = useMemo(
     () =>
       currentKindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
-        const g = resolveGroupKey(config.value.group)
+        const g = getConfigGroup(config)
         if (!acc[g]) acc[g] = []
         acc[g].push(config)
         return acc
@@ -353,6 +365,10 @@ export default function ConfigsPage() {
     () => cardConfigGroupConfigs.find((config) => config.key === CARD_PRICES_KEY) ?? null,
     [cardConfigGroupConfigs]
   )
+  const aiCustomSizeConfig = useMemo(
+    () => aiCustomSizeConfigs.find((config) => config.key === AI_CUSTOM_SIZE_CONFIG_KEY) ?? null,
+    [aiCustomSizeConfigs]
+  )
   const maxWordsAcrossSizes = useMemo(
     () => (cardSizesConfig ? maxWordsOfSizes(parseCardSizes(cardSizesConfig.value.value)) : 0),
     [cardSizesConfig]
@@ -435,6 +451,10 @@ export default function ConfigsPage() {
       }
       if (isCardPricesKey(config.key)) {
         setCalligraphyDialogOpen(true)
+        return
+      }
+      if (isAiCustomSizeConfig(config.key)) {
+        setAiCustomSizeDialogOpen(true)
         return
       }
       if (matchesB2BServicesConfig(config)) {
@@ -733,6 +753,12 @@ export default function ConfigsPage() {
         onClose={() => setCalligraphyDialogOpen(false)}
         existingConfig={cardPricesConfig}
         maxWordsAcrossSizes={maxWordsAcrossSizes}
+      />
+
+      <AiCustomSizeConfigDialog
+        open={aiCustomSizeDialogOpen}
+        onClose={() => setAiCustomSizeDialogOpen(false)}
+        existingConfig={aiCustomSizeConfig}
       />
 
       <CheckoutMethodsDialog

@@ -18,11 +18,12 @@ export type B2BServiceSlug = (typeof B2B_SERVICE_SLUGS)[number]
 const GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
 const PREFIX_LC = B2B_SERVICES_KEY_PREFIX.toLowerCase()
 
-const groupMatches = (group: string): boolean => group.toLowerCase() === GROUP_LC
+const groupMatches = (group: string | null | undefined): boolean =>
+  typeof group === 'string' && group.toLowerCase() === GROUP_LC
 const hasServicePrefix = (key: string): boolean => key.toLowerCase().startsWith(PREFIX_LC)
 
 export const matchesB2BServicesConfig = (config: Config): boolean =>
-  groupMatches(config.value.group) &&
+  groupMatches(config.value?.group ?? config.group) &&
   config.kind === ConfigKind.content &&
   config.value.inputType === InputType.json &&
   hasServicePrefix(config.key) &&

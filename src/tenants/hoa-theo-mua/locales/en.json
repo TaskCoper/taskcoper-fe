@@ -1366,6 +1366,32 @@
     }
   },
   "configsPage": {
+    "aiCustomSizeDialog": {
+      "title": "AI Custom flower sizes",
+      "description": "Manage size names, descriptions, combo quantities, and availability.",
+      "manage": "Manage sizes",
+      "keyHint": "This configuration key is fixed to keep AI Custom size data consistent.",
+      "itemsTitle": "Size list",
+      "itemsDescription": "Manage sizes available when creating AI flower designs.",
+      "toggleDetails": "Expand or collapse size details",
+      "section": {
+        "title": "Section header",
+        "description": "Title and description shown to customers in the flower size section.",
+        "enabled": "Show",
+        "titleField": "Title",
+        "descriptionField": "Short description"
+      },
+      "add": "Add size",
+      "empty": "No sizes are configured.",
+      "invalid": "Enter a size name and a combo quantity greater than 0.",
+      "fields": {
+        "configLabel": "Display label",
+        "name": "Size",
+        "description": "Description",
+        "comboQuantity": "Combo quantity"
+      },
+      "status": { "active": "Active", "inactive": "Inactive" }
+    },
     "dialog": {
       "createTitle": "Add field",
       "editTitle": "Edit field",

@@ -1366,6 +1366,32 @@
     }
   },
   "configsPage": {
+    "aiCustomSizeDialog": {
+      "title": "Size hoa Custom AI",
+      "description": "Quản lý tên Size, mô tả, số lượng Combo và trạng thái sử dụng.",
+      "manage": "Quản lý Size",
+      "keyHint": "Khóa cấu hình được cố định để đồng nhất dữ liệu Size hoa Custom AI.",
+      "itemsTitle": "Danh sách Size",
+      "itemsDescription": "Quản lý các Size được sử dụng khi tạo mẫu hoa AI.",
+      "toggleDetails": "Mở hoặc thu gọn thông tin Size",
+      "section": {
+        "title": "Phần đầu mục",
+        "description": "Tiêu đề và mô tả hiển thị cho khách hàng ở section Size hoa.",
+        "enabled": "Hiển thị",
+        "titleField": "Tiêu đề",
+        "descriptionField": "Mô tả ngắn"
+      },
+      "add": "Thêm Size",
+      "empty": "Chưa có Size nào được cấu hình.",
+      "invalid": "Vui lòng nhập tên Size và số lượng Combo lớn hơn 0.",
+      "fields": {
+        "configLabel": "Nhãn hiển thị",
+        "name": "Size",
+        "description": "Mô tả",
+        "comboQuantity": "Số lượng Combo"
+      },
+      "status": { "active": "Hoạt động", "inactive": "Dừng hoạt động" }
+    },
     "dialog": {
       "createTitle": "Thêm trường",
       "editTitle": "Chỉnh sửa trường",
