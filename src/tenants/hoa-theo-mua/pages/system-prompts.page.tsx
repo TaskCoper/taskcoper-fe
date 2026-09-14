@@ -55,13 +55,15 @@ const PROMPT_TABS: PromptTabDefinition[] = [
     value: SystemPromptTab.BackgroundRule,
     labelKey: 'systemPrompts.tabs.backgroundRule.label',
     titleKey: 'systemPrompts.tabs.backgroundRule.title',
-    descriptionKey: 'systemPrompts.tabs.backgroundRule.description'
+    descriptionKey: 'systemPrompts.tabs.backgroundRule.description',
+    type: SystemPromptType.PlatformRule
   },
   {
     value: SystemPromptTab.ImageToImage,
     labelKey: 'systemPrompts.tabs.imageToImage.label',
     titleKey: 'systemPrompts.tabs.imageToImage.title',
-    descriptionKey: 'systemPrompts.tabs.imageToImage.description'
+    descriptionKey: 'systemPrompts.tabs.imageToImage.description',
+    type: SystemPromptType.ImageToImage
   }
 ]
 
@@ -93,11 +95,11 @@ export default function SystemPromptsPage() {
   )
   const isSupported = activeDefinition.type !== undefined
 
-  const handleCopy = async () => {
-    if (!systemPrompt?.content) return
+  const handleCopy = async (content = systemPrompt?.content) => {
+    if (!content) return
 
     try {
-      await navigator.clipboard.writeText(htmlToPlainText(systemPrompt.content))
+      await navigator.clipboard.writeText(htmlToPlainText(content))
       setHasCopied(true)
       toast.success(t('systemPrompts.toast.copySuccess'))
       window.setTimeout(() => setHasCopied(false), 1500)
@@ -147,10 +149,11 @@ export default function SystemPromptsPage() {
           isListError={isSystemPromptsError}
           isDetailError={isSystemPromptError}
           hasCopied={hasCopied}
-          onCopy={() => void handleCopy()}
+          onCopy={(content) => void handleCopy(content)}
           onEdit={() => setIsEditDialogOpen(true)}
           onRetryList={() => void refetchSystemPrompts()}
           onRetryDetail={() => void refetchSystemPrompt()}
+          isPlatformRule={activeTab === SystemPromptTab.BackgroundRule}
         />
       </div>
       <EditSystemPromptDialog systemPrompt={systemPrompt} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />

@@ -122,10 +122,34 @@
         "description": "Rules that guide AI content processing based on the image background."
       },
       "imageToImage": {
-        "label": "Create from source image",
-        "title": "Create from source image",
+        "label": "Image to image",
+        "title": "Image to image",
         "description": "The System Prompt guides AI when generating a new image from a source image."
       }
+    },
+    "mockContent": {
+      "previewBadge": "Preview",
+      "platforms": {
+        "facebook": "Facebook",
+        "zalo": "Zalo OA",
+        "instagram": "Instagram"
+      },
+      "platformTitle": {
+        "facebook": "Platform rules: Facebook",
+        "zalo": "Platform rules: Zalo OA",
+        "instagram": "Platform rules: Instagram"
+      },
+      "platformDescription": {
+        "facebook": "Rules for formatting, icons, hashtags and calls to action on Facebook News Feed.",
+        "zalo": "Rules for Zalo OA messages, customer care and promotions.",
+        "instagram": "Optimize captions, visual-first storytelling and relevant hashtags."
+      },
+      "platform": {
+        "facebook": "<h1>SYSTEM PROMPT: FACEBOOK PLATFORM</h1><ul><li>Format: Start with a strong hook under 125 characters before “Read more”.</li><li>Use emojis naturally and sparingly.</li><li>End with up to 5 relevant hashtags.</li></ul>",
+        "zalo": "<h1>SYSTEM PROMPT: ZALO OA PLATFORM</h1><ul><li>Use a polite, concise and value-oriented tone.</li><li>Keep messages under 160 characters for mobile display.</li></ul>",
+        "instagram": "<h1>SYSTEM PROMPT: INSTAGRAM PLATFORM</h1><ul><li>Open with an emotional, visually evocative line.</li><li>Use short, readable paragraphs.</li><li>Place 10–15 relevant hashtags at the end.</li></ul>"
+      },
+      "imageToImage": "<h1>SYSTEM PROMPT: CREATE FROM SOURCE IMAGE</h1><ul><li>Preserve the key subject, composition and visual identity of the source image.</li><li>Apply the requested style while keeping the result natural and coherent.</li></ul>"
     },
     "actions": {
       "copy": "Copy",

@@ -117,15 +117,39 @@
         "description": "System Prompt hỗ trợ AI tạo nội dung truyền thông."
       },
       "backgroundRule": {
-        "label": "Rule theo nền ảnh",
-        "title": "Rule theo nền ảnh",
-        "description": "Quy tắc hướng dẫn AI xử lý nội dung theo nền ảnh."
+        "label": "Rule theo nền tảng",
+        "title": "Rule theo nền tảng",
+        "description": "Quy tắc hướng dẫn AI xử lý nội dung theo nền tảng."
       },
       "imageToImage": {
         "label": "Tạo ảnh từ ảnh gốc",
         "title": "Tạo ảnh từ ảnh gốc",
         "description": "System Prompt hướng dẫn AI tạo ảnh mới dựa trên ảnh gốc."
       }
+    },
+    "mockContent": {
+      "previewBadge": "Xem trước",
+      "platforms": {
+        "facebook": "Facebook",
+        "zalo": "Zalo OA",
+        "instagram": "Instagram"
+      },
+      "platformTitle": {
+        "facebook": "Rule theo nền tảng: Facebook",
+        "zalo": "Rule theo nền tảng: Zalo OA",
+        "instagram": "Rule theo nền tảng: Instagram"
+      },
+      "platformDescription": {
+        "facebook": "Ràng buộc định dạng, icon, hashtag và cấu trúc ngắt dòng chuyên biệt cho Facebook News Feed.",
+        "zalo": "Quy chuẩn tin nhắn Zalo OA, thông báo chăm sóc khách hàng và khuyến mãi.",
+        "instagram": "Tối ưu caption thẩm mỹ, visual-first storytelling và hashtag thịnh hành."
+      },
+      "platform": {
+        "facebook": "<h1>SYSTEM PROMPT: NỀN TẢNG FACEBOOK</h1><ul><li>Định dạng: Có mở bài gây chú ý dưới 125 ký tự trước nút “Xem thêm”.</li><li>Sử dụng emoji tự nhiên, vừa phải.</li><li>Hashtag cuối bài: tối đa 5 hashtag phù hợp.</li></ul>",
+        "zalo": "<h1>SYSTEM PROMPT: NỀN TẢNG ZALO OA</h1><ul><li>Phong cách: Lịch sự, ngắn gọn, đi thẳng vào giá trị ưu đãi hoặc dịch vụ.</li><li>Độ dài khuyến nghị: Dưới 160 ký tự để hiển thị tốt trên điện thoại.</li></ul>",
+        "instagram": "<h1>SYSTEM PROMPT: NỀN TẢNG INSTAGRAM</h1><ul><li>Câu đầu tiên mang tính thi vị và thẩm mỹ thị giác cao.</li><li>Xuống dòng rõ ràng bằng các đoạn ngắn, dễ đọc.</li><li>Khối hashtag tách biệt ở cuối bài viết.</li></ul>"
+      },
+      "imageToImage": "<h1>SYSTEM PROMPT: TẠO ẢNH TỪ ẢNH GỐC</h1><ul><li>Giữ chủ thể, bố cục và nhận diện hình ảnh chính từ ảnh gốc.</li><li>Áp dụng phong cách được yêu cầu nhưng vẫn bảo đảm kết quả tự nhiên, nhất quán.</li></ul>"
     },
     "actions": {
       "copy": "Sao chép",

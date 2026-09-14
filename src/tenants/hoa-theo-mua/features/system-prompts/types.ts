@@ -1,7 +1,9 @@
 export const SystemPromptType = {
   Flower: 0,
   Card: 1,
-  Post: 2
+  Post: 2,
+  PlatformRule: 3,
+  ImageToImage: 4
 } as const
 
 export type SystemPromptType = (typeof SystemPromptType)[keyof typeof SystemPromptType]
