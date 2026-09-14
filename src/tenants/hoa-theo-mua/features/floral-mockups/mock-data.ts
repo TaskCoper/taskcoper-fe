@@ -42,7 +42,8 @@ let mockFloralMockups: FloralMockupListItem[] = Array.from({ length: 28 }, (_, i
   isActive: index % 4 !== 0,
   isDeleted: false,
   createdAt: new Date(Date.now() - index * 86400000).toISOString(),
-  updatedAt: new Date(Date.now() - index * 3600000).toISOString()
+  updatedAt: new Date(Date.now() - index * 3600000).toISOString(),
+  type: index % 2 === 0 ? 'flower' : 'bundle'
 }))
 
 export const createMockFloralMockup = async (payload: CreateFloralMockupPayload): Promise<FloralMockupListItem> => {
@@ -54,7 +55,8 @@ export const createMockFloralMockup = async (payload: CreateFloralMockupPayload)
     isActive: payload.isActive,
     isDeleted: false,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    type: payload.type
   }
 
   mockFloralMockups = [mockup, ...mockFloralMockups]
@@ -65,7 +67,8 @@ export const getMockFloralMockups = async ({
   pageIndex = 1,
   pageSize = 10,
   search,
-  isActive
+  isActive,
+  type
 }: GetFloralMockupsParams): Promise<FloralMockupsPage> => {
   const normalizedSearch = search ? normalizeSearch(search) : ''
   const filteredMockups = mockFloralMockups.filter((mockup) => {
@@ -73,8 +76,9 @@ export const getMockFloralMockups = async ({
 
     const matchesSearch = !normalizedSearch || normalizeSearch(mockup.name).includes(normalizedSearch)
     const matchesStatus = isActive === undefined || mockup.isActive === isActive
+    const matchesType = type === undefined || mockup.type === type
 
-    return matchesSearch && matchesStatus
+    return matchesSearch && matchesStatus && matchesType
   })
   const safePageSize = Math.max(1, pageSize)
   const totalCount = filteredMockups.length

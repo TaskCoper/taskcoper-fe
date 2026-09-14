@@ -16,7 +16,7 @@ import DeleteFloralMockupDialog from '../features/floral-mockups/components/dele
 import { getFloralMockupColumns } from '../features/floral-mockups/components/floral-mockup-columns'
 import FloralMockupDetailDialog from '../features/floral-mockups/components/floral-mockup-detail-dialog'
 import { useGetFloralMockups } from '../features/floral-mockups/hooks/use-get-floral-mockups'
-import type { FloralMockupListItem } from '../features/floral-mockups/types'
+import { FlowerReferenceType, type FloralMockupListItem } from '../features/floral-mockups/types'
 
 const FILTER_PREFIX = 'floralMockups'
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
@@ -42,7 +42,11 @@ export default function FlowerMockupsPage() {
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_name`, parseAsString)
   const [statusFilter] = useQueryState(`${FILTER_PREFIX}_isActive`, parseAsString)
+  const [typeFilter] = useQueryState(`${FILTER_PREFIX}_type`, parseAsString)
   const activeStatus = statusFilter === 'true' ? true : statusFilter === 'false' ? false : undefined
+  const referenceType = Object.values(FlowerReferenceType).includes(typeFilter as FlowerReferenceType)
+    ? (typeFilter as FlowerReferenceType)
+    : undefined
   const {
     floralMockups,
     isGettingFloralMockups,
@@ -53,7 +57,8 @@ export default function FlowerMockupsPage() {
     pageIndex: page,
     pageSize: limit,
     search: searchFilter?.trim() || undefined,
-    isActive: activeStatus
+    isActive: activeStatus,
+    type: referenceType
   })
 
   const { table } = useDataTable({

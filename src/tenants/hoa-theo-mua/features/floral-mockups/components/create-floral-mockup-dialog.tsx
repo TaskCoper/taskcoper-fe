@@ -11,6 +11,7 @@ import {
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
@@ -26,11 +27,13 @@ import {
   MAX_FLORAL_MOCKUP_IMAGE_SIZE,
   type CreateFloralMockupFormValues
 } from '../validations'
+import { FlowerReferenceType } from '../types'
 
 const defaultValues: CreateFloralMockupFormValues = {
   name: '',
   description: '',
-  imageFile: null
+  imageFile: null,
+  type: FlowerReferenceType.Flower
 }
 
 const CreateFloralMockupDialog = ({
@@ -71,6 +74,7 @@ const CreateFloralMockupDialog = ({
         name: values.name,
         description: values.description || null,
         imageUrl,
+        type: values.type,
         isActive: true
       })
       reset(defaultValues)
@@ -138,6 +142,26 @@ const CreateFloralMockupDialog = ({
                   placeholder={t('floralMockups.form.descriptionPlaceholder')}
                   disabled={isSubmitting}
                 />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name='type'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='min-w-0 gap-1.5'>
+                <FieldLabel htmlFor={field.name}>{t('floralMockups.column.type')}</FieldLabel>
+                <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
+                  <SelectTrigger id={field.name} aria-invalid={fieldState.invalid} className='w-full'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={FlowerReferenceType.Flower}>{t('floralMockups.type.flower')}</SelectItem>
+                    <SelectItem value={FlowerReferenceType.Bundle}>{t('floralMockups.type.bundle')}</SelectItem>
+                  </SelectContent>
+                </Select>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}

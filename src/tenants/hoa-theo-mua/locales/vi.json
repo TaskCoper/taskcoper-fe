@@ -100,13 +100,14 @@
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
   "floralMockups": {
-    "title": "Danh sách Mockup mẫu hoa",
-    "description": "Theo dõi và quản lý các Mockup được sử dụng để tạo mẫu hoa AI.",
+    "title": "Quản lý kiểu dáng hoa",
+    "description": "Theo dõi và quản lý mẫu được sử dụng trong quy trình tùy chỉnh hoa AI.",
     "column": {
-      "name": "Tên Mockup",
+      "name": "Tên mẫu",
       "description": "Mô tả",
       "preview": "Ảnh Preview",
       "status": "Trạng thái",
+      "type": "Loại mẫu",
       "createdAt": "Ngày tạo",
       "actions": "Thao tác"
     },
@@ -114,66 +115,70 @@
       "active": "Hoạt động",
       "inactive": "Dừng hoạt động"
     },
-    "searchPlaceholder": "Tìm theo tên Mockup...",
+    "type": {
+      "flower": "Mẫu mockup hoa",
+      "bundle": "Mẫu gói hoa"
+    },
+    "searchPlaceholder": "Tìm theo tên Template...",
     "noDescription": "Không có mô tả",
     "previewAlt": "Ảnh Preview của {{name}}",
     "openPreview": "Mở ảnh Preview của {{name}}",
-    "openMenu": "Mở thao tác Mockup",
+    "openMenu": "Mở thao tác Template",
     "viewDetail": "Xem chi tiết",
-    "loadFailed": "Không thể tải danh sách Mockup",
+    "loadFailed": "Không thể tải danh sách Template",
     "loadFailedDescription": "Đã xảy ra lỗi trong quá trình tải dữ liệu. Vui lòng thử lại.",
     "retry": "Thử lại",
     "form": {
-      "add": "Thêm Mockup",
-      "title": "Thêm Mockup mẫu hoa",
-      "description": "Tạo Mockup mới để sử dụng trong quy trình tạo mẫu hoa AI.",
-      "name": "Tên Mockup",
-      "namePlaceholder": "Nhập tên Mockup...",
+      "add": "Thêm Template",
+      "title": "Thêm Template",
+      "description": "Tạo Template mẫu hoa hoặc gói hoa cho quy trình tùy chỉnh hoa AI.",
+      "name": "Tên Template",
+      "namePlaceholder": "Nhập tên Template...",
       "mockupDescription": "Mô tả",
       "descriptionPlaceholder": "Nhập mô tả nếu có...",
-      "image": "Ảnh Mockup",
+      "image": "Ảnh Template",
       "imageHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB · Không giới hạn kích thước hoặc tỷ lệ ảnh",
-      "imagePreviewAlt": "Ảnh xem trước của Mockup đã chọn",
+      "imagePreviewAlt": "Ảnh xem trước của Template đã chọn",
       "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
       "dropzoneActive": "Thả ảnh để tải lên",
       "removeImage": "Xóa ảnh đã chọn",
-      "activeHint": "Mockup mới sẽ được tạo với trạng thái Hoạt động.",
+      "activeHint": "Template mới sẽ được tạo với trạng thái Hoạt động.",
       "submit": "Thêm",
-      "createSuccess": "Thêm Mockup thành công.",
-      "createFailed": "Không thể thêm Mockup. Vui lòng thử lại.",
+      "createSuccess": "Thêm Template thành công.",
+      "createFailed": "Không thể thêm Template. Vui lòng thử lại.",
       "validation": {
-        "nameRequired": "Vui lòng nhập tên Mockup.",
-        "nameLength": "Tên Mockup không được vượt quá 50 ký tự.",
+        "nameRequired": "Vui lòng nhập tên Template.",
+        "nameLength": "Tên Template không được vượt quá 50 ký tự.",
         "descriptionLength": "Mô tả không được vượt quá 200 ký tự.",
-        "imageRequired": "Vui lòng chọn ảnh Mockup.",
+        "imageRequired": "Vui lòng chọn ảnh Template.",
         "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
-        "imageSize": "Ảnh Mockup không được vượt quá 10 MB."
+        "imageSize": "Ảnh Template không được vượt quá 10 MB."
       }
     },
     "detail": {
-      "description": "Xem thông tin và ảnh Preview của Mockup mẫu hoa."
+      "description": "Xem thông tin và ảnh Preview của Template mẫu hoa."
     },
     "statusAction": {
       "activate": "Chuyển sang Hoạt động",
       "deactivate": "Chuyển sang Dừng hoạt động",
-      "activateTitle": "Chuyển Mockup sang Hoạt động?",
-      "deactivateTitle": "Chuyển Mockup sang Dừng hoạt động?",
-      "activateDescription": "Mockup {{name}} sẽ khả dụng và có thể được hiển thị cho khách hàng khi chọn Mockup.",
-      "deactivateDescription": "Mockup {{name}} sẽ không còn khả dụng cho yêu cầu mới và không hiển thị để khách hàng lựa chọn.",
+      "activateTitle": "Chuyển Template sang Hoạt động?",
+      "deactivateTitle": "Chuyển Template sang Dừng hoạt động?",
+      "activateDescription": "Template {{name}} sẽ khả dụng và có thể được hiển thị cho khách hàng khi chọn Template.",
+      "deactivateDescription": "Template {{name}} sẽ không còn khả dụng cho yêu cầu mới và không hiển thị để khách hàng lựa chọn.",
       "activateConfirm": "Chuyển sang Hoạt động",
       "deactivateConfirm": "Chuyển sang Dừng hoạt động",
-      "activateSuccess": "Mockup đã chuyển sang Hoạt động.",
-      "deactivateSuccess": "Mockup đã chuyển sang Dừng hoạt động.",
-      "failed": "Không thể chuyển trạng thái Mockup. Vui lòng thử lại."
+      "activateSuccess": "Template đã chuyển sang Hoạt động.",
+      "deactivateSuccess": "Template đã chuyển sang Dừng hoạt động.",
+      "failed": "Không thể chuyển trạng thái Template. Vui lòng thử lại."
     },
     "deleteAction": {
-      "delete": "Xóa Mockup",
-      "title": "Bạn chắc chắn muốn xóa Mockup này không?",
-      "description": "Mockup {{name}} sẽ không còn hiển thị trong danh sách quản lý hoặc cho khách hàng lựa chọn. Dữ liệu và ảnh Preview vẫn được giữ lại để xem lịch sử.",
-      "confirm": "Xóa Mockup",
+      "delete": "Xóa Template",
+      "title": "Bạn chắc chắn muốn xóa Template này không?",
+      "description": "Template {{name}} sẽ không còn hiển thị trong danh sách quản lý hoặc cho khách hàng lựa chọn. Dữ liệu và ảnh Preview vẫn được giữ lại để xem lịch sử.",
+      "confirm": "Xóa Template",
       "retry": "Thử lại",
-      "success": "Xóa Mockup thành công.",
-      "failed": "Không thể xóa Mockup. Vui lòng thử lại."
+      "success": "Xóa Template thành công.",
+      "failed": "Không thể xóa Template. Vui lòng thử lại."
     }
   },
   "aiCustom": {
@@ -378,7 +383,7 @@
     "templateManagement": {
       "title": "Quản lý mẫu",
       "cardTemplates": "Mẫu thiệp",
-      "flowerMockups": "Mockup mẫu hoa"
+      "flowerMockups": "Kiểu dáng hoa"
     },
     "cardConfiguration": {
       "title": "Cấu hình thiệp",

@@ -100,12 +100,13 @@
     "categoriesComingSoon": "Categories - Coming Soon"
   },
   "floralMockups": {
-    "title": "Flower Mockups",
-    "description": "View and manage the mockups used to generate AI flower designs.",
+    "title": "Flower Style",
+    "description": "View and manage templates used in AI flower customization.",
     "column": {
-      "name": "Mockup name",
+      "name": "Template name",
       "description": "Description",
       "preview": "Preview",
+      "type": "Type",
       "status": "Status",
       "createdAt": "Created at",
       "actions": "Actions"
@@ -114,40 +115,44 @@
       "active": "Active",
       "inactive": "Inactive"
     },
-    "searchPlaceholder": "Search by Mockup name...",
+    "type": {
+      "flower": "Flower Mockup",
+      "bundle": "Bundle Mockup"
+    },
+    "searchPlaceholder": "Search by Template name...",
     "noDescription": "No description",
     "previewAlt": "{{name}} preview",
     "openPreview": "Open {{name}} preview",
-    "openMenu": "Open mockup actions",
+    "openMenu": "Open template actions",
     "viewDetail": "View details",
-    "loadFailed": "Unable to load the mockup list",
+    "loadFailed": "Unable to load the template list",
     "loadFailedDescription": "An error occurred while loading data. Please try again.",
     "retry": "Retry",
     "form": {
-      "add": "Add Mockup",
-      "title": "Add flower Mockup",
-      "description": "Create a new Mockup for use in the AI flower design workflow.",
-      "name": "Mockup name",
-      "namePlaceholder": "Enter the Mockup name...",
+      "add": "Add Template",
+      "title": "Add Template",
+      "description": "Create a flower or bundle template for the AI customization workflow.",
+      "name": "Template name",
+      "namePlaceholder": "Enter the Template name...",
       "mockupDescription": "Description",
       "descriptionPlaceholder": "Enter an optional description...",
-      "image": "Mockup image",
+      "image": "Template image",
       "imageHint": "PNG, JPG or JPEG · Up to 10 MB · No dimension or aspect ratio restrictions",
-      "imagePreviewAlt": "Selected Mockup image preview",
+      "imagePreviewAlt": "Selected Template image preview",
       "dropzoneTitle": "Drag an image here or click to browse",
       "dropzoneActive": "Drop the image to upload",
       "removeImage": "Remove selected image",
-      "activeHint": "New Mockups are created with Active status.",
+      "activeHint": "New Templates are created with Active status.",
       "submit": "Add",
-      "createSuccess": "Mockup added successfully.",
-      "createFailed": "Could not add the Mockup. Please try again.",
+      "createSuccess": "Template added successfully.",
+      "createFailed": "Could not add the Template. Please try again.",
       "validation": {
-        "nameRequired": "Mockup name is required.",
-        "nameLength": "Mockup name must not exceed 50 characters.",
+        "nameRequired": "Template name is required.",
+        "nameLength": "Template name must not exceed 50 characters.",
         "descriptionLength": "Description must not exceed 200 characters.",
-        "imageRequired": "Mockup image is required.",
+        "imageRequired": "Template image is required.",
         "imageType": "Only PNG, JPG or JPEG images are accepted.",
-        "imageSize": "The Mockup image must not exceed 10 MB."
+        "imageSize": "The Template image must not exceed 10 MB."
       }
     },
     "detail": {
@@ -156,24 +161,24 @@
     "statusAction": {
       "activate": "Set as Active",
       "deactivate": "Set as Inactive",
-      "activateTitle": "Set this mockup as Active?",
-      "deactivateTitle": "Set this mockup as Inactive?",
+      "activateTitle": "Set this template as Active?",
+      "deactivateTitle": "Set this template as Inactive?",
       "activateDescription": "{{name}} will be available for generating AI flower designs.",
       "deactivateDescription": "{{name}} will no longer be available for generating AI flower designs.",
       "activateConfirm": "Set as Active",
       "deactivateConfirm": "Set as Inactive",
-      "activateSuccess": "The mockup is now Active.",
-      "deactivateSuccess": "The mockup is now Inactive.",
-      "failed": "Could not change the mockup status. Please try again."
+      "activateSuccess": "The template is now Active.",
+      "deactivateSuccess": "The template is now Inactive.",
+      "failed": "Could not change the template status. Please try again."
     },
     "deleteAction": {
-      "delete": "Delete Mockup",
-      "title": "Are you sure you want to delete this Mockup?",
+      "delete": "Delete Template",
+      "title": "Are you sure you want to delete this Template?",
       "description": "{{name}} will no longer appear in management lists or customer selections. Its data and Preview image remain available for history.",
-      "confirm": "Delete Mockup",
+      "confirm": "Delete Template",
       "retry": "Retry",
-      "success": "Mockup deleted successfully.",
-      "failed": "Could not delete the Mockup. Please try again."
+      "success": "Template deleted successfully.",
+      "failed": "Could not delete the Template. Please try again."
     }
   },
   "aiCustom": {
@@ -378,7 +383,7 @@
     "templateManagement": {
       "title": "Template Management",
       "cardTemplates": "Card Templates",
-      "flowerMockups": "Flower Mockups"
+      "flowerMockups": "Flower Style Management"
     },
     "cardConfiguration": {
       "title": "Card Configuration",

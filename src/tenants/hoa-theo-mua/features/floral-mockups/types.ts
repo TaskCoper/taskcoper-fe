@@ -1,5 +1,12 @@
 import type { BasePaginationResponse } from '@/lib/axios'
 
+export const FlowerReferenceType = {
+  Flower: 'flower',
+  Bundle: 'bundle'
+} as const
+
+export type FlowerReferenceType = (typeof FlowerReferenceType)[keyof typeof FlowerReferenceType]
+
 export interface FloralMockupListItem {
   id: string
   name: string
@@ -9,6 +16,7 @@ export interface FloralMockupListItem {
   isDeleted: boolean
   createdAt: string
   updatedAt: string
+  type: FlowerReferenceType
 }
 
 export interface GetFloralMockupsParams {
@@ -16,6 +24,7 @@ export interface GetFloralMockupsParams {
   pageSize?: number
   search?: string
   isActive?: boolean
+  type?: FlowerReferenceType
 }
 
 export interface ChangeFloralMockupStatusPayload {
@@ -31,6 +40,7 @@ export interface CreateFloralMockupPayload {
   name: string
   description: string | null
   imageUrl: string
+  type: FlowerReferenceType
   isActive: true
 }
 

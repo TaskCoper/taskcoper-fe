@@ -1,5 +1,6 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { EyeIcon, MoreHorizontalIcon, PowerIcon, SearchIcon, Trash2Icon } from 'lucide-react'
-import type { FloralMockupListItem } from '../types'
+import { FlowerReferenceType, type FloralMockupListItem } from '../types'
 import FloralMockupDescription from './floral-mockup-description'
 import FloralMockupPreview from './floral-mockup-preview'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -85,6 +86,28 @@ export const getFloralMockupColumns = ({
     enableHiding: true,
     enableColumnFilter: true,
     size: 230
+  },
+  {
+    id: 'type',
+    accessorKey: 'type',
+    meta: {
+      label: 'floralMockups.column.type',
+      variant: 'radio',
+      options: [
+        { label: t('floralMockups.type.flower'), value: FlowerReferenceType.Flower },
+        { label: t('floralMockups.type.bundle'), value: FlowerReferenceType.Bundle }
+      ]
+    },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='floralMockups.column.type' />,
+    cell: ({ row }) => (
+      <Badge variant='outline' className='font-medium'>
+        {t(`floralMockups.type.${row.original.type}`)}
+      </Badge>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: true,
+    size: 150
   },
   {
     id: 'description',

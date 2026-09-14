@@ -9,9 +9,10 @@ export const useGetFloralMockups = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   search,
-  isActive
+  isActive,
+  type
 }: GetFloralMockupsParams) => {
-  const params = { pageIndex, pageSize, search, isActive }
+  const params = { pageIndex, pageSize, search, isActive, type }
   const {
     data: floralMockups,
     isLoading: isGettingFloralMockups,

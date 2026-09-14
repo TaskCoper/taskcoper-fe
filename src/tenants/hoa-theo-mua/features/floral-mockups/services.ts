@@ -3,15 +3,16 @@ import { BaseService } from '../../services/base.service'
 import type { CreateFloralMockupPayload, FloralMockupListItem, GetFloralMockupsParams } from './types'
 
 class FloralMockupService extends BaseService {
-  private readonly baseUrl = 'mockups'
+  private readonly baseUrl = 'reference-flowers'
 
-  getFloralMockups = async ({ search, pageIndex, pageSize, isActive }: GetFloralMockupsParams) => {
+  getFloralMockups = async ({ search, pageIndex, pageSize, isActive, type }: GetFloralMockupsParams) => {
     const { data } = await this.get<BasePaginationResponse<FloralMockupListItem>>(`/v1/${this.baseUrl}`, {
       params: {
         search,
         pageIndex,
         pageSize,
-        isActive
+        isActive,
+        type
       }
     })
     return data.value
