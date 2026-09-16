@@ -178,11 +178,9 @@ export const getCardTemplateColumns = ({
   {
     id: 'actions',
     meta: { label: 'cardTemplates.column.actions' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label='cardTemplates.column.actions' className='justify-end' />
-    ),
+    header: () => null,
     cell: ({ row }) => (
-      <div className='flex justify-end'>
+      <div className='flex justify-center'>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='size-8 p-0'>

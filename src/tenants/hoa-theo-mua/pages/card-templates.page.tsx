@@ -4,19 +4,18 @@ import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useQueryClient } from '@tanstack/react-query'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { PlusIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getCardTemplateColumns } from '../features/card-templates/components/card-template-columns'
-import ChangeCardTemplateStatusDialog from '../features/card-templates/components/change-card-template-status-dialog'
 import CreateCardTemplateDialog from '../features/card-templates/components/create-card-template-dialog'
-import DeleteCardTemplateDialog from '../features/card-templates/components/delete-card-template-dialog'
 import UpdateCardTemplateDialog from '../features/card-templates/components/update-card-template-dialog'
+import { useChangeCardTemplateStatus } from '../features/card-templates/hooks/use-change-card-template-status'
+import { useDeleteCardTemplate } from '../features/card-templates/hooks/use-delete-card-template'
 import { useGetCardTemplates } from '../features/card-templates/hooks/use-get-card-templates'
-import { cardTemplateKeys } from '../features/card-templates/query-keys'
 import { isCardTemplateType, type CardTemplateListItem, type CardTemplateType } from '../features/card-templates/types'
 
 const FILTER_PREFIX = 'cardTemplates'
@@ -28,22 +27,46 @@ const resolveTemplateType = (value: string | null): CardTemplateType | undefined
 
 export default function CardTemplatesPage() {
   const { t } = useTenantTranslation()
-  const queryClient = useQueryClient()
+  const { confirm } = useConfirmStore()
+  const { changeCardTemplateStatus } = useChangeCardTemplateStatus()
+  const { deleteCardTemplate } = useDeleteCardTemplate()
   const [previewTemplate, setPreviewTemplate] = useState<CardTemplateListItem | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [editingTemplate, setEditingTemplate] = useState<CardTemplateListItem | null>(null)
-  const [statusTemplate, setStatusTemplate] = useState<CardTemplateListItem | null>(null)
-  const [deletingTemplate, setDeletingTemplate] = useState<CardTemplateListItem | null>(null)
+  const handleToggleStatus = useCallback(
+    async (template: CardTemplateListItem) => {
+      const isActive = !template.isActive
+      const action = isActive ? 'activate' : 'deactivate'
+      const confirmed = await confirm({
+        title: t(`cardTemplates.statusAction.${action}Title`),
+        description: t(`cardTemplates.statusAction.${action}Description`, { name: template.name })
+      })
+      if (confirmed) changeCardTemplateStatus({ id: template.id, isActive })
+    },
+    [changeCardTemplateStatus, confirm, t]
+  )
+
+  const handleDelete = useCallback(
+    async (template: CardTemplateListItem) => {
+      const confirmed = await confirm({
+        title: t('cardTemplates.deleteAction.title'),
+        description: t('cardTemplates.deleteAction.description'),
+        variant: 'destructive'
+      })
+      if (confirmed) deleteCardTemplate(template.id)
+    },
+    [confirm, deleteCardTemplate, t]
+  )
   const columns = useMemo(
     () =>
       getCardTemplateColumns({
         t,
         onPreview: setPreviewTemplate,
         onEdit: setEditingTemplate,
-        onToggleStatus: setStatusTemplate,
-        onDelete: setDeletingTemplate
+        onToggleStatus: handleToggleStatus,
+        onDelete: handleDelete
       }),
-    [t]
+    [handleDelete, handleToggleStatus, t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)
@@ -79,10 +102,9 @@ export default function CardTemplatesPage() {
     }
   })
 
-  const handleCreateDialogOpenChange = (open: boolean) => {
-    setIsCreateDialogOpen(open)
-    if (!open) void queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
-  }
+  useEffect(() => {
+    if (cardTemplates?.items.length === 0 && page > 1) table.previousPage()
+  }, [cardTemplates?.items.length, page, table])
 
   return (
     <div className='h-full overflow-auto'>
@@ -119,7 +141,7 @@ export default function CardTemplatesPage() {
 
       <CreateCardTemplateDialog
         open={isCreateDialogOpen}
-        onOpenChange={handleCreateDialogOpenChange}
+        onOpenChange={setIsCreateDialogOpen}
         onCreated={() => table.setPageIndex(0)}
       />
       <UpdateCardTemplateDialog
@@ -127,25 +149,6 @@ export default function CardTemplatesPage() {
         open={Boolean(editingTemplate)}
         onOpenChange={(open) => {
           if (!open) setEditingTemplate(null)
-        }}
-      />
-      <ChangeCardTemplateStatusDialog
-        template={statusTemplate}
-        open={Boolean(statusTemplate)}
-        onOpenChange={(open) => {
-          if (!open) setStatusTemplate(null)
-        }}
-      />
-      <DeleteCardTemplateDialog
-        template={deletingTemplate}
-        open={Boolean(deletingTemplate)}
-        onOpenChange={(open) => {
-          if (!open) setDeletingTemplate(null)
-        }}
-        onDeleted={() => {
-          if (table.getRowModel().rows.length === 1 && table.getState().pagination.pageIndex > 0) {
-            table.previousPage()
-          }
         }}
       />
     </div>

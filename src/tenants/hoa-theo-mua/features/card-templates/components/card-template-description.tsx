@@ -3,7 +3,7 @@ import { cn } from '@/shared/utils'
 import { FileTextIcon } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
-const CardTemplateDescription = ({
+export default function CardTemplateDescription({
   description,
   emptyLabel,
   label
@@ -11,7 +11,7 @@ const CardTemplateDescription = ({
   description: string | null
   emptyLabel: string
   label: string
-}) => {
+}) {
   const [isTruncated, setIsTruncated] = useState(false)
   const measureDescription = useCallback((node: HTMLParagraphElement | null) => {
     if (!node) return
@@ -66,5 +66,3 @@ const CardTemplateDescription = ({
     </Tooltip>
   )
 }
-
-export default CardTemplateDescription

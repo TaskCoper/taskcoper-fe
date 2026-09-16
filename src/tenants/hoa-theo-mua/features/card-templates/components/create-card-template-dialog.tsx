@@ -16,25 +16,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { ImageIcon, UploadCloudIcon } from 'lucide-react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useWatch } from 'react-hook-form'
 import { useCreateCardTemplate } from '../hooks/use-create-card-template'
 import { CardTemplateType } from '../types'
 import {
   CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
   CARD_TEMPLATE_IMAGE_MAX_SIZE,
   CARD_TEMPLATE_NAME_MAX_LENGTH,
-  createCardTemplateSchema,
   type CreateCardTemplateFormValues
 } from '../validations'
-
-const DEFAULT_VALUES: CreateCardTemplateFormValues = {
-  name: '',
-  description: '',
-  imageFile: undefined as unknown as File,
-  templateType: CardTemplateType.Handmade
-}
 
 const CreateCardTemplateDialog = ({
   open,
@@ -46,16 +37,12 @@ const CreateCardTemplateDialog = ({
   onCreated: () => void
 }) => {
   const { t } = useTenantTranslation()
-  const { createCardTemplate, isCreatingCardTemplate } = useCreateCardTemplate()
+  const { createCardTemplate, isCreatingCardTemplate, methods } = useCreateCardTemplate()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
-  const methods = useForm<CreateCardTemplateFormValues>({
-    resolver: zodResolver(createCardTemplateSchema(t)),
-    defaultValues: DEFAULT_VALUES
-  })
   const description = useWatch({ control: methods.control, name: 'description' })
 
   const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) methods.reset(DEFAULT_VALUES)
+    if (!nextOpen) methods.reset()
     onOpenChange(nextOpen)
   }
 
@@ -65,8 +52,8 @@ const CreateCardTemplateDialog = ({
 
     createCardTemplate(
       {
-        name: values.name.trim(),
-        description: values.description.trim() || null,
+        name: values.name,
+        description: values.description || null,
         imageUrl,
         templateType: values.templateType
       },
@@ -83,13 +70,13 @@ const CreateCardTemplateDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-xl'>
+      <DialogContent position='top-center' className='sm:max-w-xl'>
         <DialogHeader>
           <DialogTitle>{t('cardTemplates.form.title')}</DialogTitle>
           <DialogDescription>{t('cardTemplates.form.description')}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-4' noValidate>
+        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-3' noValidate>
           <Controller
             name='name'
             control={methods.control}

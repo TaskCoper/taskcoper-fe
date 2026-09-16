@@ -15,17 +15,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { ImageIcon, UploadCloudIcon } from 'lucide-react'
-import { useEffect } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useWatch } from 'react-hook-form'
 import { useUpdateCardTemplate } from '../hooks/use-update-card-template'
 import type { CardTemplateListItem } from '../types'
 import {
   CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
   CARD_TEMPLATE_IMAGE_MAX_SIZE,
   CARD_TEMPLATE_NAME_MAX_WORDS,
-  updateCardTemplateSchema,
   type UpdateCardTemplateFormValues
 } from '../validations'
 
@@ -41,29 +38,10 @@ const UpdateCardTemplateDialog = ({
   onOpenChange: (open: boolean) => void
 }) => {
   const { t } = useTenantTranslation()
-  const { updateCardTemplate, isUpdatingCardTemplate } = useUpdateCardTemplate()
+  const { updateCardTemplate, isUpdatingCardTemplate, methods } = useUpdateCardTemplate(template, open)
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
-  const methods = useForm<UpdateCardTemplateFormValues>({
-    resolver: zodResolver(updateCardTemplateSchema(t)),
-    defaultValues: {
-      name: '',
-      description: '',
-      imageFile: null
-    }
-  })
-  const { reset } = methods
   const name = useWatch({ control: methods.control, name: 'name' })
   const description = useWatch({ control: methods.control, name: 'description' })
-
-  useEffect(() => {
-    if (!open || !template) return
-
-    reset({
-      name: template.name,
-      description: template.description ?? '',
-      imageFile: null
-    })
-  }, [open, reset, template])
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) methods.reset()
@@ -83,8 +61,8 @@ const UpdateCardTemplateDialog = ({
     updateCardTemplate(
       {
         id: template.id,
-        name: values.name.trim(),
-        description: values.description.trim() || null,
+        name: values.name,
+        description: values.description || null,
         ...(imageUrl ? { imageUrl } : {})
       },
       {
@@ -99,13 +77,13 @@ const UpdateCardTemplateDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-xl'>
+      <DialogContent position='top-center' className='sm:max-w-xl'>
         <DialogHeader>
           <DialogTitle>{t('cardTemplates.form.updateTitle')}</DialogTitle>
           <DialogDescription>{t('cardTemplates.form.updateDescription')}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-4' noValidate>
+        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-3' noValidate>
           <Controller
             name='name'
             control={methods.control}
