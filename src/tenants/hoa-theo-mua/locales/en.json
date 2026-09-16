@@ -788,6 +788,16 @@
       "onlyLeft": "Only {{count}} left",
       "viewOnWebsite": "View on website",
       "copyCode": "Copy code",
+      "description": {
+        "title": "Description",
+        "subtitle": "Product description information.",
+        "empty": "No description available.",
+        "edit": "Edit",
+        "editTitle": "Edit product description",
+        "placeholder": "Enter product description...",
+        "save": "Save description",
+        "updated": "Product description updated"
+      },
       "copied": "Copied",
       "share": "Copy link",
       "linkCopied": "Link copied to clipboard",
