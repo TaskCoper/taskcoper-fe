@@ -33,7 +33,7 @@ class CardTemplateService extends BaseService {
     return data.value
   }
 
-  updateCardTemplate = async (id: string, payload: UpdateCardTemplatePayload) => {
+  updateCardTemplate = async ({ id, ...payload }: UpdateCardTemplatePayload) => {
     const { data } = await this.put<BasePaginationResponse<CardTemplateListItem>>(`/v1/${this.baseUrl}/${id}`, payload)
     return data.value
   }

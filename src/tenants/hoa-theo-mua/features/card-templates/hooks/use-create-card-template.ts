@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 import { getErrorDescription } from '../../products/error-description'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
-import type { CreateCardTemplatePayload } from '../types'
 import { CardTemplateType } from '../types'
 import { createCardTemplateSchema, type CreateCardTemplateFormValues } from '../validations'
 
@@ -25,7 +24,7 @@ export const useCreateCardTemplate = () => {
     defaultValues: DEFAULT_VALUES
   })
   const { mutate: createCardTemplate, isPending: isCreatingCardTemplate } = useMutation({
-    mutationFn: (payload: CreateCardTemplatePayload) => cardTemplateService.addCardTemplate(payload),
+    mutationFn: cardTemplateService.addCardTemplate,
     onSuccess: () => {
       toast.success(t('cardTemplates.form.createSuccess'))
     },

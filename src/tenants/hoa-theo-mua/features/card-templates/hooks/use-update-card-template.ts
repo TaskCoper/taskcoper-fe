@@ -4,13 +4,12 @@ import { toast } from 'sonner'
 import { getErrorDescription } from '../../products/error-description'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
-import type { UpdateCardTemplatePayload } from '../types'
 
 export const useUpdateCardTemplate = () => {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
   const { mutate: updateCardTemplate, isPending: isUpdatingCardTemplate } = useMutation({
-    mutationFn: (payload: UpdateCardTemplatePayload) => cardTemplateService.updateCardTemplate(payload.id, payload),
+    mutationFn: cardTemplateService.updateCardTemplate,
     onSuccess: () => {
       toast.success(t('cardTemplates.form.updateSuccess'))
     },

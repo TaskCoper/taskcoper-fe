@@ -14,7 +14,7 @@ export const useDeleteCardTemplate = () => {
     isError: isDeleteCardTemplateError,
     reset: resetDeleteCardTemplate
   } = useMutation({
-    mutationFn: (id: string) => cardTemplateService.deleteCardTemplate(id),
+    mutationFn: cardTemplateService.deleteCardTemplate,
     onSuccess: () => {
       toast.success(t('cardTemplates.deleteAction.success'))
     },
