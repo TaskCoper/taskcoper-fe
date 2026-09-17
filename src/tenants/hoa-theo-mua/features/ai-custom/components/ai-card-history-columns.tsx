@@ -194,9 +194,7 @@ export const getAiCardHistoryColumns = ({
   {
     id: 'actions',
     meta: { label: 'aiCustom.history.column.actions' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label='aiCustom.history.column.actions' className='justify-end' />
-    ),
+    header: () => null,
     cell: ({ row }) => {
       const isDownloading = downloadingCardId === row.original.generatedCardId
 

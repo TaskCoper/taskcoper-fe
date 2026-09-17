@@ -20,7 +20,7 @@ const AiCardPreview = ({
       <div
         role='img'
         aria-label={alt}
-        className='flex h-16 w-24 items-center justify-center rounded-lg border bg-muted/40 text-muted-foreground'
+        className='flex h-12 w-20 items-center justify-center rounded-lg border bg-muted/40 text-muted-foreground'
       >
         <ImageOffIcon className='size-5' aria-hidden='true' />
       </div>
@@ -31,7 +31,7 @@ const AiCardPreview = ({
     <button
       type='button'
       onClick={onOpen}
-      className='group relative block h-16 w-24 overflow-hidden rounded-lg border bg-muted/40 outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+      className='group relative block h-12 w-20 overflow-hidden rounded-lg border bg-muted/40 outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
       aria-label={openLabel}
     >
       <img

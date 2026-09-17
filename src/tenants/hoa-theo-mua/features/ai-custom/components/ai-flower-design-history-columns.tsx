@@ -127,9 +127,7 @@ export const getAiFlowerDesignHistoryColumns = ({
   {
     id: 'actions',
     meta: { label: 'aiCustom.flowerHistory.column.actions' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.actions' className='justify-end' />
-    ),
+    header: () => null,
     cell: ({ row }) => (
       <div className='flex justify-end'>
         <DropdownMenu>
