@@ -30,6 +30,7 @@ import FileHandler from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
 import { Placeholder } from '@tiptap/extensions'
+import { Markdown } from '@tiptap/markdown'
 import {
   type Editor,
   EditorContent,
@@ -52,19 +53,28 @@ import { Card, CardBody } from './tiptap-ui-primitive/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from './tiptap-ui-primitive/dropdown-menu'
 import { Progress } from './ui/progress'
 
+type RichTextFormat = 'html' | 'markdown'
+
 interface RichTextEditorProps {
   isDisplay?: boolean
   isInitialFocus?: boolean
   compact?: boolean
   content: string
   placeholder?: I18nKey
-  onChange: (html: string) => void
+  /** The serialized editor value, in the requested output format. */
+  onChange: (value: string) => void
+  /**
+   * Format emitted by `onChange`. Content is accepted as either HTML or Markdown so
+   * existing HTML values can be migrated seamlessly after the next save.
+   */
+  outputFormat?: RichTextFormat
   onMentionIdsChange?: (mentionIds: string[]) => void
   invalid?: boolean
   error?: { message?: string }
   projectIdentifier?: string
   mentionedUsers?: MentionUser[]
   className?: string
+  displayError?: boolean
 }
 
 // Helper function to extract user IDs from Tiptap's JSON structure.
@@ -85,19 +95,23 @@ const extractMentionIds = (jsonNode: JSONContent): string[] => {
   return ids
 }
 
+const contentFormat = (content: string): RichTextFormat => (/<\/?[a-z][^>]*>/i.test(content) ? 'html' : 'markdown')
+
 export default function RichTextEditor({
   content,
   isDisplay = true,
   isInitialFocus = false,
   compact = false,
   onChange,
+  outputFormat = 'html',
   onMentionIdsChange,
   placeholder = 'richTextEditor.placeholder',
   invalid = false,
   error,
   projectIdentifier,
   mentionedUsers = [],
-  className
+  className,
+  displayError = true
 }: RichTextEditorProps) {
   const queryClient = useQueryClient()
   const { t, i18n } = useTenantTranslation()
@@ -107,6 +121,9 @@ export default function RichTextEditor({
 
   const finalContent = useMemo(() => {
     if (!mentionedUsers.length || !content) return content
+
+    // Mentions are represented as HTML nodes. Markdown content has no DOM nodes to refresh.
+    if (contentFormat(content) === 'markdown') return content
 
     let shouldUpdate = false
     const parser = new DOMParser()
@@ -231,6 +248,7 @@ export default function RichTextEditor({
   const extensions = useMemo(
     () => [
       StarterKit,
+      Markdown,
       Image,
       Mention.extend({
         parseHTML() {
@@ -379,15 +397,15 @@ export default function RichTextEditor({
         }
       },
       content: finalContent,
+      contentType: contentFormat(finalContent),
       onUpdate: ({ editor }) => {
-        // Extract the current HTML string
-        const currentHtml = editor.isEmpty || editor.getHTML() === '<p></p>' ? '' : editor.getHTML()
+        const currentValue = editor.isEmpty ? '' : outputFormat === 'markdown' ? editor.getMarkdown() : editor.getHTML()
 
         // Extract unique user IDs from the underlying JSON structure
         const mentionIds = extractMentionIds(editor.getJSON())
 
-        // Pass both back to the parent component
-        onChange(currentHtml)
+        // Pass the requested serialized value and mention IDs back to the parent component.
+        onChange(currentValue)
         onMentionIdsChange?.(mentionIds)
       },
       // Don't render immediately on the server to avoid SSR issues
@@ -405,8 +423,13 @@ export default function RichTextEditor({
   }, [isDisplay, isInitialFocus, editor])
 
   useEffect(() => {
-    if (editor && finalContent !== editor.getHTML()) {
-      editor.commands.setContent(finalContent)
+    if (!editor) return
+
+    const inputFormat = contentFormat(finalContent)
+    const currentValue = editor.isEmpty ? '' : inputFormat === 'markdown' ? editor.getMarkdown() : editor.getHTML()
+
+    if (finalContent !== currentValue) {
+      editor.commands.setContent(finalContent, { contentType: inputFormat })
     }
   }, [finalContent, editor])
 
@@ -584,7 +607,7 @@ export default function RichTextEditor({
           </div>
         </EditorContext.Provider>
 
-        <div className='min-h-4'>{<FieldError className='text-xs' errors={[error]} />}</div>
+        {displayError && <div className='min-h-4'>{<FieldError className='text-xs' errors={[error]} />}</div>}
       </div>
     )
   }
