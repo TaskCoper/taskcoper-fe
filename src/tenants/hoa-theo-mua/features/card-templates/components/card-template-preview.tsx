@@ -1,7 +1,7 @@
 import { ImageOffIcon } from 'lucide-react'
 import { useState } from 'react'
 
-const CardTemplatePreview = ({
+export default function CardTemplatePreview({
   src,
   alt,
   openLabel,
@@ -11,7 +11,7 @@ const CardTemplatePreview = ({
   alt: string
   openLabel: string
   onOpen: () => void
-}) => {
+}) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const hasError = Boolean(src && failedSrc === src)
 
@@ -44,5 +44,3 @@ const CardTemplatePreview = ({
     </button>
   )
 }
-
-export default CardTemplatePreview

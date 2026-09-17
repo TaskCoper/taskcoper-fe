@@ -15,31 +15,41 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { ImageIcon, UploadCloudIcon } from 'lucide-react'
-import { Controller, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useUpdateCardTemplate } from '../hooks/use-update-card-template'
 import type { CardTemplateListItem } from '../types'
 import {
   CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
   CARD_TEMPLATE_IMAGE_MAX_SIZE,
   CARD_TEMPLATE_NAME_MAX_WORDS,
+  updateCardTemplateSchema,
   type UpdateCardTemplateFormValues
 } from '../validations'
 
 const countWords = (value: string) => value.trim().split(/\s+/u).filter(Boolean).length
 
-const UpdateCardTemplateDialog = ({
+function UpdateCardTemplateDialogContent({
   template,
   open,
   onOpenChange
 }: {
-  template: CardTemplateListItem | null
+  template: CardTemplateListItem
   open: boolean
   onOpenChange: (open: boolean) => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
-  const { updateCardTemplate, isUpdatingCardTemplate, methods } = useUpdateCardTemplate(template, open)
+  const { updateCardTemplate, isUpdatingCardTemplate } = useUpdateCardTemplate()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
+  const methods = useForm<UpdateCardTemplateFormValues>({
+    resolver: zodResolver(updateCardTemplateSchema(t)),
+    defaultValues: {
+      name: template.name,
+      description: template.description ?? '',
+      imageFile: null
+    }
+  })
   const name = useWatch({ control: methods.control, name: 'name' })
   const description = useWatch({ control: methods.control, name: 'description' })
 
@@ -49,8 +59,6 @@ const UpdateCardTemplateDialog = ({
   }
 
   const handleSubmit = async (values: UpdateCardTemplateFormValues) => {
-    if (!template) return
-
     let imageUrl: string | undefined
     if (values.imageFile) {
       const uploadedImageUrl = await uploadFileWithToast({ file: values.imageFile, showSuccessToast: false })
@@ -61,8 +69,8 @@ const UpdateCardTemplateDialog = ({
     updateCardTemplate(
       {
         id: template.id,
-        name: values.name,
-        description: values.description || null,
+        name: values.name.trim(),
+        description: values.description.trim() || null,
         ...(imageUrl ? { imageUrl } : {})
       },
       {
@@ -72,8 +80,6 @@ const UpdateCardTemplateDialog = ({
   }
 
   const isSubmitting = isUploading || isUpdatingCardTemplate
-
-  if (!template) return null
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -207,4 +213,16 @@ const UpdateCardTemplateDialog = ({
   )
 }
 
-export default UpdateCardTemplateDialog
+export default function UpdateCardTemplateDialog({
+  template,
+  open,
+  onOpenChange
+}: {
+  template: CardTemplateListItem | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  if (!template) return null
+
+  return <UpdateCardTemplateDialogContent template={template} open={open} onOpenChange={onOpenChange} />
+}

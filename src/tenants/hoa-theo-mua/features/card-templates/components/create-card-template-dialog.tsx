@@ -27,7 +27,7 @@ import {
   type CreateCardTemplateFormValues
 } from '../validations'
 
-const CreateCardTemplateDialog = ({
+export default function CreateCardTemplateDialog({
   open,
   onOpenChange,
   onCreated
@@ -35,7 +35,7 @@ const CreateCardTemplateDialog = ({
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreated: () => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
   const { createCardTemplate, isCreatingCardTemplate, methods } = useCreateCardTemplate()
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
@@ -76,7 +76,7 @@ const CreateCardTemplateDialog = ({
           <DialogDescription>{t('cardTemplates.form.description')}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-3' noValidate>
+        <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-1' noValidate>
           <Controller
             name='name'
             control={methods.control}
@@ -238,5 +238,3 @@ const CreateCardTemplateDialog = ({
     </Dialog>
   )
 }
-
-export default CreateCardTemplateDialog
