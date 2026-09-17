@@ -2196,6 +2196,42 @@
         "maxWordsInvalid": "Max words must be an integer greater than 0.",
         "ambiguous": "Another config already uses the card_config.sizes key."
       }
+    },
+    "postgenPalette": {
+      "create": "Create",
+      "otherTitle": "Other configs in this group",
+      "enabled": {
+        "label": "Enable post generation"
+      },
+      "systemPrompts": {
+        "activeOn": "Enabled",
+        "activeOff": "Disabled",
+        "statusField": "Status",
+        "empty": "No platform yet."
+      },
+      "platforms": {
+        "zalo": {
+          "label": "Zalo"
+        },
+        "instagram": {
+          "label": "Instagram"
+        },
+        "facebook": {
+          "label": "Facebook"
+        }
+      },
+      "imageInstruction": {
+        "title": "Image instruction",
+        "subtitle": "Shared by every platform."
+      },
+      "docs": {
+        "imageInstruction": {
+          "label": "Image instruction"
+        }
+      }
+    },
+    "postgenDialog": {
+      "contentPlaceholder": "Write the instructions for the AI ..."
     }
   },
   "productCategories": {
