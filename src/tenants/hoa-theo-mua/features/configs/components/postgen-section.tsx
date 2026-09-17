@@ -120,7 +120,7 @@ export default function PostgenSection({ configs, onEditConfig }: PostgenSection
 
       <PostgenSystemPrompts configs={configs} />
 
-      <div className='space-y-2'>
+      <div className='space-y-2 px-0.5'>
         <div className='-space-y-0.5'>
           <p className='font-semibold'>{t('configsPage.postgenPalette.imageInstruction.title')}</p>
           <p className='text-sm text-muted-foreground'>{t('configsPage.postgenPalette.imageInstruction.subtitle')}</p>
