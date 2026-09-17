@@ -1,7 +1,13 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useLayoutEffect, useRef, useState } from 'react'
 
-const FloralMockupDescription = ({ description, emptyLabel }: { description: string | null; emptyLabel: string }) => {
+export default function FloralMockupDescription({
+  description,
+  emptyLabel
+}: {
+  description: string | null
+  emptyLabel: string
+}) {
   const descriptionRef = useRef<HTMLParagraphElement>(null)
   const [isTruncated, setIsTruncated] = useState(false)
   const normalizedDescription = description?.trim()
@@ -46,5 +52,3 @@ const FloralMockupDescription = ({ description, emptyLabel }: { description: str
     </Tooltip>
   )
 }
-
-export default FloralMockupDescription

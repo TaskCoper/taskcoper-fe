@@ -14,7 +14,7 @@ import type { MouseEvent } from 'react'
 import { useChangeFloralMockupStatus } from '../hooks/use-change-floral-mockup-status'
 import type { FloralMockupListItem } from '../types'
 
-const ChangeFloralMockupStatusDialog = ({
+export default function ChangeFloralMockupStatusDialog({
   mockup,
   open,
   onOpenChange
@@ -22,7 +22,7 @@ const ChangeFloralMockupStatusDialog = ({
   mockup: FloralMockupListItem | null
   open: boolean
   onOpenChange: (open: boolean) => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
   const { changeFloralMockupStatus, isChangingFloralMockupStatus } = useChangeFloralMockupStatus()
   const targetStatus = mockup ? !mockup.isActive : false
@@ -62,5 +62,3 @@ const ChangeFloralMockupStatusDialog = ({
     </AlertDialog>
   )
 }
-
-export default ChangeFloralMockupStatusDialog

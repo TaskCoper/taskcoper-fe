@@ -6,7 +6,7 @@ import { ImageOffIcon, ZoomInIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { FloralMockupListItem } from '../types'
 
-const FloralMockupDetailDialog = ({
+export default function FloralMockupDetailDialog({
   mockup,
   open,
   onOpenChange,
@@ -16,7 +16,7 @@ const FloralMockupDetailDialog = ({
   open: boolean
   onOpenChange: (open: boolean) => void
   onPreview: (mockup: FloralMockupListItem) => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const hasImageError = Boolean(mockup?.imageUrl && failedSrc === mockup.imageUrl)
@@ -79,5 +79,3 @@ const FloralMockupDetailDialog = ({
     </Dialog>
   )
 }
-
-export default FloralMockupDetailDialog

@@ -5,39 +5,70 @@ import { Spinner } from '@/components/ui/spinner'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { AlertCircleIcon, PlusIcon, RotateCcwIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
-import ChangeFloralMockupStatusDialog from '../features/floral-mockups/components/change-floral-mockup-status-dialog'
 import CreateFloralMockupDialog from '../features/floral-mockups/components/create-floral-mockup-dialog'
-import DeleteFloralMockupDialog from '../features/floral-mockups/components/delete-floral-mockup-dialog'
 import { getFloralMockupColumns } from '../features/floral-mockups/components/floral-mockup-columns'
 import FloralMockupDetailDialog from '../features/floral-mockups/components/floral-mockup-detail-dialog'
+import { useChangeFloralMockupStatus } from '../features/floral-mockups/hooks/use-change-floral-mockup-status'
+import { useDeleteFloralMockup } from '../features/floral-mockups/hooks/use-delete-floral-mockup'
 import { useGetFloralMockups } from '../features/floral-mockups/hooks/use-get-floral-mockups'
 import { FlowerReferenceType, type FloralMockupListItem } from '../features/floral-mockups/types'
 
 const FILTER_PREFIX = 'floralMockups'
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
 
 export default function FlowerMockupsPage() {
   const { t } = useTenantTranslation()
+  const { confirm } = useConfirmStore()
+  const { changeFloralMockupStatus } = useChangeFloralMockupStatus()
+  const { deleteFloralMockup } = useDeleteFloralMockup()
   const [previewMockup, setPreviewMockup] = useState<FloralMockupListItem | null>(null)
   const [detailMockup, setDetailMockup] = useState<FloralMockupListItem | null>(null)
-  const [statusMockup, setStatusMockup] = useState<FloralMockupListItem | null>(null)
-  const [deletingMockup, setDeletingMockup] = useState<FloralMockupListItem | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+
+  const handleToggleStatus = useCallback(
+    async (mockup: FloralMockupListItem) => {
+      const isActive = !mockup.isActive
+      const action = isActive ? 'activate' : 'deactivate'
+      const confirmed = await confirm({
+        title: t(`floralMockups.statusAction.${action}Title`),
+        description: t(`floralMockups.statusAction.${action}Description`, { name: mockup.name }),
+        confirmText: t(`floralMockups.statusAction.${action}Confirm`)
+      })
+
+      if (confirmed) changeFloralMockupStatus({ id: mockup.id, isActive })
+    },
+    [changeFloralMockupStatus, confirm, t]
+  )
+
+  const handleDelete = useCallback(
+    async (mockup: FloralMockupListItem) => {
+      const confirmed = await confirm({
+        title: t('floralMockups.deleteAction.title'),
+        description: t('floralMockups.deleteAction.description', { name: mockup.name }),
+        confirmText: t('floralMockups.deleteAction.confirm'),
+        variant: 'destructive'
+      })
+
+      if (confirmed) deleteFloralMockup({ id: mockup.id })
+    },
+    [confirm, deleteFloralMockup, t]
+  )
+
   const columns = useMemo(
     () =>
       getFloralMockupColumns({
         t,
         onPreview: setPreviewMockup,
         onViewDetail: setDetailMockup,
-        onToggleStatus: setStatusMockup,
-        onDelete: setDeletingMockup
+        onToggleStatus: handleToggleStatus,
+        onDelete: handleDelete
       }),
-    [t]
+    [handleDelete, handleToggleStatus, t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX, limit: 10 })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_name`, parseAsString)
@@ -106,7 +137,7 @@ export default function FlowerMockupsPage() {
             </Button>
           </div>
         ) : (
-          <DataTable table={table} isLoading={isGettingFloralMockups} pageSizeOptions={PAGE_SIZE_OPTIONS}>
+          <DataTable table={table} isLoading={isGettingFloralMockups}>
             <DataTableToolbar table={table}>
               <Button size='sm' onClick={() => setIsCreateDialogOpen(true)}>
                 <PlusIcon />
@@ -140,29 +171,10 @@ export default function FlowerMockupsPage() {
         }}
         onPreview={setPreviewMockup}
       />
-      <ChangeFloralMockupStatusDialog
-        mockup={statusMockup}
-        open={Boolean(statusMockup)}
-        onOpenChange={(open) => {
-          if (!open) setStatusMockup(null)
-        }}
-      />
       <CreateFloralMockupDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         onCreated={() => table.setPageIndex(0)}
-      />
-      <DeleteFloralMockupDialog
-        mockup={deletingMockup}
-        open={Boolean(deletingMockup)}
-        onOpenChange={(open) => {
-          if (!open) setDeletingMockup(null)
-        }}
-        onDeleted={() => {
-          if (table.getRowModel().rows.length === 1 && table.getState().pagination.pageIndex > 0) {
-            table.previousPage()
-          }
-        }}
       />
     </div>
   )

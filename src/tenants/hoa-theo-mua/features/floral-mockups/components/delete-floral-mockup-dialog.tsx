@@ -15,7 +15,7 @@ import type { MouseEvent } from 'react'
 import { useDeleteFloralMockup } from '../hooks/use-delete-floral-mockup'
 import type { FloralMockupListItem } from '../types'
 
-const DeleteFloralMockupDialog = ({
+export default function DeleteFloralMockupDialog({
   mockup,
   open,
   onOpenChange,
@@ -25,7 +25,7 @@ const DeleteFloralMockupDialog = ({
   open: boolean
   onOpenChange: (open: boolean) => void
   onDeleted?: () => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
   const { deleteFloralMockup, isDeletingFloralMockup, isDeleteFloralMockupError, resetDeleteFloralMockup } =
     useDeleteFloralMockup()
@@ -89,5 +89,3 @@ const DeleteFloralMockupDialog = ({
     </AlertDialog>
   )
 }
-
-export default DeleteFloralMockupDialog

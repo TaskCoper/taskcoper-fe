@@ -142,7 +142,7 @@
       "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
       "dropzoneActive": "Thả ảnh để tải lên",
       "removeImage": "Xóa ảnh đã chọn",
-      "activeHint": "Template mới sẽ được tạo với trạng thái Hoạt động.",
+      "activeHint": "Template mới sẽ được tạo với trạng thái Dừng hoạt động.",
       "submit": "Thêm",
       "createSuccess": "Thêm Template thành công.",
       "createFailed": "Không thể thêm Template. Vui lòng thử lại.",

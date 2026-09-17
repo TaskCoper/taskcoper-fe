@@ -142,7 +142,7 @@
       "dropzoneTitle": "Drag an image here or click to browse",
       "dropzoneActive": "Drop the image to upload",
       "removeImage": "Remove selected image",
-      "activeHint": "New Templates are created with Active status.",
+      "activeHint": "New templates are created with Inactive status.",
       "submit": "Add",
       "createSuccess": "Template added successfully.",
       "createFailed": "Could not add the Template. Please try again.",

@@ -41,7 +41,7 @@ export interface CreateFloralMockupPayload {
   description: string | null
   imageUrl: string
   type: FlowerReferenceType
-  isActive: true
+  isActive: boolean
 }
 
 export type FloralMockupsPage = BasePaginationResponse<FloralMockupListItem>['value']

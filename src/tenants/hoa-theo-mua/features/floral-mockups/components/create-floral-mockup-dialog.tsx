@@ -17,7 +17,7 @@ import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle2Icon, ImageIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
+import { ImageIcon, InfoIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
 import { useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useCreateFloralMockup } from '../hooks/use-create-floral-mockup'
@@ -36,7 +36,7 @@ const defaultValues: CreateFloralMockupFormValues = {
   type: FlowerReferenceType.Flower
 }
 
-const CreateFloralMockupDialog = ({
+export default function CreateFloralMockupDialog({
   open,
   onOpenChange,
   onCreated
@@ -44,7 +44,7 @@ const CreateFloralMockupDialog = ({
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreated?: () => void
-}) => {
+}) {
   const { t } = useTenantTranslation()
   const schema = useMemo(() => createFloralMockupSchema(t), [t])
   const { createFloralMockup, isCreatingFloralMockup } = useCreateFloralMockup()
@@ -75,7 +75,7 @@ const CreateFloralMockupDialog = ({
         description: values.description || null,
         imageUrl,
         type: values.type,
-        isActive: true
+        isActive: false
       })
       reset(defaultValues)
       onCreated?.()
@@ -244,8 +244,8 @@ const CreateFloralMockupDialog = ({
             )}
           />
 
-          <div className='flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'>
-            <CheckCircle2Icon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
+          <div className='flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50/70 p-3 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-400'>
+            <InfoIcon className='mt-0.5 size-4 shrink-0' aria-hidden='true' />
             <p className='text-sm'>{t('floralMockups.form.activeHint')}</p>
           </div>
 
@@ -263,5 +263,3 @@ const CreateFloralMockupDialog = ({
     </Dialog>
   )
 }
-
-export default CreateFloralMockupDialog
