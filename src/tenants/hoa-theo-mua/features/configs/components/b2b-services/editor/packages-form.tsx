@@ -1,7 +1,8 @@
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { defaultPackageItem, type OverviewPackages, type PackageItem } from '../../../b2b-overview-palette'
+import { defaultPackageItem } from '../../../b2b-overview-palette'
+import { type OverviewPackages, type PackageItem } from '../../../types'
 import {
   AddRowButton,
   IconPickerField,

@@ -1,17 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
+import { configKeys } from '../query-keys'
 import configService from '../services'
-import type { GetConfigsParams } from '../types'
+import { ConfigKind, type GetConfigsParams } from '../types'
 
 interface GetSettingConfigsProps extends GetConfigsParams {
   enabled?: boolean
 }
 
-export const useGetSettingConfigs = ({ groupName, key, enabled = true }: GetSettingConfigsProps) => {
-  const { data: settingConfigs, isLoading: isGettingSettingConfigs } = useQuery({
-    queryKey: ['configs', 'setting', groupName, key],
+export const useGetSettingConfigs = ({ groupName, key, enabled = true }: GetSettingConfigsProps = {}) => {
+  const query = useQuery({
+    queryKey: configKeys.list(ConfigKind.setting, { groupName, key }),
     queryFn: () => configService.getSettingConfigs({ groupName, key }),
-    enabled
+    enabled,
+    throwOnError: false
   })
 
-  return { settingConfigs, isGettingSettingConfigs }
+  return {
+    settingConfigs: query.data,
+    isGettingSettingConfigs: query.isLoading,
+    isSettingConfigsError: query.isError,
+    settingConfigsError: query.error,
+    refetchSettingConfigs: query.refetch
+  }
 }

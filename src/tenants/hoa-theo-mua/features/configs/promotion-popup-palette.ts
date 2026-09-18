@@ -1,4 +1,11 @@
-import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
+import { emptyLocalizedText, parseLocalizedText, safeJsonParse } from './palette-shared'
+import {
+  POPUP_FREQUENCIES,
+  type PromotionCampaign,
+  type PromotionPopupCollection,
+  type PromotionPopupFrequency,
+  type PromotionPopupSection
+} from './types'
 
 export const PROMOTION_POPUP_GROUP = 'promotions'
 // Singleton: one popup slot; campaigns are items inside it.
@@ -7,11 +14,6 @@ export const PROMOTION_POPUP_KEY = `${PROMOTION_POPUP_GROUP}.popup`
 export const isPromotionPopupKey = (key: string | null | undefined): boolean => key === PROMOTION_POPUP_KEY
 
 export const MAX_VISIBLE_CAMPAIGNS = 5
-
-// How often a returning visitor sees the same campaigns; `every-load` is for previews only.
-export const POPUP_FREQUENCIES = ['once-per-session', 'every-load'] as const
-
-export type PromotionPopupFrequency = (typeof POPUP_FREQUENCIES)[number]
 
 export const DEFAULT_POPUP_FREQUENCY: PromotionPopupFrequency = 'once-per-session'
 
@@ -35,31 +37,6 @@ export const ALLOWED_IMAGE_HOSTS: readonly string[] = [
 ]
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
-
-// Dates are `YYYY-MM-DD` compared lexicographically. `''` = no bound; `endDate` is inclusive.
-export interface PromotionCampaign {
-  id: string
-  image: string
-  href: string
-  openInNewTab: boolean
-  alt: LocalizedText
-  startDate: string
-  endDate: string
-  enabled: boolean
-  // [] inherits section.pages; a non-empty list replaces it.
-  pages: string[]
-}
-
-export interface PromotionPopupSection {
-  enabled: boolean
-  frequency: PromotionPopupFrequency
-  pages: string[]
-}
-
-export interface PromotionPopupCollection {
-  section: PromotionPopupSection
-  items: PromotionCampaign[]
-}
 
 const genId = (): string => `pp_${Math.random().toString(36).slice(2, 8)}`
 

@@ -15,23 +15,14 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, ImageIcon, Plus, Trash2, UploadIcon
 import type { ReactNode } from 'react'
 import { useRef } from 'react'
 import { toast } from 'sonner'
-import {
-  defaultFaqItem,
-  defaultRichItem,
-  defaultStatItem,
-  type FaqItem,
-  type RichItem,
-  type StatItem
-} from '../../b2b-service-detail-palette'
-import type { LocalizedText } from '../../palette-shared'
+import { defaultFaqItem, defaultRichItem, defaultStatItem } from '../../b2b-service-detail-palette'
 import { emptyLocalizedText } from '../../palette-shared'
-import { LocalizedTabs } from '../collection-shared'
+import { type FaqItem, type LocalizedText, type RichItem, type ServiceStatItem } from '../../types'
+import { LocalizedTabs } from '../shared/collection-shared'
 import { ICON_REGISTRY } from './preview/preview-shared'
 
 type Lang = 'vi' | 'en'
 
-// When `locale` is passed, renders a single field for that locale only; when omitted,
-// falls back to per-field vi/en tabs.
 export function LocalizedField({
   label,
   value,
@@ -481,8 +472,8 @@ export function StatsListEditor({
   onChange,
   locale
 }: {
-  items: StatItem[]
-  onChange: (next: StatItem[]) => void
+  items: ServiceStatItem[]
+  onChange: (next: ServiceStatItem[]) => void
   locale?: Lang
 }) {
   const { t } = useTenantTranslation()

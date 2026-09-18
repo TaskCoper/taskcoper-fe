@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { B2BOverview } from '../../../b2b-overview-palette'
+import { type B2BOverview } from '../../../types'
 import { AdvantagesPreview } from './advantages-preview'
 import { CaseStudyPreview } from './case-study-preview'
 import { CtaPreview } from './cta-preview'

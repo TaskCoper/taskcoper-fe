@@ -2,7 +2,7 @@ import { ImageWithViewport } from '@/components/image-with-viewport'
 /* eslint-disable react-refresh/only-export-components */
 import { cn } from '@/shared/utils'
 import type { ReactNode } from 'react'
-import type { LocalizedText } from '../../../palette-shared'
+import { type LocalizedText } from '../../../types'
 import { pick, type PreviewLocale } from '../preview/preview-shared'
 
 export { pick }

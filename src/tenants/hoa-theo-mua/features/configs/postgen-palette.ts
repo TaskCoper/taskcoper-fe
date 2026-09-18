@@ -1,6 +1,6 @@
 import { getPlainTextFromHtml } from '@/shared/utils'
-import { safeJsonParse } from './palette-shared'
-import { ConfigKind, InputType, type Config } from './types'
+import { normalizeGroup, safeJsonParse } from './palette-shared'
+import { ConfigKind, InputType, type Config, type PostgenPlatform, type PostgenPlatformMeta } from './types'
 import type { CreateConfigFormValues } from './validations'
 
 export const POSTGEN_GROUP = 'postgen'
@@ -39,29 +39,16 @@ export const isPostgenSystemPromptKey = (key: string | null | undefined): boolea
   !!key && postgenPlatformSlug(key) !== ''
 
 // BE derives the group from the key prefix, but rows seeded by hand can carry a different
-// casing; match on either so the tab stays whole.
+// casing; match on either so the tab stays whole. `normalizeGroup` also keeps a row with a
+// missing `value.group` from throwing - it just falls through to the key check.
 export const matchesPostgenConfig = (config: Config): boolean =>
-  config.value.group.toLowerCase() === POSTGEN_GROUP || config.key.startsWith(`${POSTGEN_GROUP}.`)
+  normalizeGroup(config.value?.group) === POSTGEN_GROUP || config.key.startsWith(`${POSTGEN_GROUP}.`)
 
 /** Prompts are stored as the editor's raw HTML string; anything else is treated as empty. */
 export const parsePostgenHtml = (raw: unknown): string => (typeof raw === 'string' ? raw : '')
 
 // TipTap leaves `<p></p>` behind once every character is deleted, so "has text" is the real check.
 export const isBlankPostgenHtml = (html: string): boolean => getPlainTextFromHtml(html).trim().length === 0
-
-/** Per-platform metadata that isn't the prompt itself. */
-export interface PostgenPlatformMeta {
-  logo: string
-  isActive: boolean
-}
-
-export interface PostgenPlatform extends PostgenPlatformMeta {
-  slug: string
-  key: string
-  label: string
-  html: string
-  config: Config | null
-}
 
 export const defaultPostgenPlatformMeta = (): PostgenPlatformMeta => ({ logo: '', isActive: true })
 

@@ -1,7 +1,4 @@
-// Seed / quick-fill content for the B2B overview page (`b2bServices.overview`).
-// Transcribed verbatim from docs/b2b-cms-migration.md §A (A.3–A.8). Admins can edit
-// this copy in the CMS; ids/slugs/icons/image src stay code-owned.
-import type { B2BOverview } from '../../b2b-overview-palette'
+import { type B2BOverview } from '../../types'
 
 export const B2B_OVERVIEW_PRESET: B2BOverview = {
   hero: {

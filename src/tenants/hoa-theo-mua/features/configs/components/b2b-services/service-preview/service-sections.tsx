@@ -2,7 +2,7 @@
 import { cn } from '@/shared/utils'
 import { Building2, Calendar, CheckCircle2, Quote } from 'lucide-react'
 import type { ReactNode } from 'react'
-import type { B2BServiceDetail } from '../../../b2b-service-detail-palette'
+import { type B2BServiceDetail } from '../../../types'
 import {
   gridCols,
   petalCard,

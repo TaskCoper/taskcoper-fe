@@ -1,12 +1,7 @@
-import { B2B_IMAGE_ASPECT } from '../b2b-image-aspects'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import {
-  defaultLogoItem,
-  type LogoGroup,
-  type LogoItem,
-  type OverviewTrustBar,
-  type StatItem
-} from '../../../b2b-overview-palette'
+import { defaultLogoItem } from '../../../b2b-overview-palette'
+import { type LogoGroup, type LogoItem, type OverviewStatItem, type OverviewTrustBar } from '../../../types'
+import { B2B_IMAGE_ASPECT } from '../b2b-image-aspects'
 import { AddRowButton, ImageUploadField, ListRow, LocalizedField, useListOps } from '../b2b-section-editors'
 import type { PreviewLocale } from '../preview/preview-shared'
 import { Accordion, ItemRow, previewLabel, SectionCard, updateInList } from './editor-shared'
@@ -97,7 +92,7 @@ export function TrustBarForm({
 
       <div className='text-xs font-medium text-muted-foreground'>{t('configsPage.b2bOverviewDialog.field.stats')}</div>
       <Accordion type='multiple' className='space-y-2'>
-        {value.stats.map((stat: StatItem, index) => (
+        {value.stats.map((stat: OverviewStatItem, index) => (
           <ItemRow key={stat.id} index={index} label={previewLabel(stat.label, stat.id)}>
             <LocalizedField
               label={t('configsPage.b2bOverviewDialog.field.statValue')}

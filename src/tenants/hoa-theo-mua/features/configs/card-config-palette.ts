@@ -1,22 +1,9 @@
 import { safeJsonParse } from './palette-shared'
+import type { CalligraphyRule, CardSize } from './types'
 
 export const CARD_CONFIG_GROUP = 'card_config'
 export const CARD_SIZES_KEY = `${CARD_CONFIG_GROUP}.sizes`
 export const CARD_PRICES_KEY = `${CARD_CONFIG_GROUP}.prices`
-
-export interface CardSize {
-  name: string
-  width: number
-  height: number
-  base_price: number
-  max_words: number
-}
-
-export interface CalligraphyRule {
-  min_words: number
-  max_words: number
-  extra_price: number
-}
 
 export const isCardSizesKey = (key: string | null | undefined): boolean => key === CARD_SIZES_KEY
 export const isCardPricesKey = (key: string | null | undefined): boolean => key === CARD_PRICES_KEY

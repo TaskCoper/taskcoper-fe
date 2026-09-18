@@ -5,14 +5,16 @@ import {
   parseCollectionCard,
   parseCollectionSection,
   parseLocalizedText,
-  safeJsonParse,
-  type CollectionCard,
-  type CollectionSection,
-  type LocalizedText
+  safeJsonParse
 } from './palette-shared'
-import { ConfigKind, InputType, type Config } from './types'
-
-export { emptyLocalizedText, slugify, type LocalizedText } from './palette-shared'
+import {
+  ConfigKind,
+  InputType,
+  type Config,
+  type ProductCollection,
+  type ProductCollectionCampaign,
+  type ProductCollectionCard
+} from './types'
 
 /**
  * Storefront collection cards are portrait, not square. 4:5 is the best fit across the two renderers
@@ -31,37 +33,15 @@ const PRODUCT_NON_COLLECTION_KEYS = new Set([`${PRODUCT_COLLECTION_KEY_PREFIX}si
 // A product-group config is a "collection" when it stores json content. That filters
 // out any future non-collection products.* configs (e.g. products.priceCap as text).
 export const matchesProductCollectionConfig = (config: Config): boolean =>
-  config.value.group === PRODUCT_COLLECTION_GROUP &&
+  config.value?.group === PRODUCT_COLLECTION_GROUP &&
   config.kind === ConfigKind.content &&
-  config.value.inputType === InputType.json &&
+  config.value?.inputType === InputType.json &&
   config.key.startsWith(PRODUCT_COLLECTION_KEY_PREFIX) &&
   config.key.length > PRODUCT_COLLECTION_KEY_PREFIX.length &&
   !PRODUCT_NON_COLLECTION_KEYS.has(config.key)
 
 export const productCollectionKeySuffix = (key: string): string =>
   key.startsWith(PRODUCT_COLLECTION_KEY_PREFIX) ? key.slice(PRODUCT_COLLECTION_KEY_PREFIX.length) : key
-
-export interface ProductCollectionCampaign {
-  id: string
-  campaignName: LocalizedText
-  skuPrefix: string
-  startDate: string
-  endDate: string
-  categoryIds: string[]
-  badge: LocalizedText
-  enabled: boolean
-}
-
-export interface ProductCollectionCard extends CollectionCard {
-  // Always present so toggling hasCampaigns off/on in the editor preserves data.
-  campaigns: ProductCollectionCampaign[]
-}
-
-export interface ProductCollection {
-  section: CollectionSection
-  hasCampaigns: boolean
-  cards: ProductCollectionCard[]
-}
 
 export const defaultProductCollectionCampaign = (): ProductCollectionCampaign => ({
   id: '',

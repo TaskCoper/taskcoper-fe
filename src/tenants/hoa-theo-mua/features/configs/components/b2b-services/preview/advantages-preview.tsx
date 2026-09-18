@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewAdvantages } from '../../../b2b-overview-palette'
+import { type OverviewAdvantages } from '../../../types'
 import { pick, resolveIcon, type PreviewLocale } from './preview-shared'
 
 export const AdvantagesPreview = memo(function AdvantagesPreview({

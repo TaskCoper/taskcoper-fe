@@ -1,8 +1,7 @@
 import { ImageWithViewport } from '@/components/image-with-viewport'
 import { cn } from '@/shared/utils'
 import { ArrowRight, ChevronRight, Mail, Phone } from 'lucide-react'
-import type { B2BServiceDetail } from '../../../b2b-service-detail-palette'
-import type { LocalizedText } from '../../../palette-shared'
+import { type B2BServiceDetail, type LocalizedText } from '../../../types'
 import { PreviewButton, type PreviewContact } from '../preview/preview-shared'
 import {
   CHROME_TEXT,

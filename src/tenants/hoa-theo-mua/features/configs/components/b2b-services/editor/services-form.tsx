@@ -1,5 +1,5 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import type { OverviewServices } from '../../../b2b-overview-palette'
+import { type OverviewServices } from '../../../types'
 import { LocalizedField } from '../b2b-section-editors'
 import type { PreviewLocale } from '../preview/preview-shared'
 import { SectionCard } from './editor-shared'

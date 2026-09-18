@@ -1,7 +1,6 @@
 import { cn } from '@/shared/utils'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { OverviewCta } from '../../../b2b-overview-palette'
-import type { B2BServiceDetail } from '../../../b2b-service-detail-palette'
+import { type B2BServiceDetail, type OverviewCta } from '../../../types'
 import { B2BPreviewFrame } from '../preview/b2b-preview-frame'
 import { CtaPreview } from '../preview/cta-preview'
 import type { PreviewContact } from '../preview/preview-shared'
@@ -11,8 +10,8 @@ import {
   ServiceSidebarPreview,
   type ServiceSibling
 } from './service-chrome'
-import { getServiceSectionKeys, renderServiceSection } from './service-sections'
 import type { PreviewLocale, SectionKey } from './service-preview-shared'
+import { getServiceSectionKeys, renderServiceSection } from './service-sections'
 
 const DESIGN_WIDTH = 1280
 const PEEK = 40

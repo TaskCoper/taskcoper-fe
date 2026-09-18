@@ -1,46 +1,16 @@
-import { parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
+import { parseLocalizedText, safeJsonParse } from './palette-shared'
+import {
+  PaymentGateway,
+  ShippingGateway,
+  type CheckoutMethodDefinition,
+  type CheckoutMethodItem,
+  type CheckoutMethodKind,
+  type CheckoutMethodsCollection
+} from './types'
 
 export const CHECKOUT_CONFIG_GROUP = 'checkout'
 export const CHECKOUT_PAYMENT_METHODS_KEY = 'checkout.payment_methods'
 export const CHECKOUT_DELIVERY_METHODS_KEY = 'checkout.delivery_methods'
-
-export type CheckoutMethodKind = 'payment' | 'delivery'
-
-export const PaymentGateway = {
-  BaoKim: 1,
-  Sepay: 2
-} as const
-
-export const ShippingGateway = {
-  Ahamove: 1,
-  XanhSm: 2
-} as const
-
-export type PaymentGatewayValue = (typeof PaymentGateway)[keyof typeof PaymentGateway]
-export type ShippingGatewayValue = (typeof ShippingGateway)[keyof typeof ShippingGateway]
-export type CheckoutGatewayValue = PaymentGatewayValue | ShippingGatewayValue
-
-export interface CheckoutMethodItem {
-  id: string
-  enabled: boolean
-  isDefault: boolean
-  label: LocalizedText
-  description: LocalizedText
-  gateway: CheckoutGatewayValue
-  gatewayName: string
-}
-
-export interface CheckoutMethodsCollection {
-  items: CheckoutMethodItem[]
-}
-
-interface CheckoutMethodDefinition {
-  id: string
-  label: LocalizedText
-  description: LocalizedText
-  gateway: CheckoutGatewayValue
-  gatewayName: string
-}
 
 export const PAYMENT_METHOD_REGISTRY: readonly CheckoutMethodDefinition[] = [
   {

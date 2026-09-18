@@ -1,8 +1,16 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
-import { FEEDBACK_SOURCES, MAX_FEATURED_FEEDBACKS } from './feedbacks-palette'
-import { isSafeHref, isValidPagePattern, pickerValueToYmd, POPUP_FREQUENCIES } from './promotion-popup-palette'
-import { ConfigKind, InputType, type ConfigDefinition, type ValidationRule } from './types'
+import { MAX_FEATURED_FEEDBACKS } from './feedbacks-palette'
+import { isSafeHref, isValidPagePattern, pickerValueToYmd } from './promotion-popup-palette'
+import {
+  ConfigKind,
+  FEEDBACK_SOURCES,
+  InputType,
+  POPUP_FREQUENCIES,
+  type ConfigDefinition,
+  type ValidationRule
+} from './types'
+import { canCreateWithRegistry, isSuffixTaken, type SuffixRegistry } from './uniqueness'
 
 const KEY_REGEX_STRICT = /^[a-z][a-z0-9]*(_[a-z0-9]+)*(\.[a-z][a-z0-9]*(_[a-z0-9]+)*)+$/
 const SLUG_REGEX = /^[a-z0-9][a-z0-9-]*$/
@@ -125,14 +133,12 @@ export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
       break
 
     case 'select': {
-      // options are the source of truth: value must match one of option.value
       const values = (def.options ?? []).map((o) => o.value)
       base = literalUnion(values)
       break
     }
 
     case 'multiSelect': {
-      // value is an array; each element must match one of option.value
       const values = (def.options ?? []).map((o) => o.value)
       let arr = z.array(literalUnion(values))
       if (def.required) arr = arr.min(1, 'Bắt buộc chọn ít nhất 1 giá trị')
@@ -156,7 +162,6 @@ export const buildValueValidator = (def: ConfigDefinition): z.ZodTypeAny => {
     case 'textarea':
     default: {
       let s = applyStringRules(z.string(), def.validations)
-      // required string without explicit minLength → force non-empty
       if (def.required && !def.validations.some((r) => 'minLength' in r)) {
         s = s.min(1, 'Bắt buộc nhập')
       }
@@ -177,7 +182,6 @@ export const validateConfigValue = (
     : { ok: false, errors: result.error.issues.map((i) => i.message) }
 }
 
-// key must follow `group.sub_key` format and value.group must equal the key prefix
 export const configExportSchema = z
   .object({
     key: z.string().max(200).regex(KEY_REGEX_STRICT, 'Key sai format group.sub_key'),
@@ -269,7 +273,8 @@ const productCollectionCardFormSchema = z.object({
 })
 
 export interface ProductCollectionSchemaOpts {
-  takenSuffixes: Set<string>
+  /** Which suffixes are taken AND whether that is known yet - see `uniqueness.ts`. */
+  registry: SuffixRegistry
   // On edit the suffix is locked; skip its validation.
   isEditing: boolean
 }
@@ -302,7 +307,14 @@ export const productCollectionFormSchema = (t: TenantT, opts: ProductCollectionS
             message: t('configsPage.collectionKey.errors.invalid'),
             path: ['keySuffix']
           })
-        } else if (opts.takenSuffixes.has(suffix)) {
+        } else if (!canCreateWithRegistry(opts.registry)) {
+          // Uniqueness cannot be confirmed yet, so creation is refused rather than gambled on.
+          ctx.addIssue({
+            code: 'custom',
+            message: t('configsPage.collectionKey.errors.unverified'),
+            path: ['keySuffix']
+          })
+        } else if (isSuffixTaken(opts.registry, suffix)) {
           ctx.addIssue({
             code: 'custom',
             message: t('configsPage.collectionKey.errors.duplicate'),

@@ -1,6 +1,6 @@
 import { ArrowRight, Mail, PhoneCall, Sparkles } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewCta } from '../../../b2b-overview-palette'
+import { type OverviewCta } from '../../../types'
 import { pick, PreviewButton, type PreviewContact, type PreviewLocale } from './preview-shared'
 
 // Shown when the tenant has no `contact.*` configs to pull real values from.

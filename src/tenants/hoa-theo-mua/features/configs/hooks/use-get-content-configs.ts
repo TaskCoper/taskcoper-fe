@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { configKeys } from '../query-keys'
 import configService from '../services'
 import type { GetConfigsParams } from '../types'
 
@@ -8,11 +9,18 @@ interface GetContentConfigsProps extends GetConfigsParams {
 }
 
 export const useGetContentConfigs = ({ groupName, key, isPublic, enabled = true }: GetContentConfigsProps = {}) => {
-  const { data: contentConfigs, isLoading: isGettingContentConfigs } = useQuery({
-    queryKey: ['configs', 'content', groupName, key, isPublic],
+  const query = useQuery({
+    queryKey: configKeys.contentList({ groupName, key, isPublic }),
     queryFn: () => configService.getContentConfigs({ groupName, isPublic, key }),
-    enabled
+    enabled,
+    throwOnError: false
   })
 
-  return { contentConfigs, isGettingContentConfigs }
+  return {
+    contentConfigs: query.data,
+    isGettingContentConfigs: query.isLoading,
+    isContentConfigsError: query.isError,
+    contentConfigsError: query.error,
+    refetchContentConfigs: query.refetch
+  }
 }

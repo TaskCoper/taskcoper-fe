@@ -17,8 +17,7 @@ import {
 } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useId } from 'react'
-import type { B2BOverview } from '../../../b2b-overview-palette'
-import type { LocalizedText } from '../../../palette-shared'
+import { type B2BOverview, type LocalizedText } from '../../../types'
 
 export type PreviewLocale = 'vi' | 'en'
 

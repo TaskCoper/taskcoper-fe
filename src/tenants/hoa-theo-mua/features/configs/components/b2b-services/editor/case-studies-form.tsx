@@ -1,5 +1,6 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { defaultCaseStudyItem, type CaseStudyItem, type OverviewCaseStudies } from '../../../b2b-overview-palette'
+import { defaultCaseStudyItem } from '../../../b2b-overview-palette'
+import { type CaseStudyItem, type OverviewCaseStudies } from '../../../types'
 import {
   AddRowButton,
   ImageUploadField,
