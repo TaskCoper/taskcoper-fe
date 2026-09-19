@@ -15,16 +15,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUploadFileWithToast } from '@/hooks/use-upload-file-with-toast'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { ImageIcon, UploadCloudIcon } from 'lucide-react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useWatch } from 'react-hook-form'
 import { useUpdateCardTemplate } from '../hooks/use-update-card-template'
 import type { CardTemplateListItem } from '../types'
 import {
   CARD_TEMPLATE_DESCRIPTION_MAX_LENGTH,
   CARD_TEMPLATE_IMAGE_MAX_SIZE,
   CARD_TEMPLATE_NAME_MAX_WORDS,
-  updateCardTemplateSchema,
   type UpdateCardTemplateFormValues
 } from '../validations'
 
@@ -40,16 +38,8 @@ function UpdateCardTemplateDialogContent({
   onOpenChange: (open: boolean) => void
 }) {
   const { t } = useTenantTranslation()
-  const { updateCardTemplate, isUpdatingCardTemplate } = useUpdateCardTemplate()
+  const { methods, updateCardTemplate, isUpdatingCardTemplate } = useUpdateCardTemplate(template)
   const { uploadFileWithToast, isUploading } = useUploadFileWithToast()
-  const methods = useForm<UpdateCardTemplateFormValues>({
-    resolver: zodResolver(updateCardTemplateSchema(t)),
-    defaultValues: {
-      name: template.name,
-      description: template.description ?? '',
-      imageFile: null
-    }
-  })
   const name = useWatch({ control: methods.control, name: 'name' })
   const description = useWatch({ control: methods.control, name: 'description' })
 

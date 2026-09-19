@@ -1,13 +1,25 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useForm } from 'react-hook-form'
 import { getErrorDescription } from '../../products/error-description'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
+import type { CardTemplateListItem } from '../types'
+import { updateCardTemplateSchema, type UpdateCardTemplateFormValues } from '../validations'
 
-export const useUpdateCardTemplate = () => {
+export const useUpdateCardTemplate = (template: CardTemplateListItem) => {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
+  const methods = useForm<UpdateCardTemplateFormValues>({
+    resolver: zodResolver(updateCardTemplateSchema(t)),
+    defaultValues: {
+      name: template.name,
+      description: template.description ?? '',
+      imageFile: null
+    }
+  })
   const { mutate: updateCardTemplate, isPending: isUpdatingCardTemplate } = useMutation({
     mutationFn: cardTemplateService.updateCardTemplate,
     onSuccess: () => {
@@ -21,5 +33,5 @@ export const useUpdateCardTemplate = () => {
     onSettled: () => queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
   })
 
-  return { updateCardTemplate, isUpdatingCardTemplate }
+  return { methods, updateCardTemplate, isUpdatingCardTemplate }
 }
