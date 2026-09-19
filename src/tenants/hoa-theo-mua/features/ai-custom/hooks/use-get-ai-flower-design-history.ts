@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import productService from '../../products/services'
 import { getMockAiFlowerDesignComboOptions, getMockAiFlowerDesignHistory } from '../ai-flower-design-mock-data'
 import { aiFlowerDesignKeys } from '../query-keys'
+import generateAiService from '../services'
 import type {
   AiFlowerDesignComboOptionsPage,
   GetAiFlowerDesignComboOptionsParams,
@@ -29,9 +30,9 @@ export const useGetAiFlowerDesignHistory = ({
     queryKey: aiFlowerDesignKeys.list(params),
     queryFn: async () => {
       try {
-        return await getMockAiFlowerDesignHistory(params)
+        return await generateAiService.getAiFlowerDesignHistory(params)
       } catch {
-        return getMockAiFlowerDesignHistory({ pageIndex, pageSize })
+        return getMockAiFlowerDesignHistory(params)
       }
     },
     placeholderData: keepPreviousData,
