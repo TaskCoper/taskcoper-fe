@@ -99,6 +99,90 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "cardTemplates": {
+    "title": "Danh sách mẫu thiệp",
+    "description": "Theo dõi các mẫu thiệp đang được hệ thống sử dụng.",
+    "searchPlaceholder": "Tìm theo tên mẫu thiệp...",
+    "add": "Thêm mẫu thiệp",
+    "column": {
+      "name": "Tên mẫu",
+      "preview": "Ảnh Preview",
+      "description": "Mô tả",
+      "type": "Loại mẫu",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "type": {
+      "handmade": "Thiệp có sẵn",
+      "ai": "Thiệp AI"
+    },
+    "status": {
+      "active": "Đang sử dụng",
+      "inactive": "Ngừng sử dụng"
+    },
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview mẫu {{name}}",
+    "openPreview": "Mở ảnh Preview mẫu {{name}}",
+    "viewPreview": "Xem ảnh Preview",
+    "edit": "Sửa mẫu thiệp",
+    "openMenu": "Mở thao tác mẫu thiệp",
+    "form": {
+      "title": "Thêm mẫu thiệp",
+      "description": "Tạo mẫu mới để khách hàng sử dụng khi tạo thiệp.",
+      "name": "Tên mẫu",
+      "namePlaceholder": "Nhập tên mẫu thiệp...",
+      "templateDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh template mẫu thiệp",
+      "imageHint": "Định dạng PNG hoặc JPG, dung lượng tối đa 10 MB.",
+      "imagePreviewAlt": "Ảnh xem trước của mẫu thiệp đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "dropzoneHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB",
+      "status": "Trạng thái sử dụng",
+      "statusHint": "Mẫu thiệp mới mặc định ở trạng thái Đang sử dụng.",
+      "submit": "Thêm mẫu thiệp",
+      "updateTitle": "Sửa mẫu thiệp",
+      "updateDescription": "Cập nhật tên, mô tả hoặc ảnh mẫu thiệp mà không thay đổi trạng thái sử dụng.",
+      "updateImageHint": "Giữ ảnh hiện tại hoặc chọn ảnh PNG/JPG mới có dung lượng tối đa 10 MB.",
+      "updateSubmit": "Lưu thay đổi",
+      "words": "từ",
+      "createSuccess": "Thêm mẫu thiệp thành công.",
+      "createFailed": "Không thể thêm mẫu thiệp. Vui lòng thử lại.",
+      "updateSuccess": "Cập nhật mẫu thiệp thành công.",
+      "updateFailed": "Không thể cập nhật mẫu thiệp. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên mẫu thiệp.",
+        "imageRequired": "Vui lòng chọn ảnh template mẫu thiệp.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh không được vượt quá 10 MB.",
+        "nameWords": "Tên mẫu không được vượt quá {{max}} từ."
+      }
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Đang sử dụng",
+      "deactivate": "Chuyển sang Ngừng sử dụng",
+      "activateTitle": "Chuyển mẫu thiệp sang Đang sử dụng?",
+      "deactivateTitle": "Chuyển mẫu thiệp sang Ngừng sử dụng?",
+      "activateDescription": "Mẫu {{name}} sẽ được hiển thị cho khách hàng khi tạo thiệp mới.",
+      "deactivateDescription": "Mẫu {{name}} sẽ không còn hiển thị cho khách hàng khi tạo thiệp mới.",
+      "activateConfirm": "Chuyển sang Đang sử dụng",
+      "deactivateConfirm": "Chuyển sang Ngừng sử dụng",
+      "activateSuccess": "Mẫu thiệp đã chuyển sang Đang sử dụng.",
+      "deactivateSuccess": "Mẫu thiệp đã chuyển sang Ngừng sử dụng.",
+      "failed": "Không thể chuyển trạng thái mẫu thiệp. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa",
+      "title": "Bạn chắc chắn muốn xóa mẫu thiệp này không?",
+      "description": "Mẫu thiệp sau khi xóa sẽ không còn hiển thị để khách hàng lựa chọn.",
+      "confirm": "Xóa mẫu thiệp",
+      "retry": "Thử lại",
+      "success": "Xóa mẫu thiệp thành công.",
+      "failed": "Không thể xóa mẫu thiệp. Vui lòng thử lại."
+    }
+  },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",
     "history": {
@@ -2198,6 +2282,42 @@
         "maxWordsInvalid": "Số từ tối đa phải là số nguyên lớn hơn 0.",
         "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.sizes."
       }
+    },
+    "postgenPalette": {
+      "create": "Tạo",
+      "otherTitle": "Cấu hình khác trong nhóm",
+      "enabled": {
+        "label": "Bật tạo bài đăng tự động"
+      },
+      "systemPrompts": {
+        "activeOn": "Đang bật",
+        "activeOff": "Đang tắt",
+        "statusField": "Trạng thái",
+        "empty": "Chưa có nền tảng nào."
+      },
+      "platforms": {
+        "zalo": {
+          "label": "Zalo"
+        },
+        "instagram": {
+          "label": "Instagram"
+        },
+        "facebook": {
+          "label": "Facebook"
+        }
+      },
+      "imageInstruction": {
+        "title": "Hướng dẫn tạo ảnh",
+        "subtitle": "Dùng chung cho mọi nền tảng."
+      },
+      "docs": {
+        "imageInstruction": {
+          "label": "Hướng dẫn tạo ảnh"
+        }
+      }
+    },
+    "postgenDialog": {
+      "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ..."
     }
   },
   "productCategories": {

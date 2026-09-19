@@ -44,6 +44,7 @@ import CheckoutMethodsDialog from '../features/configs/components/checkout-metho
 import ConfigFieldRow from '../features/configs/components/config-field-row'
 import CreateConfigDialog from '../features/configs/components/create-config-dialog'
 import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
+import PostgenSection from '../features/configs/components/postgen-section'
 import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
 import PromotionPopupDialog from '../features/configs/components/promotion-popup-dialog'
 import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
@@ -52,6 +53,7 @@ import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-
 import { useGetSecretConfigs } from '../features/configs/hooks/use-get-secret-configs'
 import { useGetSettingConfigs } from '../features/configs/hooks/use-get-setting-configs'
 import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
+import { POSTGEN_GROUP } from '../features/configs/postgen-palette'
 import {
   matchesProductCollectionConfig,
   productCollectionKeySuffix
@@ -88,8 +90,13 @@ const toNamedOptions = (rows: { id: number; name: string }[]): InputOption[] =>
 // Legacy `b2bservices` rows predate the `b2bServices` casing convention; fold them into
 // one tab instead of splitting the group across two casings.
 const B2B_SERVICES_GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
-const resolveGroupKey = (group: string): string =>
-  group.toLowerCase() === B2B_SERVICES_GROUP_LC ? B2B_SERVICES_GROUP : group
+const resolveGroupKey = (group: string): string => {
+  const lowered = group.toLowerCase()
+  if (lowered === B2B_SERVICES_GROUP_LC) return B2B_SERVICES_GROUP
+  // Same idea for `postgen`: its palette tab must stay a single tab whatever casing a row carries.
+  if (lowered === POSTGEN_GROUP) return POSTGEN_GROUP
+  return group
+}
 
 // const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
 //   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
@@ -241,8 +248,14 @@ export default function ConfigsPage() {
       }
     }
 
+    // Postgen is a fixed palette section, so its tab shows up even before any record exists -
+    // otherwise the first prompt could never be created from the UI.
+    if (currentKind === ConfigKind.setting && !seen.has(POSTGEN_GROUP)) {
+      result.push(POSTGEN_GROUP)
+    }
+
     return result
-  }, [currentKindConfigs])
+  }, [currentKindConfigs, currentKind])
 
   const [activeGroup, setActiveGroup] = useQueryState('section', parseAsString)
   const currentGroup = activeGroup && groups.includes(activeGroup) ? activeGroup : (groups[0] ?? '')
@@ -572,7 +585,9 @@ export default function ConfigsPage() {
                 ) : (
                   groups.map((group) => (
                     <TabsContent key={group} value={group} className='mt-3 space-y-4'>
-                      {(groupedConfigs[group] ?? []).length === 0 ? (
+                      {group === POSTGEN_GROUP ? (
+                        <PostgenSection configs={groupedConfigs[group] ?? []} onEditConfig={openEdit} />
+                      ) : (groupedConfigs[group] ?? []).length === 0 ? (
                         <p className='py-8 text-center text-sm text-muted-foreground'>
                           {t('configsPage.emptySection')}
                         </p>
