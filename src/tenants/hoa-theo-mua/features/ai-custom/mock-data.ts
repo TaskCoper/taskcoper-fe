@@ -133,25 +133,23 @@ const normalizeSearch = (value: string) =>
     .trim()
 
 export const getMockAiCardHistory = async ({
+  id,
   pageIndex = 1,
   pageSize = 10,
-  search,
-  sizeName,
+  size,
+  cardTemplateName,
   formType
 }: GetAiCardHistoryParams): Promise<AiCardHistoryPage> => {
-  const normalizedSearch = search ? normalizeSearch(search) : ''
+  const normalizedTemplate = cardTemplateName ? normalizeSearch(cardTemplateName) : ''
   const filteredCards = mockGeneratedCards.filter((card) => {
     if (!card.imageUrl?.trim()) return false
 
-    const matchesSearch =
-      !normalizedSearch ||
-      [card.nameCustomer, card.templateName]
-        .filter((value): value is string => Boolean(value))
-        .some((value) => normalizeSearch(value).includes(normalizedSearch))
-    const matchesSize = !sizeName || card.sizeName === sizeName
+    const matchesId = !id || card.generatedCardId === id
+    const matchesTemplate = !normalizedTemplate || normalizeSearch(card.templateName ?? '').includes(normalizedTemplate)
+    const matchesSize = !size || card.sizeName === size
     const matchesFormType = !formType || card.formType === formType
 
-    return matchesSearch && matchesSize && matchesFormType
+    return matchesId && matchesTemplate && matchesSize && matchesFormType
   })
   const safePageSize = Math.max(1, pageSize)
   const totalCount = filteredCards.length

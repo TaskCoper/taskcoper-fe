@@ -72,51 +72,45 @@ export const getAiCardHistoryColumns = ({
     enableColumnFilter: false,
     size: 120
   },
+  /* Customer fields remain intentionally disabled until the API provides them again.
   {
     id: 'search',
     accessorFn: (row) => row.nameCustomer,
-    meta: {
-      label: 'aiCustom.history.column.customer',
-      placeholder: 'aiCustom.history.searchPlaceholder',
-      variant: 'text',
-      icon: SearchIcon
-    },
+    meta: { label: 'aiCustom.history.column.customer', placeholder: 'aiCustom.history.searchPlaceholder', variant: 'text', icon: SearchIcon },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
     cell: ({ row }) => {
       const { nameCustomer, phoneCustomer } = row.original
-
-      return (
-        <div className='min-w-0 max-w-48'>
-          <p className='truncate font-medium' title={nameCustomer ?? undefined}>
-            {nameCustomer?.trim() || t('aiCustom.history.walkInCustomer')}
-          </p>
-          {phoneCustomer?.trim() && (
-            <p className='mt-0.5 truncate text-xs text-muted-foreground' title={phoneCustomer}>
-              {phoneCustomer}
-            </p>
-          )}
-        </div>
-      )
+      return <div className='min-w-0 max-w-48'><p className='truncate font-medium'>{nameCustomer?.trim() || t('aiCustom.history.walkInCustomer')}</p>{phoneCustomer?.trim() && <p className='mt-0.5 truncate text-xs text-muted-foreground'>{phoneCustomer}</p>}</div>
     },
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,
     size: 190
   },
+  */
   {
-    id: 'template',
-    accessorFn: (row) => row.templateName,
-    meta: { label: 'aiCustom.history.column.template' },
+    id: 'search',
+    accessorFn: (row) => row.cardTemplateName ?? row.templateName,
+    meta: {
+      label: 'aiCustom.history.column.template',
+      placeholder: 'aiCustom.history.searchPlaceholder',
+      variant: 'text',
+      icon: SearchIcon
+    },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.template' />,
-    cell: ({ row }) => <p className='min-w-36 truncate'>{row.original.templateName?.trim() || '-'}</p>,
+    cell: ({ row }) => (
+      <p className='min-w-36 truncate'>
+        {row.original.cardTemplateName?.trim() || row.original.templateName?.trim() || '-'}
+      </p>
+    ),
     enableSorting: false,
     enableHiding: true,
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     size: 180
   },
   {
-    id: 'sizeName',
-    accessorKey: 'sizeName',
+    id: 'size',
+    accessorFn: (row) => row.sizeName,
     meta: {
       label: 'aiCustom.history.column.size',
       variant: 'radio',

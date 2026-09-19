@@ -15,6 +15,46 @@ export const AiCardFileStatus = {
 
 export type AiCardFileStatus = (typeof AiCardFileStatus)[keyof typeof AiCardFileStatus]
 
+export interface GeneratedCardTemplateReference {
+  id: string
+  name: string
+  templateType: string
+  imageUrl: string | null
+}
+
+export interface GeneratedCardSourceReference {
+  type: string
+  id: string
+  imageUrl: string | null
+}
+
+export interface GeneratedCardClientHistoryMetadata {
+  operation: string | null
+  orderDetailId: string | null
+  virtualId: string | null
+  sourceType: string | null
+  originProductId: string | null
+  generatedFlowerId: string | null
+  source: GeneratedCardSourceReference | null
+  cardTemplate: GeneratedCardTemplateReference | null
+  regeneratedFromCardId: string | null
+  systemPromptSource: string | null
+  validatedAt: string | null
+}
+
+export interface GeneratedCardClientHistory {
+  id: string
+  userId: string
+  type: string
+  systemForm: { type: string; content: string } | null
+  metadata: GeneratedCardClientHistoryMetadata | null
+  rootId: string | null
+  createdAt: string
+  baseId: string | null
+  outputId: string | null
+  sesionId: string | null
+}
+
 export interface AiCardLinkedOrder {
   id: string
   code: string
@@ -24,6 +64,7 @@ export interface AiCardLinkedOrder {
 
 export interface GeneratedCardHistoryItem {
   historyId: string
+  clientHistory?: GeneratedCardClientHistory | null
   generatedCardId: string
   content: string
   imageUrl: string | null
@@ -48,7 +89,8 @@ export interface GeneratedCardHistoryItem {
   basePrice: number
   extraPrice: number
   totalPrice: number
-  templateName: string | null
+  cardTemplateName?: string | null
+  templateName?: string | null
 }
 
 export interface GeneratedCardOrder {
@@ -70,10 +112,11 @@ export interface GeneratedCardDownload {
 }
 
 export interface GetAiCardHistoryParams {
+  id?: string
   pageIndex?: number
   pageSize?: number
-  search?: string
-  sizeName?: string
+  size?: string
+  cardTemplateName?: string
   formType?: AiCardWritingMode
 }
 

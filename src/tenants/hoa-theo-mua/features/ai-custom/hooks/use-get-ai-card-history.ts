@@ -8,15 +8,21 @@ import type { GetAiCardHistoryParams } from '../types'
 export const useGetAiCardHistory = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
-  search,
-  sizeName,
+  id,
+  size,
+  cardTemplateName,
   formType
 }: GetAiCardHistoryParams) => {
-  const params = { pageIndex, pageSize, search, sizeName, formType }
+  const params = { id, pageIndex, pageSize, size, cardTemplateName, formType }
   const { data: aiCardHistory, isLoading: isGettingAiCardHistory } = useQuery({
     queryKey: aiCardKeys.list(params),
-    queryFn: async () =>
-      (await generateAiService.getAiCardHistory(params).catch(() => null)) ?? getMockAiCardHistory(params),
+    queryFn: async () => {
+      try {
+        return await generateAiService.getAiCardHistory(params)
+      } catch {
+        return getMockAiCardHistory(params)
+      }
+    },
     placeholderData: keepPreviousData,
     throwOnError: false
   })

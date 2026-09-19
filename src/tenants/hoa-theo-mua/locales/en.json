@@ -287,6 +287,9 @@
         "customer": "Customer",
         "message": "Card message",
         "design": "Design & file",
+        "pricing": "Size & pricing",
+        "source": "Data source",
+        "attachments": "Attachments",
         "orders": "Linked orders"
       },
       "section": {
@@ -294,6 +297,8 @@
         "customer": "Customer information",
         "message": "Card message",
         "design": "Design and file information",
+        "pricing": "Size and pricing",
+        "source": "Data source",
         "orders": "Linked orders"
       },
       "field": {
@@ -306,7 +311,18 @@
         "greeting": "Greeting",
         "attachments": "User attachments",
         "fileStatus": "File status",
-        "cardType": "Card type"
+        "cardType": "Card type",
+        "templateType": "Template type",
+        "sourceType": "Source type",
+        "originProduct": "Source product",
+        "generatedFlower": "Source flower design",
+        "dimensions": "Dimensions",
+        "maxWords": "Maximum words",
+        "wordCount": "Word count",
+        "basePrice": "Base price",
+        "extraPrice": "Extra price",
+        "totalPrice": "Total price",
+        "systemPrompt": "System prompt"
       },
       "fileStatus": {
         "available": "Available",

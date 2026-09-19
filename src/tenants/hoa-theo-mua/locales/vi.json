@@ -287,6 +287,9 @@
         "customer": "Khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thiết kế & file",
+        "pricing": "Kích thước & giá",
+        "source": "Nguồn dữ liệu",
+        "attachments": "Ảnh đính kèm",
         "orders": "Order liên kết"
       },
       "section": {
@@ -294,6 +297,8 @@
         "customer": "Thông tin khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thông tin thiết kế và file",
+        "pricing": "Kích thước và giá",
+        "source": "Nguồn dữ liệu",
         "orders": "Order liên kết"
       },
       "field": {
@@ -306,7 +311,18 @@
         "greeting": "Lời chúc",
         "attachments": "Ảnh người dùng đính kèm",
         "fileStatus": "Trạng thái file",
-        "cardType": "Loại thiệp"
+        "cardType": "Loại thiệp",
+        "templateType": "Loại mẫu thiệp",
+        "sourceType": "Loại nguồn",
+        "originProduct": "Sản phẩm nguồn",
+        "generatedFlower": "Mẫu hoa nguồn",
+        "dimensions": "Kích thước",
+        "maxWords": "Số từ tối đa",
+        "wordCount": "Số từ đã dùng",
+        "basePrice": "Giá cơ bản",
+        "extraPrice": "Phụ phí",
+        "totalPrice": "Tổng giá",
+        "systemPrompt": "Prompt hệ thống"
       },
       "fileStatus": {
         "available": "Còn khả dụng",

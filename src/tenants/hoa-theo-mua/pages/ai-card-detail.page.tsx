@@ -23,7 +23,8 @@ import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-c
 import { useGetAiCardDetail } from '../features/ai-custom/hooks/use-get-ai-card-detail'
 import { AiCardWritingMode } from '../features/ai-custom/types'
 
-const AI_CARD_DETAIL_TABS = ['customer', 'message', 'design', 'orders'] as const
+const AI_CARD_DETAIL_TABS = ['message', 'design', 'pricing', 'source', 'attachments'] as const
+const LEGACY_CARD_SECTIONS_ENABLED = false
 
 function InformationCard({ children }: { children: ReactNode }) {
   return <dl className='divide-y'>{children}</dl>
@@ -54,7 +55,9 @@ function DetailPanel({
   children: ReactNode
 }) {
   return (
-    <section className={cn('flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-sm', className)}>
+    <section
+      className={cn('flex w-full min-h-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-sm', className)}
+    >
       <div className='flex items-start justify-between gap-3 border-b bg-muted/20 px-5 py-4'>
         <div>
           <h2 className='font-bold'>{title}</h2>
@@ -133,7 +136,7 @@ export default function AiCardDetailPage() {
     }))
   ]
   const rawTab = searchParams.get('tab')
-  const currentTab = AI_CARD_DETAIL_TABS.includes(rawTab as (typeof AI_CARD_DETAIL_TABS)[number]) ? rawTab! : 'customer'
+  const currentTab = AI_CARD_DETAIL_TABS.includes(rawTab as (typeof AI_CARD_DETAIL_TABS)[number]) ? rawTab! : 'design'
 
   const handleTabChange = (value: string) => {
     const nextSearchParams = new URLSearchParams(searchParams)
@@ -217,31 +220,35 @@ export default function AiCardDetailPage() {
             </TabsList>
 
             <div className='pt-4'>
-              <TabsContent value='customer' className='mt-0'>
-                <DetailPanel title={t('aiCustom.detail.section.customer')} contentClassName='p-0' className='max-w-4xl'>
-                  <InformationCard>
-                    <InformationRow label={t('aiCustom.detail.field.customerName')}>
-                      {aiCard.nameCustomer || '-'}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.phone')}>
-                      {aiCard.phoneCustomer || '-'}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.address')}>
-                      {aiCard.addressCustomer || '-'}
-                    </InformationRow>
-                  </InformationCard>
-                </DetailPanel>
-              </TabsContent>
+              {LEGACY_CARD_SECTIONS_ENABLED && (
+                <TabsContent value='customer' className='mt-0'>
+                  <DetailPanel
+                    title={t('aiCustom.detail.section.customer')}
+                    contentClassName='p-0'
+                    className='max-w-4xl'
+                  >
+                    <InformationCard>
+                      <InformationRow label={t('aiCustom.detail.field.customerName')}>
+                        {aiCard.nameCustomer || '-'}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.detail.field.phone')}>
+                        {aiCard.phoneCustomer || '-'}
+                      </InformationRow>
+                      <InformationRow label={t('aiCustom.detail.field.address')}>
+                        {aiCard.addressCustomer || '-'}
+                      </InformationRow>
+                    </InformationCard>
+                  </DetailPanel>
+                </TabsContent>
+              )}
 
               <TabsContent value='message' className='mt-0'>
-                <DetailPanel title={t('aiCustom.detail.section.message')} contentClassName='p-0' className='max-w-4xl'>
+                <DetailPanel
+                  title={t('aiCustom.detail.section.message')}
+                  contentClassName='p-0'
+                  className='w-full max-w-none'
+                >
                   <InformationCard>
-                    <InformationRow label={t('aiCustom.detail.field.sender')}>
-                      {aiCard.senderName || '-'}
-                    </InformationRow>
-                    <InformationRow label={t('aiCustom.detail.field.recipient')}>
-                      {aiCard.receiverName || '-'}
-                    </InformationRow>
                     <InformationRow label={t('aiCustom.detail.field.greeting')}>
                       <span className='whitespace-pre-wrap font-normal'>{aiCard.messageContent || '-'}</span>
                     </InformationRow>
@@ -250,14 +257,28 @@ export default function AiCardDetailPage() {
               </TabsContent>
 
               <TabsContent value='design' className='mt-0'>
-                <div className='grid items-start gap-5 2xl:grid-cols-2'>
-                  <DetailPanel title={t('aiCustom.detail.section.design')} contentClassName='p-0'>
+                <div className='grid grid-cols-1 items-start gap-5'>
+                  <DetailPanel
+                    title={t('aiCustom.detail.section.design')}
+                    contentClassName='p-0'
+                    className='w-full max-w-none'
+                  >
                     <InformationCard>
                       <InformationRow label={t('aiCustom.history.column.template')}>
-                        {aiCard.templateName || '-'}
+                        {aiCard.cardTemplateName ||
+                          aiCard.templateName ||
+                          aiCard.clientHistory?.metadata?.cardTemplate?.name ||
+                          '-'}
                       </InformationRow>
                       <InformationRow label={t('aiCustom.history.column.size')}>
-                        {aiCard.sizeName || '-'}
+                        {[
+                          aiCard.sizeWidth != null && aiCard.sizeHeight != null
+                            ? `${aiCard.sizeWidth} x ${aiCard.sizeHeight} cm`
+                            : null,
+                          aiCard.sizeName
+                        ]
+                          .filter(Boolean)
+                          .join(' · ') || '-'}
                       </InformationRow>
                       <InformationRow label={t('aiCustom.history.column.writingMode')}>
                         {writingModeLabel}
@@ -270,99 +291,160 @@ export default function AiCardDetailPage() {
                       </InformationRow>
                     </InformationCard>
                   </DetailPanel>
-
-                  <DetailPanel title={t('aiCustom.detail.field.attachments')}>
-                    {attachmentImageUrls.length > 0 ? (
-                      <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2'>
-                        {attachmentImageUrls.map((imageUrl, index) => (
-                          <button
-                            key={`${imageUrl}-${index}`}
-                            type='button'
-                            aria-label={t('aiCustom.detail.openAttachment', { index: index + 1 })}
-                            onClick={() => setLightboxImageIndex(attachmentImageStartIndex + index)}
-                            className='block rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                          >
-                            <img
-                              src={imageUrl}
-                              alt={t('aiCustom.detail.attachmentAlt', { index: index + 1 })}
-                              loading='lazy'
-                              className='aspect-square w-full rounded-xl border bg-muted/40 object-cover'
-                            />
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className='flex min-h-40 items-center justify-center rounded-xl border border-dashed p-5 text-center'>
-                        <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.noAttachments')}</p>
-                      </div>
-                    )}
-                  </DetailPanel>
                 </div>
               </TabsContent>
 
-              <TabsContent value='orders' className='mt-0'>
+              <TabsContent value='pricing' className='mt-0'>
                 <DetailPanel
-                  title={t('aiCustom.detail.section.orders')}
-                  // description={t('aiCustom.detail.ordersDescription')}
+                  title={t('aiCustom.detail.section.pricing')}
                   contentClassName='p-0'
+                  className='w-full max-w-none'
                 >
-                  {aiCard.orders.length > 0 ? (
-                    <div className='overflow-hidden'>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
-                            <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
-                            <TableHead>{t('aiCustom.history.column.createdAt')}</TableHead>
-                            <TableHead>{t('aiCustom.detail.order.totalFee')}</TableHead>
-                            <TableHead className='w-16' />
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {aiCard.orders.map((order) => (
-                            <TableRow key={order.id}>
-                              <TableCell className='px-5'>
-                                <Link
-                                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                                  className='font-mono font-medium hover:underline'
-                                >
-                                  {order.id}
-                                </Link>
-                              </TableCell>
-                              <TableCell>
-                                {order.status === 'Paid'
-                                  ? t('orders.status.paid')
-                                  : order.status === 'Pending'
-                                    ? t('orders.status.pending')
-                                    : '-'}
-                              </TableCell>
-                              <TableCell className='whitespace-nowrap'>
-                                {formatDateTime(order.createdAt, 'dateTimeShort')}
-                              </TableCell>
-                              <TableCell>{formatCurrency(order.totalFee)}</TableCell>
-                              <TableCell className='text-right'>
-                                <Button variant='ghost' size='icon' asChild>
-                                  <Link
-                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
-                                    aria-label={t('aiCustom.detail.order.open', { code: order.id })}
-                                  >
-                                    <ArrowUpRightIcon />
-                                  </Link>
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                  <InformationCard>
+                    <InformationRow label={t('aiCustom.detail.field.dimensions')}>
+                      {aiCard.sizeWidth != null && aiCard.sizeHeight != null
+                        ? `${aiCard.sizeWidth} x ${aiCard.sizeHeight} cm`
+                        : '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.maxWords')}>
+                      {aiCard.sizeMaxWords ?? '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.wordCount')}>{aiCard.wordCount}</InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.basePrice')}>
+                      {formatCurrency(aiCard.basePrice)}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.extraPrice')}>
+                      {formatCurrency(aiCard.extraPrice)}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.totalPrice')}>
+                      {formatCurrency(aiCard.totalPrice)}
+                    </InformationRow>
+                  </InformationCard>
+                </DetailPanel>
+              </TabsContent>
+
+              <TabsContent value='source' className='mt-0'>
+                <DetailPanel
+                  title={t('aiCustom.detail.section.source')}
+                  contentClassName='p-0'
+                  className='w-full max-w-none'
+                >
+                  <InformationCard>
+                    <InformationRow label={t('aiCustom.detail.field.templateType')}>
+                      {aiCard.clientHistory?.metadata?.cardTemplate?.templateType || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.sourceType')}>
+                      {aiCard.clientHistory?.metadata?.sourceType || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.originProduct')}>
+                      {aiCard.clientHistory?.metadata?.originProductId || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.generatedFlower')}>
+                      {aiCard.clientHistory?.metadata?.generatedFlowerId || '-'}
+                    </InformationRow>
+                    <InformationRow label={t('aiCustom.detail.field.systemPrompt')}>
+                      <span className='whitespace-pre-wrap font-normal'>
+                        {aiCard.clientHistory?.systemForm?.content || '-'}
+                      </span>
+                    </InformationRow>
+                  </InformationCard>
+                </DetailPanel>
+              </TabsContent>
+
+              <TabsContent value='attachments' className='mt-0'>
+                <DetailPanel title={t('aiCustom.detail.field.attachments')} className='w-full max-w-none'>
+                  {attachmentImageUrls.length > 0 ? (
+                    <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                      {attachmentImageUrls.map((imageUrl, index) => (
+                        <button
+                          key={`${imageUrl}-${index}`}
+                          type='button'
+                          aria-label={t('aiCustom.detail.openAttachment', { index: index + 1 })}
+                          onClick={() => setLightboxImageIndex(attachmentImageStartIndex + index)}
+                          className='block rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={t('aiCustom.detail.attachmentAlt', { index: index + 1 })}
+                            loading='lazy'
+                            className='aspect-square w-full rounded-xl border bg-muted/40 object-cover'
+                          />
+                        </button>
+                      ))}
                     </div>
                   ) : (
-                    <div className='m-5 flex flex-col items-center gap-2 rounded-xl border border-dashed p-8 text-center text-muted-foreground'>
-                      <PackageSearchIcon className='size-8 opacity-60' />
-                      <p className='text-sm'>{t('aiCustom.detail.noOrders')}</p>
+                    <div className='flex min-h-40 items-center justify-center rounded-xl border border-dashed p-5 text-center'>
+                      <p className='text-sm text-muted-foreground'>{t('aiCustom.detail.noAttachments')}</p>
                     </div>
                   )}
                 </DetailPanel>
               </TabsContent>
+
+              {LEGACY_CARD_SECTIONS_ENABLED && (
+                <TabsContent value='orders' className='mt-0'>
+                  <DetailPanel
+                    title={t('aiCustom.detail.section.orders')}
+                    // description={t('aiCustom.detail.ordersDescription')}
+                    contentClassName='p-0'
+                  >
+                    {aiCard.orders.length > 0 ? (
+                      <div className='overflow-hidden'>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className='px-5'>{t('aiCustom.detail.order.code')}</TableHead>
+                              <TableHead>{t('aiCustom.detail.order.status')}</TableHead>
+                              <TableHead>{t('aiCustom.history.column.createdAt')}</TableHead>
+                              <TableHead>{t('aiCustom.detail.order.totalFee')}</TableHead>
+                              <TableHead className='w-16' />
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {aiCard.orders.map((order) => (
+                              <TableRow key={order.id}>
+                                <TableCell className='px-5'>
+                                  <Link
+                                    to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
+                                    className='font-mono font-medium hover:underline'
+                                  >
+                                    {order.id}
+                                  </Link>
+                                </TableCell>
+                                <TableCell>
+                                  {order.status === 'Paid'
+                                    ? t('orders.status.paid')
+                                    : order.status === 'Pending'
+                                      ? t('orders.status.pending')
+                                      : '-'}
+                                </TableCell>
+                                <TableCell className='whitespace-nowrap'>
+                                  {formatDateTime(order.createdAt, 'dateTimeShort')}
+                                </TableCell>
+                                <TableCell>{formatCurrency(order.totalFee)}</TableCell>
+                                <TableCell className='text-right'>
+                                  <Button variant='ghost' size='icon' asChild>
+                                    <Link
+                                      to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders/${order.id}`}
+                                      aria-label={t('aiCustom.detail.order.open', { code: order.id })}
+                                    >
+                                      <ArrowUpRightIcon />
+                                    </Link>
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    ) : (
+                      <div className='m-5 flex flex-col items-center gap-2 rounded-xl border border-dashed p-8 text-center text-muted-foreground'>
+                        <PackageSearchIcon className='size-8 opacity-60' />
+                        <p className='text-sm'>{t('aiCustom.detail.noOrders')}</p>
+                      </div>
+                    )}
+                  </DetailPanel>
+                </TabsContent>
+              )}
             </div>
           </div>
         </div>

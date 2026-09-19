@@ -1,5 +1,6 @@
-import api, { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
-import type { CardSize } from '../configs/card-config-palette'
+import { type BasePaginationResponse, type BaseResponse } from '@/lib/axios'
+import { CARD_SIZES_KEY, parseCardSizes } from '../configs/card-config-palette'
+import type { Config } from '../configs/types'
 import { BaseService } from '../../services/base.service'
 import type {
   GeneratedFlowerHistoryItem,
@@ -21,8 +22,14 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiCardHistoryDetail = async (generatedCardId: string) => {
-    const { data } = await this.get<BaseResponse<GeneratedCardDetailItem>>(`${this.baseUrl}/${generatedCardId}`)
-    return data.value
+    const { data } = await this.get<BasePaginationResponse<GeneratedCardDetailItem>>(this.baseUrl, {
+      params: {
+        id: generatedCardId,
+        pageIndex: 1,
+        pageSize: 1
+      }
+    })
+    return data.value.items[0] ?? null
   }
 
   getAiCardDownload = async (generatedCardId: string) => {
@@ -31,8 +38,12 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiCardSizes = async () => {
-    const { data } = await api.get<{ items: CardSize[] }>('/api/card-config/sizes')
-    return data.items
+    const { data } = await this.get<BaseResponse<Config[]>>('/v1/configs/settings', {
+      params: { key: CARD_SIZES_KEY }
+    })
+    const rawValue = data.value?.[0]?.value?.value
+
+    return parseCardSizes(rawValue)
   }
 
   getAiFlowerDesignHistory = async (params: GetAiFlowerDesignHistoryParams) => {
