@@ -27,7 +27,13 @@ export const useGetAiFlowerDesignHistory = ({
   const params = { pageIndex, pageSize, search, comboIds }
   const { data: aiFlowerDesignHistory, isLoading: isGettingAiFlowerDesignHistory } = useQuery({
     queryKey: aiFlowerDesignKeys.list(params),
-    queryFn: () => getMockAiFlowerDesignHistory(params),
+    queryFn: async () => {
+      try {
+        return await getMockAiFlowerDesignHistory(params)
+      } catch {
+        return getMockAiFlowerDesignHistory({ pageIndex, pageSize })
+      }
+    },
     placeholderData: keepPreviousData,
     staleTime: 0,
     refetchOnMount: 'always'
