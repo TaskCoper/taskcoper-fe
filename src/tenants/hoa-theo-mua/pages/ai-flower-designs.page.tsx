@@ -36,7 +36,7 @@ export default function AiFlowerDesignsPage() {
     initialState: {
       columnPinning: { right: ['actions'] }
     },
-    getRowId: (row) => row.historyId,
+    getRowId: (row) => row.id,
     shallow: false,
     clearOnDefault: true,
     filterPrefix: FILTER_PREFIX,
@@ -67,7 +67,7 @@ export default function AiFlowerDesignsPage() {
           slides={[
             {
               src: previewDesign.imageUrl,
-              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.generatedFlowerId })
+              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.id })
             }
           ]}
           carousel={{ finite: true }}

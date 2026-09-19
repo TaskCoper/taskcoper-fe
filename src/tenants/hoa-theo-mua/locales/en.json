@@ -192,6 +192,7 @@
       "column": {
         "preview": "Preview",
         "customer": "Customer",
+        "name": "Flower name",
         "template": "Card template",
         "size": "Size",
         "writingMode": "Writing Method",
@@ -215,7 +216,9 @@
         "preview": "Flower preview",
         "code": "Flower design code",
         "customer": "Customer",
+        "name": "Flower name",
         "sourceCombo": "Source Combo",
+        "sourceProduct": "Source product",
         "createdAt": "Created at",
         "actions": "Actions"
       },
@@ -243,7 +246,10 @@
         "overview": "Overview",
         "materials": "Materials",
         "source": "Design source",
-        "orders": "Linked orders"
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "orders": "Linked orders",
+        "audit": "AI audit"
       },
       "section": {
         "customer": "Customer information",
@@ -252,6 +258,27 @@
         "supportMaterials": "Support materials at creation time",
         "sourceCombo": "Source combo",
         "sourceMockup": "Source mockup",
+        "bundleImage": "Bundle image",
+        "bundle": {
+          "title": "Bundle details",
+          "id": "Bundle ID",
+          "name": "Bundle name",
+          "description": "Description",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "accessories": {
+          "ribbon": "Ribbon",
+          "wrappingPaper": "Wrapping paper",
+          "id": "ID",
+          "name": "Name",
+          "label": "Label",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No information available."
+        },
         "orders": "Linked orders"
       },
       "customRequest": "Request or notes",

@@ -1,10 +1,8 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import productService from '../../products/services'
-import { PRODUCT_TYPE_FILTER } from '../../products/types'
 import { getMockAiFlowerDesignComboOptions, getMockAiFlowerDesignHistory } from '../ai-flower-design-mock-data'
 import { aiFlowerDesignKeys } from '../query-keys'
-import generateAiService from '../services'
 import type {
   AiFlowerDesignComboOptionsPage,
   GetAiFlowerDesignComboOptionsParams,
@@ -29,13 +27,7 @@ export const useGetAiFlowerDesignHistory = ({
   const params = { pageIndex, pageSize, search, comboIds }
   const { data: aiFlowerDesignHistory, isLoading: isGettingAiFlowerDesignHistory } = useQuery({
     queryKey: aiFlowerDesignKeys.list(params),
-    queryFn: async () => {
-      try {
-        return await generateAiService.getAiFlowerDesignHistory(params)
-      } catch {
-        return getMockAiFlowerDesignHistory(params)
-      }
-    },
+    queryFn: () => getMockAiFlowerDesignHistory(params),
     placeholderData: keepPreviousData,
     staleTime: 0,
     refetchOnMount: 'always'
@@ -51,7 +43,7 @@ export const useGetAiFlowerDesignComboOptions = (params: GetAiFlowerDesignComboO
       try {
         const response = await productService.getProducts({
           ...params,
-          productType: PRODUCT_TYPE_FILTER.combo
+          productType: 1
         })
 
         return {

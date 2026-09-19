@@ -192,6 +192,7 @@
       "column": {
         "preview": "Ảnh thiệp",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "template": "Mẫu thiệp",
         "size": "Kích thước",
         "writingMode": "Hình thức viết",
@@ -215,7 +216,9 @@
         "preview": "Ảnh mẫu hoa",
         "code": "Mã mẫu hoa",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "sourceCombo": "Combo nguồn",
+        "sourceProduct": "Sản phẩm nguồn",
         "createdAt": "Ngày tạo",
         "actions": "Thao tác"
       },
@@ -243,7 +246,10 @@
         "overview": "Tổng quan",
         "materials": "Vật liệu",
         "source": "Nguồn thiết kế",
-        "orders": "Order liên kết"
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "orders": "Order liên kết",
+        "audit": "Lịch sử AI"
       },
       "section": {
         "customer": "Thông tin khách hàng",
@@ -252,6 +258,27 @@
         "supportMaterials": "Vật liệu Support tại thời điểm tạo",
         "sourceCombo": "Combo nguồn",
         "sourceMockup": "Mockup nguồn",
+        "bundleImage": "Ảnh Bundle",
+        "bundle": {
+          "title": "Thông tin Bundle",
+          "id": "Bundle ID",
+          "name": "Tên Bundle",
+          "description": "Mô tả",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động"
+        },
+        "accessories": {
+          "ribbon": "Ruy băng",
+          "wrappingPaper": "Giấy gói",
+          "id": "ID",
+          "name": "Tên",
+          "label": "Nhãn",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động",
+          "empty": "Không có thông tin."
+        },
         "orders": "Order liên kết"
       },
       "customRequest": "Yêu cầu hoặc ghi chú",

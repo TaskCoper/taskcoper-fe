@@ -54,10 +54,14 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiFlowerDesignDetail = async (generatedFlowerId: string) => {
-    const { data } = await this.get<BaseResponse<GeneratedFlowerDetail>>(
-      `${this.generatedFlowersBaseUrl}/${generatedFlowerId}`
-    )
-    return data.value
+    const { data } = await this.get<BasePaginationResponse<GeneratedFlowerDetail>>(this.generatedFlowersBaseUrl, {
+      params: {
+        GeneratedFlowerId: generatedFlowerId,
+        PageIndex: 1,
+        PageSize: 1
+      }
+    })
+    return data.value.items[0] ?? null
   }
 }
 

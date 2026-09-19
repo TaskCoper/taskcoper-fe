@@ -123,16 +123,98 @@ export interface GetAiCardHistoryParams {
 export type AiCardHistoryPage = BasePaginationResponse<GeneratedCardHistoryItem>['value']
 
 export interface GeneratedFlowerHistoryItem {
-  historyId: string
-  generatedFlowerId: string
-  nameCustomer: string | null
-  phoneCustomer: string | null
-  addressCustomer: string | null
-  comboId: string
-  comboName: string | null
-  productCode: string | null
+  id: string
+  name: string
+  userId: string
   imageUrl: string | null
   createdAt: string
+  metadata: GeneratedFlowerMetadata | null
+  clientHistory: GeneratedFlowerClientHistory | null
+}
+
+export interface GeneratedFlowerMaterial {
+  matId: string
+  name: string
+  quantity: number
+  isCore: boolean
+}
+
+export interface GeneratedFlowerProductSnapshot {
+  name: string | null
+  attributes: Record<string, unknown>
+  image: GeneratedFlowerImageSnapshot | null
+  observedStatus: GeneratedFlowerObservedStatus | null
+}
+
+export interface GeneratedFlowerBundleSnapshot {
+  id: string
+  name: string
+  description: string | null
+  image: GeneratedFlowerImageSnapshot | null
+  observedStatus: GeneratedFlowerObservedStatus | null
+}
+
+export interface GeneratedFlowerMockupSnapshot {
+  id: string
+  name: string
+  description: string | null
+  image: GeneratedFlowerImageSnapshot | null
+  observedStatus: GeneratedFlowerObservedStatus | null
+}
+
+export interface GeneratedFlowerImageSnapshot {
+  url: string | null
+  objectKey?: string | null
+  versionId?: string | null
+  sha256?: string | null
+}
+
+export interface GeneratedFlowerObservedStatus {
+  isActive: boolean
+  isDeleted: boolean
+}
+
+export interface GeneratedFlowerMetadata {
+  subId: string | null
+  aiCustomize: boolean
+  ribbon: GeneratedFlowerMaterialAccessory | null
+  wrappingPaper: GeneratedFlowerMaterialAccessory | null
+  AdditionCustome?: GeneratedFlowerMaterial[] | null
+  materials: GeneratedFlowerMaterial[]
+}
+
+export interface GeneratedFlowerMaterialAccessory {
+  id: string
+  name: string
+  label: string
+  imageUrl: string | null
+  isActive: boolean
+  isDeleted: boolean
+}
+
+export interface GeneratedFlowerClientHistoryMetadata {
+  schemaVersion: number | null
+  operation: string | null
+  product: GeneratedFlowerProductSnapshot | null
+  bundle: GeneratedFlowerBundleSnapshot | null
+  mockup: GeneratedFlowerMockupSnapshot | null
+  logoConfig: Record<string, unknown>
+  regeneratedFromFlowerId: string | null
+  systemPromptSource: string | null
+  validatedAt: string | null
+}
+
+export interface GeneratedFlowerClientHistory {
+  id: string
+  userId: string
+  type: string
+  systemForm: { type: string; content: string } | null
+  metadata: GeneratedFlowerClientHistoryMetadata | null
+  rootId: string | null
+  createdAt: string
+  baseId: string | null
+  outputId: string | null
+  sesionId: string | null
 }
 
 export interface AiFlowerDesignComboOption {
@@ -150,46 +232,7 @@ export interface GetAiFlowerDesignComboOptionsParams {
 
 export type AiFlowerDesignComboOptionsPage = BasePaginationResponse<AiFlowerDesignComboOption>['value']
 
-export interface GeneratedFlowerMaterial {
-  code: string | null
-  name: string
-  unit: string | null
-  quantity: number
-  isCore: boolean
-}
-
-export interface GeneratedFlowerSourceCombo {
-  code: string | null
-  name: string
-  description: string | null
-  imageCombo: string | null
-}
-
-export interface GeneratedFlowerMockup {
-  name: string
-  imageUrl: string | null
-}
-
-export interface GeneratedFlowerOrder {
-  id: string
-  status: string | null
-  createdAt: string
-  totalFee: number
-}
-
-export interface GeneratedFlowerDetail {
-  historyId: string
-  generatedFlowerId: string
-  nameCustomer: string | null
-  phoneCustomer: string | null
-  addressCustomer: string | null
-  sourceCombo: GeneratedFlowerSourceCombo
-  imageUrl: string | null
-  mockup: GeneratedFlowerMockup | null
-  materials: GeneratedFlowerMaterial[]
-  createdAt: string
-  orders: GeneratedFlowerOrder[]
-}
+export type GeneratedFlowerDetail = GeneratedFlowerHistoryItem
 
 export interface GetAiFlowerDesignHistoryParams {
   pageIndex?: number

@@ -54,8 +54,8 @@ export const getAiFlowerDesignHistoryColumns = ({
     cell: ({ row }) => (
       <AiCardPreview
         src={row.original.imageUrl}
-        alt={t('aiCustom.flowerHistory.previewAlt', { code: row.original.generatedFlowerId })}
-        openLabel={t('aiCustom.flowerHistory.openPreview', { code: row.original.generatedFlowerId })}
+        alt={t('aiCustom.flowerHistory.previewAlt', { code: row.original.id })}
+        openLabel={t('aiCustom.flowerHistory.openPreview', { code: row.original.id })}
         onOpen={() => onPreview(row.original)}
       />
     ),
@@ -66,20 +66,17 @@ export const getAiFlowerDesignHistoryColumns = ({
   },
   {
     id: 'search',
-    accessorFn: (row) => row.nameCustomer,
+    accessorFn: (row) => row.name,
     meta: {
-      label: 'aiCustom.flowerHistory.column.customer',
+      label: 'aiCustom.flowerHistory.column.name',
       placeholder: 'aiCustom.flowerHistory.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.customer' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.name' />,
     cell: ({ row }) => (
       <div className='min-w-40'>
-        <p className='truncate text-sm font-medium'>
-          {row.original.nameCustomer?.trim() || t('aiCustom.history.walkInCustomer')}
-        </p>
-        <p className='mt-0.5 truncate text-xs text-muted-foreground'>{row.original.phoneCustomer?.trim() || '-'}</p>
+        <p className='truncate text-sm font-medium'>{row.original.name || '-'}</p>
       </div>
     ),
     enableSorting: false,
@@ -89,19 +86,18 @@ export const getAiFlowerDesignHistoryColumns = ({
   },
   {
     id: 'comboIds',
-    accessorKey: 'comboId',
+    accessorFn: (row) => row.clientHistory?.metadata?.product?.name,
     meta: {
-      label: 'aiCustom.flowerHistory.column.sourceCombo',
+      label: 'aiCustom.flowerHistory.column.sourceProduct',
       variant: 'multiSelect',
       renderFilter: ({ column, label }) => <AiFlowerComboFilter column={column} label={label} />
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.sourceCombo' />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label='aiCustom.flowerHistory.column.sourceProduct' />
+    ),
     cell: ({ row }) => (
       <div className='min-w-52 max-w-72'>
-        <p className='truncate text-sm font-medium'>{row.original.comboName?.trim() || '-'}</p>
-        <p className='mt-0.5 truncate font-mono text-xs text-muted-foreground'>
-          {row.original.productCode?.trim() || '-'}
-        </p>
+        <p className='truncate text-sm font-medium'>{row.original.clientHistory?.metadata?.product?.name || '-'}</p>
       </div>
     ),
     enableSorting: false,
@@ -140,7 +136,7 @@ export const getAiFlowerDesignHistoryColumns = ({
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>{t('products.action.actions')}</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link to={row.original.generatedFlowerId}>
+              <Link to={row.original.id}>
                 <EyeIcon />
                 {t('aiCustom.flowerHistory.viewDetail')}
               </Link>
