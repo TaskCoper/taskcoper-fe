@@ -99,6 +99,90 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "cardTemplates": {
+    "title": "Card templates",
+    "description": "Track the card templates currently available in the system.",
+    "searchPlaceholder": "Search by template name...",
+    "add": "Add card template",
+    "column": {
+      "name": "Template name",
+      "preview": "Preview",
+      "description": "Description",
+      "type": "Template type",
+      "status": "Status",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "type": {
+      "handmade": "Free Templates",
+      "ai": "AI-generated Cards"
+    },
+    "status": {
+      "active": "In use",
+      "inactive": "Not in use"
+    },
+    "noDescription": "No description",
+    "previewAlt": "{{name}} template preview",
+    "openPreview": "Open {{name}} preview",
+    "viewPreview": "View preview",
+    "edit": "Edit card template",
+    "openMenu": "Open card template actions",
+    "form": {
+      "title": "Add card template",
+      "description": "Create a new template for customers to use when generating cards.",
+      "name": "Template name",
+      "namePlaceholder": "Enter template name...",
+      "templateDescription": "Description",
+      "descriptionPlaceholder": "Enter an optional description...",
+      "image": "Template image",
+      "imageHint": "PNG or JPG, up to 10 MB.",
+      "imagePreviewAlt": "Selected template preview",
+      "dropzoneTitle": "Drop an image here or click to select",
+      "dropzoneActive": "Drop the image to upload",
+      "dropzoneHint": "PNG, JPG or JPEG · Maximum 10 MB",
+      "status": "Usage status",
+      "statusHint": "New templates are in use by default.",
+      "submit": "Add template",
+      "updateTitle": "Edit card template",
+      "updateDescription": "Update the template name, description, or image without changing its usage status.",
+      "updateImageHint": "Keep the current image or select a new PNG/JPG image up to 10 MB.",
+      "updateSubmit": "Save changes",
+      "words": "words",
+      "createSuccess": "Card template added successfully.",
+      "createFailed": "Could not add the card template. Please try again.",
+      "updateSuccess": "Card template updated successfully.",
+      "updateFailed": "Could not update the card template. Please try again.",
+      "validation": {
+        "nameRequired": "Template name is required.",
+        "imageRequired": "Template image is required.",
+        "imageType": "Only PNG, JPG or JPEG images are accepted.",
+        "imageSize": "The image must not exceed 10 MB.",
+        "nameWords": "Template name must not exceed {{max}} words."
+      }
+    },
+    "statusAction": {
+      "activate": "Set as in use",
+      "deactivate": "Set as not in use",
+      "activateTitle": "Set this template as in use?",
+      "deactivateTitle": "Set this template as not in use?",
+      "activateDescription": "{{name}} will be available to customers when creating new cards.",
+      "deactivateDescription": "{{name}} will no longer be available to customers when creating new cards.",
+      "activateConfirm": "Set as in use",
+      "deactivateConfirm": "Set as not in use",
+      "activateSuccess": "The card template is now in use.",
+      "deactivateSuccess": "The card template is no longer in use.",
+      "failed": "Could not change the card template status. Please try again."
+    },
+    "deleteAction": {
+      "delete": "Delete",
+      "title": "Are you sure you want to delete this card template?",
+      "description": "Once deleted, this template will no longer be available for customers to select.",
+      "confirm": "Delete template",
+      "retry": "Retry",
+      "success": "Card template deleted successfully.",
+      "failed": "Could not delete the card template. Please try again."
+    }
+  },
   "aiCustom": {
     "comingSoon": "This feature is under development",
     "history": {
