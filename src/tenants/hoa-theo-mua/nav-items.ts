@@ -8,7 +8,6 @@ import {
   NewspaperIcon,
   PackageIcon,
   SettingsIcon,
-  SlidersHorizontalIcon,
   SparklesIcon
 } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
@@ -189,24 +188,6 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         titleKey: 'navigation.templateManagement.flowerMockups',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/flower-mockups`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/template-management/flower-mockups`]
-      }
-    ]
-  },
-  {
-    titleKey: 'navigation.cardConfiguration.title',
-    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`,
-    icon: SlidersHorizontalIcon,
-    feature: 'custom.cardConfiguration',
-    items: [
-      {
-        titleKey: 'navigation.cardConfiguration.sizes',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/sizes`]
-      },
-      {
-        titleKey: 'navigation.cardConfiguration.handwritingSurcharge',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/handwriting-surcharge`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/card-configuration/handwriting-surcharge`]
       }
     ]
   }
