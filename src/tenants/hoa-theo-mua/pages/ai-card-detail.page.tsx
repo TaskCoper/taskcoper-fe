@@ -352,22 +352,22 @@ export default function AiCardDetailPage() {
               </TabsContent>
 
               <TabsContent value='attachments' className='mt-0'>
-                <DetailPanel title={t('aiCustom.detail.field.attachments')} className='w-full max-w-none'>
+                <DetailPanel title={t('aiCustom.detail.field.attachments')} className='w-fit max-w-full'>
                   {attachmentImageUrls.length > 0 ? (
-                    <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                    <div className='flex flex-wrap gap-3'>
                       {attachmentImageUrls.map((imageUrl, index) => (
                         <button
                           key={`${imageUrl}-${index}`}
                           type='button'
                           aria-label={t('aiCustom.detail.openAttachment', { index: index + 1 })}
                           onClick={() => setLightboxImageIndex(attachmentImageStartIndex + index)}
-                          className='block rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                          className='block w-fit max-w-full rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
                         >
                           <img
                             src={imageUrl}
                             alt={t('aiCustom.detail.attachmentAlt', { index: index + 1 })}
                             loading='lazy'
-                            className='aspect-square w-full rounded-xl border bg-muted/40 object-cover'
+                            className='h-auto max-h-[36rem] w-auto max-w-full rounded-xl border bg-muted/40 object-contain'
                           />
                         </button>
                       ))}

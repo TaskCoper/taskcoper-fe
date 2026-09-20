@@ -7,7 +7,7 @@ import type {
   GeneratedFlowerDetail,
   GetAiFlowerDesignHistoryParams,
   GeneratedCardDetailItem,
-  GeneratedCardDownload,
+  GeneratedCardImageResponse,
   GeneratedCardHistoryItem,
   GetAiCardHistoryParams
 } from './types'
@@ -34,7 +34,9 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiCardDownload = async (generatedCardId: string) => {
-    const { data } = await this.get<BaseResponse<GeneratedCardDownload>>(`${this.baseUrl}/${generatedCardId}/download`)
+    const { data } = await this.get<BaseResponse<GeneratedCardImageResponse>>(
+      `/v1/generated-cards/${generatedCardId}/image`
+    )
     return data.value
   }
 

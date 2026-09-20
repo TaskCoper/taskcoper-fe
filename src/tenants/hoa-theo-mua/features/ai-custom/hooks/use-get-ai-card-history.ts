@@ -1,6 +1,5 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { getMockAiCardHistory } from '../mock-data'
 import { aiCardKeys } from '../query-keys'
 import generateAiService from '../services'
 import type { GetAiCardHistoryParams } from '../types'
@@ -16,15 +15,8 @@ export const useGetAiCardHistory = ({
   const params = { id, pageIndex, pageSize, size, cardTemplateName, formType }
   const { data: aiCardHistory, isLoading: isGettingAiCardHistory } = useQuery({
     queryKey: aiCardKeys.list(params),
-    queryFn: async () => {
-      try {
-        return await generateAiService.getAiCardHistory(params)
-      } catch {
-        return getMockAiCardHistory(params)
-      }
-    },
-    placeholderData: keepPreviousData,
-    throwOnError: false
+    queryFn: () => generateAiService.getAiCardHistory(params),
+    placeholderData: keepPreviousData
   })
 
   return { aiCardHistory, isGettingAiCardHistory }

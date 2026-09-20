@@ -29,7 +29,7 @@ export const useDownloadAiCard = () => {
   } = useMutation({
     mutationFn: async (card: GeneratedCardHistoryItem) => {
       const download = await generateAiService.getAiCardDownload(card.generatedCardId)
-      await downloadAiCardImage(download.imageUrl, download.fileName, download.contentType)
+      await downloadAiCardImage(download.imageUrl, `ai-card-${card.generatedCardId}`)
     },
     onError: (error) => {
       toast.error(t('aiCustom.download.failed'), {

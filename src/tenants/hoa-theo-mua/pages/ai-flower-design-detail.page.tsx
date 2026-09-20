@@ -76,7 +76,7 @@ function MaterialTable({ materials }: { materials: GeneratedFlowerMaterial[] }) 
             <TableCell className='px-5'>
               <div className='flex min-w-56 items-center gap-3'>
                 <img
-                  src={material.imageUrl || '/images/placeholder-cover.png'}
+                  src={material.coverImage || '/images/placeholder-cover.png'}
                   alt={material.name}
                   className='size-10 shrink-0 rounded-lg border bg-muted/40 object-cover'
                 />
@@ -294,15 +294,17 @@ export default function AiFlowerDesignDetailPage() {
                 <div className='grid items-start gap-5 xl:grid-cols-2'>
                   <DetailPanel title={t('aiCustom.flowerDetail.section.sourceCombo')} contentClassName='p-0'>
                     <div className='border-b p-5'>
-                      <AiCardOutputImage
-                        src={product?.image?.url || '/images/placeholder-cover.png'}
-                        alt={product?.name || '-'}
-                        className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
-                        imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
-                        placeholderClassName='w-full min-w-72 border bg-muted/40'
-                        onOpen={product?.image?.url ? () => setLightboxImageIndex(sourceComboImageIndex) : undefined}
-                        showZoomOverlay
-                      />
+                      <div className='flex justify-center'>
+                        <AiCardOutputImage
+                          src={product?.image?.url || '/images/placeholder-cover.png'}
+                          alt={product?.name || '-'}
+                          className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
+                          imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
+                          placeholderClassName='w-full min-w-72 border bg-muted/40'
+                          onOpen={product?.image?.url ? () => setLightboxImageIndex(sourceComboImageIndex) : undefined}
+                          showZoomOverlay
+                        />
+                      </div>
                     </div>
                     <dl>
                       <InformationRow label={t('aiCustom.flowerDetail.combo.code')}>
@@ -317,16 +319,18 @@ export default function AiFlowerDesignDetailPage() {
                   <DetailPanel title={t('aiCustom.flowerDetail.section.sourceMockup')}>
                     {mockup ? (
                       <div className='space-y-3'>
-                        <AiCardOutputImage
-                          className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
-                          imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
-                          placeholderClassName='w-full min-w-72 border bg-muted/40'
-                          src={mockup.image?.url ?? null}
-                          alt={t('aiCustom.flowerDetail.mockupAlt', { name: mockup.name })}
-                          openLabel={t('aiCustom.flowerDetail.openMockup', { name: mockup.name })}
-                          onOpen={mockup.image?.url ? () => setLightboxImageIndex(mockupImageIndex) : undefined}
-                          showZoomOverlay
-                        />
+                        <div className='flex justify-center'>
+                          <AiCardOutputImage
+                            className='w-fit max-w-full rounded-lg border-0 bg-transparent shadow-none hover:shadow-none'
+                            imageClassName='aspect-auto h-auto max-h-[36rem] w-auto max-w-full rounded-lg hover:shadow-none '
+                            placeholderClassName='w-full min-w-72 border bg-muted/40'
+                            src={mockup.image?.url ?? null}
+                            alt={t('aiCustom.flowerDetail.mockupAlt', { name: mockup.name })}
+                            openLabel={t('aiCustom.flowerDetail.openMockup', { name: mockup.name })}
+                            onOpen={mockup.image?.url ? () => setLightboxImageIndex(mockupImageIndex) : undefined}
+                            showZoomOverlay
+                          />
+                        </div>
                         <div>
                           <p className='font-medium'>{mockup.name}</p>
                           <p className='mt-2 text-sm text-muted-foreground'>{mockup.description || '-'}</p>
