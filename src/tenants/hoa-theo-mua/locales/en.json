@@ -191,8 +191,8 @@
       "searchPlaceholder": "Type to search...",
       "column": {
         "preview": "Preview",
-        "code": "Card code",
         "customer": "Customer",
+        "name": "Flower name",
         "template": "Card template",
         "size": "Size",
         "writingMode": "Writing Method",
@@ -216,7 +216,9 @@
         "preview": "Flower preview",
         "code": "Flower design code",
         "customer": "Customer",
+        "name": "Flower name",
         "sourceCombo": "Source Combo",
+        "sourceProduct": "Source product",
         "createdAt": "Created at",
         "actions": "Actions"
       },
@@ -244,7 +246,10 @@
         "overview": "Overview",
         "materials": "Materials",
         "source": "Design source",
-        "orders": "Linked orders"
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "orders": "Linked orders",
+        "audit": "AI audit"
       },
       "section": {
         "customer": "Customer information",
@@ -253,6 +258,27 @@
         "supportMaterials": "Support materials at creation time",
         "sourceCombo": "Source combo",
         "sourceMockup": "Source mockup",
+        "bundleImage": "Bundle image",
+        "bundle": {
+          "title": "Bundle details",
+          "id": "Bundle ID",
+          "name": "Bundle name",
+          "description": "Description",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "accessories": {
+          "ribbon": "Ribbon",
+          "wrappingPaper": "Wrapping paper",
+          "id": "ID",
+          "name": "Name",
+          "label": "Label",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No information available."
+        },
         "orders": "Linked orders"
       },
       "customRequest": "Request or notes",
@@ -288,6 +314,9 @@
         "customer": "Customer",
         "message": "Card message",
         "design": "Design & file",
+        "pricing": "Size & pricing",
+        "source": "Data source",
+        "attachments": "Attachments",
         "orders": "Linked orders"
       },
       "section": {
@@ -295,17 +324,32 @@
         "customer": "Customer information",
         "message": "Card message",
         "design": "Design and file information",
+        "pricing": "Size and pricing",
+        "source": "Data source",
         "orders": "Linked orders"
       },
       "field": {
         "customerName": "Full name",
         "phone": "Phone number",
+        "address": "Address",
         "email": "Email",
         "sender": "Sender",
         "recipient": "Recipient",
         "greeting": "Greeting",
         "attachments": "User attachments",
-        "fileStatus": "File status"
+        "fileStatus": "File status",
+        "cardType": "Card type",
+        "templateType": "Template type",
+        "sourceType": "Source type",
+        "originProduct": "Source product",
+        "generatedFlower": "Source flower design",
+        "dimensions": "Dimensions",
+        "maxWords": "Maximum words",
+        "wordCount": "Word count",
+        "basePrice": "Base price",
+        "extraPrice": "Extra price",
+        "totalPrice": "Total price",
+        "systemPrompt": "System prompt"
       },
       "fileStatus": {
         "available": "Available",
@@ -336,6 +380,7 @@
         "code": "Order code",
         "status": "Status",
         "createdAt": "Created at",
+        "totalFee": "Total fee",
         "open": "Open order {{code}} details"
       }
     },
@@ -2521,6 +2566,7 @@
       "tab": {
         "overview": "Overview",
         "items": "Products",
+        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "invoice": "Invoice"
@@ -2531,6 +2577,7 @@
         "delivery": "Delivery location",
         "fees": "Fee breakdown",
         "items": "Products",
+        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "transaction": "Transaction",
@@ -2542,6 +2589,7 @@
         "delivery": "Where the order is delivered to.",
         "fees": "How the order total is made up.",
         "items": "Products in this order and the materials captured at checkout.",
+        "snapshot": "Configuration saved when the order was placed for later comparison.",
         "shipping": "Tracking codes and carrier links for this order.",
         "payment": "Payment method and links used to settle this order.",
         "transaction": "The settled payment transaction, if any.",
@@ -2604,7 +2652,28 @@
       "vat": "VAT",
       "mapTitle": "Delivery location map",
       "noLocation": "No delivery location",
-      "openInMaps": "Open in Maps"
+      "openInMaps": "Open in Maps",
+      "snapshot": {
+        "empty": "This order has no snapshot",
+        "ribbon": "Ribbon",
+        "wrappingPaper": "Wrapping paper",
+        "materials": "Materials",
+        "additions": "Additional materials",
+        "active": "Active",
+        "inactive": "Inactive",
+        "card": "Attached card",
+        "accessoriesTitle": "Accessories",
+        "accessoriesDescription": "Ribbon and wrapping paper saved with the order.",
+        "materialsTitle": "Materials",
+        "materialsDescription": "Materials recorded in the product snapshot.",
+        "cardTitle": "Attached card",
+        "cardDescription": "Card details saved with the order configuration.",
+        "cardSize": "Size",
+        "cardDimensions": "Dimensions",
+        "cardQuantity": "Quantity",
+        "cardWordCount": "Word count",
+        "cardTotal": "Total fee"
+      }
     }
   }
 }

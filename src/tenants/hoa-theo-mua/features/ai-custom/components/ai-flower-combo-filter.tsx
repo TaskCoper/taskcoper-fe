@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react'
 import { useGetAiFlowerDesignComboOptions } from '../hooks/use-get-ai-flower-design-history'
 
 const SEARCH_DEBOUNCE_MS = 500
-const COMBO_PAGE_SIZE_OPTIONS = [5, 10, 20]
+const COMBO_PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50]
 const QUERY_STATE_OPTIONS = { clearOnDefault: true, history: 'replace' as const }
 
 const AiFlowerComboFilter = <TData,>({ column, label }: { column: Column<TData>; label: string }) => {

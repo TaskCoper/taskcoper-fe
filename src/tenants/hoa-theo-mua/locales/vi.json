@@ -188,11 +188,11 @@
     "history": {
       "title": "Lịch sử thiệp AI",
       "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
-      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
       "column": {
         "preview": "Ảnh thiệp",
-        "code": "Mã thiệp",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "template": "Mẫu thiệp",
         "size": "Kích thước",
         "writingMode": "Hình thức viết",
@@ -216,7 +216,9 @@
         "preview": "Ảnh mẫu hoa",
         "code": "Mã mẫu hoa",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "sourceCombo": "Combo nguồn",
+        "sourceProduct": "Sản phẩm nguồn",
         "createdAt": "Ngày tạo",
         "actions": "Thao tác"
       },
@@ -244,7 +246,10 @@
         "overview": "Tổng quan",
         "materials": "Vật liệu",
         "source": "Nguồn thiết kế",
-        "orders": "Order liên kết"
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "orders": "Order liên kết",
+        "audit": "Lịch sử AI"
       },
       "section": {
         "customer": "Thông tin khách hàng",
@@ -253,6 +258,27 @@
         "supportMaterials": "Vật liệu Support tại thời điểm tạo",
         "sourceCombo": "Combo nguồn",
         "sourceMockup": "Mockup nguồn",
+        "bundleImage": "Ảnh Bundle",
+        "bundle": {
+          "title": "Thông tin Bundle",
+          "id": "Bundle ID",
+          "name": "Tên Bundle",
+          "description": "Mô tả",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động"
+        },
+        "accessories": {
+          "ribbon": "Ruy băng",
+          "wrappingPaper": "Giấy gói",
+          "id": "ID",
+          "name": "Tên",
+          "label": "Nhãn",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động",
+          "empty": "Không có thông tin."
+        },
         "orders": "Order liên kết"
       },
       "customRequest": "Yêu cầu hoặc ghi chú",
@@ -288,6 +314,9 @@
         "customer": "Khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thiết kế & file",
+        "pricing": "Kích thước & giá",
+        "source": "Nguồn dữ liệu",
+        "attachments": "Ảnh đính kèm",
         "orders": "Order liên kết"
       },
       "section": {
@@ -295,17 +324,32 @@
         "customer": "Thông tin khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thông tin thiết kế và file",
+        "pricing": "Kích thước và giá",
+        "source": "Nguồn dữ liệu",
         "orders": "Order liên kết"
       },
       "field": {
         "customerName": "Họ tên",
         "phone": "Số điện thoại",
+        "address": "Địa chỉ",
         "email": "Email",
         "sender": "Người gửi",
         "recipient": "Người nhận",
         "greeting": "Lời chúc",
         "attachments": "Ảnh người dùng đính kèm",
-        "fileStatus": "Trạng thái file"
+        "fileStatus": "Trạng thái file",
+        "cardType": "Loại thiệp",
+        "templateType": "Loại mẫu thiệp",
+        "sourceType": "Loại nguồn",
+        "originProduct": "Sản phẩm nguồn",
+        "generatedFlower": "Mẫu hoa nguồn",
+        "dimensions": "Kích thước",
+        "maxWords": "Số từ tối đa",
+        "wordCount": "Số từ đã dùng",
+        "basePrice": "Giá cơ bản",
+        "extraPrice": "Phụ phí",
+        "totalPrice": "Tổng giá",
+        "systemPrompt": "Prompt hệ thống"
       },
       "fileStatus": {
         "available": "Còn khả dụng",
@@ -336,6 +380,7 @@
         "code": "Mã Order",
         "status": "Trạng thái",
         "createdAt": "Ngày tạo",
+        "totalFee": "Tổng tiền",
         "open": "Mở chi tiết Order {{code}}"
       }
     },
@@ -2521,6 +2566,7 @@
       "tab": {
         "overview": "Tổng quan",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "invoice": "Hóa đơn"
@@ -2531,6 +2577,7 @@
         "delivery": "Vị trí giao hàng",
         "fees": "Chi tiết chi phí",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "transaction": "Giao dịch",
@@ -2542,6 +2589,7 @@
         "delivery": "Địa điểm giao hàng của đơn.",
         "fees": "Cách tổng tiền của đơn được cấu thành.",
         "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
+        "snapshot": "Thông tin cấu hình được lưu lại tại thời điểm đặt hàng để đối chiếu.",
         "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
         "payment": "Phương thức và liên kết thanh toán của đơn.",
         "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
@@ -2604,7 +2652,28 @@
       "vat": "VAT",
       "mapTitle": "Bản đồ vị trí giao hàng",
       "noLocation": "Không có vị trí giao hàng",
-      "openInMaps": "Mở Google Maps"
+      "openInMaps": "Mở Google Maps",
+      "snapshot": {
+        "empty": "Đơn hàng chưa có snapshot",
+        "ribbon": "Ruy băng",
+        "wrappingPaper": "Giấy gói",
+        "materials": "Vật liệu",
+        "additions": "Vật liệu bổ sung",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "card": "Thiệp đi kèm",
+        "accessoriesTitle": "Phụ kiện",
+        "accessoriesDescription": "Ruy băng và giấy gói được lưu trong đơn hàng.",
+        "materialsTitle": "Vật liệu",
+        "materialsDescription": "Các vật liệu được ghi nhận trong snapshot sản phẩm.",
+        "cardTitle": "Thiệp đi kèm",
+        "cardDescription": "Thông tin thiệp được lưu cùng cấu hình đơn hàng.",
+        "cardSize": "Kích thước",
+        "cardDimensions": "Kích thước thực tế",
+        "cardQuantity": "Số lượng",
+        "cardWordCount": "Số từ",
+        "cardTotal": "Tổng phí"
+      }
     }
   }
 }

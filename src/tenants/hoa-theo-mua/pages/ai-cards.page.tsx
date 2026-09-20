@@ -9,21 +9,23 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import { getAiCardHistoryColumns } from '../features/ai-custom/components/ai-card-history-columns'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
+import { useGetAiCardSizes } from '../features/ai-custom/hooks/use-get-ai-card-sizes'
 import { useGetAiCardHistory } from '../features/ai-custom/hooks/use-get-ai-card-history'
-import { AiCardWritingMode, type AiCardHistoryItem } from '../features/ai-custom/types'
+import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../features/ai-custom/types'
 
 const FILTER_PREFIX = 'aiCards'
 
-const resolveWritingMode = (value: string | null) => {
-  if (value === AiCardWritingMode.Calligraphy || value === AiCardWritingMode.Typed) return value
+const resolveFormType = (value: string | null) => {
+  if (value === AiCardWritingMode.Calligraphy || value === AiCardWritingMode.GoMay) return value
 
   return undefined
 }
 
 export default function AiCardsPage() {
   const { t } = useTenantTranslation()
-  const [previewCard, setPreviewCard] = useState<AiCardHistoryItem | null>(null)
+  const [previewCard, setPreviewCard] = useState<GeneratedCardHistoryItem | null>(null)
   const { downloadAiCard, downloadingAiCardId } = useDownloadAiCard()
+  const { aiCardSizes } = useGetAiCardSizes()
 
   const columns = useMemo(
     () =>
@@ -31,21 +33,22 @@ export default function AiCardsPage() {
         t,
         onPreview: setPreviewCard,
         onDownload: downloadAiCard,
-        downloadingCardId: downloadingAiCardId
+        downloadingCardId: downloadingAiCardId,
+        sizeOptions: aiCardSizes
       }),
-    [downloadAiCard, downloadingAiCardId, t]
+    [aiCardSizes, downloadAiCard, downloadingAiCardId, t]
   )
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX })
-  const [searchFilter] = useQueryState(`${FILTER_PREFIX}_code`, parseAsString)
-  const [sizeFilter] = useQueryState(`${FILTER_PREFIX}_sizeId`, parseAsString)
-  const [writingModeFilter] = useQueryState(`${FILTER_PREFIX}_writingMode`, parseAsString)
+  const [searchFilter] = useQueryState(`${FILTER_PREFIX}_search`, parseAsString)
+  const [sizeFilter] = useQueryState(`${FILTER_PREFIX}_size`, parseAsString)
+  const [formTypeFilter] = useQueryState(`${FILTER_PREFIX}_formType`, parseAsString)
 
   const { aiCardHistory, isGettingAiCardHistory } = useGetAiCardHistory({
     pageIndex: page,
     pageSize: limit,
-    search: searchFilter?.trim() || undefined,
-    sizeId: sizeFilter || undefined,
-    writingMode: resolveWritingMode(writingModeFilter)
+    cardTemplateName: searchFilter?.trim() || undefined,
+    size: sizeFilter || undefined,
+    formType: resolveFormType(formTypeFilter)
   })
 
   const { table } = useDataTable({
@@ -55,7 +58,7 @@ export default function AiCardsPage() {
     initialState: {
       columnPinning: { right: ['actions'] }
     },
-    getRowId: (row) => row.id,
+    getRowId: (row) => row.historyId,
     shallow: false,
     clearOnDefault: true,
     filterPrefix: FILTER_PREFIX,
@@ -79,14 +82,14 @@ export default function AiCardsPage() {
         </DataTable>
       </div>
 
-      {previewCard?.outputImageUrl && (
+      {previewCard?.imageUrl && (
         <Lightbox
           open
           close={() => setPreviewCard(null)}
           slides={[
             {
-              src: previewCard.outputImageUrl,
-              alt: t('aiCustom.history.previewAlt', { code: previewCard.code })
+              src: previewCard.imageUrl,
+              alt: t('aiCustom.history.previewAlt', { code: previewCard.generatedCardId })
             }
           ]}
           carousel={{ finite: true }}

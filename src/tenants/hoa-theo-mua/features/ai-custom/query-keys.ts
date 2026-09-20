@@ -8,12 +8,13 @@ export const aiCardKeys = {
   all: ['ai-cards'] as const,
   lists: () => [...aiCardKeys.all, 'list'] as const,
   list: (params: GetAiCardHistoryParams) => [...aiCardKeys.lists(), params] as const,
+  sizes: () => [...aiCardKeys.all, 'sizes'] as const,
   details: () => [...aiCardKeys.all, 'detail'] as const,
   detail: (id: string) => [...aiCardKeys.details(), id] as const
 }
 
 export const aiFlowerDesignKeys = {
-  all: ['ai-flower-designs', 'mock-v3'] as const,
+  all: ['ai-flower-designs'] as const,
   lists: () => [...aiFlowerDesignKeys.all, 'list'] as const,
   list: (params: GetAiFlowerDesignHistoryParams) => [...aiFlowerDesignKeys.lists(), params] as const,
   comboOptions: (params: GetAiFlowerDesignComboOptionsParams) =>
