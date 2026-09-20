@@ -1,5 +1,27 @@
 import { B2B_OVERVIEW_KEY } from './b2b-service-detail-palette'
-import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
+import { emptyLocalizedText, parseLocalizedText, safeJsonParse } from './palette-shared'
+import type {
+  AdvantageItem,
+  B2BOverview,
+  CaseStudyItem,
+  LocalizedText,
+  LogoGroup,
+  LogoItem,
+  OverviewAdvantages,
+  OverviewCaseStudies,
+  OverviewCta,
+  OverviewFaq,
+  OverviewFaqItem,
+  OverviewHero,
+  OverviewPackages,
+  OverviewProcess,
+  OverviewServices,
+  OverviewStatItem,
+  OverviewTrustBar,
+  PackageItem,
+  PartnerItem,
+  ProcessStep
+} from './types'
 
 export { B2B_OVERVIEW_KEY }
 
@@ -66,16 +88,6 @@ const OVERVIEW_FAQ_IDS = [
 
 const newItemId = (): string => crypto.randomUUID()
 
-export interface OverviewHero {
-  eyebrow: LocalizedText
-  title: LocalizedText
-  subtitle: LocalizedText
-  audienceLine: LocalizedText
-  primaryCta: LocalizedText
-  secondaryCta: LocalizedText
-  imageAlt: LocalizedText
-  image: string
-}
 const defaultHero = (): OverviewHero => ({
   eyebrow: emptyLocalizedText(),
   title: emptyLocalizedText(),
@@ -97,26 +109,6 @@ const parseHero = (raw: Partial<OverviewHero> | undefined): OverviewHero => ({
   image: typeof raw?.image === 'string' ? raw.image : LEGACY_HERO_IMAGE
 })
 
-export interface StatItem {
-  id: string
-  value: LocalizedText
-  label: LocalizedText
-}
-export interface LogoItem {
-  id: string
-  name: LocalizedText
-  image: string
-}
-export interface LogoGroup {
-  id: string
-  label: LocalizedText
-  items: LogoItem[]
-}
-export interface OverviewTrustBar {
-  eyebrow: LocalizedText
-  stats: StatItem[]
-  logos: { ariaLabel: LocalizedText; groups: LogoGroup[] }
-}
 export const defaultLogoItem = (): LogoItem => ({ id: newItemId(), name: emptyLocalizedText(), image: '' })
 const defaultTrustBar = (): OverviewTrustBar => ({
   eyebrow: emptyLocalizedText(),
@@ -130,7 +122,7 @@ const defaultTrustBar = (): OverviewTrustBar => ({
     }))
   }
 })
-const parseStat = (raw: Partial<StatItem> | undefined): StatItem => ({
+const parseStat = (raw: Partial<OverviewStatItem> | undefined): OverviewStatItem => ({
   id: String(raw?.id ?? ''),
   value: parseLocalizedText(raw?.value),
   label: parseLocalizedText(raw?.label)
@@ -164,13 +156,6 @@ const parseTrustBar = (raw: Partial<OverviewTrustBar> | undefined): OverviewTrus
   }
 }
 
-// Service cards come from the per-service `card` docs, not stored here.
-export interface OverviewServices {
-  title: LocalizedText
-  description: LocalizedText
-  explore: LocalizedText
-  viewPackages: LocalizedText
-}
 const defaultServices = (): OverviewServices => ({
   title: emptyLocalizedText(),
   description: emptyLocalizedText(),
@@ -184,31 +169,6 @@ const parseServices = (raw: Partial<OverviewServices> | undefined): OverviewServ
   viewPackages: parseLocalizedText(raw?.viewPackages)
 })
 
-export interface CaseStudyItem {
-  id: string
-  logo: string
-  logoAlt: LocalizedText
-  badge: LocalizedText
-  summary: LocalizedText
-  quote: LocalizedText
-  quoteAuthor: LocalizedText
-  quoteRole: LocalizedText
-  photos: string[]
-}
-export interface PartnerItem {
-  id: string
-  logo: string
-  name: LocalizedText
-  role: LocalizedText
-  summary: LocalizedText
-  logoAlt: LocalizedText
-}
-export interface OverviewCaseStudies {
-  title: LocalizedText
-  description: LocalizedText
-  items: CaseStudyItem[]
-  partners: { title: LocalizedText; description: LocalizedText; items: PartnerItem[] }
-}
 export const defaultCaseStudyItem = (): CaseStudyItem => ({
   id: newItemId(),
   logo: '',
@@ -300,24 +260,6 @@ const parseCaseStudies = (
 // into the free `features: LocalizedText[]` list below.
 const LEGACY_PACKAGE_FEATURE_KEYS = ['pots', 'area', 'potSize', 'locations', 'care'] as const
 
-export interface PackageItem {
-  id: string
-  icon: string // ICON_REGISTRY key (preview-shared.tsx)
-  highlighted: boolean
-  name: LocalizedText
-  target: LocalizedText
-  price: LocalizedText
-  features: LocalizedText[]
-}
-export interface OverviewPackages {
-  title: LocalizedText
-  description: LocalizedText
-  popular: LocalizedText
-  fromLabel: LocalizedText
-  cta: LocalizedText
-  quarterlySuffix: LocalizedText
-  items: PackageItem[]
-}
 export const defaultPackageItem = (): PackageItem => ({
   id: newItemId(),
   icon: DEFAULT_ICON_KEY,
@@ -382,18 +324,6 @@ const parsePackages = (raw: Partial<OverviewPackages> | undefined): OverviewPack
   }
 }
 
-export interface AdvantageItem {
-  id: string
-  icon: string // ICON_REGISTRY key (preview-shared.tsx)
-  title: LocalizedText
-  description: LocalizedText
-}
-export interface OverviewAdvantages {
-  eyebrow: LocalizedText
-  title: LocalizedText
-  description: LocalizedText
-  items: AdvantageItem[]
-}
 export const defaultAdvantageItem = (): AdvantageItem => ({
   id: newItemId(),
   icon: DEFAULT_ICON_KEY,
@@ -431,19 +361,6 @@ const parseAdvantages = (raw: Partial<OverviewAdvantages> | undefined): Overview
   }
 }
 
-export interface ProcessStep {
-  id: string
-  icon: string // ICON_REGISTRY key (preview-shared.tsx)
-  label: LocalizedText
-  title: LocalizedText
-  description: LocalizedText
-}
-export interface OverviewProcess {
-  eyebrow: LocalizedText
-  title: LocalizedText
-  description: LocalizedText
-  steps: ProcessStep[]
-}
 export const defaultProcessStep = (): ProcessStep => ({
   id: newItemId(),
   icon: DEFAULT_ICON_KEY,
@@ -484,18 +401,6 @@ const parseProcess = (raw: Partial<OverviewProcess> | undefined): OverviewProces
   }
 }
 
-// `hasZalo` answers embed a `<zalo>…</zalo>` marker the FE swaps for the Zalo link.
-export interface OverviewFaqItem {
-  id: string
-  question: LocalizedText
-  answer: LocalizedText
-  hasZalo: boolean
-}
-export interface OverviewFaq {
-  title: LocalizedText
-  description: LocalizedText
-  items: OverviewFaqItem[]
-}
 export const defaultOverviewFaqItem = (): OverviewFaqItem => ({
   id: newItemId(),
   question: emptyLocalizedText(),
@@ -528,16 +433,6 @@ const parseFaq = (raw: Partial<OverviewFaq> | undefined): OverviewFaq => {
   }
 }
 
-export interface OverviewCta {
-  eyebrow: LocalizedText
-  subEyebrow: LocalizedText
-  title: LocalizedText
-  description: LocalizedText
-  callLabel: LocalizedText
-  emailLabel: LocalizedText
-  primary: LocalizedText
-  secondary: LocalizedText
-}
 const defaultCta = (): OverviewCta => ({
   eyebrow: emptyLocalizedText(),
   subEyebrow: emptyLocalizedText(),
@@ -558,18 +453,6 @@ const parseCta = (raw: Partial<OverviewCta> | undefined): OverviewCta => ({
   primary: parseLocalizedText(raw?.primary),
   secondary: parseLocalizedText(raw?.secondary)
 })
-
-export interface B2BOverview {
-  hero: OverviewHero
-  trustBar: OverviewTrustBar
-  services: OverviewServices
-  caseStudies: OverviewCaseStudies
-  packages: OverviewPackages
-  advantages: OverviewAdvantages
-  process: OverviewProcess
-  faq: OverviewFaq
-  cta: OverviewCta
-}
 
 export const defaultB2BOverview = (): B2BOverview => ({
   hero: defaultHero(),

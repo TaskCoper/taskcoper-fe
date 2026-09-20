@@ -1,16 +1,19 @@
-export interface LocalizedText {
-  vi: string
-  en: string
-}
+import type { CollectionCard, CollectionSection, LocalizedText } from './types'
 
+// normalize for consistent comparison
+export const normalizeGroup = (group: string | null | undefined): string =>
+  typeof group === 'string' ? group.trim().toLowerCase() : ''
+
+// get default object for localized text
 export const emptyLocalizedText = (): LocalizedText => ({ vi: '', en: '' })
 
+// return translated text or empty string
 export const parseLocalizedText = (raw: Partial<LocalizedText> | undefined): LocalizedText => ({
   vi: raw?.vi ?? '',
   en: raw?.en ?? ''
 })
 
-// Strip diacritics + lowercase + kebab - used to derive a URL-safe id from the VI name.
+// turn string into slug (eg: this-is-a-slug)
 export const slugify = (input: string): string =>
   input
     .normalize('NFD')
@@ -20,19 +23,13 @@ export const slugify = (input: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+// json parse with try catch
 export const safeJsonParse = (s: string): unknown => {
   try {
     return JSON.parse(s)
   } catch {
     return null
   }
-}
-
-// A collection section header - title/description/visibility - shared across product palettes.
-export interface CollectionSection {
-  title: LocalizedText
-  description: LocalizedText
-  enabled: boolean
 }
 
 export const defaultCollectionSection = (): CollectionSection => ({
@@ -46,18 +43,6 @@ export const parseCollectionSection = (raw: Partial<CollectionSection> | undefin
   description: parseLocalizedText(raw?.description),
   enabled: raw?.enabled ?? true
 })
-
-// The product-card fields shared by every collection card. Sub-palettes can extend
-// this with their own extra fields (e.g. occasions adds `campaigns`).
-export interface CollectionCard {
-  id: string
-  image: string
-  badge: LocalizedText
-  name: LocalizedText
-  description: LocalizedText
-  categoryIds: string[]
-  enabled: boolean
-}
 
 export const defaultCollectionCard = (): CollectionCard => ({
   id: '',

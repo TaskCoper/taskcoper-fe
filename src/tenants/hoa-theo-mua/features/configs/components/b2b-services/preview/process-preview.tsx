@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewProcess } from '../../../b2b-overview-palette'
+import { type OverviewProcess } from '../../../types'
 import { pick, resolveIcon, type PreviewLocale } from './preview-shared'
 
 export const ProcessPreview = memo(function ProcessPreview({

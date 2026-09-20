@@ -2,7 +2,7 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { ChevronDown } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { memo } from 'react'
-import type { OverviewFaq, OverviewFaqItem } from '../../../b2b-overview-palette'
+import { type OverviewFaq, type OverviewFaqItem } from '../../../types'
 import { pick, type PreviewContact, type PreviewLocale } from './preview-shared'
 
 // Answers may embed a single `<zalo>…</zalo>` marker that becomes a Zalo deep-link.

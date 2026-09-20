@@ -1,6 +1,7 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { configKeys } from '../query-keys'
 import configService from '../services'
 
 export const useDeleteConfig = () => {
@@ -16,7 +17,7 @@ export const useDeleteConfig = () => {
       toast.error(t('configKeys.toast.error'))
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['configs'] })
+      queryClient.invalidateQueries({ queryKey: configKeys.all })
     }
   })
 

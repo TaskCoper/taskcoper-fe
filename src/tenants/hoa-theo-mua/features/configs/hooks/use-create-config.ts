@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { configKeys } from '../query-keys'
 import configService from '../services'
 import {
   configExportSchema,
@@ -30,7 +31,7 @@ export const useCreateConfig = () => {
       toast.error(t('configKeys.toast.error'))
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['configs'] })
+      queryClient.invalidateQueries({ queryKey: configKeys.all })
     }
   })
 

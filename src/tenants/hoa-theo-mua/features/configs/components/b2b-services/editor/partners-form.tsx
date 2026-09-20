@@ -1,5 +1,6 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { defaultPartnerItem, type OverviewCaseStudies, type PartnerItem } from '../../../b2b-overview-palette'
+import { defaultPartnerItem } from '../../../b2b-overview-palette'
+import { type OverviewCaseStudies, type PartnerItem } from '../../../types'
 import { AddRowButton, ImageUploadField, ListRow, LocalizedField, useListOps } from '../b2b-section-editors'
 import type { PreviewLocale } from '../preview/preview-shared'
 import { Accordion, previewLabel, SectionCard } from './editor-shared'

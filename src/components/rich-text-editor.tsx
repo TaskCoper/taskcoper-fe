@@ -95,7 +95,14 @@ const extractMentionIds = (jsonNode: JSONContent): string[] => {
   return ids
 }
 
-const contentFormat = (content: string): RichTextFormat => (/<\/?[a-z][^>]*>/i.test(content) ? 'html' : 'markdown')
+/**
+ * Nội dung rỗng phải đi đường HTML: parser markdown dựng ra doc không có child nào
+ * (`{"type":"doc"}`, selection ở depth 0), nên `editor.can()` chặn hết heading/list/link/code
+ * block tới khi user click vào editor mới có paragraph. Parse '' theo HTML thì doc có sẵn một
+ * paragraph rỗng và toolbar hiện đủ ngay từ đầu.
+ */
+const contentFormat = (content: string): RichTextFormat =>
+  !content?.trim() || /<\/?[a-z][^>]*>/i.test(content) ? 'html' : 'markdown'
 
 export default function RichTextEditor({
   content,

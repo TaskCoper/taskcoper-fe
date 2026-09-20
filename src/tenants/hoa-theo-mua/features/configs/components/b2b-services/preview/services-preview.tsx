@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewServices } from '../../../b2b-overview-palette'
+import { type OverviewServices } from '../../../types'
 import { pick, SERVICE_META, SparkleDivider, type PreviewLocale, type ServiceCardData } from './preview-shared'
 
 export const ServicesPreview = memo(function ServicesPreview({

@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils'
 import { Quote } from 'lucide-react'
 import { memo } from 'react'
-import type { CaseStudyItem, OverviewCaseStudies } from '../../../b2b-overview-palette'
+import { type CaseStudyItem, type OverviewCaseStudies } from '../../../types'
 import {
   buildMarqueeSet,
   CASE_STUDIES_SUB_ANCHOR_ID,

@@ -1,24 +1,10 @@
 import { safeJsonParse } from './palette-shared'
 import { PRODUCT_COLLECTION_KEY_PREFIX } from './product-collection-palette'
+import type { SignatureLandingGroup, SignatureLandingMap } from './types'
 
 export const PRODUCT_SIGNATURE_KEY = `${PRODUCT_COLLECTION_KEY_PREFIX}signature`
 
 export const isProductSignatureKey = (key: string | null | undefined): boolean => key === PRODUCT_SIGNATURE_KEY
-
-export type SignatureLandingMap = Record<string, string>
-
-export interface SignatureLandingGroup {
-  uid: string
-  url: string
-  productIds: string[]
-}
-
-export interface SignatureProductRef {
-  id: string
-  productName: string | null
-  productCode: string | null
-  coverImage: string | null
-}
 
 let uidCounter = 0
 export const nextSignatureGroupUid = (): string => `signature-group-${++uidCounter}`

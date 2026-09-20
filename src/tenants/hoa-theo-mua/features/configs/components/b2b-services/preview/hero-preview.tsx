@@ -1,7 +1,7 @@
 import { ImageWithViewport } from '@/components/image-with-viewport'
 import { ArrowRight, Leaf, Sparkles } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewHero } from '../../../b2b-overview-palette'
+import { type OverviewHero } from '../../../types'
 import { pick, PreviewButton, type PreviewLocale } from './preview-shared'
 
 export const HeroPreview = memo(function HeroPreview({ hero, locale }: { hero: OverviewHero; locale: PreviewLocale }) {

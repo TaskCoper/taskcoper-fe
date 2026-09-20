@@ -15,7 +15,7 @@ import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DownloadIcon, EyeIcon, LoaderCircleIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
-import type { CardSize } from '../../configs/card-config-palette'
+import type { CardSize } from '../../configs/types'
 import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../types'
 import AiCardPreview from './ai-card-preview'
 

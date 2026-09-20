@@ -1091,6 +1091,8 @@
         "saveFactor": "Lưu chỉ số",
         "updatingFactor": "Đang cập nhật...",
         "updateFactorSuccess": "Cập nhật chỉ số kích thước thành công",
+        "updateSuccess": "Cập nhật định lượng combo thành công",
+        "loadError": "Không tải được định lượng combo.",
         "availableQuantity": "Có thể bán",
         "editButton": "Chỉnh sửa",
         "saveChanges": "Lưu thay đổi",
@@ -1478,7 +1480,9 @@
       "order": "Đơn hàng",
       "payment": "Thanh toán",
       "reward": "Tích điểm",
-      "shipping": "Vận chuyển"
+      "shipping": "Vận chuyển",
+      "contact": "Thông tin liên hệ",
+      "company": "Thông tin doanh nghiệp"
     },
     "manageButton": "Quản lý cấu hình",
     "render": {
@@ -1500,54 +1504,6 @@
     "title": "Cấu hình hệ thống"
   },
   "configKeys": {
-    "title": "Config keys",
-    "newKey": "+ Tạo key mới",
-    "search": "Tìm theo key, nhãn, nhóm...",
-    "noSelection": "Chưa chọn config",
-    "noSelectionDesc": "Chọn một key từ danh sách hoặc tạo mới.",
-    "emptyList": "Không có config nào.",
-    "page": "Trang {{current}} / {{total}} · Tổng {{count}}",
-    "editor": {
-      "key": "KEY",
-      "keyPlaceholder": "Định danh trong code, vd. summerSaleCampaign",
-      "group": "NHÓM",
-      "inputType": "KIỂU INPUT",
-      "label": "NHÃN",
-      "labelPlaceholder": "Tên hiển thị",
-      "description": "MÔ TẢ",
-      "descriptionPlaceholder": "Mô tả tùy chọn",
-      "options": "TÙY CHỌN",
-      "addOption": "Thêm tùy chọn",
-      "optionLabelPlaceholder": "Nhãn",
-      "optionValuePlaceholder": "Giá trị",
-      "switches": "SWITCHES",
-      "addSwitch": "Thêm switch",
-      "switchKeyPlaceholder": "key",
-      "switchLabelPlaceholder": "Nhãn",
-      "defaultValue": "GIÁ TRỊ MẶC ĐỊNH",
-      "required": "BẮT BUỘC",
-      "requiredDesc": "Trường này bắt buộc phải có giá trị",
-      "active": "KÍCH HOẠT",
-      "activeDesc": "Config được bật và hiển thị cho người dùng",
-      "validations": "VALIDATIONS",
-      "addValidation": "Thêm rule",
-      "jsonPreview": "JSON PREVIEW",
-      "cancel": "Hủy",
-      "copyJson": "Copy JSON",
-      "save": "Lưu thay đổi",
-      "saving": "Đang lưu...",
-      "deleteConfirmTitle": "Xóa config?",
-      "deleteConfirmDescription": "Config key này sẽ bị xóa vĩnh viễn.",
-      "enabledByDefault": "Bật mặc định",
-      "disabledByDefault": "Tắt mặc định",
-      "currencyLabel": "Đơn vị tiền",
-      "from": "Từ",
-      "to": "Đến",
-      "boolTrue": "true",
-      "boolFalse": "false",
-      "metaId": "id: ",
-      "metaUserId": "userId: "
-    },
     "toast": {
       "created": "Đã tạo config",
       "updated": "Đã lưu config",
@@ -1555,35 +1511,39 @@
       "copied": "Đã copy JSON",
       "copyFailed": "Copy thất bại",
       "error": "Đã có lỗi xảy ra"
-    },
-    "inputTypes": {
-      "text": "text",
-      "number": "number",
-      "currency": "currency",
-      "percentage": "percentage",
-      "select": "select",
-      "address": "address",
-      "checkbox": "checkbox",
-      "switch-group": "switch-group",
-      "date": "date",
-      "dateRange": "dateRange"
-    },
-    "validationRules": {
-      "minLength": "Độ dài tối thiểu",
-      "maxLength": "Độ dài tối đa",
-      "pattern": "Pattern (regex)",
-      "min": "Giá trị nhỏ nhất",
-      "max": "Giá trị lớn nhất",
-      "step": "Bước nhảy",
-      "currency": "Đơn vị tiền",
-      "multiple": "Cho phép chọn nhiều",
-      "minDate": "Ngày nhỏ nhất",
-      "maxDate": "Ngày lớn nhất",
-      "minDays": "Số ngày tối thiểu",
-      "maxDays": "Số ngày tối đa"
     }
   },
   "configsPage": {
+    "category": {
+      "banners": "Banner khuyến mãi",
+      "productCollections": "Bộ sưu tập sản phẩm",
+      "signatureLanding": "Landing page câu chuyện",
+      "feedbacks": "Feedback khách hàng",
+      "promotionPopup": "Popup khuyến mãi",
+      "b2b": "Dịch vụ B2B",
+      "paymentMethods": "Phương thức thanh toán",
+      "deliveryMethods": "Phương thức giao hàng",
+      "cardSizes": "Kích thước thiệp",
+      "calligraphy": "Bậc giá calligraphy",
+      "postgen": "Bài đăng mạng xã hội",
+      "imagegen": "Prompt tạo ảnh AI",
+      "nhanhvn": "Nhanh.vn",
+      "ahamove": "Ahamove",
+      "contact": "Thông tin liên hệ",
+      "company": "Thông tin doanh nghiệp"
+    },
+    "unsaved": {
+      "regionLabel": "Thay đổi chưa lưu",
+      "count_one": "{{count}} trường chưa lưu",
+      "count_other": "{{count}} trường chưa lưu",
+      "review": "Xem lại",
+      "discard": "Hủy thay đổi",
+      "leaveTitle": "Rời đi mà không lưu?",
+      "leaveDescription": "Một số trường có thay đổi chưa được lưu. Rời đi sẽ bỏ các thay đổi này.",
+      "discardTitle": "Hủy các thay đổi chưa lưu?",
+      "discardDescription_one": "{{count}} trường chưa lưu sẽ trở về giá trị đã lưu. Các trường đang lưu sẽ được giữ nguyên.",
+      "discardDescription_other": "Tất cả {{count}} trường chưa lưu sẽ trở về giá trị đã lưu. Các trường đang lưu sẽ được giữ nguyên."
+    },
     "dialog": {
       "createTitle": "Thêm trường",
       "editTitle": "Chỉnh sửa trường",
@@ -1643,7 +1603,10 @@
     },
     "signatureLanding": {
       "title": "Landing page câu chuyện",
+      "description": "Gán mỗi sản phẩm vào landing page câu chuyện tương ứng.",
+      "configLabel": "Landing page câu chuyện",
       "subtitle": "{{products}} sản phẩm · {{pages}} landing page",
+      "groupsTitle": "Danh sách landing page",
       "empty": "Chưa có landing page nào. Thêm một landing page rồi gán sản phẩm vào.",
       "addGroup": "Thêm landing page",
       "removeGroup": "Xóa landing page",
@@ -1663,8 +1626,6 @@
       "rawHint": "Dạng { \"id sản phẩm\": \"đường dẫn landing page\" }",
       "invalidJson": "JSON không hợp lệ - thay đổi chưa được áp dụng"
     },
-    "breadcrumb": "Quản lý cấu hình",
-    "fallbackTitle": "Cấu hình",
     "country": {
       "label": "Quốc gia",
       "all": "Tất cả quốc gia",
@@ -1677,14 +1638,8 @@
       "deleteConfirm": "Xóa",
       "deleteCancel": "Hủy"
     },
-    "addSection": "Thêm nhóm mới",
-    "cloneSection": "Nhân bản nhóm",
-    "deleteSection": "Xóa nhóm",
+    "unsupportedRecords": "Bản ghi khác trong mục này",
     "emptySection": "Chưa có trường nào trong nhóm này.",
-    "emptyPage": "Chưa có cấu hình nào. Hãy thêm nhóm để bắt đầu.",
-    "dragAndDrop": "Kéo và thả",
-    "showField": "Hiện trường",
-    "hideField": "Ẩn trường",
     "card": {
       "editDefinition": "Chỉnh sửa định nghĩa",
       "save": "Lưu",
@@ -1698,8 +1653,8 @@
       "public": "Công khai",
       "publicTooltip": "Cho phép client truy cập config này",
       "secretLockedTooltip": "Hiển thị bí mật trước khi thay đổi",
-      "complexValue": "Giá trị phức hợp",
       "openEditor": "Mở trình chỉnh sửa",
+      "complexValue": "Giá trị dạng cấu trúc - mở trình chỉnh sửa để thay đổi",
       "hints": {
         "minLength": "Tối thiểu {{n}} ký tự",
         "maxLength": "Tối đa {{n}} ký tự",
@@ -1709,7 +1664,16 @@
         "url": "URL",
         "integer": "Số nguyên",
         "pattern": "Regex"
-      }
+      },
+      "revert": "Hoàn tác",
+      "edit": "Chỉnh sửa",
+      "autosaved": "Tự động lưu",
+      "autosavedHint": "Cài đặt này được lưu ngay khi bạn bật/tắt, không cần bấm lưu.",
+      "genericFallbackHint": "Bản ghi này không đúng định dạng của trình soạn thảo riêng nên sẽ mở trình soạn thảo chung.",
+      "itemCount_one": "{{count}} mục",
+      "itemCount_other": "{{count}} mục",
+      "savedAnnouncement": "Đã lưu {{label}}",
+      "saveFailedAnnouncement": "Không lưu được {{label}}"
     },
     "palette": {
       "title": "Trường dữ liệu",
@@ -1814,7 +1778,6 @@
       "title": "Dịch vụ B2B",
       "newLabel": "Thêm dịch vụ",
       "emptyList": "Chưa có dịch vụ nào.",
-      "allSlugsUsed": "Tất cả dịch vụ đã được tạo.",
       "overviewLabel": "Trang tổng quan",
       "overviewNewLabel": "Tạo trang tổng quan"
     },
@@ -1825,7 +1788,10 @@
       "errors": {
         "required": "Vui lòng nhập khoá.",
         "invalid": "Chỉ dùng chữ cái thường, chữ số và dấu gạch nối (phải bắt đầu bằng chữ hoặc số).",
-        "duplicate": "Khoá này đã được dùng."
+        "duplicate": "Khoá này đã được dùng.",
+        "pending": "Đang kiểm tra các key đã được dùng…",
+        "unavailable": "Không tải được danh sách key hiện có nên không thể kiểm tra trùng lặp.",
+        "unverified": "Chưa xác nhận được key này chưa được dùng. Đợi danh sách tải xong hoặc thử lại."
       }
     },
     "productCollectionDialog": {
@@ -1920,7 +1886,7 @@
     },
     "feedbacksDialog": {
       "title": "Feedback khách hàng",
-      "subtitle": "Chọn tối đa 6 feedback nổi bật. Ưu tiên feedback thật từ Zalo, Messenger, Facebook hoặc Google - placeholder phải được thay bằng feedback thật trước khi launch.",
+      "subtitle": "Chọn tối đa 6 feedback nổi bật. Ưu tiên feedback thật từ Zalo, Messenger, Facebook hoặc Google",
       "configLabel": "Feedback khách hàng",
       "locale": {
         "vi": "Tiếng Việt",
@@ -1938,7 +1904,11 @@
       "section": {
         "title": "Phần đầu mục",
         "subtitle": "Tiêu đề và mô tả hiển thị trên đầu danh sách feedback.",
-        "enabled": "Hiển thị",
+        "statusField": "Trạng thái",
+        "status": {
+          "visible": "Hiển thị",
+          "hidden": "Ẩn"
+        },
         "titleField": "Tiêu đề",
         "titlePlaceholder": "vd: Khách hàng nói gì về chúng tôi",
         "descriptionField": "Mô tả ngắn",
@@ -1955,11 +1925,8 @@
       "item": {
         "untitled": "Feedback #{{index}} (chưa có tên)",
         "noMeta": "(chưa có khu vực / loại hoa)",
-        "demoBadge": "DEMO",
         "featuredBadge": "Nổi bật",
         "featuredToggle": "Nổi bật",
-        "placeholderToggle": "Đánh dấu là placeholder (nội dung demo)",
-        "placeholderHelp": "Dùng khi đang dựng layout. Feedback thật từ Zalo / Messenger / Facebook / Google phải thay thế placeholder trước khi launch chính thức.",
         "moveUp": "Di chuyển lên",
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá feedback",
@@ -2350,10 +2317,6 @@
       "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
       "jsonPreview": "Bản xem trước JSON"
     },
-    "cardConfigTempActions": {
-      "editCardSizes": "Kích thước thiệp",
-      "editCalligraphy": "Giá calligraphy"
-    },
     "calligraphyDialog": {
       "title": "Bậc giá calligraphy",
       "description": "Toàn bộ khoảng giá calligraphy được lưu trong một record card_config.prices.",
@@ -2414,6 +2377,116 @@
         "maxWordsInvalid": "Số từ tối đa phải là số nguyên lớn hơn 0.",
         "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.sizes."
       }
+    },
+    "genericPanel": {
+      "subtitle": "{{count}} bản ghi trong nhóm này.",
+      "secretsSubtitle": "Khoá và token dùng để kết nối dịch vụ ngoài.",
+      "secretsWarning": "Giá trị bí mật luôn bị che. Bấm Xem để lộ từng giá trị khi thật sự cần."
+    },
+    "postgenPalette": {
+      "subtitle": "Bật/tắt tính năng và soạn prompt hệ thống cho từng nền tảng.",
+      "enabledSection": "Trạng thái tính năng",
+      "systemPromptsTitle": "Prompt theo nền tảng",
+      "systemPromptsSubtitle": "Mỗi nền tảng có một prompt riêng và lưu độc lập.",
+      "create": "Tạo",
+      "otherTitle": "Cấu hình khác trong nhóm",
+      "enabled": {
+        "on": "Đang bật",
+        "off": "Đang tắt",
+        "label": "Bật tạo bài đăng tự động"
+      },
+      "systemPrompts": {
+        "activeOn": "Đang bật",
+        "activeOff": "Đang tắt",
+        "statusField": "Trạng thái",
+        "empty": "Chưa có nền tảng nào."
+      },
+      "platforms": {
+        "zalo": {
+          "label": "Zalo"
+        },
+        "instagram": {
+          "label": "Instagram"
+        },
+        "facebook": {
+          "label": "Facebook"
+        }
+      },
+      "imageInstruction": {
+        "title": "Hướng dẫn tạo ảnh",
+        "subtitle": "Dùng chung cho mọi nền tảng."
+      },
+      "docs": {
+        "imageInstruction": {
+          "label": "Hướng dẫn tạo ảnh"
+        }
+      }
+    },
+    "postgenDialog": {
+      "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ..."
+    },
+    "imagegenPalette": {
+      "subtitle": "Prompt để AI dựng ảnh hoa và thiệp đi kèm.",
+      "create": "Tạo",
+      "otherTitle": "Cấu hình khác trong nhóm",
+      "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ...",
+      "flower": {
+        "title": "Prompt ảnh hoa",
+        "subtitle": "Mô tả cách AI dựng ảnh bó hoa.",
+        "label": "Prompt ảnh hoa"
+      },
+      "card": {
+        "title": "Prompt thiệp",
+        "subtitle": "Chạy kèm prompt ảnh hoa để dựng thiệp tương ứng.",
+        "label": "Prompt thiệp"
+      }
+    },
+    "error": {
+      "title": "Không tải được cấu hình",
+      "description": "Yêu cầu thất bại. Chưa có gì thay đổi - vui lòng thử lại.",
+      "retry": "Thử lại"
+    },
+    "nav": {
+      "label": "Nhóm cấu hình",
+      "searchPlaceholder": "Tìm nhóm và key…",
+      "noMatches": "Không có nhóm nào khớp.",
+      "hasUnsaved": "Có thay đổi chưa lưu",
+      "matchCount_one": "{{count}} kết quả",
+      "matchCount_other": "{{count}} kết quả"
+    },
+    "navSection": {
+      "storefront": "Trang bán hàng",
+      "b2b": "Trang B2B",
+      "commerce": "Thanh toán & giao hàng",
+      "cards": "Thiệp & calligraphy",
+      "automation": "Tự động hóa",
+      "integrations": "Tích hợp",
+      "platform": "Hệ thống",
+      "other": "Khác"
+    },
+    "filter": {
+      "allKinds": "Tất cả"
+    },
+    "categoryRemoved": "Mục này không còn tồn tại nên hệ thống hiển thị nhóm đầu tiên.",
+    "addField": "Thêm trường",
+    "b2b": {
+      "subtitle": "Chọn một trang để mở trình chỉnh sửa riêng của trang đó.",
+      "overviewSection": "Trang tổng quan",
+      "servicesSection": "Trang dịch vụ",
+      "servicesSectionSubtitle": "{{configured}}/{{total}} trang đã cấu hình",
+      "otherSection": "Bản ghi khác",
+      "edit": "Chỉnh sửa",
+      "notConfigured": "Chưa cấu hình",
+      "slug": {
+        "outsourced": "Hoa thuê ngoài",
+        "events-mice": "Sự kiện & MICE",
+        "office-subscription": "Gói hoa văn phòng",
+        "corporate-gifts": "Quà tặng doanh nghiệp",
+        "brand-experience": "Trải nghiệm thương hiệu"
+      }
+    },
+    "create": {
+      "action": "Tạo mới"
     }
   },
   "productCategories": {

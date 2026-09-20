@@ -1,3 +1,4 @@
+import type { CardSize } from '../configs/types'
 import {
   AiCardFileStatus,
   AiCardWritingMode,
@@ -6,7 +7,6 @@ import {
   type GeneratedCardHistoryItem,
   type GetAiCardHistoryParams
 } from './types'
-import type { CardSize } from '../configs/card-config-palette'
 
 const customers = [
   { id: 'customer-1', name: 'Nguyễn Minh Anh', phone: '0901 234 567' },
