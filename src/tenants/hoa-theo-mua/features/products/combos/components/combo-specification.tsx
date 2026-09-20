@@ -116,7 +116,11 @@ export function ComboSpecification({
   }
 
   if (isError) {
-    return <div className='rounded-lg border py-8 text-center text-sm text-destructive'>{t('common.error')}</div>
+    return (
+      <div className='rounded-lg border py-8 text-center text-sm text-destructive'>
+        {t('products.detail.comboSpecification.loadError')}
+      </div>
+    )
   }
 
   const coreMaterials = materials.filter((material) => material.isCore)

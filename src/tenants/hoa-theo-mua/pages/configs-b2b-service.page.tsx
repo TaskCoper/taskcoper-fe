@@ -3,19 +3,14 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { ArrowLeft, Maximize2, SaveIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
-import { toast } from 'sonner'
-import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { defaultB2BOverview, parseB2BOverview } from '../features/configs/b2b-overview-palette'
 import {
-  B2B_SERVICE_SLUGS,
   B2B_SERVICES_KEY_PREFIX,
   b2bServicesKeySuffix,
   defaultB2BServiceDetail,
@@ -27,15 +22,7 @@ import {
   defaultStatsBlock,
   isB2BOverviewKey,
   matchesB2BServicesConfig,
-  parseB2BServiceDetail,
-  type B2BServiceDetail,
-  type B2BServiceSlug,
-  type BenefitsBlock,
-  type FaqBlock,
-  type ListBlock,
-  type MiceBlock,
-  type PersonalizationBlock,
-  type StatsBlock
+  parseB2BServiceDetail
 } from '../features/configs/b2b-service-detail-palette'
 import { B2B_IMAGE_ASPECT } from '../features/configs/components/b2b-services/b2b-image-aspects'
 import {
@@ -47,8 +34,6 @@ import {
   RichItemListEditor,
   StatsListEditor
 } from '../features/configs/components/b2b-services/b2b-section-editors'
-// import { B2B_SERVICE_PRESETS } from '../features/configs/components/b2b-services/b2b-service-presets'
-import { useSaveB2BService } from '../features/configs/components/b2b-services/editor/use-save-b2b-service'
 import type { PreviewContact, PreviewLocale } from '../features/configs/components/b2b-services/preview/preview-shared'
 import type { ServiceSibling } from '../features/configs/components/b2b-services/service-preview/service-chrome'
 import { ServiceFullPagePreview } from '../features/configs/components/b2b-services/service-preview/service-full-page-preview'
@@ -56,10 +41,27 @@ import {
   ServicePreviewScrollPane,
   type ServicePreviewSelection
 } from '../features/configs/components/b2b-services/service-preview/service-preview-scroll-pane'
+import { B2BPageSkeleton, PreviewLocaleToggle } from '../features/configs/components/b2b-services/b2b-page-chrome'
+import ConfigsErrorState from '../features/configs/components/shared/configs-error-state'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
-import type { Config } from '../features/configs/types'
+import { useNavigate, useParams } from 'react-router'
+import { toast } from 'sonner'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
+import { useSaveB2BService } from '../features/configs/components/b2b-services/editor/use-save-b2b-service'
+import {
+  B2B_SERVICE_SLUGS,
+  type B2BServiceDetail,
+  type B2BServiceSlug,
+  type BenefitsBlock,
+  type Config,
+  type FaqBlock,
+  type ListBlock,
+  type MiceBlock,
+  type PersonalizationBlock,
+  type StatsBlock
+} from '../features/configs/types'
 
-// Nav order: identity/hero/intro up front, then the optional content blocks, then closing/seo.
+// Thứ tự nav: identity/hero/intro trước, rồi tới các khối nội dung tuỳ chọn, cuối cùng là closing/seo.
 type NavKey =
   | 'settings'
   | 'hero'
@@ -116,7 +118,7 @@ const OPTIONAL_KEYS: OptionalSectionKey[] = [
   'faq'
 ]
 
-// Which page section the preview scrolls to for each nav entry (settings/seo focus the hero).
+// Mỗi mục nav ứng với section nào trong preview (settings/seo thì cuộn về hero).
 const NAV_TO_PREVIEW: Record<NavKey, ServicePreviewSelection> = {
   settings: 'hero',
   hero: 'hero',
@@ -134,10 +136,8 @@ const NAV_TO_PREVIEW: Record<NavKey, ServicePreviewSelection> = {
   seo: 'hero'
 }
 
-const PREVIEW_LOCALES: PreviewLocale[] = ['vi', 'en']
-
-// Working state keeps every optional block materialised (so toggling a section off then on
-// preserves its edits) plus the set of sections the admin has switched on.
+// State làm việc luôn giữ đủ mọi khối tuỳ chọn (để tắt rồi bật lại một section không mất phần đã
+// sửa), kèm tập hợp những section admin đang bật.
 interface Working extends Omit<B2BServiceDetail, OptionalSectionKey> {
   inclusions: ListBlock
   stats: StatsBlock
@@ -169,12 +169,15 @@ const toWorking = (detail: B2BServiceDetail): Working => {
   }
 }
 
-// Presence rule: an optional block is stored only when enabled AND non-empty.
+// Quy tắc: một khối tuỳ chọn chỉ được lưu khi vừa bật VỪA có nội dung.
 const listHasItems = (block: { items: unknown[] }): boolean => block.items.length > 0
 const miceHasContent = (block: MiceBlock): boolean =>
   Boolean(block.heading.vi || block.heading.en || block.intro.vi || block.intro.en || block.body.vi || block.body.en)
 
-// Materialise a Working back into the stored/rendered B2BServiceDetail shape.
+// Phép nghịch của `toWorking`, và là chỗ duy nhất đọc `enabledSections`: một khối tuỳ chọn chỉ
+// được ghi ra khi vừa bật vừa có nội dung. Bật-mà-rỗng bị bỏ có chủ đích - lưu nó sẽ render một
+// section trống trên storefront, còn công tắc thì vẫn nằm trong state làm việc nên admin không mất
+// nó khi lưu giữa chừng.
 const buildResolved = (working: Working): B2BServiceDetail => {
   const { enabledSections } = working
   const include = (key: OptionalSectionKey, nonEmpty: boolean) => enabledSections.has(key) && nonEmpty
@@ -210,14 +213,18 @@ const buildResolved = (working: Working): B2BServiceDetail => {
 export default function B2BServiceEditorPage() {
   const { slug: rawSlug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-  const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({})
+  const { contentConfigs, isGettingContentConfigs, isContentConfigsError, refetchContentConfigs } =
+    useGetContentConfigs()
+  // Chỉ đọc sau guard lỗi bên dưới, để lỗi không bị che thành một danh sách rỗng.
+  // Memo hoá để các phép suy diễn phía dưới giữ được dependency ổn định.
+  const loadedConfigs = useMemo(() => contentConfigs ?? [], [contentConfigs])
 
   const isValidSlug = (B2B_SERVICE_SLUGS as readonly string[]).includes(rawSlug ?? '')
   const slug = (isValidSlug ? rawSlug : B2B_SERVICE_SLUGS[0]) as B2BServiceSlug
 
   const b2bServiceDocs = useMemo(
-    () => contentConfigs.filter((c) => matchesB2BServicesConfig(c) && !isB2BOverviewKey(c.key)),
-    [contentConfigs]
+    () => loadedConfigs.filter((c) => matchesB2BServicesConfig(c) && !isB2BOverviewKey(c.key)),
+    [loadedConfigs]
   )
   const existingConfig = useMemo(
     () => b2bServiceDocs.find((c) => b2bServicesKeySuffix(c.key) === slug) ?? null,
@@ -225,11 +232,11 @@ export default function B2BServiceEditorPage() {
   )
 
   const overviewCta = useMemo(() => {
-    const overviewConfig = contentConfigs.find((c) => matchesB2BServicesConfig(c) && isB2BOverviewKey(c.key))
+    const overviewConfig = loadedConfigs.find((c) => matchesB2BServicesConfig(c) && isB2BOverviewKey(c.key))
     return (overviewConfig ? parseB2BOverview(overviewConfig.value.value) : defaultB2BOverview()).cta
-  }, [contentConfigs])
+  }, [loadedConfigs])
 
-  // Sibling services (already configured) power the sidebar's "related services" list.
+  // Các dịch vụ anh em (đã cấu hình) là nguồn cho danh sách "dịch vụ liên quan" ở sidebar.
   const siblings = useMemo<ServiceSibling[]>(
     () =>
       b2bServiceDocs
@@ -243,30 +250,27 @@ export default function B2BServiceEditorPage() {
 
   const contact = useMemo<PreviewContact>(() => {
     const find = (key: string) => {
-      const raw = contentConfigs.find((c) => c.key === key)?.value.value
+      const raw = loadedConfigs.find((c) => c.key === key)?.value.value
       return typeof raw === 'string' && raw.trim() ? raw : undefined
     }
     return { phone: find('contact.phone'), email: find('contact.email'), zaloUrl: find('contact.zalo') }
-  }, [contentConfigs])
+  }, [loadedConfigs])
 
   const availableSlugs = useMemo<B2BServiceSlug[]>(() => {
     const used = new Set(b2bServiceDocs.map((c) => b2bServicesKeySuffix(c.key)))
     return B2B_SERVICE_SLUGS.filter((s) => !used.has(s) || s === slug)
   }, [b2bServiceDocs, slug])
 
-  if (isGettingContentConfigs) {
+  if (isContentConfigsError) {
     return (
-      <div className='flex h-full min-h-0 flex-col'>
-        <div className='flex items-center gap-2 border-b px-4 py-3'>
-          <Skeleton className='h-8 w-64' />
-        </div>
-        <div className='flex flex-1 gap-4 p-4'>
-          <Skeleton className='h-full w-48' />
-          <Skeleton className='h-full w-[26rem]' />
-          <Skeleton className='h-full flex-1' />
-        </div>
+      <div className='flex h-full min-h-0 items-center justify-center p-6'>
+        <ConfigsErrorState className='max-w-md' onRetry={() => refetchContentConfigs()} />
       </div>
     )
+  }
+
+  if (isGettingContentConfigs) {
+    return <B2BPageSkeleton />
   }
 
   return (
@@ -356,18 +360,22 @@ function B2BServiceEditor({
     onNavigateSlug(next)
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!working.card.name.vi.trim()) {
       toast.error(t('configsPage.b2bServicesDialog.errors.cardNameRequired'))
       setSelected('hero')
       return
     }
-    const saved = await save(resolved, existingConfig, configLabel)
-    if (saved) {
-      setBaseline(JSON.stringify(resolved))
-      setBaselineLabel(configLabel)
-      if (!existingConfig) navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`)
-    }
+    save(
+      { working: resolved, existingConfig, configLabel },
+      {
+        onSuccess: () => {
+          setBaseline(JSON.stringify(resolved))
+          setBaselineLabel(configLabel)
+          if (!existingConfig) navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`)
+        }
+      }
+    )
   }
 
   const previewData = {
@@ -405,34 +413,7 @@ function B2BServiceEditor({
         </div>
 
         <div className='ml-auto flex items-center gap-2'>
-          {/* <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            onClick={() => {
-              setWorking(toWorking(B2B_SERVICE_PRESETS[slug]))
-              setConfigLabel(t('configsPage.b2bServicesDialog.configLabel', { slug }))
-            }}
-          >
-            <WandSparkles />
-            {t('configsPage.b2bServicePage.fillPresetButton')}
-          </Button> */}
-
-          <div className='flex items-center rounded-md border p-0.5'>
-            {PREVIEW_LOCALES.map((option) => (
-              <button
-                key={option}
-                type='button'
-                onClick={() => setPreviewLocale(option)}
-                className={cn(
-                  'cursor-pointer rounded-sm px-2 py-1 text-xs font-semibold uppercase transition-colors',
-                  option === previewLocale ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {t(`configsPage.b2bOverviewPage.previewLocale.${option}`)}
-              </button>
-            ))}
-          </div>
+          <PreviewLocaleToggle value={previewLocale} onChange={setPreviewLocale} />
 
           <Button type='button' variant='outline' size='sm' onClick={() => setFullPreviewOpen(true)}>
             <Maximize2 />
@@ -483,21 +464,7 @@ function B2BServiceEditor({
             <span className='text-xs font-medium text-muted-foreground'>
               {t('configsPage.b2bOverviewPage.editLocaleLabel')}
             </span>
-            <div className='flex items-center rounded-md border p-0.5'>
-              {PREVIEW_LOCALES.map((option) => (
-                <button
-                  key={option}
-                  type='button'
-                  onClick={() => setEditLocale(option)}
-                  className={cn(
-                    'cursor-pointer rounded-sm px-2 py-1 text-xs font-semibold uppercase transition-colors',
-                    option === editLocale ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {t(`configsPage.b2bOverviewPage.previewLocale.${option}`)}
-                </button>
-              ))}
-            </div>
+            <PreviewLocaleToggle value={editLocale} onChange={setEditLocale} />
           </div>
           <div className='flex-1 overflow-y-auto p-4'>
             <ServiceForm
@@ -537,7 +504,7 @@ function B2BServiceEditor({
   )
 }
 
-// Shared editor for the four plain ListBlock sections (inclusions/schedule/process/audience).
+// Editor dùng chung cho bốn section ListBlock đơn giản (inclusions/schedule/process/audience).
 function ListBlockEditor({
   block,
   onChange,
@@ -547,7 +514,7 @@ function ListBlockEditor({
   block: ListBlock
   onChange: (next: ListBlock) => void
   locale: PreviewLocale
-  /** The four sections sharing this editor render their image at different aspects. */
+  /** Bốn section dùng chung editor này render ảnh theo các tỉ lệ khác nhau. */
   aspectRatio: number
 }) {
   const { t } = useTenantTranslation()

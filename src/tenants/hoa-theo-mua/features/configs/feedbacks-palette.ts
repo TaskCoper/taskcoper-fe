@@ -2,7 +2,7 @@ import type { RatingValue } from '@/components/rating-field'
 import { emptyLocalizedText, safeJsonParse } from './palette-shared'
 import { FEEDBACK_SOURCES, type FeedbackCollection, type FeedbackItem, type FeedbackSource } from './types'
 
-// Storefront draws this as a 40px circular avatar (`testimonial-carousel.tsx`), so it must be square.
+// Storefront vẽ ảnh này thành avatar tròn 40px (`testimonial-carousel.tsx`) nên bắt buộc phải vuông.
 export const FEEDBACK_IMAGE_ASPECT = 1
 
 export const FEEDBACKS_GROUP = 'feedbacks'
@@ -30,7 +30,6 @@ export const defaultFeedbackItem = (): FeedbackItem => ({
   postDate: new Date().toISOString().slice(0, 10),
   rating: 5,
   featured: false,
-  isPlaceholder: false,
   source: 'other',
   sourceUrl: ''
 })
@@ -82,7 +81,6 @@ const normalizeItem = (raw: unknown): FeedbackItem => {
     postDate: i.postDate ?? base.postDate,
     rating,
     featured: Boolean(i.featured),
-    isPlaceholder: Boolean(i.isPlaceholder),
     source,
     sourceUrl: i.sourceUrl ?? ''
   }

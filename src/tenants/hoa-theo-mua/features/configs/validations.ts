@@ -273,9 +273,9 @@ const productCollectionCardFormSchema = z.object({
 })
 
 export interface ProductCollectionSchemaOpts {
-  /** Which suffixes are taken AND whether that is known yet - see `uniqueness.ts`. */
+  /** Những suffix đã bị chiếm VÀ việc đó đã biết chắc hay chưa - xem `uniqueness.ts`. */
   registry: SuffixRegistry
-  // On edit the suffix is locked; skip its validation.
+  // Khi sửa thì suffix bị khoá, bỏ qua validate cho nó.
   isEditing: boolean
 }
 
@@ -308,7 +308,7 @@ export const productCollectionFormSchema = (t: TenantT, opts: ProductCollectionS
             path: ['keySuffix']
           })
         } else if (!canCreateWithRegistry(opts.registry)) {
-          // Uniqueness cannot be confirmed yet, so creation is refused rather than gambled on.
+          // Chưa xác nhận được tính duy nhất nên từ chối tạo, không đánh cược.
           ctx.addIssue({
             code: 'custom',
             message: t('configsPage.collectionKey.errors.unverified'),
@@ -441,7 +441,6 @@ const feedbackItemFormSchema = z.object({
   postDate: z.string(),
   rating: z.number().optional(),
   featured: z.boolean(),
-  isPlaceholder: z.boolean(),
   source: z.enum(FEEDBACK_SOURCES),
   sourceUrl: z.string()
 })
@@ -510,7 +509,7 @@ const promotionCampaignFormSchema = z.object({
   startDate: z.string().nullable(),
   endDate: z.string().nullable(),
   enabled: z.boolean(),
-  // `[]` inherits `section.pages`; a non-empty list replaces it.
+  // `[]` là thừa kế `section.pages`; danh sách khác rỗng sẽ thay thế hẳn.
   pages: z.array(z.string())
 })
 
@@ -525,8 +524,8 @@ export const promotionPopupFormSchema = (t: TenantT) =>
       items: z.array(promotionCampaignFormSchema)
     })
     .superRefine((data, ctx) => {
-      // A bad pattern can't be reported by the storefront - it just silently changes where
-      // the popup appears - so it is caught here instead.
+      // Storefront không báo được pattern sai, nó chỉ âm thầm đổi chỗ popup xuất hiện, nên bắt
+      // ngay tại đây.
       const invalidSectionPattern = data.section.pages.find((pattern) => !isValidPagePattern(pattern))
       if (invalidSectionPattern) {
         ctx.addIssue({

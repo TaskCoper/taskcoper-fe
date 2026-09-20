@@ -6,8 +6,14 @@ import {
 } from './b2b-service-detail-palette'
 import { BANNERS_GROUP, matchesBannerKey } from './banners-palette'
 import { CARD_CONFIG_GROUP, isCardPricesKey, isCardSizesKey } from './card-config-palette'
-import { CHECKOUT_CONFIG_GROUP, matchesCheckoutMethodsKey } from './checkout-methods-palette'
+import {
+  CHECKOUT_CONFIG_GROUP,
+  isCheckoutDeliveryMethodsKey,
+  isCheckoutPaymentMethodsKey,
+  matchesCheckoutMethodsKey
+} from './checkout-methods-palette'
 import { FEEDBACKS_GROUP, matchesFeedbacksKey } from './feedbacks-palette'
+import { IMAGEGEN_GROUP, isImagegenPromptKey } from './imagegen-palette'
 import { LOCKED_ASYNC_CONFIG_KEYS, isLockedAsyncConfigKey } from './locked-config-keys'
 import { normalizeGroup } from './palette-shared'
 import {
@@ -66,27 +72,44 @@ export const CONFIG_CATEGORIES: readonly ConfigCategory[] = [
 
   { id: 'b2b', section: 'b2b', labelKey: 'configsPage.category.b2b', order: 10, isSynthesised: false },
 
-  { id: 'checkout', section: 'commerce', labelKey: 'configsPage.category.checkout', order: 10, isSynthesised: false },
   {
-    id: 'cards-calligraphy',
+    id: 'payment-methods',
     section: 'commerce',
-    labelKey: 'configsPage.category.cardsCalligraphy',
+    labelKey: 'configsPage.category.paymentMethods',
+    order: 10,
+    isSynthesised: false
+  },
+  {
+    id: 'delivery-methods',
+    section: 'commerce',
+    labelKey: 'configsPage.category.deliveryMethods',
+    order: 20,
+    isSynthesised: false
+  },
+
+  { id: 'card-sizes', section: 'cards', labelKey: 'configsPage.category.cardSizes', order: 10, isSynthesised: false },
+  {
+    id: 'calligraphy',
+    section: 'cards',
+    labelKey: 'configsPage.category.calligraphy',
     order: 20,
     isSynthesised: false
   },
 
   { id: 'postgen', section: 'automation', labelKey: 'configsPage.category.postgen', order: 10, isSynthesised: false },
+  {
+    id: 'imagegen',
+    section: 'automation',
+    labelKey: 'configsPage.category.imagegen',
+    order: 20,
+    isSynthesised: false
+  },
 
   { id: 'nhanhvn', section: 'integrations', labelKey: 'configsPage.category.nhanhvn', order: 10, isSynthesised: false },
   { id: 'ahamove', section: 'integrations', labelKey: 'configsPage.category.ahamove', order: 20, isSynthesised: false },
 
-  {
-    id: 'business-details',
-    section: 'platform',
-    labelKey: 'configsPage.category.businessDetails',
-    order: 5,
-    isSynthesised: false
-  },
+  { id: 'contact', section: 'platform', labelKey: 'configsPage.category.contact', order: 5, isSynthesised: false },
+  { id: 'company', section: 'platform', labelKey: 'configsPage.category.company', order: 6, isSynthesised: false },
   { id: 'secrets', section: 'platform', labelKey: 'systemConfigs.kind.secret', order: 40, isSynthesised: false }
 ]
 
@@ -121,14 +144,14 @@ export const LEGACY_SECTION_MAP: Readonly<Record<string, CategoryId>> = {
   feedbacks: 'feedbacks',
   products: 'product-collections',
   promotions: 'promotion-popup',
-  checkout: 'checkout',
-  card_config: 'cards-calligraphy',
+  checkout: 'payment-methods',
+  card_config: 'card-sizes',
   b2bservices: 'b2b',
   postgen: 'postgen',
   nhanhvn: 'nhanhvn',
   ahamove: 'ahamove',
-  contact: 'business-details',
-  company: 'business-details',
+  contact: 'contact',
+  company: 'company',
   general: 'general',
   feature: 'features',
   datesettings: 'dates',
@@ -136,6 +159,20 @@ export const LEGACY_SECTION_MAP: Readonly<Record<string, CategoryId>> = {
   payment: 'payment',
   shipping: 'shipping',
   reward: 'rewards'
+}
+
+/**
+ * Category bị tách đôi: id cũ trong `?category=` trỏ về category đầu tiên của cặp mới,
+ * để link đã lưu không rơi về category mặc định kèm thông báo "đã bị gỡ".
+ */
+export const RENAMED_CATEGORY_IDS: Readonly<Record<string, CategoryId>> = {
+  checkout: 'payment-methods',
+  'cards-calligraphy': 'card-sizes'
+}
+
+export const resolveRenamedCategory = (id: string | null | undefined): CategoryId | null => {
+  const renamed = id ? RENAMED_CATEGORY_IDS[id] : undefined
+  return renamed && isDeclaredCategory(renamed) ? renamed : null
 }
 
 /**
@@ -209,10 +246,13 @@ const RULES: readonly CategoryRule[] = [
   // rank 1: khớp chính xác key
   { rank: 1, category: 'b2b', match: (c) => isB2BOverviewKey(c.key) },
   { rank: 1, category: 'promotion-popup', match: (c) => isPromotionPopupKey(c.key) },
-  { rank: 1, category: 'checkout', match: (c) => matchesCheckoutMethodsKey(c.key) },
-  { rank: 1, category: 'cards-calligraphy', match: (c) => isCardSizesKey(c.key) || isCardPricesKey(c.key) },
+  { rank: 1, category: 'payment-methods', match: (c) => isCheckoutPaymentMethodsKey(c.key) },
+  { rank: 1, category: 'delivery-methods', match: (c) => isCheckoutDeliveryMethodsKey(c.key) },
+  { rank: 1, category: 'card-sizes', match: (c) => isCardSizesKey(c.key) },
+  { rank: 1, category: 'calligraphy', match: (c) => isCardPricesKey(c.key) },
   { rank: 1, category: 'signature-landing', match: (c) => isProductSignatureKey(c.key) },
   { rank: 1, category: 'postgen', match: (c) => isPostgenEnabledKey(c.key) || isPostgenImageInstructionKey(c.key) },
+  { rank: 1, category: 'imagegen', match: (c) => isImagegenPromptKey(c.key) },
   { rank: 1, category: 'nhanhvn', match: (c) => isLockedAsyncConfigKey(c.key) },
 
   // rank 2: khớp key prefix và shape
@@ -231,15 +271,18 @@ const RULES: readonly CategoryRule[] = [
   { rank: 4, category: 'feedbacks', match: groupIs(FEEDBACKS_GROUP) },
   { rank: 4, category: 'product-collections', match: groupIs(PRODUCT_COLLECTION_GROUP) },
   { rank: 4, category: 'promotion-popup', match: groupIs(PROMOTION_POPUP_GROUP) },
-  { rank: 4, category: 'checkout', match: groupIs(CHECKOUT_CONFIG_GROUP) },
-  { rank: 4, category: 'cards-calligraphy', match: groupIs(CARD_CONFIG_GROUP) },
+  // Hai group dưới đây trải trên hai category; key lạ trong group về category đầu của cặp
+  // và hiện ở phần "bản ghi chưa hỗ trợ" của category đó.
+  { rank: 4, category: 'payment-methods', match: groupIs(CHECKOUT_CONFIG_GROUP) },
+  { rank: 4, category: 'card-sizes', match: groupIs(CARD_CONFIG_GROUP) },
   { rank: 4, category: 'b2b', match: groupIs(B2B_SERVICES_GROUP) },
   { rank: 4, category: 'postgen', match: groupIs(POSTGEN_GROUP) },
+  { rank: 4, category: 'imagegen', match: groupIs(IMAGEGEN_GROUP) },
   { rank: 4, category: 'nhanhvn', match: groupIs(NHANHVN_GROUP) },
   { rank: 4, category: 'ahamove', match: groupIs(AHAMOVE_GROUP) },
   // Các group chung từ backend; slug lấy từ `systemConfigs.groups` trong tenant locales.
-  { rank: 4, category: 'business-details', match: groupIs('contact') },
-  { rank: 4, category: 'business-details', match: groupIs('company') },
+  { rank: 4, category: 'contact', match: groupIs('contact') },
+  { rank: 4, category: 'company', match: groupIs('company') },
   { rank: 4, category: 'general', match: groupIs('general') },
   { rank: 4, category: 'features', match: groupIs('feature') },
   { rank: 4, category: 'dates', match: groupIs('dateSettings') },
