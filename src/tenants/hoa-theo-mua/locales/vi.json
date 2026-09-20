@@ -522,6 +522,7 @@
       "back": "Quay lại",
       "cancel": "Hủy",
       "delete": "Xóa",
+      "saving": "Đang lưu...",
       "previous": "Trước",
       "next": "Sau"
     },
@@ -995,6 +996,16 @@
       "onlyLeft": "Chỉ còn {{count}} sản phẩm",
       "viewOnWebsite": "Xem trên website",
       "copyCode": "Sao chép mã",
+      "description": {
+        "title": "Mô tả",
+        "subtitle": "Thông tin mô tả sản phẩm.",
+        "empty": "Chưa có mô tả.",
+        "edit": "Chỉnh sửa",
+        "editTitle": "Chỉnh sửa mô tả sản phẩm",
+        "placeholder": "Nhập mô tả sản phẩm...",
+        "save": "Lưu mô tả",
+        "updated": "Đã cập nhật mô tả sản phẩm"
+      },
       "copied": "Đã sao chép",
       "share": "Sao chép liên kết",
       "linkCopied": "Đã sao chép liên kết",
