@@ -2566,6 +2566,7 @@
       "tab": {
         "overview": "Overview",
         "items": "Products",
+        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "invoice": "Invoice"
@@ -2576,6 +2577,7 @@
         "delivery": "Delivery location",
         "fees": "Fee breakdown",
         "items": "Products",
+        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "transaction": "Transaction",
@@ -2587,6 +2589,7 @@
         "delivery": "Where the order is delivered to.",
         "fees": "How the order total is made up.",
         "items": "Products in this order and the materials captured at checkout.",
+        "snapshot": "Configuration saved when the order was placed for later comparison.",
         "shipping": "Tracking codes and carrier links for this order.",
         "payment": "Payment method and links used to settle this order.",
         "transaction": "The settled payment transaction, if any.",
@@ -2649,7 +2652,28 @@
       "vat": "VAT",
       "mapTitle": "Delivery location map",
       "noLocation": "No delivery location",
-      "openInMaps": "Open in Maps"
+      "openInMaps": "Open in Maps",
+      "snapshot": {
+        "empty": "This order has no snapshot",
+        "ribbon": "Ribbon",
+        "wrappingPaper": "Wrapping paper",
+        "materials": "Materials",
+        "additions": "Additional materials",
+        "active": "Active",
+        "inactive": "Inactive",
+        "card": "Attached card",
+        "accessoriesTitle": "Accessories",
+        "accessoriesDescription": "Ribbon and wrapping paper saved with the order.",
+        "materialsTitle": "Materials",
+        "materialsDescription": "Materials recorded in the product snapshot.",
+        "cardTitle": "Attached card",
+        "cardDescription": "Card details saved with the order configuration.",
+        "cardSize": "Size",
+        "cardDimensions": "Dimensions",
+        "cardQuantity": "Quantity",
+        "cardWordCount": "Word count",
+        "cardTotal": "Total fee"
+      }
     }
   }
 }

@@ -2566,6 +2566,7 @@
       "tab": {
         "overview": "Tổng quan",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "invoice": "Hóa đơn"
@@ -2576,6 +2577,7 @@
         "delivery": "Vị trí giao hàng",
         "fees": "Chi tiết chi phí",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "transaction": "Giao dịch",
@@ -2587,6 +2589,7 @@
         "delivery": "Địa điểm giao hàng của đơn.",
         "fees": "Cách tổng tiền của đơn được cấu thành.",
         "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
+        "snapshot": "Thông tin cấu hình được lưu lại tại thời điểm đặt hàng để đối chiếu.",
         "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
         "payment": "Phương thức và liên kết thanh toán của đơn.",
         "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
@@ -2649,7 +2652,28 @@
       "vat": "VAT",
       "mapTitle": "Bản đồ vị trí giao hàng",
       "noLocation": "Không có vị trí giao hàng",
-      "openInMaps": "Mở Google Maps"
+      "openInMaps": "Mở Google Maps",
+      "snapshot": {
+        "empty": "Đơn hàng chưa có snapshot",
+        "ribbon": "Ruy băng",
+        "wrappingPaper": "Giấy gói",
+        "materials": "Vật liệu",
+        "additions": "Vật liệu bổ sung",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "card": "Thiệp đi kèm",
+        "accessoriesTitle": "Phụ kiện",
+        "accessoriesDescription": "Ruy băng và giấy gói được lưu trong đơn hàng.",
+        "materialsTitle": "Vật liệu",
+        "materialsDescription": "Các vật liệu được ghi nhận trong snapshot sản phẩm.",
+        "cardTitle": "Thiệp đi kèm",
+        "cardDescription": "Thông tin thiệp được lưu cùng cấu hình đơn hàng.",
+        "cardSize": "Kích thước",
+        "cardDimensions": "Kích thước thực tế",
+        "cardQuantity": "Số lượng",
+        "cardWordCount": "Số từ",
+        "cardTotal": "Tổng phí"
+      }
     }
   }
 }

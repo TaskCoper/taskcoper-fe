@@ -23,6 +23,7 @@ import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { OrderItemsTable } from '../features/orders/components/detail/order-items'
+import { ProductSnapshot } from '../features/orders/components/detail/product-snapshot'
 import {
   DeliveryCard,
   DetailRows,
@@ -36,7 +37,7 @@ import { useGetSystemOrder } from '../features/orders/hooks/use-get-system-order
 import { OrderStatus, OrderStatusLabel, OrderStatusStyle } from '../features/orders/types'
 import { numberFormatter, vndFormatter } from '../features/orders/utils'
 
-const TAB_VALUES = ['overview', 'items', 'shipping', 'payment', 'invoice'] as const
+const TAB_VALUES = ['overview', 'items', 'snapshot', 'shipping', 'payment', 'invoice'] as const
 
 export default function SystemOrderPage() {
   const { t } = useTenantTranslation()
@@ -107,10 +108,20 @@ export default function SystemOrderPage() {
 
   const shippingRows: DetailRow[] = [
     { label: 'systemOrders.detail.trackNumber', value: text(order.trackNumber), mono: true },
-    { label: 'systemOrders.detail.ahamoveOrderId', value: text(order.ahahaMoveOrderId), mono: true },
+    {
+      label: 'systemOrders.detail.ahamoveOrderId',
+      value: text(order.shippingPartyOrderId ?? order.ahahaMoveOrderId),
+      mono: true
+    },
     {
       label: 'systemOrders.detail.ahamoveTracking',
-      value: <TrackingLink href={order.ahahaMoveTrackingUrl} label={t('systemOrders.detail.openLink')} empty={empty} />
+      value: (
+        <TrackingLink
+          href={order.shippingTrackingUrl ?? order.ahahaMoveTrackingUrl}
+          label={t('systemOrders.detail.openLink')}
+          empty={empty}
+        />
+      )
     },
     { label: 'systemOrders.column.shippingFee', value: currency(order.shippingFee) }
   ]
@@ -194,6 +205,7 @@ export default function SystemOrderPage() {
   const TABS = [
     { value: 'overview', label: t('systemOrders.detail.tab.overview') },
     { value: 'items', label: t('systemOrders.detail.tab.items') },
+    { value: 'snapshot', label: t('systemOrders.detail.tab.snapshot') },
     { value: 'shipping', label: t('systemOrders.detail.tab.shipping') },
     { value: 'payment', label: t('systemOrders.detail.tab.payment') },
     { value: 'invoice', label: t('systemOrders.detail.tab.invoice') }
@@ -374,6 +386,16 @@ export default function SystemOrderPage() {
               }
             >
               <OrderItemsTable items={items} t={t} />
+            </DetailSection>
+          </TabsContent>
+
+          {/* Product snapshot */}
+          <TabsContent value='snapshot' className='mt-0'>
+            <DetailSection
+              title={t('systemOrders.detail.section.snapshot')}
+              description={t('systemOrders.detail.sectionDesc.snapshot')}
+            >
+              <ProductSnapshot items={items} t={t} />
             </DetailSection>
           </TabsContent>
 

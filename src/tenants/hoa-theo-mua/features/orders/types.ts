@@ -245,10 +245,69 @@ export interface SystemOrderMaterialSnapshot {
   isCore: boolean
 }
 
+export interface SystemOrderSnapshotAccessory {
+  name: string | null
+  label: string | null
+  imageUrl: string | null
+  price: number | null
+  isActive: boolean
+  isDeleted: boolean
+}
+
+export type SystemOrderSnapshotMaterial = SystemOrderMaterialSnapshot
+
+export interface SystemOrderSnapshotCardSource {
+  type: string | null
+  imageUrl: string | null
+}
+
+export interface SystemOrderSnapshotCardTemplate {
+  templateName: string | null
+  templateType: string | null
+  templateImageUrl: string | null
+}
+
+export interface SystemOrderSnapshotCardSize {
+  name: string | null
+  width: number | null
+  height: number | null
+  basePrice: number | null
+  maxWords: number | null
+}
+
+export interface SystemOrderSnapshotCard {
+  cardType: string | null
+  source: SystemOrderSnapshotCardSource | null
+  rawImage: string | null
+  cardTemplate: SystemOrderSnapshotCardTemplate | null
+  cardSize: SystemOrderSnapshotCardSize | null
+  messageContent: string | null
+  formType: string | null
+  attachedImageUrl: string | null
+  quantity: number | null
+  wordCount: number | null
+  basePrice: number | null
+  extraPrice: number | null
+  totalPrice: number | null
+  validatedAt: string | null
+  status: string | null
+}
+
+export interface SystemOrderProductMetadata {
+  name: string | null
+  aiCustomize: boolean
+  ribbon: SystemOrderSnapshotAccessory | null
+  wrappingPaper: SystemOrderSnapshotAccessory | null
+  additionCustome: SystemOrderSnapshotMaterial[] | null
+  materials: SystemOrderSnapshotMaterial[] | null
+  snapShotCard: SystemOrderSnapshotCard | null
+}
+
 /** Product snapshot stored on an order line item. */
 export interface SystemOrderItemSnapshot {
   subId: string | null // Guid
-  materials: SystemOrderMaterialSnapshot[] | null
+  materials?: SystemOrderMaterialSnapshot[] | null
+  productMetadata: SystemOrderProductMetadata[] | null
 }
 
 /** A single line item within a system order. */
@@ -297,11 +356,15 @@ export interface SystemOrderDetail extends SystemOrderCoordinates, SystemOrderFe
 
   // Shipping
   trackNumber: string | null
+  shippingPartyOrderId: string | null
+  shippingTrackingUrl: string | null
   ahahaMoveOrderId: string | null
   ahahaMoveTrackingUrl: string | null
 
   // Payment
   paymentMethod: number | null
+  paymentGateway: number | null
+  shippingGateway: number | null
   paymentUrl: string | null
   sepayUrl: string | null
   transaction: SystemOrderTransaction | null
