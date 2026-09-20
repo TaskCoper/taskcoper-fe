@@ -86,7 +86,15 @@ function MaterialTable({ materials }: { materials: GeneratedFlowerMaterial[] }) 
               </div>
             </TableCell>
             <TableCell className='font-medium tabular-nums'>{material.quantity}</TableCell>
-            <TableCell>-</TableCell>
+            <TableCell>
+              {material.unit ? (
+                <Badge variant='secondary' className='font-normal'>
+                  {material.unit.trim().toLowerCase()}
+                </Badge>
+              ) : (
+                '-'
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

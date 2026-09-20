@@ -134,6 +134,7 @@ export interface GeneratedFlowerMaterial {
   matId: string
   name: string
   quantity: number
+  unit?: string | null
   isCore: boolean
   coverImage?: string | null
 }
