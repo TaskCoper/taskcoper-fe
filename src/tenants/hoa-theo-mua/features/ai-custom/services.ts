@@ -22,13 +22,14 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiCardHistoryDetail = async (generatedCardId: string) => {
-    const { data } = await this.get<BasePaginationResponse<GeneratedCardDetailItem>>(this.baseUrl, {
-      params: {
-        id: generatedCardId,
-        pageIndex: 1,
-        pageSize: 1
-      }
+    const query = new URLSearchParams({
+      id: generatedCardId,
+      pageIndex: '1',
+      pageSize: '5'
     })
+    const { data } = await this.get<BasePaginationResponse<GeneratedCardDetailItem>>(
+      `${this.baseUrl}?${query.toString()}`
+    )
     return data.value.items[0] ?? null
   }
 
@@ -54,13 +55,14 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiFlowerDesignDetail = async (generatedFlowerId: string) => {
-    const { data } = await this.get<BasePaginationResponse<GeneratedFlowerDetail>>(this.generatedFlowersBaseUrl, {
-      params: {
-        GeneratedFlowerId: generatedFlowerId,
-        PageIndex: 1,
-        PageSize: 1
-      }
+    const query = new URLSearchParams({
+      generatedFlowerId,
+      pageIndex: '1',
+      pageSize: '5'
     })
+    const { data } = await this.get<BasePaginationResponse<GeneratedFlowerDetail>>(
+      `${this.generatedFlowersBaseUrl}?${query.toString()}`
+    )
     return data.value.items[0] ?? null
   }
 }
