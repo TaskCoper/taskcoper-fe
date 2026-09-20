@@ -1,7 +1,9 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import productService from '../../products/services'
 import { getMockAiFlowerDesignComboOptions, getMockAiFlowerDesignHistory } from '../ai-flower-design-mock-data'
 import { aiFlowerDesignKeys } from '../query-keys'
+import generateAiService from '../services'
 import type {
   AiFlowerDesignComboOptionsPage,
   GetAiFlowerDesignComboOptionsParams,
@@ -26,7 +28,13 @@ export const useGetAiFlowerDesignHistory = ({
   const params = { pageIndex, pageSize, search, comboIds }
   const { data: aiFlowerDesignHistory, isLoading: isGettingAiFlowerDesignHistory } = useQuery({
     queryKey: aiFlowerDesignKeys.list(params),
-    queryFn: () => getMockAiFlowerDesignHistory(params),
+    queryFn: async () => {
+      try {
+        return await generateAiService.getAiFlowerDesignHistory(params)
+      } catch {
+        return getMockAiFlowerDesignHistory(params)
+      }
+    },
     placeholderData: keepPreviousData,
     staleTime: 0,
     refetchOnMount: 'always'
@@ -38,7 +46,26 @@ export const useGetAiFlowerDesignHistory = ({
 export const useGetAiFlowerDesignComboOptions = (params: GetAiFlowerDesignComboOptionsParams) => {
   const { data, isFetching: isGettingComboOptions } = useQuery({
     queryKey: aiFlowerDesignKeys.comboOptions(params),
-    queryFn: () => getMockAiFlowerDesignComboOptions(params),
+    queryFn: async () => {
+      try {
+        const response = await productService.getProducts({
+          ...params,
+          productType: 1
+        })
+
+        return {
+          ...response.value,
+          items: response.value.items.map((product) => ({
+            id: product.id,
+            code: product.productCode,
+            name: product.productName || product.productCode || '-',
+            imageUrl: product.coverImage
+          }))
+        }
+      } catch {
+        return getMockAiFlowerDesignComboOptions(params)
+      }
+    },
     placeholderData: keepPreviousData
   })
 

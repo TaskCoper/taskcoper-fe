@@ -52,6 +52,9 @@ export interface Product {
   // H - Tên sản phẩm
   productName: string | null
 
+  /** Rich-text product description returned by the product detail API. */
+  description: string | null
+
   // I - Tên khác
   otherName: string | null
 

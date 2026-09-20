@@ -91,6 +91,11 @@ class ProductService extends BaseService {
     return data.value
   }
 
+  updateProductDescription = async ({ id, description }: { id: string | number; description: string }) => {
+    const { data } = await this.put<BaseResponse<ProductDetail>>(`/v1/${this.baseUrl}/${id}`, { description })
+    return data.value
+  }
+
   getComboSpecification = async ({ id }: { id: string | number }) => {
     const { data } = await this.get<BaseResponse<ComboSpecification>>(`/v1/products/${id}/${this.baseComboUrl}`)
     return data.value

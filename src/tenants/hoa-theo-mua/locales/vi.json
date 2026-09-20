@@ -99,16 +99,178 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "floralMockups": {
+    "title": "Quản lý kiểu dáng hoa",
+    "description": "Theo dõi và quản lý mẫu được sử dụng trong quy trình tùy chỉnh hoa AI.",
+    "column": {
+      "name": "Tên mẫu",
+      "description": "Mô tả",
+      "preview": "Ảnh Preview",
+      "status": "Trạng thái",
+      "type": "Loại mẫu",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Dừng hoạt động"
+    },
+    "type": {
+      "flower": "Mẫu mockup hoa",
+      "bundle": "Mẫu gói hoa"
+    },
+    "searchPlaceholder": "Tìm theo tên Template...",
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview của {{name}}",
+    "openPreview": "Mở ảnh Preview của {{name}}",
+    "openMenu": "Mở thao tác Template",
+    "viewDetail": "Xem chi tiết",
+    "loadFailed": "Không thể tải danh sách Template",
+    "loadFailedDescription": "Đã xảy ra lỗi trong quá trình tải dữ liệu. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "form": {
+      "add": "Thêm Template",
+      "title": "Thêm Template",
+      "description": "Tạo Template mẫu hoa hoặc gói hoa cho quy trình tùy chỉnh hoa AI.",
+      "name": "Tên Template",
+      "namePlaceholder": "Nhập tên Template...",
+      "mockupDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh Template",
+      "imageHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB · Không giới hạn kích thước hoặc tỷ lệ ảnh",
+      "imagePreviewAlt": "Ảnh xem trước của Template đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "removeImage": "Xóa ảnh đã chọn",
+      "activeHint": "Template mới sẽ được tạo với trạng thái Dừng hoạt động.",
+      "submit": "Thêm",
+      "createSuccess": "Thêm Template thành công.",
+      "createFailed": "Không thể thêm Template. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên Template.",
+        "nameLength": "Tên Template không được vượt quá 50 ký tự.",
+        "descriptionLength": "Mô tả không được vượt quá 200 ký tự.",
+        "imageRequired": "Vui lòng chọn ảnh Template.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh Template không được vượt quá 10 MB."
+      }
+    },
+    "detail": {
+      "description": "Xem thông tin và ảnh Preview của Template mẫu hoa."
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Hoạt động",
+      "deactivate": "Chuyển sang Dừng hoạt động",
+      "activateTitle": "Chuyển Template sang Hoạt động?",
+      "deactivateTitle": "Chuyển Template sang Dừng hoạt động?",
+      "activateDescription": "Template {{name}} sẽ khả dụng và có thể được hiển thị cho khách hàng khi chọn Template.",
+      "deactivateDescription": "Template {{name}} sẽ không còn khả dụng cho yêu cầu mới và không hiển thị để khách hàng lựa chọn.",
+      "activateConfirm": "Chuyển sang Hoạt động",
+      "deactivateConfirm": "Chuyển sang Dừng hoạt động",
+      "activateSuccess": "Template đã chuyển sang Hoạt động.",
+      "deactivateSuccess": "Template đã chuyển sang Dừng hoạt động.",
+      "failed": "Không thể chuyển trạng thái Template. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa Template",
+      "title": "Bạn chắc chắn muốn xóa Template này không?",
+      "description": "Template {{name}} sẽ không còn hiển thị trong danh sách quản lý hoặc cho khách hàng lựa chọn. Dữ liệu và ảnh Preview vẫn được giữ lại để xem lịch sử.",
+      "confirm": "Xóa Template",
+      "retry": "Thử lại",
+      "success": "Xóa Template thành công.",
+      "failed": "Không thể xóa Template. Vui lòng thử lại."
+    }
+  },
+  "cardTemplates": {
+    "title": "Danh sách mẫu thiệp",
+    "description": "Theo dõi các mẫu thiệp đang được hệ thống sử dụng.",
+    "searchPlaceholder": "Tìm theo tên mẫu thiệp...",
+    "add": "Thêm mẫu thiệp",
+    "column": {
+      "name": "Tên mẫu",
+      "preview": "Ảnh Preview",
+      "description": "Mô tả",
+      "type": "Loại mẫu",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "type": {
+      "handmade": "Thiệp có sẵn",
+      "ai": "Thiệp AI"
+    },
+    "status": {
+      "active": "Đang sử dụng",
+      "inactive": "Ngừng sử dụng"
+    },
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview mẫu {{name}}",
+    "openPreview": "Mở ảnh Preview mẫu {{name}}",
+    "viewPreview": "Xem ảnh Preview",
+    "edit": "Sửa mẫu thiệp",
+    "openMenu": "Mở thao tác mẫu thiệp",
+    "form": {
+      "title": "Thêm mẫu thiệp",
+      "description": "Tạo mẫu mới để khách hàng sử dụng khi tạo thiệp.",
+      "name": "Tên mẫu",
+      "namePlaceholder": "Nhập tên mẫu thiệp...",
+      "templateDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh template mẫu thiệp",
+      "imageHint": "Định dạng PNG hoặc JPG, dung lượng tối đa 10 MB.",
+      "imagePreviewAlt": "Ảnh xem trước của mẫu thiệp đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "dropzoneHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB",
+      "submit": "Thêm mẫu thiệp",
+      "updateTitle": "Sửa mẫu thiệp",
+      "updateDescription": "Cập nhật tên, mô tả hoặc ảnh mẫu thiệp mà không thay đổi trạng thái sử dụng.",
+      "updateImageHint": "Giữ ảnh hiện tại hoặc chọn ảnh PNG/JPG mới có dung lượng tối đa 10 MB.",
+      "updateSubmit": "Lưu thay đổi",
+      "words": "từ",
+      "createSuccess": "Thêm mẫu thiệp thành công.",
+      "createFailed": "Không thể thêm mẫu thiệp. Vui lòng thử lại.",
+      "updateSuccess": "Cập nhật mẫu thiệp thành công.",
+      "updateFailed": "Không thể cập nhật mẫu thiệp. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên mẫu thiệp.",
+        "imageRequired": "Vui lòng chọn ảnh template mẫu thiệp.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh không được vượt quá 10 MB.",
+        "nameWords": "Tên mẫu không được vượt quá {{max}} từ."
+      }
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Đang sử dụng",
+      "deactivate": "Chuyển sang Ngừng sử dụng",
+      "activateTitle": "Chuyển mẫu thiệp sang Đang sử dụng?",
+      "deactivateTitle": "Chuyển mẫu thiệp sang Ngừng sử dụng?",
+      "activateDescription": "Mẫu {{name}} sẽ được hiển thị cho khách hàng khi tạo thiệp mới.",
+      "deactivateDescription": "Mẫu {{name}} sẽ không còn hiển thị cho khách hàng khi tạo thiệp mới.",
+      "activateConfirm": "Chuyển sang Đang sử dụng",
+      "deactivateConfirm": "Chuyển sang Ngừng sử dụng",
+      "activateSuccess": "Mẫu thiệp đã chuyển sang Đang sử dụng.",
+      "deactivateSuccess": "Mẫu thiệp đã chuyển sang Ngừng sử dụng.",
+      "failed": "Không thể chuyển trạng thái mẫu thiệp. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa",
+      "title": "Bạn chắc chắn muốn xóa mẫu thiệp này không?",
+      "description": "Mẫu thiệp sau khi xóa sẽ không còn hiển thị để khách hàng lựa chọn.",
+      "success": "Xóa mẫu thiệp thành công.",
+      "failed": "Không thể xóa mẫu thiệp. Vui lòng thử lại."
+    }
+  },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",
     "history": {
       "title": "Lịch sử thiệp AI",
       "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
-      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
       "column": {
         "preview": "Ảnh thiệp",
-        "code": "Mã thiệp",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "template": "Mẫu thiệp",
         "size": "Kích thước",
         "writingMode": "Hình thức viết",
@@ -132,7 +294,9 @@
         "preview": "Ảnh mẫu hoa",
         "code": "Mã mẫu hoa",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "sourceCombo": "Combo nguồn",
+        "sourceProduct": "Sản phẩm nguồn",
         "createdAt": "Ngày tạo",
         "actions": "Thao tác"
       },
@@ -160,7 +324,10 @@
         "overview": "Tổng quan",
         "materials": "Vật liệu",
         "source": "Nguồn thiết kế",
-        "orders": "Order liên kết"
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "orders": "Order liên kết",
+        "audit": "Lịch sử AI"
       },
       "section": {
         "customer": "Thông tin khách hàng",
@@ -169,6 +336,27 @@
         "supportMaterials": "Vật liệu Support tại thời điểm tạo",
         "sourceCombo": "Combo nguồn",
         "sourceMockup": "Mockup nguồn",
+        "bundleImage": "Ảnh Bundle",
+        "bundle": {
+          "title": "Thông tin Bundle",
+          "id": "Bundle ID",
+          "name": "Tên Bundle",
+          "description": "Mô tả",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động"
+        },
+        "accessories": {
+          "ribbon": "Ruy băng",
+          "wrappingPaper": "Giấy gói",
+          "id": "ID",
+          "name": "Tên",
+          "label": "Nhãn",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động",
+          "empty": "Không có thông tin."
+        },
         "orders": "Order liên kết"
       },
       "customRequest": "Yêu cầu hoặc ghi chú",
@@ -204,6 +392,9 @@
         "customer": "Khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thiết kế & file",
+        "pricing": "Kích thước & giá",
+        "source": "Nguồn dữ liệu",
+        "attachments": "Ảnh đính kèm",
         "orders": "Order liên kết"
       },
       "section": {
@@ -211,17 +402,32 @@
         "customer": "Thông tin khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thông tin thiết kế và file",
+        "pricing": "Kích thước và giá",
+        "source": "Nguồn dữ liệu",
         "orders": "Order liên kết"
       },
       "field": {
         "customerName": "Họ tên",
         "phone": "Số điện thoại",
+        "address": "Địa chỉ",
         "email": "Email",
         "sender": "Người gửi",
         "recipient": "Người nhận",
         "greeting": "Lời chúc",
         "attachments": "Ảnh người dùng đính kèm",
-        "fileStatus": "Trạng thái file"
+        "fileStatus": "Trạng thái file",
+        "cardType": "Loại thiệp",
+        "templateType": "Loại mẫu thiệp",
+        "sourceType": "Loại nguồn",
+        "originProduct": "Sản phẩm nguồn",
+        "generatedFlower": "Mẫu hoa nguồn",
+        "dimensions": "Kích thước",
+        "maxWords": "Số từ tối đa",
+        "wordCount": "Số từ đã dùng",
+        "basePrice": "Giá cơ bản",
+        "extraPrice": "Phụ phí",
+        "totalPrice": "Tổng giá",
+        "systemPrompt": "Prompt hệ thống"
       },
       "fileStatus": {
         "available": "Còn khả dụng",
@@ -252,6 +458,7 @@
         "code": "Mã Order",
         "status": "Trạng thái",
         "createdAt": "Ngày tạo",
+        "totalFee": "Tổng tiền",
         "open": "Mở chi tiết Order {{code}}"
       }
     },
@@ -301,7 +508,7 @@
     "templateManagement": {
       "title": "Quản lý mẫu",
       "cardTemplates": "Mẫu thiệp",
-      "flowerMockups": "Mockup mẫu hoa"
+      "flowerMockups": "Kiểu dáng hoa"
     },
     "cardConfiguration": {
       "title": "Cấu hình thiệp",
@@ -315,6 +522,7 @@
       "back": "Quay lại",
       "cancel": "Hủy",
       "delete": "Xóa",
+      "saving": "Đang lưu...",
       "previous": "Trước",
       "next": "Sau"
     },
@@ -788,6 +996,16 @@
       "onlyLeft": "Chỉ còn {{count}} sản phẩm",
       "viewOnWebsite": "Xem trên website",
       "copyCode": "Sao chép mã",
+      "description": {
+        "title": "Mô tả",
+        "subtitle": "Thông tin mô tả sản phẩm.",
+        "empty": "Chưa có mô tả.",
+        "edit": "Chỉnh sửa",
+        "editTitle": "Chỉnh sửa mô tả sản phẩm",
+        "placeholder": "Nhập mô tả sản phẩm...",
+        "save": "Lưu mô tả",
+        "updated": "Đã cập nhật mô tả sản phẩm"
+      },
       "copied": "Đã sao chép",
       "share": "Sao chép liên kết",
       "linkCopied": "Đã sao chép liên kết",
@@ -2474,6 +2692,7 @@
       "tab": {
         "overview": "Tổng quan",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "invoice": "Hóa đơn"
@@ -2484,6 +2703,7 @@
         "delivery": "Vị trí giao hàng",
         "fees": "Chi tiết chi phí",
         "items": "Sản phẩm",
+        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "transaction": "Giao dịch",
@@ -2495,6 +2715,7 @@
         "delivery": "Địa điểm giao hàng của đơn.",
         "fees": "Cách tổng tiền của đơn được cấu thành.",
         "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
+        "snapshot": "Thông tin cấu hình được lưu lại tại thời điểm đặt hàng để đối chiếu.",
         "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
         "payment": "Phương thức và liên kết thanh toán của đơn.",
         "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
@@ -2557,7 +2778,28 @@
       "vat": "VAT",
       "mapTitle": "Bản đồ vị trí giao hàng",
       "noLocation": "Không có vị trí giao hàng",
-      "openInMaps": "Mở Google Maps"
+      "openInMaps": "Mở Google Maps",
+      "snapshot": {
+        "empty": "Đơn hàng chưa có snapshot",
+        "ribbon": "Ruy băng",
+        "wrappingPaper": "Giấy gói",
+        "materials": "Vật liệu",
+        "additions": "Vật liệu bổ sung",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "card": "Thiệp đi kèm",
+        "accessoriesTitle": "Phụ kiện",
+        "accessoriesDescription": "Ruy băng và giấy gói được lưu trong đơn hàng.",
+        "materialsTitle": "Vật liệu",
+        "materialsDescription": "Các vật liệu được ghi nhận trong snapshot sản phẩm.",
+        "cardTitle": "Thiệp đi kèm",
+        "cardDescription": "Thông tin thiệp được lưu cùng cấu hình đơn hàng.",
+        "cardSize": "Kích thước",
+        "cardDimensions": "Kích thước thực tế",
+        "cardQuantity": "Số lượng",
+        "cardWordCount": "Số từ",
+        "cardTotal": "Tổng phí"
+      }
     }
   }
 }
