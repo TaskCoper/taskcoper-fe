@@ -188,7 +188,7 @@
     "history": {
       "title": "AI card history",
       "description": "View and search successfully generated AI cards.",
-      "searchPlaceholder": "Search by customer or card template...",
+      "searchPlaceholder": "Type to search...",
       "column": {
         "preview": "Preview",
         "customer": "Customer",

@@ -76,13 +76,12 @@ function MaterialTable({ materials }: { materials: GeneratedFlowerMaterial[] }) 
             <TableCell className='px-5'>
               <div className='flex min-w-56 items-center gap-3'>
                 <img
-                  src='/images/placeholder-cover.png'
+                  src={material.imageUrl || '/images/placeholder-cover.png'}
                   alt={material.name}
                   className='size-10 shrink-0 rounded-lg border bg-muted/40 object-cover'
                 />
                 <div className='min-w-0'>
                   <p className='truncate font-medium'>{material.name}</p>
-                  <p className='truncate font-mono text-xs text-muted-foreground'>{material.matId}</p>
                 </div>
               </div>
             </TableCell>
@@ -330,7 +329,6 @@ export default function AiFlowerDesignDetailPage() {
                         />
                         <div>
                           <p className='font-medium'>{mockup.name}</p>
-                          <p className='mt-1 font-mono text-xs text-muted-foreground'>{mockup.id}</p>
                           <p className='mt-2 text-sm text-muted-foreground'>{mockup.description || '-'}</p>
                         </div>
                       </div>
@@ -343,7 +341,7 @@ export default function AiFlowerDesignDetailPage() {
 
               <TabsContent value='bundle' className='mt-0 grid items-start gap-5 xl:grid-cols-2'>
                 <DetailPanel title={t('aiCustom.flowerDetail.section.bundle.title')} contentClassName='p-0'>
-                  <div className='border-b p-5'>
+                  <div className='flex justify-center border-b p-5'>
                     <AiCardOutputImage
                       src={bundle?.image?.url || null}
                       alt={bundle?.name || '-'}

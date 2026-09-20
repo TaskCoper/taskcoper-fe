@@ -137,6 +137,7 @@ export interface GeneratedFlowerMaterial {
   name: string
   quantity: number
   isCore: boolean
+  imageUrl?: string | null
 }
 
 export interface GeneratedFlowerProductSnapshot {

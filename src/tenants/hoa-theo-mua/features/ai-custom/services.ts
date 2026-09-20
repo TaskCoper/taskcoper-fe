@@ -48,8 +48,13 @@ class GenerateAiCustomService extends BaseService {
   }
 
   getAiFlowerDesignHistory = async (params: GetAiFlowerDesignHistoryParams) => {
+    const { comboIds, search, ...restParams } = params
     const { data } = await this.get<BasePaginationResponse<GeneratedFlowerHistoryItem>>(this.generatedFlowersBaseUrl, {
-      params
+      params: {
+        ...restParams,
+        generatedFlowerName: search,
+        productId: comboIds
+      }
     })
     return data.value
   }
