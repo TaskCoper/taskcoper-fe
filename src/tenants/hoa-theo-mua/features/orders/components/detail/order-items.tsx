@@ -54,8 +54,8 @@ function MaterialGroup({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {materials.map((material) => (
-            <TableRow key={material.matId}>
+          {materials.map((material, index) => (
+            <TableRow key={`${material.matId}-${index}`}>
               <TableCell className='truncate py-2 text-sm'>
                 <Link
                   to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.matId}`}
@@ -134,7 +134,11 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
           {items.map((item) => {
             const name = item.name?.trim() || empty
             const lineTotal = item.price != null && item.number != null ? item.price * item.number : null
-            const materials = item.snapshot?.materials ?? []
+            // API mới trả vật liệu trong từng `productMetadata`, bản cũ trả thẳng ở `snapshot.materials`.
+            const materials =
+              item.snapshot?.materials ??
+              item.snapshot?.productMetadata?.flatMap((metadata) => metadata.materials ?? []) ??
+              []
             const isExpanded = expandedIds.includes(item.orderDetailsId)
 
             return (

@@ -253,6 +253,7 @@ export interface SystemOrderMaterialSnapshot {
 }
 
 export interface SystemOrderSnapshotAccessory {
+  id: string
   name: string | null
   label: string | null
   imageUrl: string | null
@@ -265,10 +266,12 @@ export type SystemOrderSnapshotMaterial = SystemOrderMaterialSnapshot
 
 export interface SystemOrderSnapshotCardSource {
   type: string | null
+  id: string | null // Guid
   imageUrl: string | null
 }
 
 export interface SystemOrderSnapshotCardTemplate {
+  templateId: string | null // Guid
   templateName: string | null
   templateType: string | null
   templateImageUrl: string | null
@@ -282,6 +285,19 @@ export interface SystemOrderSnapshotCardSize {
   maxWords: number | null
 }
 
+/** Giới hạn số từ và phụ phí áp cho thiệp tại thời điểm đặt. */
+export interface SystemOrderSnapshotCardConfig {
+  minWords: number | null
+  maxWords: number | null
+  extraPrice: number | null
+}
+
+/** Prompt hệ thống dùng để sinh ảnh thiệp. */
+export interface SystemOrderSnapshotCardPrompt {
+  type: string | null
+  content: string | null
+}
+
 export interface SystemOrderSnapshotCard {
   virtualId: string | null
   cardId: string | null
@@ -290,6 +306,7 @@ export interface SystemOrderSnapshotCard {
   rawImage: string | null
   cardTemplate: SystemOrderSnapshotCardTemplate | null
   cardSize: SystemOrderSnapshotCardSize | null
+  cardConfig: SystemOrderSnapshotCardConfig | null
   messageContent: string | null
   formType: string | null
   attachedImageUrl: string | null
@@ -298,6 +315,7 @@ export interface SystemOrderSnapshotCard {
   basePrice: number | null
   extraPrice: number | null
   totalPrice: number | null
+  systemPrompt: SystemOrderSnapshotCardPrompt | null
   validatedAt: string | null
   status: string | null
   idResult: string[] | null
@@ -315,6 +333,8 @@ export interface SystemOrderDetailCard {
 
 export interface SystemOrderProductMetadata {
   name: string | null
+  subId: string | null // Guid - sản phẩm con được chốt trong đơn
+  generatedFlower: string | null // Guid - bản hoa AI đã sinh
   aiCustomize: boolean
   ribbon: SystemOrderSnapshotAccessory | null
   wrappingPaper: SystemOrderSnapshotAccessory | null
@@ -325,7 +345,8 @@ export interface SystemOrderProductMetadata {
 
 /** Product snapshot stored on an order line item. */
 export interface SystemOrderItemSnapshot {
-  subId: string | null // Guid
+  // API mới chỉ trả `productMetadata`; `subId` và `materials` nằm trong từng metadata.
+  subId?: string | null // Guid
   materials?: SystemOrderMaterialSnapshot[] | null
   productMetadata: SystemOrderProductMetadata[] | null
 }
