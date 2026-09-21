@@ -1,7 +1,13 @@
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { ImageIcon, PackageIcon } from 'lucide-react'
+import { cn } from '@/shared/utils'
+import { CheckIcon, ImageIcon, ImageOffIcon, PackageIcon } from 'lucide-react'
+import { Link } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../../config'
+import { useGetOrderDetailCards } from '../../hooks/use-get-order-detail-cards'
 import type {
+  SystemOrderDetailCard,
   SystemOrderItem,
   SystemOrderProductMetadata,
   SystemOrderSnapshotAccessory,
@@ -77,7 +83,153 @@ function MaterialList({
   )
 }
 
-function CardSnapshot({ card, t }: { card: SystemOrderSnapshotCard; t: TenantT }) {
+interface CardVersionView {
+  id: string
+  /** Số thứ tự bản, đánh theo đúng thứ tự API trả về. */
+  label: number
+  name: string | null
+  imageUrl: string | null
+  isFinal: boolean
+}
+
+const toCardVersions = (cards: SystemOrderDetailCard[], card: SystemOrderSnapshotCard): CardVersionView[] => {
+  const generated = cards.map((item, index) => ({
+    id: item.id,
+    label: index + 1,
+    name: item.name,
+    imageUrl: item.imageUrl
+  }))
+
+  const seen = new Set(generated.map((version) => version.id))
+  const missing: Omit<CardVersionView, 'isFinal'>[] = []
+
+  for (const id of card.idResult ?? []) {
+    if (!id || seen.has(id)) continue
+    seen.add(id)
+    missing.push({ id, label: generated.length + missing.length + 1, name: null, imageUrl: null })
+  }
+
+  return [...generated, ...missing].map((version) => ({
+    ...version,
+    isFinal: !!card.finalGeneratedCardId && version.id === card.finalGeneratedCardId
+  }))
+}
+
+function CardVersionTile({ version, t }: { version: CardVersionView; t: TenantT }) {
+  const label = t('systemOrders.detail.snapshot.versionLabel', { index: version.label })
+
+  return (
+    <Link
+      to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/cards/${version.id}`}
+      className={cn(
+        'block overflow-hidden rounded-lg border bg-card transition-colors hover:border-primary/60',
+        version.isFinal ? 'border-primary ring-2 ring-primary/30' : 'opacity-90 hover:opacity-100'
+      )}
+    >
+      <div className='relative flex aspect-square items-center justify-center bg-muted/30'>
+        {version.imageUrl ? (
+          <img src={version.imageUrl} alt={label} className='size-full object-contain' />
+        ) : (
+          <div className='flex flex-col items-center gap-1 px-2 text-center text-muted-foreground/60'>
+            <ImageOffIcon className='size-4' />
+            <span className='text-[10px] leading-tight'>{t('systemOrders.detail.snapshot.versionMissing')}</span>
+          </div>
+        )}
+        <Badge
+          variant={version.isFinal ? 'default' : 'secondary'}
+          className='absolute right-1.5 top-1.5 gap-1 px-1.5 py-0 text-[10px] font-normal shadow-sm'
+        >
+          {version.isFinal && <CheckIcon className='size-2.5' />}
+          {version.isFinal
+            ? t('systemOrders.detail.snapshot.versionFinal')
+            : t('systemOrders.detail.snapshot.versionNotChosen')}
+        </Badge>
+      </div>
+      <div className='border-t px-2 py-1.5'>
+        <p className='text-xs font-medium'>{label}</p>
+        <p className='truncate font-mono text-[10px] text-muted-foreground'>{version.name?.trim() || version.id}</p>
+      </div>
+    </Link>
+  )
+}
+
+function CardVersions({
+  orderDetailsId,
+  card,
+  t
+}: {
+  orderDetailsId: string
+  card: SystemOrderSnapshotCard
+  t: TenantT
+}) {
+  const { orderDetailCards, isGettingOrderDetailCards, isOrderDetailCardsError } = useGetOrderDetailCards({
+    orderDetailsId,
+    virtualId: card.virtualId ?? undefined
+  })
+
+  // Thiệp đặt trước khi có studio AI không có `virtualId` lẫn id bản sinh nào - không có gì để đối chiếu.
+  if (!card.virtualId && !card.finalGeneratedCardId && !(card.idResult?.length ?? 0)) return null
+
+  const versions = toCardVersions(orderDetailCards ?? [], card)
+  const finalVersion = versions.find((version) => version.isFinal)
+
+  const status = finalVersion
+    ? t('systemOrders.detail.snapshot.versionsChosen', { index: finalVersion.label })
+    : card.finalGeneratedCardId
+      ? t('systemOrders.detail.snapshot.versionsChosenMissing')
+      : t('systemOrders.detail.snapshot.versionsNoFinal')
+
+  return (
+    <div className='space-y-3 border-t pt-3'>
+      <div className='flex flex-wrap items-center gap-2'>
+        <p className='text-sm font-medium'>{t('systemOrders.detail.snapshot.versionsTitle')}</p>
+        {versions.length > 0 && (
+          <Badge variant='secondary' className='font-normal'>
+            {versions.length}
+          </Badge>
+        )}
+        <Badge
+          variant={finalVersion ? 'default' : 'outline'}
+          className={cn('font-normal', !finalVersion && 'text-muted-foreground')}
+        >
+          {status}
+        </Badge>
+      </div>
+
+      {isGettingOrderDetailCards ? (
+        <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8'>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className='aspect-[4/5] rounded-lg' />
+          ))}
+        </div>
+      ) : isOrderDetailCardsError ? (
+        <p className='rounded-lg border py-4 text-center text-sm text-muted-foreground'>
+          {t('systemOrders.detail.snapshot.versionsError')}
+        </p>
+      ) : versions.length === 0 ? (
+        <p className='rounded-lg border py-4 text-center text-sm text-muted-foreground'>
+          {t('systemOrders.detail.snapshot.versionsEmpty')}
+        </p>
+      ) : (
+        <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8'>
+          {versions.map((version) => (
+            <CardVersionTile key={version.id} version={version} t={t} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function CardSnapshot({
+  orderDetailsId,
+  card,
+  t
+}: {
+  orderDetailsId: string
+  card: SystemOrderSnapshotCard
+  t: TenantT
+}) {
   const empty = t('systemOrders.common.noDataShort')
   const size = card.cardSize
 
@@ -123,6 +275,7 @@ function CardSnapshot({ card, t }: { card: SystemOrderSnapshotCard; t: TenantT }
       {card.messageContent && (
         <div className='rounded-md bg-muted/40 p-3 text-sm whitespace-pre-wrap'>{card.messageContent}</div>
       )}
+      <CardVersions orderDetailsId={orderDetailsId} card={card} t={t} />
     </div>
   )
 }
@@ -130,10 +283,12 @@ function CardSnapshot({ card, t }: { card: SystemOrderSnapshotCard; t: TenantT }
 type SnapshotSection = 'accessories' | 'materials' | 'card'
 
 function MetadataCard({
+  orderDetailsId,
   metadata,
   section,
   t
 }: {
+  orderDetailsId: string
   metadata: SystemOrderProductMetadata
   section: SnapshotSection
   t: TenantT
@@ -163,7 +318,9 @@ function MetadataCard({
       {section === 'materials' && additions.length > 0 && (
         <MaterialList title={t('systemOrders.detail.snapshot.additions')} materials={additions} t={t} />
       )}
-      {section === 'card' && metadata.snapShotCard && <CardSnapshot card={metadata.snapShotCard} t={t} />}
+      {section === 'card' && metadata.snapShotCard && (
+        <CardSnapshot orderDetailsId={orderDetailsId} card={metadata.snapShotCard} t={t} />
+      )}
     </div>
   )
 }
@@ -174,7 +331,13 @@ function SnapshotSection({ items, section, t }: { items: SystemOrderItem[]; sect
       {items.map((item) => (
         <div key={item.orderDetailsId} className='grid gap-4'>
           {item.snapshot?.productMetadata?.map((metadata, index) => (
-            <MetadataCard key={`${item.orderDetailsId}-${index}`} metadata={metadata} section={section} t={t} />
+            <MetadataCard
+              key={`${item.orderDetailsId}-${index}`}
+              orderDetailsId={item.orderDetailsId}
+              metadata={metadata}
+              section={section}
+              t={t}
+            />
           ))}
         </div>
       ))}

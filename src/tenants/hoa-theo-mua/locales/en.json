@@ -2798,7 +2798,17 @@
         "cardDimensions": "Dimensions",
         "cardQuantity": "Quantity",
         "cardWordCount": "Word count",
-        "cardTotal": "Total fee"
+        "cardTotal": "Total fee",
+        "versionsTitle": "Generated card versions",
+        "versionLabel": "Version {{index}}",
+        "versionFinal": "Final pick",
+        "versionNotChosen": "Not chosen",
+        "versionMissing": "Image unavailable",
+        "versionsChosen": "Final pick: version {{index}}",
+        "versionsChosenMissing": "Final pick is no longer listed",
+        "versionsNoFinal": "No final pick yet",
+        "versionsEmpty": "No card versions generated yet",
+        "versionsError": "Could not load card versions"
       }
     }
   }

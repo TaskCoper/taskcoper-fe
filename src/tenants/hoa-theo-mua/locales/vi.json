@@ -2798,7 +2798,17 @@
         "cardDimensions": "Kích thước thực tế",
         "cardQuantity": "Số lượng",
         "cardWordCount": "Số từ",
-        "cardTotal": "Tổng phí"
+        "cardTotal": "Tổng phí",
+        "versionsTitle": "Các bản thiệp đã sinh",
+        "versionLabel": "Phiên bản {{index}}",
+        "versionFinal": "Bản chốt in",
+        "versionNotChosen": "Không chọn",
+        "versionMissing": "Không còn ảnh",
+        "versionsChosen": "Đã chốt phiên bản {{index}}",
+        "versionsChosenMissing": "Bản chốt không còn trong danh sách",
+        "versionsNoFinal": "Chưa chốt bản in",
+        "versionsEmpty": "Chưa sinh bản thiệp nào",
+        "versionsError": "Không tải được các bản thiệp"
       }
     }
   }

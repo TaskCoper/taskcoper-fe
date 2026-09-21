@@ -15,6 +15,13 @@ export const OrderStatusLabel: Record<OrderStatus, I18nKey> = {
   [OrderStatus.Cancelled]: 'orders.status.cancelled' as I18nKey
 }
 
+export const OrderSnapshotFormType = {
+  GoMay: 'go_may',
+  Calligraphy: 'calligraphy'
+} as const
+
+export type OrderSnapshotFormType = (typeof OrderSnapshotFormType)[keyof typeof OrderSnapshotFormType]
+
 export const OrderStatusStyle: Record<OrderStatus, { dot: string; badge: string }> = {
   [OrderStatus.Paid]: {
     dot: 'bg-emerald-500',
@@ -276,6 +283,8 @@ export interface SystemOrderSnapshotCardSize {
 }
 
 export interface SystemOrderSnapshotCard {
+  virtualId: string | null
+  cardId: string | null
   cardType: string | null
   source: SystemOrderSnapshotCardSource | null
   rawImage: string | null
@@ -291,6 +300,17 @@ export interface SystemOrderSnapshotCard {
   totalPrice: number | null
   validatedAt: string | null
   status: string | null
+  idResult: string[] | null
+  finalGeneratedCardId: string | null
+}
+
+export interface SystemOrderDetailCard {
+  id: string
+  name: string
+  imageUrl: string
+  formType: OrderSnapshotFormType
+  messageContent: string
+  templateId: string
 }
 
 export interface SystemOrderProductMetadata {
