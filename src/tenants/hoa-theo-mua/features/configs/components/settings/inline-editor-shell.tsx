@@ -20,6 +20,7 @@ export interface InlineEditorShellProps {
   onBack?: () => void
   saveDisabledReason?: string
   secondaryAction?: ReactNode
+  contentClassName?: string
 }
 
 export default function InlineEditorShell({
@@ -34,7 +35,8 @@ export default function InlineEditorShell({
   onSave,
   onBack,
   saveDisabledReason,
-  secondaryAction
+  secondaryAction,
+  contentClassName
 }: InlineEditorShellProps) {
   const { t } = useTenantTranslation()
 
@@ -57,9 +59,9 @@ export default function InlineEditorShell({
       tabIndex={-1}
       data-editor-id={editorId}
       aria-labelledby={`editor-title-${editorId}`}
-      className='outline-none flex flex-col flex-1'
+      className='outline-none flex min-h-0 flex-col flex-1'
     >
-      <div className='p-4 flex items-center gap-2.5 border-b border-border'>
+      <div className='p-4 flex shrink-0 items-center gap-2.5 border-b border-border'>
         {onBack && (
           <Button type='button' variant='ghost' size='icon' className='shrink-0' onClick={onBack}>
             <ArrowLeft className='size-4' />
@@ -78,7 +80,7 @@ export default function InlineEditorShell({
             id={`editor-title-${editorId}`}
             ref={headingRef}
             tabIndex={-1}
-            className='truncate text-lg font-semibold outline-none'
+            className='truncate text-lg font-semibold outline-none text-primary'
           >
             {title}
           </h3>
@@ -87,11 +89,11 @@ export default function InlineEditorShell({
         </div>
       </div>
 
-      <div data-dirty-focus className='flex-1 space-y-8 p-4'>
+      <div data-dirty-focus className={cn('flex-1 space-y-8 p-4', contentClassName)}>
         {children}
       </div>
 
-      <div className='sticky bottom-0 z-10 mt-6 flex items-center justify-end gap-2 border-t bg-card px-4 py-3'>
+      <div className='sticky bottom-0 z-10 mt-6 flex shrink-0 items-center justify-end gap-2 border-t bg-card px-4 py-3'>
         {secondaryAction && <div className='mr-auto'>{secondaryAction}</div>}
         {saveDisabledReason && <p className='mr-auto text-xs text-muted-foreground'>{saveDisabledReason}</p>}
 

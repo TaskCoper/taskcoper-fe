@@ -535,11 +535,25 @@ function ConfigsPageContent() {
     }
 
     if (activeCategory === POSTGEN_CATEGORY_ID) {
-      return <PostgenSection configs={categoryConfigs} onEditConfig={openEdit} />
+      return (
+        <PostgenSection
+          configs={categoryConfigs}
+          onEditConfig={openEdit}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+        />
+      )
     }
 
     if (activeCategory === IMAGEGEN_CATEGORY_ID) {
-      return <ImagegenSection configs={categoryConfigs} onEditConfig={openEdit} />
+      return (
+        <ImagegenSection
+          configs={categoryConfigs}
+          onEditConfig={openEdit}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+        />
+      )
     }
 
     if (visibleConfigs.length === 0) {

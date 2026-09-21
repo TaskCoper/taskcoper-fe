@@ -10,12 +10,21 @@ import type { CreateConfigFormValues } from './validations'
  */
 export const IMAGEGEN_GROUP = 'imagegen'
 
-/** Prompt dựng ảnh bó hoa. */
-export const IMAGEGEN_FLOWER_PROMPT_KEY = `${IMAGEGEN_GROUP}.flower_prompt`
+/** Prompt dựng ảnh bó hoa thô - bước đầu, chưa có bối cảnh. */
+export const IMAGEGEN_FLOWER_CREATE_PROMPT_KEY = `${IMAGEGEN_GROUP}.flower_prompt_create_flowers`
+/** Prompt ghép bối cảnh lên ảnh hoa thô ở bước trên. */
+export const IMAGEGEN_FLOWER_MOCKUP_PROMPT_KEY = `${IMAGEGEN_GROUP}.flower_prompt_flowers_apply_mockup`
+/** Ràng buộc chung cho hai bước trên, giữ AI bám mô tả thật thay vì bịa chi tiết. */
+export const IMAGEGEN_FLOWER_GUARD_PROMPT_KEY = `${IMAGEGEN_GROUP}.flower_prompt_guard_rules`
 /** Prompt dựng thiệp đi kèm bó hoa; chạy cùng prompt hoa nên để chung nhóm. */
 export const IMAGEGEN_CARD_PROMPT_KEY = `${IMAGEGEN_GROUP}.card_prompt`
 
-export const IMAGEGEN_PROMPT_KEYS = [IMAGEGEN_FLOWER_PROMPT_KEY, IMAGEGEN_CARD_PROMPT_KEY] as const
+export const IMAGEGEN_PROMPT_KEYS = [
+  IMAGEGEN_FLOWER_CREATE_PROMPT_KEY,
+  IMAGEGEN_FLOWER_MOCKUP_PROMPT_KEY,
+  IMAGEGEN_FLOWER_GUARD_PROMPT_KEY,
+  IMAGEGEN_CARD_PROMPT_KEY
+] as const
 
 export type ImagegenPromptKey = (typeof IMAGEGEN_PROMPT_KEYS)[number]
 

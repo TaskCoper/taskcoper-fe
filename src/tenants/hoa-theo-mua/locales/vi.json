@@ -2430,10 +2430,20 @@
       "create": "Tạo",
       "otherTitle": "Cấu hình khác trong nhóm",
       "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ...",
-      "flower": {
-        "title": "Prompt ảnh hoa",
-        "subtitle": "Mô tả cách AI dựng ảnh bó hoa.",
-        "label": "Prompt ảnh hoa"
+      "flowerCreate": {
+        "title": "Prompt dựng ảnh hoa thô",
+        "subtitle": "Bước 1: mô tả cách AI dựng ảnh bó hoa gốc, chưa có bối cảnh.",
+        "label": "Prompt dựng ảnh hoa thô"
+      },
+      "flowerMockup": {
+        "title": "Prompt ghép bối cảnh cho ảnh hoa",
+        "subtitle": "Bước 2: mô tả bối cảnh và các chi tiết ghép thêm lên ảnh hoa thô ở bước 1.",
+        "label": "Prompt ghép bối cảnh cho ảnh hoa"
+      },
+      "flowerGuard": {
+        "title": "Prompt ràng buộc cho ảnh hoa",
+        "subtitle": "Các quy tắc bắt buộc để AI bám đúng mô tả, không tự bịa thêm chi tiết.",
+        "label": "Prompt ràng buộc cho ảnh hoa"
       },
       "card": {
         "title": "Prompt thiệp",
@@ -2808,7 +2818,21 @@
         "versionsChosenMissing": "Bản chốt không còn trong danh sách",
         "versionsNoFinal": "Chưa chốt bản in",
         "versionsEmpty": "Chưa sinh bản thiệp nào",
-        "versionsError": "Không tải được các bản thiệp"
+        "versionsError": "Không tải được các bản thiệp",
+        "itemEmpty": "Sản phẩm này chưa có dữ liệu snapshot",
+        "accessories": "Phụ kiện",
+        "noAccessories": "Không có phụ kiện",
+        "core": "Core",
+        "materialsTotal": "Tổng vật liệu",
+        "aiCustomize": "Tùy chỉnh AI",
+        "cardTemplate": "Mẫu thiệp",
+        "cardForm": "Kiểu chữ",
+        "cardBasePrice": "Giá cơ bản",
+        "cardExtraPrice": "Phụ phí",
+        "cardWordLimit": "Giới hạn từ",
+        "cardMessage": "Lời chúc",
+        "cardPrompt": "Prompt tạo ảnh AI",
+        "openProduct": "Mở trang sản phẩm"
       }
     }
   }

@@ -2430,10 +2430,20 @@
       "create": "Create",
       "otherTitle": "Other configs in this group",
       "contentPlaceholder": "Write the instructions for the AI ...",
-      "flower": {
-        "title": "Flower image prompt",
-        "subtitle": "Describes how a bouquet image is rendered.",
-        "label": "Flower image prompt"
+      "flowerCreate": {
+        "title": "Raw flower image prompt",
+        "subtitle": "Step 1: describes how the base bouquet image is rendered, without any scenery.",
+        "label": "Raw flower image prompt"
+      },
+      "flowerMockup": {
+        "title": "Flower mockup prompt",
+        "subtitle": "Step 2: describes the scenery and extra details applied on top of the raw image from step 1.",
+        "label": "Flower mockup prompt"
+      },
+      "flowerGuard": {
+        "title": "Flower guard rules prompt",
+        "subtitle": "Hard rules that keep the AI on the given description instead of inventing details.",
+        "label": "Flower guard rules prompt"
       },
       "card": {
         "title": "Card prompt",
@@ -2808,7 +2818,21 @@
         "versionsChosenMissing": "Final pick is no longer listed",
         "versionsNoFinal": "No final pick yet",
         "versionsEmpty": "No card versions generated yet",
-        "versionsError": "Could not load card versions"
+        "versionsError": "Could not load card versions",
+        "itemEmpty": "This product has no snapshot data",
+        "accessories": "Accessories",
+        "noAccessories": "No accessories",
+        "core": "Core",
+        "materialsTotal": "Materials total",
+        "aiCustomize": "AI customized",
+        "cardTemplate": "Template",
+        "cardForm": "Lettering style",
+        "cardBasePrice": "Base price",
+        "cardExtraPrice": "Extra fee",
+        "cardWordLimit": "Word limit",
+        "cardMessage": "Message",
+        "cardPrompt": "AI image prompt",
+        "openProduct": "Open product page"
       }
     }
   }

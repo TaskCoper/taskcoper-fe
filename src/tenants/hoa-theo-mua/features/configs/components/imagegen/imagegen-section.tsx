@@ -4,13 +4,15 @@ import { Spinner } from '@/components/ui/spinner'
 import type { I18nKey } from '@/lib/i18n/types'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ImagePlus, Plus, SaveIcon } from 'lucide-react'
+import { ImagePlus, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import {
   buildImagegenDocBody,
   IMAGEGEN_CARD_PROMPT_KEY,
-  IMAGEGEN_FLOWER_PROMPT_KEY,
+  IMAGEGEN_FLOWER_CREATE_PROMPT_KEY,
+  IMAGEGEN_FLOWER_GUARD_PROMPT_KEY,
+  IMAGEGEN_FLOWER_MOCKUP_PROMPT_KEY,
   isBlankImagegenHtml,
   isImagegenPromptKey,
   parseImagegenHtml
@@ -18,55 +20,80 @@ import {
 import { configKeys } from '../../query-keys'
 import configService from '../../services'
 import type { Config } from '../../types'
+import InlineEditorShell from '../settings/inline-editor-shell'
+import CategoryEditorPanel, { type CategoryEditorItem } from '../shared/category-editor-panel'
 import ConfigFieldRow from '../shared/config-field-row'
 import EditorSection from '../shared/editor-section'
 
-/** Hai prompt cố định của nhóm; thứ tự ở đây cũng là thứ tự hiển thị. */
 const PROMPT_DOCS = [
-  { configKey: IMAGEGEN_FLOWER_PROMPT_KEY, i18nGroup: 'flower' },
+  { configKey: IMAGEGEN_FLOWER_CREATE_PROMPT_KEY, i18nGroup: 'flowerCreate' },
+  { configKey: IMAGEGEN_FLOWER_MOCKUP_PROMPT_KEY, i18nGroup: 'flowerMockup' },
+  { configKey: IMAGEGEN_FLOWER_GUARD_PROMPT_KEY, i18nGroup: 'flowerGuard' },
   { configKey: IMAGEGEN_CARD_PROMPT_KEY, i18nGroup: 'card' }
 ] as const
 
 interface ImagegenSectionProps {
   configs: Config[]
   onEditConfig: (config: Config) => void
+  selectedKey: string | null
+  onSelect: (key: string) => void
 }
 
-export default function ImagegenSection({ configs, onEditConfig }: ImagegenSectionProps) {
+export default function ImagegenSection({ configs, onEditConfig, selectedKey, onSelect }: ImagegenSectionProps) {
   const { t } = useTenantTranslation()
 
   const configByKey = useMemo(() => new Map(configs.map((config) => [config.key, config])), [configs])
+
+  const items = useMemo<CategoryEditorItem[]>(
+    () =>
+      PROMPT_DOCS.map(({ configKey, i18nGroup }) => ({
+        key: configKey,
+        label: t(`configsPage.imagegenPalette.${i18nGroup}.label`),
+        config: configByKey.get(configKey) ?? null,
+        icon: <ImagePlus className='size-4 shrink-0' />
+      })),
+    [configByKey, t]
+  )
 
   // Record key tạo tay vẫn phải vào sửa được.
   const extraConfigs = useMemo(() => configs.filter((config) => !isImagegenPromptKey(config.key)), [configs])
 
   return (
-    <section className='flex flex-1 flex-col'>
-      <div className='flex items-center gap-2.5 border-b border-border p-4'>
+    <section className='flex min-h-0 flex-1 flex-col'>
+      <div className='flex shrink-0 items-center gap-2.5 border-b border-border p-4'>
         <div className='min-w-0 flex-1 -space-y-0.5'>
           <h3 className='truncate text-lg font-semibold'>{t('configsPage.category.imagegen')}</h3>
           <p className='text-xs text-muted-foreground'>{t('configsPage.imagegenPalette.subtitle')}</p>
         </div>
       </div>
 
-      <div className='flex-1 space-y-8 p-4'>
-        {PROMPT_DOCS.map(({ configKey, i18nGroup }) => (
-          <ImagegenPromptEditor
-            key={configKey}
-            configKey={configKey}
-            i18nGroup={i18nGroup}
-            config={configByKey.get(configKey) ?? null}
-          />
-        ))}
+      <CategoryEditorPanel
+        items={items}
+        selectedKey={selectedKey}
+        onSelect={onSelect}
+        navLabel={t('configsPage.category.imagegen')}
+        contentClassName='min-h-0 flex-1'
+        footer={
+          extraConfigs.length > 0 && (
+            <div className='border-t p-4'>
+              <EditorSection title={t('configsPage.imagegenPalette.otherTitle')} contentClassName='space-y-2'>
+                {extraConfigs.map((config) => (
+                  <ConfigFieldRow key={config.id} config={config} onEdit={() => onEditConfig(config)} />
+                ))}
+              </EditorSection>
+            </div>
+          )
+        }
+      >
+        {(item) => {
+          const doc = PROMPT_DOCS.find((prompt) => prompt.configKey === item.key)
+          if (!doc) return null
 
-        {extraConfigs.length > 0 && (
-          <EditorSection title={t('configsPage.imagegenPalette.otherTitle')} contentClassName='space-y-2'>
-            {extraConfigs.map((config) => (
-              <ConfigFieldRow key={config.id} config={config} onEdit={() => onEditConfig(config)} />
-            ))}
-          </EditorSection>
-        )}
-      </div>
+          return (
+            <ImagegenPromptEditor key={item.key} configKey={item.key} i18nGroup={doc.i18nGroup} config={item.config} />
+          )
+        }}
+      </CategoryEditorPanel>
     </section>
   )
 }
@@ -77,10 +104,6 @@ interface ImagegenPromptEditorProps {
   config: Config | null
 }
 
-/**
- * Record chưa tồn tại thì chỉ hiện nút tạo - đây là bản tạm để seed hai key trước khi BE có sẵn;
- * tạo xong mới mở editor như ô hướng dẫn ảnh của `postgen`.
- */
 function ImagegenPromptEditor({ configKey, i18nGroup, config }: ImagegenPromptEditorProps) {
   const { t } = useTenantTranslation()
   const queryClient = useQueryClient()
@@ -123,28 +146,9 @@ function ImagegenPromptEditor({ configKey, i18nGroup, config }: ImagegenPromptEd
     }
   })
 
-  return (
-    <EditorSection
-      title={t(`configsPage.imagegenPalette.${i18nGroup}.title`)}
-      description={t(`configsPage.imagegenPalette.${i18nGroup}.subtitle`)}
-      action={
-        config && (
-          <Button type='button' size='sm' disabled={!isDirty || isSaving} onClick={() => savePrompt()}>
-            {isSaving ? <Spinner data-icon='inline-start' /> : <SaveIcon data-icon='inline-start' />}
-            {t('configsPage.dialog.save')}
-          </Button>
-        )
-      }
-    >
-      {config ? (
-        <RichTextEditor
-          content={html}
-          onChange={setDraft}
-          outputFormat='markdown'
-          placeholder={'configsPage.imagegenPalette.contentPlaceholder' as I18nKey}
-          displayError={false}
-        />
-      ) : (
+  if (!config) {
+    return (
+      <div className='p-4'>
         <div className='flex w-full items-center gap-3 rounded-xl border border-dashed bg-muted/30 p-3'>
           <span className='flex size-10 shrink-0 items-center justify-center rounded-lg border border-dashed text-muted-foreground'>
             <ImagePlus className='size-4' />
@@ -167,7 +171,30 @@ function ImagegenPromptEditor({ configKey, i18nGroup, config }: ImagegenPromptEd
             {t('configsPage.imagegenPalette.create')}
           </Button>
         </div>
-      )}
-    </EditorSection>
+      </div>
+    )
+  }
+
+  return (
+    <InlineEditorShell
+      editorId={configKey}
+      icon={<ImagePlus className='size-4' />}
+      title={t(`configsPage.imagegenPalette.${i18nGroup}.title`)}
+      description={t(`configsPage.imagegenPalette.${i18nGroup}.subtitle`)}
+      isDirty={isDirty}
+      isSaving={isSaving}
+      onRevert={() => setDraft(null)}
+      onSave={() => savePrompt()}
+      contentClassName='flex min-h-0 flex-col space-y-0 p-0'
+    >
+      <RichTextEditor
+        content={html}
+        onChange={setDraft}
+        outputFormat='markdown'
+        placeholder={'configsPage.imagegenPalette.contentPlaceholder' as I18nKey}
+        displayError={false}
+        variant='fullscreen'
+      />
+    </InlineEditorShell>
   )
 }

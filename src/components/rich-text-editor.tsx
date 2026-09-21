@@ -55,6 +55,8 @@ import { Progress } from './ui/progress'
 
 type RichTextFormat = 'html' | 'markdown'
 
+export type RichTextEditorVariant = 'card' | 'fullscreen'
+
 interface RichTextEditorProps {
   isDisplay?: boolean
   isInitialFocus?: boolean
@@ -75,6 +77,7 @@ interface RichTextEditorProps {
   mentionedUsers?: MentionUser[]
   className?: string
   displayError?: boolean
+  variant?: RichTextEditorVariant
 }
 
 // Helper function to extract user IDs from Tiptap's JSON structure.
@@ -118,8 +121,10 @@ export default function RichTextEditor({
   projectIdentifier,
   mentionedUsers = [],
   className,
-  displayError = true
+  displayError = true,
+  variant = 'card'
 }: RichTextEditorProps) {
+  const isFullscreen = variant === 'fullscreen'
   const queryClient = useQueryClient()
   const { t, i18n } = useTenantTranslation()
   const { uploadFileWithToast } = useUploadFileWithToast()
@@ -398,7 +403,8 @@ export default function RichTextEditor({
       editorProps: {
         attributes: {
           class: cn(
-            'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl p-4 min-h-48 max-h-96 overflow-auto',
+            'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl overflow-auto p-4',
+            isFullscreen ? 'min-h-0 w-full max-w-none flex-1' : 'min-h-48 max-h-96',
             className
           )
         }
@@ -454,16 +460,28 @@ export default function RichTextEditor({
 
   if (isDisplay && editor) {
     return (
-      <div className='space-y-1'>
+      <div className={cn('space-y-1', isFullscreen && 'flex min-h-0 flex-1 flex-col space-y-0')}>
         <EditorContext.Provider value={{ editor }}>
           <div
             className={cn(
-              'border bg-background focus-within:ring-2',
-              invalid ? 'border-destructive focus-within:ring-destructive' : 'border-border focus-within:ring-primary',
-              softInsetSurfaceClasses
+              'bg-background',
+              isFullscreen
+                ? 'flex min-h-0 w-full flex-1 flex-col'
+                : cn(
+                    'border focus-within:ring-2',
+                    invalid
+                      ? 'border-destructive focus-within:ring-destructive'
+                      : 'border-border focus-within:ring-primary',
+                    softInsetSurfaceClasses
+                  )
             )}
           >
-            <div className='p-2 flex gap-2 border-b items-center flex-wrap'>
+            <div
+              className={cn(
+                'p-2 flex gap-2 border-b items-center flex-wrap',
+                isFullscreen && 'sticky top-0 z-10 shrink-0 bg-background'
+              )}
+            >
               {compact ? (
                 // Compact toolbar for narrow spaces
                 <>
@@ -610,7 +628,8 @@ export default function RichTextEditor({
                 </>
               )}
             </div>
-            <EditorContent editor={editor} />
+
+            <EditorContent editor={editor} className={cn(isFullscreen && 'flex min-h-0 flex-1 flex-col')} />
           </div>
         </EditorContext.Provider>
 
