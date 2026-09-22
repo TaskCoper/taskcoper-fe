@@ -453,11 +453,6 @@ export default function AiFlowerDesignDetailPage() {
                     <InformationRow label='Schema version'>
                       {aiFlowerDesign.clientHistory?.metadata?.schemaVersion ?? '-'}
                     </InformationRow>
-                    <InformationRow label='System prompt'>
-                      <span className='whitespace-pre-wrap font-normal'>
-                        {aiFlowerDesign.clientHistory?.systemForm?.content || '-'}
-                      </span>
-                    </InformationRow>
                     <InformationRow label='Validated at'>
                       {aiFlowerDesign.clientHistory?.metadata?.validatedAt
                         ? formatDateTime(aiFlowerDesign.clientHistory.metadata.validatedAt, 'dateTimeShort')
