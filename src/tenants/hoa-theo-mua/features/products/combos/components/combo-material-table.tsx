@@ -12,17 +12,28 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from '@/tenants/hoa-theo-mua/config'
 
 // const CORE_ROLE = '1'
 
-const getActualQuantity = (quantity: number, factor: number) => Math.floor(quantity * factor)
+const isBundleUnit = (unit?: string | null) => {
+  const normalizedUnit = unit?.trim().normalize('NFC').toLocaleLowerCase('vi-VN')
+  return normalizedUnit === 'bó' || normalizedUnit === 'giỏ'
+}
+
+const getActualQuantity = (quantity: number, factor: number, unit?: string | null) =>
+  isBundleUnit(unit) ? quantity * factor : Math.floor(quantity * factor)
 
 const isAccessoryMaterial = (productLabel?: string | null) =>
   productLabel?.trim().normalize('NFC').toLocaleLowerCase('vi-VN') === 'phụ liệu'
 
-const getActualQuantityDisplay = (quantity: number, factor: number | null, applyFactor: boolean) => {
+const getActualQuantityDisplay = (
+  quantity: number,
+  factor: number | null,
+  applyFactor: boolean,
+  unit?: string | null
+) => {
   if (!Number.isFinite(quantity) || quantity <= 0) return null
   if (!applyFactor) return quantity
   if (factor === null || !Number.isFinite(factor) || factor <= 0) return null
 
-  return getActualQuantity(quantity, factor)
+  return getActualQuantity(quantity, factor, unit)
 }
 
 export interface MaterialEditValue {
@@ -162,7 +173,8 @@ export default function ComboMaterialTable({
                       : (getActualQuantityDisplay(
                           editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
                           factor,
-                          applyFactor && !isAccessoryMaterial(productLabelsByMaterialId[material.materialId])
+                          applyFactor && !isAccessoryMaterial(productLabelsByMaterialId[material.materialId]),
+                          material.unit
                         ) ?? t('products.detail.comboSpecification.unconfigured'))}
                   </TableCell>
                 )}
