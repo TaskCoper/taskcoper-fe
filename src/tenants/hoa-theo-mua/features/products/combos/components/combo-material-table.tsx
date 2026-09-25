@@ -43,6 +43,7 @@ export interface MaterialEditValue {
 
 export default function ComboMaterialTable({
   materials,
+  baseQuantityByMaterialId,
   factor,
   applyFactor,
   isEditing,
@@ -57,6 +58,7 @@ export default function ComboMaterialTable({
   t
 }: {
   materials: ComboMaterial[]
+  baseQuantityByMaterialId?: Record<string, number | null>
   factor: number | null
   applyFactor: boolean
   isEditing: boolean
@@ -87,9 +89,21 @@ export default function ComboMaterialTable({
                 />
               </TableHead>
               <TableHead>{t('products.detail.comboSpecification.material')}</TableHead>
-              <TableHead className='text-right'>{t('products.detail.comboSpecification.baseQuantity')}</TableHead>
+              <TableHead className='text-right'>
+                {t(
+                  baseQuantityByMaterialId
+                    ? 'products.detail.comboSpecification.parentBaseQuantity'
+                    : 'products.detail.comboSpecification.baseQuantity'
+                )}
+              </TableHead>
               {applyFactor && (
-                <TableHead className='text-right'>{t('products.detail.comboSpecification.actualQuantity')}</TableHead>
+                <TableHead className='text-right'>
+                  {t(
+                    baseQuantityByMaterialId
+                      ? 'products.detail.comboSpecification.childActualQuantity'
+                      : 'products.detail.comboSpecification.actualQuantity'
+                  )}
+                </TableHead>
               )}
               <TableHead>{t('products.detail.comboSpecification.unit')}</TableHead>
               <TableHead>{t('products.detail.comboSpecification.role')}</TableHead>
@@ -98,139 +112,145 @@ export default function ComboMaterialTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {materials.map((material, index) => (
-              <TableRow key={`${material.materialId}-${index}`}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedMaterialIds.has(material.materialId)}
-                    onCheckedChange={() => onToggle(material.materialId)}
-                    aria-label={t('products.detail.comboSpecification.selectMaterial', {
-                      name: material.materialName || material.materialId
-                    })}
-                  />
-                </TableCell>
-                <TableCell className='min-w-52 font-medium'>
-                  <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.materialId}`}>
-                    <div className='flex min-w-0 items-center gap-3'>
-                      <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
-                        <img
-                          src={material.coverImage || '/images/placeholder-cover.png'}
-                          alt={material.materialName || material.materialId}
-                          className='size-full object-cover'
+            {materials.map((material, index) => {
+              const baseQuantity = baseQuantityByMaterialId
+                ? baseQuantityByMaterialId[material.materialId]
+                : material.quantityPerCombo
+
+              return (
+                <TableRow key={`${material.materialId}-${index}`}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedMaterialIds.has(material.materialId)}
+                      onCheckedChange={() => onToggle(material.materialId)}
+                      aria-label={t('products.detail.comboSpecification.selectMaterial', {
+                        name: material.materialName || material.materialId
+                      })}
+                    />
+                  </TableCell>
+                  <TableCell className='min-w-52 font-medium'>
+                    <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.materialId}`}>
+                      <div className='flex min-w-0 items-center gap-3'>
+                        <div className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted/30'>
+                          <img
+                            src={material.coverImage || '/images/placeholder-cover.png'}
+                            alt={material.materialName || material.materialId}
+                            className='size-full object-cover'
+                          />
+                        </div>
+                        <div className='flex min-w-0 flex-col items-start gap-1'>
+                          <span className='block truncate'>
+                            {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
+                          </span>
+                          {material.availableForSale != null && material.availableForSale <= 0 && (
+                            <Badge
+                              variant='outline'
+                              className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
+                            >
+                              {t('products.detail.outOfStock')}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  </TableCell>
+                  <TableCell className='text-right tabular-nums'>
+                    {isEditing ? (
+                      <div className='ml-auto w-32'>
+                        <Input
+                          type='number'
+                          min={0}
+                          step='any'
+                          value={
+                            Number.isFinite(editValues[material.materialId]?.quantity)
+                              ? editValues[material.materialId]?.quantity || ''
+                              : ''
+                          }
+                          aria-invalid={Boolean(quantityErrors[material.materialId])}
+                          onChange={(event) =>
+                            onEditChange(material.materialId, {
+                              quantity: event.target.value === '' ? Number.NaN : event.target.valueAsNumber
+                            })
+                          }
+                          className='h-9 w-full'
+                        />
+                        <FieldError
+                          className='mt-1 text-left text-xs leading-tight'
+                          errors={[{ message: quantityErrors[material.materialId] }]}
                         />
                       </div>
-                      <div className='flex min-w-0 flex-col items-start gap-1'>
-                        <span className='block truncate'>
-                          {material.materialName?.trim() || t('products.detail.comboSpecification.unnamedMaterial')}
-                        </span>
-                        {material.availableForSale != null && material.availableForSale <= 0 && (
-                          <Badge
-                            variant='outline'
-                            className='shrink-0 border-amber-200 bg-amber-50 text-[10px] text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300'
-                          >
-                            {t('products.detail.outOfStock')}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                </TableCell>
-                <TableCell className='text-right tabular-nums'>
-                  {isEditing ? (
-                    <div className='ml-auto w-32'>
-                      <Input
-                        type='number'
-                        min={0}
-                        step='any'
-                        value={
-                          Number.isFinite(editValues[material.materialId]?.quantity)
-                            ? editValues[material.materialId]?.quantity || ''
-                            : ''
-                        }
-                        aria-invalid={Boolean(quantityErrors[material.materialId])}
-                        onChange={(event) =>
+                    ) : baseQuantity != null && baseQuantity > 0 ? (
+                      baseQuantity
+                    ) : (
+                      t('products.detail.comboSpecification.unconfigured')
+                    )}
+                  </TableCell>
+                  {applyFactor && (
+                    <TableCell className='text-right font-semibold tabular-nums text-primary'>
+                      {isGettingProductLabels
+                        ? '...'
+                        : (getActualQuantityDisplay(
+                            editValues[material.materialId]?.quantity ?? baseQuantity ?? Number.NaN,
+                            factor,
+                            applyFactor && !isAccessoryMaterial(productLabelsByMaterialId[material.materialId]),
+                            material.unit
+                          ) ?? t('products.detail.comboSpecification.unconfigured'))}
+                    </TableCell>
+                  )}
+                  <TableCell>
+                    {material.unit ? (
+                      <Badge variant='outline' className='font-normal'>
+                        {material.unit}
+                      </Badge>
+                    ) : (
+                      t('products.common.noData')
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {isEditing ? (
+                      <Select
+                        value={editValues[material.materialId]?.isCore ? ComboRole[1] : ComboRole[2]}
+                        onValueChange={(value) =>
                           onEditChange(material.materialId, {
-                            quantity: event.target.value === '' ? Number.NaN : event.target.valueAsNumber
+                            isCore: value === ComboRole[1]
                           })
                         }
-                        className='h-9 w-full'
-                      />
-                      <FieldError
-                        className='mt-1 text-left text-xs leading-tight'
-                        errors={[{ message: quantityErrors[material.materialId] }]}
-                      />
-                    </div>
-                  ) : material.quantityPerCombo > 0 ? (
-                    material.quantityPerCombo
-                  ) : (
-                    t('products.detail.comboSpecification.unconfigured')
-                  )}
-                </TableCell>
-                {applyFactor && (
-                  <TableCell className='text-right font-semibold tabular-nums text-primary'>
-                    {isGettingProductLabels
-                      ? '...'
-                      : (getActualQuantityDisplay(
-                          editValues[material.materialId]?.quantity ?? material.quantityPerCombo,
-                          factor,
-                          applyFactor && !isAccessoryMaterial(productLabelsByMaterialId[material.materialId]),
-                          material.unit
-                        ) ?? t('products.detail.comboSpecification.unconfigured'))}
+                      >
+                        <SelectTrigger className='w-40 min-w-40'>
+                          <SelectValue />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value={ComboRole[1]}>{t(ComboRoleLabel[ComboRole[1]])}</SelectItem>
+
+                          <SelectItem value={ComboRole[2]}>{t(ComboRoleLabel[ComboRole[2]])}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Badge
+                        variant='secondary'
+                        className={cn(
+                          'font-medium',
+                          material.isCore
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
+                            : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
+                        )}
+                      >
+                        {material.isCore
+                          ? t('products.detail.comboSpecification.core')
+                          : t('products.detail.comboSpecification.support')}
+                      </Badge>
+                    )}
                   </TableCell>
-                )}
-                <TableCell>
-                  {material.unit ? (
-                    <Badge variant='outline' className='font-normal'>
-                      {material.unit}
-                    </Badge>
-                  ) : (
-                    t('products.common.noData')
-                  )}
-                </TableCell>
-                <TableCell>
-                  {isEditing ? (
-                    <Select
-                      value={editValues[material.materialId]?.isCore ? ComboRole[1] : ComboRole[2]}
-                      onValueChange={(value) =>
-                        onEditChange(material.materialId, {
-                          isCore: value === ComboRole[1]
-                        })
-                      }
-                    >
-                      <SelectTrigger className='w-40 min-w-40'>
-                        <SelectValue />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectItem value={ComboRole[1]}>{t(ComboRoleLabel[ComboRole[1]])}</SelectItem>
-
-                        <SelectItem value={ComboRole[2]}>{t(ComboRoleLabel[ComboRole[2]])}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <Badge
-                      variant='secondary'
-                      className={cn(
-                        'font-medium',
-                        material.isCore
-                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-400'
-                          : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-400'
-                      )}
-                    >
-                      {material.isCore
-                        ? t('products.detail.comboSpecification.core')
-                        : t('products.detail.comboSpecification.support')}
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell className='text-center font-medium tabular-nums'>
-                  {material.availableForSale ?? t('products.common.noData')}
-                </TableCell>
-                <TableCell className='text-center font-semibold tabular-nums text-foreground'>
-                  {material.maxComboPossible ?? t('products.common.noData')}
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell className='text-center font-medium tabular-nums'>
+                    {material.availableForSale ?? t('products.common.noData')}
+                  </TableCell>
+                  <TableCell className='text-center font-semibold tabular-nums text-foreground'>
+                    {material.maxComboPossible ?? t('products.common.noData')}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </div>

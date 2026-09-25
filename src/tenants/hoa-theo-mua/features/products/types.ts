@@ -30,6 +30,9 @@ export interface Product {
   // B - Id sản phẩm cha
   parentProductId: string | null
 
+  // GUID sản phẩm cha dùng cho các API định lượng combo
+  parentProductGuidId?: string | null
+
   // C - Mã sản phẩm cha
   parentProductCode: string | null
 
