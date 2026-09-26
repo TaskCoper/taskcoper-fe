@@ -14,7 +14,7 @@ import { HOA_THEO_MUA_ROUTE_PREFIX } from '@/tenants/hoa-theo-mua/config'
 
 const isBundleUnit = (unit?: string | null) => {
   const normalizedUnit = unit?.trim().normalize('NFC').toLocaleLowerCase('vi-VN')
-  return normalizedUnit === 'bó' || normalizedUnit === 'giỏ'
+  return normalizedUnit === 'bó' || normalizedUnit === 'chậu'
 }
 
 const getActualQuantity = (quantity: number, factor: number, unit?: string | null) =>
