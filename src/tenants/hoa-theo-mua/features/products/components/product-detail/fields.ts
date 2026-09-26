@@ -4,7 +4,7 @@ import { formatPrice, formatQuantity } from '../../utils'
 
 type FieldFormat = 'text' | 'price' | 'quantity' | 'decimal'
 
-type ProductStringKey = { [K in keyof Product]: Product[K] extends string | null ? K : never }[keyof Product]
+type ProductStringKey = { [K in keyof Product]-?: Product[K] extends string | null ? K : never }[keyof Product]
 
 export interface FieldConfig {
   key: ProductStringKey

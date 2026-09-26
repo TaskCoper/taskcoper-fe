@@ -1076,6 +1076,8 @@
         "quantityPerCombo": "Quantity / combo",
         "baseQuantity": "Base quantity",
         "actualQuantity": "Actual quantity",
+        "parentBaseQuantity": "Parent base quantity",
+        "childActualQuantity": "Child quantity after factor",
         "role": "Role",
         "factor": "Size factor",
         "factorHint": "Factor must be greater than 0",

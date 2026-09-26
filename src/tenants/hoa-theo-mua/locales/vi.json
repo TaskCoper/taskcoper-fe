@@ -1076,6 +1076,8 @@
         "quantityPerCombo": "Số lượng / combo",
         "baseQuantity": "Định lượng gốc",
         "actualQuantity": "Định lượng thực tế",
+        "parentBaseQuantity": "Định lượng gốc (cha)",
+        "childActualQuantity": "Định lượng con sau nhân",
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
         "factorHint": "Chỉ số phải lớn hơn 0",
