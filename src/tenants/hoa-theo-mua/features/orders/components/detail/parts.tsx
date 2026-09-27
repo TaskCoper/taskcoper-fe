@@ -41,6 +41,83 @@ export function DetailSection({
   )
 }
 
+/**
+ * Thẻ dữ liệu dùng chung cho mọi khối trong dialog chi tiết sản phẩm:
+ * tiêu đề nhỏ + các dòng chia bằng đường kẻ, không dùng `<table>`.
+ */
+export function InfoCard({
+  title,
+  description,
+  action,
+  className,
+  children
+}: {
+  title?: string
+  description?: string
+  action?: ReactNode
+  className?: string
+  children: ReactNode
+}) {
+  return (
+    <section className={cn('space-y-2', className)}>
+      {(title || action) && (
+        <div className='flex flex-wrap items-baseline gap-x-2 gap-y-1'>
+          {title && <h5 className='text-sm font-semibold'>{title}</h5>}
+          {action}
+          {description && <p className='basis-full text-xs text-muted-foreground'>{description}</p>}
+        </div>
+      )}
+      <div className='divide-y overflow-hidden rounded-lg border bg-card'>{children}</div>
+    </section>
+  )
+}
+
+/** Dòng nhãn/giá trị trong `InfoCard`. */
+export function InfoRow({
+  label,
+  value,
+  alignEnd,
+  emphasis
+}: {
+  label: ReactNode
+  value: ReactNode
+  alignEnd?: boolean
+  emphasis?: boolean
+}) {
+  return (
+    <div className='grid gap-0.5 px-3 py-2 text-sm sm:grid-cols-[minmax(0,14rem)_1fr] sm:items-baseline sm:gap-4'>
+      <span className='min-w-0 text-muted-foreground'>{label}</span>
+      <span
+        className={cn(
+          'min-w-0 break-words font-medium',
+          alignEnd && 'tabular-nums sm:text-right',
+          emphasis && 'text-base font-bold text-primary'
+        )}
+      >
+        {value}
+      </span>
+    </div>
+  )
+}
+
+/** Dòng hai đầu trong `InfoCard`: nội dung bên trái, số liệu bên phải - dùng cho vật liệu và phụ kiện. */
+export function SplitRow({
+  leading,
+  trailing,
+  className
+}: {
+  leading: ReactNode
+  trailing?: ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn('flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-3 py-2 text-sm', className)}>
+      <div className='min-w-0 flex-1'>{leading}</div>
+      {trailing && <div className='shrink-0 text-right tabular-nums'>{trailing}</div>}
+    </div>
+  )
+}
+
 /** Key/value rows inside a bordered container - mirrors the product detail layout. */
 export function DetailRows({ rows, t }: { rows: DetailRow[]; t: TenantT }) {
   if (rows.length === 0) {

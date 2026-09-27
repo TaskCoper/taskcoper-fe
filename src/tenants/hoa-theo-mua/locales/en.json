@@ -2704,7 +2704,6 @@
       "tab": {
         "overview": "Overview",
         "items": "Products",
-        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "invoice": "Invoice"
@@ -2715,7 +2714,6 @@
         "delivery": "Delivery location",
         "fees": "Fee breakdown",
         "items": "Products",
-        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "transaction": "Transaction",
@@ -2726,8 +2724,7 @@
         "customer": "Who placed the order and who receives it.",
         "delivery": "Where the order is delivered to.",
         "fees": "How the order total is made up.",
-        "items": "Products in this order and the materials captured at checkout.",
-        "snapshot": "Configuration saved when the order was placed for later comparison.",
+        "items": "Products in this order - click a row to see its snapshot and AI flower design.",
         "shipping": "Tracking codes and carrier links for this order.",
         "payment": "Payment method and links used to settle this order.",
         "transaction": "The settled payment transaction, if any.",
@@ -2833,8 +2830,55 @@
         "cardExtraPrice": "Extra fee",
         "cardWordLimit": "Word limit",
         "cardMessage": "Message",
-        "cardPrompt": "AI image prompt",
         "openProduct": "Open product page"
+      },
+      "item": {
+        "tab": {
+          "info": "Information",
+          "snapshot": "Snapshot",
+          "card": "Card",
+          "flower": "AI flower design"
+        },
+        "group": {
+          "product": "Product",
+          "pricing": "Price and quantity",
+          "shipping": "Shipping specs"
+        },
+        "open": "View product details",
+        "itemId": "Line item code",
+        "dimensions": "Dimensions (L × W × H)",
+        "variantLabel": "Variant #{{order}} of {{total}}",
+        "hint": {
+          "viewFlower": "View the AI flower design for variant #{{order}}",
+          "viewCard": "View the card for variant #{{order}}",
+          "noFlower": "No AI flower design for this variant",
+          "noCard": "No card for this variant"
+        }
+      },
+      "flower": {
+        "notFound": "Could not load the AI flower design for this product",
+        "createdAt": "Created at",
+        "materialCount": "Material count",
+        "openDetail": "Open flower design page",
+        "sourceTitle": "Design source",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "materials": "Materials",
+        "coreMaterials": "Core materials",
+        "supportMaterials": "Support materials",
+        "additions": "Additional materials",
+        "inactive": "No longer active",
+        "audit": "AI history",
+        "operation": "Operation",
+        "schemaVersion": "Schema version",
+        "validatedAt": "Validated at",
+        "systemPromptSource": "Prompt source",
+        "sourceDescription": "Combo, mockup and bundle used to generate this design.",
+        "accessoriesDescription": "Ribbon and wrapping paper attached to this design.",
+        "materialsDescription": "Materials locked in when the design was generated.",
+        "auditDescription": "Technical details of this generation run."
       }
     }
   }

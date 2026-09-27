@@ -23,7 +23,6 @@ import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { OrderItemsTable } from '../features/orders/components/detail/order-items'
-import { ProductSnapshot } from '../features/orders/components/detail/product-snapshot'
 import {
   DeliveryCard,
   DetailRows,
@@ -37,7 +36,7 @@ import { useGetSystemOrder } from '../features/orders/hooks/use-get-system-order
 import { OrderStatus, OrderStatusLabel, OrderStatusStyle } from '../features/orders/types'
 import { numberFormatter, vndFormatter } from '../features/orders/utils'
 
-const TAB_VALUES = ['overview', 'items', 'snapshot', 'shipping', 'payment', 'invoice'] as const
+const TAB_VALUES = ['overview', 'items', 'shipping', 'payment', 'invoice'] as const
 
 export default function SystemOrderPage() {
   const { t } = useTenantTranslation()
@@ -174,7 +173,9 @@ export default function SystemOrderPage() {
   ]
 
   const rawTab = searchParams.get('tab')
-  const currentTab = TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) ? rawTab! : 'overview'
+  // Tab snapshot đã gộp vào tab sản phẩm - link cũ vẫn mở đúng chỗ.
+  const requestedTab = rawTab === 'snapshot' ? 'items' : rawTab
+  const currentTab = TAB_VALUES.includes(requestedTab as (typeof TAB_VALUES)[number]) ? requestedTab! : 'overview'
 
   const handleTabChange = (value: string) => {
     const next = new URLSearchParams(searchParams)
@@ -205,7 +206,6 @@ export default function SystemOrderPage() {
   const TABS = [
     { value: 'overview', label: t('systemOrders.detail.tab.overview') },
     { value: 'items', label: t('systemOrders.detail.tab.items') },
-    { value: 'snapshot', label: t('systemOrders.detail.tab.snapshot') },
     { value: 'shipping', label: t('systemOrders.detail.tab.shipping') },
     { value: 'payment', label: t('systemOrders.detail.tab.payment') },
     { value: 'invoice', label: t('systemOrders.detail.tab.invoice') }
@@ -374,7 +374,7 @@ export default function SystemOrderPage() {
             </div>
           </TabsContent>
 
-          {/* Line items */}
+          {/* Line items - snapshot và mẫu hoa AI của từng dòng nằm trong dialog khi bấm vào dòng */}
           <TabsContent value='items' className='mt-0'>
             <DetailSection
               title={t('systemOrders.detail.section.items')}
@@ -386,16 +386,6 @@ export default function SystemOrderPage() {
               }
             >
               <OrderItemsTable items={items} t={t} />
-            </DetailSection>
-          </TabsContent>
-
-          {/* Product snapshot */}
-          <TabsContent value='snapshot' className='mt-0'>
-            <DetailSection
-              title={t('systemOrders.detail.section.snapshot')}
-              description={t('systemOrders.detail.sectionDesc.snapshot')}
-            >
-              <ProductSnapshot items={items} t={t} />
             </DetailSection>
           </TabsContent>
 
