@@ -69,6 +69,18 @@ export const useStagedUpload = (url: string | null | undefined): StagedUpload | 
 export type ResolveStagedResult<T> = { ok: true; value: T } | { ok: false }
 
 /**
+ * Thrown by a mutation whose staged uploads failed, so its `onError` can stay quiet - the upload
+ * itself already toasted. Lets an abort travel as a rejection (which skips `onSuccess`) instead of
+ * a falsy return value that callers would have to re-check.
+ */
+export class StagedUploadError extends Error {
+  constructor() {
+    super('Staged uploads could not be resolved')
+    this.name = 'StagedUploadError'
+  }
+}
+
+/**
  * Replaces every staged `blob:` URL in `payload` with a real one, writing each file's framing
  * into the URL it lands at. `payload` is never mutated; call this before `JSON.stringify`ing it,
  * or the staged URLs end up buried in a string where they can't be found.

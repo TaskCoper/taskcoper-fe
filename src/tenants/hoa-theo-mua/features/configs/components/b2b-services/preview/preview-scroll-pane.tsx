@@ -1,6 +1,6 @@
 import { cn } from '@/shared/utils'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { B2BOverview } from '../../../b2b-overview-palette'
+import { type B2BOverview } from '../../../types'
 import { B2B_SECTION_KEYS, renderB2BSection, type B2BSectionData } from './b2b-page-sections'
 import { B2BPreviewFrame } from './b2b-preview-frame'
 import { CASE_STUDIES_SUB_ANCHOR_ID, PREVIEW_DIM_GROUP, type PreviewSelection } from './preview-shared'

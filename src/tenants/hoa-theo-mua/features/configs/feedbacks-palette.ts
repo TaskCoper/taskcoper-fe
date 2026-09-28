@@ -1,6 +1,8 @@
 import type { RatingValue } from '@/components/rating-field'
+import { emptyLocalizedText, safeJsonParse } from './palette-shared'
+import { FEEDBACK_SOURCES, type FeedbackCollection, type FeedbackItem, type FeedbackSource } from './types'
 
-// Storefront draws this as a 40px circular avatar (`testimonial-carousel.tsx`), so it must be square.
+// Storefront vẽ ảnh này thành avatar tròn 40px (`testimonial-carousel.tsx`) nên bắt buộc phải vuông.
 export const FEEDBACK_IMAGE_ASPECT = 1
 
 export const FEEDBACKS_GROUP = 'feedbacks'
@@ -14,41 +16,7 @@ export const feedbacksKeySuffix = (key: string): string =>
 
 export const MAX_FEATURED_FEEDBACKS = 6
 
-export const FEEDBACK_SOURCES = ['zalo', 'messenger', 'facebook', 'google', 'other'] as const
-export type FeedbackSource = (typeof FEEDBACK_SOURCES)[number]
-
 const VALID_RATINGS: RatingValue[] = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
-
-export interface LocalizedText {
-  vi: string
-  en: string
-}
-
-export interface FeedbackItem {
-  id: string
-  customerName: string
-  area: string
-  content: LocalizedText
-  flowerType: string
-  image: string
-  postDate: string
-  rating?: RatingValue
-  featured: boolean
-  isPlaceholder: boolean
-  source: FeedbackSource
-  sourceUrl: string
-}
-
-export interface FeedbackCollection {
-  section: {
-    title: LocalizedText
-    description: LocalizedText
-    enabled: boolean
-  }
-  items: FeedbackItem[]
-}
-
-const emptyLocalizedText = (): LocalizedText => ({ vi: '', en: '' })
 
 const genId = (): string => `fb_${Math.random().toString(36).slice(2, 8)}`
 
@@ -62,7 +30,6 @@ export const defaultFeedbackItem = (): FeedbackItem => ({
   postDate: new Date().toISOString().slice(0, 10),
   rating: 5,
   featured: false,
-  isPlaceholder: false,
   source: 'other',
   sourceUrl: ''
 })
@@ -114,16 +81,7 @@ const normalizeItem = (raw: unknown): FeedbackItem => {
     postDate: i.postDate ?? base.postDate,
     rating,
     featured: Boolean(i.featured),
-    isPlaceholder: Boolean(i.isPlaceholder),
     source,
     sourceUrl: i.sourceUrl ?? ''
-  }
-}
-
-const safeJsonParse = (s: string): unknown => {
-  try {
-    return JSON.parse(s)
-  } catch {
-    return null
   }
 }

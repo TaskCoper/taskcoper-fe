@@ -15,21 +15,23 @@ import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DownloadIcon, EyeIcon, LoaderCircleIcon, MoreHorizontalIcon, SearchIcon } from 'lucide-react'
 import { Link } from 'react-router'
-import { aiCardSizeOptions } from '../mock-data'
-import { AiCardWritingMode, type AiCardHistoryItem } from '../types'
+import type { CardSize } from '../../configs/types'
+import { AiCardWritingMode, type GeneratedCardHistoryItem } from '../types'
 import AiCardPreview from './ai-card-preview'
 
 export const getAiCardHistoryColumns = ({
   t,
   onPreview,
   onDownload,
-  downloadingCardId
+  downloadingCardId,
+  sizeOptions
 }: {
   t: TenantT
-  onPreview: (card: AiCardHistoryItem) => void
-  onDownload: (card: AiCardHistoryItem) => void
+  onPreview: (card: GeneratedCardHistoryItem) => void
+  onDownload: (card: GeneratedCardHistoryItem) => void
   downloadingCardId?: string
-}): ColumnDef<AiCardHistoryItem>[] => [
+  sizeOptions: CardSize[]
+}): ColumnDef<GeneratedCardHistoryItem>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -59,9 +61,9 @@ export const getAiCardHistoryColumns = ({
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.preview' />,
     cell: ({ row }) => (
       <AiCardPreview
-        src={row.original.outputImageUrl}
-        alt={t('aiCustom.history.previewAlt', { code: row.original.code })}
-        openLabel={t('aiCustom.history.openPreview', { code: row.original.code })}
+        src={row.original.imageUrl}
+        alt={t('aiCustom.history.previewAlt', { code: row.original.generatedCardId })}
+        openLabel={t('aiCustom.history.openPreview', { code: row.original.generatedCardId })}
         onOpen={() => onPreview(row.original)}
       />
     ),
@@ -70,88 +72,84 @@ export const getAiCardHistoryColumns = ({
     enableColumnFilter: false,
     size: 120
   },
+  /* Customer fields remain intentionally disabled until the API provides them again.
   {
-    id: 'code',
-    accessorKey: 'code',
+    id: 'search',
+    accessorFn: (row) => row.nameCustomer,
+    meta: { label: 'aiCustom.history.column.customer', placeholder: 'aiCustom.history.searchPlaceholder', variant: 'text', icon: SearchIcon },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
+    cell: ({ row }) => {
+      const { nameCustomer, phoneCustomer } = row.original
+      return <div className='min-w-0 max-w-48'><p className='truncate font-medium'>{nameCustomer?.trim() || t('aiCustom.history.walkInCustomer')}</p>{phoneCustomer?.trim() && <p className='mt-0.5 truncate text-xs text-muted-foreground'>{phoneCustomer}</p>}</div>
+    },
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: true,
+    size: 190
+  },
+  */
+  {
+    id: 'search',
+    accessorFn: (row) => row.cardTemplateName ?? row.templateName,
     meta: {
-      label: 'aiCustom.history.column.code',
+      label: 'aiCustom.history.column.template',
       placeholder: 'aiCustom.history.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.code' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.template' />,
     cell: ({ row }) => (
-      <Link to={row.original.id} className='whitespace-nowrap font-mono text-sm font-medium hover:underline'>
-        {row.original.code}
-      </Link>
+      <p className='min-w-36 truncate'>
+        {row.original.cardTemplateName?.trim() || row.original.templateName?.trim() || '-'}
+      </p>
     ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,
-    size: 150
-  },
-  {
-    id: 'customer',
-    accessorFn: (row) => row.customerName,
-    meta: { label: 'aiCustom.history.column.customer' },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.customer' />,
-    cell: ({ row }) => (
-      <div className='min-w-40'>
-        <p className='truncate text-sm font-medium'>
-          {row.original.customerName?.trim() || t('aiCustom.history.walkInCustomer')}
-        </p>
-        <p className='mt-0.5 truncate text-xs text-muted-foreground'>{row.original.customerPhone?.trim() || '-'}</p>
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: true,
-    enableColumnFilter: false,
-    size: 190
-  },
-  {
-    id: 'template',
-    accessorFn: (row) => row.templateName,
-    meta: { label: 'aiCustom.history.column.template' },
-    header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.template' />,
-    cell: ({ row }) => <p className='min-w-36 truncate'>{row.original.templateName?.trim() || '-'}</p>,
-    enableSorting: false,
-    enableHiding: true,
-    enableColumnFilter: false,
     size: 180
   },
   {
-    id: 'sizeId',
-    accessorKey: 'sizeId',
+    id: 'size',
+    accessorFn: (row) => row.sizeName,
     meta: {
       label: 'aiCustom.history.column.size',
       variant: 'radio',
-      options: aiCardSizeOptions.map((size) => ({ label: size.name, value: size.id }))
+      options: sizeOptions.map((size) => ({
+        label: `${size.width} x ${size.height} cm · ${size.name}`,
+        value: size.name
+      }))
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.size' />,
-    cell: ({ row }) => (
-      <Badge variant='secondary' className='whitespace-nowrap font-normal'>
-        {row.original.sizeName || '-'}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const { sizeWidth, sizeHeight, sizeName } = row.original
+      const dimensions = sizeWidth != null && sizeHeight != null ? `${sizeWidth} x ${sizeHeight} cm` : null
+      const displaySize = [dimensions, sizeName?.trim()].filter(Boolean).join(' · ')
+
+      return (
+        <Badge variant='secondary' className='whitespace-nowrap font-normal'>
+          {displaySize || '-'}
+        </Badge>
+      )
+    },
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: true,
     size: 130
   },
   {
-    id: 'writingMode',
-    accessorKey: 'writingMode',
+    id: 'formType',
+    accessorKey: 'formType',
     meta: {
       label: 'aiCustom.history.column.writingMode',
       variant: 'radio',
       options: [
         { label: t('aiCustom.history.writingMode.calligraphy'), value: AiCardWritingMode.Calligraphy },
-        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.Typed }
+        { label: t('aiCustom.history.writingMode.typed'), value: AiCardWritingMode.GoMay }
       ]
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='aiCustom.history.column.writingMode' />,
     cell: ({ row }) => {
-      const isCalligraphy = row.original.writingMode === AiCardWritingMode.Calligraphy
+      const isCalligraphy = row.original.formType === AiCardWritingMode.Calligraphy
 
       return (
         <Badge
@@ -190,11 +188,9 @@ export const getAiCardHistoryColumns = ({
   {
     id: 'actions',
     meta: { label: 'aiCustom.history.column.actions' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label='aiCustom.history.column.actions' className='justify-end' />
-    ),
+    header: () => null,
     cell: ({ row }) => {
-      const isDownloading = downloadingCardId === row.original.id
+      const isDownloading = downloadingCardId === row.original.generatedCardId
 
       return (
         <div className='flex justify-end'>
@@ -208,7 +204,7 @@ export const getAiCardHistoryColumns = ({
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>{t('products.action.actions')}</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link to={row.original.id}>
+                <Link to={row.original.generatedCardId}>
                   <EyeIcon />
                   {t('aiCustom.history.viewDetail')}
                 </Link>

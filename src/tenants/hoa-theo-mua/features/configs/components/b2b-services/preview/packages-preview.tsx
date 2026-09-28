@@ -1,6 +1,6 @@
 import { CircleCheck } from 'lucide-react'
 import { memo } from 'react'
-import type { OverviewPackages } from '../../../b2b-overview-palette'
+import { type OverviewPackages } from '../../../types'
 import { pick, PreviewButton, resolveIcon, type PreviewLocale } from './preview-shared'
 
 export const PackagesPreview = memo(function PackagesPreview({

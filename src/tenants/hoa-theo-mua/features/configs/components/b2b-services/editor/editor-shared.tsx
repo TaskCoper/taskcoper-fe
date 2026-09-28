@@ -2,7 +2,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { cn } from '@/shared/utils'
 import type { ReactNode } from 'react'
-import type { LocalizedText } from '../../../palette-shared'
+import { type LocalizedText } from '../../../types'
 
 // A titled section card wrapping a group of fields.
 export function SectionCard({

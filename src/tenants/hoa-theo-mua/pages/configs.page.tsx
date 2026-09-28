@@ -1,656 +1,646 @@
 import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { cn } from '@/shared/utils'
-import { ChevronDown, FileText, KeyRound, Plus, Settings2 } from 'lucide-react'
-import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs'
-import type { ComponentType, SVGProps } from 'react'
-import { useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { toast } from 'sonner'
-import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
+import { parseAsString, useQueryState } from 'nuqs'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { bannerKeySuffix } from '../features/configs/banners-palette'
+import { CARD_PRICES_KEY, CARD_SIZES_KEY } from '../features/configs/card-config-palette'
 import {
-  B2B_SERVICE_SLUGS,
-  B2B_SERVICES_GROUP,
-  b2bServicesKeySuffix,
-  isB2BOverviewKey,
-  matchesB2BServicesConfig,
-  type B2BServiceSlug
-} from '../features/configs/b2b-service-detail-palette'
-import { bannerKeySuffix, matchesBannerKey } from '../features/configs/banners-palette'
-import {
-  CHECKOUT_CONFIG_GROUP,
   CHECKOUT_DELIVERY_METHODS_KEY,
-  CHECKOUT_PAYMENT_METHODS_KEY,
-  checkoutMethodKindFromKey,
-  matchesCheckoutMethodsKey,
-  type CheckoutMethodKind
+  CHECKOUT_PAYMENT_METHODS_KEY
 } from '../features/configs/checkout-methods-palette'
-import AhamoveCreateConfigDialog from '../features/configs/components/ahamove-create-config-dialog'
-import BannersCollectionDialog from '../features/configs/components/banners-collection-dialog'
-import CheckoutMethodsDialog from '../features/configs/components/checkout-methods-dialog'
-import ConfigFieldRow from '../features/configs/components/config-field-row'
-import CreateConfigDialog from '../features/configs/components/create-config-dialog'
-import FeedbacksCollectionDialog from '../features/configs/components/feedbacks-collection-dialog'
-import ProductCollectionDialog from '../features/configs/components/product-collection-dialog'
-import PromotionPopupDialog from '../features/configs/components/promotion-popup-dialog'
-import UpdateConfigDialog from '../features/configs/components/update-config-dialog'
-import { feedbacksKeySuffix, matchesFeedbacksKey } from '../features/configs/feedbacks-palette'
+import B2BEntryList from '../features/configs/components/b2b/b2b-entry-list'
+import BannersCollectionEditor from '../features/configs/components/banners/banners-collection-editor'
+import CalligraphyPricingEditor from '../features/configs/components/cards-calligraphy/calligraphy-pricing-editor'
+import CardSizesEditor from '../features/configs/components/cards-calligraphy/card-sizes-editor'
+import CheckoutMethodsEditor from '../features/configs/components/checkout/checkout-methods-editor'
+import FeedbacksCollectionEditor from '../features/configs/components/feedbacks/feedbacks-collection-editor'
+import SignatureLandingConfigEditor from '../features/configs/components/generic/signature-landing-config-editor'
+import UpdateConfigDialog from '../features/configs/components/generic/update-config-dialog'
+import ImagegenSection from '../features/configs/components/imagegen/imagegen-section'
+import PostgenSection from '../features/configs/components/postgen/postgen-section'
+import ProductCollectionEditor from '../features/configs/components/product-collections/product-collection-editor'
+import PromotionPopupEditor from '../features/configs/components/promotion-popup/promotion-popup-editor'
+import EditorCallout from '../features/configs/components/settings/editor-callout'
+import CategoryEditorPanel, {
+  type CategoryEditorItem
+} from '../features/configs/components/shared/category-editor-panel'
+import ConfigFieldRow from '../features/configs/components/shared/config-field-row'
+import ConfigsErrorState from '../features/configs/components/shared/configs-error-state'
+import ConfigsNav from '../features/configs/components/shared/configs-nav'
+import UnsavedChangesBar from '../features/configs/components/shared/unsaved-changes-bar'
+import {
+  categorize,
+  DEFAULT_CATEGORY_ID,
+  groupOf,
+  resolveLegacyCategory,
+  resolveRenamedCategory
+} from '../features/configs/config-registry'
+import { feedbacksKeySuffix } from '../features/configs/feedbacks-palette'
+import { useCollectionRegistries } from '../features/configs/hooks/use-collection-registries'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
 import { useGetSecretConfigs } from '../features/configs/hooks/use-get-secret-configs'
 import { useGetSettingConfigs } from '../features/configs/hooks/use-get-setting-configs'
-import { LOCKED_ASYNC_CONFIG_KEYS } from '../features/configs/locked-config-keys'
 import {
-  matchesProductCollectionConfig,
-  productCollectionKeySuffix
-} from '../features/configs/product-collection-palette'
-import {
-  isPromotionPopupKey,
-  PROMOTION_POPUP_GROUP,
-  PROMOTION_POPUP_KEY
-} from '../features/configs/promotion-popup-palette'
-import type { Config, InputOption } from '../features/configs/types'
-import { ConfigKind, ConfigKindLabel, InputType } from '../features/configs/types'
-import type { CreateConfigFormInput } from '../features/configs/validations'
-import { useGetDepots } from '../hooks/use-get-depots'
-import { useGetOrderSources } from '../hooks/use-get-order-sources'
-import { useGetOrderTags } from '../hooks/use-get-order-tags'
-import { useGetProductLabels } from '../hooks/use-get-product-labels'
-import type { AhamoveServiceRequest } from '../types/ahamove.type'
-
-type LockedFields = { key?: boolean; options?: boolean; kind?: boolean }
-
-// interface LockedPaletteItem {
-//   key: string
-//   label: string
-//   inputType: InputType
-//   options: InputOption[]
-//   defaultValue: unknown
-// }
+  NEW_BANNERS,
+  NEW_FEEDBACKS,
+  NEW_PRODUCT_COLLECTION,
+  useRecordEditor
+} from '../features/configs/hooks/use-record-editor'
+import { productCollectionKeySuffix } from '../features/configs/product-collection-palette'
+import { PROMOTION_POPUP_KEY } from '../features/configs/promotion-popup-palette'
+import { PRODUCT_SIGNATURE_KEY } from '../features/configs/signature-landing-palette'
+import { DirtyRegistryProvider } from '../features/configs/state/dirty-registry'
+import { useDirtySnapshot, useUnsavedChangesGuard } from '../features/configs/state/dirty-registry-hooks'
+import { ConfigKind, InputType, type CategoryId, type Config } from '../features/configs/types'
 
 const KIND_ORDER = [ConfigKind.content, ConfigKind.setting, ConfigKind.secret] as const
 
-const toNamedOptions = (rows: { id: number; name: string }[]): InputOption[] =>
-  rows.map((row) => ({ label: row.name, value: row.id }))
+const B2B_CATEGORY_ID = 'b2b'
+const FEEDBACKS_CATEGORY_ID = 'feedbacks'
+const POSTGEN_CATEGORY_ID = 'postgen'
+const BANNERS_CATEGORY_ID = 'banners'
+const PRODUCT_COLLECTIONS_CATEGORY_ID = 'product-collections'
+const PAYMENT_METHODS_CATEGORY_ID = 'payment-methods'
+const DELIVERY_METHODS_CATEGORY_ID = 'delivery-methods'
+const CARD_SIZES_CATEGORY_ID = 'card-sizes'
+const CALLIGRAPHY_CATEGORY_ID = 'calligraphy'
+const PROMOTION_POPUP_CATEGORY_ID = 'promotion-popup'
+const SIGNATURE_LANDING_CATEGORY_ID = 'signature-landing'
+const SECRETS_CATEGORY_ID = 'secrets'
+const IMAGEGEN_CATEGORY_ID = 'imagegen'
 
-// Legacy `b2bservices` rows predate the `b2bServices` casing convention; fold them into
-// one tab instead of splitting the group across two casings.
-const B2B_SERVICES_GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
-const resolveGroupKey = (group: string): string =>
-  group.toLowerCase() === B2B_SERVICES_GROUP_LC ? B2B_SERVICES_GROUP : group
-
-// const safeJsonParse = (raw: unknown): Record<string, unknown> | null => {
-//   if (raw && typeof raw === 'object') return raw as Record<string, unknown>
-//   if (typeof raw !== 'string') return null
-//   try {
-//     const parsed = JSON.parse(raw)
-//     return parsed && typeof parsed === 'object' ? parsed : null
-//   } catch {
-//     return null
-//   }
-// }
-
-const KIND_VISUALS: Record<
-  ConfigKind,
-  {
-    Icon: ComponentType<SVGProps<SVGSVGElement>>
-  }
-> = {
-  [ConfigKind.content]: {
-    Icon: FileText
-  },
-  [ConfigKind.setting]: {
-    Icon: Settings2
-  },
-  [ConfigKind.secret]: {
-    Icon: KeyRound
-  }
-}
+const SETTINGS_LIST_CLASS = 'divide-y'
 
 export default function ConfigsPage() {
-  const { t } = useTenantTranslation()
-  const navigate = useNavigate()
-  const [currentKind, setCurrentKind] = useQueryState(
-    'kind',
-    parseAsStringEnum<ConfigKind>(Object.values(ConfigKind)).withDefault(ConfigKind.content)
+  return (
+    <DirtyRegistryProvider>
+      <ConfigsPageContent />
+    </DirtyRegistryProvider>
   )
+}
 
-  const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({
-    enabled: currentKind === ConfigKind.content
+function ConfigsPageContent() {
+  const { t } = useTenantTranslation()
+
+  const [categoryParam, setCategoryParam] = useQueryState('category', parseAsString)
+  const [kindFilter, setKindFilter] = useQueryState('kind', parseAsString)
+  const [legacySection, setLegacySection] = useQueryState('section', parseAsString)
+
+  const { contentConfigs, isGettingContentConfigs, isContentConfigsError, refetchContentConfigs } =
+    useGetContentConfigs()
+  const { settingConfigs, isGettingSettingConfigs, isSettingConfigsError, refetchSettingConfigs } =
+    useGetSettingConfigs()
+  const { secretConfigs, isGettingSecretConfigs, isSecretConfigsError, refetchSecretConfigs } = useGetSecretConfigs({
+    enabled: categoryParam === SECRETS_CATEGORY_ID
   })
-  const { settingConfigs = [], isGettingSettingConfigs } = useGetSettingConfigs({
-    enabled: currentKind === ConfigKind.setting
-  })
-  const { secretConfigs = [], isGettingSecretConfigs } = useGetSecretConfigs({
-    enabled: currentKind === ConfigKind.secret
-  })
 
-  const { contentConfigs: promotionsGroupConfigs = [] } = useGetContentConfigs({ groupName: PROMOTION_POPUP_GROUP })
-  const { contentConfigs: checkoutGroupConfigs = [] } = useGetContentConfigs({ groupName: CHECKOUT_CONFIG_GROUP })
-
-  const { depots, refetchDepots } = useGetDepots()
-  const { orderTags, refetchOrderTags } = useGetOrderTags()
-  const { orderSources, refetchOrderSources } = useGetOrderSources()
-  const { productLabels, refetchProductLabels } = useGetProductLabels()
-  // const { requests: ahamoveRequests, isGettingAhamoveService } = useGetAhamoveService()
-
-  const currentKindConfigs =
-    currentKind === ConfigKind.content
-      ? contentConfigs
-      : currentKind === ConfigKind.setting
-        ? settingConfigs
-        : secretConfigs
-
-  const isGettingConfigs =
-    (currentKind === ConfigKind.content && isGettingContentConfigs) ||
-    (currentKind === ConfigKind.setting && isGettingSettingConfigs) ||
-    (currentKind === ConfigKind.secret && isGettingSecretConfigs)
-
-  const allLoadedConfigs = useMemo<Config[]>(
-    () => [...contentConfigs, ...settingConfigs, ...secretConfigs],
+  const allConfigs = useMemo<Config[]>(
+    () => [...(contentConfigs ?? []), ...(settingConfigs ?? []), ...(secretConfigs ?? [])],
     [contentConfigs, settingConfigs, secretConfigs]
   )
+  const { categories, byCategory, assignments } = useMemo(() => categorize(allConfigs), [allConfigs])
 
-  const [createOpen, setCreateOpen] = useState(false)
-  const [createInitialValues, setCreateInitialValues] = useState<Partial<CreateConfigFormInput>>()
-  const [createLockedFields, setCreateLockedFields] = useState<LockedFields | undefined>()
-  const [selectedAhamoveRequest, setSelectedAhamoveRequest] = useState<AhamoveServiceRequest | null>(null)
-  const [editingAhamoveConfig, setEditingAhamoveConfig] = useState<Config | null>(null)
-  const [editOpen, setEditOpen] = useState(false)
-  const [editingConfig, setEditingConfig] = useState<Config | null>(null)
-  const [productCollectionDialogOpen, setProductCollectionDialogOpen] = useState(false)
-  const [editingProductCollectionConfig, setEditingProductCollectionConfig] = useState<Config | null>(null)
-  const [feedbacksDialogOpen, setFeedbacksDialogOpen] = useState(false)
-  const [editingFeedbacksConfig, setEditingFeedbacksConfig] = useState<Config | null>(null)
-  const [bannersDialogOpen, setBannersDialogOpen] = useState(false)
-  const [editingBannersConfig, setEditingBannersConfig] = useState<Config | null>(null)
-  const [promotionPopupDialogOpen, setPromotionPopupDialogOpen] = useState(false)
-  const [checkoutMethodsKind, setCheckoutMethodsKind] = useState<CheckoutMethodKind | null>(null)
-  // const [paletteSheetOpen, setPaletteSheetOpen] = useState(false)
-
-  const depotOptions = useMemo<InputOption[]>(() => toNamedOptions(depots), [depots])
-
-  const orderTagOptions = useMemo<InputOption[]>(() => toNamedOptions(orderTags), [orderTags])
-
-  const orderSourceOptions = useMemo<InputOption[]>(() => toNamedOptions(orderSources), [orderSources])
-
-  const productLabelOptions = useMemo<InputOption[]>(() => toNamedOptions(productLabels), [productLabels])
-
-  const liveOptionsByKey = useMemo<Record<string, InputOption[]>>(
-    () => ({
-      [LOCKED_ASYNC_CONFIG_KEYS.defaultDepot]: depotOptions,
-      [LOCKED_ASYNC_CONFIG_KEYS.orderTags]: orderTagOptions,
-      [LOCKED_ASYNC_CONFIG_KEYS.orderSources]: orderSourceOptions,
-      [LOCKED_ASYNC_CONFIG_KEYS.productLabels]: productLabelOptions
-    }),
-    [depotOptions, orderTagOptions, orderSourceOptions, productLabelOptions]
-  )
-
-  // The edit dialog calls this to pull the upstream list again; returns `null` for keys that aren't
-  // API-backed so the dialog can hide the sync affordance.
-  const syncLiveOptions = useCallback(
-    async (key: string): Promise<InputOption[] | null> => {
-      switch (key) {
-        case LOCKED_ASYNC_CONFIG_KEYS.defaultDepot: {
-          const { data } = await refetchDepots({ throwOnError: true })
-          return toNamedOptions(data ?? [])
-        }
-        case LOCKED_ASYNC_CONFIG_KEYS.orderTags: {
-          const { data } = await refetchOrderTags({ throwOnError: true })
-          return toNamedOptions(data ?? [])
-        }
-        case LOCKED_ASYNC_CONFIG_KEYS.orderSources: {
-          const { data } = await refetchOrderSources({ throwOnError: true })
-          return toNamedOptions(data ?? [])
-        }
-        case LOCKED_ASYNC_CONFIG_KEYS.productLabels: {
-          const { data } = await refetchProductLabels({ throwOnError: true })
-          return toNamedOptions(data ?? [])
-        }
-        default:
-          return null
-      }
-    },
-    [refetchDepots, refetchOrderTags, refetchOrderSources, refetchProductLabels]
-  )
-
-  const groups = useMemo(() => {
-    const seen = new Set<string>()
-    const result: string[] = []
-
-    for (const config of currentKindConfigs) {
-      const group = resolveGroupKey(config.value.group)
-      if (!seen.has(group)) {
-        seen.add(group)
-        result.push(group)
-      }
+  const { rows: dirtyRows } = useDirtySnapshot()
+  const dirtyCategories = useMemo(() => {
+    const ids = new Set<CategoryId>()
+    for (const row of dirtyRows) {
+      if (!row.isDirty) continue
+      const category = assignments.get(row.configId)
+      if (category) ids.add(category)
     }
+    return ids
+  }, [dirtyRows, assignments])
 
-    return result
-  }, [currentKindConfigs])
+  const knownCategoryIds = useMemo(() => new Set(categories.map((category) => category.id)), [categories])
 
-  const [activeGroup, setActiveGroup] = useQueryState('section', parseAsString)
-  const currentGroup = activeGroup && groups.includes(activeGroup) ? activeGroup : (groups[0] ?? '')
+  // Link cũ trỏ tới category đã bị tách đôi vẫn mở được, không rơi về category mặc định.
+  const renamedCategory = resolveRenamedCategory(categoryParam)
+  const isUnknownCategory = Boolean(categoryParam) && !renamedCategory && !knownCategoryIds.has(categoryParam as string)
+  const activeCategory = renamedCategory ?? (isUnknownCategory || !categoryParam ? DEFAULT_CATEGORY_ID : categoryParam)
+  const [dismissedUnknownCategory, setDismissedUnknownCategory] = useState(false)
 
-  const groupedConfigs = useMemo(
-    () =>
-      currentKindConfigs.reduce<Record<string, Config[]>>((acc, config) => {
-        const g = resolveGroupKey(config.value.group)
-        if (!acc[g]) acc[g] = []
-        acc[g].push(config)
-        return acc
-      }, {}),
-    [currentKindConfigs]
+  const categoryConfigs = useMemo(() => byCategory.get(activeCategory) ?? [], [byCategory, activeCategory])
+
+  const isSecretsCategory = activeCategory === SECRETS_CATEGORY_ID
+  const isGettingConfigs = isSecretsCategory
+    ? isGettingSecretConfigs
+    : isGettingContentConfigs || isGettingSettingConfigs
+
+  const isConfigsError = isSecretsCategory ? isSecretConfigsError : isContentConfigsError || isSettingConfigsError
+
+  const retryCurrentCategory = useCallback(() => {
+    if (isSecretsCategory) {
+      refetchSecretConfigs()
+      return
+    }
+    refetchContentConfigs()
+    refetchSettingConfigs()
+  }, [isSecretsCategory, refetchSecretConfigs, refetchContentConfigs, refetchSettingConfigs])
+
+  const kindsInCategory = useMemo(
+    () => KIND_ORDER.filter((kind) => categoryConfigs.some((config) => config.kind === kind)),
+    [categoryConfigs]
+  )
+  const activeKindFilter = kindFilter && kindsInCategory.includes(kindFilter as ConfigKind) ? kindFilter : null
+  const visibleConfigs = useMemo(
+    () => (activeKindFilter ? categoryConfigs.filter((config) => config.kind === activeKindFilter) : categoryConfigs),
+    [categoryConfigs, activeKindFilter]
   )
 
-  const openCreate = useCallback((initial: Partial<CreateConfigFormInput>, locked?: LockedFields) => {
-    setCreateInitialValues(initial)
-    setCreateLockedFields(locked)
-    setCreateOpen(true)
-  }, [])
+  const groupedVisible = useMemo(() => {
+    const buckets = new Map<string, { documents: Config[]; settings: Config[] }>()
+    for (const config of visibleConfigs) {
+      const group = groupOf(config) || 'other'
+      const bucket = buckets.get(group) ?? { documents: [], settings: [] }
+      if (config.value?.inputType === InputType.json) bucket.documents.push(config)
+      else bucket.settings.push(config)
+      buckets.set(group, bucket)
+    }
+    return [...buckets.entries()]
+  }, [visibleConfigs])
 
-  const openStaticPaletteCreate = useCallback(
-    (inputType: InputType, options?: InputOption[]) => {
-      openCreate({
-        key: currentGroup ? `${currentGroup}.` : '',
-        kind: currentKind,
-        value: {
-          group: currentGroup,
-          label: '',
-          inputType,
-          value: inputType === InputType.multiSelect ? [] : undefined,
-          required: false,
-          options: options ?? [],
-          validations: []
-        }
+  const {
+    productCollectionRegistry,
+    feedbacksRegistry,
+    bannersRegistry,
+    bannersConfigs,
+    productCollectionConfigs,
+    feedbacksConfigs,
+    promotionPopupConfig,
+    signatureLandingConfig,
+    checkoutPaymentMethodsConfig,
+    checkoutDeliveryMethodsConfig,
+    cardSizesConfig,
+    cardPricesConfig,
+    maxWordsAcrossSizes
+  } = useCollectionRegistries({ contentConfigs, isContentConfigsError, settingConfigs })
+
+  const bannerItems = useMemo<CategoryEditorItem[]>(
+    () =>
+      bannersConfigs.length > 0
+        ? bannersConfigs.map((config) => ({ key: config.key, label: bannerKeySuffix(config.key), config, mono: true }))
+        : [{ key: `new:${NEW_BANNERS}`, label: t('configsPage.bannersPalette.newLabel'), config: null }],
+    [bannersConfigs, t]
+  )
+
+  const productCollectionItems = useMemo<CategoryEditorItem[]>(
+    () =>
+      productCollectionConfigs.length > 0
+        ? productCollectionConfigs.map((config) => ({
+            key: config.key,
+            label: productCollectionKeySuffix(config.key),
+            config,
+            mono: true
+          }))
+        : [
+            {
+              key: `new:${NEW_PRODUCT_COLLECTION}`,
+              label: t('configsPage.productCollectionPalette.newLabel'),
+              config: null
+            }
+          ],
+    [productCollectionConfigs, t]
+  )
+
+  const feedbacksItems = useMemo<CategoryEditorItem[]>(
+    () =>
+      feedbacksConfigs.length > 0
+        ? feedbacksConfigs.map((config) => ({
+            key: config.key,
+            label: feedbacksKeySuffix(config.key),
+            config,
+            mono: true
+          }))
+        : [{ key: `new:${NEW_FEEDBACKS}`, label: t('configsPage.feedbacksPalette.newLabel'), config: null }],
+    [feedbacksConfigs, t]
+  )
+
+  const paymentMethodsItems = useMemo<CategoryEditorItem[]>(
+    () => [
+      {
+        key: CHECKOUT_PAYMENT_METHODS_KEY,
+        label: t('configsPage.checkoutMethodsPalette.payment'),
+        config: checkoutPaymentMethodsConfig
+      }
+    ],
+    [checkoutPaymentMethodsConfig, t]
+  )
+
+  const deliveryMethodsItems = useMemo<CategoryEditorItem[]>(
+    () => [
+      {
+        key: CHECKOUT_DELIVERY_METHODS_KEY,
+        label: t('configsPage.checkoutMethodsPalette.delivery'),
+        config: checkoutDeliveryMethodsConfig
+      }
+    ],
+    [checkoutDeliveryMethodsConfig, t]
+  )
+
+  const cardSizesItems = useMemo<CategoryEditorItem[]>(
+    () => [{ key: CARD_SIZES_KEY, label: t('configsPage.cardSizesDialog.title'), config: cardSizesConfig }],
+    [cardSizesConfig, t]
+  )
+
+  const calligraphyItems = useMemo<CategoryEditorItem[]>(
+    () => [{ key: CARD_PRICES_KEY, label: t('configsPage.calligraphyDialog.title'), config: cardPricesConfig }],
+    [cardPricesConfig, t]
+  )
+
+  const promotionPopupItems = useMemo<CategoryEditorItem[]>(
+    () => [{ key: PROMOTION_POPUP_KEY, label: t('configsPage.category.promotionPopup'), config: promotionPopupConfig }],
+    [promotionPopupConfig, t]
+  )
+
+  const signatureLandingItems = useMemo<CategoryEditorItem[]>(
+    () => [
+      { key: PRODUCT_SIGNATURE_KEY, label: t('configsPage.category.signatureLanding'), config: signatureLandingConfig }
+    ],
+    [signatureLandingConfig, t]
+  )
+
+  const { requestNavigation } = useUnsavedChangesGuard({
+    title: t('configsPage.unsaved.leaveTitle'),
+    description: t('configsPage.unsaved.leaveDescription'),
+    confirmText: t('common.button.leave'),
+    cancelText: t('common.button.cancel')
+  })
+
+  const {
+    editingKey,
+    openEdit,
+    finishEditor,
+    selectRecord,
+    editOpen,
+    editingConfig,
+    closeEdit,
+    liveOptionsByKey,
+    syncLiveOptions,
+    openB2BOverviewEditor,
+    openB2BServiceEditor
+  } = useRecordEditor({ requestNavigation })
+
+  const hasMigratedLegacyUrl = useRef(false)
+  useEffect(() => {
+    if (hasMigratedLegacyUrl.current || categoryParam) return
+    if (!legacySection && !kindFilter) return
+    if (isGettingContentConfigs || isGettingSettingConfigs) return
+
+    hasMigratedLegacyUrl.current = true
+    const resolved = resolveLegacyCategory({ section: legacySection, kind: kindFilter }, knownCategoryIds)
+    void setCategoryParam(resolved ?? DEFAULT_CATEGORY_ID)
+    void setLegacySection(null)
+    void setKindFilter(null)
+  }, [
+    categoryParam,
+    legacySection,
+    kindFilter,
+    isGettingContentConfigs,
+    isGettingSettingConfigs,
+    knownCategoryIds,
+    setCategoryParam,
+    setLegacySection,
+    setKindFilter
+  ])
+
+  const [isNavOpen, setIsNavOpen] = useState(false)
+
+  const selectCategory = useCallback(
+    (id: CategoryId) => {
+      if (id === activeCategory) return
+      void requestNavigation(() => {
+        setDismissedUnknownCategory(false)
+        void setCategoryParam(id)
+        void setKindFilter(null)
+        finishEditor()
       })
     },
-    [openCreate, currentGroup, currentKind]
+    [activeCategory, requestNavigation, setCategoryParam, setKindFilter, finishEditor]
   )
 
-  // const openLockedPaletteCreate = useCallback(
-  //   (item: LockedPaletteItem) => {
-  //     const existing = allLoadedConfigs.find((c) => c.key === item.key)
-  //     if (existing) {
-  //       setEditingConfig(existing)
-  //       setEditOpen(true)
-  //       return
-  //     }
-  //     const [group] = item.key.split('.')
-  //     openCreate(
-  //       {
-  //         key: item.key,
-  //         kind: ConfigKind.setting,
-  //         value: {
-  //           group,
-  //           label: item.label,
-  //           inputType: item.inputType,
-  //           value: item.defaultValue,
-  //           required: false,
-  //           options: item.options,
-  //           validations: []
-  //         }
-  //       },
-  //       { key: true, options: true, kind: true }
-  //     )
-  //   },
-  //   [allLoadedConfigs, openCreate]
-  // )
+  const activeCategoryMeta = categories.find((category) => category.id === activeCategory) ?? null
+  const activeCategoryLabel = activeCategoryMeta
+    ? activeCategoryMeta.labelKey
+      ? t(activeCategoryMeta.labelKey)
+      : (activeCategoryMeta.fallbackLabel ?? activeCategoryMeta.id)
+    : ''
 
-  const productCollectionConfigs = useMemo(
-    () => allLoadedConfigs.filter(matchesProductCollectionConfig),
-    [allLoadedConfigs]
-  )
-  const feedbacksConfigs = useMemo(() => allLoadedConfigs.filter((c) => matchesFeedbacksKey(c.key)), [allLoadedConfigs])
-  const bannersConfigs = useMemo(() => allLoadedConfigs.filter((c) => matchesBannerKey(c.key)), [allLoadedConfigs])
+  const navProps = {
+    categories,
+    recordsByCategory: byCategory,
+    activeCategory,
+    dirtyCategories
+  }
 
-  const productCollectionTakenSuffixes = useMemo(
-    () => new Set(productCollectionConfigs.map((c) => productCollectionKeySuffix(c.key))),
-    [productCollectionConfigs]
-  )
-  const feedbacksTakenSuffixes = useMemo(
-    () => new Set(feedbacksConfigs.map((c) => feedbacksKeySuffix(c.key))),
-    [feedbacksConfigs]
-  )
-  const bannersTakenSuffixes = useMemo(
-    () => new Set(bannersConfigs.map((c) => bannerKeySuffix(c.key))),
-    [bannersConfigs]
-  )
+  const renderUnsupportedRows = (supported: readonly (Config | null)[]) => {
+    const supportedKeys = new Set(supported.flatMap((config) => (config ? [config.key] : [])))
+    const rest = categoryConfigs.filter((config) => !supportedKeys.has(config.key))
+    if (rest.length === 0) return null
 
-  const promotionPopupConfig = useMemo(
-    () => promotionsGroupConfigs.find((c) => c.key === PROMOTION_POPUP_KEY) ?? null,
-    [promotionsGroupConfigs]
-  )
-  const checkoutPaymentMethodsConfig = useMemo(
-    () => checkoutGroupConfigs.find((config) => config.key === CHECKOUT_PAYMENT_METHODS_KEY) ?? null,
-    [checkoutGroupConfigs]
-  )
-  const checkoutDeliveryMethodsConfig = useMemo(
-    () => checkoutGroupConfigs.find((config) => config.key === CHECKOUT_DELIVERY_METHODS_KEY) ?? null,
-    [checkoutGroupConfigs]
-  )
+    return (
+      <div className='border-t p-4'>
+        <h3 className='mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground'>
+          {t('configsPage.unsupportedRecords')}
+        </h3>
+        <div className='divide-y border-t'>
+          {rest.map((config) => (
+            <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
-  const b2bServicesConfigs = useMemo(() => allLoadedConfigs.filter(matchesB2BServicesConfig), [allLoadedConfigs])
-  // The shared `b2bServices` group holds two doc kinds; split them so each routes to its own editor.
-  const b2bServiceDocs = useMemo(() => b2bServicesConfigs.filter((c) => !isB2BOverviewKey(c.key)), [b2bServicesConfigs])
-  // const b2bOverviewConfig = useMemo(
-  //   () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
-  //   [b2bServicesConfigs]
-  // )
-  const usedB2BSlugs = useMemo(() => new Set(b2bServiceDocs.map((c) => b2bServicesKeySuffix(c.key))), [b2bServiceDocs])
-  const availableB2BSlugs = useMemo<B2BServiceSlug[]>(
-    () => B2B_SERVICE_SLUGS.filter((slug) => !usedB2BSlugs.has(slug)),
-    [usedB2BSlugs]
-  )
+  const renderCategoryPanel = () => {
+    if (isConfigsError) return <ConfigsErrorState onRetry={retryCurrentCategory} />
 
-  // const findAhamoveRequestForConfig = useCallback(
-  //   (config: Config): AhamoveServiceRequest | null => {
-  //     const raw = config.value.value
-  //     const parsed = typeof raw === 'string' ? safeJsonParse(raw) : (raw as Record<string, unknown> | null)
-  //     const storedId = typeof parsed?._id === 'string' ? parsed._id : null
-  //     if (storedId) {
-  //       const byId = ahamoveRequests.find((r) => r._id === storedId)
-  //       if (byId) return byId
-  //     }
-  //     const suffix = config.key.replace(/^ahamove\.shipping\./, '')
-  //     return ahamoveRequests.find((r) => normalizeAhamoveKey(r._id) === suffix) ?? null
-  //   },
-  //   [ahamoveRequests]
-  // )
+    if (isGettingConfigs) {
+      return (
+        <div className='space-y-3'>
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className='h-20 w-full' />
+          ))}
+        </div>
+      )
+    }
 
-  const openB2BOverviewEditor = useCallback(() => {
-    navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs/b2b-overview`)
-  }, [navigate])
-
-  // B2B service docs are edited on a dedicated full-page editor; existing rows route to their
-  // slug, "add service" routes to the first free slug.
-  const openB2BServiceEditor = useCallback(
-    (config: Config | null) => {
-      const slug = config ? b2bServicesKeySuffix(config.key) : availableB2BSlugs[0]
-      if (!slug) {
-        toast.error(t('configsPage.b2bServicesPalette.allSlugsUsed'))
-        return
-      }
-      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs/b2b-service/${slug}`)
-    },
-    [navigate, availableB2BSlugs, t]
-  )
-
-  const openEdit = useCallback(
-    (config: Config) => {
-      if (matchesCheckoutMethodsKey(config.key)) {
-        setCheckoutMethodsKind(checkoutMethodKindFromKey(config.key))
-        return
-      }
-      if (isPromotionPopupKey(config.key)) {
-        setPromotionPopupDialogOpen(true)
-        return
-      }
-      if (matchesProductCollectionConfig(config)) {
-        setEditingProductCollectionConfig(config)
-        setProductCollectionDialogOpen(true)
-        return
-      }
-      if (matchesFeedbacksKey(config.key)) {
-        setEditingFeedbacksConfig(config)
-        setFeedbacksDialogOpen(true)
-        return
-      }
-      if (matchesBannerKey(config.key)) {
-        setEditingBannersConfig(config)
-        setBannersDialogOpen(true)
-        return
-      }
-      if (matchesB2BServicesConfig(config)) {
-        if (isB2BOverviewKey(config.key)) {
-          openB2BOverviewEditor()
-        } else {
-          openB2BServiceEditor(config)
-        }
-        return
-      }
-      setEditingConfig(config)
-      setEditOpen(true)
-    },
-    [openB2BOverviewEditor, openB2BServiceEditor]
-  )
-
-  // const openProductCollectionDialog = useCallback((config: Config | null) => {
-  //   setEditingProductCollectionConfig(config)
-  //   setProductCollectionDialogOpen(true)
-  // }, [])
-  // const openFeedbacksDialog = useCallback((config: Config | null) => {
-  //   setEditingFeedbacksConfig(config)
-  //   setFeedbacksDialogOpen(true)
-  // }, [])
-  // const openBannersDialog = useCallback((config: Config | null) => {
-  //   setEditingBannersConfig(config)
-  //   setBannersDialogOpen(true)
-  // }, [])
-  // const openPromotionPopupDialog = useCallback(() => {
-  //   setPromotionPopupDialogOpen(true)
-  // }, [])
-  // const openCheckoutPaymentMethods = useCallback(() => setCheckoutMethodsKind('payment'), [])
-  // const openCheckoutDeliveryMethods = useCallback(() => setCheckoutMethodsKind('delivery'), [])
-  const closeEdit = useCallback(() => {
-    setEditOpen(false)
-  }, [])
-
-  return (
-    <div className='flex h-full min-h-0'>
-      <div className='flex w-full min-h-0 flex-col gap-4 p-4 lg:max-w-6xl lg:mx-auto lg:p-6'>
-        <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
-          <span>{t('configsPage.breadcrumb')}</span>
-          <ChevronDown className='size-3.5 -rotate-90' />
-          <span>{t(`systemConfigs.kind.${currentKind}`)}</span>
-          {currentGroup && (
-            <>
-              <ChevronDown className='size-3.5 -rotate-90' />
-              <span className='capitalize'>{currentGroup}</span>
-            </>
+    if (activeCategory === BANNERS_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={bannerItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.banners')}
+          footer={renderUnsupportedRows(bannersConfigs)}
+        >
+          {(item) => (
+            <BannersCollectionEditor
+              key={item.key}
+              existingConfig={item.config}
+              registry={bannersRegistry}
+              onSaved={finishEditor}
+            />
           )}
-        </nav>
+        </CategoryEditorPanel>
+      )
+    }
 
-        <div className='flex items-start justify-between gap-2'>
-          <h1 className='text-2xl font-bold'>{t(`systemConfigs.kind.${currentKind}`)}</h1>
-          {/* <Button
-            type='button'
-            variant='outline'
-            size='icon'
-            className='shrink-0 lg:hidden'
-            onClick={() => setPaletteSheetOpen(true)}
-          >
-            <PanelRight className='size-4' />
-            <span className='sr-only'>{t('configsPage.palette.title')}</span>
-          </Button> */}
+    if (activeCategory === PRODUCT_COLLECTIONS_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={productCollectionItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.productCollections')}
+          footer={renderUnsupportedRows(productCollectionConfigs)}
+        >
+          {(item) => (
+            <ProductCollectionEditor
+              key={item.key}
+              existingConfig={item.config}
+              registry={productCollectionRegistry}
+              onSaved={(saved) => finishEditor(saved?.key)}
+            />
+          )}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === FEEDBACKS_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={feedbacksItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.feedbacks')}
+          footer={renderUnsupportedRows(feedbacksConfigs)}
+        >
+          {(item) => (
+            <FeedbacksCollectionEditor
+              key={item.key}
+              existingConfig={item.config}
+              registry={feedbacksRegistry}
+              onSaved={finishEditor}
+            />
+          )}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === PAYMENT_METHODS_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={paymentMethodsItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.paymentMethods')}
+          footer={renderUnsupportedRows([checkoutPaymentMethodsConfig])}
+        >
+          {(item) => (
+            <CheckoutMethodsEditor key={item.key} kind='payment' existingConfig={item.config} onSaved={finishEditor} />
+          )}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === DELIVERY_METHODS_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={deliveryMethodsItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.deliveryMethods')}
+          footer={renderUnsupportedRows([checkoutDeliveryMethodsConfig])}
+        >
+          {(item) => (
+            <CheckoutMethodsEditor key={item.key} kind='delivery' existingConfig={item.config} onSaved={finishEditor} />
+          )}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === CARD_SIZES_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={cardSizesItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.cardSizes')}
+          footer={renderUnsupportedRows([cardSizesConfig])}
+        >
+          {(item) => <CardSizesEditor key={item.key} existingConfig={item.config} onSaved={finishEditor} />}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === CALLIGRAPHY_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={calligraphyItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.calligraphy')}
+          footer={renderUnsupportedRows([cardPricesConfig])}
+        >
+          {(item) => (
+            <CalligraphyPricingEditor
+              key={item.key}
+              existingConfig={item.config}
+              onSaved={finishEditor}
+              maxWordsAcrossSizes={maxWordsAcrossSizes}
+            />
+          )}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === PROMOTION_POPUP_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={promotionPopupItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.promotionPopup')}
+          footer={renderUnsupportedRows([promotionPopupConfig])}
+        >
+          {(item) => <PromotionPopupEditor existingConfig={item.config} onSaved={finishEditor} />}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === SIGNATURE_LANDING_CATEGORY_ID) {
+      return (
+        <CategoryEditorPanel
+          items={signatureLandingItems}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+          navLabel={t('configsPage.category.signatureLanding')}
+          footer={renderUnsupportedRows([signatureLandingConfig])}
+        >
+          {(item) => <SignatureLandingConfigEditor existingConfig={item.config} onSaved={finishEditor} />}
+        </CategoryEditorPanel>
+      )
+    }
+
+    if (activeCategory === B2B_CATEGORY_ID) {
+      return (
+        <B2BEntryList
+          configs={categoryConfigs}
+          onOpenOverview={openB2BOverviewEditor}
+          onOpenService={openB2BServiceEditor}
+        />
+      )
+    }
+
+    if (activeCategory === POSTGEN_CATEGORY_ID) {
+      return (
+        <PostgenSection
+          configs={categoryConfigs}
+          onEditConfig={openEdit}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+        />
+      )
+    }
+
+    if (activeCategory === IMAGEGEN_CATEGORY_ID) {
+      return (
+        <ImagegenSection
+          configs={categoryConfigs}
+          onEditConfig={openEdit}
+          selectedKey={editingKey}
+          onSelect={selectRecord}
+        />
+      )
+    }
+
+    if (visibleConfigs.length === 0) {
+      return <p className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
+    }
+
+    return (
+      <section className='flex flex-1 flex-col'>
+        <div className='flex items-center gap-2.5 border-b border-border p-4'>
+          <div className='min-w-0 flex-1 -space-y-0.5'>
+            <h3 className='truncate text-lg font-semibold'>{activeCategoryLabel}</h3>
+            <p className='text-xs text-muted-foreground'>
+              {isSecretsCategory
+                ? t('configsPage.genericPanel.secretsSubtitle')
+                : t('configsPage.genericPanel.subtitle', { count: visibleConfigs.length })}
+            </p>
+          </div>
         </div>
 
-        <div className='flex flex-1 flex-col gap-4 min-h-0'>
-          <div className='flex flex-wrap items-center gap-2'>
-            {KIND_ORDER.map((kind) => {
-              const isActive = kind === currentKind
-              const visuals = KIND_VISUALS[kind]
-
-              return (
-                <Button
-                  key={kind}
-                  type='button'
-                  onClick={() => setCurrentKind(kind)}
-                  variant={isActive ? 'default' : 'outline'}
-                  size='sm'
-                >
-                  <visuals.Icon />
-                  <p>{t(ConfigKindLabel[kind])}</p>
-                </Button>
-              )
-            })}
-          </div>
-
-          {isGettingConfigs ? (
-            <div className='space-y-3'>
-              <div className='flex gap-4 border-b pb-2'>
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className='h-8 w-28' />
-                ))}
-              </div>
-              {[1, 2, 3, 4].map((i) => (
-                <Skeleton key={i} className='h-20 w-full' />
-              ))}
-            </div>
-          ) : (
-            <Tabs
-              value={currentGroup}
-              onValueChange={(v) => setActiveGroup(v)}
-              className='flex flex-1 flex-col gap-0 min-h-0'
-            >
-              <div className='shrink-0 overflow-x-auto border-b'>
-                <TabsList className='h-auto w-max gap-0 rounded-none bg-transparent p-0'>
-                  {groups.map((group) => (
-                    <TabsTrigger
-                      key={group}
-                      value={group}
-                      className={cn(
-                        'relative h-9 shrink-0 rounded-none border-b-2 border-b-transparent px-4 text-sm font-medium capitalize text-muted-foreground shadow-none transition-none',
-                        'data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none'
-                      )}
-                    >
-                      {group}
-                    </TabsTrigger>
-                  ))}
-
-                  <Button
-                    variant='ghost'
-                    size='sm'
-                    className='shrink-0 text-muted-foreground first:ml-0 ml-2'
-                    onClick={() => openStaticPaletteCreate(InputType.text)}
-                  >
-                    <Plus className='size-3.5' />
-                    {t('configsPage.addSection')}
-                  </Button>
-                </TabsList>
-              </div>
-
-              <div className='min-h-0 flex-1 overflow-y-auto'>
-                {groups.length === 0 ? (
-                  <p className='py-16 text-center text-sm text-muted-foreground'>{t('configsPage.emptySection')}</p>
-                ) : (
-                  groups.map((group) => (
-                    <TabsContent key={group} value={group} className='mt-3 space-y-4'>
-                      {(groupedConfigs[group] ?? []).length === 0 ? (
-                        <p className='py-8 text-center text-sm text-muted-foreground'>
-                          {t('configsPage.emptySection')}
-                        </p>
-                      ) : (
-                        (groupedConfigs[group] ?? []).map((config) => (
-                          <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
-                        ))
-                      )}
-                    </TabsContent>
-                  ))
-                )}
-              </div>
-            </Tabs>
+        <div className='flex-1 space-y-8 p-4'>
+          {isSecretsCategory && (
+            <EditorCallout tone='warning'>{t('configsPage.genericPanel.secretsWarning')}</EditorCallout>
           )}
+
+          {groupedVisible.map(([group, { documents, settings }]) => (
+            <div key={group} className='space-y-3'>
+              {documents.length > 0 && (
+                <div className='space-y-2'>
+                  {documents.map((config) => (
+                    <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
+                  ))}
+                </div>
+              )}
+
+              {settings.length > 0 && (
+                <div className={SETTINGS_LIST_CLASS}>
+                  {settings.map((config) => (
+                    <ConfigFieldRow key={config.id} config={config} onEdit={() => openEdit(config)} />
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <div className='flex h-full min-h-0 flex-col'>
+      <div className='flex min-h-0 flex-1'>
+        <ConfigsNav {...navProps} onSelect={selectCategory} className='hidden w-72 shrink-0 border-r lg:flex' />
+
+        <div className='min-h-0 flex flex-col flex-1 overflow-y-auto'>
+          {isUnknownCategory && !dismissedUnknownCategory && (
+            <div
+              role='status'
+              className='mb-4 flex items-center gap-3 rounded-lg border border-dashed bg-muted/40 px-3 py-2'
+            >
+              <p className='flex-1 text-xs text-muted-foreground'>{t('configsPage.categoryRemoved')}</p>
+              <Button type='button' variant='ghost' size='sm' onClick={() => setDismissedUnknownCategory(true)}>
+                {t('common.button.close')}
+              </Button>
+            </div>
+          )}
+
+          <div className='flex-1 flex'>{renderCategoryPanel()}</div>
+
+          <UnsavedChangesBar />
         </div>
       </div>
 
-      {/* <ConfigPaletteSidebar
-        className='hidden lg:block'
-        depotOptions={depotOptions}
-        orderTagOptions={orderTagOptions}
-        productCollectionConfigs={productCollectionConfigs}
-        feedbacksConfigs={feedbacksConfigs}
-        bannersConfigs={bannersConfigs}
-        b2bServicesConfigs={b2bServiceDocs}
-        b2bOverviewConfig={b2bOverviewConfig}
-        promotionPopupConfig={promotionPopupConfig}
-        checkoutPaymentMethodsConfig={checkoutPaymentMethodsConfig}
-        checkoutDeliveryMethodsConfig={checkoutDeliveryMethodsConfig}
-        onCreateLocked={openLockedPaletteCreate}
-        onOpenProductCollection={openProductCollectionDialog}
-        onOpenFeedbacks={openFeedbacksDialog}
-        onOpenBanners={openBannersDialog}
-        onOpenB2BService={openB2BServiceEditor}
-        onOpenB2BOverview={openB2BOverviewEditor}
-        onOpenPromotionPopup={openPromotionPopupDialog}
-        onOpenCheckoutPaymentMethods={openCheckoutPaymentMethods}
-        onOpenCheckoutDeliveryMethods={openCheckoutDeliveryMethods}
-      /> */}
-
-      {/* <Sheet open={paletteSheetOpen} onOpenChange={setPaletteSheetOpen}>
-        <SheetContent side='right' className='w-4/5 gap-0 p-0 sm:max-w-sm'>
-          <SheetHeader className='border-b'>
-            <SheetTitle>{t('configsPage.palette.title')}</SheetTitle>
+      <Sheet open={isNavOpen} onOpenChange={setIsNavOpen}>
+        <SheetContent side='left' className='flex w-4/5 flex-col gap-0 p-0 sm:max-w-xs'>
+          <SheetHeader className='shrink-0 border-b'>
+            <SheetTitle>{t('configsPage.nav.label')}</SheetTitle>
           </SheetHeader>
-          <ConfigPaletteSidebar
-            className='w-full flex-1 overflow-y-auto border-0'
-            depotOptions={depotOptions}
-            orderTagOptions={orderTagOptions}
-            productCollectionConfigs={productCollectionConfigs}
-            feedbacksConfigs={feedbacksConfigs}
-            bannersConfigs={bannersConfigs}
-            b2bServicesConfigs={b2bServiceDocs}
-            b2bOverviewConfig={b2bOverviewConfig}
-            promotionPopupConfig={promotionPopupConfig}
-            checkoutPaymentMethodsConfig={checkoutPaymentMethodsConfig}
-            checkoutDeliveryMethodsConfig={checkoutDeliveryMethodsConfig}
-            onCreateLocked={(item) => {
-              setPaletteSheetOpen(false)
-              openLockedPaletteCreate(item)
+          <ConfigsNav
+            {...navProps}
+            onSelect={(id) => {
+              setIsNavOpen(false)
+              selectCategory(id)
             }}
-            onOpenProductCollection={(config) => {
-              setPaletteSheetOpen(false)
-              openProductCollectionDialog(config)
-            }}
-            onOpenFeedbacks={(config) => {
-              setPaletteSheetOpen(false)
-              openFeedbacksDialog(config)
-            }}
-            onOpenBanners={(config) => {
-              setPaletteSheetOpen(false)
-              openBannersDialog(config)
-            }}
-            onOpenB2BService={(config) => {
-              setPaletteSheetOpen(false)
-              openB2BServiceEditor(config)
-            }}
-            onOpenB2BOverview={() => {
-              setPaletteSheetOpen(false)
-              openB2BOverviewEditor()
-            }}
-            onOpenPromotionPopup={() => {
-              setPaletteSheetOpen(false)
-              openPromotionPopupDialog()
-            }}
-            onOpenCheckoutPaymentMethods={() => {
-              setPaletteSheetOpen(false)
-              openCheckoutPaymentMethods()
-            }}
-            onOpenCheckoutDeliveryMethods={() => {
-              setPaletteSheetOpen(false)
-              openCheckoutDeliveryMethods()
-            }}
+            className='min-h-0 flex-1'
           />
         </SheetContent>
-      </Sheet> */}
-
-      <CreateConfigDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        initialValues={createInitialValues}
-        lockedFields={createLockedFields}
-      />
-
-      <AhamoveCreateConfigDialog
-        open={selectedAhamoveRequest !== null}
-        request={selectedAhamoveRequest}
-        existingConfig={editingAhamoveConfig}
-        onClose={() => {
-          setSelectedAhamoveRequest(null)
-          setEditingAhamoveConfig(null)
-        }}
-      />
+      </Sheet>
 
       <UpdateConfigDialog
         open={editOpen}
@@ -658,42 +648,6 @@ export default function ConfigsPage() {
         onClose={closeEdit}
         liveOptionsByKey={liveOptionsByKey}
         onSyncOptions={syncLiveOptions}
-      />
-
-      <ProductCollectionDialog
-        open={productCollectionDialogOpen}
-        onClose={() => setProductCollectionDialogOpen(false)}
-        existingConfig={editingProductCollectionConfig}
-        takenSuffixes={productCollectionTakenSuffixes}
-      />
-
-      <FeedbacksCollectionDialog
-        open={feedbacksDialogOpen}
-        onClose={() => setFeedbacksDialogOpen(false)}
-        existingConfig={editingFeedbacksConfig}
-        takenSuffixes={feedbacksTakenSuffixes}
-      />
-
-      <BannersCollectionDialog
-        open={bannersDialogOpen}
-        onClose={() => setBannersDialogOpen(false)}
-        existingConfig={editingBannersConfig}
-        takenSuffixes={bannersTakenSuffixes}
-      />
-
-      <PromotionPopupDialog
-        open={promotionPopupDialogOpen}
-        onClose={() => setPromotionPopupDialogOpen(false)}
-        existingConfig={promotionPopupConfig}
-      />
-
-      <CheckoutMethodsDialog
-        open={checkoutMethodsKind !== null}
-        kind={checkoutMethodsKind ?? 'payment'}
-        existingConfig={
-          checkoutMethodsKind === 'delivery' ? checkoutDeliveryMethodsConfig : checkoutPaymentMethodsConfig
-        }
-        onClose={() => setCheckoutMethodsKind(null)}
       />
     </div>
   )

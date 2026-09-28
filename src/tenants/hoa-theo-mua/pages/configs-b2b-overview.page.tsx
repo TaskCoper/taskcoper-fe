@@ -1,21 +1,18 @@
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { ArrowLeft, Maximize2, SaveIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
-import { defaultB2BOverview, parseB2BOverview, type B2BOverview } from '../features/configs/b2b-overview-palette'
+import { defaultB2BOverview, parseB2BOverview } from '../features/configs/b2b-overview-palette'
 import {
-  B2B_SERVICE_SLUGS,
   b2bServicesKeySuffix,
   isB2BOverviewKey,
   matchesB2BServicesConfig,
   parseB2BServiceDetail
 } from '../features/configs/b2b-service-detail-palette'
-// import { B2B_OVERVIEW_PRESET } from '../features/configs/components/b2b-services/b2b-overview-preset'
+import { useNavigate } from 'react-router'
+import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { AdvantagesForm } from '../features/configs/components/b2b-services/editor/advantages-form'
 import { CaseStudiesForm } from '../features/configs/components/b2b-services/editor/case-studies-form'
 import { CtaForm } from '../features/configs/components/b2b-services/editor/cta-form'
@@ -37,10 +34,12 @@ import type {
   PreviewLocale,
   ServiceCardData
 } from '../features/configs/components/b2b-services/preview/preview-shared'
+import { B2BPageSkeleton, PreviewLocaleToggle } from '../features/configs/components/b2b-services/b2b-page-chrome'
+import ConfigsErrorState from '../features/configs/components/shared/configs-error-state'
 import { useGetContentConfigs } from '../features/configs/hooks/use-get-content-configs'
-import type { Config } from '../features/configs/types'
+import { B2B_SERVICE_SLUGS, type B2BOverview, type Config } from '../features/configs/types'
 
-// `partners` lives at `caseStudies.partners` but gets its own nav entry/form.
+// `partners` nằm trong `caseStudies.partners` nhưng có mục nav và form riêng.
 type SectionId = PreviewSelection
 
 const SECTION_ORDER: SectionId[] = [
@@ -56,18 +55,20 @@ const SECTION_ORDER: SectionId[] = [
   'cta'
 ]
 
-const PREVIEW_LOCALES: PreviewLocale[] = ['vi', 'en']
-
 export default function B2BOverviewEditorPage() {
-  const { contentConfigs = [], isGettingContentConfigs } = useGetContentConfigs({})
+  const { contentConfigs, isGettingContentConfigs, isContentConfigsError, refetchContentConfigs } =
+    useGetContentConfigs()
+  // Chỉ đọc sau guard lỗi bên dưới, để lỗi không bị che thành một danh sách rỗng.
+  // Memo hoá để các phép suy diễn phía dưới giữ được dependency ổn định.
+  const loadedConfigs = useMemo(() => contentConfigs ?? [], [contentConfigs])
 
-  const b2bServicesConfigs = useMemo(() => contentConfigs.filter(matchesB2BServicesConfig), [contentConfigs])
+  const b2bServicesConfigs = useMemo(() => loadedConfigs.filter(matchesB2BServicesConfig), [loadedConfigs])
   const overviewConfig = useMemo(
     () => b2bServicesConfigs.find((c) => isB2BOverviewKey(c.key)) ?? null,
     [b2bServicesConfigs]
   )
 
-  // Missing slugs get a placeholder so the services grid always previews with the real layout.
+  // Slug còn thiếu được thế bằng placeholder để lưới dịch vụ luôn xem trước đúng bố cục thật.
   const cards = useMemo<Record<string, ServiceCardData>>(() => {
     const result: Record<string, ServiceCardData> = {}
     for (const slug of B2B_SERVICE_SLUGS) {
@@ -82,31 +83,28 @@ export default function B2BOverviewEditorPage() {
 
   const contact = useMemo<PreviewContact>(() => {
     const find = (key: string) => {
-      const raw = contentConfigs.find((c) => c.key === key)?.value.value
+      const raw = loadedConfigs.find((c) => c.key === key)?.value.value
       return typeof raw === 'string' && raw.trim() ? raw : undefined
     }
     return { phone: find('contact.phone'), email: find('contact.email'), zaloUrl: find('contact.zalo') }
-  }, [contentConfigs])
+  }, [loadedConfigs])
 
-  if (isGettingContentConfigs) {
+  if (isContentConfigsError) {
     return (
-      <div className='flex h-full min-h-0 flex-col'>
-        <div className='flex items-center gap-2 border-b px-4 py-3'>
-          <Skeleton className='h-8 w-64' />
-        </div>
-        <div className='flex flex-1 gap-4 p-4'>
-          <Skeleton className='h-full w-48' />
-          <Skeleton className='h-full w-[26rem]' />
-          <Skeleton className='h-full flex-1' />
-        </div>
+      <div className='flex h-full min-h-0 items-center justify-center p-6'>
+        <ConfigsErrorState className='max-w-md' onRetry={() => refetchContentConfigs()} />
       </div>
     )
+  }
+
+  if (isGettingContentConfigs) {
+    return <B2BPageSkeleton />
   }
 
   return <B2BOverviewEditor overviewConfig={overviewConfig} cards={cards} contact={contact} />
 }
 
-// Seeds its working copy once from the fetched doc; post-save refetches don't clobber it.
+// Chỉ nạp bản làm việc một lần từ document đã tải; các lượt refetch sau khi lưu không ghi đè lên nó.
 function B2BOverviewEditor({
   overviewConfig,
   cards,
@@ -138,7 +136,7 @@ function B2BOverviewEditor({
     return () => window.removeEventListener('beforeunload', onBeforeUnload)
   }, [isDirty])
 
-  // Keeps other slices' referential identity so their memoized previews skip re-rendering.
+  // Giữ nguyên identity của các phần khác để preview đã memo hoá của chúng khỏi render lại.
   const patch = <K extends keyof B2BOverview>(key: K, next: B2BOverview[K]) =>
     setWorking((prev) => ({ ...prev, [key]: next }))
 
@@ -147,10 +145,11 @@ function B2BOverviewEditor({
     navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/configs`)
   }
 
-  const handleSave = async () => {
-    const saved = await save(working, overviewConfig)
-    if (saved) setBaseline(JSON.stringify(parseB2BOverview(working)))
-  }
+  const handleSave = () =>
+    save(
+      { working, existingConfig: overviewConfig },
+      { onSuccess: () => setBaseline(JSON.stringify(parseB2BOverview(working))) }
+    )
 
   const renderForm = () => {
     switch (selected) {
@@ -222,31 +221,7 @@ function B2BOverviewEditor({
         </div>
 
         <div className='ml-auto flex items-center gap-2'>
-          {/* <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            onClick={() => setWorking(parseB2BOverview(B2B_OVERVIEW_PRESET))}
-          >
-            <WandSparkles />
-            {t('configsPage.b2bOverviewDialog.fillPresetButton')}
-          </Button> */}
-
-          <div className='flex items-center rounded-md border p-0.5'>
-            {PREVIEW_LOCALES.map((option) => (
-              <button
-                key={option}
-                type='button'
-                onClick={() => setPreviewLocale(option)}
-                className={cn(
-                  'cursor-pointer rounded-sm px-2 py-1 text-xs font-semibold uppercase transition-colors',
-                  option === previewLocale ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {t(`configsPage.b2bOverviewPage.previewLocale.${option}`)}
-              </button>
-            ))}
-          </div>
+          <PreviewLocaleToggle value={previewLocale} onChange={setPreviewLocale} />
 
           <Button type='button' variant='outline' size='sm' onClick={() => setFullPreviewOpen(true)}>
             <Maximize2 />
@@ -284,21 +259,7 @@ function B2BOverviewEditor({
             <span className='text-xs font-medium text-muted-foreground'>
               {t('configsPage.b2bOverviewPage.editLocaleLabel')}
             </span>
-            <div className='flex items-center rounded-md border p-0.5'>
-              {PREVIEW_LOCALES.map((option) => (
-                <button
-                  key={option}
-                  type='button'
-                  onClick={() => setEditLocale(option)}
-                  className={cn(
-                    'cursor-pointer rounded-sm px-2 py-1 text-xs font-semibold uppercase transition-colors',
-                    option === editLocale ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {t(`configsPage.b2bOverviewPage.previewLocale.${option}`)}
-                </button>
-              ))}
-            </div>
+            <PreviewLocaleToggle value={editLocale} onChange={setEditLocale} />
           </div>
           <div className='flex-1 overflow-y-auto p-4'>{renderForm()}</div>
         </div>

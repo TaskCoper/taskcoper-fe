@@ -107,10 +107,20 @@ export default function SystemOrderPage() {
 
   const shippingRows: DetailRow[] = [
     { label: 'systemOrders.detail.trackNumber', value: text(order.trackNumber), mono: true },
-    { label: 'systemOrders.detail.ahamoveOrderId', value: text(order.ahahaMoveOrderId), mono: true },
+    {
+      label: 'systemOrders.detail.ahamoveOrderId',
+      value: text(order.shippingPartyOrderId ?? order.ahahaMoveOrderId),
+      mono: true
+    },
     {
       label: 'systemOrders.detail.ahamoveTracking',
-      value: <TrackingLink href={order.ahahaMoveTrackingUrl} label={t('systemOrders.detail.openLink')} empty={empty} />
+      value: (
+        <TrackingLink
+          href={order.shippingTrackingUrl ?? order.ahahaMoveTrackingUrl}
+          label={t('systemOrders.detail.openLink')}
+          empty={empty}
+        />
+      )
     },
     { label: 'systemOrders.column.shippingFee', value: currency(order.shippingFee) }
   ]
@@ -163,7 +173,9 @@ export default function SystemOrderPage() {
   ]
 
   const rawTab = searchParams.get('tab')
-  const currentTab = TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) ? rawTab! : 'overview'
+  // Tab snapshot đã gộp vào tab sản phẩm - link cũ vẫn mở đúng chỗ.
+  const requestedTab = rawTab === 'snapshot' ? 'items' : rawTab
+  const currentTab = TAB_VALUES.includes(requestedTab as (typeof TAB_VALUES)[number]) ? requestedTab! : 'overview'
 
   const handleTabChange = (value: string) => {
     const next = new URLSearchParams(searchParams)
@@ -362,7 +374,7 @@ export default function SystemOrderPage() {
             </div>
           </TabsContent>
 
-          {/* Line items */}
+          {/* Line items - snapshot và mẫu hoa AI của từng dòng nằm trong dialog khi bấm vào dòng */}
           <TabsContent value='items' className='mt-0'>
             <DetailSection
               title={t('systemOrders.detail.section.items')}

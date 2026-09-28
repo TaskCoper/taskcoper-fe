@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import SanitizedHtml from '@/components/sanitized-html'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -32,6 +33,7 @@ import { ComboSpecification } from '../features/products/combos/components/combo
 import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
 import { useUpdateComboPublication } from '../features/products/combos/hooks/use-update-combo-publication'
 import ProductCategoriesEditor from '../features/products/components/product-categories-editor'
+import ProductDescriptionDialog from '../features/products/components/product-description-dialog'
 import {
   ATTRIBUTE_OVERVIEW_FIELDS,
   BASIC_INFO_FIELDS,
@@ -64,6 +66,7 @@ export default function ProductPage() {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [copied, setCopied] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false)
 
   const [imageResetId, setImageResetId] = useState(id)
   if (id !== imageResetId) {
@@ -91,6 +94,18 @@ export default function ProductPage() {
     id: id ?? '',
     enabled: canManageComboSpecification && isComboSpecificationRequested
   })
+  const {
+    comboSpecification: parentComboSpecification,
+    isGettingComboSpecification: isGettingParentComboSpecification,
+    isError: isParentComboSpecificationError
+  } = useGetComboSpecification({
+    id: product?.parentProductGuidId ?? '',
+    enabled:
+      canManageComboSpecification &&
+      canEditFactor &&
+      isComboSpecificationRequested &&
+      Boolean(product?.parentProductGuidId)
+  })
   const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
   if (isGettingProduct) return <ProductDetailSkeleton />
@@ -112,7 +127,17 @@ export default function ProductPage() {
     )
   }
 
-  const { coverImage, otherImages, productName, otherName, productCode, categoryName, productLabel, slug } = product
+  const {
+    coverImage,
+    otherImages,
+    productName,
+    otherName,
+    productCode,
+    categoryName,
+    productLabel,
+    slug,
+    description
+  } = product
 
   const displayName = productName?.trim() || t('products.common.unnamed')
   const comboId = product.parentProductId?.trim() || id || ''
@@ -426,6 +451,24 @@ export default function ProductPage() {
             </DetailSection>
 
             <DetailSection
+              title={t('products.detail.description.title')}
+              description={t('products.detail.description.subtitle')}
+              action={
+                <Button variant='outline' size='sm' onClick={() => setDescriptionDialogOpen(true)}>
+                  {t('products.detail.description.edit')}
+                </Button>
+              }
+            >
+              <div className='min-h-24 rounded-lg border bg-background p-4'>
+                {description?.trim() ? (
+                  <SanitizedHtml html={description} className='max-w-none overflow-visible' />
+                ) : (
+                  <p className='text-sm text-muted-foreground'>{t('products.detail.description.empty')}</p>
+                )}
+              </div>
+            </DetailSection>
+
+            <DetailSection
               title={t('products.detail.section.pricing')}
               description={t('products.detail.sectionDesc.pricing')}
             >
@@ -550,8 +593,9 @@ export default function ProductPage() {
                   isUpdatingPublication={isUpdatingComboPublication}
                   onEnsureUnpublished={ensureComboUnpublished}
                   materials={comboSpecification?.materials ?? []}
-                  isLoading={isGettingComboSpecification}
-                  isError={isComboSpecificationError}
+                  parentMaterials={canEditFactor ? (parentComboSpecification?.materials ?? []) : undefined}
+                  isLoading={isGettingComboSpecification || isGettingParentComboSpecification}
+                  isError={isComboSpecificationError || isParentComboSpecificationError}
                   t={t}
                 />
               </DetailSection>
@@ -595,6 +639,15 @@ export default function ProductPage() {
           )}
         </div>
       </Tabs>
+
+      {descriptionDialogOpen && (
+        <ProductDescriptionDialog
+          productId={id ?? ''}
+          description={description ?? ''}
+          open
+          onOpenChange={setDescriptionDialogOpen}
+        />
+      )}
 
       {galleryImages.length > 0 && (
         <Lightbox

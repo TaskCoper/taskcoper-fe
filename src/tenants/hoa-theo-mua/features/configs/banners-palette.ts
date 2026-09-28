@@ -1,11 +1,9 @@
-import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
+import { emptyLocalizedText, parseLocalizedText, safeJsonParse } from './palette-shared'
+import type { BannerCollection, BannerItem, LocalizedText } from './types'
 
-/** A banner shape: the ratio to frame against, plus how to describe it to an author. */
 export interface BannerShape {
   aspect: number
-  /** Written as a ratio, e.g. `16:5`. */
   label: string
-  /** A concrete upload size at that ratio, e.g. `1920×600`. */
   example: string
 }
 
@@ -13,11 +11,6 @@ const SHAPE_3_1: BannerShape = { aspect: 3, label: '3:1', example: '1800×600' }
 const SHAPE_16_5: BannerShape = { aspect: 16 / 5, label: '16:5', example: '1920×600' }
 const SHAPE_5_1: BannerShape = { aspect: 5, label: '5:1', example: '2800×560' }
 
-/**
- * Banner shapes, by storefront slot. The storefront renders banners with `w-full h-auto` (no
- * fixed crop box), so these ratios are an upload guide matching each slot's fallback art, not an
- * enforced crop.
- */
 export const BANNER_SLOT_SHAPE: Record<string, BannerShape> = {
   /** `banner-one.webp`, 2172×678. */
   'home.collection': SHAPE_16_5,
@@ -28,14 +21,9 @@ export const BANNER_SLOT_SHAPE: Record<string, BannerShape> = {
   product: SHAPE_5_1
 }
 
-/** The slots the storefront names in `types/config.type.ts` → `BANNER_SLOTS`. */
 export const KNOWN_BANNER_SLOTS: string[] = Object.keys(BANNER_SLOT_SHAPE)
-
-/** Fallback for slots with no known box; 3:1 is the safe (widest) end of the design's actual 3.2:1-5:1 range. */
 export const DEFAULT_BANNER_SHAPE = SHAPE_3_1
 
-// Mirrors the storefront's own `normalizeSlot` (`hooks/use-banner-by-slot.ts`), so a slot typed as
-// `Home_Collection` resolves here exactly as it will resolve there.
 const normalizeSlot = (slot: string): string =>
   slot
     .trim()
@@ -57,25 +45,6 @@ export const matchesBannerKey = (key: string): boolean =>
 
 export const bannerKeySuffix = (key: string): string =>
   key.startsWith(BANNERS_KEY_PREFIX) ? key.slice(BANNERS_KEY_PREFIX.length) : key
-
-// Free-form slot key (e.g. "hero", "sidebar-top", "checkout-footer").
-// Frontend components filter banners by this string.
-export interface BannerItem {
-  id: string
-  slot: string
-  image: LocalizedText
-  href: string
-  openInNewTab: boolean
-  alt: LocalizedText
-  enabled: boolean
-}
-
-export interface BannerCollection {
-  section: {
-    enabled: boolean
-  }
-  items: BannerItem[]
-}
 
 const genId = (): string => `bn_${Math.random().toString(36).slice(2, 8)}`
 
@@ -124,7 +93,6 @@ const parseBannerItem = (raw: Partial<BannerItem> | undefined): BannerItem => {
   }
 }
 
-// Convenience: distinct slot keys already used in the collection (for autocomplete).
 export const collectSlotKeys = (items: BannerItem[]): string[] => {
   const set = new Set<string>()
   for (const item of items) if (item.slot.trim()) set.add(item.slot.trim())

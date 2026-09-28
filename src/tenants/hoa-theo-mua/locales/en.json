@@ -99,6 +99,168 @@
     "articlesComingSoon": "Articles - Coming Soon",
     "categoriesComingSoon": "Categories - Coming Soon"
   },
+  "floralMockups": {
+    "title": "Flower Style",
+    "description": "View and manage templates used in AI flower customization.",
+    "column": {
+      "name": "Template name",
+      "description": "Description",
+      "preview": "Preview",
+      "type": "Type",
+      "status": "Status",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "type": {
+      "flower": "Flower Mockup",
+      "bundle": "Bundle Mockup"
+    },
+    "searchPlaceholder": "Search by Template name...",
+    "noDescription": "No description",
+    "previewAlt": "{{name}} preview",
+    "openPreview": "Open {{name}} preview",
+    "openMenu": "Open template actions",
+    "viewDetail": "View details",
+    "loadFailed": "Unable to load the template list",
+    "loadFailedDescription": "An error occurred while loading data. Please try again.",
+    "retry": "Retry",
+    "form": {
+      "add": "Add Template",
+      "title": "Add Template",
+      "description": "Create a flower or bundle template for the AI customization workflow.",
+      "name": "Template name",
+      "namePlaceholder": "Enter the Template name...",
+      "mockupDescription": "Description",
+      "descriptionPlaceholder": "Enter an optional description...",
+      "image": "Template image",
+      "imageHint": "PNG, JPG or JPEG · Up to 10 MB · No dimension or aspect ratio restrictions",
+      "imagePreviewAlt": "Selected Template image preview",
+      "dropzoneTitle": "Drag an image here or click to browse",
+      "dropzoneActive": "Drop the image to upload",
+      "removeImage": "Remove selected image",
+      "activeHint": "New templates are created with Inactive status.",
+      "submit": "Add",
+      "createSuccess": "Template added successfully.",
+      "createFailed": "Could not add the Template. Please try again.",
+      "validation": {
+        "nameRequired": "Template name is required.",
+        "nameLength": "Template name must not exceed 50 characters.",
+        "descriptionLength": "Description must not exceed 200 characters.",
+        "imageRequired": "Template image is required.",
+        "imageType": "Only PNG, JPG or JPEG images are accepted.",
+        "imageSize": "The Template image must not exceed 10 MB."
+      }
+    },
+    "detail": {
+      "description": "View the flower mockup information and preview."
+    },
+    "statusAction": {
+      "activate": "Set as Active",
+      "deactivate": "Set as Inactive",
+      "activateTitle": "Set this template as Active?",
+      "deactivateTitle": "Set this template as Inactive?",
+      "activateDescription": "{{name}} will be available for generating AI flower designs.",
+      "deactivateDescription": "{{name}} will no longer be available for generating AI flower designs.",
+      "activateConfirm": "Set as Active",
+      "deactivateConfirm": "Set as Inactive",
+      "activateSuccess": "The template is now Active.",
+      "deactivateSuccess": "The template is now Inactive.",
+      "failed": "Could not change the template status. Please try again."
+    },
+    "deleteAction": {
+      "delete": "Delete Template",
+      "title": "Are you sure you want to delete this Template?",
+      "description": "{{name}} will no longer appear in management lists or customer selections. Its data and Preview image remain available for history.",
+      "confirm": "Delete Template",
+      "retry": "Retry",
+      "success": "Template deleted successfully.",
+      "failed": "Could not delete the Template. Please try again."
+    }
+  },
+  "cardTemplates": {
+    "title": "Card templates",
+    "description": "Track the card templates currently available in the system.",
+    "searchPlaceholder": "Search by template name...",
+    "add": "Add card template",
+    "column": {
+      "name": "Template name",
+      "preview": "Preview",
+      "description": "Description",
+      "type": "Template type",
+      "status": "Status",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "type": {
+      "handmade": "Free Templates",
+      "ai": "AI-generated Cards"
+    },
+    "status": {
+      "active": "In use",
+      "inactive": "Not in use"
+    },
+    "noDescription": "No description",
+    "previewAlt": "{{name}} template preview",
+    "openPreview": "Open {{name}} preview",
+    "viewPreview": "View preview",
+    "edit": "Edit card template",
+    "openMenu": "Open card template actions",
+    "form": {
+      "title": "Add card template",
+      "description": "Create a new template for customers to use when generating cards.",
+      "name": "Template name",
+      "namePlaceholder": "Enter template name...",
+      "templateDescription": "Description",
+      "descriptionPlaceholder": "Enter an optional description...",
+      "image": "Template image",
+      "imageHint": "PNG or JPG, up to 10 MB.",
+      "imagePreviewAlt": "Selected template preview",
+      "dropzoneTitle": "Drop an image here or click to select",
+      "dropzoneActive": "Drop the image to upload",
+      "dropzoneHint": "PNG, JPG or JPEG · Maximum 10 MB",
+      "submit": "Add template",
+      "updateTitle": "Edit card template",
+      "updateDescription": "Update the template name, description, or image without changing its usage status.",
+      "updateImageHint": "Keep the current image or select a new PNG/JPG image up to 10 MB.",
+      "updateSubmit": "Save changes",
+      "words": "words",
+      "createSuccess": "Card template added successfully.",
+      "createFailed": "Could not add the card template. Please try again.",
+      "updateSuccess": "Card template updated successfully.",
+      "updateFailed": "Could not update the card template. Please try again.",
+      "validation": {
+        "nameRequired": "Template name is required.",
+        "imageRequired": "Please select a template image.",
+        "imageType": "Only PNG, JPG or JPEG images are accepted.",
+        "imageSize": "The image must not exceed 10 MB.",
+        "nameWords": "Template name must not exceed {{max}} words."
+      }
+    },
+    "statusAction": {
+      "activate": "Set as in use",
+      "deactivate": "Set as not in use",
+      "activateTitle": "Set this template as in use?",
+      "deactivateTitle": "Set this template as not in use?",
+      "activateDescription": "{{name}} will be available to customers when creating new cards.",
+      "deactivateDescription": "{{name}} will no longer be available to customers when creating new cards.",
+      "activateConfirm": "Set as in use",
+      "deactivateConfirm": "Set as not in use",
+      "activateSuccess": "The card template is now in use.",
+      "deactivateSuccess": "The card template is no longer in use.",
+      "failed": "Could not change the card template status. Please try again."
+    },
+    "deleteAction": {
+      "delete": "Delete",
+      "title": "Are you sure you want to delete this card template?",
+      "description": "Once deleted, this template will no longer be available for customers to select.",
+      "success": "Card template deleted successfully.",
+      "failed": "Could not delete the card template. Please try again."
+    }
+  },
   "aiCustom": {
     "comingSoon": "This feature is under development",
     "history": {
@@ -107,8 +269,8 @@
       "searchPlaceholder": "Type to search...",
       "column": {
         "preview": "Preview",
-        "code": "Card code",
         "customer": "Customer",
+        "name": "Flower name",
         "template": "Card template",
         "size": "Size",
         "writingMode": "Writing Method",
@@ -132,7 +294,9 @@
         "preview": "Flower preview",
         "code": "Flower design code",
         "customer": "Customer",
+        "name": "Flower name",
         "sourceCombo": "Source Combo",
+        "sourceProduct": "Source product",
         "createdAt": "Created at",
         "actions": "Actions"
       },
@@ -160,7 +324,10 @@
         "overview": "Overview",
         "materials": "Materials",
         "source": "Design source",
-        "orders": "Linked orders"
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "orders": "Linked orders",
+        "audit": "AI audit"
       },
       "section": {
         "customer": "Customer information",
@@ -169,6 +336,27 @@
         "supportMaterials": "Support materials at creation time",
         "sourceCombo": "Source combo",
         "sourceMockup": "Source mockup",
+        "bundleImage": "Bundle image",
+        "bundle": {
+          "title": "Bundle details",
+          "id": "Bundle ID",
+          "name": "Bundle name",
+          "description": "Description",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "accessories": {
+          "ribbon": "Ribbon",
+          "wrappingPaper": "Wrapping paper",
+          "id": "ID",
+          "name": "Name",
+          "label": "Label",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No information available."
+        },
         "orders": "Linked orders"
       },
       "customRequest": "Request or notes",
@@ -204,6 +392,9 @@
         "customer": "Customer",
         "message": "Card message",
         "design": "Design & file",
+        "pricing": "Size & pricing",
+        "source": "Data source",
+        "attachments": "Attachments",
         "orders": "Linked orders"
       },
       "section": {
@@ -211,17 +402,32 @@
         "customer": "Customer information",
         "message": "Card message",
         "design": "Design and file information",
+        "pricing": "Size and pricing",
+        "source": "Data source",
         "orders": "Linked orders"
       },
       "field": {
         "customerName": "Full name",
         "phone": "Phone number",
+        "address": "Address",
         "email": "Email",
         "sender": "Sender",
         "recipient": "Recipient",
         "greeting": "Greeting",
         "attachments": "User attachments",
-        "fileStatus": "File status"
+        "fileStatus": "File status",
+        "cardType": "Card type",
+        "templateType": "Template type",
+        "sourceType": "Source type",
+        "originProduct": "Source product",
+        "generatedFlower": "Source flower design",
+        "dimensions": "Dimensions",
+        "maxWords": "Maximum words",
+        "wordCount": "Word count",
+        "basePrice": "Base price",
+        "extraPrice": "Extra price",
+        "totalPrice": "Total price",
+        "systemPrompt": "System prompt"
       },
       "fileStatus": {
         "available": "Available",
@@ -252,6 +458,7 @@
         "code": "Order code",
         "status": "Status",
         "createdAt": "Created at",
+        "totalFee": "Total fee",
         "open": "Open order {{code}} details"
       }
     },
@@ -301,7 +508,7 @@
     "templateManagement": {
       "title": "Template Management",
       "cardTemplates": "Card Templates",
-      "flowerMockups": "Flower Mockups"
+      "flowerMockups": "Flower Style Management"
     },
     "cardConfiguration": {
       "title": "Card Configuration",
@@ -315,6 +522,7 @@
       "back": "Back",
       "cancel": "Cancel",
       "delete": "Delete",
+      "saving": "Saving...",
       "previous": "Previous",
       "next": "Next"
     },
@@ -788,6 +996,16 @@
       "onlyLeft": "Only {{count}} left",
       "viewOnWebsite": "View on website",
       "copyCode": "Copy code",
+      "description": {
+        "title": "Description",
+        "subtitle": "Product description information.",
+        "empty": "No description available.",
+        "edit": "Edit",
+        "editTitle": "Edit product description",
+        "placeholder": "Enter product description...",
+        "save": "Save description",
+        "updated": "Product description updated"
+      },
       "copied": "Copied",
       "share": "Copy link",
       "linkCopied": "Link copied to clipboard",
@@ -858,6 +1076,8 @@
         "quantityPerCombo": "Quantity / combo",
         "baseQuantity": "Base quantity",
         "actualQuantity": "Actual quantity",
+        "parentBaseQuantity": "Parent base quantity",
+        "childActualQuantity": "Child quantity after factor",
         "role": "Role",
         "factor": "Size factor",
         "factorHint": "Factor must be greater than 0",
@@ -873,6 +1093,8 @@
         "saveFactor": "Save factor",
         "updatingFactor": "Updating...",
         "updateFactorSuccess": "Size factor updated successfully",
+        "updateSuccess": "Combo quantities updated successfully",
+        "loadError": "Couldn't load the combo quantities.",
         "availableQuantity": "Available to sell",
         "editButton": "Edit",
         "saveChanges": "Save changes",
@@ -1260,7 +1482,9 @@
       "order": "Orders",
       "payment": "Payment",
       "reward": "Rewards",
-      "shipping": "Shipping"
+      "shipping": "Shipping",
+      "contact": "Contact information",
+      "company": "Company information"
     },
     "manageButton": "Manage configurations",
     "render": {
@@ -1282,54 +1506,6 @@
     "title": "System Configurations"
   },
   "configKeys": {
-    "title": "Config keys",
-    "newKey": "+ New key",
-    "search": "Search by key, label, group...",
-    "noSelection": "No config selected",
-    "noSelectionDesc": "Choose a key from the list or create a new one.",
-    "emptyList": "No config keys found.",
-    "page": "Page {{current}} / {{total}} · Total {{count}}",
-    "editor": {
-      "key": "KEY",
-      "keyPlaceholder": "Identifier in code, e.g. summerSaleCampaign",
-      "group": "GROUP",
-      "inputType": "INPUT TYPE",
-      "label": "LABEL",
-      "labelPlaceholder": "Human-readable name",
-      "description": "DESCRIPTION",
-      "descriptionPlaceholder": "Optional description",
-      "options": "OPTIONS",
-      "addOption": "Add option",
-      "optionLabelPlaceholder": "Label",
-      "optionValuePlaceholder": "Value",
-      "switches": "SWITCHES",
-      "addSwitch": "Add switch",
-      "switchKeyPlaceholder": "key",
-      "switchLabelPlaceholder": "Label",
-      "defaultValue": "DEFAULT VALUE",
-      "required": "REQUIRED",
-      "requiredDesc": "This field must have a value",
-      "active": "ACTIVE",
-      "activeDesc": "Config is enabled and visible to consumers",
-      "validations": "VALIDATIONS",
-      "addValidation": "Add rule",
-      "jsonPreview": "JSON PREVIEW",
-      "cancel": "Cancel",
-      "copyJson": "Copy JSON",
-      "save": "Save changes",
-      "saving": "Saving...",
-      "deleteConfirmTitle": "Delete config?",
-      "deleteConfirmDescription": "This config key will be permanently deleted.",
-      "enabledByDefault": "Enabled by default",
-      "disabledByDefault": "Disabled by default",
-      "currencyLabel": "Currency",
-      "from": "From",
-      "to": "To",
-      "boolTrue": "true",
-      "boolFalse": "false",
-      "metaId": "id: ",
-      "metaUserId": "userId: "
-    },
     "toast": {
       "created": "Config created",
       "updated": "Config saved",
@@ -1337,35 +1513,39 @@
       "copied": "JSON copied to clipboard",
       "copyFailed": "Failed to copy",
       "error": "Something went wrong"
-    },
-    "inputTypes": {
-      "text": "text",
-      "number": "number",
-      "currency": "currency",
-      "percentage": "percentage",
-      "select": "select",
-      "address": "address",
-      "checkbox": "checkbox",
-      "switch-group": "switch-group",
-      "date": "date",
-      "dateRange": "dateRange"
-    },
-    "validationRules": {
-      "minLength": "Min length",
-      "maxLength": "Max length",
-      "pattern": "Pattern (regex)",
-      "min": "Min",
-      "max": "Max",
-      "step": "Step",
-      "currency": "Currency",
-      "multiple": "Allow multiple",
-      "minDate": "Min date",
-      "maxDate": "Max date",
-      "minDays": "Min days",
-      "maxDays": "Max days"
     }
   },
   "configsPage": {
+    "category": {
+      "banners": "Promotional banners",
+      "productCollections": "Product collections",
+      "signatureLanding": "Story landing pages",
+      "feedbacks": "Customer feedbacks",
+      "promotionPopup": "Promotional popup",
+      "b2b": "B2B Services",
+      "paymentMethods": "Payment methods",
+      "deliveryMethods": "Delivery methods",
+      "cardSizes": "Card sizes",
+      "calligraphy": "Calligraphy pricing",
+      "postgen": "Social post generation",
+      "imagegen": "AI image prompts",
+      "nhanhvn": "Nhanh.vn",
+      "ahamove": "Ahamove",
+      "contact": "Contact details",
+      "company": "Business details"
+    },
+    "unsaved": {
+      "regionLabel": "Unsaved changes",
+      "count_one": "{{count}} unsaved field",
+      "count_other": "{{count}} unsaved fields",
+      "review": "Review",
+      "discard": "Discard",
+      "leaveTitle": "Leave without saving?",
+      "leaveDescription": "Some fields have changes that have not been saved yet. Leaving will discard them.",
+      "discardTitle": "Discard unsaved changes?",
+      "discardDescription_one": "The {{count}} unsaved field will go back to its saved value. Fields that are already saving are left alone.",
+      "discardDescription_other": "All {{count}} unsaved fields will go back to their saved values. Fields that are already saving are left alone."
+    },
     "dialog": {
       "createTitle": "Add field",
       "editTitle": "Edit field",
@@ -1425,7 +1605,10 @@
     },
     "signatureLanding": {
       "title": "Story landing pages",
+      "description": "Point each product at the story landing page it should link to.",
+      "configLabel": "Story landing pages",
       "subtitle": "{{products}} products · {{pages}} landing pages",
+      "groupsTitle": "Landing pages",
       "empty": "No landing page yet. Add one, then assign products to it.",
       "addGroup": "Add landing page",
       "removeGroup": "Remove landing page",
@@ -1445,8 +1628,6 @@
       "rawHint": "Shape: { \"productId\": \"landing page url\" }",
       "invalidJson": "Invalid JSON - changes are not applied"
     },
-    "breadcrumb": "Manage Configuration",
-    "fallbackTitle": "Configurations",
     "country": {
       "label": "Country",
       "all": "All Countries",
@@ -1459,14 +1640,8 @@
       "deleteConfirm": "Delete",
       "deleteCancel": "Cancel"
     },
-    "addSection": "Add New Section",
-    "cloneSection": "Clone Section",
-    "deleteSection": "Delete section",
+    "unsupportedRecords": "Other records in this section",
     "emptySection": "No fields in this section.",
-    "emptyPage": "No configurations found. Add a section to get started.",
-    "dragAndDrop": "Drag and drop",
-    "showField": "Show field",
-    "hideField": "Hide field",
     "card": {
       "editDefinition": "Edit definition",
       "save": "Save",
@@ -1480,8 +1655,8 @@
       "public": "Public",
       "publicTooltip": "Expose this config to client-side consumers",
       "secretLockedTooltip": "Reveal the secret before changing it",
-      "complexValue": "Complex value",
       "openEditor": "Open editor",
+      "complexValue": "Structured value - open the editor to change it",
       "hints": {
         "minLength": "Min {{n}} chars",
         "maxLength": "Max {{n}} chars",
@@ -1491,7 +1666,16 @@
         "url": "URL",
         "integer": "Integer",
         "pattern": "Regex"
-      }
+      },
+      "revert": "Revert",
+      "edit": "Edit",
+      "autosaved": "Saves automatically",
+      "autosavedHint": "This setting is written as soon as you toggle it; there is nothing to save.",
+      "genericFallbackHint": "This record's shape does not match its usual editor, so the generic editor opens instead.",
+      "itemCount_one": "{{count}} item",
+      "itemCount_other": "{{count}} items",
+      "savedAnnouncement": "{{label}} saved",
+      "saveFailedAnnouncement": "{{label}} could not be saved"
     },
     "palette": {
       "title": "Fields",
@@ -1596,7 +1780,6 @@
       "title": "B2B Services",
       "newLabel": "Add service",
       "emptyList": "No services yet.",
-      "allSlugsUsed": "All services have already been created.",
       "overviewLabel": "Overview page",
       "overviewNewLabel": "Create overview page"
     },
@@ -1607,7 +1790,10 @@
       "errors": {
         "required": "Please enter a key.",
         "invalid": "Use lowercase letters, digits, and hyphens only (must start with a letter or digit).",
-        "duplicate": "This key is already used."
+        "duplicate": "This key is already used.",
+        "pending": "Checking which keys are already in use…",
+        "unavailable": "Existing keys could not be loaded, so a new one cannot be checked for duplicates.",
+        "unverified": "Cannot confirm this key is unused yet. Wait for the list to load, or retry it."
       }
     },
     "productCollectionDialog": {
@@ -1702,7 +1888,7 @@
     },
     "feedbacksDialog": {
       "title": "Customer feedbacks",
-      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google - placeholders must be replaced before launch.",
+      "subtitle": "Curate up to 6 featured customer reviews. Use real feedback from Zalo, Messenger, Facebook or Google",
       "configLabel": "Customer feedbacks",
       "locale": {
         "vi": "Vietnamese",
@@ -1720,7 +1906,11 @@
       "section": {
         "title": "Section header",
         "subtitle": "Title and description shown above the feedback list.",
-        "enabled": "Visible",
+        "statusField": "Status",
+        "status": {
+          "visible": "Visible",
+          "hidden": "Hidden"
+        },
         "titleField": "Title",
         "titlePlaceholder": "e.g. What customers say",
         "descriptionField": "Short description",
@@ -1737,11 +1927,8 @@
       "item": {
         "untitled": "Feedback #{{index}} (no name)",
         "noMeta": "(no area / flower type)",
-        "demoBadge": "DEMO",
         "featuredBadge": "Featured",
         "featuredToggle": "Featured",
-        "placeholderToggle": "Mark as placeholder (demo content)",
-        "placeholderHelp": "Use this while building the layout. Real reviews from Zalo / Messenger / Facebook / Google must replace placeholders before launch.",
         "moveUp": "Move up",
         "moveDown": "Move down",
         "remove": "Remove feedback",
@@ -2131,6 +2318,187 @@
       "priceField": "Price (VND)",
       "priceHelp": "Declared item value in Vietnamese đồng. Used by Ahamove for compensation.",
       "jsonPreview": "JSON preview"
+    },
+    "calligraphyDialog": {
+      "title": "Calligraphy pricing tiers",
+      "description": "All calligraphy price ranges live in a single card_config.prices record.",
+      "hint": "The system counts words and picks the tier where min_words <= count <= max_words. Card price = base price + surcharge. Machine-typed cards always have a 0 surcharge.",
+      "configLabel": "Config label",
+      "configLabelFallback": "Calligraphy pricing tiers",
+      "rulesTitle": "Pricing tiers",
+      "rulesSubtitle": "Tiers must cover a continuous range starting at 0, with no overlap.",
+      "addRule": "Add tier",
+      "removeRule": "Remove tier",
+      "emptyRules": "No pricing tier yet.",
+      "fields": {
+        "min_words": "From (words)",
+        "max_words": "To (words)",
+        "extra_price": "Surcharge (VND)"
+      },
+      "coverageWarning": "Tiers only cover up to {{covered}} words, but card sizes allow up to {{required}} words.",
+      "previewTitle": "Try a word count",
+      "previewResult": "Surcharge: {{price}}",
+      "previewNoMatch": "No tier matches this word count.",
+      "errors": {
+        "labelRequired": "Enter a config label before saving.",
+        "empty": "At least one pricing tier is required.",
+        "negative": "Word counts and surcharges cannot be negative.",
+        "reversed": "The starting word count must be less than or equal to the ending one.",
+        "notStartingAtZero": "The first tier must start at 0 words.",
+        "overlap": "Pricing tiers overlap each other.",
+        "gap": "Pricing tiers have a gap, so some word counts cannot be priced.",
+        "ambiguous": "Another config already uses the card_config.prices key."
+      }
+    },
+    "cardSizesDialog": {
+      "title": "Card sizes",
+      "description": "All sizes live in a single card_config.sizes record.",
+      "hint": "Each row is one card size. Final price = base price + calligraphy surcharge by word count.",
+      "configLabel": "Config label",
+      "configLabelFallback": "Card sizes",
+      "sizesTitle": "Size list",
+      "sizesSubtitle": "The size name is the identifier and must be unique.",
+      "addSize": "Add size",
+      "removeSize": "Remove size",
+      "emptySizes": "No size yet.",
+      "namePlaceholder": "A",
+      "fields": {
+        "name": "Size name",
+        "width": "Width (cm)",
+        "height": "Height (cm)",
+        "base_price": "Base price (VND)",
+        "max_words": "Max words"
+      },
+      "errors": {
+        "labelRequired": "Enter a config label before saving.",
+        "empty": "At least one size is required.",
+        "nameRequired": "Please name every size.",
+        "duplicateName": "Duplicate size name.",
+        "dimensionInvalid": "Width and height must be greater than 0.",
+        "basePriceInvalid": "Base price cannot be negative.",
+        "maxWordsInvalid": "Max words must be an integer greater than 0.",
+        "ambiguous": "Another config already uses the card_config.sizes key."
+      }
+    },
+    "genericPanel": {
+      "subtitle": "{{count}} records in this group.",
+      "secretsSubtitle": "Keys and tokens used to reach external services.",
+      "secretsWarning": "Secret values stay masked. Reveal one only when you actually need it."
+    },
+    "postgenPalette": {
+      "subtitle": "Turn the feature on or off and write the system prompt for each platform.",
+      "enabledSection": "Feature status",
+      "systemPromptsTitle": "Prompt per platform",
+      "systemPromptsSubtitle": "Each platform keeps its own prompt and saves independently.",
+      "create": "Create",
+      "otherTitle": "Other configs in this group",
+      "enabled": {
+        "on": "Enabled",
+        "off": "Disabled",
+        "label": "Enable post generation"
+      },
+      "systemPrompts": {
+        "activeOn": "Enabled",
+        "activeOff": "Disabled",
+        "statusField": "Status",
+        "empty": "No platform yet."
+      },
+      "platforms": {
+        "zalo": {
+          "label": "Zalo"
+        },
+        "instagram": {
+          "label": "Instagram"
+        },
+        "facebook": {
+          "label": "Facebook"
+        }
+      },
+      "imageInstruction": {
+        "title": "Image instruction",
+        "subtitle": "Shared by every platform."
+      },
+      "docs": {
+        "imageInstruction": {
+          "label": "Image instruction"
+        }
+      }
+    },
+    "postgenDialog": {
+      "contentPlaceholder": "Write the instructions for the AI ..."
+    },
+    "imagegenPalette": {
+      "subtitle": "Prompts the AI follows when rendering the flower image and the card that goes with it.",
+      "create": "Create",
+      "otherTitle": "Other configs in this group",
+      "contentPlaceholder": "Write the instructions for the AI ...",
+      "flowerCreate": {
+        "title": "Raw flower image prompt",
+        "subtitle": "Step 1: describes how the base bouquet image is rendered, without any scenery.",
+        "label": "Raw flower image prompt"
+      },
+      "flowerMockup": {
+        "title": "Flower mockup prompt",
+        "subtitle": "Step 2: describes the scenery and extra details applied on top of the raw image from step 1.",
+        "label": "Flower mockup prompt"
+      },
+      "flowerGuard": {
+        "title": "Flower guard rules prompt",
+        "subtitle": "Hard rules that keep the AI on the given description instead of inventing details.",
+        "label": "Flower guard rules prompt"
+      },
+      "card": {
+        "title": "Card prompt",
+        "subtitle": "Runs alongside the flower prompt to render the matching card.",
+        "label": "Card prompt"
+      }
+    },
+    "error": {
+      "title": "Could not load configurations",
+      "description": "The request failed. Nothing has been changed - try again.",
+      "retry": "Try again"
+    },
+    "nav": {
+      "label": "Configuration categories",
+      "searchPlaceholder": "Search categories and keys…",
+      "noMatches": "No categories match.",
+      "hasUnsaved": "Has unsaved changes",
+      "matchCount_one": "{{count}} match",
+      "matchCount_other": "{{count}} matches"
+    },
+    "navSection": {
+      "storefront": "Storefront",
+      "b2b": "B2B site",
+      "commerce": "Checkout & delivery",
+      "cards": "Cards & calligraphy",
+      "automation": "Automation",
+      "integrations": "Integrations",
+      "platform": "Platform",
+      "other": "Other"
+    },
+    "filter": {
+      "allKinds": "All"
+    },
+    "categoryRemoved": "That section is no longer available, so the first category is shown instead.",
+    "addField": "Add field",
+    "b2b": {
+      "subtitle": "Pick a page to open its own editor.",
+      "overviewSection": "Overview page",
+      "servicesSection": "Service pages",
+      "servicesSectionSubtitle": "{{configured}} of {{total}} pages configured",
+      "otherSection": "Other records",
+      "edit": "Edit",
+      "notConfigured": "Not configured",
+      "slug": {
+        "outsourced": "Outsourced florals",
+        "events-mice": "Events & MICE",
+        "office-subscription": "Office subscription",
+        "corporate-gifts": "Corporate gifts",
+        "brand-experience": "Brand experience"
+      }
+    },
+    "create": {
+      "action": "Create"
     }
   },
   "productCategories": {
@@ -2356,7 +2724,7 @@
         "customer": "Who placed the order and who receives it.",
         "delivery": "Where the order is delivered to.",
         "fees": "How the order total is made up.",
-        "items": "Products in this order and the materials captured at checkout.",
+        "items": "Products in this order - click a row to see its snapshot and AI flower design.",
         "shipping": "Tracking codes and carrier links for this order.",
         "payment": "Payment method and links used to settle this order.",
         "transaction": "The settled payment transaction, if any.",
@@ -2419,7 +2787,99 @@
       "vat": "VAT",
       "mapTitle": "Delivery location map",
       "noLocation": "No delivery location",
-      "openInMaps": "Open in Maps"
+      "openInMaps": "Open in Maps",
+      "snapshot": {
+        "empty": "This order has no snapshot",
+        "ribbon": "Ribbon",
+        "wrappingPaper": "Wrapping paper",
+        "materials": "Materials",
+        "additions": "Additional materials",
+        "active": "Active",
+        "inactive": "Inactive",
+        "card": "Attached card",
+        "accessoriesTitle": "Accessories",
+        "accessoriesDescription": "Ribbon and wrapping paper saved with the order.",
+        "materialsTitle": "Materials",
+        "materialsDescription": "Materials recorded in the product snapshot.",
+        "cardTitle": "Attached card",
+        "cardDescription": "Card details saved with the order configuration.",
+        "cardSize": "Size",
+        "cardDimensions": "Dimensions",
+        "cardQuantity": "Quantity",
+        "cardWordCount": "Word count",
+        "cardTotal": "Total fee",
+        "versionsTitle": "Generated card versions",
+        "versionLabel": "Version {{index}}",
+        "versionFinal": "Final pick",
+        "versionNotChosen": "Not chosen",
+        "versionMissing": "Image unavailable",
+        "versionsChosen": "Final pick: version {{index}}",
+        "versionsChosenMissing": "Final pick is no longer listed",
+        "versionsNoFinal": "No final pick yet",
+        "versionsEmpty": "No card versions generated yet",
+        "versionsError": "Could not load card versions",
+        "itemEmpty": "This product has no snapshot data",
+        "accessories": "Accessories",
+        "noAccessories": "No accessories",
+        "core": "Core",
+        "materialsTotal": "Materials total",
+        "aiCustomize": "AI customized",
+        "cardTemplate": "Template",
+        "cardForm": "Lettering style",
+        "cardBasePrice": "Base price",
+        "cardExtraPrice": "Extra fee",
+        "cardWordLimit": "Word limit",
+        "cardMessage": "Message",
+        "openProduct": "Open product page"
+      },
+      "item": {
+        "tab": {
+          "info": "Information",
+          "snapshot": "Snapshot",
+          "card": "Card",
+          "flower": "AI flower design"
+        },
+        "group": {
+          "product": "Product",
+          "pricing": "Price and quantity",
+          "shipping": "Shipping specs"
+        },
+        "open": "View product details",
+        "itemId": "Line item code",
+        "dimensions": "Dimensions (L × W × H)",
+        "variantLabel": "Variant #{{order}} of {{total}}",
+        "hint": {
+          "viewFlower": "View the AI flower design for variant #{{order}}",
+          "viewCard": "View the card for variant #{{order}}",
+          "noFlower": "No AI flower design for this variant",
+          "noCard": "No card for this variant"
+        }
+      },
+      "flower": {
+        "notFound": "Could not load the AI flower design for this product",
+        "createdAt": "Created at",
+        "materialCount": "Material count",
+        "openDetail": "Open flower design page",
+        "sourceTitle": "Design source",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "materials": "Materials",
+        "coreMaterials": "Core materials",
+        "supportMaterials": "Support materials",
+        "additions": "Additional materials",
+        "inactive": "No longer active",
+        "audit": "AI history",
+        "operation": "Operation",
+        "schemaVersion": "Schema version",
+        "validatedAt": "Validated at",
+        "systemPromptSource": "Prompt source",
+        "sourceDescription": "Combo, mockup and bundle used to generate this design.",
+        "accessoriesDescription": "Ribbon and wrapping paper attached to this design.",
+        "materialsDescription": "Materials locked in when the design was generated.",
+        "auditDescription": "Technical details of this generation run."
+      }
     }
   }
 }

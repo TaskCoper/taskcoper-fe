@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { CheckIcon, CircleCheck, CircleX, PackageCheck, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import type { ComboMaterial } from '../types'
 import {
@@ -34,6 +34,7 @@ export function ComboSpecification({
   isUpdatingPublication,
   onEnsureUnpublished,
   materials,
+  parentMaterials,
   isLoading,
   isError,
   t
@@ -48,12 +49,14 @@ export function ComboSpecification({
   isUpdatingPublication: boolean
   onEnsureUnpublished: () => Promise<boolean>
   materials: ComboMaterial[]
+  parentMaterials?: ComboMaterial[]
   isLoading: boolean
   isError: boolean
   t: TenantT
 }) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const normalizedInitialFactor = initialFactor !== null && initialFactor > 0 ? initialFactor : null
+  const [savedFactor, setSavedFactor] = useState<number | null>(normalizedInitialFactor)
   const [isEditing, setIsEditing] = useState(false)
   const [selectedMaterialIds, setSelectedMaterialIds] = useState<Set<string>>(new Set())
   const { confirm } = useConfirmStore()
@@ -72,6 +75,13 @@ export function ComboSpecification({
         materialProductIds.map((materialId) => [materialId, materialProductsById[materialId]?.productLabel])
       ),
     [materialProductIds, materialProductsById]
+  )
+  const parentBaseQuantityByMaterialId = useMemo(
+    () =>
+      parentMaterials
+        ? Object.fromEntries(parentMaterials.map((material) => [material.materialId, material.quantityPerCombo]))
+        : undefined,
+    [parentMaterials]
   )
   const factorSchema = useMemo(() => createComboFactorSchema(t), [t])
   const materialsSchema = useMemo(() => createComboMaterialsSchema(t), [t])
@@ -102,6 +112,10 @@ export function ComboSpecification({
     ])
   )
 
+  useEffect(() => {
+    setSavedFactor(normalizedInitialFactor)
+  }, [normalizedInitialFactor])
+
   if (isLoading) {
     return (
       <div className='space-y-8'>
@@ -116,7 +130,11 @@ export function ComboSpecification({
   }
 
   if (isError) {
-    return <div className='rounded-lg border py-8 text-center text-sm text-destructive'>{t('common.error')}</div>
+    return (
+      <div className='rounded-lg border py-8 text-center text-sm text-destructive'>
+        {t('products.detail.comboSpecification.loadError')}
+      </div>
+    )
   }
 
   const coreMaterials = materials.filter((material) => material.isCore)
@@ -177,6 +195,7 @@ export function ComboSpecification({
 
   const handleSaveFactor = async ({ factor }: ComboFactorFormValues) => {
     await updateChildQuantity({ productId, factor })
+    setSavedFactor(factor)
   }
 
   const toggleMaterial = (materialId: string) => {
@@ -348,7 +367,8 @@ export function ComboSpecification({
         >
           <ComboMaterialTable
             materials={coreMaterials}
-            factor={factor}
+            baseQuantityByMaterialId={parentBaseQuantityByMaterialId}
+            factor={savedFactor}
             applyFactor={canEditFactor}
             isEditing={isEditing}
             editValues={editValues}
@@ -371,7 +391,8 @@ export function ComboSpecification({
         >
           <ComboMaterialTable
             materials={supportMaterials}
-            factor={factor}
+            baseQuantityByMaterialId={parentBaseQuantityByMaterialId}
+            factor={savedFactor}
             applyFactor={canEditFactor}
             isEditing={isEditing}
             editValues={editValues}

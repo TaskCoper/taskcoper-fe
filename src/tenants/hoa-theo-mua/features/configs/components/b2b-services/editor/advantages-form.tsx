@@ -1,5 +1,6 @@
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { defaultAdvantageItem, type AdvantageItem, type OverviewAdvantages } from '../../../b2b-overview-palette'
+import { defaultAdvantageItem } from '../../../b2b-overview-palette'
+import { type AdvantageItem, type OverviewAdvantages } from '../../../types'
 import { AddRowButton, IconPickerField, ListRow, LocalizedField, useListOps } from '../b2b-section-editors'
 import type { PreviewLocale } from '../preview/preview-shared'
 import { Accordion, previewLabel, SectionCard } from './editor-shared'

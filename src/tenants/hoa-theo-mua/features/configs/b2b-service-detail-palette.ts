@@ -1,30 +1,37 @@
-import { emptyLocalizedText, parseLocalizedText, safeJsonParse, type LocalizedText } from './palette-shared'
-import { ConfigKind, InputType, type Config } from './types'
+import { emptyLocalizedText, normalizeGroup, parseLocalizedText, safeJsonParse } from './palette-shared'
+import {
+  B2B_SERVICE_SLUGS,
+  ConfigKind,
+  InputType,
+  type B2BServiceDetail,
+  type B2BServiceSlug,
+  type BenefitsBlock,
+  type ClosingBlock,
+  type Config,
+  type FaqBlock,
+  type FaqItem,
+  type ListBlock,
+  type MiceBlock,
+  type PersonalizationBlock,
+  type RichItem,
+  type ServiceStatItem,
+  type StatsBlock
+} from './types'
 
 export const B2B_SERVICES_GROUP = 'b2bServices'
 export const B2B_SERVICES_KEY_PREFIX = `${B2B_SERVICES_GROUP}.`
-// The overview page shares the group but has its own shape/editor, see b2b-overview-palette.ts.
 export const B2B_OVERVIEW_KEY = `${B2B_SERVICES_GROUP}.overview`
-
-export const B2B_SERVICE_SLUGS = [
-  'outsourced',
-  'events-mice',
-  'office-subscription',
-  'corporate-gifts',
-  'brand-experience'
-] as const
-export type B2BServiceSlug = (typeof B2B_SERVICE_SLUGS)[number]
 
 const GROUP_LC = B2B_SERVICES_GROUP.toLowerCase()
 const PREFIX_LC = B2B_SERVICES_KEY_PREFIX.toLowerCase()
 
-const groupMatches = (group: string): boolean => group.toLowerCase() === GROUP_LC
+const groupMatches = (group: string | null | undefined): boolean => normalizeGroup(group) === GROUP_LC
 const hasServicePrefix = (key: string): boolean => key.toLowerCase().startsWith(PREFIX_LC)
 
 export const matchesB2BServicesConfig = (config: Config): boolean =>
-  groupMatches(config.value.group) &&
+  groupMatches(config.value?.group) &&
   config.kind === ConfigKind.content &&
-  config.value.inputType === InputType.json &&
+  config.value?.inputType === InputType.json &&
   hasServicePrefix(config.key) &&
   config.key.length > B2B_SERVICES_KEY_PREFIX.length
 
@@ -37,37 +44,23 @@ export const isB2BOverviewKey = (key: string): boolean => key.toLowerCase() === 
 const isServiceSlug = (value: unknown): value is B2BServiceSlug =>
   typeof value === 'string' && (B2B_SERVICE_SLUGS as readonly string[]).includes(value)
 
-export interface RichItem {
-  title: LocalizedText
-  description: LocalizedText
-}
 export const defaultRichItem = (): RichItem => ({ title: emptyLocalizedText(), description: emptyLocalizedText() })
 export const parseRichItem = (raw: Partial<RichItem> | undefined): RichItem => ({
   title: parseLocalizedText(raw?.title),
   description: parseLocalizedText(raw?.description)
 })
 
-export interface StatItem {
-  value: LocalizedText
-  label: LocalizedText
-  caption: LocalizedText
-}
-export const defaultStatItem = (): StatItem => ({
+export const defaultStatItem = (): ServiceStatItem => ({
   value: emptyLocalizedText(),
   label: emptyLocalizedText(),
   caption: emptyLocalizedText()
 })
-const parseStatItem = (raw: Partial<StatItem> | undefined): StatItem => ({
+const parseStatItem = (raw: Partial<ServiceStatItem> | undefined): ServiceStatItem => ({
   value: parseLocalizedText(raw?.value),
   label: parseLocalizedText(raw?.label),
   caption: parseLocalizedText(raw?.caption)
 })
 
-export interface FaqItem {
-  question: LocalizedText
-  answer: LocalizedText
-  hasZalo: boolean
-}
 export const defaultFaqItem = (): FaqItem => ({
   question: emptyLocalizedText(),
   answer: emptyLocalizedText(),
@@ -79,15 +72,6 @@ const parseFaqItem = (raw: Partial<FaqItem> | undefined): FaqItem => ({
   hasZalo: Boolean(raw?.hasZalo)
 })
 
-// A section is "rendered" iff present AND (for list blocks) items.length > 0.
-// `image` is an optional per-section visual (rendered as a divider/split image on the FE).
-export interface ListBlock {
-  heading: LocalizedText
-  subIntro: LocalizedText
-  items: RichItem[]
-  closing: LocalizedText
-  image?: string
-}
 export const defaultListBlock = (): ListBlock => ({
   heading: emptyLocalizedText(),
   subIntro: emptyLocalizedText(),
@@ -103,11 +87,6 @@ const parseListBlock = (raw: Partial<ListBlock> | undefined): ListBlock => ({
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-export interface BenefitsBlock {
-  heading: LocalizedText
-  items: RichItem[]
-  image?: string
-}
 export const defaultBenefitsBlock = (): BenefitsBlock => ({ heading: emptyLocalizedText(), items: [], image: '' })
 const parseBenefitsBlock = (raw: Partial<BenefitsBlock> | undefined): BenefitsBlock => ({
   heading: parseLocalizedText(raw?.heading),
@@ -115,11 +94,6 @@ const parseBenefitsBlock = (raw: Partial<BenefitsBlock> | undefined): BenefitsBl
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-export interface StatsBlock {
-  heading: LocalizedText
-  items: StatItem[]
-  image?: string
-}
 export const defaultStatsBlock = (): StatsBlock => ({ heading: emptyLocalizedText(), items: [], image: '' })
 const parseStatsBlock = (raw: Partial<StatsBlock> | undefined): StatsBlock => ({
   heading: parseLocalizedText(raw?.heading),
@@ -127,12 +101,6 @@ const parseStatsBlock = (raw: Partial<StatsBlock> | undefined): StatsBlock => ({
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-export interface MiceBlock {
-  heading: LocalizedText
-  intro: LocalizedText
-  body: LocalizedText
-  image?: string
-}
 export const defaultMiceBlock = (): MiceBlock => ({
   heading: emptyLocalizedText(),
   intro: emptyLocalizedText(),
@@ -146,11 +114,6 @@ const parseMiceBlock = (raw: Partial<MiceBlock> | undefined): MiceBlock => ({
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-export interface FaqBlock {
-  heading: LocalizedText
-  items: FaqItem[]
-  image?: string
-}
 export const defaultFaqBlock = (): FaqBlock => ({ heading: emptyLocalizedText(), items: [], image: '' })
 const parseFaqBlock = (raw: Partial<FaqBlock> | undefined): FaqBlock => ({
   heading: parseLocalizedText(raw?.heading),
@@ -158,11 +121,6 @@ const parseFaqBlock = (raw: Partial<FaqBlock> | undefined): FaqBlock => ({
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-export interface ClosingBlock {
-  heading: LocalizedText
-  paragraphs: LocalizedText[]
-  image?: string
-}
 export const defaultClosingBlock = (): ClosingBlock => ({ heading: emptyLocalizedText(), paragraphs: [], image: '' })
 const parseClosingBlock = (raw: Partial<ClosingBlock> | undefined): ClosingBlock => ({
   heading: parseLocalizedText(raw?.heading),
@@ -170,10 +128,6 @@ const parseClosingBlock = (raw: Partial<ClosingBlock> | undefined): ClosingBlock
   image: typeof raw?.image === 'string' ? raw.image : ''
 })
 
-// personalization has an extra `intro` on top of a ListBlock
-export interface PersonalizationBlock extends ListBlock {
-  intro: LocalizedText
-}
 export const defaultPersonalizationBlock = (): PersonalizationBlock => ({
   ...defaultListBlock(),
   intro: emptyLocalizedText()
@@ -182,42 +136,6 @@ const parsePersonalizationBlock = (raw: Partial<PersonalizationBlock> | undefine
   ...parseListBlock(raw),
   intro: parseLocalizedText(raw?.intro)
 })
-
-export interface B2BServiceDetail {
-  slug: B2BServiceSlug
-  enabled: boolean
-  showPackagesLink: boolean
-
-  heroImage: string
-  ogImage?: string
-  introImage?: string
-
-  // card copy (drives overview grid + detail H1 + related cards)
-  card: { tag: LocalizedText; name: LocalizedText; description: LocalizedText }
-  lede: LocalizedText
-
-  seo: {
-    metaTitle: LocalizedText
-    metaDescription: LocalizedText
-    keywords: LocalizedText // comma-separated per locale
-    ogAlt: LocalizedText
-    breadcrumb: LocalizedText
-    serviceType: string // schema.org serviceType - locale-neutral
-  }
-
-  // sections (optional = not rendered)
-  intro: LocalizedText[]
-  inclusions?: ListBlock
-  stats?: StatsBlock
-  mice?: MiceBlock
-  schedule?: ListBlock
-  personalization?: PersonalizationBlock
-  benefits?: BenefitsBlock
-  process?: ListBlock
-  audience?: ListBlock
-  faq?: FaqBlock
-  closing: ClosingBlock
-}
 
 export const defaultB2BServiceDetail = (slug: B2BServiceSlug): B2BServiceDetail => ({
   slug,

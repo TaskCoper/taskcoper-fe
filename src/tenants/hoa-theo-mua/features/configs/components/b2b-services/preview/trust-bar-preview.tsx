@@ -1,6 +1,6 @@
 import { ImageWithViewport } from '@/components/image-with-viewport'
 import { memo } from 'react'
-import type { OverviewTrustBar } from '../../../b2b-overview-palette'
+import { type OverviewTrustBar } from '../../../types'
 import { buildMarqueeSet, Marquee, marqueeDuration, pick, type PreviewLocale } from './preview-shared'
 
 export const TrustBarPreview = memo(function TrustBarPreview({

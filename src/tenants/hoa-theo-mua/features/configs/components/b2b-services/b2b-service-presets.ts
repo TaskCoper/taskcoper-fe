@@ -1,8 +1,4 @@
-// AUTO-GENERATED seed content for the 5 B2B service documents, extracted from the
-// "Nội dung" content sheet (Vietnamese) with English translations. Used by the
-// quick-fill buttons in the service editor so testers don't have to type each service
-// by hand. Regenerate by re-parsing the source sheet + translation map.
-import type { B2BServiceDetail, B2BServiceSlug } from '../../b2b-service-detail-palette'
+import { type B2BServiceDetail, type B2BServiceSlug } from '../../types'
 
 export const B2B_SERVICE_PRESETS: Record<B2BServiceSlug, B2BServiceDetail> = {
   outsourced: {

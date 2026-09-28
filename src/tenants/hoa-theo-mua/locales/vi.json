@@ -99,16 +99,178 @@
     "articlesComingSoon": "Bài viết - Sắp ra mắt",
     "categoriesComingSoon": "Danh mục bài viết - Sắp ra mắt"
   },
+  "floralMockups": {
+    "title": "Quản lý kiểu dáng hoa",
+    "description": "Theo dõi và quản lý mẫu được sử dụng trong quy trình tùy chỉnh hoa AI.",
+    "column": {
+      "name": "Tên mẫu",
+      "description": "Mô tả",
+      "preview": "Ảnh Preview",
+      "status": "Trạng thái",
+      "type": "Loại mẫu",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Dừng hoạt động"
+    },
+    "type": {
+      "flower": "Mẫu mockup hoa",
+      "bundle": "Mẫu gói hoa"
+    },
+    "searchPlaceholder": "Tìm theo tên Template...",
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview của {{name}}",
+    "openPreview": "Mở ảnh Preview của {{name}}",
+    "openMenu": "Mở thao tác Template",
+    "viewDetail": "Xem chi tiết",
+    "loadFailed": "Không thể tải danh sách Template",
+    "loadFailedDescription": "Đã xảy ra lỗi trong quá trình tải dữ liệu. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "form": {
+      "add": "Thêm Template",
+      "title": "Thêm Template",
+      "description": "Tạo Template mẫu hoa hoặc gói hoa cho quy trình tùy chỉnh hoa AI.",
+      "name": "Tên Template",
+      "namePlaceholder": "Nhập tên Template...",
+      "mockupDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh Template",
+      "imageHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB · Không giới hạn kích thước hoặc tỷ lệ ảnh",
+      "imagePreviewAlt": "Ảnh xem trước của Template đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "removeImage": "Xóa ảnh đã chọn",
+      "activeHint": "Template mới sẽ được tạo với trạng thái Dừng hoạt động.",
+      "submit": "Thêm",
+      "createSuccess": "Thêm Template thành công.",
+      "createFailed": "Không thể thêm Template. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên Template.",
+        "nameLength": "Tên Template không được vượt quá 50 ký tự.",
+        "descriptionLength": "Mô tả không được vượt quá 200 ký tự.",
+        "imageRequired": "Vui lòng chọn ảnh Template.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh Template không được vượt quá 10 MB."
+      }
+    },
+    "detail": {
+      "description": "Xem thông tin và ảnh Preview của Template mẫu hoa."
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Hoạt động",
+      "deactivate": "Chuyển sang Dừng hoạt động",
+      "activateTitle": "Chuyển Template sang Hoạt động?",
+      "deactivateTitle": "Chuyển Template sang Dừng hoạt động?",
+      "activateDescription": "Template {{name}} sẽ khả dụng và có thể được hiển thị cho khách hàng khi chọn Template.",
+      "deactivateDescription": "Template {{name}} sẽ không còn khả dụng cho yêu cầu mới và không hiển thị để khách hàng lựa chọn.",
+      "activateConfirm": "Chuyển sang Hoạt động",
+      "deactivateConfirm": "Chuyển sang Dừng hoạt động",
+      "activateSuccess": "Template đã chuyển sang Hoạt động.",
+      "deactivateSuccess": "Template đã chuyển sang Dừng hoạt động.",
+      "failed": "Không thể chuyển trạng thái Template. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa Template",
+      "title": "Bạn chắc chắn muốn xóa Template này không?",
+      "description": "Template {{name}} sẽ không còn hiển thị trong danh sách quản lý hoặc cho khách hàng lựa chọn. Dữ liệu và ảnh Preview vẫn được giữ lại để xem lịch sử.",
+      "confirm": "Xóa Template",
+      "retry": "Thử lại",
+      "success": "Xóa Template thành công.",
+      "failed": "Không thể xóa Template. Vui lòng thử lại."
+    }
+  },
+  "cardTemplates": {
+    "title": "Danh sách mẫu thiệp",
+    "description": "Theo dõi các mẫu thiệp đang được hệ thống sử dụng.",
+    "searchPlaceholder": "Tìm theo tên mẫu thiệp...",
+    "add": "Thêm mẫu thiệp",
+    "column": {
+      "name": "Tên mẫu",
+      "preview": "Ảnh Preview",
+      "description": "Mô tả",
+      "type": "Loại mẫu",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "type": {
+      "handmade": "Thiệp có sẵn",
+      "ai": "Thiệp AI"
+    },
+    "status": {
+      "active": "Đang sử dụng",
+      "inactive": "Ngừng sử dụng"
+    },
+    "noDescription": "Không có mô tả",
+    "previewAlt": "Ảnh Preview mẫu {{name}}",
+    "openPreview": "Mở ảnh Preview mẫu {{name}}",
+    "viewPreview": "Xem ảnh Preview",
+    "edit": "Sửa mẫu thiệp",
+    "openMenu": "Mở thao tác mẫu thiệp",
+    "form": {
+      "title": "Thêm mẫu thiệp",
+      "description": "Tạo mẫu mới để khách hàng sử dụng khi tạo thiệp.",
+      "name": "Tên mẫu",
+      "namePlaceholder": "Nhập tên mẫu thiệp...",
+      "templateDescription": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả nếu có...",
+      "image": "Ảnh template mẫu thiệp",
+      "imageHint": "Định dạng PNG hoặc JPG, dung lượng tối đa 10 MB.",
+      "imagePreviewAlt": "Ảnh xem trước của mẫu thiệp đã chọn",
+      "dropzoneTitle": "Kéo thả ảnh vào đây hoặc nhấn để chọn",
+      "dropzoneActive": "Thả ảnh để tải lên",
+      "dropzoneHint": "PNG, JPG hoặc JPEG · Tối đa 10 MB",
+      "submit": "Thêm mẫu thiệp",
+      "updateTitle": "Sửa mẫu thiệp",
+      "updateDescription": "Cập nhật tên, mô tả hoặc ảnh mẫu thiệp mà không thay đổi trạng thái sử dụng.",
+      "updateImageHint": "Giữ ảnh hiện tại hoặc chọn ảnh PNG/JPG mới có dung lượng tối đa 10 MB.",
+      "updateSubmit": "Lưu thay đổi",
+      "words": "từ",
+      "createSuccess": "Thêm mẫu thiệp thành công.",
+      "createFailed": "Không thể thêm mẫu thiệp. Vui lòng thử lại.",
+      "updateSuccess": "Cập nhật mẫu thiệp thành công.",
+      "updateFailed": "Không thể cập nhật mẫu thiệp. Vui lòng thử lại.",
+      "validation": {
+        "nameRequired": "Vui lòng nhập tên mẫu thiệp.",
+        "imageRequired": "Vui lòng chọn ảnh template mẫu thiệp.",
+        "imageType": "Chỉ chấp nhận ảnh định dạng PNG, JPG hoặc JPEG.",
+        "imageSize": "Ảnh không được vượt quá 10 MB.",
+        "nameWords": "Tên mẫu không được vượt quá {{max}} từ."
+      }
+    },
+    "statusAction": {
+      "activate": "Chuyển sang Đang sử dụng",
+      "deactivate": "Chuyển sang Ngừng sử dụng",
+      "activateTitle": "Chuyển mẫu thiệp sang Đang sử dụng?",
+      "deactivateTitle": "Chuyển mẫu thiệp sang Ngừng sử dụng?",
+      "activateDescription": "Mẫu {{name}} sẽ được hiển thị cho khách hàng khi tạo thiệp mới.",
+      "deactivateDescription": "Mẫu {{name}} sẽ không còn hiển thị cho khách hàng khi tạo thiệp mới.",
+      "activateConfirm": "Chuyển sang Đang sử dụng",
+      "deactivateConfirm": "Chuyển sang Ngừng sử dụng",
+      "activateSuccess": "Mẫu thiệp đã chuyển sang Đang sử dụng.",
+      "deactivateSuccess": "Mẫu thiệp đã chuyển sang Ngừng sử dụng.",
+      "failed": "Không thể chuyển trạng thái mẫu thiệp. Vui lòng thử lại."
+    },
+    "deleteAction": {
+      "delete": "Xóa",
+      "title": "Bạn chắc chắn muốn xóa mẫu thiệp này không?",
+      "description": "Mẫu thiệp sau khi xóa sẽ không còn hiển thị để khách hàng lựa chọn.",
+      "success": "Xóa mẫu thiệp thành công.",
+      "failed": "Không thể xóa mẫu thiệp. Vui lòng thử lại."
+    }
+  },
   "aiCustom": {
     "comingSoon": "Tính năng đang được phát triển",
     "history": {
       "title": "Lịch sử thiệp AI",
       "description": "Xem và tìm kiếm các thiệp AI đã tạo thành công.",
-      "searchPlaceholder": "Nhập để tìm kiếm ...",
+      "searchPlaceholder": "Nhập để tìm kiếm...",
       "column": {
         "preview": "Ảnh thiệp",
-        "code": "Mã thiệp",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "template": "Mẫu thiệp",
         "size": "Kích thước",
         "writingMode": "Hình thức viết",
@@ -132,7 +294,9 @@
         "preview": "Ảnh mẫu hoa",
         "code": "Mã mẫu hoa",
         "customer": "Khách hàng",
+        "name": "Tên mẫu hoa",
         "sourceCombo": "Combo nguồn",
+        "sourceProduct": "Sản phẩm nguồn",
         "createdAt": "Ngày tạo",
         "actions": "Thao tác"
       },
@@ -160,7 +324,10 @@
         "overview": "Tổng quan",
         "materials": "Vật liệu",
         "source": "Nguồn thiết kế",
-        "orders": "Order liên kết"
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "orders": "Order liên kết",
+        "audit": "Lịch sử AI"
       },
       "section": {
         "customer": "Thông tin khách hàng",
@@ -169,6 +336,27 @@
         "supportMaterials": "Vật liệu Support tại thời điểm tạo",
         "sourceCombo": "Combo nguồn",
         "sourceMockup": "Mockup nguồn",
+        "bundleImage": "Ảnh Bundle",
+        "bundle": {
+          "title": "Thông tin Bundle",
+          "id": "Bundle ID",
+          "name": "Tên Bundle",
+          "description": "Mô tả",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động"
+        },
+        "accessories": {
+          "ribbon": "Ruy băng",
+          "wrappingPaper": "Giấy gói",
+          "id": "ID",
+          "name": "Tên",
+          "label": "Nhãn",
+          "status": "Trạng thái",
+          "active": "Hoạt động",
+          "inactive": "Không hoạt động",
+          "empty": "Không có thông tin."
+        },
         "orders": "Order liên kết"
       },
       "customRequest": "Yêu cầu hoặc ghi chú",
@@ -204,6 +392,9 @@
         "customer": "Khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thiết kế & file",
+        "pricing": "Kích thước & giá",
+        "source": "Nguồn dữ liệu",
+        "attachments": "Ảnh đính kèm",
         "orders": "Order liên kết"
       },
       "section": {
@@ -211,17 +402,32 @@
         "customer": "Thông tin khách hàng",
         "message": "Nội dung thiệp",
         "design": "Thông tin thiết kế và file",
+        "pricing": "Kích thước và giá",
+        "source": "Nguồn dữ liệu",
         "orders": "Order liên kết"
       },
       "field": {
         "customerName": "Họ tên",
         "phone": "Số điện thoại",
+        "address": "Địa chỉ",
         "email": "Email",
         "sender": "Người gửi",
         "recipient": "Người nhận",
         "greeting": "Lời chúc",
         "attachments": "Ảnh người dùng đính kèm",
-        "fileStatus": "Trạng thái file"
+        "fileStatus": "Trạng thái file",
+        "cardType": "Loại thiệp",
+        "templateType": "Loại mẫu thiệp",
+        "sourceType": "Loại nguồn",
+        "originProduct": "Sản phẩm nguồn",
+        "generatedFlower": "Mẫu hoa nguồn",
+        "dimensions": "Kích thước",
+        "maxWords": "Số từ tối đa",
+        "wordCount": "Số từ đã dùng",
+        "basePrice": "Giá cơ bản",
+        "extraPrice": "Phụ phí",
+        "totalPrice": "Tổng giá",
+        "systemPrompt": "Prompt hệ thống"
       },
       "fileStatus": {
         "available": "Còn khả dụng",
@@ -252,6 +458,7 @@
         "code": "Mã Order",
         "status": "Trạng thái",
         "createdAt": "Ngày tạo",
+        "totalFee": "Tổng tiền",
         "open": "Mở chi tiết Order {{code}}"
       }
     },
@@ -301,7 +508,7 @@
     "templateManagement": {
       "title": "Quản lý mẫu",
       "cardTemplates": "Mẫu thiệp",
-      "flowerMockups": "Mockup mẫu hoa"
+      "flowerMockups": "Kiểu dáng hoa"
     },
     "cardConfiguration": {
       "title": "Cấu hình thiệp",
@@ -315,6 +522,7 @@
       "back": "Quay lại",
       "cancel": "Hủy",
       "delete": "Xóa",
+      "saving": "Đang lưu...",
       "previous": "Trước",
       "next": "Sau"
     },
@@ -788,6 +996,16 @@
       "onlyLeft": "Chỉ còn {{count}} sản phẩm",
       "viewOnWebsite": "Xem trên website",
       "copyCode": "Sao chép mã",
+      "description": {
+        "title": "Mô tả",
+        "subtitle": "Thông tin mô tả sản phẩm.",
+        "empty": "Chưa có mô tả.",
+        "edit": "Chỉnh sửa",
+        "editTitle": "Chỉnh sửa mô tả sản phẩm",
+        "placeholder": "Nhập mô tả sản phẩm...",
+        "save": "Lưu mô tả",
+        "updated": "Đã cập nhật mô tả sản phẩm"
+      },
       "copied": "Đã sao chép",
       "share": "Sao chép liên kết",
       "linkCopied": "Đã sao chép liên kết",
@@ -858,6 +1076,8 @@
         "quantityPerCombo": "Số lượng / combo",
         "baseQuantity": "Định lượng gốc",
         "actualQuantity": "Định lượng thực tế",
+        "parentBaseQuantity": "Định lượng gốc (cha)",
+        "childActualQuantity": "Định lượng con sau nhân",
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
         "factorHint": "Chỉ số phải lớn hơn 0",
@@ -873,6 +1093,8 @@
         "saveFactor": "Lưu chỉ số",
         "updatingFactor": "Đang cập nhật...",
         "updateFactorSuccess": "Cập nhật chỉ số kích thước thành công",
+        "updateSuccess": "Cập nhật định lượng combo thành công",
+        "loadError": "Không tải được định lượng combo.",
         "availableQuantity": "Có thể bán",
         "editButton": "Chỉnh sửa",
         "saveChanges": "Lưu thay đổi",
@@ -1260,7 +1482,9 @@
       "order": "Đơn hàng",
       "payment": "Thanh toán",
       "reward": "Tích điểm",
-      "shipping": "Vận chuyển"
+      "shipping": "Vận chuyển",
+      "contact": "Thông tin liên hệ",
+      "company": "Thông tin doanh nghiệp"
     },
     "manageButton": "Quản lý cấu hình",
     "render": {
@@ -1282,54 +1506,6 @@
     "title": "Cấu hình hệ thống"
   },
   "configKeys": {
-    "title": "Config keys",
-    "newKey": "+ Tạo key mới",
-    "search": "Tìm theo key, nhãn, nhóm...",
-    "noSelection": "Chưa chọn config",
-    "noSelectionDesc": "Chọn một key từ danh sách hoặc tạo mới.",
-    "emptyList": "Không có config nào.",
-    "page": "Trang {{current}} / {{total}} · Tổng {{count}}",
-    "editor": {
-      "key": "KEY",
-      "keyPlaceholder": "Định danh trong code, vd. summerSaleCampaign",
-      "group": "NHÓM",
-      "inputType": "KIỂU INPUT",
-      "label": "NHÃN",
-      "labelPlaceholder": "Tên hiển thị",
-      "description": "MÔ TẢ",
-      "descriptionPlaceholder": "Mô tả tùy chọn",
-      "options": "TÙY CHỌN",
-      "addOption": "Thêm tùy chọn",
-      "optionLabelPlaceholder": "Nhãn",
-      "optionValuePlaceholder": "Giá trị",
-      "switches": "SWITCHES",
-      "addSwitch": "Thêm switch",
-      "switchKeyPlaceholder": "key",
-      "switchLabelPlaceholder": "Nhãn",
-      "defaultValue": "GIÁ TRỊ MẶC ĐỊNH",
-      "required": "BẮT BUỘC",
-      "requiredDesc": "Trường này bắt buộc phải có giá trị",
-      "active": "KÍCH HOẠT",
-      "activeDesc": "Config được bật và hiển thị cho người dùng",
-      "validations": "VALIDATIONS",
-      "addValidation": "Thêm rule",
-      "jsonPreview": "JSON PREVIEW",
-      "cancel": "Hủy",
-      "copyJson": "Copy JSON",
-      "save": "Lưu thay đổi",
-      "saving": "Đang lưu...",
-      "deleteConfirmTitle": "Xóa config?",
-      "deleteConfirmDescription": "Config key này sẽ bị xóa vĩnh viễn.",
-      "enabledByDefault": "Bật mặc định",
-      "disabledByDefault": "Tắt mặc định",
-      "currencyLabel": "Đơn vị tiền",
-      "from": "Từ",
-      "to": "Đến",
-      "boolTrue": "true",
-      "boolFalse": "false",
-      "metaId": "id: ",
-      "metaUserId": "userId: "
-    },
     "toast": {
       "created": "Đã tạo config",
       "updated": "Đã lưu config",
@@ -1337,35 +1513,39 @@
       "copied": "Đã copy JSON",
       "copyFailed": "Copy thất bại",
       "error": "Đã có lỗi xảy ra"
-    },
-    "inputTypes": {
-      "text": "text",
-      "number": "number",
-      "currency": "currency",
-      "percentage": "percentage",
-      "select": "select",
-      "address": "address",
-      "checkbox": "checkbox",
-      "switch-group": "switch-group",
-      "date": "date",
-      "dateRange": "dateRange"
-    },
-    "validationRules": {
-      "minLength": "Độ dài tối thiểu",
-      "maxLength": "Độ dài tối đa",
-      "pattern": "Pattern (regex)",
-      "min": "Giá trị nhỏ nhất",
-      "max": "Giá trị lớn nhất",
-      "step": "Bước nhảy",
-      "currency": "Đơn vị tiền",
-      "multiple": "Cho phép chọn nhiều",
-      "minDate": "Ngày nhỏ nhất",
-      "maxDate": "Ngày lớn nhất",
-      "minDays": "Số ngày tối thiểu",
-      "maxDays": "Số ngày tối đa"
     }
   },
   "configsPage": {
+    "category": {
+      "banners": "Banner khuyến mãi",
+      "productCollections": "Bộ sưu tập sản phẩm",
+      "signatureLanding": "Landing page câu chuyện",
+      "feedbacks": "Feedback khách hàng",
+      "promotionPopup": "Popup khuyến mãi",
+      "b2b": "Dịch vụ B2B",
+      "paymentMethods": "Phương thức thanh toán",
+      "deliveryMethods": "Phương thức giao hàng",
+      "cardSizes": "Kích thước thiệp",
+      "calligraphy": "Bậc giá calligraphy",
+      "postgen": "Bài đăng mạng xã hội",
+      "imagegen": "Prompt tạo ảnh AI",
+      "nhanhvn": "Nhanh.vn",
+      "ahamove": "Ahamove",
+      "contact": "Thông tin liên hệ",
+      "company": "Thông tin doanh nghiệp"
+    },
+    "unsaved": {
+      "regionLabel": "Thay đổi chưa lưu",
+      "count_one": "{{count}} trường chưa lưu",
+      "count_other": "{{count}} trường chưa lưu",
+      "review": "Xem lại",
+      "discard": "Hủy thay đổi",
+      "leaveTitle": "Rời đi mà không lưu?",
+      "leaveDescription": "Một số trường có thay đổi chưa được lưu. Rời đi sẽ bỏ các thay đổi này.",
+      "discardTitle": "Hủy các thay đổi chưa lưu?",
+      "discardDescription_one": "{{count}} trường chưa lưu sẽ trở về giá trị đã lưu. Các trường đang lưu sẽ được giữ nguyên.",
+      "discardDescription_other": "Tất cả {{count}} trường chưa lưu sẽ trở về giá trị đã lưu. Các trường đang lưu sẽ được giữ nguyên."
+    },
     "dialog": {
       "createTitle": "Thêm trường",
       "editTitle": "Chỉnh sửa trường",
@@ -1425,7 +1605,10 @@
     },
     "signatureLanding": {
       "title": "Landing page câu chuyện",
+      "description": "Gán mỗi sản phẩm vào landing page câu chuyện tương ứng.",
+      "configLabel": "Landing page câu chuyện",
       "subtitle": "{{products}} sản phẩm · {{pages}} landing page",
+      "groupsTitle": "Danh sách landing page",
       "empty": "Chưa có landing page nào. Thêm một landing page rồi gán sản phẩm vào.",
       "addGroup": "Thêm landing page",
       "removeGroup": "Xóa landing page",
@@ -1445,8 +1628,6 @@
       "rawHint": "Dạng { \"id sản phẩm\": \"đường dẫn landing page\" }",
       "invalidJson": "JSON không hợp lệ - thay đổi chưa được áp dụng"
     },
-    "breadcrumb": "Quản lý cấu hình",
-    "fallbackTitle": "Cấu hình",
     "country": {
       "label": "Quốc gia",
       "all": "Tất cả quốc gia",
@@ -1459,14 +1640,8 @@
       "deleteConfirm": "Xóa",
       "deleteCancel": "Hủy"
     },
-    "addSection": "Thêm nhóm mới",
-    "cloneSection": "Nhân bản nhóm",
-    "deleteSection": "Xóa nhóm",
+    "unsupportedRecords": "Bản ghi khác trong mục này",
     "emptySection": "Chưa có trường nào trong nhóm này.",
-    "emptyPage": "Chưa có cấu hình nào. Hãy thêm nhóm để bắt đầu.",
-    "dragAndDrop": "Kéo và thả",
-    "showField": "Hiện trường",
-    "hideField": "Ẩn trường",
     "card": {
       "editDefinition": "Chỉnh sửa định nghĩa",
       "save": "Lưu",
@@ -1480,8 +1655,8 @@
       "public": "Công khai",
       "publicTooltip": "Cho phép client truy cập config này",
       "secretLockedTooltip": "Hiển thị bí mật trước khi thay đổi",
-      "complexValue": "Giá trị phức hợp",
       "openEditor": "Mở trình chỉnh sửa",
+      "complexValue": "Giá trị dạng cấu trúc - mở trình chỉnh sửa để thay đổi",
       "hints": {
         "minLength": "Tối thiểu {{n}} ký tự",
         "maxLength": "Tối đa {{n}} ký tự",
@@ -1491,7 +1666,16 @@
         "url": "URL",
         "integer": "Số nguyên",
         "pattern": "Regex"
-      }
+      },
+      "revert": "Hoàn tác",
+      "edit": "Chỉnh sửa",
+      "autosaved": "Tự động lưu",
+      "autosavedHint": "Cài đặt này được lưu ngay khi bạn bật/tắt, không cần bấm lưu.",
+      "genericFallbackHint": "Bản ghi này không đúng định dạng của trình soạn thảo riêng nên sẽ mở trình soạn thảo chung.",
+      "itemCount_one": "{{count}} mục",
+      "itemCount_other": "{{count}} mục",
+      "savedAnnouncement": "Đã lưu {{label}}",
+      "saveFailedAnnouncement": "Không lưu được {{label}}"
     },
     "palette": {
       "title": "Trường dữ liệu",
@@ -1596,7 +1780,6 @@
       "title": "Dịch vụ B2B",
       "newLabel": "Thêm dịch vụ",
       "emptyList": "Chưa có dịch vụ nào.",
-      "allSlugsUsed": "Tất cả dịch vụ đã được tạo.",
       "overviewLabel": "Trang tổng quan",
       "overviewNewLabel": "Tạo trang tổng quan"
     },
@@ -1607,7 +1790,10 @@
       "errors": {
         "required": "Vui lòng nhập khoá.",
         "invalid": "Chỉ dùng chữ cái thường, chữ số và dấu gạch nối (phải bắt đầu bằng chữ hoặc số).",
-        "duplicate": "Khoá này đã được dùng."
+        "duplicate": "Khoá này đã được dùng.",
+        "pending": "Đang kiểm tra các key đã được dùng…",
+        "unavailable": "Không tải được danh sách key hiện có nên không thể kiểm tra trùng lặp.",
+        "unverified": "Chưa xác nhận được key này chưa được dùng. Đợi danh sách tải xong hoặc thử lại."
       }
     },
     "productCollectionDialog": {
@@ -1702,7 +1888,7 @@
     },
     "feedbacksDialog": {
       "title": "Feedback khách hàng",
-      "subtitle": "Chọn tối đa 6 feedback nổi bật. Ưu tiên feedback thật từ Zalo, Messenger, Facebook hoặc Google - placeholder phải được thay bằng feedback thật trước khi launch.",
+      "subtitle": "Chọn tối đa 6 feedback nổi bật. Ưu tiên feedback thật từ Zalo, Messenger, Facebook hoặc Google",
       "configLabel": "Feedback khách hàng",
       "locale": {
         "vi": "Tiếng Việt",
@@ -1720,7 +1906,11 @@
       "section": {
         "title": "Phần đầu mục",
         "subtitle": "Tiêu đề và mô tả hiển thị trên đầu danh sách feedback.",
-        "enabled": "Hiển thị",
+        "statusField": "Trạng thái",
+        "status": {
+          "visible": "Hiển thị",
+          "hidden": "Ẩn"
+        },
         "titleField": "Tiêu đề",
         "titlePlaceholder": "vd: Khách hàng nói gì về chúng tôi",
         "descriptionField": "Mô tả ngắn",
@@ -1737,11 +1927,8 @@
       "item": {
         "untitled": "Feedback #{{index}} (chưa có tên)",
         "noMeta": "(chưa có khu vực / loại hoa)",
-        "demoBadge": "DEMO",
         "featuredBadge": "Nổi bật",
         "featuredToggle": "Nổi bật",
-        "placeholderToggle": "Đánh dấu là placeholder (nội dung demo)",
-        "placeholderHelp": "Dùng khi đang dựng layout. Feedback thật từ Zalo / Messenger / Facebook / Google phải thay thế placeholder trước khi launch chính thức.",
         "moveUp": "Di chuyển lên",
         "moveDown": "Di chuyển xuống",
         "remove": "Xoá feedback",
@@ -2131,6 +2318,187 @@
       "priceField": "Giá (VNĐ)",
       "priceHelp": "Giá trị khai báo của mặt hàng (VNĐ). Ahamove dùng để bồi thường khi cần.",
       "jsonPreview": "Bản xem trước JSON"
+    },
+    "calligraphyDialog": {
+      "title": "Bậc giá calligraphy",
+      "description": "Toàn bộ khoảng giá calligraphy được lưu trong một record card_config.prices.",
+      "hint": "Hệ thống đếm số từ rồi tìm bậc thoả min_words <= số từ <= max_words. Giá thiệp = giá cơ bản + phụ phí. Thiệp gõ máy luôn có phụ phí bằng 0.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelFallback": "Bậc giá calligraphy",
+      "rulesTitle": "Các bậc giá",
+      "rulesSubtitle": "Các bậc phải phủ liên tục từ 0 và không chồng lấn nhau.",
+      "addRule": "Thêm bậc",
+      "removeRule": "Xoá bậc",
+      "emptyRules": "Chưa có bậc giá nào.",
+      "fields": {
+        "min_words": "Từ (số từ)",
+        "max_words": "Đến (số từ)",
+        "extra_price": "Phụ phí (VND)"
+      },
+      "coverageWarning": "Bậc giá mới phủ tới {{covered}} từ, trong khi kích thước thiệp cho phép tối đa {{required}} từ.",
+      "previewTitle": "Thử tính phụ phí",
+      "previewResult": "Phụ phí: {{price}}",
+      "previewNoMatch": "Không có bậc nào khớp số từ này.",
+      "errors": {
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu.",
+        "empty": "Cần ít nhất một bậc giá.",
+        "negative": "Số từ và phụ phí không được âm.",
+        "reversed": "Số từ bắt đầu phải nhỏ hơn hoặc bằng số từ kết thúc.",
+        "notStartingAtZero": "Bậc đầu tiên phải bắt đầu từ 0 từ.",
+        "overlap": "Các bậc giá đang chồng lấn nhau.",
+        "gap": "Các bậc giá đang bị hở khoảng, sẽ có số từ không tính được giá.",
+        "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.prices."
+      }
+    },
+    "cardSizesDialog": {
+      "title": "Kích thước thiệp",
+      "description": "Toàn bộ kích thước được lưu trong một record card_config.sizes.",
+      "hint": "Mỗi dòng là một kích thước thiệp. Giá cuối = giá cơ bản + phụ phí calligraphy theo số từ.",
+      "configLabel": "Nhãn cấu hình",
+      "configLabelFallback": "Kích thước thiệp",
+      "sizesTitle": "Danh sách kích thước",
+      "sizesSubtitle": "Tên kích thước là định danh, không được trùng nhau.",
+      "addSize": "Thêm kích thước",
+      "removeSize": "Xoá kích thước",
+      "emptySizes": "Chưa có kích thước nào.",
+      "namePlaceholder": "A",
+      "fields": {
+        "name": "Tên kích thước",
+        "width": "Chiều rộng (cm)",
+        "height": "Chiều cao (cm)",
+        "base_price": "Giá cơ bản (VND)",
+        "max_words": "Số từ tối đa"
+      },
+      "errors": {
+        "labelRequired": "Nhập nhãn cấu hình trước khi lưu.",
+        "empty": "Cần ít nhất một kích thước.",
+        "nameRequired": "Vui lòng nhập tên cho tất cả kích thước.",
+        "duplicateName": "Tên kích thước bị trùng.",
+        "dimensionInvalid": "Chiều rộng và chiều cao phải lớn hơn 0.",
+        "basePriceInvalid": "Giá cơ bản không được âm.",
+        "maxWordsInvalid": "Số từ tối đa phải là số nguyên lớn hơn 0.",
+        "ambiguous": "Đã có cấu hình khác đang dùng khoá card_config.sizes."
+      }
+    },
+    "genericPanel": {
+      "subtitle": "{{count}} bản ghi trong nhóm này.",
+      "secretsSubtitle": "Khoá và token dùng để kết nối dịch vụ ngoài.",
+      "secretsWarning": "Giá trị bí mật luôn bị che. Bấm Xem để lộ từng giá trị khi thật sự cần."
+    },
+    "postgenPalette": {
+      "subtitle": "Bật/tắt tính năng và soạn prompt hệ thống cho từng nền tảng.",
+      "enabledSection": "Trạng thái tính năng",
+      "systemPromptsTitle": "Prompt theo nền tảng",
+      "systemPromptsSubtitle": "Mỗi nền tảng có một prompt riêng và lưu độc lập.",
+      "create": "Tạo",
+      "otherTitle": "Cấu hình khác trong nhóm",
+      "enabled": {
+        "on": "Đang bật",
+        "off": "Đang tắt",
+        "label": "Bật tạo bài đăng tự động"
+      },
+      "systemPrompts": {
+        "activeOn": "Đang bật",
+        "activeOff": "Đang tắt",
+        "statusField": "Trạng thái",
+        "empty": "Chưa có nền tảng nào."
+      },
+      "platforms": {
+        "zalo": {
+          "label": "Zalo"
+        },
+        "instagram": {
+          "label": "Instagram"
+        },
+        "facebook": {
+          "label": "Facebook"
+        }
+      },
+      "imageInstruction": {
+        "title": "Hướng dẫn tạo ảnh",
+        "subtitle": "Dùng chung cho mọi nền tảng."
+      },
+      "docs": {
+        "imageInstruction": {
+          "label": "Hướng dẫn tạo ảnh"
+        }
+      }
+    },
+    "postgenDialog": {
+      "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ..."
+    },
+    "imagegenPalette": {
+      "subtitle": "Prompt để AI dựng ảnh hoa và thiệp đi kèm.",
+      "create": "Tạo",
+      "otherTitle": "Cấu hình khác trong nhóm",
+      "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ...",
+      "flowerCreate": {
+        "title": "Prompt dựng ảnh hoa thô",
+        "subtitle": "Bước 1: mô tả cách AI dựng ảnh bó hoa gốc, chưa có bối cảnh.",
+        "label": "Prompt dựng ảnh hoa thô"
+      },
+      "flowerMockup": {
+        "title": "Prompt ghép bối cảnh cho ảnh hoa",
+        "subtitle": "Bước 2: mô tả bối cảnh và các chi tiết ghép thêm lên ảnh hoa thô ở bước 1.",
+        "label": "Prompt ghép bối cảnh cho ảnh hoa"
+      },
+      "flowerGuard": {
+        "title": "Prompt ràng buộc cho ảnh hoa",
+        "subtitle": "Các quy tắc bắt buộc để AI bám đúng mô tả, không tự bịa thêm chi tiết.",
+        "label": "Prompt ràng buộc cho ảnh hoa"
+      },
+      "card": {
+        "title": "Prompt thiệp",
+        "subtitle": "Chạy kèm prompt ảnh hoa để dựng thiệp tương ứng.",
+        "label": "Prompt thiệp"
+      }
+    },
+    "error": {
+      "title": "Không tải được cấu hình",
+      "description": "Yêu cầu thất bại. Chưa có gì thay đổi - vui lòng thử lại.",
+      "retry": "Thử lại"
+    },
+    "nav": {
+      "label": "Nhóm cấu hình",
+      "searchPlaceholder": "Tìm nhóm và key…",
+      "noMatches": "Không có nhóm nào khớp.",
+      "hasUnsaved": "Có thay đổi chưa lưu",
+      "matchCount_one": "{{count}} kết quả",
+      "matchCount_other": "{{count}} kết quả"
+    },
+    "navSection": {
+      "storefront": "Trang bán hàng",
+      "b2b": "Trang B2B",
+      "commerce": "Thanh toán & giao hàng",
+      "cards": "Thiệp & calligraphy",
+      "automation": "Tự động hóa",
+      "integrations": "Tích hợp",
+      "platform": "Hệ thống",
+      "other": "Khác"
+    },
+    "filter": {
+      "allKinds": "Tất cả"
+    },
+    "categoryRemoved": "Mục này không còn tồn tại nên hệ thống hiển thị nhóm đầu tiên.",
+    "addField": "Thêm trường",
+    "b2b": {
+      "subtitle": "Chọn một trang để mở trình chỉnh sửa riêng của trang đó.",
+      "overviewSection": "Trang tổng quan",
+      "servicesSection": "Trang dịch vụ",
+      "servicesSectionSubtitle": "{{configured}}/{{total}} trang đã cấu hình",
+      "otherSection": "Bản ghi khác",
+      "edit": "Chỉnh sửa",
+      "notConfigured": "Chưa cấu hình",
+      "slug": {
+        "outsourced": "Hoa thuê ngoài",
+        "events-mice": "Sự kiện & MICE",
+        "office-subscription": "Gói hoa văn phòng",
+        "corporate-gifts": "Quà tặng doanh nghiệp",
+        "brand-experience": "Trải nghiệm thương hiệu"
+      }
+    },
+    "create": {
+      "action": "Tạo mới"
     }
   },
   "productCategories": {
@@ -2356,7 +2724,7 @@
         "customer": "Người đặt hàng và người nhận hàng.",
         "delivery": "Địa điểm giao hàng của đơn.",
         "fees": "Cách tổng tiền của đơn được cấu thành.",
-        "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
+        "items": "Sản phẩm trong đơn - bấm vào một dòng để xem snapshot và mẫu hoa AI.",
         "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
         "payment": "Phương thức và liên kết thanh toán của đơn.",
         "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
@@ -2419,7 +2787,99 @@
       "vat": "VAT",
       "mapTitle": "Bản đồ vị trí giao hàng",
       "noLocation": "Không có vị trí giao hàng",
-      "openInMaps": "Mở Google Maps"
+      "openInMaps": "Mở Google Maps",
+      "snapshot": {
+        "empty": "Đơn hàng chưa có snapshot",
+        "ribbon": "Ruy băng",
+        "wrappingPaper": "Giấy gói",
+        "materials": "Vật liệu",
+        "additions": "Vật liệu bổ sung",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "card": "Thiệp đi kèm",
+        "accessoriesTitle": "Phụ kiện",
+        "accessoriesDescription": "Ruy băng và giấy gói được lưu trong đơn hàng.",
+        "materialsTitle": "Vật liệu",
+        "materialsDescription": "Các vật liệu được ghi nhận trong snapshot sản phẩm.",
+        "cardTitle": "Thiệp đi kèm",
+        "cardDescription": "Thông tin thiệp được lưu cùng cấu hình đơn hàng.",
+        "cardSize": "Kích thước",
+        "cardDimensions": "Kích thước thực tế",
+        "cardQuantity": "Số lượng",
+        "cardWordCount": "Số từ",
+        "cardTotal": "Tổng phí",
+        "versionsTitle": "Các bản thiệp đã sinh",
+        "versionLabel": "Phiên bản {{index}}",
+        "versionFinal": "Bản chốt in",
+        "versionNotChosen": "Không chọn",
+        "versionMissing": "Không còn ảnh",
+        "versionsChosen": "Đã chốt phiên bản {{index}}",
+        "versionsChosenMissing": "Bản chốt không còn trong danh sách",
+        "versionsNoFinal": "Chưa chốt bản in",
+        "versionsEmpty": "Chưa sinh bản thiệp nào",
+        "versionsError": "Không tải được các bản thiệp",
+        "itemEmpty": "Sản phẩm này chưa có dữ liệu snapshot",
+        "accessories": "Phụ kiện",
+        "noAccessories": "Không có phụ kiện",
+        "core": "Core",
+        "materialsTotal": "Tổng vật liệu",
+        "aiCustomize": "Tùy chỉnh AI",
+        "cardTemplate": "Mẫu thiệp",
+        "cardForm": "Kiểu chữ",
+        "cardBasePrice": "Giá cơ bản",
+        "cardExtraPrice": "Phụ phí",
+        "cardWordLimit": "Giới hạn từ",
+        "cardMessage": "Lời chúc",
+        "openProduct": "Mở trang sản phẩm"
+      },
+      "item": {
+        "tab": {
+          "info": "Thông tin",
+          "snapshot": "Snapshot",
+          "card": "Thiệp",
+          "flower": "Mẫu hoa AI"
+        },
+        "group": {
+          "product": "Sản phẩm",
+          "pricing": "Giá và số lượng",
+          "shipping": "Thông số vận chuyển"
+        },
+        "open": "Xem chi tiết sản phẩm",
+        "itemId": "Mã dòng sản phẩm",
+        "dimensions": "Kích thước (D × R × C)",
+        "variantLabel": "Biến thể #{{order}}/{{total}}",
+        "hint": {
+          "viewFlower": "Xem mẫu hoa AI của biến thể #{{order}}",
+          "viewCard": "Xem thiệp của biến thể #{{order}}",
+          "noFlower": "Biến thể này không có mẫu hoa AI",
+          "noCard": "Biến thể này không có thiệp"
+        }
+      },
+      "flower": {
+        "notFound": "Không tải được mẫu hoa AI của sản phẩm này",
+        "createdAt": "Thời điểm tạo",
+        "materialCount": "Số vật liệu",
+        "openDetail": "Mở trang chi tiết mẫu hoa",
+        "sourceTitle": "Nguồn thiết kế",
+        "sourceCombo": "Combo nguồn",
+        "sourceMockup": "Mockup nguồn",
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "materials": "Vật liệu",
+        "coreMaterials": "Vật liệu chính",
+        "supportMaterials": "Vật liệu phụ",
+        "additions": "Vật liệu bổ sung",
+        "inactive": "Không còn hoạt động",
+        "audit": "Lịch sử AI",
+        "operation": "Thao tác",
+        "schemaVersion": "Phiên bản schema",
+        "validatedAt": "Thời điểm xác nhận",
+        "systemPromptSource": "Nguồn prompt",
+        "sourceDescription": "Combo, mockup và bundle được dùng khi sinh mẫu hoa.",
+        "accessoriesDescription": "Ruy băng và giấy gói đi kèm mẫu hoa.",
+        "materialsDescription": "Vật liệu được chốt tại thời điểm sinh mẫu.",
+        "auditDescription": "Thông tin kỹ thuật của lần sinh mẫu này."
+      }
     }
   }
 }

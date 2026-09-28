@@ -30,6 +30,9 @@ export interface Product {
   // B - Id sản phẩm cha
   parentProductId: string | null
 
+  // GUID sản phẩm cha dùng cho các API định lượng combo
+  parentProductGuidId?: string | null
+
   // C - Mã sản phẩm cha
   parentProductCode: string | null
 
@@ -51,6 +54,9 @@ export interface Product {
 
   // H - Tên sản phẩm
   productName: string | null
+
+  /** Rich-text product description returned by the product detail API. */
+  description: string | null
 
   // I - Tên khác
   otherName: string | null
