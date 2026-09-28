@@ -15,9 +15,9 @@ export const useChangeFloralMockupStatus = () => {
     onSuccess: ({ isActive }) => {
       toast.success(t(`floralMockups.statusAction.${isActive ? 'activateSuccess' : 'deactivateSuccess'}`))
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
-        description: t('floralMockups.statusAction.failed')
+        description: error.response?.data?.detail
       })
     },
     onSettled: () => {

@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { getErrorDescription } from '../../products/error-description'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
 import { CardTemplateType } from '../types'
@@ -30,7 +29,7 @@ export const useCreateCardTemplate = () => {
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
-        description: getErrorDescription(error.response?.data) || t('cardTemplates.form.createFailed')
+        description: error.response?.data?.detail
       })
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })
