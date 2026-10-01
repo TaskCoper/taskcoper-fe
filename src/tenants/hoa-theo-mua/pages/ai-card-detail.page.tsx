@@ -9,14 +9,7 @@ import { cn, formatCurrency } from '@/shared/utils'
 import { ArrowLeftIcon, ArrowUpRightIcon, DownloadIcon, LoaderCircleIcon, PackageSearchIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
-import Lightbox from 'yet-another-react-lightbox'
-import Captions from 'yet-another-react-lightbox/plugins/captions'
-import Counter from 'yet-another-react-lightbox/plugins/counter'
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen'
-import Zoom from 'yet-another-react-lightbox/plugins/zoom'
-import 'yet-another-react-lightbox/plugins/captions.css'
-import 'yet-another-react-lightbox/plugins/counter.css'
-import 'yet-another-react-lightbox/styles.css'
+import ImageLightbox from '../components/image-lightbox'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import AiCardOutputImage from '../features/ai-custom/components/ai-card-output-image'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
@@ -450,35 +443,13 @@ export default function AiCardDetailPage() {
         </div>
       </Tabs>
 
-      {lightboxImages.length > 0 && (
-        <Lightbox
-          open={lightboxImageIndex !== null}
-          close={() => setLightboxImageIndex(null)}
-          index={lightboxImageIndex ?? 0}
-          on={{ view: ({ index }) => setLightboxImageIndex(index) }}
-          slides={lightboxImages}
-          plugins={[Captions, Counter, Fullscreen, Zoom]}
-          captions={{ showToggle: true, descriptionTextAlign: 'start' }}
-          counter={{ separator: ' / ' }}
-          zoom={{ scrollToZoom: true, maxZoomPixelRatio: 3 }}
-          labels={{
-            Previous: t('aiCustom.detail.lightbox.previous'),
-            Next: t('aiCustom.detail.lightbox.next'),
-            Close: t('aiCustom.detail.lightbox.close'),
-            Lightbox: t('aiCustom.detail.lightbox.label'),
-            'Photo gallery': t('aiCustom.detail.lightbox.gallery'),
-            '{index} of {total}': t('aiCustom.detail.lightbox.position'),
-            'Show captions': t('aiCustom.detail.lightbox.showCaptions'),
-            'Hide captions': t('aiCustom.detail.lightbox.hideCaptions'),
-            'Zoom in': t('aiCustom.detail.lightbox.zoomIn'),
-            'Zoom out': t('aiCustom.detail.lightbox.zoomOut'),
-            'Enter Fullscreen': t('aiCustom.detail.lightbox.enterFullscreen'),
-            'Exit Fullscreen': t('aiCustom.detail.lightbox.exitFullscreen')
-          }}
-          carousel={{ finite: lightboxImages.length === 1 }}
-          render={lightboxImages.length === 1 ? { buttonPrev: () => null, buttonNext: () => null } : undefined}
-        />
-      )}
+      <ImageLightbox
+        slides={lightboxImages}
+        index={lightboxImageIndex}
+        onIndexChange={setLightboxImageIndex}
+        label={t('aiCustom.detail.lightbox.label')}
+        gallery={t('aiCustom.detail.lightbox.gallery')}
+      />
     </div>
   )
 }
