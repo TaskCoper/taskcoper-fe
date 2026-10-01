@@ -1,8 +1,16 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
+import type { GetOrderDetailCardsParams } from './hooks/use-get-order-detail-cards'
 import type { GetOrdersParams } from './hooks/use-get-orders'
 import type { GetSystemOrdersParams } from './hooks/use-get-system-orders'
-import type { Order, ShippingLocation, ShippingLocationType, SystemOrder, SystemOrderDetail } from './types'
+import type {
+  Order,
+  ShippingLocation,
+  ShippingLocationType,
+  SystemOrder,
+  SystemOrderDetail,
+  SystemOrderDetailCard
+} from './types'
 import type { UpdateOrderFormValues } from './validation'
 
 interface GetOrderShippingLocationsBody {
@@ -44,6 +52,15 @@ class OrderService extends BaseService {
     const { data } = await this.get<BaseResponse<SystemOrderDetail>>(`/v1/${this.baseUrl}/${id}`)
 
     return data.value
+  }
+
+  getOrderDetailCards = async ({ orderDetailsId, virtualId }: GetOrderDetailCardsParams) => {
+    const { data } = await this.get<BaseResponse<{ cards: SystemOrderDetailCard[] }>>(
+      `/v1/order-details/${orderDetailsId}/cards`,
+      { params: { virtualId } }
+    )
+
+    return data.value?.cards ?? []
   }
 
   getOrderShippingLocations = async (body: GetOrderShippingLocationsBody) => {

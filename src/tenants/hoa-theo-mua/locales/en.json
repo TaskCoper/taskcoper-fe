@@ -1673,6 +1673,8 @@
         "quantityPerCombo": "Quantity / combo",
         "baseQuantity": "Base quantity",
         "actualQuantity": "Actual quantity",
+        "parentBaseQuantity": "Parent base quantity",
+        "childActualQuantity": "Child quantity after factor",
         "role": "Role",
         "factor": "Size factor",
         "factorHint": "Factor must be greater than 0",
@@ -3027,10 +3029,20 @@
       "create": "Create",
       "otherTitle": "Other configs in this group",
       "contentPlaceholder": "Write the instructions for the AI ...",
-      "flower": {
-        "title": "Flower image prompt",
-        "subtitle": "Describes how a bouquet image is rendered.",
-        "label": "Flower image prompt"
+      "flowerCreate": {
+        "title": "Raw flower image prompt",
+        "subtitle": "Step 1: describes how the base bouquet image is rendered, without any scenery.",
+        "label": "Raw flower image prompt"
+      },
+      "flowerMockup": {
+        "title": "Flower mockup prompt",
+        "subtitle": "Step 2: describes the scenery and extra details applied on top of the raw image from step 1.",
+        "label": "Flower mockup prompt"
+      },
+      "flowerGuard": {
+        "title": "Flower guard rules prompt",
+        "subtitle": "Hard rules that keep the AI on the given description instead of inventing details.",
+        "label": "Flower guard rules prompt"
       },
       "card": {
         "title": "Card prompt",
@@ -3289,7 +3301,6 @@
       "tab": {
         "overview": "Overview",
         "items": "Products",
-        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "invoice": "Invoice"
@@ -3300,7 +3311,6 @@
         "delivery": "Delivery location",
         "fees": "Fee breakdown",
         "items": "Products",
-        "snapshot": "Order snapshot",
         "shipping": "Shipping",
         "payment": "Payment",
         "transaction": "Transaction",
@@ -3311,8 +3321,7 @@
         "customer": "Who placed the order and who receives it.",
         "delivery": "Where the order is delivered to.",
         "fees": "How the order total is made up.",
-        "items": "Products in this order and the materials captured at checkout.",
-        "snapshot": "Configuration saved when the order was placed for later comparison.",
+        "items": "Products in this order - click a row to see its snapshot and AI flower design.",
         "shipping": "Tracking codes and carrier links for this order.",
         "payment": "Payment method and links used to settle this order.",
         "transaction": "The settled payment transaction, if any.",
@@ -3395,7 +3404,78 @@
         "cardDimensions": "Dimensions",
         "cardQuantity": "Quantity",
         "cardWordCount": "Word count",
-        "cardTotal": "Total fee"
+        "cardTotal": "Total fee",
+        "versionsTitle": "Generated card versions",
+        "versionLabel": "Version {{index}}",
+        "versionFinal": "Final pick",
+        "versionNotChosen": "Not chosen",
+        "versionMissing": "Image unavailable",
+        "versionsChosen": "Final pick: version {{index}}",
+        "versionsChosenMissing": "Final pick is no longer listed",
+        "versionsNoFinal": "No final pick yet",
+        "versionsEmpty": "No card versions generated yet",
+        "versionsError": "Could not load card versions",
+        "itemEmpty": "This product has no snapshot data",
+        "accessories": "Accessories",
+        "noAccessories": "No accessories",
+        "core": "Core",
+        "materialsTotal": "Materials total",
+        "aiCustomize": "AI customized",
+        "cardTemplate": "Template",
+        "cardForm": "Lettering style",
+        "cardBasePrice": "Base price",
+        "cardExtraPrice": "Extra fee",
+        "cardWordLimit": "Word limit",
+        "cardMessage": "Message",
+        "openProduct": "Open product page"
+      },
+      "item": {
+        "tab": {
+          "info": "Information",
+          "snapshot": "Snapshot",
+          "card": "Card",
+          "flower": "AI flower design"
+        },
+        "group": {
+          "product": "Product",
+          "pricing": "Price and quantity",
+          "shipping": "Shipping specs"
+        },
+        "open": "View product details",
+        "itemId": "Line item code",
+        "dimensions": "Dimensions (L × W × H)",
+        "variantLabel": "Variant #{{order}} of {{total}}",
+        "hint": {
+          "viewFlower": "View the AI flower design for variant #{{order}}",
+          "viewCard": "View the card for variant #{{order}}",
+          "noFlower": "No AI flower design for this variant",
+          "noCard": "No card for this variant"
+        }
+      },
+      "flower": {
+        "notFound": "Could not load the AI flower design for this product",
+        "createdAt": "Created at",
+        "materialCount": "Material count",
+        "openDetail": "Open flower design page",
+        "sourceTitle": "Design source",
+        "sourceCombo": "Source combo",
+        "sourceMockup": "Source mockup",
+        "bundle": "Bundle",
+        "accessories": "Accessories",
+        "materials": "Materials",
+        "coreMaterials": "Core materials",
+        "supportMaterials": "Support materials",
+        "additions": "Additional materials",
+        "inactive": "No longer active",
+        "audit": "AI history",
+        "operation": "Operation",
+        "schemaVersion": "Schema version",
+        "validatedAt": "Validated at",
+        "systemPromptSource": "Prompt source",
+        "sourceDescription": "Combo, mockup and bundle used to generate this design.",
+        "accessoriesDescription": "Ribbon and wrapping paper attached to this design.",
+        "materialsDescription": "Materials locked in when the design was generated.",
+        "auditDescription": "Technical details of this generation run."
       }
     }
   },

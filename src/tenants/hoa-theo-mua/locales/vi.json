@@ -1673,6 +1673,8 @@
         "quantityPerCombo": "Số lượng / combo",
         "baseQuantity": "Định lượng gốc",
         "actualQuantity": "Định lượng thực tế",
+        "parentBaseQuantity": "Định lượng gốc (cha)",
+        "childActualQuantity": "Định lượng con sau nhân",
         "role": "Vai trò",
         "factor": "Chỉ số kích thước",
         "factorHint": "Chỉ số phải lớn hơn 0",
@@ -3027,10 +3029,20 @@
       "create": "Tạo",
       "otherTitle": "Cấu hình khác trong nhóm",
       "contentPlaceholder": "Nhập nội dung hướng dẫn cho AI ...",
-      "flower": {
-        "title": "Prompt ảnh hoa",
-        "subtitle": "Mô tả cách AI dựng ảnh bó hoa.",
-        "label": "Prompt ảnh hoa"
+      "flowerCreate": {
+        "title": "Prompt dựng ảnh hoa thô",
+        "subtitle": "Bước 1: mô tả cách AI dựng ảnh bó hoa gốc, chưa có bối cảnh.",
+        "label": "Prompt dựng ảnh hoa thô"
+      },
+      "flowerMockup": {
+        "title": "Prompt ghép bối cảnh cho ảnh hoa",
+        "subtitle": "Bước 2: mô tả bối cảnh và các chi tiết ghép thêm lên ảnh hoa thô ở bước 1.",
+        "label": "Prompt ghép bối cảnh cho ảnh hoa"
+      },
+      "flowerGuard": {
+        "title": "Prompt ràng buộc cho ảnh hoa",
+        "subtitle": "Các quy tắc bắt buộc để AI bám đúng mô tả, không tự bịa thêm chi tiết.",
+        "label": "Prompt ràng buộc cho ảnh hoa"
       },
       "card": {
         "title": "Prompt thiệp",
@@ -3289,7 +3301,6 @@
       "tab": {
         "overview": "Tổng quan",
         "items": "Sản phẩm",
-        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "invoice": "Hóa đơn"
@@ -3300,7 +3311,6 @@
         "delivery": "Vị trí giao hàng",
         "fees": "Chi tiết chi phí",
         "items": "Sản phẩm",
-        "snapshot": "Snapshot đơn hàng",
         "shipping": "Vận chuyển",
         "payment": "Thanh toán",
         "transaction": "Giao dịch",
@@ -3311,8 +3321,7 @@
         "customer": "Người đặt hàng và người nhận hàng.",
         "delivery": "Địa điểm giao hàng của đơn.",
         "fees": "Cách tổng tiền của đơn được cấu thành.",
-        "items": "Sản phẩm trong đơn và nguyên liệu được lưu lúc đặt hàng.",
-        "snapshot": "Thông tin cấu hình được lưu lại tại thời điểm đặt hàng để đối chiếu.",
+        "items": "Sản phẩm trong đơn - bấm vào một dòng để xem snapshot và mẫu hoa AI.",
         "shipping": "Mã vận đơn và liên kết theo dõi của đơn.",
         "payment": "Phương thức và liên kết thanh toán của đơn.",
         "transaction": "Giao dịch thanh toán đã ghi nhận (nếu có).",
@@ -3395,7 +3404,78 @@
         "cardDimensions": "Kích thước thực tế",
         "cardQuantity": "Số lượng",
         "cardWordCount": "Số từ",
-        "cardTotal": "Tổng phí"
+        "cardTotal": "Tổng phí",
+        "versionsTitle": "Các bản thiệp đã sinh",
+        "versionLabel": "Phiên bản {{index}}",
+        "versionFinal": "Bản chốt in",
+        "versionNotChosen": "Không chọn",
+        "versionMissing": "Không còn ảnh",
+        "versionsChosen": "Đã chốt phiên bản {{index}}",
+        "versionsChosenMissing": "Bản chốt không còn trong danh sách",
+        "versionsNoFinal": "Chưa chốt bản in",
+        "versionsEmpty": "Chưa sinh bản thiệp nào",
+        "versionsError": "Không tải được các bản thiệp",
+        "itemEmpty": "Sản phẩm này chưa có dữ liệu snapshot",
+        "accessories": "Phụ kiện",
+        "noAccessories": "Không có phụ kiện",
+        "core": "Core",
+        "materialsTotal": "Tổng vật liệu",
+        "aiCustomize": "Tùy chỉnh AI",
+        "cardTemplate": "Mẫu thiệp",
+        "cardForm": "Kiểu chữ",
+        "cardBasePrice": "Giá cơ bản",
+        "cardExtraPrice": "Phụ phí",
+        "cardWordLimit": "Giới hạn từ",
+        "cardMessage": "Lời chúc",
+        "openProduct": "Mở trang sản phẩm"
+      },
+      "item": {
+        "tab": {
+          "info": "Thông tin",
+          "snapshot": "Snapshot",
+          "card": "Thiệp",
+          "flower": "Mẫu hoa AI"
+        },
+        "group": {
+          "product": "Sản phẩm",
+          "pricing": "Giá và số lượng",
+          "shipping": "Thông số vận chuyển"
+        },
+        "open": "Xem chi tiết sản phẩm",
+        "itemId": "Mã dòng sản phẩm",
+        "dimensions": "Kích thước (D × R × C)",
+        "variantLabel": "Biến thể #{{order}}/{{total}}",
+        "hint": {
+          "viewFlower": "Xem mẫu hoa AI của biến thể #{{order}}",
+          "viewCard": "Xem thiệp của biến thể #{{order}}",
+          "noFlower": "Biến thể này không có mẫu hoa AI",
+          "noCard": "Biến thể này không có thiệp"
+        }
+      },
+      "flower": {
+        "notFound": "Không tải được mẫu hoa AI của sản phẩm này",
+        "createdAt": "Thời điểm tạo",
+        "materialCount": "Số vật liệu",
+        "openDetail": "Mở trang chi tiết mẫu hoa",
+        "sourceTitle": "Nguồn thiết kế",
+        "sourceCombo": "Combo nguồn",
+        "sourceMockup": "Mockup nguồn",
+        "bundle": "Bundle",
+        "accessories": "Phụ kiện",
+        "materials": "Vật liệu",
+        "coreMaterials": "Vật liệu chính",
+        "supportMaterials": "Vật liệu phụ",
+        "additions": "Vật liệu bổ sung",
+        "inactive": "Không còn hoạt động",
+        "audit": "Lịch sử AI",
+        "operation": "Thao tác",
+        "schemaVersion": "Phiên bản schema",
+        "validatedAt": "Thời điểm xác nhận",
+        "systemPromptSource": "Nguồn prompt",
+        "sourceDescription": "Combo, mockup và bundle được dùng khi sinh mẫu hoa.",
+        "accessoriesDescription": "Ruy băng và giấy gói đi kèm mẫu hoa.",
+        "materialsDescription": "Vật liệu được chốt tại thời điểm sinh mẫu.",
+        "auditDescription": "Thông tin kỹ thuật của lần sinh mẫu này."
       }
     }
   },

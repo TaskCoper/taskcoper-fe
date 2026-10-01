@@ -1,16 +1,11 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
-import { cn } from '@/shared/utils'
-import { ChevronDownIcon, ChevronRightIcon, PackageIcon } from 'lucide-react'
-import { Fragment, useState } from 'react'
-import { Link } from 'react-router'
-import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../../config'
-import type { SystemOrderItem, SystemOrderMaterialSnapshot } from '../../types'
+import { ChevronRightIcon, GiftIcon, MailIcon, PackageIcon, SparklesIcon } from 'lucide-react'
+import { useState } from 'react'
+import type { SystemOrderItem } from '../../types'
 import { numberFormatter, vndFormatter } from '../../utils'
-
-const COLUMN_COUNT = 8
+import OrderItemDialog from './order-item-dialog'
 
 const formatCurrency = (value: number | null | undefined, empty: string) =>
   value == null ? empty : vndFormatter.format(value)
@@ -18,94 +13,27 @@ const formatCurrency = (value: number | null | undefined, empty: string) =>
 const formatNumber = (value: number | null | undefined, empty: string) =>
   value == null ? empty : numberFormatter.format(value)
 
-/** One core/support group of materials, rendered as its own labeled table. */
-function MaterialGroup({
-  title,
-  materials,
-  core,
-  t
-}: {
-  title: string
-  materials: SystemOrderMaterialSnapshot[]
-  core: boolean
-  t: TenantT
-}) {
-  const empty = t('systemOrders.common.noDataShort')
+/** Đếm nhanh những gì snapshot của dòng đơn hàng có, để hiện dấu hiệu ngay trên bảng. */
+const summarizeSnapshot = (item: SystemOrderItem) => {
+  const metadataList = item.snapshot?.productMetadata ?? []
 
-  return (
-    <div className={cn('overflow-hidden rounded-lg border bg-background', core && 'border-primary/30')}>
-      <div
-        className={cn(
-          'flex items-center justify-between gap-2 border-b px-3 py-2',
-          core ? 'border-primary/20 bg-primary/5' : 'bg-muted/30'
-        )}
-      >
-        <span className={cn('text-xs font-semibold', core && 'text-primary')}>{title}</span>
-        <Badge variant={core ? 'default' : 'secondary'} className='font-normal'>
-          {materials.length}
-        </Badge>
-      </div>
-      <Table className='table-fixed'>
-        <TableHeader>
-          <TableRow className='hover:bg-transparent'>
-            <TableHead className='h-9 text-xs'>{t('systemOrders.detail.materials')}</TableHead>
-            <TableHead className='h-9 w-24 text-right text-xs'>{t('systemOrders.detail.itemQuantity')}</TableHead>
-            <TableHead className='h-9 w-28 text-right text-xs'>{t('systemOrders.detail.itemPrice')}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {materials.map((material) => (
-            <TableRow key={material.matId}>
-              <TableCell className='truncate py-2 text-sm'>
-                <Link
-                  to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${material.matId}`}
-                  className='hover:underline hover:text-primary'
-                >
-                  {material.name?.trim() || empty}
-                </Link>
-              </TableCell>
-              <TableCell className='w-24 py-2 text-right text-sm tabular-nums'>
-                {formatNumber(material.quantity, empty)}
-              </TableCell>
-              <TableCell className='w-28 py-2 text-right text-sm tabular-nums'>
-                {formatCurrency(material.price, empty)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  )
-}
-
-/** Materials captured on the product snapshot when the order was placed, grouped by core/support. */
-function MaterialTable({ materials, t }: { materials: SystemOrderMaterialSnapshot[]; t: TenantT }) {
-  const coreMaterials = materials.filter((material) => material.isCore)
-  const supportMaterials = materials.filter((material) => !material.isCore)
-
-  return (
-    <div className='space-y-3 p-2'>
-      {coreMaterials.length > 0 && (
-        <MaterialGroup title={t('products.detail.comboSpecification.core')} materials={coreMaterials} core t={t} />
-      )}
-      {supportMaterials.length > 0 && (
-        <MaterialGroup
-          title={t('products.detail.comboSpecification.support')}
-          materials={supportMaterials}
-          core={false}
-          t={t}
-        />
-      )}
-    </div>
-  )
+  return {
+    accessories: metadataList.reduce(
+      (sum, metadata) => sum + (metadata.ribbon ? 1 : 0) + (metadata.wrappingPaper ? 1 : 0),
+      0
+    ),
+    materials: metadataList.reduce(
+      (sum, metadata) => sum + (metadata.materials?.length ?? 0) + (metadata.additionCustome?.length ?? 0),
+      0
+    ),
+    hasCard: metadataList.some((metadata) => metadata.snapShotCard),
+    hasFlower: metadataList.some((metadata) => metadata.generatedFlower?.trim())
+  }
 }
 
 export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: TenantT }) {
-  const [expandedIds, setExpandedIds] = useState<string[]>([])
+  const [selectedItem, setSelectedItem] = useState<SystemOrderItem | null>(null)
   const empty = t('systemOrders.common.noDataShort')
-
-  const toggleRow = (id: string) =>
-    setExpandedIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
 
   if (items.length === 0) {
     return (
@@ -116,46 +44,42 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
   }
 
   return (
-    <div className='overflow-x-auto rounded-lg border bg-card'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className='w-10' />
-            <TableHead className='w-16' />
-            <TableHead>{t('systemOrders.detail.itemName')}</TableHead>
-            <TableHead>{t('systemOrders.detail.itemParent')}</TableHead>
-            <TableHead className='text-right'>{t('systemOrders.detail.itemWeight')}</TableHead>
-            <TableHead className='text-right'>{t('systemOrders.detail.itemQuantity')}</TableHead>
-            <TableHead className='text-right'>{t('systemOrders.detail.itemPrice')}</TableHead>
-            <TableHead className='text-right'>{t('systemOrders.detail.itemTotal')}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {items.map((item) => {
-            const name = item.name?.trim() || empty
-            const lineTotal = item.price != null && item.number != null ? item.price * item.number : null
-            const materials = item.snapshot?.materials ?? []
-            const isExpanded = expandedIds.includes(item.orderDetailsId)
+    <>
+      <div className='overflow-x-auto rounded-lg border bg-card'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='w-16' />
+              <TableHead>{t('systemOrders.detail.itemName')}</TableHead>
+              <TableHead>{t('systemOrders.detail.itemParent')}</TableHead>
+              <TableHead className='text-right'>{t('systemOrders.detail.itemWeight')}</TableHead>
+              <TableHead className='text-right'>{t('systemOrders.detail.itemQuantity')}</TableHead>
+              <TableHead className='text-right'>{t('systemOrders.detail.itemPrice')}</TableHead>
+              <TableHead className='text-right'>{t('systemOrders.detail.itemTotal')}</TableHead>
+              <TableHead className='w-10' />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items.map((item) => {
+              const name = item.name?.trim() || empty
+              const lineTotal = item.price != null && item.number != null ? item.price * item.number : null
+              const summary = summarizeSnapshot(item)
 
-            return (
-              <Fragment key={item.orderDetailsId}>
-                <TableRow className={cn('align-top', materials.length > 0 && 'border-b-0')}>
-                  <TableCell className='w-10'>
-                    {materials.length > 0 && (
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        className='size-6'
-                        onClick={() => toggleRow(item.orderDetailsId)}
-                        aria-expanded={isExpanded}
-                        aria-label={t(
-                          isExpanded ? 'systemOrders.detail.hideMaterials' : 'systemOrders.detail.showMaterials'
-                        )}
-                      >
-                        {isExpanded ? <ChevronDownIcon className='size-4' /> : <ChevronRightIcon className='size-4' />}
-                      </Button>
-                    )}
-                  </TableCell>
+              return (
+                <TableRow
+                  key={item.orderDetailsId}
+                  onClick={() => setSelectedItem(item)}
+                  tabIndex={0}
+                  role='button'
+                  aria-label={t('systemOrders.detail.item.open')}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      setSelectedItem(item)
+                    }
+                  }}
+                  className='cursor-pointer align-top focus-visible:bg-muted/60 focus-visible:outline-none'
+                >
                   <TableCell className='w-16'>
                     <span className='flex size-12 items-center justify-center overflow-hidden rounded-lg border bg-muted/30'>
                       {item.coverImage ? (
@@ -166,47 +90,41 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
                     </span>
                   </TableCell>
                   <TableCell className='max-w-72'>
-                    {item.productId ? (
-                      <Link
-                        to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${item.productId}`}
-                        className='font-medium hover:underline hover:text-primary'
-                      >
-                        {name}
-                      </Link>
-                    ) : (
-                      <span className='font-medium'>{name}</span>
-                    )}
-                    <div className='mt-0.5 flex flex-wrap items-center gap-2'>
-                      {item.itemId != null && (
-                        <span className='font-mono text-xs text-muted-foreground'>#{item.itemId}</span>
+                    <span className='font-medium'>{name}</span>
+                    {/* Dấu hiệu nội dung snapshot - chi tiết nằm trong dialog. */}
+                    <div className='mt-0.5 flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground'>
+                      {item.itemId != null && <span className='font-mono'>#{item.itemId}</span>}
+                      {summary.accessories > 0 && (
+                        <span className='inline-flex items-center gap-1'>
+                          <GiftIcon className='size-3' />
+                          {summary.accessories}
+                        </span>
                       )}
-                      {materials.length > 0 && (
-                        <button
-                          type='button'
-                          onClick={() => toggleRow(item.orderDetailsId)}
-                          className='text-xs text-primary hover:underline'
-                        >
-                          {t('systemOrders.detail.materials')} ({materials.length})
-                        </button>
+                      {summary.materials > 0 && (
+                        <span className='inline-flex items-center gap-1'>
+                          <PackageIcon className='size-3' />
+                          {summary.materials}
+                        </span>
+                      )}
+                      {summary.hasCard && (
+                        <span className='inline-flex items-center gap-1'>
+                          <MailIcon className='size-3' />
+                          {t('systemOrders.detail.snapshot.card')}
+                        </span>
+                      )}
+                      {summary.hasFlower && (
+                        <span className='inline-flex items-center gap-1 text-primary'>
+                          <SparklesIcon className='size-3' />
+                          {t('systemOrders.detail.item.tab.flower')}
+                        </span>
                       )}
                     </div>
                   </TableCell>
                   <TableCell className='max-w-56'>
                     {item.parentProductName?.trim() ? (
-                      item.parentProductId ? (
-                        <Link
-                          to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/products/${item.parentProductId}`}
-                          className='hover:underline hover:text-primary'
-                        >
-                          <Badge variant='secondary' className='font-normal'>
-                            {item.parentProductName.trim()}
-                          </Badge>
-                        </Link>
-                      ) : (
-                        <Badge variant='secondary' className='font-normal'>
-                          {item.parentProductName.trim()}
-                        </Badge>
-                      )
+                      <Badge variant='secondary' className='font-normal'>
+                        {item.parentProductName.trim()}
+                      </Badge>
                     ) : (
                       <span className='text-muted-foreground'>{empty}</span>
                     )}
@@ -223,29 +141,25 @@ export function OrderItemsTable({ items, t }: { items: SystemOrderItem[]; t: Ten
                   <TableCell className='whitespace-nowrap text-right font-semibold tabular-nums'>
                     {formatCurrency(lineTotal, empty)}
                   </TableCell>
+                  <TableCell className='w-10 text-muted-foreground'>
+                    <ChevronRightIcon className='size-4' />
+                  </TableCell>
                 </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
 
-                {materials.length > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={COLUMN_COUNT} className='bg-muted/50 p-0'>
-                      <div
-                        className={cn(
-                          'grid transition-[grid-template-rows] duration-200 ease-in-out',
-                          isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-                        )}
-                      >
-                        <div className='overflow-hidden'>
-                          <MaterialTable materials={materials} t={t} />
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </Fragment>
-            )
-          })}
-        </TableBody>
-      </Table>
-    </div>
+      {selectedItem && (
+        <OrderItemDialog
+          key={selectedItem.orderDetailsId}
+          item={selectedItem}
+          open
+          onOpenChange={(open) => !open && setSelectedItem(null)}
+          t={t}
+        />
+      )}
+    </>
   )
 }

@@ -8,6 +8,7 @@ export interface CategoryEditorItem {
   label: string
   config: Config | null
   mono?: boolean
+  icon?: ReactNode
 }
 
 interface CategoryEditorPanelProps {
@@ -17,6 +18,7 @@ interface CategoryEditorPanelProps {
   navLabel: string
   children: (item: CategoryEditorItem) => ReactNode
   footer?: ReactNode
+  contentClassName?: string
 }
 
 export default function CategoryEditorPanel({
@@ -25,7 +27,8 @@ export default function CategoryEditorPanel({
   onSelect,
   navLabel,
   children,
-  footer
+  footer,
+  contentClassName
 }: CategoryEditorPanelProps) {
   const selected = items.find((item) => item.key === selectedKey) ?? items[0]
   if (!selected) return null
@@ -33,9 +36,14 @@ export default function CategoryEditorPanel({
   const labels = items.map((item) => item.config?.value?.label?.trim() || item.label)
 
   return (
-    <Tabs value={selected.key} onValueChange={onSelect} activationMode='manual' className='min-w-0 flex-1 gap-0'>
+    <Tabs
+      value={selected.key}
+      onValueChange={onSelect}
+      activationMode='manual'
+      className='min-h-0 min-w-0 flex-1 gap-0'
+    >
       {items.length > 1 && (
-        <div className='border-b px-4 py-3'>
+        <div className='shrink-0 border-b px-4 py-3'>
           <TabsList aria-label={navLabel} className='h-auto flex-wrap justify-start gap-1'>
             {items.map((item, index) => {
               const label = labels[index]
@@ -48,11 +56,12 @@ export default function CategoryEditorPanel({
                   value={item.key}
                   title={item.key}
                   className={cn(
-                    'max-w-64 flex-none text-xs',
+                    'max-w-64 flex-none text-xs min-w-32',
                     !item.config && 'border-dashed border-muted-foreground/40 text-muted-foreground',
                     isActive ? 'bg-primary! text-primary-foreground' : ''
                   )}
                 >
+                  {item.icon}
                   <span className={cn('truncate', item.mono && label === item.label && 'font-mono')}>{label}</span>
                   {disambiguator && (
                     <span className={cn('shrink-0 opacity-70', item.mono && 'font-mono')}>{disambiguator}</span>
@@ -64,7 +73,7 @@ export default function CategoryEditorPanel({
         </div>
       )}
 
-      <TabsContent value={selected.key} className='flex min-w-0 flex-col'>
+      <TabsContent value={selected.key} className={cn('flex min-w-0 flex-col', contentClassName)}>
         {children(selected)}
       </TabsContent>
 

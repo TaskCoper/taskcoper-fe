@@ -93,6 +93,18 @@ export default function ProductPage() {
     id: id ?? '',
     enabled: canManageComboSpecification && isComboSpecificationRequested
   })
+  const {
+    comboSpecification: parentComboSpecification,
+    isGettingComboSpecification: isGettingParentComboSpecification,
+    isError: isParentComboSpecificationError
+  } = useGetComboSpecification({
+    id: product?.parentProductGuidId ?? '',
+    enabled:
+      canManageComboSpecification &&
+      canEditFactor &&
+      isComboSpecificationRequested &&
+      Boolean(product?.parentProductGuidId)
+  })
   const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
   if (isGettingProduct) return <ProductDetailSkeleton />
@@ -580,8 +592,9 @@ export default function ProductPage() {
                   isUpdatingPublication={isUpdatingComboPublication}
                   onEnsureUnpublished={ensureComboUnpublished}
                   materials={comboSpecification?.materials ?? []}
-                  isLoading={isGettingComboSpecification}
-                  isError={isComboSpecificationError}
+                  parentMaterials={canEditFactor ? (parentComboSpecification?.materials ?? []) : undefined}
+                  isLoading={isGettingComboSpecification || isGettingParentComboSpecification}
+                  isError={isComboSpecificationError || isParentComboSpecificationError}
                   t={t}
                 />
               </DetailSection>
