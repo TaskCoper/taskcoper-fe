@@ -439,18 +439,8 @@
       "noAttachments": "Không có ảnh đính kèm",
       "lightbox": {
         "caption": "Mã thiệp: {{code}} · Ngày tạo: {{createdAt}}",
-        "previous": "Ảnh trước",
-        "next": "Ảnh tiếp theo",
-        "close": "Đóng",
         "label": "Xem ảnh thiệp",
-        "gallery": "Bộ ảnh thiệp",
-        "position": "Ảnh {index} trên {total}",
-        "showCaptions": "Hiện chú thích",
-        "hideCaptions": "Ẩn chú thích",
-        "zoomIn": "Phóng to",
-        "zoomOut": "Thu nhỏ",
-        "enterFullscreen": "Mở toàn màn hình",
-        "exitFullscreen": "Thoát toàn màn hình"
+        "gallery": "Bộ ảnh thiệp"
       },
       "ordersDescription": "Mỗi Order giữ thông tin bill riêng tại trang Chi tiết Order.",
       "noOrders": "Thiệp này chưa liên kết với Order nào.",
@@ -465,6 +455,606 @@
     "download": {
       "action": "Tải ảnh thiệp xuống",
       "failed": "Tải thiệp thất bại. Vui lòng thử lại"
+    }
+  },
+  "marketingPosts": {
+    "planImport": {
+      "templateHint": "Chưa có file? Tải mẫu về điền theo đúng cột.",
+      "downloadTemplate": "Tải file mẫu",
+      "title": "Nhập kế hoạch marketing từ Excel",
+      "description": "Tải lên file kế hoạch đăng bài cho cả tháng, AI sẽ lo phần còn lại.",
+      "dropzone": "Kéo thả file Excel vào đây hoặc bấm để chọn",
+      "dropzoneHint": ".xlsx, .xls · tối đa {{size}}",
+      "remove": "Bỏ file này",
+      "note": "AI chạy nền nên có thể mất một lúc. Bài sẽ lần lượt hiện trong danh sách, cứ đóng hộp thoại này và làm việc khác.",
+      "submit": "Cho AI làm",
+      "success": "Đã gửi kế hoạch",
+      "successDescription": "AI đang xử lý, bài sẽ lần lượt hiện trong danh sách.",
+      "error": "Không gửi được kế hoạch"
+    },
+    "title": "Danh sách bài đăng",
+    "description": "Toàn bộ bài đăng marketing do AI soạn, theo dõi theo kênh và trạng thái xuất bản.",
+    "searchPlaceholder": "Tìm theo tiêu đề bài đăng",
+    "previewAlt": "Ảnh bài đăng {{title}}",
+    "openPreview": "Xem ảnh bài đăng {{title}}",
+    "detail": {
+      "back": "Quay lại danh sách",
+      "notFound": "Không tìm thấy bài đăng này.",
+      "openPost": "Mở bài trên {{channel}}",
+      "imageAlt": "Ảnh {{index}} của bài đăng",
+      "openImage": "Xem ảnh {{index}}",
+      "noImages": "Bài đăng chưa có hình ảnh.",
+      "section": {
+        "images": "Hình ảnh",
+        "content": "Nội dung bài đăng",
+        "base": "Nội dung gốc",
+        "platforms": "Nội dung theo nền tảng",
+        "performance": "Hiệu quả bài đăng"
+      },
+      "field": {
+        "createdAt": "Ngày tạo",
+        "updatedAt": "Cập nhật lần cuối",
+        "postUrl": "Link bài đăng",
+        "failureReason": "Lý do đăng lỗi",
+        "lastError": "Lỗi gần nhất"
+      },
+      "lightbox": {
+        "label": "Xem ảnh"
+      },
+      "noPlatforms": "Bài này chưa sinh nội dung cho nền tảng nào.",
+      "noPlatformContent": "Nền tảng này chưa chốt nội dung.",
+      "noPlatformImages": "Nền tảng này chưa chốt ảnh.",
+      "contentVersion": "Bản {{version}}",
+      "source": {
+        "Ai": "AI viết",
+        "Manual": "Tự sửa"
+      },
+      "imageCount_one": "{{count}} ảnh",
+      "imageCount_other": "{{count}} ảnh",
+      "publishedAt": "Đăng lúc {{time}}"
+    },
+    "update": {
+      "back": "Quay lại chi tiết"
+    },
+    "channelPreset": {
+      "facebook": "kể chuyện, có thể dài, chèn emoji vừa phải",
+      "instagram": "ngắn, giàu hình ảnh, nhiều hashtag",
+      "zaloOa": "trang trọng, đi thẳng vào ưu đãi và cách đặt hàng"
+    },
+    "validation": {
+      "title": {
+        "required": "Tiêu đề không được để trống"
+      },
+      "channels": {
+        "required": "Chọn ít nhất một nền tảng"
+      },
+      "content": {
+        "required": "Nội dung bài đăng không được để trống"
+      },
+      "images": {
+        "ratioRequired": "Mỗi ảnh phải chọn ít nhất một tỉ lệ",
+        "required": "Chọn ít nhất 1 ảnh nguồn cho bài đăng.",
+        "max": "Chỉ tải lên tối đa {{max}} ảnh nguồn."
+      },
+      "hashtags": {
+        "missingHash": "Mỗi hashtag phải bắt đầu bằng dấu #"
+      }
+    },
+    "create": {
+      "planImportHint": "Có sẵn kế hoạch đăng bài cả tháng? Nhập file Excel để AI tạo hết một lượt.",
+      "title": "Tạo bài đăng mới",
+      "description": "Soạn nội dung một lần, tinh chỉnh riêng cho từng nền tảng.",
+      "submit": "Tạo bài đăng",
+      "channelsHint": "Mỗi nền tảng được chọn sẽ tạo ra một bài đăng riêng, dùng chung nội dung gốc này.",
+      "section": {
+        "channels": "Chọn nền tảng",
+        "images": "Ảnh gốc",
+        "ratios": "Tỉ lệ ảnh xuất"
+      },
+      "field": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Ví dụ: Ưu đãi 20/10",
+        "content": "Nội dung gốc",
+        "contentPlaceholder": "Mô tả nội dung muốn đăng, thông tin cần nhấn mạnh...",
+        "imagesPlaceholder": "Chọn ảnh hoặc kéo thả vào đây",
+        "removeImage": "Xoá ảnh {{name}}",
+        "imagesSizeHint": "PNG, JPG, WEBP · tối đa 10 MB/ảnh",
+        "ratioLabel": "Chọn một hoặc nhiều tỉ lệ AI xuất ra cho ảnh này",
+        "totalOutputs": "Sẽ cắt {{outputs}} ảnh",
+        "hashtags": "Hashtag",
+        "hashtagsPlaceholder": "#hoatheomua #quatang",
+        "hashtagsHint": "Gõ dấu # trước mỗi hashtag, cách nhau bằng khoảng trắng.",
+        "imageCount": "{{count}}/{{max}} ảnh",
+        "totalOutputsBatched": "Sẽ cắt {{outputs}} ảnh · chia {{batches}} lượt"
+      },
+      "optionalImagesNote": "Có thể tạo bài đăng có hoặc không có hình ảnh.",
+      "channel": {
+        "systemPrompt": "System prompt nền tảng",
+        "configured": "Đã cấu hình",
+        "systemPromptTitle": "System prompt {{channel}}",
+        "systemPromptHint": "Chỉ dẫn AI dùng khi viết lại nội dung cho nền tảng này.",
+        "systemPromptPreview": "Xem toàn bộ system prompt"
+      },
+      "stepOne": "Bước 1/2",
+      "stepTwo": "Bước 2/2",
+      "nextStep": "Tiếp tục chọn nền tảng",
+      "backToContent": "Quay lại nội dung gốc",
+      "sourceSummary": "{{images}} ảnh gốc đã tải lên",
+      "saveDraft": "Lưu",
+      "saveSuccess": "Đã lưu bài gốc",
+      "imagesNote": "Có thể để trống, tối đa 20 ảnh. Không có ảnh thì AI chỉ viết nội dung.",
+      "stepTwoTitle": "Chọn tỉ lệ ảnh & nền tảng",
+      "generatingBatch": "Đang sinh lượt {{current}}/{{total}}"
+    },
+    "column": {
+      "selectAll": "Chọn tất cả bài đăng",
+      "selectRow": "Chọn bài đăng",
+      "thumbnail": "Ảnh",
+      "title": "Bài đăng",
+      "channel": "Kênh đăng",
+      "status": "Trạng thái",
+      "publishedAt": "Thời gian đăng",
+      "actions": "Thao tác",
+      "platform": "Nền tảng",
+      "hashtag": "Hashtag"
+    },
+    "channel": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "zaloOa": "Zalo OA"
+    },
+    "status": {
+      "draft": "Nháp",
+      "scheduled": "Đã lên lịch",
+      "published": "Đã đăng",
+      "failed": "Đăng lỗi"
+    },
+    "action": {
+      "importPlan": "Nhập kế hoạch Excel",
+      "actions": "Thao tác",
+      "openMenu": "Mở menu thao tác bài đăng",
+      "viewDetail": "Xem chi tiết",
+      "update": "Chỉnh sửa",
+      "create": "Thêm bài đăng",
+      "delete": "Xóa bài đăng",
+      "showPublications": "Xem các lần đăng",
+      "collapsePublications": "Thu gọn các lần đăng"
+    },
+    "channelAccount": {
+      "facebook": "Trang Hoa Theo Mùa",
+      "instagram": "@hoatheomua.official",
+      "zaloOa": "Zalo OA Hoa Theo Mùa"
+    },
+    "studio": {
+      "description": "AI đã viết lại nội dung cho từng kênh và cắt ảnh sẵn. Soát lại rồi chốt cách đăng cho từng kênh.",
+      "expired": "Phiên tạo bài đã kết thúc. Ảnh gốc chỉ sống trong phiên làm việc nên cần tạo lại từ đầu.",
+      "jobSummary": "{{images}} job ảnh · {{captions}} job caption",
+      "finalizeSuccess": "Đã tạo {{count}} bài đăng",
+      "progress": {
+        "images": "Cắt ảnh",
+        "imagesHint": "Mỗi ảnh gốc nhân với tỉ lệ đã chọn, không phụ thuộc số kênh.",
+        "captions": "Viết caption",
+        "captionsHint": "Mỗi kênh một bản nội dung riêng theo giọng của kênh đó.",
+        "imageJob": "{{name}} · {{ratio}}",
+        "captionJob": "Caption {{channel}}",
+        "failedCount": "· {{count}} lỗi"
+      },
+      "pool": {
+        "title": "Pool ảnh",
+        "allRatios": "Tất cả",
+        "toggle": "Chọn ảnh {{name}} tỉ lệ {{ratio}}",
+        "ratioWarning": "Lệch tỉ lệ chuẩn của kênh, kênh sẽ tự cắt ảnh.",
+        "empty": "Bài này không có ảnh nào.",
+        "regenerate": "Cho AI cắt lại ảnh {{name}} tỉ lệ {{ratio}}",
+        "failed": "Cắt ảnh lỗi",
+        "retry": "Thử lại",
+        "retryAll_one": "Thử lại {{count}} ảnh lỗi",
+        "retryAll_other": "Thử lại {{count}} ảnh lỗi",
+        "retryAllDone_one": "Đã cắt lại xong {{count}} ảnh lỗi.",
+        "retryAllDone_other": "Đã cắt lại xong {{count}} ảnh lỗi.",
+        "retryAllPartial": "Cắt lại được {{succeeded}}/{{total}} ảnh, số còn lại vẫn lỗi.",
+        "historyTitle": "Các bản đã cắt",
+        "historyHint": "Bản cũ vẫn được giữ, bấm để quay về bản ưng hơn.",
+        "versionCount": "v{{current}}/{{total}}",
+        "versionLabel": "v{{index}}",
+        "selectingFor": "Đang chọn ảnh cho {{channel}}. Mỗi nền tảng có lựa chọn riêng.",
+        "versionFailed": "Bản này cắt lỗi nên không dùng được",
+        "versionFailedLabel": "Bản {{index}} · lỗi",
+        "lastRetryFailed": "Lần cắt lại gần nhất bị lỗi, ô này vẫn đang dùng bản cũ.",
+        "tooManyPairs": "Một lần chỉ cắt được tối đa {{max}} ảnh. Bớt tỉ lệ hoặc bớt ảnh rồi thử lại.",
+        "zoom": "Xem to ảnh {{name}} tỉ lệ {{ratio}}",
+        "caption": "{{name}} · {{ratio}}",
+        "lockedFor": "Bài trên {{channel}} đã đăng nên ảnh không đổi được nữa, chỉ xem lại."
+      },
+      "channelShort": {
+        "facebook": "FB",
+        "instagram": "IG",
+        "zaloOa": "ZA"
+      },
+      "regenerate": {
+        "trigger": "Viết lại",
+        "title": "Viết lại caption kênh này",
+        "description": "Chọn hướng điều chỉnh hoặc ghi rõ yêu cầu, ảnh đã chọn giữ nguyên.",
+        "notePlaceholder": "Ví dụ: nhấn mạnh giao trong 2 giờ",
+        "submit": "Cho AI viết lại",
+        "tweak": {
+          "shorter": "Ngắn hơn",
+          "moreEmoji": "Nhiều emoji",
+          "addCta": "Thêm CTA",
+          "fewerHashtags": "Bớt hashtag"
+        },
+        "optionalNote": "Không chọn gì cũng được, AI sẽ cho một bản khác.",
+        "sourceLabel": "Dựa trên bản nào",
+        "fromScratch": "Viết mới từ bài gốc"
+      },
+      "selected": {
+        "title": "Ảnh của kênh này",
+        "description": "Kéo thả để đổi thứ tự hiển thị.",
+        "empty": "Chưa chọn ảnh nào. Bấm ảnh trong pool để thêm.",
+        "reorder": "Kéo để đổi vị trí ảnh {{name}}",
+        "remove": "Bỏ ảnh {{name}} khỏi kênh này",
+        "zoom": "Xem to ảnh {{name}}"
+      },
+      "preview": {
+        "justNow": "Vừa xong",
+        "noCaption": "Chưa chọn nội dung.",
+        "moreImages": "+{{count}}",
+        "trigger": "Xem trước",
+        "title": "Xem trước trên {{channel}}"
+      },
+      "source": {
+        "title": "Nội dung gốc",
+        "description": "Sửa ở đây rồi cho AI viết lại toàn bộ caption. Ảnh đã cắt được giữ nguyên.",
+        "content": "Nội dung người dùng nhập",
+        "hashtags": "Hashtag",
+        "regenerateAll": "Tạo lại toàn bộ caption",
+        "regenerateAllHint": "Chỉ chạy lại phần caption, không cắt lại ảnh.",
+        "confirm": {
+          "title": "Tạo lại toàn bộ caption?",
+          "description": "Toàn bộ phương án nội dung của các kênh sẽ bị thay bằng bản mới. Ảnh đã chọn và cách đăng vẫn giữ nguyên.",
+          "confirmText": "Tạo lại"
+        },
+        "pinnedNote": "{{count}} kênh đã ghim sẽ được giữ nguyên.",
+        "allPinnedNote": "Mọi kênh đang được ghim nên không có gì để viết lại. Bỏ ghim ít nhất một kênh trước đã.",
+        "zoom": "Xem to ảnh gốc {{name}}"
+      },
+      "publish": {
+        "title": "Chốt đăng",
+        "description": "Mỗi kênh chọn tài khoản và cách đăng riêng, rồi bấm một lần cho hết.",
+        "submit": "Chốt {{count}} bài đăng",
+        "waiting": "Chờ AI chạy xong rồi mới chốt được.",
+        "failedImages": "Còn {{count}} ảnh cắt lỗi chưa xử lý. Vẫn chốt được, ảnh lỗi sẽ không có trong bài.",
+        "editTitle": "Trạng thái & lưu",
+        "editDescription": "Đổi cách đăng của bài này.",
+        "save": "Lưu thay đổi",
+        "autoSaved": "Mọi thay đổi trong Studio được lưu tự động, không cần bấm chốt.",
+        "noReadyChannel": "Chưa kênh nào sẵn sàng đăng. Chọn tài khoản và xử lý các mục còn thiếu ở trên.",
+        "submitAll": "Chốt đăng {{count}} kênh",
+        "submitting": "Đang gửi lệnh đăng…"
+      },
+      "publishMode": {
+        "draft": "Lưu nháp",
+        "schedule": "Hẹn lịch",
+        "publishNow": "Đăng ngay"
+      },
+      "issue": {
+        "noCaption": "Chưa chọn nội dung cho kênh này.",
+        "captionTooLong": "Nội dung vượt quá {{max}} ký tự của kênh.",
+        "tooManyImages": "Kênh này chỉ nhận tối đa {{max}} ảnh.",
+        "scheduleInvalid": "Chọn thời điểm hẹn lịch ở tương lai.",
+        "noImages": "Kênh này chưa có ảnh nào.",
+        "ratioMismatch": "{{count}} ảnh không đúng tỉ lệ chuẩn của kênh.",
+        "MissingContent": "Chưa có nội dung chốt cho kênh này.",
+        "MissingImages": "Chưa chốt ảnh nào cho kênh này.",
+        "GenerationInProgress": "AI đang sinh cho kênh này, chờ xong đã.",
+        "PublishingState": "Kênh này đang trong quá trình đăng, không sửa được.",
+        "ratioUnsupported": "{{count}} ảnh có tỉ lệ {{ratios}}, kênh này không đăng được. Bỏ chọn hoặc cắt lại theo tỉ lệ khác.",
+        "albumRatioRequired": "Đăng nhiều ảnh thì mọi ảnh phải có tỉ lệ {{ratio}}."
+      },
+      "channelPicker": {
+        "add": "Thêm nền tảng",
+        "title": "Thêm nền tảng cho bài này",
+        "hint": "AI viết thêm một bản nội dung riêng, ảnh lấy sẵn từ pool nên không phải nhập lại gì."
+      },
+      "removeChannel": {
+        "trigger": "Bỏ nền tảng",
+        "title": "Bỏ nền tảng này khỏi bài?",
+        "description": "Nội dung và ảnh đã chọn cho {{channel}} sẽ bị bỏ. Các nền tảng còn lại không bị ảnh hưởng.",
+        "confirmText": "Bỏ nền tảng",
+        "lastChannel": "Phải giữ lại ít nhất một nền tảng"
+      },
+      "ratioAdder": {
+        "add": "Cắt thêm tỉ lệ",
+        "title": "Cắt thêm tỉ lệ",
+        "generate": "Cắt {{name}} theo tỉ lệ {{ratio}}",
+        "alreadyGenerated": "Tỉ lệ này đã có trong pool",
+        "submit": "Cắt {{count}} ảnh"
+      },
+      "caption": {
+        "title": "Nội dung sẽ đăng",
+        "description": "Sửa tay trực tiếp ở đây, hashtag chỉnh riêng cho kênh này.",
+        "edited": "Nội dung này đã được sửa tay, khác với bản AI viết.",
+        "editedMark": "· đã sửa",
+        "revert": "Về bản AI",
+        "removeHashtag": "Bỏ hashtag {{hashtag}}",
+        "suggestHashtags": "Gợi ý thêm:",
+        "hashtagPlaceholder": "Gõ #hashtag rồi Enter"
+      },
+      "captionHistory": {
+        "badge": "Lượt {{current}}/{{total}}",
+        "title": "Các lượt AI đã viết",
+        "hint": "Lượt cũ vẫn giữ, bấm để quay về lượt đó.",
+        "entry": "Lượt {{index}}",
+        "askedFor": "Yêu cầu: {{asked}}",
+        "firstRun": "Bản đầu tiên",
+        "lockedHint": "Bài đã đăng nên không đổi được bản chốt, chỉ xem lại các lượt AI đã viết."
+      },
+      "pin": {
+        "pin": "Ghim",
+        "pinned": "Đã ghim",
+        "hint": "Ghim kênh đã ưng để \"Tạo lại toàn bộ caption\" chừa nó ra."
+      },
+      "discard": {
+        "trigger": "Huỷ bài",
+        "title": "Huỷ bài đang soạn?",
+        "description": "Toàn bộ nội dung AI đã viết và ảnh đã cắt sẽ mất, bài không được lưu vào danh sách.",
+        "confirmText": "Huỷ bài"
+      },
+      "imageAdder": {
+        "add": "Thêm ảnh",
+        "title": "Tải thêm ảnh gốc",
+        "hint": "Ảnh mới vào pool chung, không tự gán cho nền tảng nào - tự tick cho kênh cần dùng.",
+        "ratios": "Tỉ lệ AI xuất ra cho mẻ ảnh này"
+      },
+      "editDescription": "Sửa lại bài đã có: nội dung, ảnh, cách đăng.",
+      "saveSuccess": "Đã lưu bài đăng",
+      "locked": {
+        "notice": "Bài đã đăng nên không thể chỉnh sửa.",
+        "nothingToSave": "Bài đã đăng nên không có gì để lưu.",
+        "noChanges": "Chưa có thay đổi nào để lưu."
+      },
+      "imageRegenerate": {
+        "title": "Cắt lại ảnh này",
+        "description": "Chọn hướng điều chỉnh hoặc ghi rõ yêu cầu. Bản cũ vẫn được giữ trong lịch sử.",
+        "notePlaceholder": "Ví dụ: bỏ bớt phần bàn ở dưới",
+        "submit": "Cho AI cắt lại",
+        "tweak": {
+          "zoomIn": "Cận hơn",
+          "zoomOut": "Lấy rộng hơn",
+          "centerSubject": "Đưa hoa vào giữa",
+          "brighter": "Sáng hơn"
+        },
+        "sourceLabel": "Dựa trên bản nào",
+        "fromScratch": "Cắt lại từ ảnh gốc"
+      },
+      "schedule": {
+        "pickHour": "Giờ",
+        "pickMinute": "Phút"
+      },
+      "comingSoon": "Chức năng này chưa có API, chờ backend làm xong nhé.",
+      "discardSuccess": "Đã xoá bài đăng.",
+      "imageFailed": "Cắt lại ảnh không thành công",
+      "imageReady": "Đã có bản cắt mới, chọn để dùng cho kênh.",
+      "busy": {
+        "description": "AI có thể mất tới 3 phút. Cứ để tab này mở, đừng bấm lại.",
+        "generate": "AI đang sinh nội dung và ảnh…",
+        "content": "AI đang viết lại nội dung…",
+        "image": "AI đang cắt lại ảnh…",
+        "retryFailed": "AI đang cắt lại ảnh lỗi {{current}}/{{total}}…"
+      },
+      "ratioClone": {
+        "badge": "+ tỉ lệ",
+        "trigger": "Cắt bản này sang tỉ lệ khác",
+        "title": "Từ bản {{ratio}} sang tỉ lệ khác",
+        "description": "AI cắt lại từ ảnh gốc theo tỉ lệ mới.",
+        "withNote": "AI cắt lại từ ảnh gốc, giữ yêu cầu cũ: {{note}}"
+      },
+      "lightbox": {
+        "pool": "Ảnh đã cắt",
+        "source": "Ảnh gốc",
+        "selected": "Ảnh đã chọn"
+      },
+      "error": {
+        "stateChanged": "Trạng thái của bài đã đổi nên thao tác này không còn thực hiện được (bài đã chốt hoặc đã đăng). Tải lại để xem trạng thái mới nhất."
+      }
+    },
+    "systemPrompt": {
+      "facebook": "## Vai trò\n\nBạn viết nội dung cho **trang Facebook của Hoa Theo Mùa** — tiệm hoa tươi cắt theo mùa, bó tay trong ngày, giao nội thành trong 2 giờ.\n\n## Giọng văn\n\n- Thân mật như đang kể chuyện với khách quen\n- Được phép dài: 3–5 đoạn ngắn, mỗi đoạn 1–2 câu\n- Emoji vừa phải, tối đa 3–4 cái cho cả bài, đặt ở đầu đoạn chứ không rải giữa câu\n\n## Cấu trúc\n\n1. Mở bằng một câu chạm cảm xúc hoặc bối cảnh dịp lễ\n2. Giữa bài nêu điểm mạnh sản phẩm: hoa theo mùa, bó tay, giao 2 giờ\n3. Kết bằng lời mời nhắn tin hoặc đặt hàng\n\n## Hashtag\n\n2–4 cái, đặt ở cuối bài, luôn có `#hoatheomua` kèm tag theo dịp.\n\n## Tuyệt đối không\n\n- Bịa khuyến mãi hoặc mức giá không có trong nội dung gốc\n- Hứa thời gian giao khác 2 giờ nội thành\n- Dùng từ giật gân kiểu *\"rẻ nhất thị trường\"*",
+      "instagram": "## Vai trò\n\nBạn viết **caption Instagram** cho Hoa Theo Mùa — tiệm hoa tươi cắt theo mùa, bó tay trong ngày, giao nội thành trong 2 giờ.\n\n## Giọng văn\n\n- Ngắn, gọn, giàu hình ảnh\n- Tối đa 4–6 dòng, mỗi dòng một ý độc lập, xuống dòng liên tục được\n- Ưu tiên danh từ và tính từ gợi hình hơn câu văn đầy đủ\n\n## Cấu trúc\n\n1. Câu đầu phải bắt mắt ngay — Instagram chỉ hiện khoảng **125 ký tự** trước khi cắt\n2. Phần sau bổ sung chi tiết\n3. Kết bằng một lời mời ngắn\n\n## Hashtag\n\n5–9 cái, gom hết xuống cuối, trộn tag tiếng Việt và tiếng Anh.\n\n## Tuyệt đối không\n\n- Viết đoạn văn dài\n- Chèn link (Instagram không bấm được trong caption)\n- Bịa khuyến mãi hoặc giá",
+      "zaloOa": "## Vai trò\n\nBạn soạn **tin Zalo OA** cho Hoa Theo Mùa — tiệm hoa tươi cắt theo mùa, bó tay trong ngày, giao nội thành trong 2 giờ.\n\n## Giọng văn\n\n- Trang trọng, lịch sự, xưng hô **\"quý khách\"**\n- Đi thẳng vào thông tin, không kể chuyện vòng vo\n- Tối đa 3 đoạn\n\n## Cấu trúc\n\n1. Mở bằng câu chào và nêu ngay chương trình hoặc sản phẩm\n2. Nêu quyền lợi và điều kiện rõ ràng\n3. Kết bằng cách đặt hàng cụ thể kèm hotline\n\n## Hashtag\n\nNhiều nhất 1 cái, hoặc bỏ hẳn. Zalo OA gần như không dùng hashtag.\n\n## Tuyệt đối không\n\n- Dùng quá 1 emoji\n- Viết hoa cả cụm để nhấn mạnh\n- Bịa khuyến mãi hoặc giá\n- Dùng ngôn ngữ suồng sã"
+    },
+    "platform": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "zalo": "Zalo OA"
+    },
+    "platformStatus": {
+      "Draft": "Nháp",
+      "Generating": "Đang sinh nội dung",
+      "Generated": "Đã sinh nội dung",
+      "Failed": "Lỗi khi tạo",
+      "Ready": "Sẵn sàng đăng",
+      "Scheduled": "Đã lên lịch",
+      "Publishing": "Đang đăng",
+      "Published": "Đã đăng",
+      "PublishFailed": "Đăng lỗi",
+      "Partial": "Còn thiếu ảnh"
+    },
+    "generate": {
+      "error": {
+        "title": "Chưa sinh được bài đăng",
+        "busy": "Bài này đang được AI xử lý. Đợi xong rồi thử lại nhé.",
+        "rateLimited": "AI đang quá tải. Thử lại sau khoảng {{seconds}} giây.",
+        "unavailable": "Server chưa phản hồi được. Bài gốc vẫn còn nguyên - mở lại bài để xem AI đã kịp sinh được gì chưa, đừng bấm tạo lại ngay."
+      }
+    },
+    "publication": {
+      "title": "Đăng bài",
+      "account": "Tài khoản đăng",
+      "noAccount": "Chưa có tài khoản nào được kết nối cho nền tảng này.",
+      "unsupportedPlatform": "Nền tảng này chưa mở luồng đăng tự động.",
+      "scheduledFor": "Hẹn đăng lúc {{time}}",
+      "scheduledHistory": "Giờ lịch đã đặt: {{time}}",
+      "mode": {
+        "now": "Đăng ngay",
+        "schedule": "Hẹn lịch"
+      },
+      "status": {
+        "Queued": "Đã nhận yêu cầu",
+        "Scheduled": "Đã đặt lịch",
+        "Publishing": "Đang đăng",
+        "Succeeded": "Đã đăng",
+        "Failed": "Thất bại",
+        "NeedsReview": "Cần đối soát",
+        "Cancelled": "Đã hủy",
+        "Closed": "Đã đóng xử lý"
+      },
+      "action": {
+        "openPreview": "Xem trước và đăng",
+        "publish": "Đăng ngay",
+        "schedule": "Đặt lịch",
+        "reschedule": "Đổi giờ",
+        "saveSchedule": "Lưu giờ mới",
+        "cancelSchedule": "Hủy lịch",
+        "cancel": "Hủy yêu cầu",
+        "retry": "Chạy lại",
+        "recheck": "Kiểm tra lại",
+        "review": "Đối soát",
+        "openPost": "Mở bài đã đăng",
+        "manageAccounts": "Quản lý tài khoản",
+        "confirmSchedule": "Xác nhận đặt lịch"
+      },
+      "preview": {
+        "title": "Xem trước bản chốt",
+        "description": "Đây là đúng nội dung và thứ tự ảnh sẽ được gửi lên nền tảng.",
+        "formatter": "Định dạng {{version}}",
+        "imageAlt": "Ảnh thứ {{order}}",
+        "unverifiedNote": "Preview chưa gọi sang nền tảng. File ảnh, quyền và hạn mức chỉ được kiểm lúc chạy thật, nên vẫn có thể bị từ chối ở bước đăng.",
+        "unavailable": "Chưa đọc được bản chốt cho tài khoản này."
+      },
+      "schedule": {
+        "invalid": "Chọn ngày và giờ hợp lệ.",
+        "tooSoon": "Phải đặt trước ít nhất 60 giây.",
+        "tooFar": "Chỉ đặt được trong vòng 30 ngày.",
+        "hint": "Nên chọn từ {{time}} trở đi để còn dư thời gian gửi yêu cầu.",
+        "rescheduleHint": "Chỉ đổi giờ. Nội dung, ảnh và tài khoản giữ nguyên - muốn sửa thì hủy lịch rồi chốt lại."
+      },
+      "media": {
+        "imagePrefix": "Ảnh {{order}}:",
+        "tooManyImages": "Tối đa {{max}} ảnh.",
+        "captionTooLong": "Caption dài {{current}} ký tự, vượt giới hạn {{max}}.",
+        "tooManyHashtags": "Có {{current}} hashtag, tối đa {{max}}.",
+        "tooManyMentions": "Có {{current}} lượt nhắc tên, tối đa {{max}}."
+      },
+      "reason": {
+        "missingContent": "Chưa chốt nội dung cho nền tảng này.",
+        "missingImages": "Chưa chốt ảnh cho nền tảng này.",
+        "generationInProgress": "Đang sinh nội dung, chờ xong rồi đăng.",
+        "publishingState": "Nền tảng này đang có tác vụ đăng chạy dở.",
+        "unknown": "Nền tảng từ chối với mã {{code}}."
+      },
+      "error": {
+        "title": "Không thực hiện được",
+        "previewChanged": "Bản chốt đã đổi từ lúc xem trước. Mở lại để lấy bản mới.",
+        "publicationChanged": "Tác vụ đã đổi trạng thái. Tải lại rồi thao tác tiếp.",
+        "idempotencyConflict": "Mã yêu cầu này đã dùng cho một lệnh khác.",
+        "publicationExists": "Nền tảng này đã có tác vụ đăng.",
+        "publicationLocked": "Đang bị khóa vì có tác vụ đăng chạy dở.",
+        "retryNotAllowed": "Tác vụ này không cho chạy lại.",
+        "cancelNotAllowed": "Không hủy được nữa, hệ thống đã bắt đầu xử lý.",
+        "reviewNotAllowed": "Trạng thái hiện tại không cho đối soát.",
+        "publishingDisabled": "Kênh này chưa được bật trong môi trường hiện tại.",
+        "adapterUnavailable": "Chưa kết nối được sang nền tảng.",
+        "imageCountInvalid": "Số ảnh của bản chốt không hợp lệ với nền tảng này.",
+        "accountMismatch": "Tài khoản đang chọn không khớp với tài khoản đã gắn cho nền tảng này.",
+        "metaTokenInvalid": "Token của tài khoản không còn hiệu lực.",
+        "metaPermissionDenied": "Tài khoản không đủ quyền đăng bài.",
+        "metaRateLimited": "Nền tảng đang giới hạn tần suất.",
+        "metaInvalidMediaOrParameter": "Nền tảng từ chối tham số hoặc ảnh đã gửi.",
+        "instagramQuotaUnverified": "Chưa đọc được hạn mức đăng của Instagram.",
+        "instagramPublishedIdUnresolved": "Instagram báo đã đăng nhưng chưa trả về ID bài.",
+        "mediaExpired": "Ảnh đã chuẩn bị quá hạn, hệ thống sẽ dựng lại khi chạy lại.",
+        "instagramJpegRequired": "Instagram chỉ nhận ảnh JPEG.",
+        "instagramDimensionsInvalid": "Kích thước hoặc tỉ lệ ảnh không hợp lệ với Instagram.",
+        "instagramCarouselSquareRequired": "Album Instagram chỉ nhận ảnh vuông.",
+        "facebookImageFormatInvalid": "Định dạng ảnh không hợp lệ với Facebook.",
+        "scheduleOffsetRequired": "Giờ hẹn phải kèm múi giờ.",
+        "scheduleOutOfRange": "Giờ hẹn nằm ngoài khoảng cho phép.",
+        "scheduleNotFound": "Không tìm thấy lịch của bài và nền tảng này.",
+        "scheduleNotEditable": "Lịch không đổi được nữa, hệ thống đã nhận việc.",
+        "scheduleMissed": "Lịch đã trễ quá hạn nên không tự chạy bù.",
+        "mediaInvalid": "Ảnh không đạt yêu cầu của nền tảng.",
+        "invalidSelectedImage": "Nền tảng chưa nhận ảnh đang chốt, thường là do còn một lượt cắt ảnh lỗi. Cắt lại ảnh lỗi hoặc bỏ chọn rồi chọn lại ảnh cho kênh này.",
+        "insightsPermissionRequired": "Tài khoản chưa cấp quyền đọc chỉ số. Kết nối lại tài khoản và cấp đủ quyền.",
+        "platformReauthRequired": "Phiên kết nối tài khoản đã hết hiệu lực. Kết nối lại tài khoản rồi thử lại."
+      },
+      "hint": {
+        "publishing": "Đang xử lý, không sửa hay hủy được lúc này.",
+        "noRetry": "Tác vụ này không cho chạy lại. Chốt lại nội dung rồi tạo yêu cầu mới.",
+        "retryKeepsSnapshot": "Chạy lại dùng đúng nội dung và ảnh đã chụp lúc tạo yêu cầu, và chạy ngay chứ không đặt lịch.",
+        "needsReview": "Chưa rõ bài đã lên hay chưa nên không mở đăng lại. Kiểm tra trên nền tảng rồi đối soát.",
+        "fixImage": "Chạy lại vẫn dùng ảnh cũ. Hãy chọn lại ảnh, chốt lại rồi tạo yêu cầu mới.",
+        "reconnectAccount": "Kết nối lại tài khoản trước khi thử tiếp.",
+        "rateLimited": "Chờ hết giới hạn rồi hãy thử lại, bấm sớm sẽ bị từ chối.",
+        "missingPermalink": "Bài đã đăng nhưng chưa lấy được đường dẫn. Không cần đăng lại.",
+        "mayHavePublished": "Lệnh đăng đã được gửi đi và chưa rõ kết quả. Kiểm tra trên nền tảng trước khi làm gì tiếp.",
+        "alreadyClosed": "Đã đóng xử lý mà kết quả bên ngoài vẫn chưa rõ, nên không mở lại quyền đăng."
+      },
+      "review": {
+        "title": "Đối soát kết quả đăng",
+        "description": "Ghi nhận những gì bạn kiểm được trên nền tảng. Hệ thống vẫn kiểm lại trước khi kết luận.",
+        "action": {
+          "ConfirmPublished": "Xác nhận đã đăng",
+          "ConfirmNotPublished": "Xác nhận chưa đăng",
+          "Close": "Đóng xử lý"
+        },
+        "actionHint": {
+          "ConfirmPublished": "Cần ID bài trên nền tảng. Hệ thống sẽ đối chiếu lại chứ không tin ngay.",
+          "ConfirmNotPublished": "Chỉ chọn khi chắc chắn bài không tồn tại trên nền tảng.",
+          "Close": "Dừng theo dõi nhưng vẫn coi như chưa rõ kết quả."
+        },
+        "externalPostId": "ID bài trên nền tảng",
+        "externalPostIdPlaceholder": "Dán ID bài, chưa nhận đường dẫn",
+        "note": "Ghi chú",
+        "notePlaceholder": "Ghi lại bạn đã kiểm những gì",
+        "closeWarning": "Đóng xử lý không gỡ bài ngoài nền tảng và cũng không mở lại quyền đăng cho bài này.",
+        "submit": "Ghi nhận"
+      },
+      "toast": {
+        "publishAccepted": "Đã nhận yêu cầu đăng. Theo dõi trạng thái ở đây.",
+        "scheduleAccepted": "Đã đặt lịch đăng.",
+        "rescheduled": "Đã đổi giờ đăng.",
+        "scheduleCancelled": "Đã hủy lịch đăng.",
+        "retryAccepted": "Đã nhận yêu cầu chạy lại.",
+        "cancelled": "Đã hủy yêu cầu đăng.",
+        "rechecked": "Đã kiểm tra lại",
+        "resolved": "Đã ghi nhận đối soát",
+        "resolveStillNeedsReview": "Đã ghi nhận, nhưng hệ thống vẫn chưa đủ bằng chứng nên tác vụ còn ở trạng thái cần đối soát."
+      },
+      "validation": {
+        "noteRequired": "Phải có ghi chú",
+        "externalPostIdRequired": "Phải có ID bài trên nền tảng"
+      },
+      "lastFailed": "Lần đăng trước bị lỗi"
+    },
+    "delete": {
+      "title": "Xóa bài đăng?",
+      "description": "Bài \"{{title}}\" cùng nội dung AI đã viết và ảnh đã cắt sẽ bị xóa. Thao tác này không thể hoàn tác.",
+      "published": "Bài đã hẹn lịch hoặc đã đăng lên nền tảng nên không xóa được.",
+      "error": "Chưa xóa được bài đăng"
+    },
+    "insights": {
+      "views": "Lượt xem",
+      "reach": "Người tiếp cận",
+      "likes": "Lượt thích",
+      "comments": "Bình luận",
+      "saved": "Lượt lưu",
+      "shares": "Lượt chia sẻ",
+      "totalInteractions": "Tổng tương tác",
+      "error": "Chưa lấy được chỉ số",
+      "reload": "Tải lại",
+      "hint": "Số liệu lấy trực tiếp từ nền tảng, ô \"-\" là nền tảng không trả dữ liệu cho chỉ số đó.",
+      "unsupported": "Nền tảng này chưa hỗ trợ xem chỉ số."
     }
   },
   "navigation": {
@@ -504,6 +1094,13 @@
       "title": "AI Custom",
       "cards": "Thiệp AI",
       "flowerDesigns": "Mẫu hoa AI"
+    },
+    "aiMarketing": {
+      "title": "AI Marketing",
+      "posts": "Danh sách bài đăng",
+      "create": "Tạo bài đăng",
+      "reports": "Báo cáo định kỳ",
+      "accounts": "Tài khoản nền tảng"
     },
     "templateManagement": {
       "title": "Quản lý mẫu",
@@ -2801,5 +3398,113 @@
         "cardTotal": "Tổng phí"
       }
     }
+  },
+  "marketingReports": {
+    "title": "Báo cáo định kỳ",
+    "description": "Chỉ số hiệu quả bài đăng lấy về từ API của từng nền tảng.",
+    "allChannels": "Tất cả nền tảng",
+    "empty": "Chưa có bài nào lên kênh trong khoảng này.",
+    "syncedAt": "Số liệu {{count}} bài, đồng bộ lúc {{time}}",
+    "range": {
+      "7": "7 ngày",
+      "30": "30 ngày",
+      "90": "90 ngày"
+    },
+    "tile": {
+      "reach": "Người tiếp cận",
+      "impressions": "Lượt hiển thị",
+      "engagements": "Tương tác",
+      "engagementRate": "{{rate}}% trên lượt tiếp cận",
+      "clicks": "Lượt nhấp"
+    },
+    "chart": {
+      "timelineTitle": "Lượt tiếp cận theo ngày",
+      "timelineDescription": "Tính theo ngày bài lên kênh. Bài nháp và bài chờ lịch chưa có số liệu.",
+      "reachValue": "{{reach}} người tiếp cận",
+      "channelTitle": "Tiếp cận theo nền tảng"
+    },
+    "table": {
+      "channelTitle": "Hiệu quả theo nền tảng",
+      "posts": "Số bài",
+      "rate": "Tỉ lệ tương tác",
+      "topTitle": "Bài hiệu quả nhất",
+      "topDescription": "Xếp theo lượt tương tác trong khoảng đang xem."
+    }
+  },
+  "platformAccounts": {
+    "title": "Tài khoản nền tảng",
+    "description": "Kết nối trang Facebook và tài khoản Instagram chuyên nghiệp để sau này đăng bài.",
+    "connectedNotReadyNote": "Kết nối thành công mới chỉ xác nhận token còn hiệu lực ở lần kiểm tra gần nhất, chưa chắc đã đủ quyền đăng bài.",
+    "empty": "Chưa kết nối tài khoản nào.",
+    "zaloPending": "Zalo OA chưa mở kết nối ở đợt này. Phần AI viết nội dung và cắt ảnh cho Zalo vẫn dùng bình thường.",
+    "popupClosed": "Đã đóng cửa sổ cấp quyền. Đang tải lại danh sách tài khoản.",
+    "refreshSuccess": "Token của {{name}} vẫn còn hiệu lực.",
+    "refreshNeedsReauth": "{{name}} cần kết nối lại.",
+    "disconnectSuccess": "Đã ngắt kết nối {{name}}.",
+    "platformHint": {
+      "facebook": "Trang Facebook đã cấp quyền đăng bài.",
+      "instagram": "Tài khoản chuyên nghiệp liên kết với Trang, đăng nhập qua Facebook."
+    },
+    "status": {
+      "Connected": "Đã kết nối",
+      "ReauthRequired": "Cần kết nối lại",
+      "Disabled": "Đã ngắt"
+    },
+    "field": {
+      "lastValidatedAt": "Kiểm tra lần cuối",
+      "accessTokenExpiresAt": "Token hết hạn",
+      "noExpiry": "Không rõ hạn"
+    },
+    "action": {
+      "connect": "Kết nối",
+      "reconnect": "Kết nối lại",
+      "refresh": "Kiểm tra lại",
+      "disconnect": "Ngắt kết nối",
+      "connectPlatform": "Kết nối {{platform}}"
+    },
+    "disconnect": {
+      "title": "Ngắt kết nối tài khoản?",
+      "description": "Bỏ kết nối {{name}}. Tài khoản vẫn nằm trong danh sách và nối lại được, nhưng bài đang chờ đăng sẽ không gửi đi được.",
+      "confirmText": "Ngắt kết nối"
+    },
+    "error": {
+      "title": "Thao tác không thành công",
+      "popupBlocked": "Trình duyệt chặn cửa sổ cấp quyền. Cho phép pop-up cho trang này rồi thử lại.",
+      "stateInvalid": "Phiên cấp quyền không hợp lệ hoặc đã hết hạn. Bấm kết nối lại từ đầu, trên đúng trình duyệt này.",
+      "denied": "Bạn đã từ chối cấp quyền ở màn hình của nền tảng.",
+      "reauthRequired": "Token không còn hiệu lực. Cần cấp quyền lại.",
+      "noEligibleAccount": "Không tìm thấy Trang hoặc tài khoản chuyên nghiệp đủ điều kiện. Kiểm tra lại quyền quản trị Trang.",
+      "accountMismatch": "Tài khoản vừa cấp quyền không phải tài khoản đang nối lại.",
+      "notFound": "Không tìm thấy tài khoản. Tải lại danh sách giúp mình.",
+      "accountChanged": "Tài khoản vừa bị thay đổi ở nơi khác. Đã tải lại, thử lại nhé.",
+      "accountDisabled": "Tài khoản đang ở trạng thái đã ngắt. Dùng nút kết nối lại.",
+      "refreshInProgress": "Đang có một lượt kiểm tra chạy dở. Chờ xong rồi thử lại.",
+      "accountInUse": "Còn bài đang hẹn lịch hoặc đang đăng bằng tài khoản này. Huỷ lịch hoặc chờ xong rồi mới ngắt được.",
+      "rateLimited": "Nền tảng đang giới hạn số lượt gọi. Thử lại sau ít phút.",
+      "providerUnavailable": "Nền tảng không phản hồi hợp lệ. Thử kết nối lại từ đầu.",
+      "providerTimeout": "Nền tảng phản hồi quá chậm. Bắt đầu một phiên kết nối mới, đừng bấm lại lượt cũ.",
+      "notConfigured": "Môi trường chưa bật hoặc chưa cấu hình ứng dụng cho nền tảng này. Cần backend xử lý."
+    },
+    "column": {
+      "platform": "Nền tảng",
+      "account": "Tài khoản",
+      "status": "Trạng thái",
+      "scopes": "Quyền đã cấp",
+      "actions": "Thao tác"
+    }
+  },
+  "lightbox": {
+    "label": "Xem ảnh",
+    "gallery": "Bộ ảnh",
+    "previous": "Ảnh trước",
+    "next": "Ảnh sau",
+    "close": "Đóng",
+    "position": "Ảnh {index} trên {total}",
+    "showCaptions": "Hiện chú thích",
+    "hideCaptions": "Ẩn chú thích",
+    "zoomIn": "Phóng to",
+    "zoomOut": "Thu nhỏ",
+    "enterFullscreen": "Mở toàn màn hình",
+    "exitFullscreen": "Thoát toàn màn hình"
   }
 }

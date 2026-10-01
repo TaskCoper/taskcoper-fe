@@ -26,8 +26,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
-import Lightbox from 'yet-another-react-lightbox'
-import 'yet-another-react-lightbox/styles.css'
+import ImageLightbox from '../components/image-lightbox'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { ComboSpecification } from '../features/products/combos/components/combo-specification'
 import { useGetComboSpecification } from '../features/products/combos/hooks/use-get-combo-specification'
@@ -636,17 +635,11 @@ export default function ProductPage() {
         />
       )}
 
-      {galleryImages.length > 0 && (
-        <Lightbox
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={safeImageIndex}
-          on={{ view: ({ index }) => setActiveImageIndex(index) }}
-          slides={galleryImages.map((image) => ({ src: image.src, alt: displayName }))}
-          carousel={{ finite: galleryImages.length === 1 }}
-          render={galleryImages.length === 1 ? { buttonPrev: () => null, buttonNext: () => null } : undefined}
-        />
-      )}
+      <ImageLightbox
+        slides={galleryImages.map((image) => ({ src: image.src, alt: displayName }))}
+        index={lightboxOpen ? safeImageIndex : null}
+        onIndexChange={(index) => (index === null ? setLightboxOpen(false) : setActiveImageIndex(index))}
+      />
     </div>
   )
 }

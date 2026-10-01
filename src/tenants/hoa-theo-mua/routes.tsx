@@ -8,6 +8,13 @@ const AiCardsPage = lazy(() => import('./pages/ai-cards.page'))
 const AiCardDetailPage = lazy(() => import('./pages/ai-card-detail.page'))
 const AiFlowerDesignsPage = lazy(() => import('./pages/ai-flower-designs.page'))
 const AiFlowerDesignDetailPage = lazy(() => import('./pages/ai-flower-design-detail.page'))
+const MarketingPostsPage = lazy(() => import('./pages/marketing-posts.page'))
+const MarketingPostCreatePage = lazy(() => import('./pages/marketing-post-create.page'))
+const MarketingPostPlatformsPage = lazy(() => import('./pages/marketing-post-platforms.page'))
+const MarketingPostStudioPage = lazy(() => import('./pages/marketing-post-studio.page'))
+const MarketingPostDetailPage = lazy(() => import('./pages/marketing-post-detail.page'))
+const MarketingReportsPage = lazy(() => import('./pages/marketing-reports.page'))
+const PlatformAccountsPage = lazy(() => import('./pages/platform-accounts.page'))
 const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
 const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
 const CardSizesPage = lazy(() => import('./pages/card-sizes.page'))
@@ -120,6 +127,45 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           {
             path: 'ai-custom/flower-designs/:id',
             element: <AiFlowerDesignDetailPage />
+          }
+        ]
+      },
+      {
+        element: <FeatureFlagGuardLayout requires='custom.aiMarketing' />,
+        children: [
+          {
+            path: 'ai-marketing/posts',
+            element: <MarketingPostsPage />
+          },
+          {
+            path: 'ai-marketing/posts/create',
+            element: <MarketingPostCreatePage />
+          },
+          {
+            // Bước 2 của luồng tạo bài: bài gốc đã lưu, giờ chọn nền tảng
+            path: 'ai-marketing/posts/create/:postId/platforms',
+            element: <MarketingPostPlatformsPage />
+          },
+          {
+            path: 'ai-marketing/posts/studio/:draftId',
+            element: <MarketingPostStudioPage />
+          },
+          {
+            path: 'ai-marketing/reports',
+            element: <MarketingReportsPage />
+          },
+          {
+            path: 'ai-marketing/accounts',
+            element: <PlatformAccountsPage />
+          },
+          {
+            path: 'ai-marketing/posts/:id',
+            element: <MarketingPostDetailPage />
+          },
+          {
+            // Sửa bài dùng chính Studio, chỉ khác là nạp từ bài có sẵn thay vì chạy AI từ đầu
+            path: 'ai-marketing/posts/:id/update',
+            element: <MarketingPostStudioPage />
           }
         ]
       },

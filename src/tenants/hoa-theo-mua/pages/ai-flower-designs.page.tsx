@@ -5,8 +5,7 @@ import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
-import Lightbox from 'yet-another-react-lightbox'
-import 'yet-another-react-lightbox/styles.css'
+import ImageLightbox from '../components/image-lightbox'
 import { getAiFlowerDesignHistoryColumns } from '../features/ai-custom/components/ai-flower-design-history-columns'
 import { useGetAiFlowerDesignHistory } from '../features/ai-custom/hooks/use-get-ai-flower-design-history'
 import type { GeneratedFlowerHistoryItem } from '../features/ai-custom/types'
@@ -47,6 +46,10 @@ export default function AiFlowerDesignsPage() {
     }
   })
 
+  const previewSlides = previewDesign?.imageUrl
+    ? [{ src: previewDesign.imageUrl, alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.id }) }]
+    : []
+
   return (
     <div className='h-full overflow-auto'>
       <div className='space-y-6 p-6'>
@@ -60,20 +63,13 @@ export default function AiFlowerDesignsPage() {
         </DataTable>
       </div>
 
-      {previewDesign?.imageUrl && (
-        <Lightbox
-          open
-          close={() => setPreviewDesign(null)}
-          slides={[
-            {
-              src: previewDesign.imageUrl,
-              alt: t('aiCustom.flowerHistory.previewAlt', { code: previewDesign.id })
-            }
-          ]}
-          carousel={{ finite: true }}
-          render={{ buttonPrev: () => null, buttonNext: () => null }}
-        />
-      )}
+      <ImageLightbox
+        slides={previewSlides}
+        index={previewSlides.length > 0 ? 0 : null}
+        onIndexChange={(index) => index === null && setPreviewDesign(null)}
+        label={t('aiCustom.flowerDetail.lightbox.label')}
+        gallery={t('aiCustom.flowerDetail.lightbox.gallery')}
+      />
     </div>
   )
 }
