@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
-import { getErrorDescription } from '../../products/error-description'
 import { cardTemplateKeys } from '../query-keys'
 import cardTemplateService from '../services'
 import type { CardTemplateListItem } from '../types'
@@ -27,7 +26,7 @@ export const useUpdateCardTemplate = (template: CardTemplateListItem) => {
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
-        description: getErrorDescription(error.response?.data) || t('cardTemplates.form.updateFailed')
+        description: error.response?.data?.detail
       })
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: cardTemplateKeys.lists() })

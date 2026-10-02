@@ -13,9 +13,9 @@ export const useCreateFloralMockup = () => {
     onSuccess: () => {
       toast.success(t('floralMockups.form.createSuccess'))
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
-        description: t('floralMockups.form.createFailed')
+        description: error.response?.data?.detail
       })
     },
     onSettled: () => {

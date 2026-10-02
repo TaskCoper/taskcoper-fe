@@ -15,6 +15,7 @@ export interface GetProductsParams {
   isPin?: boolean
   isActive?: boolean
   productType?: ProductTypeFilterValue
+  productHierarchy?: number
 }
 
 export const useGetProducts = ({

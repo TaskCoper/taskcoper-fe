@@ -34,7 +34,7 @@ export default function AiCardsPage() {
         onPreview: setPreviewCard,
         onDownload: downloadAiCard,
         downloadingCardId: downloadingAiCardId,
-        sizeOptions: aiCardSizes
+        sizeOptions: aiCardSizes ?? []
       }),
     [aiCardSizes, downloadAiCard, downloadingAiCardId, t]
   )

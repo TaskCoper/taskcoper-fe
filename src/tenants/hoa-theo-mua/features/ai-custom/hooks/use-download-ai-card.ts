@@ -10,6 +10,13 @@ const getDownloadErrorDescription = (error: unknown) => {
   if (!isAxiosError(error) || !error.response?.data || typeof error.response.data !== 'object') return undefined
 
   const responseData = error.response.data as Record<string, unknown>
+  const errors = responseData.errors
+
+  if (errors && typeof errors === 'object') {
+    const detail = (errors as Record<string, unknown>).detail
+    if (typeof detail === 'string') return detail
+  }
+
   const apiError = responseData.error
 
   if (apiError && typeof apiError === 'object') {
