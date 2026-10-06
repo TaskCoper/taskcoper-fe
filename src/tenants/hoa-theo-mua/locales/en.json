@@ -515,7 +515,8 @@
       "sizes": "Card Sizes",
       "handwritingSurcharge": "Handwriting Surcharge"
     },
-    "systemConfigs": "System configurations"
+    "systemConfigs": "System configurations",
+    "vouchers": "Discount codes"
   },
   "common": {
     "button": {
@@ -1517,6 +1518,7 @@
   },
   "configsPage": {
     "category": {
+      "orderSlots": "Order time slots",
       "banners": "Promotional banners",
       "productCollections": "Product collections",
       "signatureLanding": "Story landing pages",
@@ -2475,6 +2477,67 @@
       "integrations": "Integrations",
       "platform": "Platform",
       "other": "Other"
+    },
+    "pendingApi": "The interface is waiting for the configuration API from BE",
+    "orderSlots": {
+      "title": "Order time slots",
+      "description": "Set the daily recurring schedule for accepting orders.",
+      "apiNotice": "This is a basic interface. Reservation and concurrency controls will connect after BE is complete.",
+      "slotSection": "Daily time slots",
+      "slotDescription": "These slots repeat every day. Slots can be separated and disabled when orders are not accepted.",
+      "addSlot": "Add time slot",
+      "from": "From",
+      "to": "To",
+      "limit": "Order limit",
+      "actions": "Actions",
+      "removeSlot": "Remove time slot",
+      "syncNotice": "Time slots are synced from Nhanh.vn under Integrations > Nhanh.vn > Delivery times. Only labels matching the time format are shown.",
+      "slot": "Time slot",
+      "status": "Status",
+      "dailyRepeat": "Repeats every day",
+      "active": "Accepting orders",
+      "inactive": "Disabled",
+      "empty": "No valid time slots are synced from Nhanh.vn."
+    },
+    "vouchers": {
+      "title": "Vouchers",
+      "description": "Create and manage public vouchers shown at checkout or private vouchers applied by code.",
+      "pageDescription": "Create and manage public/private discount codes for orders.",
+      "apiNotice": "This is a basic interface. Discount rules, usage limits, and conditions will connect after BE is complete.",
+      "types": {
+        "public": "Public vouchers",
+        "private": "Private vouchers"
+      },
+      "typeDescriptions": {
+        "public": "Users can see and select this voucher at checkout.",
+        "private": "Admin creates a code and users enter it to apply the voucher."
+      },
+      "add": "Add voucher",
+      "name": "Voucher name",
+      "code": "Voucher code",
+      "description": "Description",
+      "discountType": "Discount type",
+      "discountValue": "Discount value",
+      "discountValuePercent": "Percentage discount",
+      "discountValueFixed": "Fixed amount discount",
+      "status": "Status",
+      "namePlaceholder": "Voucher name",
+      "codePlaceholder": "Voucher code",
+      "descriptionPlaceholder": "Voucher description",
+      "discountPlaceholder": "Discount value",
+      "kinds": {
+        "percent": "Percentage discount",
+        "fixed": "Fixed amount discount"
+      },
+      "startsAt": "Start date",
+      "expiresAt": "Expiry date",
+      "datePlaceholder": "Choose a date",
+      "validityPeriod": "Validity period",
+      "totalUsageLimit": "Total usage limit",
+      "usageLimitPerUser": "Usage limit per user",
+      "remove": "Remove voucher",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "filter": {
       "allKinds": "All"

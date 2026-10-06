@@ -18,6 +18,7 @@ export interface InlineEditorShellProps {
   onRevert: () => void
   onSave: () => void
   onBack?: () => void
+  hideHeader?: boolean
   saveDisabledReason?: string
   secondaryAction?: ReactNode
   contentClassName?: string
@@ -34,6 +35,7 @@ export default function InlineEditorShell({
   onRevert,
   onSave,
   onBack,
+  hideHeader = false,
   saveDisabledReason,
   secondaryAction,
   contentClassName
@@ -61,39 +63,41 @@ export default function InlineEditorShell({
       aria-labelledby={`editor-title-${editorId}`}
       className='outline-none flex min-h-0 flex-col flex-1'
     >
-      <div className='p-4 flex shrink-0 items-center gap-2.5 border-b border-border'>
-        {onBack && (
-          <Button type='button' variant='ghost' size='icon' className='shrink-0' onClick={onBack}>
-            <ArrowLeft className='size-4' />
-            <span className='sr-only'>{t('common.button.back')}</span>
-          </Button>
-        )}
+      {!hideHeader && (
+        <div className='p-4 flex shrink-0 items-center gap-2.5 border-b border-border'>
+          {onBack && (
+            <Button type='button' variant='ghost' size='icon' className='shrink-0' onClick={onBack}>
+              <ArrowLeft className='size-4' />
+              <span className='sr-only'>{t('common.button.back')}</span>
+            </Button>
+          )}
 
-        {icon && (
-          <span className='flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/5 text-primary'>
-            {icon}
-          </span>
-        )}
+          {icon && (
+            <span className='flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/5 text-primary'>
+              {icon}
+            </span>
+          )}
 
-        <div className='min-w-0 flex-1 -space-y-0.5'>
-          <h3
-            id={`editor-title-${editorId}`}
-            ref={headingRef}
-            tabIndex={-1}
-            className='truncate text-lg font-semibold outline-none text-primary'
-          >
-            {title}
-          </h3>
+          <div className='min-w-0 flex-1 -space-y-0.5'>
+            <h3
+              id={`editor-title-${editorId}`}
+              ref={headingRef}
+              tabIndex={-1}
+              className='truncate text-lg font-semibold outline-none text-primary'
+            >
+              {title}
+            </h3>
 
-          {description && <p className='text-xs text-muted-foreground'>{description}</p>}
+            {description && <p className='text-xs text-muted-foreground'>{description}</p>}
+          </div>
         </div>
-      </div>
+      )}
 
       <div data-dirty-focus className={cn('flex-1 space-y-8 p-4', contentClassName)}>
         {children}
       </div>
 
-      <div className='sticky bottom-0 z-10 mt-6 flex shrink-0 items-center justify-end gap-2 border-t bg-card px-4 py-3'>
+      <div className='sticky bottom-0 z-10 mt-auto flex shrink-0 items-center justify-end gap-2 border-t bg-card px-4 py-3'>
         {secondaryAction && <div className='mr-auto'>{secondaryAction}</div>}
         {saveDisabledReason && <p className='mr-auto text-xs text-muted-foreground'>{saveDisabledReason}</p>}
 

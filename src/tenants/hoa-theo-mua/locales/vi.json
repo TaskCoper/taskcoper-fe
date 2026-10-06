@@ -515,7 +515,8 @@
       "sizes": "Kích thước thiệp",
       "handwritingSurcharge": "Phụ phí viết tay"
     },
-    "systemConfigs": "Cấu hình hệ thống"
+    "systemConfigs": "Cấu hình hệ thống",
+    "vouchers": "Mã giảm giá"
   },
   "common": {
     "button": {
@@ -1517,6 +1518,7 @@
   },
   "configsPage": {
     "category": {
+      "orderSlots": "Khung giờ nhận đơn",
       "banners": "Banner khuyến mãi",
       "productCollections": "Bộ sưu tập sản phẩm",
       "signatureLanding": "Landing page câu chuyện",
@@ -2475,6 +2477,67 @@
       "integrations": "Tích hợp",
       "platform": "Hệ thống",
       "other": "Khác"
+    },
+    "pendingApi": "Giao diện đang chờ API cấu hình từ BE",
+    "orderSlots": {
+      "title": "Khung giờ nhận đơn",
+      "description": "Thiết lập lịch khung giờ nhận đơn lặp lại mỗi ngày.",
+      "apiNotice": "Đây là giao diện cơ bản. Cơ chế giữ chỗ và kiểm soát đồng thời sẽ kết nối sau khi BE hoàn chỉnh.",
+      "slotSection": "Danh sách khung giờ hằng ngày",
+      "slotDescription": "Các slot được áp dụng lặp lại mỗi ngày. Có thể ngắt quãng và tắt slot khi không nhận đơn.",
+      "addSlot": "Thêm khung giờ",
+      "from": "Từ",
+      "to": "Đến",
+      "limit": "Giới hạn đơn",
+      "actions": "Thao tác",
+      "removeSlot": "Xóa khung giờ",
+      "syncNotice": "Khung giờ được đồng bộ từ Nhanh.vn tại mục Tích hợp > Nhanh.vn > Giờ giao hàng. Chỉ các nhãn đúng định dạng giờ mới được hiển thị.",
+      "slot": "Khung giờ",
+      "status": "Trạng thái",
+      "dailyRepeat": "Lặp lại mỗi ngày",
+      "active": "Đang nhận",
+      "inactive": "Đã tắt",
+      "empty": "Chưa có khung giờ hợp lệ được đồng bộ từ Nhanh.vn."
+    },
+    "vouchers": {
+      "title": "Voucher",
+      "description": "Tạo và quản lý voucher public hiển thị khi thanh toán hoặc voucher private áp dụng bằng mã.",
+      "pageDescription": "Tạo và quản lý mã giảm giá public/private cho các đơn hàng.",
+      "apiNotice": "Đây là giao diện cơ bản. Quy tắc giảm giá, lượt sử dụng và điều kiện áp dụng sẽ kết nối sau khi BE hoàn chỉnh.",
+      "types": {
+        "public": "Voucher public",
+        "private": "Voucher private"
+      },
+      "typeDescriptions": {
+        "public": "User có thể nhìn thấy và tích chọn voucher tại bước thanh toán.",
+        "private": "Admin tạo mã voucher, user nhập mã để áp dụng cho đơn hàng."
+      },
+      "add": "Thêm voucher",
+      "name": "Tên voucher",
+      "code": "Mã voucher",
+      "description": "Mô tả",
+      "discountType": "Kiểu giảm giá",
+      "discountValue": "Giá trị giảm",
+      "discountValuePercent": "Phần trăm giảm",
+      "discountValueFixed": "Số tiền giảm",
+      "status": "Trạng thái",
+      "namePlaceholder": "Tên voucher",
+      "codePlaceholder": "Mã voucher",
+      "descriptionPlaceholder": "Mô tả voucher",
+      "discountPlaceholder": "Giá trị giảm",
+      "kinds": {
+        "percent": "Giảm theo phần trăm",
+        "fixed": "Giảm số tiền cố định"
+      },
+      "startsAt": "Ngày bắt đầu",
+      "expiresAt": "Ngày hết hạn",
+      "datePlaceholder": "Chọn ngày",
+      "validityPeriod": "Thời gian áp dụng",
+      "totalUsageLimit": "Tổng số lượt sử dụng",
+      "usageLimitPerUser": "Lượt sử dụng mỗi user",
+      "remove": "Xóa voucher",
+      "active": "Đang bật",
+      "inactive": "Đã tắt"
     },
     "filter": {
       "allKinds": "Tất cả"

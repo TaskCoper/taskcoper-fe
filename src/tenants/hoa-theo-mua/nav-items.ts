@@ -8,7 +8,8 @@ import {
   NewspaperIcon,
   PackageIcon,
   SettingsIcon,
-  SparklesIcon
+  SparklesIcon,
+  TicketPercentIcon
 } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
@@ -39,6 +40,13 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders`]
       }
     ]
+  },
+  {
+    titleKey: 'navigation.vouchers',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`,
+    icon: TicketPercentIcon,
+    feature: 'custom.systemConfigs',
+    items: []
   },
   {
     titleKey: 'navigation.products.title',

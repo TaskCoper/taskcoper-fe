@@ -15,6 +15,7 @@ import BannersCollectionEditor from '../features/configs/components/banners/bann
 import CalligraphyPricingEditor from '../features/configs/components/cards-calligraphy/calligraphy-pricing-editor'
 import CardSizesEditor from '../features/configs/components/cards-calligraphy/card-sizes-editor'
 import CheckoutMethodsEditor from '../features/configs/components/checkout/checkout-methods-editor'
+import OrderSlotsEditor from '../features/configs/components/orders/order-slots-editor'
 import FeedbacksCollectionEditor from '../features/configs/components/feedbacks/feedbacks-collection-editor'
 import SignatureLandingConfigEditor from '../features/configs/components/generic/signature-landing-config-editor'
 import UpdateConfigDialog from '../features/configs/components/generic/update-config-dialog'
@@ -70,6 +71,8 @@ const PROMOTION_POPUP_CATEGORY_ID = 'promotion-popup'
 const SIGNATURE_LANDING_CATEGORY_ID = 'signature-landing'
 const SECRETS_CATEGORY_ID = 'secrets'
 const IMAGEGEN_CATEGORY_ID = 'imagegen'
+const ORDER_SLOTS_CATEGORY_ID = 'order-slots'
+const NHANH_ORDER_TAGS_KEY = 'nhanhvn.order_tags'
 
 const SETTINGS_LIST_CLASS = 'divide-y'
 
@@ -122,6 +125,12 @@ function ConfigsPageContent() {
   const [dismissedUnknownCategory, setDismissedUnknownCategory] = useState(false)
 
   const categoryConfigs = useMemo(() => byCategory.get(activeCategory) ?? [], [byCategory, activeCategory])
+
+  const nhanhOrderTagsConfig = useMemo(
+    () => settingConfigs?.find((config) => config.key === NHANH_ORDER_TAGS_KEY),
+    [settingConfigs]
+  )
+  const nhanhOrderTagOptions = nhanhOrderTagsConfig?.value.options ?? []
 
   const isSecretsCategory = activeCategory === SECRETS_CATEGORY_ID
   const isGettingConfigs = isSecretsCategory
@@ -385,6 +394,10 @@ function ConfigsPageContent() {
           )}
         </CategoryEditorPanel>
       )
+    }
+
+    if (activeCategory === ORDER_SLOTS_CATEGORY_ID) {
+      return <OrderSlotsEditor orderTagOptions={nhanhOrderTagOptions} />
     }
 
     if (activeCategory === PRODUCT_COLLECTIONS_CATEGORY_ID) {
