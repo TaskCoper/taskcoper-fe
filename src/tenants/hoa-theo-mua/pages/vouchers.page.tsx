@@ -1,4 +1,4 @@
-import VouchersEditor from '../features/configs/components/promotions/vouchers-editor'
+import VouchersEditor from '../features/vouchers/components/vouchers-editor'
 import { DirtyRegistryProvider } from '../features/configs/state/dirty-registry'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 
