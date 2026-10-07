@@ -19,6 +19,7 @@ export const hoaTheoMuaConfig: TenantConfig = {
     systemConfigs: true,
     productManagement: true,
     aiCustom: true,
+    aiMarketing: true,
     templateManagement: true,
     cardConfiguration: true
   },

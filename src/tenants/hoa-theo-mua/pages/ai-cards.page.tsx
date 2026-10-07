@@ -5,8 +5,7 @@ import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
-import Lightbox from 'yet-another-react-lightbox'
-import 'yet-another-react-lightbox/styles.css'
+import ImageLightbox from '../components/image-lightbox'
 import { getAiCardHistoryColumns } from '../features/ai-custom/components/ai-card-history-columns'
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
 import { useGetAiCardSizes } from '../features/ai-custom/hooks/use-get-ai-card-sizes'
@@ -69,6 +68,10 @@ export default function AiCardsPage() {
     }
   })
 
+  const previewSlides = previewCard?.imageUrl
+    ? [{ src: previewCard.imageUrl, alt: t('aiCustom.history.previewAlt', { code: previewCard.generatedCardId }) }]
+    : []
+
   return (
     <div className='h-full overflow-auto'>
       <div className='space-y-6 p-6'>
@@ -82,20 +85,13 @@ export default function AiCardsPage() {
         </DataTable>
       </div>
 
-      {previewCard?.imageUrl && (
-        <Lightbox
-          open
-          close={() => setPreviewCard(null)}
-          slides={[
-            {
-              src: previewCard.imageUrl,
-              alt: t('aiCustom.history.previewAlt', { code: previewCard.generatedCardId })
-            }
-          ]}
-          carousel={{ finite: true }}
-          render={{ buttonPrev: () => null, buttonNext: () => null }}
-        />
-      )}
+      <ImageLightbox
+        slides={previewSlides}
+        index={previewSlides.length > 0 ? 0 : null}
+        onIndexChange={(index) => index === null && setPreviewCard(null)}
+        label={t('aiCustom.detail.lightbox.label')}
+        gallery={t('aiCustom.detail.lightbox.gallery')}
+      />
     </div>
   )
 }

@@ -439,18 +439,8 @@
       "noAttachments": "No attachments",
       "lightbox": {
         "caption": "Card code: {{code}} · Created at: {{createdAt}}",
-        "previous": "Previous image",
-        "next": "Next image",
-        "close": "Close",
         "label": "View card images",
-        "gallery": "Card image gallery",
-        "position": "Image {index} of {total}",
-        "showCaptions": "Show captions",
-        "hideCaptions": "Hide captions",
-        "zoomIn": "Zoom in",
-        "zoomOut": "Zoom out",
-        "enterFullscreen": "Enter fullscreen",
-        "exitFullscreen": "Exit fullscreen"
+        "gallery": "Card image gallery"
       },
       "ordersDescription": "Each order keeps its own billing information on the Order details page.",
       "noOrders": "This card is not linked to any orders.",
@@ -465,6 +455,606 @@
     "download": {
       "action": "Download card image",
       "failed": "Failed to download the card. Please try again"
+    }
+  },
+  "marketingPosts": {
+    "planImport": {
+      "templateHint": "No file yet? Download the template and fill in the columns.",
+      "downloadTemplate": "Download template",
+      "title": "Import marketing plan from Excel",
+      "description": "Upload the posting plan for the whole month and AI will handle the rest.",
+      "dropzone": "Drag an Excel file here or click to choose",
+      "dropzoneHint": ".xlsx, .xls · up to {{size}}",
+      "remove": "Remove this file",
+      "note": "AI runs in the background and may take a while. Posts will appear in the list as they are ready, so feel free to close this dialog.",
+      "submit": "Let AI do it",
+      "success": "Plan submitted",
+      "successDescription": "AI is working on it; posts will appear in the list as they are ready.",
+      "error": "Could not submit the plan"
+    },
+    "title": "All posts",
+    "description": "Every AI-drafted marketing post, tracked by channel and publishing status.",
+    "searchPlaceholder": "Search by post title",
+    "previewAlt": "Image of post {{title}}",
+    "openPreview": "Open image of post {{title}}",
+    "detail": {
+      "back": "Back to list",
+      "notFound": "This post could not be found.",
+      "openPost": "Open on {{channel}}",
+      "imageAlt": "Image {{index}} of the post",
+      "openImage": "Open image {{index}}",
+      "noImages": "This post has no images yet.",
+      "section": {
+        "images": "Images",
+        "content": "Post content",
+        "base": "Source content",
+        "platforms": "Content per platform",
+        "performance": "Post performance"
+      },
+      "field": {
+        "createdAt": "Created at",
+        "updatedAt": "Last updated",
+        "postUrl": "Post link",
+        "failureReason": "Failure reason",
+        "lastError": "Last error"
+      },
+      "lightbox": {
+        "label": "Image viewer"
+      },
+      "noPlatforms": "This post has no platform content yet.",
+      "noPlatformContent": "No content selected for this platform yet.",
+      "noPlatformImages": "No images selected for this platform yet.",
+      "contentVersion": "Version {{version}}",
+      "source": {
+        "Ai": "Written by AI",
+        "Manual": "Edited manually"
+      },
+      "imageCount_one": "{{count}} image",
+      "imageCount_other": "{{count}} images",
+      "publishedAt": "Published {{time}}"
+    },
+    "update": {
+      "back": "Back to detail"
+    },
+    "channelPreset": {
+      "facebook": "storytelling, can run long, light emoji use",
+      "instagram": "short, visual, hashtag-heavy",
+      "zaloOa": "formal, straight to the offer and how to order"
+    },
+    "validation": {
+      "title": {
+        "required": "Title cannot be empty"
+      },
+      "channels": {
+        "required": "Pick at least one platform"
+      },
+      "content": {
+        "required": "Post content cannot be empty"
+      },
+      "images": {
+        "ratioRequired": "Each image needs at least one ratio",
+        "required": "Add at least one source image.",
+        "max": "Upload at most {{max}} source images."
+      },
+      "hashtags": {
+        "missingHash": "Every hashtag must start with #"
+      }
+    },
+    "create": {
+      "planImportHint": "Already have a monthly posting plan? Import the Excel file and let AI create them all at once.",
+      "title": "Create post",
+      "description": "Write the content once, fine-tune it per platform.",
+      "submit": "Create post",
+      "channelsHint": "Each selected platform gets its own post, all built from this source content.",
+      "section": {
+        "channels": "Select platforms",
+        "images": "Source images",
+        "ratios": "Output ratios"
+      },
+      "field": {
+        "title": "Title",
+        "titlePlaceholder": "For example: Women's Day offer",
+        "content": "Source content",
+        "contentPlaceholder": "Describe what you want to post and what to emphasise...",
+        "imagesPlaceholder": "Pick images or drop them here",
+        "removeImage": "Remove image {{name}}",
+        "imagesSizeHint": "PNG, JPG, WEBP · max 10 MB each",
+        "ratioLabel": "Pick one or more ratios for AI to render this image",
+        "totalOutputs": "Will crop {{outputs}} images",
+        "hashtags": "Hashtags",
+        "hashtagsPlaceholder": "#hoatheomua #quatang",
+        "hashtagsHint": "Type # before each hashtag, separated by spaces.",
+        "imageCount": "{{count}}/{{max}} images",
+        "totalOutputsBatched": "Will crop {{outputs}} images · {{batches}} runs"
+      },
+      "optionalImagesNote": "A post can be created with or without images.",
+      "channel": {
+        "systemPrompt": "Platform system prompt",
+        "configured": "Configured",
+        "systemPromptTitle": "{{channel}} system prompt",
+        "systemPromptHint": "The instructions AI follows when rewriting content for this channel.",
+        "systemPromptPreview": "View the full system prompt"
+      },
+      "stepOne": "Step 1 of 2",
+      "stepTwo": "Step 2 of 2",
+      "nextStep": "Continue to channels",
+      "backToContent": "Back to source content",
+      "sourceSummary": "{{images}} source images uploaded",
+      "saveDraft": "Save",
+      "saveSuccess": "Source content saved",
+      "imagesNote": "Optional, up to 20 images. Without images the AI only writes the copy.",
+      "stepTwoTitle": "Choose ratios & platforms",
+      "generatingBatch": "Generating run {{current}}/{{total}}"
+    },
+    "column": {
+      "selectAll": "Select all posts",
+      "selectRow": "Select post",
+      "thumbnail": "Image",
+      "title": "Post",
+      "channel": "Channel",
+      "status": "Status",
+      "publishedAt": "Published at",
+      "actions": "Actions",
+      "platform": "Platform",
+      "hashtag": "Hashtag"
+    },
+    "channel": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "zaloOa": "Zalo OA"
+    },
+    "status": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "published": "Published",
+      "failed": "Failed"
+    },
+    "action": {
+      "importPlan": "Import Excel plan",
+      "actions": "Actions",
+      "openMenu": "Open post actions menu",
+      "viewDetail": "View detail",
+      "update": "Edit",
+      "create": "Add post",
+      "delete": "Delete post",
+      "showPublications": "Show publications",
+      "collapsePublications": "Hide publications"
+    },
+    "channelAccount": {
+      "facebook": "Hoa Theo Mua Page",
+      "instagram": "@hoatheomua.official",
+      "zaloOa": "Hoa Theo Mua Zalo OA"
+    },
+    "studio": {
+      "description": "AI rewrote the content per channel and cropped the images. Review, then decide how each channel goes out.",
+      "expired": "This creation session has ended. Source images only live within the session, so start over.",
+      "jobSummary": "{{images}} image jobs · {{captions}} caption jobs",
+      "finalizeSuccess": "Created {{count}} posts",
+      "progress": {
+        "images": "Cropping images",
+        "imagesHint": "Each source image times its selected ratios, independent of how many channels you picked.",
+        "captions": "Writing captions",
+        "captionsHint": "One caption per channel, in that channel voice.",
+        "imageJob": "{{name}} · {{ratio}}",
+        "captionJob": "{{channel}} caption",
+        "failedCount": "· {{count}} failed"
+      },
+      "pool": {
+        "title": "Image pool",
+        "allRatios": "All",
+        "toggle": "Select image {{name}} at {{ratio}}",
+        "ratioWarning": "Off this channel standard ratio — it will crop the image.",
+        "empty": "This post has no images.",
+        "regenerate": "Ask AI to re-crop {{name}} at {{ratio}}",
+        "failed": "Crop failed",
+        "retry": "Retry",
+        "retryAll_one": "Retry {{count}} failed image",
+        "retryAll_other": "Retry {{count}} failed images",
+        "retryAllDone_one": "Re-cropped {{count}} failed image.",
+        "retryAllDone_other": "Re-cropped all {{count}} failed images.",
+        "retryAllPartial": "Re-cropped {{succeeded}}/{{total}} images; the rest still failed.",
+        "historyTitle": "Crop history",
+        "historyHint": "Older crops are kept, click one to go back to it.",
+        "versionCount": "v{{current}}/{{total}}",
+        "versionLabel": "v{{index}}",
+        "selectingFor": "Picking images for {{channel}}. Each channel keeps its own selection.",
+        "versionFailed": "This version failed, so it cannot be used",
+        "versionFailedLabel": "v{{index}} · failed",
+        "lastRetryFailed": "The latest retry failed; this slot still uses the previous version.",
+        "tooManyPairs": "One run crops at most {{max}} images. Remove some ratios or images and try again.",
+        "zoom": "Enlarge {{name}} at ratio {{ratio}}",
+        "caption": "{{name}} · {{ratio}}",
+        "lockedFor": "The {{channel}} post is already published, so its images are read-only."
+      },
+      "channelShort": {
+        "facebook": "FB",
+        "instagram": "IG",
+        "zaloOa": "ZA"
+      },
+      "regenerate": {
+        "trigger": "Rewrite",
+        "title": "Rewrite this channel caption",
+        "description": "Pick an adjustment or spell out the request. Selected images stay as they are.",
+        "notePlaceholder": "For example: emphasise 2-hour delivery",
+        "submit": "Ask AI to rewrite",
+        "tweak": {
+          "shorter": "Shorter",
+          "moreEmoji": "More emoji",
+          "addCta": "Add CTA",
+          "fewerHashtags": "Fewer hashtags"
+        },
+        "optionalNote": "You can pick nothing — AI will simply give another take.",
+        "sourceLabel": "Base it on",
+        "fromScratch": "Write fresh from the source post"
+      },
+      "selected": {
+        "title": "Images for this channel",
+        "description": "Drag to change the display order.",
+        "empty": "No image selected yet. Click one in the pool to add it.",
+        "reorder": "Drag to reposition image {{name}}",
+        "remove": "Remove image {{name}} from this channel",
+        "zoom": "Enlarge {{name}}"
+      },
+      "preview": {
+        "justNow": "Just now",
+        "noCaption": "No content selected.",
+        "moreImages": "+{{count}}",
+        "trigger": "Preview",
+        "title": "Preview on {{channel}}"
+      },
+      "source": {
+        "title": "Source content",
+        "description": "Edit here, then have AI rewrite every caption. Cropped images are kept.",
+        "content": "What the user typed",
+        "hashtags": "Hashtags",
+        "regenerateAll": "Rewrite all captions",
+        "regenerateAllHint": "Only captions run again, images are not re-cropped.",
+        "confirm": {
+          "title": "Rewrite all captions?",
+          "description": "Every content option across the channels is replaced with a new set. Selected images and publish options stay.",
+          "confirmText": "Rewrite"
+        },
+        "pinnedNote": "{{count}} pinned channels are left untouched.",
+        "allPinnedNote": "Every channel is pinned, so there is nothing to rewrite. Unpin at least one channel first.",
+        "zoom": "Enlarge source image {{name}}"
+      },
+      "publish": {
+        "title": "Publish",
+        "description": "Each channel picks its own account and timing, then one click sends them all.",
+        "submit": "Confirm {{count}} posts",
+        "waiting": "Wait for AI to finish before confirming.",
+        "failedImages": "{{count}} crops still failed. You can still confirm, those images just will not be in the posts.",
+        "editTitle": "Status & save",
+        "editDescription": "Change how this post goes out.",
+        "save": "Save changes",
+        "autoSaved": "Every change in the Studio is saved automatically - no final save needed.",
+        "noReadyChannel": "No channel is ready yet. Pick an account and clear the items listed above.",
+        "submitAll": "Send {{count}} channels",
+        "submitting": "Sending publish request…"
+      },
+      "publishMode": {
+        "draft": "Save draft",
+        "schedule": "Schedule",
+        "publishNow": "Publish now"
+      },
+      "issue": {
+        "noCaption": "No content selected for this channel.",
+        "captionTooLong": "Content exceeds the {{max}} character limit of this channel.",
+        "tooManyImages": "This channel accepts at most {{max}} images.",
+        "scheduleInvalid": "Pick a schedule time in the future.",
+        "noImages": "This channel has no image yet.",
+        "ratioMismatch": "{{count}} images are off the standard ratio of this channel.",
+        "MissingContent": "No final content for this channel yet.",
+        "MissingImages": "No image selected for this channel yet.",
+        "GenerationInProgress": "The AI is still generating for this channel.",
+        "PublishingState": "This channel is being published and cannot be edited.",
+        "ratioUnsupported": "{{count}} image(s) use {{ratios}}, which this channel rejects. Deselect them or crop to another ratio.",
+        "albumRatioRequired": "Multi-image posts require every image to be {{ratio}}."
+      },
+      "channelPicker": {
+        "add": "Add channel",
+        "title": "Add a channel to this post",
+        "hint": "AI writes one more caption for it; images come from the shared pool, so nothing to re-enter."
+      },
+      "removeChannel": {
+        "trigger": "Remove channel",
+        "title": "Remove this channel from the post?",
+        "description": "The content and images picked for {{channel}} are dropped. Other channels are untouched.",
+        "confirmText": "Remove channel",
+        "lastChannel": "At least one channel must stay"
+      },
+      "ratioAdder": {
+        "add": "Add ratio",
+        "title": "Crop another ratio",
+        "generate": "Crop {{name}} at {{ratio}}",
+        "alreadyGenerated": "That ratio is already in the pool",
+        "submit": "Crop {{count}} images"
+      },
+      "caption": {
+        "title": "Content to publish",
+        "description": "Edit it directly here; hashtags are tuned per channel.",
+        "edited": "This content was edited by hand and differs from what AI wrote.",
+        "editedMark": "· edited",
+        "revert": "Back to AI version",
+        "removeHashtag": "Remove hashtag {{hashtag}}",
+        "suggestHashtags": "Suggested:",
+        "hashtagPlaceholder": "Type #hashtag then Enter"
+      },
+      "captionHistory": {
+        "badge": "Run {{current}}/{{total}}",
+        "title": "AI writing runs",
+        "hint": "Earlier runs are kept, click one to go back to it.",
+        "entry": "Run {{index}}",
+        "askedFor": "Asked for: {{asked}}",
+        "firstRun": "First version",
+        "lockedHint": "This post is published, so the selected version cannot change — history is read-only."
+      },
+      "pin": {
+        "pin": "Pin",
+        "pinned": "Pinned",
+        "hint": "Pin a channel you are happy with so \"Rewrite all captions\" skips it."
+      },
+      "discard": {
+        "trigger": "Discard",
+        "title": "Discard this post?",
+        "description": "Everything AI wrote and every crop is lost, and nothing is saved to the list.",
+        "confirmText": "Discard"
+      },
+      "imageAdder": {
+        "add": "Add images",
+        "title": "Upload more source images",
+        "hint": "New images land in the shared pool and are not assigned to any channel - tick them where needed.",
+        "ratios": "Ratios AI should output for this batch"
+      },
+      "editDescription": "Edit an existing post: content, images, publishing.",
+      "saveSuccess": "Post saved",
+      "locked": {
+        "notice": "Published posts cannot be edited.",
+        "nothingToSave": "Nothing to save on a published post.",
+        "noChanges": "No changes to save yet."
+      },
+      "imageRegenerate": {
+        "title": "Re-crop this image",
+        "description": "Pick an adjustment or spell out the request. Earlier crops stay in the history.",
+        "notePlaceholder": "For example: crop out the table at the bottom",
+        "submit": "Ask AI to re-crop",
+        "tweak": {
+          "zoomIn": "Closer",
+          "zoomOut": "Wider",
+          "centerSubject": "Center the flowers",
+          "brighter": "Brighter"
+        },
+        "sourceLabel": "Base it on",
+        "fromScratch": "Crop again from the original image"
+      },
+      "schedule": {
+        "pickHour": "Hour",
+        "pickMinute": "Minute"
+      },
+      "comingSoon": "This action has no API yet - waiting on the backend.",
+      "discardSuccess": "Post deleted.",
+      "imageFailed": "Image regeneration failed",
+      "imageReady": "New crop is ready - pick it to use for a channel.",
+      "busy": {
+        "description": "This can take up to 3 minutes. Keep this tab open and do not retry.",
+        "generate": "Generating content and images…",
+        "content": "Rewriting the content…",
+        "image": "Cropping the image again…",
+        "retryFailed": "AI is re-cropping failed images {{current}}/{{total}}…"
+      },
+      "ratioClone": {
+        "badge": "+ ratio",
+        "trigger": "Crop this into another ratio",
+        "title": "From {{ratio}} into another ratio",
+        "description": "The AI crops the original image again at the new ratio.",
+        "withNote": "Crops the original again, keeping your earlier note: {{note}}"
+      },
+      "lightbox": {
+        "pool": "Cropped images",
+        "source": "Source images",
+        "selected": "Selected images"
+      },
+      "error": {
+        "stateChanged": "The post has moved on, so this action no longer applies (it is already locked in or published). Reload to see the latest state."
+      }
+    },
+    "systemPrompt": {
+      "facebook": "## Role\n\nYou write content for the **Hoa Theo Mua Facebook page** — a florist cutting seasonal flowers, hand-tying every bouquet the same day, delivering in-city within 2 hours.\n\n## Voice\n\n- Warm, like talking to a regular customer\n- Length is allowed: 3–5 short paragraphs of 1–2 sentences\n- Emoji in moderation, 3–4 per post, at the start of a paragraph rather than mid-sentence\n\n## Structure\n\n1. Open with an emotional or occasion-setting line\n2. Cover product strengths: seasonal flowers, hand-tied, 2-hour delivery\n3. Close with an invitation to message or order\n\n## Hashtags\n\n2–4, at the very end, always including `#hoatheomua` plus occasion tags.\n\n## Never\n\n- Invent promotions or prices absent from the source content\n- Promise a delivery time other than 2 hours in-city\n- Use sensational claims like *\"cheapest on the market\"*",
+      "instagram": "## Role\n\nYou write **Instagram captions** for Hoa Theo Mua — a florist cutting seasonal flowers, hand-tying every bouquet the same day, delivering in-city within 2 hours.\n\n## Voice\n\n- Short, tight, image-rich\n- At most 4–6 lines, one idea per line, line breaks welcome\n- Prefer evocative nouns and adjectives over full sentences\n\n## Structure\n\n1. The first line must land immediately — Instagram truncates around **125 characters**\n2. The rest adds detail\n3. Close with a short invitation\n\n## Hashtags\n\n5–9, grouped at the end, mixing Vietnamese and English tags.\n\n## Never\n\n- Write long paragraphs\n- Include links (not clickable in captions)\n- Invent promotions or prices",
+      "zaloOa": "## Role\n\nYou write **Zalo OA messages** for Hoa Theo Mua — a florist cutting seasonal flowers, hand-tying every bouquet the same day, delivering in-city within 2 hours.\n\n## Voice\n\n- Formal and polite, addressing the reader as a **valued customer**\n- Straight to the information, no storytelling detours\n- At most 3 paragraphs\n\n## Structure\n\n1. Open with a greeting and state the offer or product right away\n2. Lay out benefits and conditions clearly\n3. Close with concrete ordering steps and the hotline\n\n## Hashtags\n\nAt most 1, or none at all. Zalo OA barely uses them.\n\n## Never\n\n- Use more than one emoji\n- Shout in all caps\n- Invent promotions or prices\n- Use slangy language"
+    },
+    "platform": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "zalo": "Zalo OA"
+    },
+    "platformStatus": {
+      "Draft": "Draft",
+      "Generating": "Generating",
+      "Generated": "Generated",
+      "Failed": "Generation failed",
+      "Ready": "Ready to publish",
+      "Scheduled": "Scheduled",
+      "Publishing": "Publishing",
+      "Published": "Published",
+      "PublishFailed": "Publish failed",
+      "Partial": "Missing images"
+    },
+    "generate": {
+      "error": {
+        "title": "Could not generate the post",
+        "busy": "This post is already being generated. Try again once it finishes.",
+        "rateLimited": "The AI service is busy. Try again in about {{seconds}} seconds.",
+        "unavailable": "The server did not respond. Your source post is safe - reopen it to see what was generated before retrying."
+      }
+    },
+    "publication": {
+      "title": "Publishing",
+      "account": "Publishing account",
+      "noAccount": "No account is connected for this platform yet.",
+      "unsupportedPlatform": "Automated publishing is not open for this platform yet.",
+      "scheduledFor": "Scheduled for {{time}}",
+      "scheduledHistory": "Scheduled time was {{time}}",
+      "mode": {
+        "now": "Publish now",
+        "schedule": "Schedule"
+      },
+      "status": {
+        "Queued": "Queued",
+        "Scheduled": "Scheduled",
+        "Publishing": "Publishing",
+        "Succeeded": "Published",
+        "Failed": "Failed",
+        "NeedsReview": "Needs review",
+        "Cancelled": "Cancelled",
+        "Closed": "Closed"
+      },
+      "action": {
+        "openPreview": "Preview and publish",
+        "publish": "Publish now",
+        "schedule": "Schedule",
+        "reschedule": "Change time",
+        "saveSchedule": "Save new time",
+        "cancelSchedule": "Cancel schedule",
+        "cancel": "Cancel request",
+        "retry": "Run again",
+        "recheck": "Check again",
+        "review": "Review",
+        "openPost": "Open published post",
+        "manageAccounts": "Manage accounts",
+        "confirmSchedule": "Confirm schedule"
+      },
+      "preview": {
+        "title": "Preview the final version",
+        "description": "This is exactly the text and image order that will be sent to the platform.",
+        "formatter": "Format {{version}}",
+        "imageAlt": "Image {{order}}",
+        "unverifiedNote": "The preview does not call the platform. Files, permissions and quota are only checked at run time, so publishing can still be rejected.",
+        "unavailable": "Could not read the final version for this account."
+      },
+      "schedule": {
+        "invalid": "Pick a valid date and time.",
+        "tooSoon": "Must be at least 60 seconds ahead.",
+        "tooFar": "Can only be scheduled within 30 days.",
+        "hint": "Pick {{time}} or later so the request has time to arrive.",
+        "rescheduleHint": "Time only. Text, images and account stay as they are - cancel the schedule to change them."
+      },
+      "media": {
+        "imagePrefix": "Image {{order}}:",
+        "tooManyImages": "At most {{max}} images.",
+        "captionTooLong": "Caption is {{current}} characters, over the {{max}} limit.",
+        "tooManyHashtags": "{{current}} hashtags, at most {{max}}.",
+        "tooManyMentions": "{{current}} mentions, at most {{max}}."
+      },
+      "reason": {
+        "missingContent": "No content has been finalised for this platform.",
+        "missingImages": "No images have been finalised for this platform.",
+        "generationInProgress": "Generation is still running.",
+        "publishingState": "This platform already has a publishing task in flight.",
+        "unknown": "The platform refused with code {{code}}."
+      },
+      "error": {
+        "title": "Could not complete",
+        "previewChanged": "The final version changed since the preview. Open it again for a fresh one.",
+        "publicationChanged": "The task changed state. Reload before acting again.",
+        "idempotencyConflict": "This request key was already used for a different command.",
+        "publicationExists": "This platform already has a publishing task.",
+        "publicationLocked": "Locked while a publishing task is in flight.",
+        "retryNotAllowed": "This task cannot be run again.",
+        "cancelNotAllowed": "Too late to cancel, processing has started.",
+        "reviewNotAllowed": "The current state does not allow reviewing.",
+        "publishingDisabled": "This channel is not enabled in the current environment.",
+        "adapterUnavailable": "Could not reach the platform.",
+        "imageCountInvalid": "The image count on this draft is not valid for this platform.",
+        "accountMismatch": "The selected account does not match the one linked to this platform.",
+        "metaTokenInvalid": "The account token is no longer valid.",
+        "metaPermissionDenied": "The account lacks permission to publish.",
+        "metaRateLimited": "The platform is rate limiting requests.",
+        "metaInvalidMediaOrParameter": "The platform rejected the parameters or media sent.",
+        "instagramQuotaUnverified": "Could not read the Instagram publishing quota.",
+        "instagramPublishedIdUnresolved": "Instagram reports a post but returned no media ID.",
+        "mediaExpired": "The prepared media expired; it will be rebuilt on the next run.",
+        "instagramJpegRequired": "Instagram only accepts JPEG images.",
+        "instagramDimensionsInvalid": "Image size or ratio is invalid for Instagram.",
+        "instagramCarouselSquareRequired": "Instagram albums only accept square images.",
+        "facebookImageFormatInvalid": "Image format is invalid for Facebook.",
+        "scheduleOffsetRequired": "The scheduled time must include a timezone offset.",
+        "scheduleOutOfRange": "The scheduled time is outside the allowed range.",
+        "scheduleNotFound": "No schedule found for this post and platform.",
+        "scheduleNotEditable": "The schedule can no longer be changed, the system has claimed it.",
+        "scheduleMissed": "The schedule was missed and will not run late.",
+        "mediaInvalid": "The image does not meet the platform's requirements.",
+        "invalidSelectedImage": "The platform has not accepted the selected image, usually because an image crop failed. Retry the failed crop, or deselect and reselect the images for this channel.",
+        "insightsPermissionRequired": "The account has not granted insights access. Reconnect it and grant the required permissions.",
+        "platformReauthRequired": "The account connection has expired. Reconnect the account and try again."
+      },
+      "hint": {
+        "publishing": "Processing - it cannot be changed or cancelled right now.",
+        "noRetry": "This task cannot be run again. Finalise the content and create a new request.",
+        "retryKeepsSnapshot": "Running again uses the exact text and images captured when the request was created, and runs immediately rather than on a schedule.",
+        "needsReview": "It is unclear whether the post went live, so republishing stays closed. Check the platform, then record what you found.",
+        "fixImage": "Running again reuses the same images. Pick different images, finalise, then create a new request.",
+        "reconnectAccount": "Reconnect the account before trying again.",
+        "rateLimited": "Wait for the limit to clear before retrying; too soon will be rejected.",
+        "missingPermalink": "The post is live but the link could not be read. No need to publish again.",
+        "mayHavePublished": "The publish command was sent and the result is unclear. Check the platform before doing anything else.",
+        "alreadyClosed": "Handling was closed while the external result stayed unclear, so publishing stays closed."
+      },
+      "review": {
+        "title": "Review the publishing result",
+        "description": "Record what you could verify on the platform. The system still checks again before concluding.",
+        "action": {
+          "ConfirmPublished": "Confirm published",
+          "ConfirmNotPublished": "Confirm not published",
+          "Close": "Close handling"
+        },
+        "actionHint": {
+          "ConfirmPublished": "Needs the post ID on the platform. The system verifies it rather than taking your word.",
+          "ConfirmNotPublished": "Only choose this when you are certain the post does not exist.",
+          "Close": "Stop tracking while still treating the result as unclear."
+        },
+        "externalPostId": "Post ID on the platform",
+        "externalPostIdPlaceholder": "Paste the post ID, URLs are not accepted yet",
+        "note": "Note",
+        "notePlaceholder": "Write down what you checked",
+        "closeWarning": "Closing does not remove the post on the platform and does not reopen publishing for it.",
+        "submit": "Record"
+      },
+      "toast": {
+        "publishAccepted": "Publish request accepted. Track its progress here.",
+        "scheduleAccepted": "Publishing scheduled.",
+        "rescheduled": "Schedule time changed.",
+        "scheduleCancelled": "Schedule cancelled.",
+        "retryAccepted": "Re-run request accepted.",
+        "cancelled": "Publish request cancelled.",
+        "rechecked": "Checked again",
+        "resolved": "Review recorded",
+        "resolveStillNeedsReview": "Recorded, but there is still not enough evidence so the task stays in review."
+      },
+      "validation": {
+        "noteRequired": "A note is required",
+        "externalPostIdRequired": "The post ID on the platform is required"
+      },
+      "lastFailed": "The previous attempt failed"
+    },
+    "delete": {
+      "title": "Delete this post?",
+      "description": "\"{{title}}\" and all AI-written content and cropped images will be deleted. This cannot be undone.",
+      "published": "This post has been scheduled or published to a platform, so it cannot be deleted.",
+      "error": "Could not delete the post"
+    },
+    "insights": {
+      "views": "Views",
+      "reach": "Reach",
+      "likes": "Likes",
+      "comments": "Comments",
+      "saved": "Saves",
+      "shares": "Shares",
+      "totalInteractions": "Total interactions",
+      "error": "Could not load insights",
+      "reload": "Reload",
+      "hint": "Numbers come straight from the platform; \"-\" means the platform returned no data for that metric.",
+      "unsupported": "Insights are not available for this platform yet."
     }
   },
   "navigation": {
@@ -504,6 +1094,13 @@
       "title": "AI Custom",
       "cards": "AI Cards",
       "flowerDesigns": "AI Flower Designs"
+    },
+    "aiMarketing": {
+      "title": "AI Marketing",
+      "posts": "All posts",
+      "create": "Create post",
+      "reports": "Periodic reports",
+      "accounts": "Platform accounts"
     },
     "templateManagement": {
       "title": "Template Management",
@@ -2881,5 +3478,113 @@
         "auditDescription": "Technical details of this generation run."
       }
     }
+  },
+  "marketingReports": {
+    "title": "Periodic report",
+    "description": "Post performance metrics pulled from each channel API.",
+    "allChannels": "All channels",
+    "empty": "No post went live in this period yet.",
+    "syncedAt": "Metrics for {{count}} posts, synced at {{time}}",
+    "range": {
+      "7": "7 days",
+      "30": "30 days",
+      "90": "90 days"
+    },
+    "tile": {
+      "reach": "Reach",
+      "impressions": "Impressions",
+      "engagements": "Engagements",
+      "engagementRate": "{{rate}}% of reach",
+      "clicks": "Clicks"
+    },
+    "chart": {
+      "timelineTitle": "Reach per day",
+      "timelineDescription": "Counted by publish day. Drafts and scheduled posts have no metrics yet.",
+      "reachValue": "{{reach}} reached",
+      "channelTitle": "Reach by channel"
+    },
+    "table": {
+      "channelTitle": "Performance by channel",
+      "posts": "Posts",
+      "rate": "Engagement rate",
+      "topTitle": "Top performing posts",
+      "topDescription": "Ranked by engagements within the selected period."
+    }
+  },
+  "platformAccounts": {
+    "title": "Platform accounts",
+    "description": "Connect a Facebook Page and a professional Instagram account for publishing later.",
+    "connectedNotReadyNote": "A successful connection only confirms the token was valid at the last check - it does not guarantee publishing permission.",
+    "empty": "No account connected yet.",
+    "zaloPending": "Zalo OA connection is not open in this round. AI content and image generation for Zalo still works.",
+    "popupClosed": "Authorization window closed. Reloading the account list.",
+    "refreshSuccess": "The token for {{name}} is still valid.",
+    "refreshNeedsReauth": "{{name}} needs to be reconnected.",
+    "disconnectSuccess": "Disconnected {{name}}.",
+    "platformHint": {
+      "facebook": "A Facebook Page you granted publishing access to.",
+      "instagram": "A professional account linked to a Page, via Facebook Login."
+    },
+    "status": {
+      "Connected": "Connected",
+      "ReauthRequired": "Needs reconnect",
+      "Disabled": "Disconnected"
+    },
+    "field": {
+      "lastValidatedAt": "Last checked",
+      "accessTokenExpiresAt": "Token expires",
+      "noExpiry": "Unknown"
+    },
+    "action": {
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "refresh": "Check again",
+      "disconnect": "Disconnect",
+      "connectPlatform": "Connect {{platform}}"
+    },
+    "disconnect": {
+      "title": "Disconnect this account?",
+      "description": "Disconnect {{name}}. It stays in the list and can be reconnected, but scheduled posts will not go out.",
+      "confirmText": "Disconnect"
+    },
+    "error": {
+      "title": "That did not work",
+      "popupBlocked": "The browser blocked the authorization window. Allow pop-ups for this site and try again.",
+      "stateInvalid": "The authorization session is invalid or expired. Start a new connection in this same browser.",
+      "denied": "You declined the permission request on the provider screen.",
+      "reauthRequired": "The token is no longer valid. Authorize again.",
+      "noEligibleAccount": "No eligible Page or professional account found. Check your Page admin rights.",
+      "accountMismatch": "The account you authorized is not the one being reconnected.",
+      "notFound": "Account not found. Please reload the list.",
+      "accountChanged": "The account changed elsewhere. Reloaded - please try again.",
+      "accountDisabled": "This account is disconnected. Use reconnect instead.",
+      "refreshInProgress": "A check is already running. Wait for it to finish.",
+      "accountInUse": "Posts are scheduled or publishing with this account. Cancel or wait before disconnecting.",
+      "rateLimited": "The platform is rate limiting requests. Try again in a few minutes.",
+      "providerUnavailable": "The platform returned an invalid response. Start a new connection.",
+      "providerTimeout": "The platform timed out. Start a new session rather than retrying the old one.",
+      "notConfigured": "This environment has not enabled or configured the platform app. Backend needs to fix this."
+    },
+    "column": {
+      "platform": "Platform",
+      "account": "Account",
+      "status": "Status",
+      "scopes": "Granted scopes",
+      "actions": "Actions"
+    }
+  },
+  "lightbox": {
+    "label": "Image viewer",
+    "gallery": "Image gallery",
+    "previous": "Previous image",
+    "next": "Next image",
+    "close": "Close",
+    "position": "Image {index} of {total}",
+    "showCaptions": "Show captions",
+    "hideCaptions": "Hide captions",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "enterFullscreen": "Enter fullscreen",
+    "exitFullscreen": "Exit fullscreen"
   }
 }

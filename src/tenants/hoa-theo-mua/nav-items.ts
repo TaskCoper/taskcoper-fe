@@ -5,6 +5,7 @@ import {
   FolderTreeIcon,
   LayoutTemplateIcon,
   MapPinIcon,
+  MegaphoneIcon,
   NewspaperIcon,
   PackageIcon,
   SettingsIcon,
@@ -170,6 +171,45 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         titleKey: 'navigation.aiCustom.flowerDesigns',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/flower-designs`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-custom/flower-designs`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.aiMarketing.title',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`,
+    icon: MegaphoneIcon,
+    feature: 'custom.aiMarketing',
+    items: [
+      {
+        titleKey: 'navigation.aiMarketing.posts',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`,
+        activePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/:id`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/:id/update`
+        ],
+        // /posts/:id khớp luôn /posts/create nên phải loại ra, không thì 2 mục cùng sáng đèn
+        activeExcludePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create`]
+      },
+      {
+        titleKey: 'navigation.aiMarketing.create',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create`,
+        // Studio là bước hai của luồng tạo bài nên vẫn tính là đang ở mục Tạo bài đăng
+        activePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create/:draftId/platforms`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/studio/:draftId`
+        ]
+      },
+      {
+        titleKey: 'navigation.aiMarketing.reports',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/reports`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/reports`]
+      },
+      {
+        titleKey: 'navigation.aiMarketing.accounts',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/accounts`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/accounts`]
       }
     ]
   },
