@@ -1,13 +1,20 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { History, MoreHorizontal, Pencil, SearchIcon, Trash2 } from 'lucide-react'
 import type { Voucher } from '../types'
-import { displayDate } from './voucher-date-utils'
+import { displayDateTime, formatMoney } from './voucher-date-utils'
+
+const renderOrderAmount = (value: number | null, currency: string, unlimited: string) => (
+  <Badge variant='outline' className='whitespace-nowrap font-normal'>
+    {value == null ? unlimited : formatMoney(value, currency)}
+  </Badge>
+)
 
 interface VoucherColumnsOptions {
   t: TenantT
@@ -24,6 +31,27 @@ export const getVoucherColumns = ({
   onToggleActive,
   onDelete
 }: VoucherColumnsOptions): ColumnDef<Voucher>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        aria-label={t('configsPage.vouchers.selectAll')}
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        aria-label={t('configsPage.vouchers.selectRow')}
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 40
+  },
   {
     id: 'code',
     accessorKey: 'code',
@@ -72,7 +100,9 @@ export const getVoucherColumns = ({
     meta: { label: 'configsPage.vouchers.discountValue' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.discountValue' />,
     cell: ({ row }) =>
-      `${row.original.discountValue}${row.original.discountType === 'percent' ? '%' : ` ${t('configsPage.vouchers.currency')}`}`,
+      row.original.discountType === 'percent'
+        ? `${row.original.discountValue}%`
+        : formatMoney(row.original.discountValue, t('configsPage.vouchers.currency')),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,
@@ -100,13 +130,45 @@ export const getVoucherColumns = ({
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.validityPeriod' />,
     cell: ({ row }) => (
       <Badge variant='outline' className='whitespace-nowrap font-normal'>
-        {displayDate(row.original.startAt)} - {displayDate(row.original.endAt)}
+        {displayDateTime(row.original.startAt)} - {displayDateTime(row.original.endAt)}
       </Badge>
     ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,
     size: 210
+  },
+  {
+    id: 'minOrderAmount',
+    accessorKey: 'minOrderAmount',
+    meta: { label: 'configsPage.vouchers.minOrderAmount' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.minOrderAmount' />,
+    cell: ({ row }) =>
+      renderOrderAmount(
+        row.original.minOrderAmount,
+        t('configsPage.vouchers.currency'),
+        t('configsPage.vouchers.unlimited')
+      ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 150
+  },
+  {
+    id: 'maxOrderAmount',
+    accessorKey: 'maxOrderAmount',
+    meta: { label: 'configsPage.vouchers.maxOrderAmount' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.maxOrderAmount' />,
+    cell: ({ row }) =>
+      renderOrderAmount(
+        row.original.maxOrderAmount,
+        t('configsPage.vouchers.currency'),
+        t('configsPage.vouchers.unlimited')
+      ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 150
   },
   {
     id: 'apply',

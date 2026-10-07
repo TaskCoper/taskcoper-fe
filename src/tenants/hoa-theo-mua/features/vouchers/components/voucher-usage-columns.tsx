@@ -1,10 +1,32 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
+import { Checkbox } from '@/components/ui/checkbox'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { VoucherUsage } from '../types'
-import { displayDate } from './voucher-date-utils'
+import { displayDate, formatMoney } from './voucher-date-utils'
 
 export const getVoucherUsageColumns = (t: TenantT): ColumnDef<VoucherUsage>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        aria-label={t('configsPage.vouchers.selectAll')}
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        aria-label={t('configsPage.vouchers.selectRow')}
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 40
+  },
   {
     id: 'customerName',
     accessorKey: 'customerName',
@@ -32,7 +54,7 @@ export const getVoucherUsageColumns = (t: TenantT): ColumnDef<VoucherUsage>[] =>
     accessorKey: 'discountAmount',
     meta: { label: 'configsPage.vouchers.discountAmount' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.discountAmount' />,
-    cell: ({ row }) => `${row.original.discountAmount} ${t('configsPage.vouchers.currency')}`,
+    cell: ({ row }) => formatMoney(row.original.discountAmount, t('configsPage.vouchers.currency')),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,

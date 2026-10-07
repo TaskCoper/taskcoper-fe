@@ -10,23 +10,23 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { parseISO } from 'date-fns'
-import { Download, Gift, MoreHorizontal, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react'
+import { Download, Gift, Plus } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
-import type { DateRange } from 'react-day-picker'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useDataTable } from '@/hooks/use-data-table'
 import EditorSection from '../../configs/components/shared/editor-section'
-import { dateValue, displayDate } from './voucher-date-utils'
+import { dateValue, timeValue } from './voucher-date-utils'
 import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 import { getVoucherColumns } from './voucher-columns'
+import { getVoucherProgramColumns } from './voucher-program-columns'
 import { getVoucherUsageColumns } from './voucher-usage-columns'
 import { VoucherDetailDialog } from './voucher-detail-dialog'
 import {
@@ -56,6 +56,53 @@ import type {
 } from '../types'
 
 type View = 'vouchers' | 'programs'
+
+type OrderAmountValidationValues = {
+  minOrderAmount: string | number | null
+  maxOrderAmount: string | number | null
+}
+
+function useOrderAmountValidation(
+  initialMin: string | number | null,
+  initialMax: string | number | null,
+  message: string
+) {
+  const {
+    register,
+    setValue,
+    getValues,
+    trigger,
+    formState: { errors }
+  } = useForm<OrderAmountValidationValues>({
+    defaultValues: { minOrderAmount: initialMin, maxOrderAmount: initialMax },
+    mode: 'onChange'
+  })
+
+  const validateMin = (value: string | number | null) => {
+    const maxValue = getValues('maxOrderAmount')
+    if (value === '' || value == null || maxValue === '' || maxValue == null) return true
+
+    const max = Number(maxValue)
+    return Number.isFinite(max) && Number(value) <= max ? true : message
+  }
+  const validateMax = (value: string | number | null) => {
+    const minValue = getValues('minOrderAmount')
+    if (value === '' || value == null || minValue === '' || minValue == null) return true
+
+    const min = Number(minValue)
+    return Number.isFinite(min) && min <= Number(value) ? true : message
+  }
+
+  const minField = register('minOrderAmount', { validate: validateMin })
+  const maxField = register('maxOrderAmount', { validate: validateMax })
+
+  const sync = (field: keyof OrderAmountValidationValues, value: string | number | null) => {
+    setValue(field, value, { shouldValidate: true, shouldDirty: true })
+    void trigger(field === 'minOrderAmount' ? 'maxOrderAmount' : 'minOrderAmount')
+  }
+
+  return { minField, maxField, errors, sync, validate: () => trigger(['minOrderAmount', 'maxOrderAmount']) }
+}
 
 function VoucherFormDialog({
   open,
@@ -88,13 +135,23 @@ function VoucherFormDialog({
     minOrderAmount: voucher?.minOrderAmount ?? '',
     maxOrderAmount: voucher?.maxOrderAmount ?? ''
   })
-  const update = (key: keyof typeof form, value: string | number) =>
+  const [dateError, setDateError] = useState('')
+  const { minField, maxField, errors, sync, validate } = useOrderAmountValidation(
+    form.minOrderAmount,
+    form.maxOrderAmount,
+    t('configsPage.vouchers.minOrderAmountValidation')
+  )
+  const update = (key: keyof typeof form, value: string | number) => {
     setForm((current) => ({ ...current, [key]: value }))
-  const range: DateRange | undefined = form.startAt
-    ? { from: parseISO(form.startAt), to: form.endAt ? parseISO(form.endAt) : undefined }
-    : undefined
-
-  const submit = () => {
+    if (key === 'minOrderAmount' || key === 'maxOrderAmount') sync(key, value)
+  }
+  const submit = async () => {
+    if (!form.startAt || !form.endAt) {
+      setDateError(t('configsPage.vouchers.validityRequired'))
+      return
+    }
+    setDateError('')
+    if (!(await validate())) return
     if (voucher) {
       onSubmit({
         id: voucher.id,
@@ -224,8 +281,9 @@ function VoucherFormDialog({
             </VoucherField>
           )}
           <div className='grid gap-4 sm:col-span-2 sm:grid-cols-2'>
-            <VoucherField label={t('configsPage.vouchers.minOrderAmount')}>
+            <VoucherField label={t('configsPage.vouchers.minOrderAmount')} error={errors.minOrderAmount?.message}>
               <VoucherInputWithSuffix
+                {...minField}
                 type='number'
                 min={0}
                 value={form.minOrderAmount}
@@ -233,8 +291,9 @@ function VoucherFormDialog({
                 onChange={(event) => update('minOrderAmount', event.target.value)}
               />
             </VoucherField>
-            <VoucherField label={t('configsPage.vouchers.maxOrderAmount')}>
+            <VoucherField label={t('configsPage.vouchers.maxOrderAmount')} error={errors.maxOrderAmount?.message}>
               <VoucherInputWithSuffix
+                {...maxField}
                 type='number'
                 min={0}
                 value={form.maxOrderAmount}
@@ -251,19 +310,25 @@ function VoucherFormDialog({
               onChange={(event) => update('maxUsageCount', Number(event.target.value))}
             />
           </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.validityPeriod')}>
+          <VoucherField label={t('configsPage.vouchers.validityPeriod')} error={dateError} className='sm:col-span-2'>
             <VoucherDateRangeField
               startAt={form.startAt}
               endAt={form.endAt}
-              selected={range}
               onSelect={(next) => {
-                update('startAt', dateValue(next?.from))
-                update('endAt', dateValue(next?.to, true))
+                update('startAt', dateValue(next?.from, false, timeValue(form.startAt, '00:00')))
+                update('endAt', dateValue(next?.to, true, timeValue(form.endAt, '23:59')))
+              }}
+              startTime={timeValue(form.startAt, '00:00')}
+              endTime={timeValue(form.endAt, '23:59')}
+              onTimeChange={(field, value) => {
+                const current = field === 'start' ? form.startAt : form.endAt
+                const date = current ? parseISO(current) : undefined
+                update(field === 'start' ? 'startAt' : 'endAt', dateValue(date, field === 'end', value))
               }}
             />
           </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.description')}>
-            <Input value={form.description} onChange={(event) => update('description', event.target.value)} />
+          <VoucherField label={t('configsPage.vouchers.description')} className='sm:col-span-2'>
+            <Textarea value={form.description} onChange={(event) => update('description', event.target.value)} />
           </VoucherField>
         </div>
         <DialogFooter>
@@ -300,8 +365,23 @@ function ProgramFormDialog({
     minOrderAmount: program?.minOrderAmount ?? '',
     maxOrderAmount: program?.maxOrderAmount ?? ''
   })
-  const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }))
-  const submit = () =>
+  const [dateError, setDateError] = useState('')
+  const { minField, maxField, errors, sync, validate } = useOrderAmountValidation(
+    form.minOrderAmount,
+    form.maxOrderAmount,
+    t('configsPage.vouchers.minOrderAmountValidation')
+  )
+  const update = (key: keyof typeof form, value: string) => {
+    setForm((current) => ({ ...current, [key]: value }))
+    if (key === 'minOrderAmount' || key === 'maxOrderAmount') sync(key, value)
+  }
+  const submit = async () => {
+    if (!form.startAt || !form.endAt) {
+      setDateError(t('configsPage.vouchers.validityRequired'))
+      return
+    }
+    setDateError('')
+    if (!(await validate())) return
     onSubmit(
       program
         ? {
@@ -320,9 +400,10 @@ function ProgramFormDialog({
             maxOrderAmount: form.maxOrderAmount === '' ? null : Number(form.maxOrderAmount)
           }
     )
+  }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className='max-w-3xl'>
         <DialogHeader>
           <DialogTitle>
             {t(program ? 'configsPage.vouchers.editProgram' : 'configsPage.vouchers.createProgram')}
@@ -332,32 +413,39 @@ function ProgramFormDialog({
           <VoucherField label={t('configsPage.vouchers.programName')}>
             <Input value={form.name} onChange={(event) => update('name', event.target.value)} />
           </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.startAt')}>
-            <Input
-              type='datetime-local'
-              value={form.startAt.slice(0, 16)}
-              onChange={(event) => update('startAt', event.target.value)}
-            />
-          </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.endAt')}>
-            <Input
-              type='datetime-local'
-              value={form.endAt.slice(0, 16)}
-              onChange={(event) => update('endAt', event.target.value)}
+          <VoucherField label={t('configsPage.vouchers.validityPeriod')} error={dateError} className='sm:col-span-2'>
+            <VoucherDateRangeField
+              startAt={form.startAt}
+              endAt={form.endAt}
+              onSelect={(next) => {
+                update('startAt', dateValue(next?.from, false, timeValue(form.startAt, '00:00')))
+                update('endAt', dateValue(next?.to, true, timeValue(form.endAt, '23:59')))
+              }}
+              startTime={timeValue(form.startAt, '00:00')}
+              endTime={timeValue(form.endAt, '23:59')}
+              onTimeChange={(field, value) => {
+                const current = field === 'start' ? form.startAt : form.endAt
+                const date = current ? parseISO(current) : undefined
+                update(field === 'start' ? 'startAt' : 'endAt', dateValue(date, field === 'end', value))
+              }}
             />
           </VoucherField>
           <div className='grid grid-cols-2 gap-3'>
-            <VoucherField label={t('configsPage.vouchers.minOrderAmount')}>
-              <Input
+            <VoucherField label={t('configsPage.vouchers.minOrderAmount')} error={errors.minOrderAmount?.message}>
+              <VoucherInputWithSuffix
+                {...minField}
                 type='number'
                 value={form.minOrderAmount}
+                suffix={t('configsPage.vouchers.currency')}
                 onChange={(event) => update('minOrderAmount', event.target.value)}
               />
             </VoucherField>
-            <VoucherField label={t('configsPage.vouchers.maxOrderAmount')}>
-              <Input
+            <VoucherField label={t('configsPage.vouchers.maxOrderAmount')} error={errors.maxOrderAmount?.message}>
+              <VoucherInputWithSuffix
+                {...maxField}
                 type='number'
                 value={form.maxOrderAmount}
+                suffix={t('configsPage.vouchers.currency')}
                 onChange={(event) => update('maxOrderAmount', event.target.value)}
               />
             </VoucherField>
@@ -405,7 +493,7 @@ function GenerateDialog({
     setForm((current) => ({ ...current, [key]: value }))
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className='max-w-3xl'>
         <DialogHeader>
           <DialogTitle>{t('configsPage.vouchers.generateTitle')}</DialogTitle>
           <DialogDescription>{program?.name}</DialogDescription>
@@ -445,7 +533,7 @@ function GenerateDialog({
           </VoucherField>
           <VoucherField label={t('configsPage.vouchers.discountType')}>
             <Select value={form.discountType} onValueChange={(value) => update('discountType', value)}>
-              <SelectTrigger>
+              <SelectTrigger className='w-full'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -455,15 +543,31 @@ function GenerateDialog({
             </Select>
           </VoucherField>
           <VoucherField label={t('configsPage.vouchers.discountValue')}>
-            <Input
+            <VoucherInputWithSuffix
               type='number'
               value={form.discountValue}
+              suffix={form.discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
               onChange={(event) => update('discountValue', Number(event.target.value))}
             />
           </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.description')}>
-            <Input value={form.description} onChange={(event) => update('description', event.target.value)} />
-          </VoucherField>
+          {form.discountType === 'percent' && (
+            <VoucherField label={t('configsPage.vouchers.maxDiscountAmount')}>
+              <VoucherInputWithSuffix
+                type='number'
+                min={0}
+                value={form.maxDiscountAmount ?? ''}
+                suffix={t('configsPage.vouchers.currency')}
+                onChange={(event) =>
+                  update('maxDiscountAmount', event.target.value ? Number(event.target.value) : null)
+                }
+              />
+            </VoucherField>
+          )}
+          <div className='sm:col-span-2'>
+            <VoucherField label={t('configsPage.vouchers.description')}>
+              <Textarea value={form.description} onChange={(event) => update('description', event.target.value)} />
+            </VoucherField>
+          </div>
         </div>
         <DialogFooter>
           <Button variant='outline' onClick={() => onOpenChange(false)}>
@@ -483,12 +587,14 @@ export default function VouchersEditor() {
   const { confirm } = useConfirmStore()
   const [view, setView] = useState<View>('vouchers')
   const [keyword] = useQueryState('vouchers_code', parseAsString)
+  const [programKeyword] = useQueryState('voucher_programs_name', parseAsString)
   const [visibilityFilter] = useQueryState('vouchers_visibility', parseAsString)
   const visibility: VoucherVisibility | undefined =
     visibilityFilter === 'public' || visibilityFilter === 'private' ? visibilityFilter : undefined
   const [voucherPage] = useQueryState('vouchers_page', parseAsInteger)
   const [voucherPerPage] = useQueryState('vouchers_perPage', parseAsInteger)
-  const [programPage, setProgramPage] = useState(1)
+  const [programPage] = useQueryState('voucher_programs_page', parseAsInteger)
+  const [programPerPage] = useQueryState('voucher_programs_perPage', parseAsInteger)
   const [dialog, setDialog] = useState<'voucher' | 'program' | 'generate' | null>(null)
   const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null)
   const [detailVoucher, setDetailVoucher] = useState<Voucher | null>(null)
@@ -507,8 +613,12 @@ export default function VouchersEditor() {
     [keyword, voucherPage, voucherPerPage, visibility]
   )
   const programParams = useMemo(
-    () => ({ pageIndex: programPage, pageSize: 20, keyword: keyword || undefined }),
-    [keyword, programPage]
+    () => ({
+      pageIndex: programPage ?? 1,
+      pageSize: programPerPage ?? 20,
+      keyword: programKeyword || undefined
+    }),
+    [programKeyword, programPage, programPerPage]
   )
   const { vouchers } = useGetVouchers(voucherParams)
   const { programs } = useGetVoucherPrograms(programParams)
@@ -522,7 +632,7 @@ export default function VouchersEditor() {
   const { deleteVoucher, isDeletingVoucher } = useDeleteVoucher()
   const { createVoucherProgram, isCreatingVoucherProgram } = useCreateVoucherProgram()
   const { updateVoucherProgram, isUpdatingVoucherProgram } = useUpdateVoucherProgram()
-  const { setVoucherProgramActive, isSettingVoucherProgramActive } = useSetVoucherProgramActive()
+  const { setVoucherProgramActive } = useSetVoucherProgramActive()
   const { deleteVoucherProgram, isDeletingVoucherProgram } = useDeleteVoucherProgram()
   const { generateVouchers, isGeneratingVouchers } = useGenerateVouchers()
   const mutations = {
@@ -532,7 +642,6 @@ export default function VouchersEditor() {
     deleteVoucher: { mutate: deleteVoucher, isPending: isDeletingVoucher },
     createProgram: { mutate: createVoucherProgram, isPending: isCreatingVoucherProgram },
     updateProgram: { mutate: updateVoucherProgram, isPending: isUpdatingVoucherProgram },
-    setProgramActive: { mutate: setVoucherProgramActive, isPending: isSettingVoucherProgramActive },
     deleteProgram: { mutate: deleteVoucherProgram, isPending: isDeletingVoucherProgram },
     generateVouchers: { mutate: generateVouchers, isPending: isGeneratingVouchers }
   }
@@ -585,6 +694,23 @@ export default function VouchersEditor() {
     [requestDelete, setVouchersActive, t]
   )
   const usageColumns = useMemo(() => getVoucherUsageColumns(t), [t])
+  const programColumns = useMemo(
+    () =>
+      getVoucherProgramColumns({
+        t,
+        onToggleActive: (program, isActive) => setVoucherProgramActive({ id: program.id, isActive }),
+        onGenerate: (program) => {
+          setGenerateProgram(program)
+          setDialog('generate')
+        },
+        onEdit: (program) => {
+          setEditingProgram(program)
+          setDialog('program')
+        },
+        onDelete: (program) => void requestDelete({ type: 'program', id: program.id })
+      }),
+    [requestDelete, setVoucherProgramActive, t]
+  )
   const { table: voucherTable } = useDataTable({
     data: voucherItems,
     columns: voucherColumns,
@@ -605,6 +731,21 @@ export default function VouchersEditor() {
     shallow: false,
     clearOnDefault: true,
     queryKeys: { page: 'voucher_usages_page', perPage: 'voucher_usages_perPage', sort: 'voucher_usages_sort' }
+  })
+  const { table: programTable } = useDataTable({
+    data: programItems,
+    columns: programColumns,
+    pageCount: Math.ceil((programs.data?.totalCount ?? 0) / (programPerPage ?? 20)) || 1,
+    initialState: { pagination: { pageIndex: 0, pageSize: 20 }, columnPinning: { right: ['actions'] } },
+    getRowId: (row) => row.id,
+    shallow: false,
+    clearOnDefault: true,
+    queryKeys: {
+      page: 'voucher_programs_page',
+      perPage: 'voucher_programs_perPage',
+      sort: 'voucher_programs_sort'
+    },
+    filterPrefix: 'voucher_programs'
   })
 
   const success = (message: string) => {
@@ -691,100 +832,10 @@ export default function VouchersEditor() {
           title={t('configsPage.vouchers.programs')}
           description={t('configsPage.vouchers.programDescription')}
         >
-          <div className='grid gap-3 md:grid-cols-2'>
-            {programItems.map((program) => (
-              <div key={program.id} className='rounded-lg border p-4'>
-                <div className='flex items-start justify-between gap-3'>
-                  <div>
-                    <h3 className='font-semibold'>{program.name}</h3>
-                    <p className='text-xs text-muted-foreground'>
-                      {displayDate(program.startAt)} - {displayDate(program.endAt)}
-                    </p>
-                  </div>
-                  <Switch
-                    checked={program.isActive}
-                    onCheckedChange={(isActive) => mutations.setProgramActive.mutate({ id: program.id, isActive })}
-                  />
-                </div>
-                <div className='mt-4 grid grid-cols-2 gap-2 text-sm'>
-                  <span>
-                    {t('configsPage.vouchers.voucherCount')}: {program.voucherCount}
-                  </span>
-                  <span>
-                    {t('configsPage.vouchers.usedVoucherCount')}: {program.usedVoucherCount}
-                  </span>
-                </div>
-                <div className='mt-4 flex justify-end'>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant='ghost' size='icon' aria-label={t('configsPage.vouchers.actions')}>
-                        <MoreHorizontal className='size-4' />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align='end'>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setGenerateProgram(program)
-                          setDialog('generate')
-                        }}
-                      >
-                        <RefreshCw className='size-4' />
-                        {t('configsPage.vouchers.generate')}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditingProgram(program)
-                          setDialog('program')
-                        }}
-                      >
-                        <Pencil className='size-4' />
-                        {t('configsPage.vouchers.editProgram')}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        variant='destructive'
-                        onClick={() => {
-                          void requestDelete({ type: 'program', id: program.id })
-                        }}
-                      >
-                        <Trash2 className='size-4' />
-                        {t('configsPage.vouchers.remove')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-            ))}
-          </div>
-          {!programs.isLoading && programItems.length === 0 && (
-            <p className='p-8 text-center text-sm text-muted-foreground'>{t('configsPage.vouchers.empty')}</p>
-          )}
+          <DataTable<VoucherProgram> table={programTable} isLoading={programs.isLoading}>
+            <DataTableToolbar<VoucherProgram> table={programTable} />
+          </DataTable>
         </EditorSection>
-      )}
-      {view === 'programs' && (
-        <div className='flex items-center justify-end gap-2 text-sm text-muted-foreground'>
-          <span>
-            {t('configsPage.vouchers.page', {
-              page: programs.data?.pageIndex ?? programPage,
-              total: programs.data?.totalCount ?? 0
-            })}
-          </span>
-          <Button
-            variant='outline'
-            size='sm'
-            disabled={programPage <= 1}
-            onClick={() => setProgramPage((current) => current - 1)}
-          >
-            {t('configsPage.vouchers.previous')}
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            disabled={!programs.data?.hasNextPage}
-            onClick={() => setProgramPage((current) => current + 1)}
-          >
-            {t('configsPage.vouchers.next')}
-          </Button>
-        </div>
       )}
       {usageVoucherId && !detailVoucher && (
         <EditorSection
