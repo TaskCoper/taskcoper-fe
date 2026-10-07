@@ -1,42 +1,52 @@
 import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
+import { Field, FieldError } from '@/components/ui/field'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Clock3 } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import EditorCallout from '../settings/editor-callout'
+import { useEffect, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import InlineEditorShell from '../settings/inline-editor-shell'
 import EditorSection from '../shared/editor-section'
-
-interface OrderTagOption {
-  label: string
-  value: string | number
-}
-
-interface SlotSetting {
-  limit: number
-  isActive: boolean
-}
-
-interface OrderSlotsEditorProps {
-  orderTagOptions: readonly OrderTagOption[]
-}
+import { useGetOrderTags } from '../../hooks/use-get-order-tags'
+import { useUpdateOrderSlotLimits } from '../../hooks/use-update-order-slot-limits'
 
 const ORDER_TAG_TIME_PATTERN = /^\s*\d{1,2}h\s*-\s*\d{1,2}h\s*$/i
 
-export default function OrderSlotsEditor({ orderTagOptions }: OrderSlotsEditorProps) {
-  const { t } = useTenantTranslation()
-  const syncedSlots = useMemo(
-    () => orderTagOptions.filter((option) => ORDER_TAG_TIME_PATTERN.test(option.label)),
-    [orderTagOptions]
-  )
-  const [settings, setSettings] = useState<Record<string, SlotSetting>>({})
+type SlotLimits = Record<string, number | null>
+type OrderSlotsFormValues = { limits: SlotLimits }
 
-  const updateSetting = (value: string | number, patch: Partial<SlotSetting>) => {
-    const key = String(value)
-    setSettings((current) => ({
-      ...current,
-      [key]: { ...(current[key] ?? { limit: 10, isActive: true }), ...patch }
-    }))
+const normalizeLimits = (options: readonly { value: number }[], limits?: SlotLimits): SlotLimits =>
+  Object.fromEntries(options.map((option) => [String(option.value), limits?.[String(option.value)] ?? null]))
+
+export default function OrderSlotsEditor() {
+  const { t } = useTenantTranslation()
+  const { orderTagsConfig, isGettingOrderTags, isOrderTagsError } = useGetOrderTags()
+  const { updateOrderSlotLimits, isUpdatingOrderSlotLimits } = useUpdateOrderSlotLimits()
+  const syncedSlots = useMemo(
+    () => (orderTagsConfig?.options ?? []).filter((option) => ORDER_TAG_TIME_PATTERN.test(option.label)),
+    [orderTagsConfig?.options]
+  )
+  const savedLimits = useMemo(
+    () => normalizeLimits(syncedSlots, orderTagsConfig?.slotLimits),
+    [orderTagsConfig?.slotLimits, syncedSlots]
+  )
+  const { control, handleSubmit, reset, formState } = useForm<OrderSlotsFormValues>({
+    mode: 'onChange',
+    defaultValues: { limits: savedLimits }
+  })
+
+  useEffect(() => {
+    reset({ limits: savedLimits })
+  }, [reset, savedLimits])
+
+  const save = () => {
+    void handleSubmit(({ limits }) =>
+      updateOrderSlotLimits({
+        slots: syncedSlots.flatMap((slot) => {
+          const limit = limits[String(slot.value)]
+          return limit === null || limit === undefined ? [] : [{ tagId: slot.value, limit }]
+        })
+      })
+    )()
   }
 
   return (
@@ -45,14 +55,12 @@ export default function OrderSlotsEditor({ orderTagOptions }: OrderSlotsEditorPr
       icon={<Clock3 className='size-4' />}
       title={t('configsPage.orderSlots.title')}
       description={t('configsPage.orderSlots.description')}
-      isDirty={false}
-      isSaving={false}
-      onRevert={() => undefined}
-      onSave={() => undefined}
-      saveDisabledReason={t('configsPage.pendingApi')}
+      isDirty={formState.isDirty}
+      isSaving={isUpdatingOrderSlotLimits}
+      onRevert={() => reset({ limits: savedLimits })}
+      onSave={save}
+      saveDisabledReason={isGettingOrderTags || isOrderTagsError ? t('configsPage.orderSlots.loadError') : undefined}
     >
-      <EditorCallout>{t('configsPage.orderSlots.syncNotice')}</EditorCallout>
-
       <EditorSection
         title={t('configsPage.orderSlots.slotSection')}
         description={t('configsPage.orderSlots.slotDescription')}
@@ -62,43 +70,58 @@ export default function OrderSlotsEditor({ orderTagOptions }: OrderSlotsEditorPr
             {t('configsPage.orderSlots.empty')}
           </div>
         ) : (
-          <div className='overflow-hidden rounded-lg border'>
-            <div className='grid grid-cols-[minmax(0,1fr)_180px_120px] gap-3 border-b bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground'>
-              <span>{t('configsPage.orderSlots.slot')}</span>
-              <span>{t('configsPage.orderSlots.limit')}</span>
-              <span>{t('configsPage.orderSlots.status')}</span>
-            </div>
+          <div className='space-y-2'>
+            {syncedSlots.map((slot) => (
+              <div
+                key={String(slot.value)}
+                className='flex min-h-16 items-center gap-3 rounded-xl border bg-card px-3 py-2.5'
+              >
+                <span className='flex size-10 shrink-0 items-center justify-center rounded-lg border bg-muted/20 text-primary'>
+                  <Clock3 className='size-4' />
+                </span>
 
-            {syncedSlots.map((slot) => {
-              const setting = settings[String(slot.value)] ?? { limit: 10, isActive: true }
-
-              return (
-                <div
-                  key={String(slot.value)}
-                  className='grid grid-cols-[minmax(0,1fr)_180px_120px] items-center gap-3 border-b px-3 py-3 last:border-b-0'
-                >
-                  <div>
-                    <p className='font-medium'>{slot.label.trim()}</p>
-                    <p className='text-xs text-muted-foreground'>{t('configsPage.orderSlots.dailyRepeat')}</p>
-                  </div>
-                  <Input
-                    type='number'
-                    min={0}
-                    value={setting.limit}
-                    onChange={(event) => updateSetting(slot.value, { limit: Number(event.target.value) })}
-                  />
-                  <div className='flex items-center gap-2'>
-                    <Switch
-                      checked={setting.isActive}
-                      onCheckedChange={(isActive) => updateSetting(slot.value, { isActive })}
-                    />
-                    <span className='text-xs text-muted-foreground'>
-                      {setting.isActive ? t('configsPage.orderSlots.active') : t('configsPage.orderSlots.inactive')}
-                    </span>
-                  </div>
+                <div className='min-w-0 flex-1'>
+                  <p className='truncate font-medium'>{slot.label.trim()}</p>
+                  <p className='truncate text-xs text-muted-foreground'>{t('configsPage.orderSlots.dailyLimitHint')}</p>
                 </div>
-              )
-            })}
+
+                <Controller
+                  control={control}
+                  name={`limits.${slot.value}` as `limits.${string}`}
+                  rules={{
+                    validate: (value) => {
+                      if (value === null || value === undefined) return true
+                      if (!Number.isInteger(value)) return t('configsPage.orderSlots.limitIntegerValidation')
+                      return value >= 0 || t('common.validation.number.min', { min: 0 })
+                    }
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Field className='w-52 shrink-0 gap-1' data-invalid={fieldState.invalid}>
+                      <div className='flex items-center gap-2'>
+                        <span className='hidden whitespace-nowrap text-xs text-muted-foreground sm:inline'>
+                          {t('configsPage.orderSlots.limit')}
+                        </span>
+                        <Input
+                          className='min-w-0 flex-1'
+                          type='number'
+                          min={0}
+                          step={1}
+                          inputMode='numeric'
+                          placeholder={t('configsPage.orderSlots.unconfigured')}
+                          value={field.value ?? ''}
+                          onBlur={field.onBlur}
+                          onChange={(event) =>
+                            field.onChange(event.target.value === '' ? null : Number(event.target.value))
+                          }
+                          aria-invalid={fieldState.invalid}
+                        />
+                      </div>
+                      {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                    </Field>
+                  )}
+                />
+              </div>
+            ))}
           </div>
         )}
       </EditorSection>

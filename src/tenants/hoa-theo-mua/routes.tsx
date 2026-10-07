@@ -41,6 +41,7 @@ const NewsDetailPage = lazy(() => import('./pages/news-detail.page'))
 
 const SystemConfigsPage = lazy(() => import('./pages/configs.page'))
 const VouchersPage = lazy(() => import('./pages/vouchers.page'))
+const VoucherProgramDetailPage = lazy(() => import('./pages/voucher-program-detail.page'))
 const B2BOverviewEditorPage = lazy(() => import('./pages/configs-b2b-overview.page'))
 const B2BServiceEditorPage = lazy(() => import('./pages/configs-b2b-service.page'))
 
@@ -100,6 +101,7 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         children: [
           { path: 'configs', element: <SystemConfigsPage /> },
           { path: 'vouchers', element: <VouchersPage /> },
+          { path: 'vouchers/programs/:programId', element: <VoucherProgramDetailPage /> },
           { path: 'configs/b2b-overview', element: <B2BOverviewEditorPage /> },
           { path: 'configs/b2b-service/:slug', element: <B2BServiceEditorPage /> }
         ]

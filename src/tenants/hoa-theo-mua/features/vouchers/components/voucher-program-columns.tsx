@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Switch } from '@/components/ui/switch'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontal, Pencil, RefreshCw, SearchIcon, Trash2 } from 'lucide-react'
+import { Eye, MoreHorizontal, Pencil, RefreshCw, SearchIcon, Trash2 } from 'lucide-react'
 import type { VoucherProgram } from '../types'
 import { displayDateTime, formatMoney } from './voucher-date-utils'
 
@@ -19,6 +19,7 @@ const renderOrderAmount = (value: number | null, currency: string, unlimited: st
 interface VoucherProgramColumnsOptions {
   t: TenantT
   onToggleActive: (program: VoucherProgram, isActive: boolean) => void
+  onViewDetail: (program: VoucherProgram) => void
   onGenerate: (program: VoucherProgram) => void
   onEdit: (program: VoucherProgram) => void
   onDelete: (program: VoucherProgram) => void
@@ -27,6 +28,7 @@ interface VoucherProgramColumnsOptions {
 export const getVoucherProgramColumns = ({
   t,
   onToggleActive,
+  onViewDetail,
   onGenerate,
   onEdit,
   onDelete
@@ -176,6 +178,10 @@ export const getVoucherProgramColumns = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
+            <DropdownMenuItem onClick={() => onViewDetail(row.original)}>
+              <Eye className='size-4' />
+              {t('configsPage.vouchers.viewProgramDetail')}
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onGenerate(row.original)}>
               <RefreshCw className='size-4' />
               {t('configsPage.vouchers.generate')}

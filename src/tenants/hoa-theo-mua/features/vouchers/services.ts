@@ -116,7 +116,7 @@ class VoucherService extends BaseService {
             voucher.description?.toLowerCase().includes(keyword)) &&
           (!params.visibility || voucher.visibility === params.visibility) &&
           (params.isActive === undefined || voucher.isActive === params.isActive) &&
-          (!params.programId || voucher.programId === params.programId)
+          (params.programId ? voucher.programId === params.programId : voucher.programId === null)
         )
       })
       return pageOf(items, params.pageIndex, params.pageSize)
@@ -139,6 +139,13 @@ class VoucherService extends BaseService {
       )
     }
     const { data } = await this.get<BasePaginationResponse<VoucherProgram>>('/v1/admin/voucher-programs', { params })
+    return data.value
+  }
+
+  getProgram = async (programId: string) => {
+    if (USE_MOCK_VOUCHER_API) return mockPrograms.find((program) => program.id === programId) ?? null
+
+    const { data } = await this.get<BaseResponse<VoucherProgram>>(`/v1/admin/voucher-programs/${programId}`)
     return data.value
   }
 
@@ -309,7 +316,7 @@ class VoucherService extends BaseService {
           code,
           description: payload.description ?? null,
           visibility: 'private',
-          isActive: program.isActive,
+          isActive: false,
           discountType: payload.discountType,
           discountValue: payload.discountValue,
           maxDiscountAmount: payload.maxDiscountAmount ?? null,
@@ -347,7 +354,9 @@ class VoucherService extends BaseService {
         'Code,Visibility,DiscountType,DiscountValue,UsedCount,MaxUsageCount',
         ...mockVouchers
           .filter(
-            (voucher) => !params.visibility || params.visibility === 'all' || voucher.visibility === params.visibility
+            (voucher) =>
+              (!params.visibility || params.visibility === 'all' || voucher.visibility === params.visibility) &&
+              (!params.programIds?.length || params.programIds.includes(voucher.programId ?? ''))
           )
           .map(
             (voucher) =>

@@ -10,5 +10,6 @@ export const configKeys = {
   contentList: ({ groupName, key, isPublic }: GetConfigsParams & { isPublic?: boolean } = {}) =>
     [...configKeys.byKind('content'), groupName, key, isPublic] as const,
 
-  detail: (id?: string) => [...configKeys.all, 'detail', id] as const
+  detail: (id?: string) => [...configKeys.all, 'detail', id] as const,
+  orderTags: () => [...configKeys.all, 'order-tags'] as const
 }

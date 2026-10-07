@@ -6,5 +6,6 @@ export const voucherKeys = {
   voucherList: (params: GetVouchersParams) => [...voucherKeys.vouchers(), params] as const,
   programs: () => [...voucherKeys.all, 'programs'] as const,
   programList: (params: GetProgramsParams) => [...voucherKeys.programs(), params] as const,
+  programDetail: (id: string) => [...voucherKeys.programs(), 'detail', id] as const,
   usages: (id: string, params: PageParams) => [...voucherKeys.all, 'usages', id, params] as const
 }

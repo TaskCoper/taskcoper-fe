@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { TimeInputField } from '@/components/time-input-field'
@@ -26,11 +27,11 @@ export function VoucherField({
   children: ReactNode
 }) {
   return (
-    <label className={cn('grid gap-1.5 text-sm', className)}>
-      <span className='text-xs font-medium'>{label}</span>
+    <Field className={cn('gap-1.5', className)} data-invalid={Boolean(error)}>
+      <FieldLabel className='text-xs font-medium'>{label}</FieldLabel>
       {children}
-      {error && <span className='text-xs text-destructive'>{error}</span>}
-    </label>
+      {error && <FieldError className='text-xs' errors={[{ message: error }]} />}
+    </Field>
   )
 }
 

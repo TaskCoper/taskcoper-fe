@@ -72,7 +72,6 @@ const SIGNATURE_LANDING_CATEGORY_ID = 'signature-landing'
 const SECRETS_CATEGORY_ID = 'secrets'
 const IMAGEGEN_CATEGORY_ID = 'imagegen'
 const ORDER_SLOTS_CATEGORY_ID = 'order-slots'
-const NHANH_ORDER_TAGS_KEY = 'nhanhvn.order_tags'
 
 const SETTINGS_LIST_CLASS = 'divide-y'
 
@@ -125,12 +124,6 @@ function ConfigsPageContent() {
   const [dismissedUnknownCategory, setDismissedUnknownCategory] = useState(false)
 
   const categoryConfigs = useMemo(() => byCategory.get(activeCategory) ?? [], [byCategory, activeCategory])
-
-  const nhanhOrderTagsConfig = useMemo(
-    () => settingConfigs?.find((config) => config.key === NHANH_ORDER_TAGS_KEY),
-    [settingConfigs]
-  )
-  const nhanhOrderTagOptions = nhanhOrderTagsConfig?.value.options ?? []
 
   const isSecretsCategory = activeCategory === SECRETS_CATEGORY_ID
   const isGettingConfigs = isSecretsCategory
@@ -397,7 +390,7 @@ function ConfigsPageContent() {
     }
 
     if (activeCategory === ORDER_SLOTS_CATEGORY_ID) {
-      return <OrderSlotsEditor orderTagOptions={nhanhOrderTagOptions} />
+      return <OrderSlotsEditor />
     }
 
     if (activeCategory === PRODUCT_COLLECTIONS_CATEGORY_ID) {
