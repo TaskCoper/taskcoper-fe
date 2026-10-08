@@ -109,7 +109,7 @@ export default function VoucherProgramDetailPage() {
         <div className='space-y-5 px-4 pb-0 pt-6 sm:px-6 lg:px-8'>
           <nav className='flex items-center gap-1.5 text-sm text-muted-foreground'>
             <Link
-              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers?tab=program`}
+              to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`}
               className='transition-colors hover:text-foreground'
             >
               {t('configsPage.vouchers.title')}
@@ -141,7 +141,7 @@ export default function VoucherProgramDetailPage() {
               </div>
             </div>
             <Button variant='outline' size='sm' asChild>
-              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers?tab=program`}>
+              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`}>
                 {t('configsPage.vouchers.backToPrograms')}
               </Link>
             </Button>

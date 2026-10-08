@@ -101,6 +101,7 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
         children: [
           { path: 'configs', element: <SystemConfigsPage /> },
           { path: 'vouchers', element: <VouchersPage /> },
+          { path: 'vouchers/programs', element: <VouchersPage view='programs' /> },
           { path: 'vouchers/programs/:programId', element: <VoucherProgramDetailPage /> },
           { path: 'configs/b2b-overview', element: <B2BOverviewEditorPage /> },
           { path: 'configs/b2b-service/:slug', element: <B2BServiceEditorPage /> }

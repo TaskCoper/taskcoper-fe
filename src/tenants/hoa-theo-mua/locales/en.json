@@ -2501,7 +2501,7 @@
       "title": "Vouchers",
       "description": "Create and manage public vouchers shown at checkout or private vouchers applied by code.",
       "pageDescription": "Create and manage public/private discount codes for orders.",
-      "list": "Voucher list",
+      "list": "Direct vouchers",
       "programs": "Voucher programs",
       "viewProgramDetail": "Program details",
       "backToPrograms": "Back to voucher programs",

@@ -2501,7 +2501,7 @@
       "title": "Voucher",
       "description": "Tạo và quản lý voucher public hiển thị khi thanh toán hoặc voucher private áp dụng bằng mã.",
       "pageDescription": "Tạo và quản lý mã giảm giá public/private cho các đơn hàng.",
-      "list": "Danh sách voucher",
+      "list": "Voucher trực tiếp",
       "programs": "Chương trình voucher",
       "viewProgramDetail": "Chi tiết chương trình",
       "backToPrograms": "Quay lại chương trình voucher",

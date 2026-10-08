@@ -46,7 +46,25 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
     url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`,
     icon: TicketPercentIcon,
     feature: 'custom.systemConfigs',
-    items: []
+    items: [
+      {
+        titleKey: 'configsPage.vouchers.list',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`],
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs/:programId`
+        ]
+      },
+      {
+        titleKey: 'configsPage.vouchers.programs',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+        activePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs/:programId`
+        ]
+      }
+    ]
   },
   {
     titleKey: 'navigation.products.title',

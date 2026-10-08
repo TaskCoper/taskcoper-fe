@@ -12,11 +12,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { parseISO } from 'date-fns'
-import { Download, Gift, Plus } from 'lucide-react'
+import { Download, Plus } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -227,7 +226,7 @@ function VoucherFormDialog({
             )}
             {!voucher && codeMode === 'generated' && (
               <>
-                <VoucherField label={t('configsPage.vouchers.codePrefix')}>
+                <VoucherField label={t('configsPage.vouchers.codePrefix')} error={errors.codePrefix?.message}>
                   <Input
                     {...register('codePrefix', {
                       validate: (value) =>
@@ -239,7 +238,7 @@ function VoucherFormDialog({
                     }
                   />
                 </VoucherField>
-                <VoucherField label={t('configsPage.vouchers.codeLength')}>
+                <VoucherField label={t('configsPage.vouchers.codeLength')} error={errors.codeLength?.message}>
                   <Input
                     type='number'
                     min={5}
@@ -256,7 +255,7 @@ function VoucherFormDialog({
                     onChange={(event) => setValue('codeLength', Number(event.target.value), { shouldValidate: true })}
                   />
                 </VoucherField>
-                <VoucherField label={t('configsPage.vouchers.codeSuffix')}>
+                <VoucherField label={t('configsPage.vouchers.codeSuffix')} error={errors.codeSuffix?.message}>
                   <Input
                     {...register('codeSuffix', {
                       validate: (value) =>
@@ -300,7 +299,7 @@ function VoucherFormDialog({
                 </SelectContent>
               </Select>
             </VoucherField>
-            <VoucherField label={t('configsPage.vouchers.discountValue')}>
+            <VoucherField label={t('configsPage.vouchers.discountValue')} error={errors.discountValue?.message}>
               <VoucherInputWithSuffix
                 type='number'
                 min={0}
@@ -355,7 +354,7 @@ function VoucherFormDialog({
                 />
               </VoucherField>
             </div>
-            <VoucherField label={t('configsPage.vouchers.maxUsageCount')}>
+            <VoucherField label={t('configsPage.vouchers.maxUsageCount')} error={errors.maxUsageCount?.message}>
               <Input
                 type='number'
                 min={1}
@@ -750,12 +749,10 @@ export function GenerateDialog({
   )
 }
 
-export default function VouchersEditor() {
+export default function VouchersEditor({ view }: { view: View }) {
   const { t } = useTenantTranslation()
   const navigate = useNavigate()
   const { confirm } = useConfirmStore()
-  const [viewTab] = useQueryState('tab', parseAsString)
-  const [view, setView] = useState<View>(viewTab === 'program' ? 'programs' : 'vouchers')
   const [keyword] = useQueryState('vouchers_code', parseAsString)
   const [programKeyword] = useQueryState('voucher_programs_name', parseAsString)
   const [visibilityFilter] = useQueryState('vouchers_visibility', parseAsString)
@@ -947,24 +944,6 @@ export default function VouchersEditor() {
 
   return (
     <div className='space-y-5'>
-      <Tabs
-        value={view}
-        onValueChange={(value) => {
-          setView(value as View)
-          void navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers?tab=${value === 'programs' ? 'program' : 'list'}`)
-        }}
-      >
-        <TabsList>
-          <TabsTrigger value='vouchers'>
-            <Gift className='size-4' />
-            {t('configsPage.vouchers.list')}
-          </TabsTrigger>
-          <TabsTrigger value='programs'>
-            <Gift className='size-4' />
-            {t('configsPage.vouchers.programs')}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
       <div className='flex flex-wrap items-center gap-2'>
         <div className='ml-auto flex gap-2'>
           {view === 'vouchers' && (
