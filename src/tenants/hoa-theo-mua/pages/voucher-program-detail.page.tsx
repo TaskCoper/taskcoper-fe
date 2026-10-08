@@ -63,7 +63,14 @@ export default function VoucherProgramDetailPage() {
     data: vouchers.data?.items ?? [],
     columns: codeColumns,
     pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / (perPage ?? 20)) || 1,
-    initialState: { pagination: { pageIndex: 0, pageSize: 20 } },
+    initialState: {
+      pagination: { pageIndex: 0, pageSize: 20 },
+      columnVisibility: {
+        description: false,
+        discountType: false,
+        updatedAt: false
+      }
+    },
     getRowId: (row) => row.id,
     shallow: false,
     clearOnDefault: true,
@@ -205,9 +212,11 @@ export default function VoucherProgramDetailPage() {
                   <div className='grid gap-1 px-4 py-3 text-sm sm:grid-cols-[16rem_1fr] sm:gap-4'>
                     <span className='text-muted-foreground'>{t('configsPage.vouchers.programStatus')}</span>
                     <span className='font-medium'>
-                      {program.isActive
-                        ? t('configsPage.vouchers.programActive')
-                        : t('configsPage.vouchers.programInactive')}
+                      <Badge variant={program.isActive ? 'default' : 'secondary'}>
+                        {program.isActive
+                          ? t('configsPage.vouchers.programActive')
+                          : t('configsPage.vouchers.programInactive')}
+                      </Badge>
                     </span>
                   </div>
                   <div className='grid gap-1 px-4 py-3 text-sm sm:grid-cols-[16rem_1fr] sm:gap-4'>

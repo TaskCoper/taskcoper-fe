@@ -6,7 +6,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { Table } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import type { Voucher, VoucherUsage } from '../types'
-import { displayDateTime } from './voucher-date-utils'
+import { displayDateTime, formatMoney } from './voucher-date-utils'
 
 interface VoucherDetailDialogProps {
   voucher: Voucher | null
@@ -34,7 +34,10 @@ export function VoucherDetailDialog({
 }: VoucherDetailDialogProps) {
   if (!voucher) return null
 
-  const discountValue = `${voucher.discountValue}${voucher.discountType === 'percent' ? '%' : ` ${t('configsPage.vouchers.currency')}`}`
+  const discountValue =
+    voucher.discountType === 'percent'
+      ? `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 }).format(voucher.discountValue)}%`
+      : formatMoney(voucher.discountValue, t('configsPage.vouchers.currency'))
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -74,18 +77,14 @@ export function VoucherDetailDialog({
             />
             <DetailItem
               label={t('configsPage.vouchers.minOrderAmount')}
-              value={
-                voucher.minOrderAmount == null
-                  ? null
-                  : `${voucher.minOrderAmount} ${t('configsPage.vouchers.currency')}`
-              }
+              value={formatMoney(voucher.minOrderAmount, t('configsPage.vouchers.currency'))}
             />
             <DetailItem
               label={t('configsPage.vouchers.maxOrderAmount')}
               value={
                 voucher.maxOrderAmount == null
-                  ? null
-                  : `${voucher.maxOrderAmount} ${t('configsPage.vouchers.currency')}`
+                  ? t('configsPage.vouchers.unlimited')
+                  : formatMoney(voucher.maxOrderAmount, t('configsPage.vouchers.currency'))
               }
             />
             <div className='sm:col-span-2 lg:col-span-3'>

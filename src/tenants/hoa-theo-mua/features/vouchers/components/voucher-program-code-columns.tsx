@@ -6,7 +6,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { SearchIcon } from 'lucide-react'
 import type { Voucher } from '../types'
-import { formatMoney } from './voucher-date-utils'
+import { displayDateTime, formatMoney } from './voucher-date-utils'
 
 export const getVoucherProgramCodeColumns = (
   t: TenantT,
@@ -45,18 +45,63 @@ export const getVoucherProgramCodeColumns = (
     size: 220
   },
   {
+    id: 'description',
+    accessorKey: 'description',
+    meta: { label: 'configsPage.vouchers.description' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.description' />,
+    cell: ({ row }) => <span className='line-clamp-2 max-w-64 text-sm'>{row.original.description || '—'}</span>,
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 220
+  },
+  {
+    id: 'discountType',
+    accessorKey: 'discountType',
+    meta: { label: 'configsPage.vouchers.discountType' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.discountType' />,
+    cell: ({ row }) => (
+      <Badge variant='outline' className='whitespace-nowrap font-normal'>
+        {row.original.discountType === 'percent'
+          ? t('configsPage.vouchers.kinds.percent')
+          : t('configsPage.vouchers.kinds.cash')}
+      </Badge>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 170
+  },
+  {
     id: 'discountValue',
     accessorKey: 'discountValue',
     meta: { label: 'configsPage.vouchers.discountValue' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.discountValue' />,
-    cell: ({ row }) =>
-      row.original.discountType === 'percent'
-        ? `${row.original.discountValue}%`
-        : formatMoney(row.original.discountValue, t('configsPage.vouchers.currency')),
+    cell: ({ row }) => (
+      <Badge variant='secondary' className='whitespace-nowrap font-normal'>
+        {row.original.discountType === 'percent'
+          ? `${row.original.discountValue}%`
+          : formatMoney(row.original.discountValue, t('configsPage.vouchers.currency'))}
+      </Badge>
+    ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,
     size: 150
+  },
+  {
+    id: 'maxDiscountAmount',
+    accessorKey: 'maxDiscountAmount',
+    meta: { label: 'configsPage.vouchers.maxDiscountAmount' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.maxDiscountAmount' />,
+    cell: ({ row }) =>
+      row.original.discountType === 'percent' && row.original.maxDiscountAmount != null
+        ? formatMoney(row.original.maxDiscountAmount, t('configsPage.vouchers.currency'))
+        : '—',
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 160
   },
   {
     id: 'usage',
@@ -72,6 +117,32 @@ export const getVoucherProgramCodeColumns = (
     enableHiding: true,
     enableColumnFilter: false,
     size: 130
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    meta: { label: 'configsPage.vouchers.createdAt' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.createdAt' />,
+    cell: ({ row }) => <span className='whitespace-nowrap text-sm'>{displayDateTime(row.original.createdAt)}</span>,
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 170
+  },
+  {
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
+    meta: { label: 'configsPage.vouchers.updatedAt' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.updatedAt' />,
+    cell: ({ row }) => (
+      <span className='whitespace-nowrap text-sm'>
+        {row.original.updatedAt ? displayDateTime(row.original.updatedAt) : '—'}
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 170
   },
   {
     id: 'apply',
