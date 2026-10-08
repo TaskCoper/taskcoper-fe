@@ -21,5 +21,8 @@ export const displayDate = (value: string) => {
     : '-'
 }
 
+export const displayValidityPeriod = (startAt: string, endAt: string, unlimited: string) =>
+  `${displayDateTime(startAt)} - ${endAt ? displayDateTime(endAt) : unlimited}`
+
 export const formatMoney = (value: number | null | undefined, currency: string) =>
   value == null ? '—' : `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(value)} ${currency}`

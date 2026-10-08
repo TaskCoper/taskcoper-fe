@@ -2531,6 +2531,8 @@
       "maxDiscountValidation": "Maximum discount only applies to percentage discounts and must be greater than 0.",
       "maxUsageValidation": "Maximum usage count must be greater than 0.",
       "endDateValidation": "End date must be later than start date.",
+      "startDateRequired": "Please enter a start date.",
+      "unlimitedEndDateConfirm": "The voucher will apply from {{date}} with no end date. Do you confirm creating the voucher?",
       "programNameValidation": "Program name is required.",
       "quantityValidation": "Quantity must be between 1 and {{max}}.",
       "bulkPartialSuccess": "Action completed partially",

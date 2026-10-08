@@ -2531,6 +2531,8 @@
       "maxDiscountValidation": "Mức giảm tối đa chỉ áp dụng cho giảm theo phần trăm và phải lớn hơn 0.",
       "maxUsageValidation": "Tổng lượt sử dụng phải lớn hơn 0.",
       "endDateValidation": "Ngày kết thúc phải sau ngày bắt đầu.",
+      "startDateRequired": "Vui lòng nhập ngày bắt đầu.",
+      "unlimitedEndDateConfirm": "Voucher sẽ áp dụng từ ngày {{date}} và không giới hạn ngày kết thúc? Bạn xác nhận tạo voucher?",
       "programNameValidation": "Tên chương trình không được để trống.",
       "quantityValidation": "Số lượng mã phải từ 1 đến {{max}}.",
       "bulkPartialSuccess": "Thao tác hoàn tất một phần",

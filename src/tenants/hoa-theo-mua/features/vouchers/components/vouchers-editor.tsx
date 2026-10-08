@@ -24,7 +24,7 @@ import { toast } from 'sonner'
 import { useDataTable } from '@/hooks/use-data-table'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
 import EditorSection from '../../configs/components/shared/editor-section'
-import { dateValue, timeValue } from './voucher-date-utils'
+import { dateValue, displayDate, timeValue } from './voucher-date-utils'
 import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 import { getVoucherColumns } from './voucher-columns'
 import { getVoucherProgramColumns } from './voucher-program-columns'
@@ -103,6 +103,7 @@ function VoucherFormDialog({
   pending: boolean
 }) {
   const { t } = useTenantTranslation()
+  const { confirm } = useConfirmStore()
   const [codeMode, setCodeMode] = useState<'manual' | 'generated'>('manual')
   const methods = useForm<VoucherFormValues>({
     mode: 'onChange',
@@ -134,16 +135,17 @@ function VoucherFormDialog({
   const values = useWatch({ control }) as VoucherFormValues
   register('startAt', {
     validate: (value) => {
+      if (!value && values.endAt) return t('configsPage.vouchers.startDateRequired')
       if (!value) return t('configsPage.vouchers.validityRequired')
       return !values.endAt || parseISO(values.endAt) > parseISO(value) || t('configsPage.vouchers.endDateValidation')
     }
   })
   register('endAt', {
     validate: (value) => {
-      if (!value) return t('configsPage.vouchers.validityRequired')
-      return (
-        !values.startAt || parseISO(value) > parseISO(values.startAt) || t('configsPage.vouchers.endDateValidation')
-      )
+      if (!value && !values.startAt) return t('configsPage.vouchers.validityRequired')
+      if (!value) return true
+      if (!values.startAt) return t('configsPage.vouchers.startDateRequired')
+      return parseISO(value) > parseISO(values.startAt) || t('configsPage.vouchers.endDateValidation')
     }
   })
   const amountValidation = () => {
@@ -152,7 +154,16 @@ function VoucherFormDialog({
     if (isEmpty(min) || isEmpty(max)) return true
     return Number(min) <= Number(max) ? true : t('configsPage.vouchers.minOrderAmountValidation')
   }
-  const submit = (form: VoucherFormValues) => {
+  const submit = async (form: VoucherFormValues) => {
+    if (form.startAt && !form.endAt) {
+      const confirmed = await confirm({
+        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(form.startAt) }),
+        confirmText: t('common.confirm.confirmText'),
+        cancelText: t('common.button.cancel')
+      })
+      if (!confirmed) return
+    }
+
     if (voucher) {
       onSubmit({
         id: voucher.id,
@@ -429,6 +440,7 @@ function ProgramFormDialog({
   pending: boolean
 }) {
   const { t } = useTenantTranslation()
+  const { confirm } = useConfirmStore()
   const methods = useForm<ProgramFormValues>({
     mode: 'onChange',
     defaultValues: {
@@ -450,15 +462,24 @@ function ProgramFormDialog({
   const form = useWatch({ control }) as ProgramFormValues
   register('startAt', {
     validate: (value) =>
-      !value
-        ? t('configsPage.vouchers.validityRequired')
-        : !form.endAt || parseISO(form.endAt) > parseISO(value) || t('configsPage.vouchers.endDateValidation')
+      !value && form.endAt
+        ? t('configsPage.vouchers.startDateRequired')
+        : !value && !form.endAt
+          ? t('configsPage.vouchers.validityRequired')
+          : !value ||
+            !form.endAt ||
+            parseISO(form.endAt) > parseISO(value) ||
+            t('configsPage.vouchers.endDateValidation')
   })
   register('endAt', {
     validate: (value) =>
-      !value
+      !value && !form.startAt
         ? t('configsPage.vouchers.validityRequired')
-        : !form.startAt || parseISO(value) > parseISO(form.startAt) || t('configsPage.vouchers.endDateValidation')
+        : !value
+          ? true
+          : !form.startAt
+            ? t('configsPage.vouchers.startDateRequired')
+            : parseISO(value) > parseISO(form.startAt) || t('configsPage.vouchers.endDateValidation')
   })
   const amountValidation = () => {
     const min = getValues('minOrderAmount')
@@ -466,7 +487,16 @@ function ProgramFormDialog({
     if (isEmpty(min) || isEmpty(max)) return true
     return Number(min) <= Number(max) || t('configsPage.vouchers.minOrderAmountValidation')
   }
-  const submit = (form: ProgramFormValues) => {
+  const submit = async (form: ProgramFormValues) => {
+    if (form.startAt && !form.endAt) {
+      const confirmed = await confirm({
+        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(form.startAt) }),
+        confirmText: t('common.confirm.confirmText'),
+        cancelText: t('common.button.cancel')
+      })
+      if (!confirmed) return
+    }
+
     onSubmit(
       program
         ? {

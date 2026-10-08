@@ -1,4 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { formatDate, getCurrentAppLocale, getDateFnsLocale, resolveAppLocale } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
@@ -9,7 +10,7 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  captionLayout = 'label',
+  captionLayout = 'dropdown',
   buttonVariant = 'ghost',
   formatters,
   components,
@@ -116,6 +117,7 @@ function Calendar({
           return <ChevronDownIcon className={cn('size-4', className)} {...props} />
         },
         DayButton: CalendarDayButton,
+        Dropdown: CalendarDropdown,
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -127,6 +129,47 @@ function Calendar({
       }}
       {...props}
     />
+  )
+}
+
+function CalendarDropdown({
+  options = [],
+  value,
+  onChange,
+  disabled,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement> & {
+  options?: Array<{ value: number; label: string; disabled: boolean }>
+}) {
+  return (
+    <ShadcnSelect
+      value={value == null ? undefined : String(value)}
+      onValueChange={(nextValue) =>
+        onChange?.({ target: { value: nextValue } } as React.ChangeEvent<HTMLSelectElement>)
+      }
+    >
+      <SelectTrigger
+        aria-label={props['aria-label']}
+        disabled={disabled}
+        className='h-8 min-w-24 gap-1 rounded-md border-input bg-background px-2 text-sm font-medium shadow-none'
+      >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className='max-h-72'>
+        {options.map((option) => {
+          return (
+            <SelectItem
+              key={String(option.value)}
+              value={String(option.value)}
+              disabled={option.disabled}
+              className='text-sm'
+            >
+              {option.label}
+            </SelectItem>
+          )
+        })}
+      </SelectContent>
+    </ShadcnSelect>
   )
 }
 

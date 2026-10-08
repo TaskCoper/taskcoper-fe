@@ -6,7 +6,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { Table } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import type { Voucher, VoucherUsage } from '../types'
-import { displayDateTime, formatMoney } from './voucher-date-utils'
+import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
 
 interface VoucherDetailDialogProps {
   voucher: Voucher | null
@@ -73,7 +73,7 @@ export function VoucherDetailDialog({
             />
             <DetailItem
               label={t('configsPage.vouchers.validityPeriod')}
-              value={`${displayDateTime(voucher.startAt)} - ${displayDateTime(voucher.endAt)}`}
+              value={displayValidityPeriod(voucher.startAt, voucher.endAt, t('configsPage.vouchers.unlimited'))}
             />
             <DetailItem
               label={t('configsPage.vouchers.minOrderAmount')}

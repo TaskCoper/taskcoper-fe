@@ -8,7 +8,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Eye, MoreHorizontal, Pencil, RefreshCw, SearchIcon, Trash2 } from 'lucide-react'
 import type { VoucherProgram } from '../types'
-import { displayDateTime, formatMoney } from './voucher-date-utils'
+import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
 
 const renderOrderAmount = (value: number | null, currency: string, unlimited: string) => (
   <Badge variant='outline' className='whitespace-nowrap font-normal'>
@@ -77,7 +77,7 @@ export const getVoucherProgramColumns = ({
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.validityPeriod' />,
     cell: ({ row }) => (
       <Badge variant='outline' className='whitespace-nowrap font-normal'>
-        {displayDateTime(row.original.startAt)} - {displayDateTime(row.original.endAt)}
+        {displayValidityPeriod(row.original.startAt, row.original.endAt, t('configsPage.vouchers.unlimited'))}
       </Badge>
     ),
     enableSorting: false,

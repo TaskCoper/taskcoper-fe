@@ -24,7 +24,7 @@ import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getVoucherProgramCodeColumns } from '../features/vouchers/components/voucher-program-code-columns'
 import { GenerateDialog } from '../features/vouchers/components/vouchers-editor'
-import { displayDateTime, formatMoney } from '../features/vouchers/components/voucher-date-utils'
+import { displayDateTime, displayValidityPeriod, formatMoney } from '../features/vouchers/components/voucher-date-utils'
 import {
   useGenerateVouchers,
   useGetVoucherProgram,
@@ -136,7 +136,7 @@ export default function VoucherProgramDetailPage() {
                 <p className='text-sm text-muted-foreground'>{t('configsPage.vouchers.programDetailDescription')}</p>
                 <div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground'>
                   <CalendarDays className='size-3.5' />
-                  {displayDateTime(program.startAt)} - {displayDateTime(program.endAt)}
+                  {displayValidityPeriod(program.startAt, program.endAt, t('configsPage.vouchers.unlimited'))}
                 </div>
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function VoucherProgramDetailPage() {
             />
             <StatCard
               title={t('configsPage.vouchers.validityPeriod')}
-              value={displayDateTime(program.endAt)}
+              value={program.endAt ? displayDateTime(program.endAt) : t('configsPage.vouchers.unlimited')}
               icon={<Clock3 className='size-4 text-white' />}
               color='slate'
             />
@@ -222,7 +222,7 @@ export default function VoucherProgramDetailPage() {
                   <div className='grid gap-1 px-4 py-3 text-sm sm:grid-cols-[16rem_1fr] sm:gap-4'>
                     <span className='text-muted-foreground'>{t('configsPage.vouchers.validityPeriod')}</span>
                     <span className='font-medium'>
-                      {displayDateTime(program.startAt)} - {displayDateTime(program.endAt)}
+                      {displayValidityPeriod(program.startAt, program.endAt, t('configsPage.vouchers.unlimited'))}
                     </span>
                   </div>
                 </div>
