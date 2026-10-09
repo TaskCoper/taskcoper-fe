@@ -49,7 +49,7 @@ export default function VoucherProgramDetailPage() {
   const { vouchers } = useGetVouchers({
     programId,
     pageIndex: page ?? 1,
-    pageSize: perPage ?? 20,
+    pageSize: perPage ?? 10,
     keyword: keyword || undefined
   })
   const { setVouchersActive } = useSetVouchersActive()
@@ -62,9 +62,9 @@ export default function VoucherProgramDetailPage() {
   const { table: codeTable } = useDataTable({
     data: vouchers.data?.items ?? [],
     columns: codeColumns,
-    pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / (perPage ?? 20)) || 1,
+    pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / (perPage ?? 10)) || 1,
     initialState: {
-      pagination: { pageIndex: 0, pageSize: 20 },
+      pagination: { pageIndex: 0, pageSize: 10 },
       columnVisibility: {
         description: false,
         discountType: false,
@@ -91,15 +91,18 @@ export default function VoucherProgramDetailPage() {
     if (!program) return
 
     try {
-      const blob = await voucherService.exportVouchers({ programIds: [program.id] })
-      const url = URL.createObjectURL(blob)
+      const file = await voucherService.exportVouchers({ programIds: [program.id] })
+      const url = URL.createObjectURL(file.blob)
       const anchor = document.createElement('a')
       anchor.href = url
-      anchor.download = `${program.name}-vouchers.xlsx`
+      anchor.download = file.fileName
       anchor.click()
       URL.revokeObjectURL(url)
-    } catch {
-      toast.error(t('error.somethingWentWrong'))
+    } catch (error) {
+      const responseError = error as { response?: { data?: { detail?: string; errors?: { detail?: string } } } }
+      toast.error(t('error.somethingWentWrong'), {
+        description: responseError.response?.data?.errors?.detail ?? responseError.response?.data?.detail
+      })
     }
   }
 

@@ -1,7 +1,6 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type {
-  BulkUpdateResponse,
   CreateProgramPayload,
   CreateVoucherPayload,
   GenerateVouchersPayload,
@@ -14,6 +13,7 @@ import type {
   VoucherPage,
   VoucherProgram,
   VoucherProgramPage,
+  VoucherExportFile,
   VoucherUsage,
   VoucherUsagePage
 } from './types'
@@ -111,6 +111,7 @@ class VoucherService extends BaseService {
       const items = mockVouchers.filter((voucher) => {
         const keyword = params.keyword?.toLowerCase()
         return (
+          !voucher.isDeleted &&
           (!keyword ||
             voucher.code.toLowerCase().includes(keyword) ||
             voucher.description?.toLowerCase().includes(keyword)) &&
@@ -131,6 +132,7 @@ class VoucherService extends BaseService {
       return pageOf(
         mockPrograms.filter(
           (program) =>
+            !program.isDeleted &&
             (!keyword || program.name.toLowerCase().includes(keyword)) &&
             (params.isActive === undefined || program.isActive === params.isActive)
         ),
@@ -143,7 +145,8 @@ class VoucherService extends BaseService {
   }
 
   getProgram = async (programId: string) => {
-    if (USE_MOCK_VOUCHER_API) return mockPrograms.find((program) => program.id === programId) ?? null
+    if (USE_MOCK_VOUCHER_API)
+      return mockPrograms.find((program) => program.id === programId && !program.isDeleted) ?? null
 
     const { data } = await this.get<BaseResponse<VoucherProgram>>(`/v1/admin/voucher-programs/${programId}`)
     return data.value
@@ -172,55 +175,43 @@ class VoucherService extends BaseService {
         updatedAt: null
       }
       mockVouchers.unshift(voucher)
-      return voucher
+      return 'Create voucher successfully'
     }
-    const { data } = await this.post<BaseResponse<Voucher>>('/v1/admin/vouchers', payload)
+    const { data } = await this.post<BaseResponse<string>>('/v1/admin/vouchers', payload)
     return data.value
   }
 
   updateVouchers = async (items: UpdateVoucherItem[]) => {
     if (USE_MOCK_VOUCHER_API) {
-      const updatedIds: string[] = []
       for (const item of items) {
         const voucher = mockVouchers.find((current) => current.id === item.id)
         if (!voucher) continue
         Object.assign(voucher, item, { updatedAt: new Date().toISOString() })
-        updatedIds.push(item.id)
       }
-      return {
-        updatedIds,
-        notFoundIds: items.filter((item) => !updatedIds.includes(item.id)).map((item) => item.id),
-        skippedItems: []
-      } satisfies BulkUpdateResponse
+      return 'Update voucher successfully'
     }
-    const { data } = await this.put<BaseResponse<BulkUpdateResponse>>('/v1/admin/vouchers', { items })
+    const { data } = await this.put<BaseResponse<string>>('/v1/admin/vouchers', { items })
     return data.value
   }
 
   setVouchersActive = async (ids: string[], isActive: boolean) => {
     if (USE_MOCK_VOUCHER_API) {
-      const updatedIds: string[] = []
       ids.forEach((voucherId) => {
         const voucher = mockVouchers.find((current) => current.id === voucherId)
         if (voucher) {
           voucher.isActive = isActive
-          updatedIds.push(voucherId)
         }
       })
-      return {
-        updatedIds,
-        notFoundIds: ids.filter((voucherId) => !updatedIds.includes(voucherId)),
-        skippedItems: []
-      } satisfies BulkUpdateResponse
+      return 'Voucher status updated successfully.'
     }
-    const { data } = await this.patch<BaseResponse<BulkUpdateResponse>>('/v1/admin/vouchers/active', { ids, isActive })
+    const { data } = await this.patch<BaseResponse<string>>('/v1/admin/vouchers/active', { ids, isActive })
     return data.value
   }
 
   deleteVoucher = async (voucherId: string) => {
     if (USE_MOCK_VOUCHER_API) {
       const voucher = mockVouchers.find((current) => current.id === voucherId)
-      if (voucher) mockVouchers.splice(mockVouchers.indexOf(voucher), 1)
+      if (voucher) voucher.isDeleted = true
       return 'Voucher deleted'
     }
     const { data } = await this.delete<BaseResponse<string>>(`/v1/admin/vouchers/${voucherId}`)
@@ -243,9 +234,9 @@ class VoucherService extends BaseService {
         updatedAt: null
       }
       mockPrograms.unshift(program)
-      return program
+      return 'Create voucher program successfully'
     }
-    const { data } = await this.post<BaseResponse<VoucherProgram>>('/v1/admin/voucher-programs', payload)
+    const { data } = await this.post<BaseResponse<string>>('/v1/admin/voucher-programs', payload)
     return data.value
   }
 
@@ -253,8 +244,12 @@ class VoucherService extends BaseService {
     if (USE_MOCK_VOUCHER_API) {
       const program = mockPrograms.find((current) => current.id === programId)!
       Object.assign(program, payload, { updatedAt: new Date().toISOString() })
+      if (payload.isActive !== undefined)
+        mockVouchers
+          .filter((voucher) => voucher.programId === programId && !voucher.isDeleted)
+          .forEach((voucher) => Object.assign(voucher, { isActive: payload.isActive }))
       mockVouchers
-        .filter((voucher) => voucher.programId === programId)
+        .filter((voucher) => voucher.programId === programId && !voucher.isDeleted)
         .forEach((voucher) =>
           Object.assign(voucher, {
             startAt: program.startAt,
@@ -270,29 +265,15 @@ class VoucherService extends BaseService {
     return data.value
   }
 
-  setProgramActive = async (programId: string, isActive: boolean) => {
-    if (USE_MOCK_VOUCHER_API) {
-      const program = mockPrograms.find((current) => current.id === programId)!
-      program.isActive = isActive
-      mockVouchers
-        .filter((voucher) => voucher.programId === programId)
-        .forEach((voucher) => {
-          voucher.isActive = isActive
-        })
-      return isActive ? 'Program activated' : 'Program deactivated'
-    }
-    const { data } = await this.patch<BaseResponse<string>>(`/v1/admin/voucher-programs/${programId}/active`, {
-      isActive
-    })
-    return data.value
-  }
-
   deleteProgram = async (programId: string) => {
     if (USE_MOCK_VOUCHER_API) {
       const program = mockPrograms.find((current) => current.id === programId)
-      if (program) mockPrograms.splice(mockPrograms.indexOf(program), 1)
-      for (let index = mockVouchers.length - 1; index >= 0; index -= 1)
-        if (mockVouchers[index].programId === programId) mockVouchers.splice(index, 1)
+      if (program) program.isDeleted = true
+      mockVouchers
+        .filter((voucher) => voucher.programId === programId)
+        .forEach((voucher) => {
+          voucher.isDeleted = true
+        })
       return 'Program deleted'
     }
     const { data } = await this.delete<BaseResponse<string>>(`/v1/admin/voucher-programs/${programId}`)
@@ -350,23 +331,66 @@ class VoucherService extends BaseService {
 
   exportVouchers = async (params: { visibility?: string; programIds?: string[] }) => {
     if (USE_MOCK_VOUCHER_API) {
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[-:TZ.]/g, '')
+        .slice(0, 14)
+      const fileName = params.programIds?.length
+        ? params.programIds.length === 1
+          ? `vouchers-program-${params.programIds[0].slice(0, 8)}-${timestamp}.xlsx`
+          : `vouchers-programs-${params.programIds.length}-${timestamp}.xlsx`
+        : `vouchers-${params.visibility ?? 'all'}-${timestamp}.xlsx`
+      const escapeCsv = (value: unknown) => {
+        const text = value == null ? '' : String(value)
+        return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+      }
       const content = [
-        'Code,Visibility,DiscountType,DiscountValue,UsedCount,MaxUsageCount',
+        'Id,ProgramId,ProgramName,Code,Description,Visibility,IsActive,DiscountType,DiscountValue,MaxDiscountAmount,MaxUsageCount,UsedCount,StartAt,EndAt,MinOrderAmount,MaxOrderAmount,CreatedAt,UpdatedAt,IsDeleted',
         ...mockVouchers
           .filter(
             (voucher) =>
+              !voucher.isDeleted &&
               (!params.visibility || params.visibility === 'all' || voucher.visibility === params.visibility) &&
               (!params.programIds?.length || params.programIds.includes(voucher.programId ?? ''))
           )
-          .map(
-            (voucher) =>
-              `${voucher.code},${voucher.visibility},${voucher.discountType},${voucher.discountValue},${voucher.usedCount},${voucher.maxUsageCount}`
-          )
+          .map((voucher) => {
+            const program = voucher.programId
+              ? mockPrograms.find((item) => item.id === voucher.programId && !item.isDeleted)
+              : undefined
+            return [
+              voucher.id,
+              voucher.programId,
+              program?.name ?? voucher.programName,
+              voucher.code,
+              voucher.description,
+              voucher.visibility,
+              voucher.isActive,
+              voucher.discountType,
+              voucher.discountValue,
+              voucher.maxDiscountAmount,
+              voucher.maxUsageCount,
+              voucher.usedCount,
+              program?.startAt ?? voucher.startAt,
+              program?.endAt ?? voucher.endAt,
+              program?.minOrderAmount ?? voucher.minOrderAmount,
+              program?.maxOrderAmount ?? voucher.maxOrderAmount,
+              voucher.createdAt,
+              voucher.updatedAt,
+              false
+            ]
+              .map(escapeCsv)
+              .join(',')
+          })
       ].join('\n')
-      return new Blob([content], { type: 'text/csv;charset=utf-8' })
+      return { blob: new Blob([content], { type: 'text/csv;charset=utf-8' }), fileName } satisfies VoucherExportFile
     }
-    const { data } = await this.get<Blob>('/v1/admin/vouchers/export', { params, responseType: 'blob' })
-    return data
+    const response = await this.get<Blob>('/v1/admin/vouchers/export', { params, responseType: 'blob' })
+    const contentDisposition = response.headers['content-disposition'] as string | undefined
+    const fileName = contentDisposition?.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/)?.[1]
+    return {
+      blob: response.data,
+      fileName: fileName ? decodeURIComponent(fileName) : 'vouchers.xlsx'
+    } satisfies VoucherExportFile
   }
 }
 

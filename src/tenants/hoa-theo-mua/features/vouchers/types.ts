@@ -17,11 +17,12 @@ export interface Voucher {
   maxUsageCount: number
   usedCount: number
   startAt: string
-  endAt: string
+  endAt: string | null
   minOrderAmount: number | null
   maxOrderAmount: number | null
   createdAt: string
   updatedAt: string | null
+  isDeleted?: boolean
 }
 
 export interface VoucherProgram {
@@ -29,13 +30,14 @@ export interface VoucherProgram {
   name: string
   isActive: boolean
   startAt: string
-  endAt: string
+  endAt: string | null
   minOrderAmount: number | null
   maxOrderAmount: number | null
   voucherCount: number
   usedVoucherCount: number
   createdAt: string
   updatedAt: string | null
+  isDeleted?: boolean
 }
 
 export interface VoucherUsage {
@@ -44,7 +46,7 @@ export interface VoucherUsage {
   customerName: string
   customerPhone: string
   discountAmount: number
-  usedAt: string
+  usedAt: string | null
 }
 
 export interface PageParams {
@@ -62,6 +64,7 @@ export interface GetVouchersParams extends PageParams {
 export interface GetProgramsParams extends PageParams {
   keyword?: string
   isActive?: boolean
+  isDelete?: boolean
 }
 
 export interface CreateVoucherPayload {
@@ -76,7 +79,7 @@ export interface CreateVoucherPayload {
   maxDiscountAmount?: number | null
   maxUsageCount: number
   startAt: string
-  endAt: string
+  endAt: string | null
   minOrderAmount?: number | null
   maxOrderAmount?: number | null
 }
@@ -90,13 +93,14 @@ export interface UpdateVoucherItem extends Partial<
 export interface CreateProgramPayload {
   name: string
   startAt: string
-  endAt: string
+  endAt: string | null
   minOrderAmount?: number | null
   maxOrderAmount?: number | null
 }
 
 export interface UpdateProgramPayload extends Partial<CreateProgramPayload> {
   id: string
+  isActive?: boolean
 }
 
 export interface GenerateVouchersPayload {
@@ -111,10 +115,9 @@ export interface GenerateVouchersPayload {
   description?: string
 }
 
-export interface BulkUpdateResponse {
-  updatedIds: string[]
-  notFoundIds: string[]
-  skippedItems: Array<{ id: string; code: string; reason: string }>
+export interface VoucherExportFile {
+  blob: Blob
+  fileName: string
 }
 
 export type VoucherPage = BasePaginationResponse<Voucher>['value']

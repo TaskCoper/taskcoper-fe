@@ -77,7 +77,11 @@ export function VoucherDetailDialog({
             />
             <DetailItem
               label={t('configsPage.vouchers.minOrderAmount')}
-              value={formatMoney(voucher.minOrderAmount, t('configsPage.vouchers.currency'))}
+              value={
+                voucher.minOrderAmount == null
+                  ? t('configsPage.vouchers.unlimited')
+                  : formatMoney(voucher.minOrderAmount, t('configsPage.vouchers.currency'))
+              }
             />
             <DetailItem
               label={t('configsPage.vouchers.maxOrderAmount')}
