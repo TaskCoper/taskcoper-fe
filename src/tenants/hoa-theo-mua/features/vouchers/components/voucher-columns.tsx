@@ -6,9 +6,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Switch } from '@/components/ui/switch'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import { History, MoreHorizontal, Pencil, SearchIcon, Trash2 } from 'lucide-react'
+import { Copy, History, MoreHorizontal, Pencil, SearchIcon, Trash2 } from 'lucide-react'
 import type { Voucher } from '../types'
 import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
+import { toast } from 'sonner'
 
 const renderOrderAmount = (value: number | null, currency: string, unlimited: string) => (
   <Badge variant='outline' className='whitespace-nowrap font-normal'>
@@ -208,6 +209,19 @@ export const getVoucherColumns = ({
             <DropdownMenuItem onClick={() => onViewUsage(row.original)}>
               <History className='size-4' />
               {t('configsPage.vouchers.usageHistory')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(row.original.code)
+                  toast.success(t('configsPage.vouchers.copyCodeSuccess'))
+                } catch {
+                  toast.error(t('configsPage.vouchers.copyCodeError'))
+                }
+              }}
+            >
+              <Copy className='size-4' />
+              {t('configsPage.vouchers.copyCode')}
             </DropdownMenuItem>
             <DropdownMenuItem variant='destructive' onClick={() => onDelete(row.original.id)}>
               <Trash2 className='size-4' />

@@ -1,12 +1,15 @@
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
-import { SearchIcon } from 'lucide-react'
+import { Copy, MoreHorizontal, SearchIcon } from 'lucide-react'
 import type { Voucher } from '../types'
 import { displayDateTime, formatMoney } from './voucher-date-utils'
+import { toast } from 'sonner'
 
 export const getVoucherProgramCodeColumns = (
   t: TenantT,
@@ -159,5 +162,42 @@ export const getVoucherProgramCodeColumns = (
     enableHiding: false,
     enableColumnFilter: false,
     size: 100
+  },
+  {
+    id: 'actions',
+    meta: { label: 'configsPage.vouchers.actions' },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label='configsPage.vouchers.actions' className='justify-end' />
+    ),
+    cell: ({ row }) => (
+      <div className='flex justify-end'>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' size='icon' aria-label={t('configsPage.vouchers.actions')}>
+              <MoreHorizontal className='size-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(row.original.code)
+                  toast.success(t('configsPage.vouchers.copyCodeSuccess'))
+                } catch {
+                  toast.error(t('configsPage.vouchers.copyCodeError'))
+                }
+              }}
+            >
+              <Copy className='size-4' />
+              {t('configsPage.vouchers.copyCode')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
+    size: 88
   }
 ]
