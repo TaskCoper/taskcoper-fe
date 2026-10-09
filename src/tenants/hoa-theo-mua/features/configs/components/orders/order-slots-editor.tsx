@@ -11,11 +11,11 @@ import { useUpdateOrderSlotLimits } from '../../hooks/use-update-order-slot-limi
 
 const ORDER_TAG_TIME_PATTERN = /^\s*\d{1,2}h\s*-\s*\d{1,2}h\s*$/i
 
-type SlotLimits = Record<string, number | null>
+type SlotLimits = Record<string, number>
 type OrderSlotsFormValues = { limits: SlotLimits }
 
-const normalizeLimits = (options: readonly { value: number }[], limits?: SlotLimits): SlotLimits =>
-  Object.fromEntries(options.map((option) => [String(option.value), limits?.[String(option.value)] ?? null]))
+const normalizeLimits = (options: readonly { value: number }[], limits?: Record<string, number | null>): SlotLimits =>
+  Object.fromEntries(options.map((option) => [String(option.value), limits?.[String(option.value)] ?? 0]))
 
 export default function OrderSlotsEditor() {
   const { t } = useTenantTranslation()
@@ -41,10 +41,7 @@ export default function OrderSlotsEditor() {
   const save = () => {
     void handleSubmit(({ limits }) =>
       updateOrderSlotLimits({
-        slots: syncedSlots.flatMap((slot) => {
-          const limit = limits[String(slot.value)]
-          return limit === null || limit === undefined ? [] : [{ tagId: slot.value, limit }]
-        })
+        slots: syncedSlots.map((slot) => ({ tagId: slot.value, limit: limits[String(slot.value)] ?? 0 }))
       })
     )()
   }
@@ -107,11 +104,10 @@ export default function OrderSlotsEditor() {
                           min={0}
                           step={1}
                           inputMode='numeric'
-                          placeholder={t('configsPage.orderSlots.unconfigured')}
-                          value={field.value ?? ''}
+                          value={field.value ?? 0}
                           onBlur={field.onBlur}
                           onChange={(event) =>
-                            field.onChange(event.target.value === '' ? null : Number(event.target.value))
+                            field.onChange(event.target.value === '' ? 0 : Number(event.target.value))
                           }
                           aria-invalid={fieldState.invalid}
                         />
