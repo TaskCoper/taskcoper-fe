@@ -56,7 +56,7 @@ export function VoucherFormDialog({
   const [codeMode, setCodeMode] = useState<'manual' | 'generated'>('manual')
   const methods = useForm<VoucherFormValues>({
     mode: 'onChange',
-    resolver: zodResolver(voucherSchema(t, voucher?.usedCount ?? 0)),
+    resolver: zodResolver(voucherSchema(t, voucher?.usedCount ?? 0, voucher ? 'edit' : codeMode)),
     defaultValues: {
       code: voucher?.code ?? '',
       codePrefix: 'HTM',

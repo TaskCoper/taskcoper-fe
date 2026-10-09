@@ -44,7 +44,7 @@ const addAmountRules =
     }
   }
 
-export const voucherSchema = (t: TenantT, usedCount = 0) =>
+export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'generated' | 'edit' = 'manual') =>
   z
     .object({
       code: z.string(),
@@ -63,18 +63,21 @@ export const voucherSchema = (t: TenantT, usedCount = 0) =>
       maxOrderAmount: optionalAmount
     })
     .superRefine((data, ctx) => {
-      if (data.code && !/^[A-Z0-9]{4,20}$/.test(data.code)) {
+      if (codeMode === 'manual' && !data.code) {
+        ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.codeFormatValidation'), path: ['code'] })
+      }
+      if (codeMode === 'manual' && data.code && !/^[A-Z0-9]{4,20}$/.test(data.code)) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.codeFormatValidation'), path: ['code'] })
       }
 
-      if (data.codePrefix && !/^[A-Z0-9]*$/.test(data.codePrefix)) {
+      if (codeMode === 'generated' && data.codePrefix && !/^[A-Z0-9]*$/.test(data.codePrefix)) {
         ctx.addIssue({
           code: 'custom',
           message: t('configsPage.vouchers.generatedCodeValidation'),
           path: ['codePrefix']
         })
       }
-      if (data.codeSuffix && !/^[A-Z0-9]*$/.test(data.codeSuffix)) {
+      if (codeMode === 'generated' && data.codeSuffix && !/^[A-Z0-9]*$/.test(data.codeSuffix)) {
         ctx.addIssue({
           code: 'custom',
           message: t('configsPage.vouchers.generatedCodeValidation'),
@@ -82,9 +85,10 @@ export const voucherSchema = (t: TenantT, usedCount = 0) =>
         })
       }
       if (
-        data.codeLength < 5 ||
-        data.codeLength > 10 ||
-        data.codePrefix.length + data.codeLength + data.codeSuffix.length > 20
+        codeMode === 'generated' &&
+        (data.codeLength < 5 ||
+          data.codeLength > 10 ||
+          data.codePrefix.length + data.codeLength + data.codeSuffix.length > 20)
       ) {
         ctx.addIssue({
           code: 'custom',
