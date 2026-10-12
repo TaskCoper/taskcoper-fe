@@ -986,7 +986,18 @@
         "mediaInvalid": "Ảnh không đạt yêu cầu của nền tảng.",
         "invalidSelectedImage": "Nền tảng chưa nhận ảnh đang chốt, thường là do còn một lượt cắt ảnh lỗi. Cắt lại ảnh lỗi hoặc bỏ chọn rồi chọn lại ảnh cho kênh này.",
         "insightsPermissionRequired": "Tài khoản chưa cấp quyền đọc chỉ số. Kết nối lại tài khoản và cấp đủ quyền.",
-        "platformReauthRequired": "Phiên kết nối tài khoản đã hết hiệu lực. Kết nối lại tài khoản rồi thử lại."
+        "platformReauthRequired": "Phiên kết nối tài khoản đã hết hiệu lực. Kết nối lại tài khoản rồi thử lại.",
+        "zaloTitleInvalid": "Tiêu đề bài Zalo bắt buộc và tối đa 150 ký tự.",
+        "zaloMetadataInvalid": "Tác giả tối đa 50 ký tự và trích dẫn tối đa 300 ký tự, không được để trống.",
+        "zaloImageInvalid": "Zalo OA chỉ nhận ảnh JPEG hoặc PNG, tối đa 1 MB mỗi ảnh.",
+        "zaloTokenInvalid": "Token Zalo không còn hợp lệ. Làm mới token hoặc kết nối lại OA.",
+        "zaloPermissionDenied": "OA hoặc ứng dụng chưa có quyền đăng bài. Kiểm tra quyền và gói dịch vụ OA.",
+        "zaloRateLimited": "Zalo đang giới hạn yêu cầu. Chờ trước khi thử lại.",
+        "zaloRejected": "Zalo từ chối yêu cầu. Kiểm tra quyền quản lý bài viết, gói OA và mã lỗi trong lịch sử.",
+        "zaloProcessing": "Zalo đang xử lý bài viết.",
+        "zaloUnverified": "Chưa xác nhận được bài trên Zalo. Kiểm tra OA và đối soát; không tạo lại bài để tránh trùng.",
+        "zaloUnavailable": "Chưa nhận được phản hồi từ Zalo. Kiểm tra trạng thái tác vụ trước khi thử lại.",
+        "zaloConfigInvalid": "Cấu hình đăng Zalo OA chưa sẵn sàng."
       },
       "hint": {
         "publishing": "Đang xử lý, không sửa hay hủy được lúc này.",
@@ -1035,7 +1046,8 @@
         "noteRequired": "Phải có ghi chú",
         "externalPostIdRequired": "Phải có ID bài trên nền tảng"
       },
-      "lastFailed": "Lần đăng trước bị lỗi"
+      "lastFailed": "Lần đăng trước bị lỗi",
+      "zaloArticle": "Bài Zalo: tác giả {{author}}; trích dẫn: {{description}}. Ảnh đầu tiên làm ảnh bìa; các ảnh còn lại nằm trong nội dung."
     },
     "delete": {
       "title": "Xóa bài đăng?",
@@ -3513,10 +3525,9 @@
   },
   "platformAccounts": {
     "title": "Tài khoản nền tảng",
-    "description": "Kết nối trang Facebook và tài khoản Instagram chuyên nghiệp để sau này đăng bài.",
+    "description": "Kết nối Facebook, Instagram chuyên nghiệp và Zalo OA để đăng bài.",
     "connectedNotReadyNote": "Kết nối thành công mới chỉ xác nhận token còn hiệu lực ở lần kiểm tra gần nhất, chưa chắc đã đủ quyền đăng bài.",
     "empty": "Chưa kết nối tài khoản nào.",
-    "zaloPending": "Zalo OA chưa mở kết nối ở đợt này. Phần AI viết nội dung và cắt ảnh cho Zalo vẫn dùng bình thường.",
     "popupClosed": "Đã đóng cửa sổ cấp quyền. Đang tải lại danh sách tài khoản.",
     "refreshSuccess": "Token của {{name}} vẫn còn hiệu lực.",
     "refreshNeedsReauth": "{{name}} cần kết nối lại.",
@@ -3571,7 +3582,8 @@
       "status": "Trạng thái",
       "scopes": "Quyền đã cấp",
       "actions": "Thao tác"
-    }
+    },
+    "zaloNote": "Zalo OA cần cấp quyền quản lý thông tin OA và bài viết. Ảnh JPEG/PNG tối đa 1 MB mỗi ảnh."
   },
   "lightbox": {
     "label": "Xem ảnh",

@@ -24,6 +24,24 @@ export const parsePublicationErrorCode = (code: string): ParsedPublicationError 
 
 // baseCode -> hậu tố khoá i18n dưới `marketingPosts.publication.error.*`
 const publicationErrorKeys: Record<string, string> = {
+  ZALO_TITLE_INVALID: 'zaloTitleInvalid',
+  ZALO_ARTICLE_METADATA_INVALID: 'zaloMetadataInvalid',
+  ZALO_IMAGE_FORMAT_INVALID: 'zaloImageInvalid',
+  ZALO_TOKEN_INVALID: 'zaloTokenInvalid',
+  ZALO_PERMISSION_DENIED: 'zaloPermissionDenied',
+  ZALO_RATE_LIMITED: 'zaloRateLimited',
+  ZALO_REQUEST_REJECTED: 'zaloRejected',
+  ZALO_PROCESSING: 'zaloProcessing',
+  ZALO_PROCESS_REFERENCE_MISSING: 'zaloUnverified',
+  ZALO_PUBLICATION_UNVERIFIED: 'zaloUnverified',
+  ZALO_CREATE_ALREADY_SENT: 'zaloUnverified',
+  ZALO_INVALID_RESPONSE: 'zaloUnverified',
+  ZALO_TIMEOUT: 'zaloUnavailable',
+  ZALO_TRANSPORT_ERROR: 'zaloUnavailable',
+  ZALO_UNAVAILABLE: 'zaloUnavailable',
+  ZALO_PUBLISHING_CONFIG_INVALID: 'zaloConfigInvalid',
+  ZALO_INVALID_TARGET: 'accountMismatch',
+
   // Mốc 12 - xung đột trạng thái và cấu hình
   PUBLICATION_PREVIEW_CHANGED: 'previewChanged',
   PUBLICATION_CHANGED: 'publicationChanged',
@@ -113,6 +131,8 @@ export const getPublicationReasonLabelKey = (reason: string) => {
 
 // Token chết hoặc mất quyền: phải kết nối lại tài khoản trước, retry suông không cứu được
 const reauthErrorCodes = [
+  'ZALO_TOKEN_INVALID',
+  'ZALO_PERMISSION_DENIED',
   'META_TOKEN_INVALID',
   'META_PERMISSION_DENIED',
   'PLATFORM_REAUTH_REQUIRED',
@@ -134,4 +154,4 @@ export const isImageErrorCode = (code: string | null) => {
 
 // Provider đang chặn theo hạn mức. Retry sớm trả HTTP 429 nên nút phải chờ, không vòng lặp.
 export const isRateLimitedCode = (code: string | null) =>
-  Boolean(code) && parsePublicationErrorCode(code as string).baseCode === 'META_RATE_LIMITED'
+  Boolean(code) && ['META_RATE_LIMITED', 'ZALO_RATE_LIMITED'].includes(parsePublicationErrorCode(code as string).baseCode)

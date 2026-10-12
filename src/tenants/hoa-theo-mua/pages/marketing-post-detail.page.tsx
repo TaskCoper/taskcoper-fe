@@ -30,7 +30,6 @@ import {
   type MarketingPostPublicationChild
 } from '../features/marketing-posts/types'
 import { usePlatformAccounts } from '../features/platform-accounts/hooks/use-platform-accounts'
-import { connectablePlatforms } from '../features/platform-accounts/types'
 
 const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
 
@@ -111,7 +110,7 @@ function PerformancePanel({ publication }: { publication: MarketingPostPublished
         )
       }
     >
-      {connectablePlatforms.includes(publication.platform) ? (
+      {(['facebook', 'instagram'] as string[]).includes(publication.platform) ? (
         <MarketingPublicationInsights publicationId={publication.publicationId} />
       ) : (
         <p className='text-sm text-muted-foreground'>{t('marketingPosts.insights.unsupported')}</p>

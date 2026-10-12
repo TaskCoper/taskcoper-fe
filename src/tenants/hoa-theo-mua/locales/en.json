@@ -986,7 +986,18 @@
         "mediaInvalid": "The image does not meet the platform's requirements.",
         "invalidSelectedImage": "The platform has not accepted the selected image, usually because an image crop failed. Retry the failed crop, or deselect and reselect the images for this channel.",
         "insightsPermissionRequired": "The account has not granted insights access. Reconnect it and grant the required permissions.",
-        "platformReauthRequired": "The account connection has expired. Reconnect the account and try again."
+        "platformReauthRequired": "The account connection has expired. Reconnect the account and try again.",
+        "zaloTitleInvalid": "Zalo articles require a title of up to 150 characters.",
+        "zaloMetadataInvalid": "Author (up to 50 characters) and description (up to 300 characters) are required.",
+        "zaloImageInvalid": "Zalo OA accepts JPEG or PNG images up to 1 MB each.",
+        "zaloTokenInvalid": "The Zalo token is invalid. Refresh it or reconnect the OA.",
+        "zaloPermissionDenied": "The OA or app lacks publishing access. Check permissions and the OA service plan.",
+        "zaloRateLimited": "Zalo is rate limiting requests. Wait before retrying.",
+        "zaloRejected": "Zalo rejected the request. Check article permissions, the OA plan and the provider code in history.",
+        "zaloProcessing": "Zalo is processing the article.",
+        "zaloUnverified": "Zalo publication is unconfirmed. Check the OA and reconcile; do not create a duplicate.",
+        "zaloUnavailable": "No response from Zalo. Check the job status before retrying.",
+        "zaloConfigInvalid": "Zalo OA publishing is not configured."
       },
       "hint": {
         "publishing": "Processing - it cannot be changed or cancelled right now.",
@@ -1035,7 +1046,8 @@
         "noteRequired": "A note is required",
         "externalPostIdRequired": "The post ID on the platform is required"
       },
-      "lastFailed": "The previous attempt failed"
+      "lastFailed": "The previous attempt failed",
+      "zaloArticle": "Zalo article: author {{author}}; description: {{description}}. The first image is the cover; remaining images appear in the body."
     },
     "delete": {
       "title": "Delete this post?",
@@ -3513,10 +3525,9 @@
   },
   "platformAccounts": {
     "title": "Platform accounts",
-    "description": "Connect a Facebook Page and a professional Instagram account for publishing later.",
+    "description": "Connect Facebook, professional Instagram accounts and Zalo OA to publish posts.",
     "connectedNotReadyNote": "A successful connection only confirms the token was valid at the last check - it does not guarantee publishing permission.",
     "empty": "No account connected yet.",
-    "zaloPending": "Zalo OA connection is not open in this round. AI content and image generation for Zalo still works.",
     "popupClosed": "Authorization window closed. Reloading the account list.",
     "refreshSuccess": "The token for {{name}} is still valid.",
     "refreshNeedsReauth": "{{name}} needs to be reconnected.",
@@ -3571,7 +3582,8 @@
       "status": "Status",
       "scopes": "Granted scopes",
       "actions": "Actions"
-    }
+    },
+    "zaloNote": "Zalo OA requires OA information and article management permissions. JPEG/PNG images must be at most 1 MB each."
   },
   "lightbox": {
     "label": "Image viewer",

@@ -80,6 +80,7 @@ export interface PublicationSnapshot {
   accountId: string
   externalAccountId: string | null
   pageId: string | null
+  article?: { author: string; description: string } | null
   images: PublicationSnapshotImage[]
 }
 
