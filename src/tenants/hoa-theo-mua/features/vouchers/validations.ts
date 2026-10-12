@@ -4,31 +4,36 @@ import type { VoucherDiscountType, VoucherVisibility } from './types'
 
 const optionalAmount = z.union([z.string(), z.number(), z.null()])
 
-const addDateRules = (t: TenantT) => (data: { startAt: string; endAt: string }, ctx: z.RefinementCtx) => {
-  if (!data.startAt && !data.endAt) {
-    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.validityRequired'), path: ['startAt'] })
-  }
+const addDateRules =
+  (t: TenantT, isProgram: boolean) => (data: { startAt: string; endAt: string }, ctx: z.RefinementCtx) => {
+    if (!data.startAt && !data.endAt) {
+      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.validityRequired'), path: ['startAt'] })
+    }
 
-  if (!data.startAt && data.endAt) {
-    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.startDateRequired'), path: ['startAt'] })
-  }
+    if (!data.startAt && data.endAt) {
+      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.startDateRequired'), path: ['startAt'] })
+    }
 
-  if (data.startAt && data.endAt && data.endAt <= data.startAt) {
-    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
-  }
+    if (data.startAt && data.endAt && Date.parse(data.endAt) <= Date.parse(data.startAt)) {
+      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
+    }
 
-  if (data.endAt && Date.parse(data.endAt) <= Date.now()) {
-    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
+    if (!isProgram && data.endAt && Date.parse(data.endAt) <= Date.now()) {
+      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
+    }
   }
-}
 
 const addAmountRules =
-  (t: TenantT) =>
+  (t: TenantT, isProgram: boolean) =>
   (data: { minOrderAmount: string | number | null; maxOrderAmount: string | number | null }, ctx: z.RefinementCtx) => {
     const min = data.minOrderAmount === '' || data.minOrderAmount === null ? undefined : Number(data.minOrderAmount)
     const max = data.maxOrderAmount === '' || data.maxOrderAmount === null ? undefined : Number(data.maxOrderAmount)
+    const isInvalidAmount = (value: number) => !Number.isFinite(value) || value < 0 || (!isProgram && value === 0)
+    const invalidAmountMessage = isProgram
+      ? t('common.validation.number.min', { min: 0 })
+      : t('common.validation.number.positive')
 
-    if (min !== undefined && max !== undefined && min > max) {
+    if (min !== undefined && max !== undefined && max > 0 && min > max) {
       ctx.addIssue({
         code: 'custom',
         message: t('configsPage.vouchers.minOrderAmountValidation'),
@@ -36,11 +41,11 @@ const addAmountRules =
       })
     }
 
-    if (min !== undefined && (!Number.isFinite(min) || min <= 0)) {
-      ctx.addIssue({ code: 'custom', message: t('common.validation.number.positive'), path: ['minOrderAmount'] })
+    if (min !== undefined && isInvalidAmount(min)) {
+      ctx.addIssue({ code: 'custom', message: invalidAmountMessage, path: ['minOrderAmount'] })
     }
-    if (max !== undefined && (!Number.isFinite(max) || max <= 0)) {
-      ctx.addIssue({ code: 'custom', message: t('common.validation.number.positive'), path: ['maxOrderAmount'] })
+    if (max !== undefined && isInvalidAmount(max)) {
+      ctx.addIssue({ code: 'custom', message: invalidAmountMessage, path: ['maxOrderAmount'] })
     }
   }
 
@@ -125,8 +130,8 @@ export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'g
       if (data.maxUsageCount < usedCount) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.maxUsageValidation'), path: ['maxUsageCount'] })
       }
-      addDateRules(t)(data, ctx)
-      addAmountRules(t)(data, ctx)
+      addDateRules(t, false)(data, ctx)
+      addAmountRules(t, false)(data, ctx)
     })
 
 export const programSchema = (t: TenantT) =>
@@ -142,8 +147,8 @@ export const programSchema = (t: TenantT) =>
       if (!data.name.trim()) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.programNameValidation'), path: ['name'] })
       }
-      addDateRules(t)(data, ctx)
-      addAmountRules(t)(data, ctx)
+      addDateRules(t, true)(data, ctx)
+      addAmountRules(t, true)(data, ctx)
     })
 
 export const generateVoucherSchema = (t: TenantT, maxQuantity: number) =>

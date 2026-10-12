@@ -2492,7 +2492,9 @@
       "unconfigured": "0 đơn",
       "limitIntegerValidation": "Giới hạn số đơn phải là số nguyên",
       "loadError": "Không thể tải khung giờ từ hệ thống",
-      "empty": "Chưa có khung giờ hợp lệ được đồng bộ từ Nhanh.vn."
+      "empty": "Chưa có khung giờ hợp lệ được đồng bộ từ Nhanh.vn.",
+      "saveSuccess": "Đã lưu giới hạn khung giờ nhận đơn.",
+      "saveError": "Không thể lưu giới hạn khung giờ nhận đơn."
     },
     "vouchers": {
       "detailTitle": "Chi tiết voucher",
@@ -2540,7 +2542,8 @@
       "selectAll": "Chọn tất cả voucher",
       "selectRow": "Chọn voucher",
       "programSearch": "Nhập tên chương trình...",
-      "validityRequired": "Vui lòng nhập đầy đủ ngày và giờ bắt đầu, kết thúc.",
+      "codeSearch": "Nhập mã voucher...",
+      "validityRequired": "Vui lòng nhập ngày và giờ bắt đầu.",
       "startTime": "Giờ bắt đầu",
       "endTime": "Giờ kết thúc",
       "unlimited": "Không giới hạn",
@@ -2575,7 +2578,21 @@
       "deleteConfirmDescription": "Voucher sẽ bị xóa khỏi danh sách và không thể sử dụng tiếp.",
       "deleteProgramConfirmTitle": "Xóa chương trình voucher?",
       "deleteProgramConfirmDescription": "Chương trình voucher sẽ bị xóa khỏi hệ thống.",
+      "programApply": "Áp dụng chương trình",
+      "programStatusAction": {
+        "activateTitle": "Bật chương trình voucher?",
+        "deactivateTitle": "Tắt chương trình voucher?",
+        "activateDescription": "Chương trình {{name}} và toàn bộ mã voucher của chương trình, kể cả mã từng tắt riêng, sẽ được bật.",
+        "deactivateDescription": "Chương trình {{name}} và toàn bộ mã voucher của chương trình sẽ ngừng áp dụng. Đơn đã tạo không bị ảnh hưởng.",
+        "confirm": "Xác nhận",
+        "activateSuccess": "Đã bật chương trình voucher.",
+        "deactivateSuccess": "Đã tắt chương trình voucher."
+      },
       "deleteConfirm": "Xóa",
+      "voucherStatusAction": {
+        "activateSuccess": "Đã bật voucher.",
+        "deactivateSuccess": "Đã tắt voucher."
+      },
       "export": "Export Excel",
       "empty": "Chưa có dữ liệu",
       "createProgram": "Tạo chương trình",

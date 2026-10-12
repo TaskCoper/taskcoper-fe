@@ -6,7 +6,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { Table } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import type { Voucher, VoucherUsage } from '../types'
-import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
+import { displayValidityPeriod, formatMoney, isUnlimitedAmount } from './voucher-date-utils'
 
 interface VoucherDetailDialogProps {
   voucher: Voucher | null
@@ -78,7 +78,7 @@ export function VoucherDetailDialog({
             <DetailItem
               label={t('configsPage.vouchers.minOrderAmount')}
               value={
-                voucher.minOrderAmount == null
+                isUnlimitedAmount(voucher.minOrderAmount)
                   ? t('configsPage.vouchers.unlimited')
                   : formatMoney(voucher.minOrderAmount, t('configsPage.vouchers.currency'))
               }
@@ -86,7 +86,7 @@ export function VoucherDetailDialog({
             <DetailItem
               label={t('configsPage.vouchers.maxOrderAmount')}
               value={
-                voucher.maxOrderAmount == null
+                isUnlimitedAmount(voucher.maxOrderAmount)
                   ? t('configsPage.vouchers.unlimited')
                   : formatMoney(voucher.maxOrderAmount, t('configsPage.vouchers.currency'))
               }

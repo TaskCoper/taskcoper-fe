@@ -2,10 +2,15 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDataTable } from '@/hooks/use-data-table'
 import StatCard from '@/features/projects/core/components/stat-card'
+import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { isAxiosError } from 'axios'
 import {
   CalendarDays,
   ChevronRightIcon,
@@ -18,17 +23,23 @@ import {
   Users
 } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getVoucherProgramCodeColumns } from '../features/vouchers/components/voucher-program-code-columns'
 import { GenerateDialog } from '../features/vouchers/components/vouchers-editor'
-import { displayDateTime, displayValidityPeriod, formatMoney } from '../features/vouchers/components/voucher-date-utils'
+import {
+  displayDateTime,
+  displayValidityPeriod,
+  formatMoney,
+  isUnlimitedAmount
+} from '../features/vouchers/components/voucher-date-utils'
+import { getErrorDescription } from '../features/vouchers/error-description'
 import {
   useGenerateVouchers,
-  useGetVoucherProgram,
-  useGetVouchers,
+  useGetVoucherProgramCodes,
+  useSetVoucherProgramActive,
   useSetVouchersActive
 } from '../features/vouchers/hooks'
 import voucherService from '../features/vouchers/services'
@@ -44,25 +55,39 @@ export default function VoucherProgramDetailPage() {
   const [perPage] = useQueryState('voucher_program_codes_perPage', parseAsInteger)
   const [isGenerateOpen, setIsGenerateOpen] = useState(false)
   const currentTab: ProgramTab = rawTab === 'codes' ? 'codes' : 'overview'
-  const { program: programQuery, isGettingProgram } = useGetVoucherProgram(programId)
-  const program = programQuery.data
-  const { vouchers } = useGetVouchers({
-    programId,
+  const { program, codes, pageCount, isGettingProgram } = useGetVoucherProgramCodes(programId, {
+    keyword: keyword || undefined,
     pageIndex: page ?? 1,
-    pageSize: perPage ?? 10,
-    keyword: keyword || undefined
+    pageSize: perPage ?? 10
   })
+  const { confirm } = useConfirmStore()
   const { setVouchersActive } = useSetVouchersActive()
+  const { setVoucherProgramActive, isSettingVoucherProgramActive } = useSetVoucherProgramActive()
   const { generateVouchers, isGeneratingVouchers } = useGenerateVouchers()
 
+  const handleToggleProgram = useCallback(
+    async (isActive: boolean) => {
+      if (!program) return
+
+      const action = isActive ? 'activate' : 'deactivate'
+      const confirmed = await confirm({
+        title: t(`configsPage.vouchers.programStatusAction.${action}Title`),
+        description: t(`configsPage.vouchers.programStatusAction.${action}Description`, { name: program.name }),
+        confirmText: t('configsPage.vouchers.programStatusAction.confirm')
+      })
+
+      if (confirmed) setVoucherProgramActive({ id: program.id, isActive })
+    },
+    [confirm, program, setVoucherProgramActive, t]
+  )
   const codeColumns = useMemo(
     () => getVoucherProgramCodeColumns(t, (voucher, isActive) => setVouchersActive({ ids: [voucher.id], isActive })),
     [setVouchersActive, t]
   )
   const { table: codeTable } = useDataTable({
-    data: vouchers.data?.items ?? [],
+    data: codes,
     columns: codeColumns,
-    pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / (perPage ?? 10)) || 1,
+    pageCount,
     initialState: {
       pagination: { pageIndex: 0, pageSize: 10 },
       columnVisibility: {
@@ -82,7 +107,7 @@ export default function VoucherProgramDetailPage() {
     filterPrefix: 'voucher_program_codes'
   })
 
-  if (isGettingProgram) return <div className='p-6 text-sm text-muted-foreground'>{t('common.loading')}</div>
+  if (isGettingProgram) return <div className='p-6 text-sm text-muted-foreground'>{t('common.ui.loading')}</div>
   if (!program)
     return <div className='p-6 text-sm text-muted-foreground'>{t('configsPage.vouchers.programNotFound')}</div>
 
@@ -99,9 +124,8 @@ export default function VoucherProgramDetailPage() {
       anchor.click()
       URL.revokeObjectURL(url)
     } catch (error) {
-      const responseError = error as { response?: { data?: { detail?: string; errors?: { detail?: string } } } }
       toast.error(t('error.somethingWentWrong'), {
-        description: responseError.response?.data?.errors?.detail ?? responseError.response?.data?.detail
+        description: getErrorDescription(isAxiosError<ErrorResponse>(error) ? error.response?.data : undefined)
       })
     }
   }
@@ -143,11 +167,24 @@ export default function VoucherProgramDetailPage() {
                 </div>
               </div>
             </div>
-            <Button variant='outline' size='sm' asChild>
-              <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`}>
-                {t('configsPage.vouchers.backToPrograms')}
-              </Link>
-            </Button>
+            <div className='flex flex-wrap items-center gap-3'>
+              <div className='flex items-center gap-2 rounded-lg border bg-card px-3 py-1.5'>
+                <Label htmlFor='voucher-program-active' className='cursor-pointer text-sm font-medium'>
+                  {t('configsPage.vouchers.programApply')}
+                </Label>
+                <Switch
+                  id='voucher-program-active'
+                  checked={program.isActive}
+                  disabled={isSettingVoucherProgramActive}
+                  onCheckedChange={(value) => void handleToggleProgram(value)}
+                />
+              </div>
+              <Button variant='outline' size='sm' asChild>
+                <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`}>
+                  {t('configsPage.vouchers.backToPrograms')}
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
@@ -166,7 +203,7 @@ export default function VoucherProgramDetailPage() {
             <StatCard
               title={t('configsPage.vouchers.minOrderAmount')}
               value={
-                program.minOrderAmount == null
+                isUnlimitedAmount(program.minOrderAmount)
                   ? t('configsPage.vouchers.unlimited')
                   : formatMoney(program.minOrderAmount, t('configsPage.vouchers.currency'))
               }
@@ -240,7 +277,7 @@ export default function VoucherProgramDetailPage() {
                   <div className='grid gap-1 px-4 py-3 text-sm sm:grid-cols-[16rem_1fr] sm:gap-4'>
                     <span className='text-muted-foreground'>{t('configsPage.vouchers.minOrderAmount')}</span>
                     <span className='font-medium'>
-                      {program.minOrderAmount == null
+                      {isUnlimitedAmount(program.minOrderAmount)
                         ? t('configsPage.vouchers.unlimited')
                         : formatMoney(program.minOrderAmount, t('configsPage.vouchers.currency'))}
                     </span>
@@ -248,7 +285,7 @@ export default function VoucherProgramDetailPage() {
                   <div className='grid gap-1 px-4 py-3 text-sm sm:grid-cols-[16rem_1fr] sm:gap-4'>
                     <span className='text-muted-foreground'>{t('configsPage.vouchers.maxOrderAmount')}</span>
                     <span className='font-medium'>
-                      {program.maxOrderAmount == null
+                      {isUnlimitedAmount(program.maxOrderAmount)
                         ? t('configsPage.vouchers.unlimited')
                         : formatMoney(program.maxOrderAmount, t('configsPage.vouchers.currency'))}
                     </span>
@@ -258,7 +295,7 @@ export default function VoucherProgramDetailPage() {
             </div>
           </TabsContent>
           <TabsContent value='codes' className='mt-0'>
-            <DataTable table={codeTable} isLoading={vouchers.isLoading}>
+            <DataTable table={codeTable} isLoading={isGettingProgram}>
               <DataTableToolbar table={codeTable}>
                 <Button variant='outline' onClick={() => void exportProgramVouchers()}>
                   <Download className='size-4' />

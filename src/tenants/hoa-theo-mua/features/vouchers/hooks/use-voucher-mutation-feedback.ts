@@ -1,6 +1,9 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { useQueryClient } from '@tanstack/react-query'
+import type { AxiosError } from 'axios'
+import { toast } from 'sonner'
+import { getErrorDescription } from '../error-description'
 import { voucherKeys } from './query-keys'
 
 export const useVoucherMutationFeedback = () => {
@@ -12,9 +15,9 @@ export const useVoucherMutationFeedback = () => {
     void queryClient.invalidateQueries({ queryKey: voucherKeys.programs() })
   }
 
-  const onError = (error: { response?: { data?: { detail?: string; errors?: { detail?: string } } } }) => {
+  const onError = (error: AxiosError<ErrorResponse>) => {
     toast.error(t('error.somethingWentWrong'), {
-      description: error.response?.data?.errors?.detail ?? error.response?.data?.detail
+      description: getErrorDescription(error.response?.data)
     })
   }
 

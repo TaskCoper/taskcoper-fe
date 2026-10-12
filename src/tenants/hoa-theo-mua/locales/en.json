@@ -2492,7 +2492,9 @@
       "unconfigured": "0 orders",
       "limitIntegerValidation": "The order limit must be an integer",
       "loadError": "Unable to load time slots",
-      "empty": "No valid time slots are synced from Nhanh.vn."
+      "empty": "No valid time slots are synced from Nhanh.vn.",
+      "saveSuccess": "Order time slot limits saved.",
+      "saveError": "Unable to save order time slot limits."
     },
     "vouchers": {
       "detailTitle": "Voucher details",
@@ -2540,7 +2542,8 @@
       "selectAll": "Select all vouchers",
       "selectRow": "Select voucher",
       "programSearch": "Enter program name...",
-      "validityRequired": "Please enter both start and end dates and times.",
+      "codeSearch": "Enter voucher code...",
+      "validityRequired": "Please enter the start date and time.",
       "startTime": "Start time",
       "endTime": "End time",
       "unlimited": "Unlimited",
@@ -2575,7 +2578,21 @@
       "deleteConfirmDescription": "The voucher will be removed and can no longer be used.",
       "deleteProgramConfirmTitle": "Delete voucher program?",
       "deleteProgramConfirmDescription": "The voucher program will be removed from the system.",
+      "programApply": "Apply program",
+      "programStatusAction": {
+        "activateTitle": "Activate voucher program?",
+        "deactivateTitle": "Deactivate voucher program?",
+        "activateDescription": "The program {{name}} and all of its voucher codes, including codes that were turned off individually, will be activated.",
+        "deactivateDescription": "The program {{name}} and all of its voucher codes will stop being applied. Existing orders are not affected.",
+        "confirm": "Confirm",
+        "activateSuccess": "Voucher program activated.",
+        "deactivateSuccess": "Voucher program deactivated."
+      },
       "deleteConfirm": "Delete",
+      "voucherStatusAction": {
+        "activateSuccess": "Voucher activated.",
+        "deactivateSuccess": "Voucher deactivated."
+      },
       "export": "Export Excel",
       "empty": "No data",
       "createProgram": "Create program",

@@ -8,11 +8,11 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Eye, MoreHorizontal, Pencil, RefreshCw, SearchIcon, Trash2 } from 'lucide-react'
 import type { VoucherProgram } from '../types'
-import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
+import { displayValidityPeriod, formatMoney, isUnlimitedAmount } from './voucher-date-utils'
 
 const renderOrderAmount = (value: number | null, currency: string, unlimited: string) => (
   <Badge variant='outline' className='whitespace-nowrap font-normal'>
-    {value == null ? unlimited : formatMoney(value, currency)}
+    {isUnlimitedAmount(value) ? unlimited : formatMoney(value, currency)}
   </Badge>
 )
 

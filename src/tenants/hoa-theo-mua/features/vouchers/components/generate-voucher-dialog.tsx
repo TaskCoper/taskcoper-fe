@@ -63,6 +63,7 @@ export function GenerateDialog({
     register,
     control,
     setValue,
+    trigger,
     handleSubmit,
     formState: { errors }
   } = methods
@@ -119,9 +120,11 @@ export function GenerateDialog({
             <VoucherField label={t('configsPage.vouchers.discountType')}>
               <Select
                 value={form.discountType}
-                onValueChange={(value) =>
-                  setValue('discountType', value as GenerateFormValues['discountType'], { shouldValidate: true })
-                }
+                onValueChange={(value) => {
+                  setValue('discountType', value as GenerateFormValues['discountType'])
+                  if (value === 'cash') setValue('maxDiscountAmount', null)
+                  void trigger(['discountValue', 'maxDiscountAmount'])
+                }}
               >
                 <SelectTrigger className='w-full'>
                   <SelectValue />
@@ -149,7 +152,6 @@ export function GenerateDialog({
                 <VoucherInputWithSuffix
                   type='number'
                   min={0}
-                  {...register('maxDiscountAmount')}
                   value={form.maxDiscountAmount ?? ''}
                   suffix={t('configsPage.vouchers.currency')}
                   onChange={(event) =>

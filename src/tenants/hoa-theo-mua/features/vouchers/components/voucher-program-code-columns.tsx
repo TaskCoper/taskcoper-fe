@@ -7,14 +7,15 @@ import { Switch } from '@/components/ui/switch'
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Copy, MoreHorizontal, SearchIcon } from 'lucide-react'
-import type { Voucher } from '../types'
-import { displayDateTime, formatMoney } from './voucher-date-utils'
+import type { ProgramVoucherItem } from '../types'
+import { displayDateTime, formatMoney, isUnlimitedAmount } from './voucher-date-utils'
+import { VoucherDescription } from './voucher-description'
 import { toast } from 'sonner'
 
 export const getVoucherProgramCodeColumns = (
   t: TenantT,
-  onToggleActive: (voucher: Voucher, isActive: boolean) => void
-): ColumnDef<Voucher>[] => [
+  onToggleActive: (voucher: ProgramVoucherItem, isActive: boolean) => void
+): ColumnDef<ProgramVoucherItem>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -39,7 +40,12 @@ export const getVoucherProgramCodeColumns = (
   {
     id: 'code',
     accessorKey: 'code',
-    meta: { label: 'configsPage.vouchers.code', placeholder: 'Nhập mã voucher...', variant: 'text', icon: SearchIcon },
+    meta: {
+      label: 'configsPage.vouchers.code',
+      placeholder: 'configsPage.vouchers.codeSearch',
+      variant: 'text',
+      icon: SearchIcon
+    },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.code' />,
     cell: ({ row }) => <span className='font-medium'>{row.original.code}</span>,
     enableSorting: false,
@@ -52,7 +58,14 @@ export const getVoucherProgramCodeColumns = (
     accessorKey: 'description',
     meta: { label: 'configsPage.vouchers.description' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.description' />,
-    cell: ({ row }) => <span className='line-clamp-2 max-w-64 text-sm'>{row.original.description || '—'}</span>,
+    cell: ({ row }) => (
+      <VoucherDescription
+        description={row.original.description}
+        label={t('configsPage.vouchers.description')}
+        emptyLabel='—'
+        className='text-sm'
+      />
+    ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,
@@ -97,10 +110,13 @@ export const getVoucherProgramCodeColumns = (
     accessorKey: 'maxDiscountAmount',
     meta: { label: 'configsPage.vouchers.maxDiscountAmount' },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.maxDiscountAmount' />,
-    cell: ({ row }) =>
-      row.original.discountType === 'percent' && row.original.maxDiscountAmount != null
-        ? formatMoney(row.original.maxDiscountAmount, t('configsPage.vouchers.currency'))
-        : '—',
+    cell: ({ row }) => (
+      <Badge variant='outline' className='whitespace-nowrap font-normal'>
+        {isUnlimitedAmount(row.original.maxDiscountAmount)
+          ? t('configsPage.vouchers.unlimited')
+          : formatMoney(row.original.maxDiscountAmount, t('configsPage.vouchers.currency'))}
+      </Badge>
+    ),
     enableSorting: false,
     enableHiding: true,
     enableColumnFilter: false,

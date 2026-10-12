@@ -40,6 +40,24 @@ export interface VoucherProgram {
   isDeleted?: boolean
 }
 
+export interface ProgramVoucherItem {
+  id: string
+  code: string
+  description: string | null
+  isActive: boolean
+  discountType: VoucherDiscountType
+  discountValue: number
+  maxDiscountAmount: number | null
+  maxUsageCount: number
+  usedCount: number
+  createdAt: string
+  updatedAt: string | null
+}
+
+export interface VoucherProgramDetail extends VoucherProgram {
+  vouchers: ProgramVoucherItem[]
+}
+
 export interface VoucherUsage {
   orderId: string
   userId: string
@@ -58,7 +76,6 @@ export interface GetVouchersParams extends PageParams {
   keyword?: string
   visibility?: VoucherVisibility
   isActive?: boolean
-  programId?: string
 }
 
 export interface GetProgramsParams extends PageParams {

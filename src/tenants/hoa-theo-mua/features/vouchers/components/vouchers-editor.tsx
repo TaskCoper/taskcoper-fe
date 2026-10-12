@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
-import { Download, Plus } from 'lucide-react'
+import { isAxiosError } from 'axios'
+import { Download, Plus, X } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -33,6 +35,7 @@ import {
   useUpdateVoucherProgram,
   useUpdateVouchers
 } from '../hooks'
+import { getErrorDescription } from '../error-description'
 import type { Voucher, VoucherProgram, VoucherUsage, VoucherVisibility } from '../types'
 
 type View = 'vouchers' | 'programs'
@@ -244,9 +247,7 @@ export default function VouchersEditor({ view }: { view: View }) {
       URL.revokeObjectURL(url)
     } catch (error) {
       toast.error(t('error.somethingWentWrong'), {
-        description:
-          (error as { response?: { data?: { detail?: string; errors?: { detail?: string } } } }).response?.data?.errors
-            ?.detail ?? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail
+        description: getErrorDescription(isAxiosError<ErrorResponse>(error) ? error.response?.data : undefined)
       })
     }
   }
@@ -328,8 +329,13 @@ export default function VouchersEditor({ view }: { view: View }) {
           description={t('configsPage.vouchers.usageDescription')}
         >
           <div className='flex justify-end'>
-            <Button variant='ghost' onClick={() => setUsageVoucherId(null)}>
-              ×
+            <Button
+              variant='ghost'
+              size='icon'
+              aria-label={t('common.button.close')}
+              onClick={() => setUsageVoucherId(null)}
+            >
+              <X className='size-4' />
             </Button>
           </div>
           <DataTable<VoucherUsage> table={usageTable} isLoading={usages.isLoading}>

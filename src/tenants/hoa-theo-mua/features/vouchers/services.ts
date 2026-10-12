@@ -12,6 +12,7 @@ import type {
   Voucher,
   VoucherPage,
   VoucherProgram,
+  VoucherProgramDetail,
   VoucherProgramPage,
   VoucherExportFile,
   VoucherUsage,
@@ -19,7 +20,7 @@ import type {
 } from './types'
 
 // BE voucher API chưa deploy. Đổi thành false khi API sẵn sàng để dùng các endpoint bên dưới.
-const USE_MOCK_VOUCHER_API = true
+const USE_MOCK_VOUCHER_API = false
 
 const now = new Date().toISOString()
 const mockPrograms: VoucherProgram[] = [
@@ -117,7 +118,7 @@ class VoucherService extends BaseService {
             voucher.description?.toLowerCase().includes(keyword)) &&
           (!params.visibility || voucher.visibility === params.visibility) &&
           (params.isActive === undefined || voucher.isActive === params.isActive) &&
-          (params.programId ? voucher.programId === params.programId : voucher.programId === null)
+          voucher.programId === null
         )
       })
       return pageOf(items, params.pageIndex, params.pageSize)
@@ -144,12 +145,20 @@ class VoucherService extends BaseService {
     return data.value
   }
 
-  getProgram = async (programId: string) => {
-    if (USE_MOCK_VOUCHER_API)
-      return mockPrograms.find((program) => program.id === programId && !program.isDeleted) ?? null
-
-    const { data } = await this.get<BaseResponse<VoucherProgram>>(`/v1/admin/voucher-programs/${programId}`)
-    return data.value
+  getProgram = async (programId: string): Promise<VoucherProgramDetail | null> => {
+    if (USE_MOCK_VOUCHER_API) {
+      const program = mockPrograms.find((current) => current.id === programId && !current.isDeleted)
+      if (!program) return null
+      return {
+        ...program,
+        vouchers: mockVouchers.filter((voucher) => voucher.programId === programId && !voucher.isDeleted)
+      }
+    }
+    const { data } = await this.get<BasePaginationResponse<VoucherProgramDetail>>(
+      '/v1/admin/voucher-programs/with-vouchers',
+      { params: { programId, pageIndex: 1, pageSize: 1 } }
+    )
+    return data.value.items[0] ?? null
   }
 
   createVoucher = async (payload: CreateVoucherPayload) => {

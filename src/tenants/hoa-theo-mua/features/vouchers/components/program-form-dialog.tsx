@@ -8,7 +8,7 @@ import { parseISO } from 'date-fns'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import type { CreateProgramPayload, VoucherProgram } from '../types'
 import { programSchema } from '../validations'
-import { dateValue, displayDate, timeValue } from './voucher-date-utils'
+import { dateValue, displayDate, isUnlimitedAmount, timeValue } from './voucher-date-utils'
 import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 
 type ProgramFormValues = {
@@ -41,8 +41,8 @@ export function ProgramFormDialog({
       name: program?.name ?? '',
       startAt: program?.startAt ?? '',
       endAt: program?.endAt ?? '',
-      minOrderAmount: program?.minOrderAmount ?? '',
-      maxOrderAmount: program?.maxOrderAmount ?? ''
+      minOrderAmount: isUnlimitedAmount(program?.minOrderAmount) ? '' : program?.minOrderAmount,
+      maxOrderAmount: isUnlimitedAmount(program?.maxOrderAmount) ? '' : program?.maxOrderAmount
     }
   })
   const {
@@ -70,7 +70,7 @@ export function ProgramFormDialog({
             name: form.name.trim(),
             startAt: form.startAt,
             endAt: form.endAt,
-            minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
+            minOrderAmount: form.minOrderAmount === '' ? 0 : Number(form.minOrderAmount),
             maxOrderAmount: form.maxOrderAmount === '' ? 0 : Number(form.maxOrderAmount)
           }
         : {

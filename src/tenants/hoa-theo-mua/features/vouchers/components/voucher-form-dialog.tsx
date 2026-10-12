@@ -78,6 +78,7 @@ export function VoucherFormDialog({
     register,
     control,
     setValue,
+    trigger,
     handleSubmit,
     formState: { errors }
   } = methods
@@ -97,7 +98,6 @@ export function VoucherFormDialog({
         id: voucher.id,
         description: form.description,
         visibility: form.visibility,
-        discountType: form.discountType,
         discountValue: Number(form.discountValue),
         maxDiscountAmount:
           form.discountType === 'percent' && form.maxDiscountAmount !== '' && form.maxDiscountAmount !== null
@@ -105,7 +105,7 @@ export function VoucherFormDialog({
             : null,
         maxUsageCount: Number(form.maxUsageCount),
         startAt: form.startAt,
-        endAt: form.endAt,
+        endAt: form.endAt || null,
         minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
         maxOrderAmount: form.maxOrderAmount === '' ? null : Number(form.maxOrderAmount)
       })
@@ -125,7 +125,7 @@ export function VoucherFormDialog({
           : null,
       maxUsageCount: Number(form.maxUsageCount),
       startAt: form.startAt,
-      endAt: form.endAt,
+      endAt: form.endAt || null,
       minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
       maxOrderAmount: form.maxOrderAmount === '' ? null : Number(form.maxOrderAmount)
     })
@@ -213,9 +213,12 @@ export function VoucherFormDialog({
             <VoucherField label={t('configsPage.vouchers.discountType')}>
               <Select
                 value={values.discountType}
-                onValueChange={(value) =>
-                  setValue('discountType', value as VoucherDiscountType, { shouldValidate: true })
-                }
+                disabled={Boolean(voucher)}
+                onValueChange={(value) => {
+                  setValue('discountType', value as VoucherDiscountType)
+                  if (value === 'cash') setValue('maxDiscountAmount', '')
+                  void trigger(['discountValue', 'maxDiscountAmount'])
+                }}
               >
                 <SelectTrigger className='w-full'>
                   <SelectValue />

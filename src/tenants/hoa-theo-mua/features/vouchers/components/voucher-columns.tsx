@@ -8,11 +8,12 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { History, MoreHorizontal, Pencil, SearchIcon, Trash2 } from 'lucide-react'
 import type { Voucher } from '../types'
-import { displayValidityPeriod, formatMoney } from './voucher-date-utils'
+import { displayValidityPeriod, formatMoney, isUnlimitedAmount } from './voucher-date-utils'
+import { VoucherDescription } from './voucher-description'
 
 const renderOrderAmount = (value: number | null, currency: string, unlimited: string) => (
   <Badge variant='outline' className='whitespace-nowrap font-normal'>
-    {value == null ? unlimited : formatMoney(value, currency)}
+    {isUnlimitedAmount(value) ? unlimited : formatMoney(value, currency)}
   </Badge>
 )
 
@@ -57,15 +58,19 @@ export const getVoucherColumns = ({
     accessorKey: 'code',
     meta: {
       label: 'configsPage.vouchers.code',
-      placeholder: 'Nhập để tìm kiếm...',
+      placeholder: 'configsPage.vouchers.codeSearch',
       variant: 'text',
       icon: SearchIcon
     },
     header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.code' />,
     cell: ({ row }) => (
-      <div className='min-w-36'>
+      <div className='min-w-36 max-w-80'>
         <p className='font-medium'>{row.original.code}</p>
-        <p className='text-xs text-muted-foreground'>{row.original.description}</p>
+        <VoucherDescription
+          description={row.original.description}
+          label={t('configsPage.vouchers.description')}
+          className='text-xs text-muted-foreground'
+        />
       </div>
     ),
     enableSorting: false,
