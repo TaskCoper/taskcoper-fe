@@ -1,10 +1,12 @@
-import { isValid, parseISO } from 'date-fns'
+import { addYears, endOfYear, isValid, parseISO } from 'date-fns'
 import { formatDateTime, formatTime } from '@/lib/date'
 
 export const dateValue = (date: Date | undefined, end = false, time?: string) =>
   date
     ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${time ? `${time}:00` : end ? '23:59:59' : '00:00:00'}+07:00`
     : ''
+
+export const calendarEndMonth = () => endOfYear(addYears(new Date(), 10))
 
 export const timeValue = (value: string, fallback: string) => {
   return formatTime(value, 'HH:mm') || fallback

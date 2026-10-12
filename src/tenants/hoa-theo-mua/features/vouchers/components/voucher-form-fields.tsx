@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { isValid, parseISO } from 'date-fns'
 import type { DateRange } from 'react-day-picker'
-import { displayDate, displayDateTime } from './voucher-date-utils'
+import { calendarEndMonth, displayDate, displayDateTime } from './voucher-date-utils'
 
 export function VoucherField({
   label,
@@ -70,7 +70,7 @@ export function VoucherDateField({
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0'>
-        <Calendar mode='range' selected={selected} onSelect={onSelect} />
+        <Calendar mode='range' selected={selected} onSelect={onSelect} endMonth={calendarEndMonth()} />
       </PopoverContent>
     </Popover>
   )
@@ -126,6 +126,7 @@ export function VoucherDateRangeField({
           <PopoverContent className='w-auto space-y-3 p-3'>
             <Calendar
               mode='single'
+              endMonth={calendarEndMonth()}
               selected={isValid(date) ? date : undefined}
               onSelect={(next) =>
                 onSelect({
