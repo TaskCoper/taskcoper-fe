@@ -4,15 +4,17 @@ import type {
   CreateProgramPayload,
   CreateVoucherPayload,
   GenerateVouchersPayload,
+  GetProgramCodesParams,
   GetProgramsParams,
   GetVouchersParams,
   PageParams,
+  ProgramVoucherItem,
+  ProgramVoucherPage,
   UpdateProgramPayload,
   UpdateVoucherItem,
   Voucher,
   VoucherPage,
   VoucherProgram,
-  VoucherProgramDetail,
   VoucherProgramPage,
   VoucherExportFile,
   VoucherUsage,
@@ -30,12 +32,17 @@ class VoucherService extends BaseService {
     return data.value
   }
 
-  getProgram = async (programId: string): Promise<VoucherProgramDetail | null> => {
-    const { data } = await this.get<BasePaginationResponse<VoucherProgramDetail>>(
-      '/v1/admin/voucher-programs/with-vouchers',
-      { params: { programId, pageIndex: 1, pageSize: 1 } }
+  getProgram = async (programId: string): Promise<VoucherProgram> => {
+    const { data } = await this.get<BaseResponse<VoucherProgram>>(`/v1/admin/voucher-programs/${programId}`)
+    return data.value
+  }
+
+  getProgramCodes = async (programId: string, params: GetProgramCodesParams): Promise<ProgramVoucherPage> => {
+    const { data } = await this.get<BasePaginationResponse<ProgramVoucherItem>>(
+      `/v1/admin/voucher-programs/${programId}/vouchers`,
+      { params }
     )
-    return data.value.items[0] ?? null
+    return data.value
   }
 
   createVoucher = async (payload: CreateVoucherPayload) => {

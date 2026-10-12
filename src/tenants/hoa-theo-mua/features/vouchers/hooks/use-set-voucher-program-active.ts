@@ -14,9 +14,9 @@ export const useSetVoucherProgramActive = () => {
         id: program.id,
         name: program.name,
         startAt: program.startAt,
-        endAt: program.endAt ?? '',
-        minOrderAmount: program.minOrderAmount,
-        maxOrderAmount: program.maxOrderAmount,
+        endAt: program.endAt || null,
+        minOrderAmount: program.minOrderAmount || null,
+        maxOrderAmount: program.maxOrderAmount || null,
         isActive
       }),
     onSuccess: (_, { isActive }) => {

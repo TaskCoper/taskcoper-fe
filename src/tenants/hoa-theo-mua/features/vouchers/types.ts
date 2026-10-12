@@ -54,10 +54,6 @@ export interface ProgramVoucherItem {
   updatedAt: string | null
 }
 
-export interface VoucherProgramDetail extends VoucherProgram {
-  vouchers: ProgramVoucherItem[]
-}
-
 export interface VoucherUsage {
   orderId: string
   userId: string
@@ -82,6 +78,11 @@ export interface GetProgramsParams extends PageParams {
   keyword?: string
   isActive?: boolean
   isDelete?: boolean
+}
+
+export interface GetProgramCodesParams extends PageParams {
+  keyword?: string
+  isActive?: boolean
 }
 
 export interface CreateVoucherPayload {
@@ -111,8 +112,8 @@ export interface CreateProgramPayload {
   name: string
   startAt: string
   endAt: string | null
-  minOrderAmount?: number | null
-  maxOrderAmount?: number | null
+  minOrderAmount: number | null
+  maxOrderAmount: number | null
 }
 
 export interface UpdateProgramPayload extends CreateProgramPayload {
@@ -139,4 +140,5 @@ export interface VoucherExportFile {
 
 export type VoucherPage = BasePaginationResponse<Voucher>['value']
 export type VoucherProgramPage = BasePaginationResponse<VoucherProgram>['value']
+export type ProgramVoucherPage = BasePaginationResponse<ProgramVoucherItem>['value']
 export type VoucherUsagePage = BasePaginationResponse<VoucherUsage>['value']

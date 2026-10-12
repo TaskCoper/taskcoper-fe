@@ -90,25 +90,15 @@ function ProgramForm({
       if (!confirmed) return
     }
 
-    onSubmit(
-      program
-        ? {
-            id: program.id,
-            name: form.name.trim(),
-            startAt: form.startAt,
-            endAt: form.endAt,
-            minOrderAmount: form.minOrderAmount === '' ? 0 : Number(form.minOrderAmount),
-            maxOrderAmount: form.maxOrderAmount === '' ? 0 : Number(form.maxOrderAmount),
-            isActive: program.isActive
-          }
-        : {
-            name: form.name.trim(),
-            startAt: form.startAt,
-            endAt: form.endAt,
-            minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
-            maxOrderAmount: form.maxOrderAmount === '' ? 0 : Number(form.maxOrderAmount)
-          }
-    )
+    const payload: CreateProgramPayload = {
+      name: form.name.trim(),
+      startAt: form.startAt,
+      endAt: form.endAt || null,
+      minOrderAmount: form.minOrderAmount === '' || form.minOrderAmount === null ? null : Number(form.minOrderAmount),
+      maxOrderAmount: form.maxOrderAmount === '' || form.maxOrderAmount === null ? null : Number(form.maxOrderAmount)
+    }
+
+    onSubmit(program ? { ...payload, id: program.id, isActive: program.isActive } : payload)
   }
   return (
     <FormProvider {...methods}>

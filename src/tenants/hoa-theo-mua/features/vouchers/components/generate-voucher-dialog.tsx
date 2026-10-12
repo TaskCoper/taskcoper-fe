@@ -17,6 +17,8 @@ import type { GenerateVouchersPayload, VoucherProgram } from '../types'
 import { generateVoucherSchema } from '../validations'
 import { VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 
+const MAX_QUANTITY_PER_BATCH = 1000
+
 type GenerateFormValues = {
   codePrefix?: string
   codeLength: number
@@ -69,10 +71,9 @@ function GenerateForm({
   pending: boolean
 }) {
   const { t } = useTenantTranslation()
-  const maxQuantity = Math.min(1000, Math.max(0, 10000 - (program?.voucherCount ?? 0)))
   const methods = useForm<GenerateFormValues>({
     mode: 'onChange',
-    resolver: zodResolver(generateVoucherSchema(t, maxQuantity)),
+    resolver: zodResolver(generateVoucherSchema(t, MAX_QUANTITY_PER_BATCH)),
     defaultValues: {
       codePrefix: 'HTM',
       codeLength: 7,

@@ -54,10 +54,11 @@ export default function VoucherProgramDetailPage() {
   const [perPage] = useQueryState('voucher_program_codes_perPage', parseAsInteger)
   const [isGenerateOpen, setIsGenerateOpen] = useState(false)
   const currentTab: ProgramTab = rawTab === 'codes' ? 'codes' : 'overview'
-  const { program, codes, pageCount, isGettingProgram } = useGetVoucherProgramCodes(programId, {
+  const { program, codes, pageCount, isGettingProgram, isGettingCodes } = useGetVoucherProgramCodes(programId, {
     keyword: keyword || undefined,
     pageIndex: page ?? 1,
-    pageSize: perPage ?? 10
+    pageSize: perPage ?? 10,
+    enabled: currentTab === 'codes'
   })
   const { setVouchersActive } = useSetVouchersActive()
   const { toggleVoucherProgram, isTogglingVoucherProgram } = useToggleVoucherProgram()
@@ -278,7 +279,7 @@ export default function VoucherProgramDetailPage() {
             </div>
           </TabsContent>
           <TabsContent value='codes' className='mt-0'>
-            <DataTable table={codeTable} isLoading={isGettingProgram}>
+            <DataTable table={codeTable} isLoading={isGettingCodes}>
               <DataTableToolbar table={codeTable}>
                 <Button variant='outline' onClick={() => void exportProgramVouchers()}>
                   <Download className='size-4' />

@@ -1,37 +1,40 @@
-import { useMemo } from 'react'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import voucherService from '../services'
 import type { ProgramVoucherItem } from '../types'
+import { voucherKeys } from './query-keys'
 import { useGetVoucherProgram } from './use-get-voucher-program'
 
 interface GetVoucherProgramCodesParams {
   keyword?: string
   pageIndex: number
   pageSize: number
+  enabled?: boolean
 }
 
 const EMPTY_VOUCHERS: ProgramVoucherItem[] = []
 
 export const useGetVoucherProgramCodes = (
   programId: string | undefined,
-  { keyword, pageIndex, pageSize }: GetVoucherProgramCodesParams
+  { keyword, pageIndex, pageSize, enabled = true }: GetVoucherProgramCodesParams
 ) => {
   const { program: programQuery, isGettingProgram } = useGetVoucherProgram(programId)
-  const program = programQuery.data
+  const params = { pageIndex, pageSize, ...(keyword?.trim() ? { keyword: keyword.trim() } : {}) }
+  const codesQuery = useQuery({
+    queryKey: voucherKeys.programCodes(programId ?? '', params),
+    queryFn: () => voucherService.getProgramCodes(programId!, params),
+    enabled: Boolean(programId) && enabled,
+    placeholderData: keepPreviousData
+  })
 
-  const filteredCodes = useMemo(() => {
-    const codes = program?.vouchers ?? EMPTY_VOUCHERS
-    const search = keyword?.trim().toLowerCase()
-    if (!search) return codes
+  const totalCount = codesQuery.data?.totalCount ?? 0
+  const pageCount = Math.ceil(totalCount / pageSize) || 1
 
-    return codes.filter(
-      (voucher) => voucher.code.toLowerCase().includes(search) || voucher.description?.toLowerCase().includes(search)
-    )
-  }, [program?.vouchers, keyword])
-
-  const pageCount = Math.ceil(filteredCodes.length / pageSize) || 1
-  const codes = useMemo(() => {
-    const currentPage = Math.min(pageIndex, pageCount)
-    return filteredCodes.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  }, [filteredCodes, pageIndex, pageCount, pageSize])
-
-  return { program, codes, pageCount, isGettingProgram }
+  return {
+    program: programQuery.data,
+    codes: codesQuery.data?.items ?? EMPTY_VOUCHERS,
+    pageCount,
+    totalCount,
+    isGettingProgram,
+    isGettingCodes: codesQuery.isLoading
+  }
 }
