@@ -115,9 +115,9 @@ export interface CreateProgramPayload {
   maxOrderAmount?: number | null
 }
 
-export interface UpdateProgramPayload extends Partial<CreateProgramPayload> {
+export interface UpdateProgramPayload extends CreateProgramPayload {
   id: string
-  isActive?: boolean
+  isActive: boolean
 }
 
 export interface GenerateVouchersPayload {

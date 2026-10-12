@@ -127,8 +127,12 @@ export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'g
       if (data.maxUsageCount <= 0) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.maxUsageValidation'), path: ['maxUsageCount'] })
       }
-      if (data.maxUsageCount < usedCount) {
-        ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.maxUsageValidation'), path: ['maxUsageCount'] })
+      if (data.maxUsageCount > 0 && data.maxUsageCount < usedCount) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.vouchers.maxUsageBelowUsed', { used: usedCount }),
+          path: ['maxUsageCount']
+        })
       }
       addDateRules(t, false)(data, ctx)
       addAmountRules(t, false)(data, ctx)

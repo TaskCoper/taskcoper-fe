@@ -32,6 +32,8 @@ import {
   useGetVouchers,
   useSetVoucherProgramActive,
   useSetVouchersActive,
+  useToggleVoucher,
+  useToggleVoucherProgram,
   useUpdateVoucherProgram,
   useUpdateVouchers
 } from '../hooks'
@@ -92,6 +94,8 @@ export default function VouchersEditor({ view }: { view: View }) {
   const { createVoucherProgram, isCreatingVoucherProgram } = useCreateVoucherProgram()
   const { updateVoucherProgram, isUpdatingVoucherProgram } = useUpdateVoucherProgram()
   const { setVoucherProgramActive } = useSetVoucherProgramActive()
+  const { toggleVoucher } = useToggleVoucher()
+  const { toggleVoucherProgram } = useToggleVoucherProgram()
   const { deleteVoucherProgram, isDeletingVoucherProgram } = useDeleteVoucherProgram()
   const { generateVouchers, isGeneratingVouchers } = useGenerateVouchers()
   const mutations = {
@@ -156,10 +160,10 @@ export default function VouchersEditor({ view }: { view: View }) {
           setDetailVoucher(voucher)
           setUsageVoucherId(voucher.id)
         },
-        onToggleActive: (voucher, isActive) => setVouchersActive({ ids: [voucher.id], isActive }),
+        onToggleActive: (voucher, isActive) => void toggleVoucher(voucher, isActive),
         onDelete: (id) => void requestDelete({ type: 'voucher', id })
       }),
-    [requestDelete, setVouchersActive, t]
+    [requestDelete, setVouchersActive, t, toggleVoucher]
   )
   const usageColumns = useMemo(() => getVoucherUsageColumns(t), [t])
   const programColumns = useMemo(
@@ -167,7 +171,7 @@ export default function VouchersEditor({ view }: { view: View }) {
       getVoucherProgramColumns({
         t,
         onViewDetail: (program) => navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs/${program.id}`),
-        onToggleActive: (program, isActive) => setVoucherProgramActive({ id: program.id, isActive }),
+        onToggleActive: (program, isActive) => void toggleVoucherProgram(program, isActive),
         onGenerate: (program) => {
           setGenerateProgram(program)
           setDialog('generate')
@@ -179,7 +183,7 @@ export default function VouchersEditor({ view }: { view: View }) {
           }
 
           if (program.isActive) {
-            setVoucherProgramActive({ id: program.id, isActive: false }, { onSuccess: openEditor })
+            setVoucherProgramActive({ program, isActive: false }, { onSuccess: openEditor })
             return
           }
 
@@ -187,7 +191,7 @@ export default function VouchersEditor({ view }: { view: View }) {
         },
         onDelete: (program) => void requestDelete({ type: 'program', id: program.id })
       }),
-    [navigate, requestDelete, setVoucherProgramActive, t]
+    [navigate, requestDelete, setVoucherProgramActive, t, toggleVoucherProgram]
   )
   const { table: voucherTable } = useDataTable({
     data: voucherItems,
@@ -254,74 +258,57 @@ export default function VouchersEditor({ view }: { view: View }) {
 
   return (
     <div className='space-y-5'>
-      <div className='flex flex-wrap items-center gap-2'>
-        <div className='ml-auto flex gap-2'>
-          {view === 'vouchers' && (
-            <>
-              <Button
-                variant='outline'
-                onClick={() => void exportVouchers({ visibility: visibilityFilter === 'all' ? 'all' : visibility })}
-              >
-                <Download />
-                {t('configsPage.vouchers.export')}
-              </Button>
-              <Button
-                onClick={() => {
-                  setEditingVoucher(null)
-                  setDialog('voucher')
-                }}
-              >
-                <Plus />
-                {t('configsPage.vouchers.create')}
-              </Button>
-            </>
-          )}
-          {view === 'programs' && (
-            <>
-              <Button
-                variant='outline'
-                disabled={programTable.getSelectedRowModel().rows.length === 0}
-                onClick={() =>
-                  void exportVouchers({
-                    programIds: programTable.getSelectedRowModel().rows.map((row) => row.original.id)
-                  })
-                }
-              >
-                <Download />
-                {t('configsPage.vouchers.export')}
-              </Button>
-              <Button
-                onClick={() => {
-                  setEditingProgram(null)
-                  setDialog('program')
-                }}
-              >
-                <Plus />
-                {t('configsPage.vouchers.createProgram')}
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
       {view === 'vouchers' ? (
-        <EditorSection title={t('configsPage.vouchers.list')} description={t('configsPage.vouchers.listDescription')}>
-          <DataTable<Voucher> table={voucherTable} isLoading={vouchers.isLoading}>
-            <DataTableToolbar<Voucher> table={voucherTable} />
-            {/*
-                      {voucher.discountType === 'percent' ? '%' : ' ₫'}
-                    </td>
-            */}
-          </DataTable>
-        </EditorSection>
+        <DataTable<Voucher> table={voucherTable} isLoading={vouchers.isLoading}>
+          <DataTableToolbar<Voucher> table={voucherTable}>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => void exportVouchers({ visibility: visibilityFilter === 'all' ? 'all' : visibility })}
+            >
+              <Download />
+              {t('configsPage.vouchers.export')}
+            </Button>
+            <Button
+              size='sm'
+              onClick={() => {
+                setEditingVoucher(null)
+                setDialog('voucher')
+              }}
+            >
+              <Plus />
+              {t('configsPage.vouchers.create')}
+            </Button>
+          </DataTableToolbar>
+        </DataTable>
       ) : (
-        <EditorSection
-          title={t('configsPage.vouchers.programs')}
-          description={t('configsPage.vouchers.programDescription')}
-        >
-          <DataTable<VoucherProgram> table={programTable} isLoading={programs.isLoading}>
-            <DataTableToolbar<VoucherProgram> table={programTable} />
-          </DataTable>
-        </EditorSection>
+        <DataTable<VoucherProgram> table={programTable} isLoading={programs.isLoading}>
+          <DataTableToolbar<VoucherProgram> table={programTable}>
+            <Button
+              variant='outline'
+              size='sm'
+              disabled={programTable.getSelectedRowModel().rows.length === 0}
+              onClick={() =>
+                void exportVouchers({
+                  programIds: programTable.getSelectedRowModel().rows.map((row) => row.original.id)
+                })
+              }
+            >
+              <Download />
+              {t('configsPage.vouchers.export')}
+            </Button>
+            <Button
+              size='sm'
+              onClick={() => {
+                setEditingProgram(null)
+                setDialog('program')
+              }}
+            >
+              <Plus />
+              {t('configsPage.vouchers.createProgram')}
+            </Button>
+          </DataTableToolbar>
+        </DataTable>
       )}
       {usageVoucherId && !detailVoucher && (
         <EditorSection

@@ -9,7 +9,6 @@ import { useDataTable } from '@/hooks/use-data-table'
 import StatCard from '@/features/projects/core/components/stat-card'
 import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { isAxiosError } from 'axios'
 import {
   CalendarDays,
@@ -23,7 +22,7 @@ import {
   Users
 } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
@@ -39,8 +38,8 @@ import { getErrorDescription } from '../features/vouchers/error-description'
 import {
   useGenerateVouchers,
   useGetVoucherProgramCodes,
-  useSetVoucherProgramActive,
-  useSetVouchersActive
+  useSetVouchersActive,
+  useToggleVoucherProgram
 } from '../features/vouchers/hooks'
 import voucherService from '../features/vouchers/services'
 
@@ -60,26 +59,10 @@ export default function VoucherProgramDetailPage() {
     pageIndex: page ?? 1,
     pageSize: perPage ?? 10
   })
-  const { confirm } = useConfirmStore()
   const { setVouchersActive } = useSetVouchersActive()
-  const { setVoucherProgramActive, isSettingVoucherProgramActive } = useSetVoucherProgramActive()
+  const { toggleVoucherProgram, isTogglingVoucherProgram } = useToggleVoucherProgram()
   const { generateVouchers, isGeneratingVouchers } = useGenerateVouchers()
 
-  const handleToggleProgram = useCallback(
-    async (isActive: boolean) => {
-      if (!program) return
-
-      const action = isActive ? 'activate' : 'deactivate'
-      const confirmed = await confirm({
-        title: t(`configsPage.vouchers.programStatusAction.${action}Title`),
-        description: t(`configsPage.vouchers.programStatusAction.${action}Description`, { name: program.name }),
-        confirmText: t('configsPage.vouchers.programStatusAction.confirm')
-      })
-
-      if (confirmed) setVoucherProgramActive({ id: program.id, isActive })
-    },
-    [confirm, program, setVoucherProgramActive, t]
-  )
   const codeColumns = useMemo(
     () => getVoucherProgramCodeColumns(t, (voucher, isActive) => setVouchersActive({ ids: [voucher.id], isActive })),
     [setVouchersActive, t]
@@ -175,8 +158,8 @@ export default function VoucherProgramDetailPage() {
                 <Switch
                   id='voucher-program-active'
                   checked={program.isActive}
-                  disabled={isSettingVoucherProgramActive}
-                  onCheckedChange={(value) => void handleToggleProgram(value)}
+                  disabled={isTogglingVoucherProgram}
+                  onCheckedChange={(value) => void toggleVoucherProgram(program, value)}
                 />
               </div>
               <Button variant='outline' size='sm' asChild>
