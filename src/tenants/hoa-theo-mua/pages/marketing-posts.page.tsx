@@ -4,12 +4,11 @@ import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { FileSpreadsheetIcon, PlusCircleIcon } from 'lucide-react'
+import { PlusCircleIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
-import MarketingPlanImportDialog from '../features/marketing-posts/components/marketing-plan-import-dialog'
 import { getMarketingPostColumns } from '../features/marketing-posts/components/marketing-post-columns'
 import MarketingPostPublicationsSubRow from '../features/marketing-posts/components/marketing-post-publications-sub-row'
 import { useDeleteMarketingPost } from '../features/marketing-posts/hooks/use-delete-marketing-post'
@@ -26,7 +25,6 @@ const resolveStatus = (value: string | null) => Object.values(PublicationStatus)
 
 export default function MarketingPostsPage() {
   const { t } = useTenantTranslation()
-  const [isPlanImportOpen, setIsPlanImportOpen] = useState(false)
 
   const { deleteMarketingPost, isDeletingMarketingPost } = useDeleteMarketingPost()
 
@@ -81,10 +79,6 @@ export default function MarketingPostsPage() {
           renderSubComponent={({ row }) => <MarketingPostPublicationsSubRow row={row} />}
         >
           <DataTableToolbar table={table}>
-            <Button type='button' variant='outline' size='sm' onClick={() => setIsPlanImportOpen(true)}>
-              <FileSpreadsheetIcon />
-              {t('marketingPosts.action.importPlan')}
-            </Button>
             <Button asChild size='sm'>
               <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create`}>
                 <PlusCircleIcon />
@@ -95,7 +89,6 @@ export default function MarketingPostsPage() {
         </DataTable>
       </div>
 
-      <MarketingPlanImportDialog open={isPlanImportOpen} onOpenChange={setIsPlanImportOpen} />
     </div>
   )
 }

@@ -202,11 +202,6 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         ]
       },
       {
-        titleKey: 'navigation.aiMarketing.reports',
-        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/reports`,
-        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/reports`]
-      },
-      {
         titleKey: 'navigation.aiMarketing.accounts',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/accounts`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/accounts`]
