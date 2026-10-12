@@ -11,6 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { useDataTable } from '@/hooks/use-data-table'
+import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
 import EditorSection from '../../configs/components/shared/editor-section'
 import { getVoucherColumns } from './voucher-columns'
@@ -66,7 +67,7 @@ export default function VouchersEditor({ view }: { view: View }) {
   const voucherParams = useMemo(
     () => ({
       pageIndex: voucherPage ?? 1,
-      pageSize: voucherPerPage ?? 10,
+      pageSize: voucherPerPage ?? DEFAULT_PAGE_SIZE,
       keyword: keyword || undefined,
       visibility
     }),
@@ -75,7 +76,7 @@ export default function VouchersEditor({ view }: { view: View }) {
   const programParams = useMemo(
     () => ({
       pageIndex: programPage ?? 1,
-      pageSize: programPerPage ?? 10,
+      pageSize: programPerPage ?? DEFAULT_PAGE_SIZE,
       keyword: programKeyword || undefined,
       isDelete: false
     }),
@@ -85,7 +86,7 @@ export default function VouchersEditor({ view }: { view: View }) {
   const { programs } = useGetVoucherPrograms(programParams)
   const { usages } = useGetVoucherUsages(usageVoucherId, {
     pageIndex: usagePage ?? 1,
-    pageSize: usagePerPage ?? 10
+    pageSize: usagePerPage ?? DEFAULT_PAGE_SIZE
   })
   const { createVoucher, isCreatingVoucher } = useCreateVoucher()
   const { updateVouchers, isUpdatingVouchers } = useUpdateVouchers()
@@ -196,8 +197,8 @@ export default function VouchersEditor({ view }: { view: View }) {
   const { table: voucherTable } = useDataTable({
     data: voucherItems,
     columns: voucherColumns,
-    pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / (voucherPerPage ?? 20)) || 1,
-    initialState: { pagination: { pageIndex: 0, pageSize: 20 }, columnPinning: { right: ['actions'] } },
+    pageCount: Math.ceil((vouchers.data?.totalCount ?? 0) / voucherParams.pageSize) || 1,
+    initialState: { pagination: { pageIndex: 0, pageSize: DEFAULT_PAGE_SIZE }, columnPinning: { right: ['actions'] } },
     getRowId: (row) => row.id,
     shallow: false,
     clearOnDefault: true,
@@ -207,8 +208,8 @@ export default function VouchersEditor({ view }: { view: View }) {
   const { table: usageTable } = useDataTable({
     data: usages.data?.items ?? [],
     columns: usageColumns,
-    pageCount: Math.ceil((usages.data?.totalCount ?? 0) / (usagePerPage ?? 10)) || 1,
-    initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+    pageCount: Math.ceil((usages.data?.totalCount ?? 0) / (usagePerPage ?? DEFAULT_PAGE_SIZE)) || 1,
+    initialState: { pagination: { pageIndex: 0, pageSize: DEFAULT_PAGE_SIZE } },
     getRowId: (row) => row.orderId,
     shallow: false,
     clearOnDefault: true,
@@ -217,8 +218,8 @@ export default function VouchersEditor({ view }: { view: View }) {
   const { table: programTable } = useDataTable({
     data: programItems,
     columns: programColumns,
-    pageCount: Math.ceil((programs.data?.totalCount ?? 0) / (programPerPage ?? 20)) || 1,
-    initialState: { pagination: { pageIndex: 0, pageSize: 20 }, columnPinning: { right: ['actions'] } },
+    pageCount: Math.ceil((programs.data?.totalCount ?? 0) / programParams.pageSize) || 1,
+    initialState: { pagination: { pageIndex: 0, pageSize: DEFAULT_PAGE_SIZE }, columnPinning: { right: ['actions'] } },
     getRowId: (row) => row.id,
     shallow: false,
     clearOnDefault: true,

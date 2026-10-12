@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDataTable } from '@/hooks/use-data-table'
+import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import StatCard from '@/features/projects/core/components/stat-card'
 import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
@@ -57,7 +58,7 @@ export default function VoucherProgramDetailPage() {
   const { program, codes, pageCount, isGettingProgram, isGettingCodes } = useGetVoucherProgramCodes(programId, {
     keyword: keyword || undefined,
     pageIndex: page ?? 1,
-    pageSize: perPage ?? 10,
+    pageSize: perPage ?? DEFAULT_PAGE_SIZE,
     enabled: currentTab === 'codes'
   })
   const { setVouchersActive } = useSetVouchersActive()
@@ -73,7 +74,7 @@ export default function VoucherProgramDetailPage() {
     columns: codeColumns,
     pageCount,
     initialState: {
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination: { pageIndex: 0, pageSize: DEFAULT_PAGE_SIZE },
       columnVisibility: {
         description: false,
         discountType: false,
