@@ -14,6 +14,12 @@ export interface PublicationMediaRule {
 }
 
 export const publicationMediaRules: Partial<Record<MarketingPostPlatform, PublicationMediaRule>> = {
+  [MarketingPostPlatform.Zalo]: {
+    maxImages: 10,
+    captionMaxScalars: null,
+    captionMaxHashtags: null,
+    captionMaxMentions: null
+  },
   [MarketingPostPlatform.Facebook]: {
     maxImages: 10,
     // Facebook chưa có giới hạn text nào được xác minh, nên không chặn theo số đoán

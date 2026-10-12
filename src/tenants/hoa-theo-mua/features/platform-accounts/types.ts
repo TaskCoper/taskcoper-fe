@@ -1,8 +1,6 @@
 import type { MarketingPostPlatform } from '../marketing-posts/types'
 
-// Mốc 11 mới mở kết nối Facebook và Instagram. Zalo backend đang tắt (`Zalo:Enabled=false`)
-// nên chưa hiện nút kết nối - phần sinh nội dung/ảnh Zalo vẫn chạy bình thường.
-export const connectablePlatforms: MarketingPostPlatform[] = ['facebook', 'instagram']
+export const connectablePlatforms: MarketingPostPlatform[] = ['facebook', 'instagram', 'zalo']
 
 export const PlatformAccountStatus = {
   Connected: 'Connected',

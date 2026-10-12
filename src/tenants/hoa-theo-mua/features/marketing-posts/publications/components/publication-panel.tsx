@@ -167,6 +167,15 @@ const MarketingPublicationPanel = ({ id, platform }: { id?: string; platform: Ma
 
           {/* Bản chốt đã xem ngay trên màn này rồi, không bắt mở thêm hộp xem trước nữa.
               Vẫn phải đọc preview để lấy hash bản chốt và lý do backend chặn. */}
+          {preview?.snapshot.article && (
+            <Note>
+              {t('marketingPosts.publication.zaloArticle', {
+                author: preview.snapshot.article.author,
+                description: preview.snapshot.article.description
+              })}
+            </Note>
+          )}
+
           {isGettingPreview && <Skeleton className='h-9 w-full rounded-lg' />}
 
           {preview && !preview.canPublish && preview.reasons.length > 0 && (

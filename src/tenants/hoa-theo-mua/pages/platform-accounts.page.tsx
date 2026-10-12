@@ -60,8 +60,7 @@ export default function PlatformAccountsPage() {
           )}
         </div>
 
-        {/* Zalo backend đang tắt ở mốc này, nhưng sinh nội dung Zalo vẫn chạy - nói rõ kẻo tưởng sót */}
-        <p className='text-xs text-muted-foreground'>{t('platformAccounts.zaloPending')}</p>
+        <p className='text-xs text-muted-foreground'>{t('platformAccounts.zaloNote')}</p>
       </div>
     </div>
   )
