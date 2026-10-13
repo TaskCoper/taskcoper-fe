@@ -4,6 +4,7 @@ import type {
   CreateProgramPayload,
   CreateVoucherPayload,
   GenerateVouchersPayload,
+  GenerateVouchersResult,
   GetProgramCodesParams,
   GetProgramsParams,
   GetVouchersParams,
@@ -13,10 +14,10 @@ import type {
   UpdateProgramPayload,
   UpdateVoucherItem,
   Voucher,
+  VoucherExportFile,
   VoucherPage,
   VoucherProgram,
   VoucherProgramPage,
-  VoucherExportFile,
   VoucherUsage,
   VoucherUsagePage
 } from './types'
@@ -71,7 +72,7 @@ class VoucherService extends BaseService {
   }
 
   updateProgram = async ({ id: programId, ...payload }: UpdateProgramPayload) => {
-    const { data } = await this.put<BaseResponse<VoucherProgram>>(`/v1/admin/voucher-programs/${programId}`, payload)
+    const { data } = await this.put<BaseResponse<string>>(`/v1/admin/voucher-programs/${programId}`, payload)
     return data.value
   }
 
@@ -81,7 +82,7 @@ class VoucherService extends BaseService {
   }
 
   generateVouchers = async (programId: string, payload: GenerateVouchersPayload) => {
-    const { data } = await this.post<BaseResponse<{ programId: string; createdCount: number; codes: string[] }>>(
+    const { data } = await this.post<BaseResponse<GenerateVouchersResult>>(
       `/v1/admin/voucher-programs/${programId}/vouchers`,
       payload
     )

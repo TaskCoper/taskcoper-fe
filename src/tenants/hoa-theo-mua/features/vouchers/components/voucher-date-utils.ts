@@ -1,10 +1,17 @@
-import { isValid, parseISO } from 'date-fns'
 import { formatDateTime, formatTime } from '@/lib/date'
+import { addYears, endOfYear, isValid, parseISO } from 'date-fns'
 
-export const dateValue = (date: Date | undefined, end = false, time?: string) =>
-  date
-    ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${time ? `${time}:00` : end ? '23:59:59' : '00:00:00'}+07:00`
-    : ''
+export const dateValue = (date: Date | undefined, end = false, time?: string) => {
+  if (!date) return ''
+
+  const clock = time || (end ? '23:59' : '00:00')
+  // Giờ kết thúc 23:59 lấy hết 59 giây cuối, nếu không đơn tạo lúc 23:59:30 bị báo voucher hết hạn
+  const seconds = end && clock === '23:59' ? '59' : '00'
+
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${clock}:${seconds}+07:00`
+}
+
+export const calendarEndMonth = () => endOfYear(addYears(new Date(), 10))
 
 export const timeValue = (value: string, fallback: string) => {
   return formatTime(value, 'HH:mm') || fallback

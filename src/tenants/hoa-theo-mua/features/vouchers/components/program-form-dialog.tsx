@@ -98,7 +98,7 @@ function ProgramForm({
       maxOrderAmount: form.maxOrderAmount === '' || form.maxOrderAmount === null ? null : Number(form.maxOrderAmount)
     }
 
-    onSubmit(program ? { ...payload, id: program.id, isActive: program.isActive } : payload)
+    onSubmit(program ? { ...payload, id: program.id } : payload)
   }
   return (
     <FormProvider {...methods}>
@@ -122,11 +122,9 @@ function ProgramForm({
           <VoucherDateRangeField
             startAt={form.startAt}
             endAt={form.endAt}
-            onSelect={(next) => {
-              setValue('startAt', dateValue(next?.from, false, timeValue(form.startAt, '00:00')), {
-                shouldValidate: true
-              })
-              setValue('endAt', dateValue(next?.to, true, timeValue(form.endAt, '23:59')), { shouldValidate: true })
+            onSelect={(next, times) => {
+              setValue('startAt', dateValue(next?.from, false, times.startTime), { shouldValidate: true })
+              setValue('endAt', dateValue(next?.to, true, times.endTime), { shouldValidate: true })
             }}
             startTime={timeValue(form.startAt, '00:00')}
             endTime={timeValue(form.endAt, '23:59')}

@@ -1,19 +1,19 @@
+import { TimeInputField } from '@/components/time-input-field'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { TimeInputField } from '@/components/time-input-field'
-import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import type { I18nKey } from '@/lib/i18n/types'
+import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
+import { isValid, parseISO } from 'date-fns'
 import { CalendarDays } from 'lucide-react'
 import type { ComponentProps, ReactNode } from 'react'
 import { useEffect } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { isValid, parseISO } from 'date-fns'
 import type { DateRange } from 'react-day-picker'
-import { displayDate, displayDateTime } from './voucher-date-utils'
+import { useForm } from 'react-hook-form'
+import { calendarEndMonth, displayDate, displayDateTime } from './voucher-date-utils'
 
 export function VoucherField({
   label,
@@ -65,16 +65,18 @@ export function VoucherDateField({
     <Popover>
       <PopoverTrigger asChild>
         <Button type='button' variant='outline' className='justify-start font-normal'>
-          <CalendarDays className='mr-2 size-4' />
+          <CalendarDays className='size-4' />
           {value ? displayDate(value) : t('configsPage.vouchers.datePlaceholder')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0'>
-        <Calendar mode='range' selected={selected} onSelect={onSelect} />
+        <Calendar mode='range' selected={selected} onSelect={onSelect} endMonth={calendarEndMonth()} />
       </PopoverContent>
     </Popover>
   )
 }
+
+export type VoucherTimes = { startTime: string; endTime: string }
 
 export function VoucherDateRangeField({
   startAt,
@@ -86,23 +88,29 @@ export function VoucherDateRangeField({
 }: {
   startAt: string
   endAt: string
-  onSelect: (range: DateRange | undefined) => void
+  onSelect: (range: DateRange | undefined, times: VoucherTimes) => void
   startTime: string
   endTime: string
   onTimeChange: (field: 'start' | 'end', value: string) => void
 }) {
   const { t } = useTenantTranslation()
-  const methods = useForm({ defaultValues: { startTime, endTime } })
-  const currentStartTime = useWatch({ control: methods.control, name: 'startTime' })
-  const currentEndTime = useWatch({ control: methods.control, name: 'endTime' })
+  const methods = useForm<VoucherTimes>({ defaultValues: { startTime, endTime } })
 
-  useEffect(() => {
-    if (currentStartTime !== startTime) onTimeChange('start', currentStartTime)
-  }, [currentStartTime, onTimeChange, startTime])
-
-  useEffect(() => {
-    if (currentEndTime !== endTime) onTimeChange('end', currentEndTime)
-  }, [currentEndTime, endTime, onTimeChange])
+  useEffect(
+    () =>
+      methods.subscribe({
+        formState: { values: true },
+        callback: ({ values, name }) => {
+          if (name === 'startTime') {
+            onTimeChange('start', values.startTime)
+          }
+          if (name === 'endTime') {
+            onTimeChange('end', values.endTime)
+          }
+        }
+      }),
+    [methods, onTimeChange]
+  )
 
   const startDate = parseISO(startAt)
   const endDate = parseISO(endAt)
@@ -119,27 +127,32 @@ export function VoucherDateRangeField({
         <Popover>
           <PopoverTrigger asChild>
             <Button type='button' variant='outline' className='justify-start font-normal'>
-              <CalendarDays className='mr-2 size-4' />
+              <CalendarDays className='size-4' />
               {value ? displayDateTime(value) : t('configsPage.vouchers.datePlaceholder')}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className='w-auto space-y-3 p-3'>
+          <PopoverContent className='w-auto p-0'>
             <Calendar
               mode='single'
+              endMonth={calendarEndMonth()}
               selected={isValid(date) ? date : undefined}
               onSelect={(next) =>
-                onSelect({
-                  from: isStart ? next : isValid(startDate) ? startDate : undefined,
-                  to: isStart ? (isValid(endDate) ? endDate : undefined) : next
-                })
+                onSelect(
+                  {
+                    from: isStart ? next : isValid(startDate) ? startDate : undefined,
+                    to: isStart ? (isValid(endDate) ? endDate : undefined) : next
+                  },
+                  methods.getValues()
+                )
               }
             />
-            <div className='border-t pt-3'>
+            <div className='border-t p-3'>
               <TimeInputField
                 name={isStart ? 'startTime' : 'endTime'}
                 label={(isStart ? 'configsPage.vouchers.startTime' : 'configsPage.vouchers.endTime') as I18nKey}
                 control={methods.control}
                 isRequired
+                displayError={false}
               />
             </div>
           </PopoverContent>
