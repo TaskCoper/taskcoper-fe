@@ -2601,6 +2601,7 @@
         "deactivateSuccess": "Đã tắt voucher."
       },
       "export": "Export Excel",
+      "exportProgramLimit": "Chỉ xuất tối đa {{max}} chương trình mỗi lần. Vui lòng bỏ bớt chương trình đã chọn.",
       "empty": "Chưa có dữ liệu",
       "createProgram": "Tạo chương trình",
       "editProgram": "Sửa chương trình",

@@ -5,8 +5,6 @@ export type VoucherDiscountType = 'cash' | 'percent'
 
 export interface Voucher {
   id: string
-  programId: string | null
-  programName: string | null
   code: string
   description: string | null
   visibility: VoucherVisibility
@@ -118,7 +116,7 @@ export interface CreateProgramPayload {
 
 export interface UpdateProgramPayload extends CreateProgramPayload {
   id: string
-  isActive: boolean
+  isActive?: boolean
 }
 
 export interface GenerateVouchersPayload {
@@ -131,6 +129,13 @@ export interface GenerateVouchersPayload {
   discountValue: number
   maxDiscountAmount?: number | null
   description?: string
+}
+
+export interface GenerateVouchersResult {
+  programId: string
+  createdCount: number
+  isActive: boolean
+  codes: string[]
 }
 
 export interface VoucherExportFile {

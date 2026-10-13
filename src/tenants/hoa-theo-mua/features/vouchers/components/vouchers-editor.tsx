@@ -1,27 +1,21 @@
-import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import { Button } from '@/components/ui/button'
+import { useDataTable } from '@/hooks/use-data-table'
 import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { isAxiosError } from 'axios'
 import { Download, Plus, X } from 'lucide-react'
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
-import { useDataTable } from '@/hooks/use-data-table'
-import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../../../config'
 import EditorSection from '../../configs/components/shared/editor-section'
-import { getVoucherColumns } from './voucher-columns'
-import { getVoucherProgramColumns } from './voucher-program-columns'
-import { getVoucherUsageColumns } from './voucher-usage-columns'
-import { VoucherDetailDialog } from './voucher-detail-dialog'
-import { VoucherFormDialog } from './voucher-form-dialog'
-import { ProgramFormDialog } from './program-form-dialog'
-import { GenerateDialog } from './generate-voucher-dialog'
-export { GenerateDialog } from './generate-voucher-dialog'
+import { downloadExportFile } from '../download-export-file'
+import { getErrorDescription } from '../error-description'
 import {
   useCreateVoucher,
   useCreateVoucherProgram,
@@ -31,17 +25,24 @@ import {
   useGetVoucherPrograms,
   useGetVoucherUsages,
   useGetVouchers,
-  useSetVoucherProgramActive,
-  useSetVouchersActive,
   useToggleVoucher,
   useToggleVoucherProgram,
   useUpdateVoucherProgram,
   useUpdateVouchers
 } from '../hooks'
-import { getErrorDescription } from '../error-description'
 import type { Voucher, VoucherProgram, VoucherUsage, VoucherVisibility } from '../types'
+import { GenerateDialog } from './generate-voucher-dialog'
+import { ProgramFormDialog } from './program-form-dialog'
+import { getVoucherColumns } from './voucher-columns'
+import { VoucherDetailDialog } from './voucher-detail-dialog'
+import { VoucherFormDialog } from './voucher-form-dialog'
+import { getVoucherProgramColumns } from './voucher-program-columns'
+import { getVoucherUsageColumns } from './voucher-usage-columns'
+export { GenerateDialog } from './generate-voucher-dialog'
 
 type View = 'vouchers' | 'programs'
+
+const MAX_EXPORT_PROGRAMS = 50
 
 export default function VouchersEditor({ view }: { view: View }) {
   const { t } = useTenantTranslation()
@@ -62,11 +63,11 @@ export default function VouchersEditor({ view }: { view: View }) {
   const [editingProgram, setEditingProgram] = useState<VoucherProgram | null>(null)
   const [generateProgram, setGenerateProgram] = useState<VoucherProgram | null>(null)
   const [usageVoucherId, setUsageVoucherId] = useState<string | null>(null)
-  const [usagePage] = useQueryState('voucher_usages_page', parseAsInteger)
+  const [usagePage, setUsagePage] = useQueryState('voucher_usages_page', parseAsInteger)
   const [usagePerPage] = useQueryState('voucher_usages_perPage', parseAsInteger)
   const voucherParams = useMemo(
     () => ({
-      pageIndex: voucherPage ?? 1,
+      pageIndex: Math.max(voucherPage ?? 1, 1),
       pageSize: voucherPerPage ?? DEFAULT_PAGE_SIZE,
       keyword: keyword || undefined,
       visibility
@@ -90,11 +91,9 @@ export default function VouchersEditor({ view }: { view: View }) {
   })
   const { createVoucher, isCreatingVoucher } = useCreateVoucher()
   const { updateVouchers, isUpdatingVouchers } = useUpdateVouchers()
-  const { setVouchersActive, isSettingVouchersActive } = useSetVouchersActive()
   const { deleteVoucher, isDeletingVoucher } = useDeleteVoucher()
   const { createVoucherProgram, isCreatingVoucherProgram } = useCreateVoucherProgram()
   const { updateVoucherProgram, isUpdatingVoucherProgram } = useUpdateVoucherProgram()
-  const { setVoucherProgramActive } = useSetVoucherProgramActive()
   const { toggleVoucher } = useToggleVoucher()
   const { toggleVoucherProgram } = useToggleVoucherProgram()
   const { deleteVoucherProgram, isDeletingVoucherProgram } = useDeleteVoucherProgram()
@@ -102,7 +101,6 @@ export default function VouchersEditor({ view }: { view: View }) {
   const mutations = {
     createVoucher: { mutate: createVoucher, isPending: isCreatingVoucher },
     updateVouchers: { mutate: updateVouchers, isPending: isUpdatingVouchers },
-    setVouchersActive: { mutate: setVouchersActive, isPending: isSettingVouchersActive },
     deleteVoucher: { mutate: deleteVoucher, isPending: isDeletingVoucher },
     createProgram: { mutate: createVoucherProgram, isPending: isCreatingVoucherProgram },
     updateProgram: { mutate: updateVoucherProgram, isPending: isUpdatingVoucherProgram },
@@ -145,26 +143,18 @@ export default function VouchersEditor({ view }: { view: View }) {
       getVoucherColumns({
         t,
         onEdit: (voucher) => {
-          const openEditor = () => {
-            setEditingVoucher({ ...voucher, isActive: false })
-            setDialog('voucher')
-          }
-
-          if (voucher.isActive) {
-            setVouchersActive({ ids: [voucher.id], isActive: false }, { onSuccess: openEditor })
-            return
-          }
-
-          openEditor()
+          setEditingVoucher(voucher)
+          setDialog('voucher')
         },
         onViewUsage: (voucher) => {
+          void setUsagePage(null)
           setDetailVoucher(voucher)
           setUsageVoucherId(voucher.id)
         },
         onToggleActive: (voucher, isActive) => void toggleVoucher(voucher, isActive),
         onDelete: (id) => void requestDelete({ type: 'voucher', id })
       }),
-    [requestDelete, setVouchersActive, t, toggleVoucher]
+    [requestDelete, setUsagePage, t, toggleVoucher]
   )
   const usageColumns = useMemo(() => getVoucherUsageColumns(t), [t])
   const programColumns = useMemo(
@@ -178,21 +168,12 @@ export default function VouchersEditor({ view }: { view: View }) {
           setDialog('generate')
         },
         onEdit: (program) => {
-          const openEditor = () => {
-            setEditingProgram({ ...program, isActive: false })
-            setDialog('program')
-          }
-
-          if (program.isActive) {
-            setVoucherProgramActive({ program, isActive: false }, { onSuccess: openEditor })
-            return
-          }
-
-          openEditor()
+          setEditingProgram(program)
+          setDialog('program')
         },
         onDelete: (program) => void requestDelete({ type: 'program', id: program.id })
       }),
-    [navigate, requestDelete, setVoucherProgramActive, t, toggleVoucherProgram]
+    [navigate, requestDelete, t, toggleVoucherProgram]
   )
   const { table: voucherTable } = useDataTable({
     data: voucherItems,
@@ -239,17 +220,17 @@ export default function VouchersEditor({ view }: { view: View }) {
     setGenerateProgram(null)
   }
   const exportVouchers = async (params: { visibility?: string; programIds?: string[] } = {}) => {
+    if (params.programIds && params.programIds.length > MAX_EXPORT_PROGRAMS) {
+      toast.error(t('configsPage.vouchers.exportProgramLimit', { max: MAX_EXPORT_PROGRAMS }))
+      return
+    }
+
     try {
       const exportParams = params.programIds?.length
         ? { programIds: params.programIds }
         : { visibility: params.visibility ?? visibility ?? 'all' }
       const file = await (await import('../services')).default.exportVouchers(exportParams)
-      const url = URL.createObjectURL(file.blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = file.fileName
-      anchor.click()
-      URL.revokeObjectURL(url)
+      downloadExportFile(file)
     } catch (error) {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(isAxiosError<ErrorResponse>(error) ? error.response?.data : undefined)

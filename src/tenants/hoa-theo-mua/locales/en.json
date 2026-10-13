@@ -2601,6 +2601,7 @@
         "deactivateSuccess": "Voucher deactivated."
       },
       "export": "Export Excel",
+      "exportProgramLimit": "You can export up to {{max}} programs at a time. Please deselect some programs.",
       "empty": "No data",
       "createProgram": "Create program",
       "editProgram": "Edit program",

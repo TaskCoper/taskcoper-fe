@@ -1,5 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { SelectContent, SelectItem, SelectTrigger, SelectValue, Select as ShadcnSelect } from '@/components/ui/select'
 import { formatDate, getCurrentAppLocale, getDateFnsLocale, resolveAppLocale } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
@@ -54,7 +54,7 @@ function Calendar({
           defaultClassNames.button_next
         ),
         month_caption: cn(
-          'flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)',
+          'flex h-(--cell-size) w-full items-center justify-center px-[calc(var(--cell-size)+--spacing(2))]',
           defaultClassNames.month_caption
         ),
         dropdowns: cn(
@@ -151,7 +151,7 @@ function CalendarDropdown({
       <SelectTrigger
         aria-label={props['aria-label']}
         disabled={disabled}
-        className='h-8 min-w-24 gap-1 rounded-md border-input bg-background px-2 text-sm font-medium shadow-none'
+        className='h-8 gap-1 rounded-md border-input bg-background px-2 text-sm font-medium shadow-none'
       >
         <SelectValue />
       </SelectTrigger>
