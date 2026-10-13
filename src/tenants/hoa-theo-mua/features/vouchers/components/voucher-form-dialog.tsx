@@ -8,8 +8,8 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -307,13 +307,9 @@ function VoucherForm({
           <VoucherDateRangeField
             startAt={values.startAt}
             endAt={values.endAt}
-            onSelect={(next) => {
-              setValue('startAt', dateValue(next?.from, false, timeValue(values.startAt, '00:00')), {
-                shouldValidate: true
-              })
-              setValue('endAt', dateValue(next?.to, true, timeValue(values.endAt, '23:59')), {
-                shouldValidate: true
-              })
+            onSelect={(next, times) => {
+              setValue('startAt', dateValue(next?.from, false, times.startTime), { shouldValidate: true })
+              setValue('endAt', dateValue(next?.to, true, times.endTime), { shouldValidate: true })
             }}
             startTime={timeValue(values.startAt, '00:00')}
             endTime={timeValue(values.endAt, '23:59')}

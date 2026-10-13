@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useDataTable } from '@/hooks/use-data-table'
-import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import StatCard from '@/features/projects/core/components/stat-card'
+import { useDataTable } from '@/hooks/use-data-table'
 import type { ErrorResponse } from '@/lib/axios'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
+import { DEFAULT_PAGE_SIZE } from '@/shared/constants'
 import { isAxiosError } from 'axios'
 import {
   CalendarDays,
@@ -27,19 +27,20 @@ import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
-import { getVoucherProgramCodeColumns } from '../features/vouchers/components/voucher-program-code-columns'
-import { GenerateDialog } from '../features/vouchers/components/vouchers-editor'
 import {
   displayDateTime,
   displayValidityPeriod,
   formatMoney,
   isUnlimitedAmount
 } from '../features/vouchers/components/voucher-date-utils'
+import { getVoucherProgramCodeColumns } from '../features/vouchers/components/voucher-program-code-columns'
+import { GenerateDialog } from '../features/vouchers/components/vouchers-editor'
+import { downloadExportFile } from '../features/vouchers/download-export-file'
 import { getErrorDescription } from '../features/vouchers/error-description'
 import {
   useGenerateVouchers,
   useGetVoucherProgramCodes,
-  useSetVouchersActive,
+  useToggleVoucher,
   useToggleVoucherProgram
 } from '../features/vouchers/hooks'
 import voucherService from '../features/vouchers/services'
@@ -61,13 +62,13 @@ export default function VoucherProgramDetailPage() {
     pageSize: perPage ?? DEFAULT_PAGE_SIZE,
     enabled: currentTab === 'codes'
   })
-  const { setVouchersActive } = useSetVouchersActive()
+  const { toggleVoucher } = useToggleVoucher()
   const { toggleVoucherProgram, isTogglingVoucherProgram } = useToggleVoucherProgram()
   const { generateVouchers, isGeneratingVouchers } = useGenerateVouchers()
 
   const codeColumns = useMemo(
-    () => getVoucherProgramCodeColumns(t, (voucher, isActive) => setVouchersActive({ ids: [voucher.id], isActive })),
-    [setVouchersActive, t]
+    () => getVoucherProgramCodeColumns(t, (voucher, isActive) => void toggleVoucher(voucher, isActive)),
+    [toggleVoucher, t]
   )
   const { table: codeTable } = useDataTable({
     data: codes,
@@ -102,12 +103,7 @@ export default function VoucherProgramDetailPage() {
 
     try {
       const file = await voucherService.exportVouchers({ programIds: [program.id] })
-      const url = URL.createObjectURL(file.blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = file.fileName
-      anchor.click()
-      URL.revokeObjectURL(url)
+      downloadExportFile(file)
     } catch (error) {
       toast.error(t('error.somethingWentWrong'), {
         description: getErrorDescription(isAxiosError<ErrorResponse>(error) ? error.response?.data : undefined)
