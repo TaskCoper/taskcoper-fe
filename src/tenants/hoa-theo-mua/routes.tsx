@@ -13,7 +13,6 @@ const MarketingPostCreatePage = lazy(() => import('./pages/marketing-post-create
 const MarketingPostPlatformsPage = lazy(() => import('./pages/marketing-post-platforms.page'))
 const MarketingPostStudioPage = lazy(() => import('./pages/marketing-post-studio.page'))
 const MarketingPostDetailPage = lazy(() => import('./pages/marketing-post-detail.page'))
-const MarketingReportsPage = lazy(() => import('./pages/marketing-reports.page'))
 const PlatformAccountsPage = lazy(() => import('./pages/platform-accounts.page'))
 const CardTemplatesPage = lazy(() => import('./pages/card-templates.page'))
 const FlowerMockupsPage = lazy(() => import('./pages/flower-mockups.page'))
@@ -154,10 +153,6 @@ export const hoaTheoMuaWorkspaceRoutes: RouteObject[] = [
           {
             path: 'ai-marketing/posts/studio/:draftId',
             element: <MarketingPostStudioPage />
-          },
-          {
-            path: 'ai-marketing/reports',
-            element: <MarketingReportsPage />
           },
           {
             path: 'ai-marketing/accounts',
