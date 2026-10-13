@@ -9,7 +9,8 @@ import {
   NewspaperIcon,
   PackageIcon,
   SettingsIcon,
-  SparklesIcon
+  SparklesIcon,
+  TicketPercentIcon
 } from 'lucide-react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from './config'
 
@@ -38,6 +39,31 @@ export const hoaTheoMuaNavMain: TenantNavMainItem[] = [
         titleKey: 'navigation.orders.system',
         url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders`,
         activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/system-orders`]
+      }
+    ]
+  },
+  {
+    titleKey: 'navigation.vouchers',
+    url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`,
+    icon: TicketPercentIcon,
+    feature: 'custom.systemConfigs',
+    items: [
+      {
+        titleKey: 'configsPage.vouchers.list',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`,
+        activePatterns: [`/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers`],
+        activeExcludePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs/:programId`
+        ]
+      },
+      {
+        titleKey: 'configsPage.vouchers.programs',
+        url: `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+        activePatterns: [
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs`,
+          `/${HOA_THEO_MUA_ROUTE_PREFIX}/vouchers/programs/:programId`
+        ]
       }
     ]
   },

@@ -88,7 +88,6 @@ export default function MarketingPostsPage() {
           </DataTableToolbar>
         </DataTable>
       </div>
-
     </div>
   )
 }

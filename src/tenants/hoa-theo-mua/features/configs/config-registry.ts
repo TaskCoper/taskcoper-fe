@@ -40,6 +40,13 @@ import {
 export const OTHER_CATEGORY_PREFIX = 'other:'
 
 export const CONFIG_CATEGORIES: readonly ConfigCategory[] = [
+  {
+    id: 'order-slots',
+    section: 'commerce',
+    labelKey: 'configsPage.category.orderSlots',
+    order: 30,
+    isSynthesised: false
+  },
   { id: 'banners', section: 'storefront', labelKey: 'configsPage.category.banners', order: 10, isSynthesised: false },
   {
     id: 'product-collections',

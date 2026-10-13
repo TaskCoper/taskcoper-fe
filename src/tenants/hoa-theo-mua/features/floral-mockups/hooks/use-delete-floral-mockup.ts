@@ -18,9 +18,9 @@ export const useDeleteFloralMockup = () => {
     onSuccess: () => {
       toast.success(t('floralMockups.deleteAction.success'))
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(t('error.somethingWentWrong'), {
-        description: t('floralMockups.deleteAction.failed')
+        description: error.response?.data?.detail
       })
     },
     onSettled: () => {

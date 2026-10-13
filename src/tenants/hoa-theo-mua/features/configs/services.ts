@@ -1,6 +1,7 @@
 import type { BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
 import type { Config, GetConfigsParams } from './types'
+import type { OrderTagsConfig, UpdateDeliverySlotLimitsBody } from './types/order-slots'
 import type { CreateConfigFormValues } from './validations'
 
 class ConfigService extends BaseService {
@@ -62,6 +63,23 @@ class ConfigService extends BaseService {
 
   deleteConfig = async ({ id }: { id: string }) => {
     const { data } = await this.delete<BaseResponse<Config>>(`/v1/${this.baseUrl}/${id}`)
+
+    return data.value
+  }
+
+  getOrderTagsConfig = async () => {
+    const { data } = await this.get<BaseResponse<OrderTagsConfig>>('/v1/configs/order-tags')
+
+    return data.value
+  }
+
+  updateDeliverySlotLimits = async ({ body }: { body: UpdateDeliverySlotLimitsBody }) => {
+    const { data } = await this.patch<
+      BaseResponse<{
+        slots: Array<{ tagId: number; label: string; limit: number }>
+        updatedAt: string
+      }>
+    >(`/v1/${this.baseUrl}/delivery-slots/limits`, body)
 
     return data.value
   }

@@ -22,6 +22,7 @@ import {
   Truck,
   Wallet,
   Warehouse,
+  Clock3,
   type LucideIcon
 } from 'lucide-react'
 import { type CategoryId } from '../../types'
@@ -31,6 +32,7 @@ import { type CategoryId } from '../../types'
  * dính React.
  */
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  'order-slots': Clock3,
   banners: GalleryHorizontalEnd,
   'product-collections': ShoppingBag,
   'signature-landing': PenLine,
