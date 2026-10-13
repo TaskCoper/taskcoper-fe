@@ -39,7 +39,7 @@ const isNoisyForReplay = (event: Sentry.ErrorEvent) => {
   return (error?.type === 'AxiosError' && NOISY_AXIOS_MESSAGE.test(message)) || /^ResizeObserver loop/.test(message)
 }
 
-// Chỉ bật khi CI truyền VITE_SENTRY_ENVIRONMENT (htm-dev / htm-prod). Build dev / prod là project khác nên không báo về đây
+// Chỉ bật khi CI truyền VITE_SENTRY_ENVIRONMENT (htm-dev → development, htm-prod → production). Build dev / prod là project khác nên không báo về đây
 Sentry.init({
   dsn: 'https://a5bc28c68493eb62675fedb7c69493bf@o4512247139794944.ingest.us.sentry.io/4512247582228480',
   enabled: Boolean(config.sentryEnvironment),

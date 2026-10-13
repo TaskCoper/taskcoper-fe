@@ -49,9 +49,9 @@ jobs:
           GOONG_MAP_TILE_API_KEY: ${{ secrets.GOONG_MAP_TILE_API_KEY }}
           VIETMAP_API_KEY: ${{ secrets.VIETMAP_API_KEY }}
           VIETMAP_MAP_API_KEY: ${{ secrets.VIETMAP_MAP_API_KEY }}
-          # Sentry chỉ bật cho htm-dev / htm-prod, dev / prod là project khác
+          # Sentry chỉ bật cho htm-dev (development) / htm-prod (production), dev / prod là project khác
           SENTRY_RELEASE: ${{ github.sha }}
-          SENTRY_ENVIRONMENT: ${{ startsWith(inputs.environment, 'htm-') && inputs.environment || '' }}
+          SENTRY_ENVIRONMENT: ${{ inputs.environment == 'htm-prod' && 'production' || inputs.environment == 'htm-dev' && 'development' || '' }}
           SENTRY_AUTH_TOKEN: ${{ startsWith(inputs.environment, 'htm-') && secrets.SENTRY_AUTH_TOKEN || '' }}
         run: |
           docker compose -f .docker/compose.yaml --profile "$PROFILE" build --parallel
