@@ -1,13 +1,13 @@
-import { Input } from '@/components/ui/input'
 import { Field, FieldError } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { Clock3 } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import InlineEditorShell from '../settings/inline-editor-shell'
-import EditorSection from '../shared/editor-section'
 import { useGetOrderTags } from '../../hooks/use-get-order-tags'
 import { useUpdateOrderSlotLimits } from '../../hooks/use-update-order-slot-limits'
+import InlineEditorShell from '../settings/inline-editor-shell'
+import EditorSection from '../shared/editor-section'
 
 const ORDER_TAG_TIME_PATTERN = /^\s*\d{1,2}h\s*-\s*\d{1,2}h\s*$/i
 
@@ -21,10 +21,14 @@ export default function OrderSlotsEditor() {
   const { t } = useTenantTranslation()
   const { orderTagsConfig, isGettingOrderTags, isOrderTagsError } = useGetOrderTags()
   const { updateOrderSlotLimits, isUpdatingOrderSlotLimits } = useUpdateOrderSlotLimits()
-  const syncedSlots = useMemo(
-    () => (orderTagsConfig?.options ?? []).filter((option) => ORDER_TAG_TIME_PATTERN.test(option.label)),
-    [orderTagsConfig?.options]
-  )
+
+  const syncedSlots = useMemo(() => {
+    const selectedTagIds = new Set(orderTagsConfig?.value ?? [])
+
+    return (orderTagsConfig?.options ?? []).filter(
+      (option) => selectedTagIds.has(option.value) && ORDER_TAG_TIME_PATTERN.test(option.label)
+    )
+  }, [orderTagsConfig?.options, orderTagsConfig?.value])
   const savedLimits = useMemo(
     () => normalizeLimits(syncedSlots, orderTagsConfig?.slotLimits),
     [orderTagsConfig?.slotLimits, syncedSlots]

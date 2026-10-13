@@ -1,8 +1,8 @@
 import type { BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
 import type { Config, GetConfigsParams } from './types'
-import type { CreateConfigFormValues } from './validations'
 import type { OrderTagsConfig, UpdateDeliverySlotLimitsBody } from './types/order-slots'
+import type { CreateConfigFormValues } from './validations'
 
 class ConfigService extends BaseService {
   private readonly baseUrl = 'configs'
@@ -79,7 +79,7 @@ class ConfigService extends BaseService {
         slots: Array<{ tagId: number; label: string; limit: number }>
         updatedAt: string
       }>
-    >('/v1/delivery-slots/limits', body)
+    >(`/v1/${this.baseUrl}/delivery-slots/limits`, body)
 
     return data.value
   }
