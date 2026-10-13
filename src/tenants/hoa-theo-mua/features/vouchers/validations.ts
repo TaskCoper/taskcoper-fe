@@ -99,7 +99,7 @@ export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'g
           path: ['codeLength']
         })
       }
-      if (data.discountValue <= 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
+      if (data.discountValue < 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
         ctx.addIssue({
           code: 'custom',
           message: t('configsPage.vouchers.discountValueValidation'),
@@ -204,7 +204,7 @@ export const generateVoucherSchema = (t: TenantT, maxQuantity: number) =>
       if (data.maxUsageCount <= 0) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.maxUsageValidation'), path: ['maxUsageCount'] })
       }
-      if (data.discountValue <= 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
+      if (data.discountValue < 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
         ctx.addIssue({
           code: 'custom',
           message: t('configsPage.vouchers.discountValueValidation'),

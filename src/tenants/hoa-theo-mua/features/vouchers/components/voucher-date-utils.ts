@@ -28,6 +28,10 @@ export const displayDate = (value: string | null) => {
 export const displayValidityPeriod = (startAt: string, endAt: string | null, unlimited: string) =>
   `${displayDateTime(startAt)} - ${endAt ? displayDateTime(endAt) : unlimited}`
 
+export const parseNumberInput = (value: string) => (value === '' ? Number.NaN : Number(value))
+
+export const displayNumberInput = (value: number) => (Number.isNaN(value) ? '' : value)
+
 export const isUnlimitedAmount = (value: number | null | undefined): value is null | undefined | 0 => !value
 
 export const formatMoney = (value: number | null | undefined, currency: string) =>
