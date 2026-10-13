@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import * as Sentry from '@sentry/react'
 import { AxiosError } from 'axios'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -34,6 +35,12 @@ export default function ErrorPage() {
   const error = useRouteError()
   const navigate = useNavigate()
   const chunkError = isDynamicImportError(error)
+
+  useEffect(() => {
+    if (chunkError || isRouteErrorResponse(error)) return
+
+    Sentry.captureException(error)
+  }, [chunkError, error])
 
   useEffect(() => {
     if (!chunkError) return

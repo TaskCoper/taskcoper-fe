@@ -1,5 +1,6 @@
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import SentryUserContext from '@/features/users/components/sentry-user-context'
 import ReactQueryProvider from '@/lib/react-query'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 import { Outlet } from 'react-router'
@@ -10,6 +11,7 @@ export default function AppLayout() {
     <NuqsAdapter>
       <ReactQueryProvider>
         <TooltipProvider delayDuration={100}>
+          <SentryUserContext />
           <Outlet />
           <Toaster position='top-right' />
           <ConfirmDialog />
