@@ -30,7 +30,14 @@ ENV VITE_GOONG_MAP_TILE_API_KEY=${GOONG_MAP_TILE_API_KEY}
 ENV VITE_VIETMAP_API_KEY=${VIETMAP_API_KEY}
 ENV VITE_VIETMAP_MAP_API_KEY=${VIETMAP_MAP_API_KEY}
 
-RUN yarn build
+ARG SENTRY_RELEASE
+ARG SENTRY_ENVIRONMENT
+ARG SENTRY_AUTH_TOKEN
+
+ENV VITE_SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT}
+
+# Plugin Sentry upload source map ngay trong yarn build, nên xoá sau đó để nginx không phục vụ .map công khai
+RUN yarn build && find dist -name '*.map' -delete
 
 FROM nginx:alpine AS runner
 COPY nginx.conf /etc/nginx/conf.d/default.conf

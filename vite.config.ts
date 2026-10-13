@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -44,6 +45,16 @@ const chunkGroups: Record<string, string[]> = {
   // Other utilities
   utils: ['axios', 'date-fns', 'jwt-decode', 'lodash', 'zustand', 'next-themes', 'react-day-picker', 'dompurify'],
 
+  // Error tracking
+  sentry: [
+    '@sentry/react',
+    '@sentry/browser',
+    '@sentry/core',
+    '@sentry/replay',
+    '@sentry/feedback',
+    '@sentry/browser-utils'
+  ],
+
   // PDF and File Handling
   pdf: ['pdfjs-dist', 'react-pdf', 'react-dropzone'],
 
@@ -72,7 +83,14 @@ const manualChunks = (id: string) => {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    sentryVitePlugin({
+      org: 'dahn-i7',
+      project: 'hoatheomua-admin-fe'
+    })
+  ],
   server: {
     port: 3000,
     proxy: {
@@ -103,6 +121,8 @@ export default defineConfig({
         manualChunks
       }
     },
-    chunkSizeWarningLimit: 800
+
+    chunkSizeWarningLimit: 800,
+    sourcemap: true
   }
 })
