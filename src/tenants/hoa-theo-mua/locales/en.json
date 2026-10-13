@@ -3137,7 +3137,7 @@
       "minOrderAmountValidation": "Minimum order must be less than or equal to maximum order.",
       "codeFormatValidation": "Voucher code must contain 4–20 A-Z or 0-9 characters.",
       "generatedCodeValidation": "Prefix and suffix must use A-Z/0-9; random length must be 5–10 characters and the full code cannot exceed 20 characters.",
-      "discountValueValidation": "Discount value must be greater than 0 and percent cannot exceed 100.",
+      "discountValueValidation": "Discount value must be at least 0 and percent cannot exceed 100.",
       "maxDiscountValidation": "Maximum discount only applies to percentage discounts and must be greater than 0.",
       "maxUsageValidation": "Maximum usage count must be greater than 0.",
       "maxUsageBelowUsed": "Maximum usage count cannot be less than the number of times already used ({{used}}).",

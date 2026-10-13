@@ -18,7 +18,7 @@ import { useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import type { CreateVoucherPayload, UpdateVoucherItem, Voucher, VoucherDiscountType, VoucherVisibility } from '../types'
 import { voucherSchema } from '../validations'
-import { dateValue, displayDate, timeValue } from './voucher-date-utils'
+import { dateValue, displayDate, displayNumberInput, parseNumberInput, timeValue } from './voucher-date-utils'
 import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 
 type VoucherFormValues = {
@@ -251,9 +251,11 @@ function VoucherForm({
             type='number'
             min={0}
             {...register('discountValue', { valueAsNumber: true })}
-            value={values.discountValue}
+            value={displayNumberInput(values.discountValue)}
             suffix={values.discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
-            onChange={(event) => setValue('discountValue', Number(event.target.value), { shouldValidate: true })}
+            onChange={(event) =>
+              setValue('discountValue', parseNumberInput(event.target.value), { shouldValidate: true })
+            }
           />
         </VoucherField>
         {values.discountType === 'percent' && (

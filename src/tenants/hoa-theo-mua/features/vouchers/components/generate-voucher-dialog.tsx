@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import type { GenerateVouchersPayload, VoucherProgram } from '../types'
 import { generateVoucherSchema } from '../validations'
+import { displayNumberInput, parseNumberInput } from './voucher-date-utils'
 import { VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
 
 const MAX_QUANTITY_PER_BATCH = 1000
@@ -160,9 +161,11 @@ function GenerateForm({
           <VoucherInputWithSuffix
             type='number'
             {...register('discountValue', { valueAsNumber: true })}
-            value={form.discountValue}
+            value={displayNumberInput(form.discountValue)}
             suffix={form.discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
-            onChange={(event) => setValue('discountValue', Number(event.target.value), { shouldValidate: true })}
+            onChange={(event) =>
+              setValue('discountValue', parseNumberInput(event.target.value), { shouldValidate: true })
+            }
           />
         </VoucherField>
         {form.discountType === 'percent' && (

@@ -3137,7 +3137,7 @@
       "minOrderAmountValidation": "Đơn tối thiểu phải nhỏ hơn hoặc bằng đơn tối đa.",
       "codeFormatValidation": "Mã voucher phải gồm 4–20 ký tự A-Z hoặc 0-9.",
       "generatedCodeValidation": "Tiền tố, hậu tố chỉ gồm A-Z/0-9; độ dài ngẫu nhiên từ 5–10 ký tự và tổng mã không quá 20 ký tự.",
-      "discountValueValidation": "Giá trị giảm phải lớn hơn 0 và phần trăm không được vượt quá 100.",
+      "discountValueValidation": "Giá trị giảm phải lớn hơn hoặc bằng 0 và phần trăm không được vượt quá 100.",
       "maxDiscountValidation": "Mức giảm tối đa chỉ áp dụng cho giảm theo phần trăm và phải lớn hơn 0.",
       "maxUsageValidation": "Tổng lượt sử dụng phải lớn hơn 0.",
       "maxUsageBelowUsed": "Tổng lượt sử dụng không được nhỏ hơn số lượt đã dùng ({{used}}).",
