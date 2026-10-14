@@ -1,5 +1,5 @@
 import { formatDateTime, formatTime } from '@/lib/date'
-import { addYears, endOfYear, isValid, parseISO } from 'date-fns'
+import { isValid, parseISO } from 'date-fns'
 
 export const dateValue = (date: Date | undefined, end = false, time?: string) => {
   if (!date) return ''
@@ -11,7 +11,11 @@ export const dateValue = (date: Date | undefined, end = false, time?: string) =>
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${clock}:${seconds}+07:00`
 }
 
-export const calendarEndMonth = () => endOfYear(addYears(new Date(), 10))
+export const composeDateTime = (date: string | null, time: string, end = false) =>
+  date ? dateValue(new Date(date), end, time) : ''
+
+export const toNullableNumber = (value: number | string | null | undefined) =>
+  value === '' || value === null || value === undefined || Number.isNaN(Number(value)) ? null : Number(value)
 
 export const timeValue = (value: string, fallback: string) => {
   return formatTime(value, 'HH:mm') || fallback
@@ -32,10 +36,6 @@ export const displayDate = (value: string | null) => {
 
 export const displayValidityPeriod = (startAt: string, endAt: string | null, unlimited: string) =>
   `${displayDateTime(startAt)} - ${endAt ? displayDateTime(endAt) : unlimited}`
-
-export const parseNumberInput = (value: string) => (value === '' ? Number.NaN : Number(value))
-
-export const displayNumberInput = (value: number) => (Number.isNaN(value) ? '' : value)
 
 export const isUnlimitedAmount = (value: number | null | undefined): value is null | undefined | 0 => !value
 

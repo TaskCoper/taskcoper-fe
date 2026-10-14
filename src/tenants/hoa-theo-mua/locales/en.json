@@ -3247,6 +3247,7 @@
       "status": "Status",
       "namePlaceholder": "Voucher name",
       "codePlaceholder": "Voucher code",
+      "programNamePlaceholder": "Program name",
       "descriptionPlaceholder": "Voucher description",
       "discountPlaceholder": "Discount value",
       "kinds": {

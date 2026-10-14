@@ -1,27 +1,24 @@
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { useUnsavedCloseGuard } from '@/tenants/hoa-theo-mua/features/configs/components/generic/config-dialog-shared'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { parseISO } from 'date-fns'
-import { useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import type { CreateVoucherPayload, UpdateVoucherItem, Voucher, VoucherDiscountType, VoucherVisibility } from '../types'
 import { voucherSchema } from '../validations'
-import { dateValue, displayDate, displayNumberInput, parseNumberInput, timeValue } from './voucher-date-utils'
-import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
+import { composeDateTime, displayDate, timeValue, toNullableNumber } from './voucher-date-utils'
+import {
+  VoucherFormFooter,
+  VoucherNumberField,
+  VoucherSelectField,
+  VoucherTextareaField,
+  VoucherTextField,
+  VoucherValidityFields
+} from './voucher-form-fields'
 
 type VoucherFormValues = {
+  codeMode: 'manual' | 'generated'
   code: string
   codePrefix: string
   codeLength: number
@@ -30,13 +27,35 @@ type VoucherFormValues = {
   visibility: VoucherVisibility
   discountType: VoucherDiscountType
   discountValue: number
-  maxDiscountAmount: string | number | null
+  maxDiscountAmount: number | null
   maxUsageCount: number
-  startAt: string
-  endAt: string
-  minOrderAmount: string | number | null
-  maxOrderAmount: string | number | null
+  startDate: string | null
+  startTime: string
+  endDate: string | null
+  endTime: string
+  minOrderAmount: number | null
+  maxOrderAmount: number | null
 }
+
+const buildDefaultValues = (voucher?: Voucher | null): VoucherFormValues => ({
+  codeMode: 'manual',
+  code: voucher?.code ?? '',
+  codePrefix: 'HTM',
+  codeLength: 7,
+  codeSuffix: '',
+  description: voucher?.description ?? '',
+  visibility: voucher?.visibility ?? 'public',
+  discountType: voucher?.discountType ?? 'percent',
+  discountValue: voucher?.discountValue ?? 20,
+  maxDiscountAmount: voucher?.maxDiscountAmount || null,
+  maxUsageCount: voucher?.maxUsageCount ?? 1,
+  startDate: voucher?.startAt || null,
+  startTime: timeValue(voucher?.startAt ?? '', '00:00'),
+  endDate: voucher?.endAt || null,
+  endTime: timeValue(voucher?.endAt ?? '', '23:59'),
+  minOrderAmount: voucher?.minOrderAmount || null,
+  maxOrderAmount: voucher?.maxOrderAmount || null
+})
 
 export function VoucherFormDialog({
   open,
@@ -52,294 +71,211 @@ export function VoucherFormDialog({
   pending: boolean
 }) {
   const { t } = useTenantTranslation()
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-3xl'>
-        <DialogHeader>
-          <DialogTitle>
-            {t(voucher ? 'configsPage.vouchers.editTitle' : 'configsPage.vouchers.createTitle')}
-          </DialogTitle>
-          <DialogDescription>{t('configsPage.vouchers.formDescription')}</DialogDescription>
-        </DialogHeader>
-        <VoucherForm voucher={voucher} onCancel={() => onOpenChange(false)} onSubmit={onSubmit} pending={pending} />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function VoucherForm({
-  voucher,
-  onCancel,
-  onSubmit,
-  pending
-}: {
-  voucher?: Voucher | null
-  onCancel: () => void
-  onSubmit: (payload: CreateVoucherPayload | UpdateVoucherItem) => void
-  pending: boolean
-}) {
-  const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
-  const [codeMode, setCodeMode] = useState<'manual' | 'generated'>('manual')
+  const defaultValues = useMemo(() => buildDefaultValues(voucher), [voucher])
   const methods = useForm<VoucherFormValues>({
     mode: 'onChange',
-    resolver: zodResolver(voucherSchema(t, voucher?.usedCount ?? 0, voucher ? 'edit' : codeMode)),
-    defaultValues: {
-      code: voucher?.code ?? '',
-      codePrefix: 'HTM',
-      codeLength: 7,
-      codeSuffix: '',
-      description: voucher?.description ?? '',
-      discountValue: voucher?.discountValue ?? 20,
-      maxDiscountAmount: voucher?.maxDiscountAmount ?? '',
-      maxUsageCount: voucher?.maxUsageCount ?? 1,
-      startAt: voucher?.startAt ?? '',
-      endAt: voucher?.endAt ?? '',
-      minOrderAmount: voucher?.minOrderAmount ?? '',
-      maxOrderAmount: voucher?.maxOrderAmount ?? '',
-      visibility: voucher?.visibility ?? 'public',
-      discountType: voucher?.discountType ?? 'percent'
-    }
+    resolver: zodResolver(voucherSchema(t, voucher?.usedCount ?? 0, Boolean(voucher))),
+    defaultValues
   })
   const {
-    register,
     control,
     setValue,
     trigger,
     handleSubmit,
-    formState: { errors }
+    reset,
+    formState: { isDirty }
   } = methods
-  const values = useWatch({ control }) as VoucherFormValues
+  const codeMode = useWatch({ control, name: 'codeMode' })
+  const discountType = useWatch({ control, name: 'discountType' })
+  const requestClose = useUnsavedCloseGuard(isDirty, () => onOpenChange(false))
+
+  useEffect(() => {
+    if (open) reset(defaultValues)
+  }, [open, defaultValues, reset])
+
   const submit = async (form: VoucherFormValues) => {
-    if (form.startAt && !form.endAt) {
+    const startAt = composeDateTime(form.startDate, form.startTime, false)
+    const endAt = composeDateTime(form.endDate, form.endTime, true)
+
+    if (startAt && !endAt) {
       const confirmed = await confirm({
-        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(form.startAt) }),
+        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(startAt) }),
         confirmText: t('common.confirm.confirmText'),
         cancelText: t('common.button.cancel')
       })
       if (!confirmed) return
     }
 
-    if (voucher) {
-      onSubmit({
-        id: voucher.id,
-        description: form.description,
-        visibility: form.visibility,
-        discountType: form.discountType,
-        discountValue: Number(form.discountValue),
-        maxDiscountAmount:
-          form.discountType === 'percent' && form.maxDiscountAmount !== '' && form.maxDiscountAmount !== null
-            ? Number(form.maxDiscountAmount)
-            : null,
-        maxUsageCount: Number(form.maxUsageCount),
-        startAt: form.startAt,
-        endAt: form.endAt || null,
-        minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
-        maxOrderAmount: form.maxOrderAmount === '' ? null : Number(form.maxOrderAmount)
-      })
-      return
-    }
-    onSubmit({
-      ...(codeMode === 'manual'
-        ? { code: form.code }
-        : { codePrefix: form.codePrefix, codeLength: Number(form.codeLength), codeSuffix: form.codeSuffix }),
+    const shared = {
       description: form.description,
       visibility: form.visibility,
       discountType: form.discountType,
       discountValue: Number(form.discountValue),
-      maxDiscountAmount:
-        form.discountType === 'percent' && form.maxDiscountAmount !== '' && form.maxDiscountAmount !== null
-          ? Number(form.maxDiscountAmount)
-          : null,
+      maxDiscountAmount: form.discountType === 'percent' ? toNullableNumber(form.maxDiscountAmount) : null,
       maxUsageCount: Number(form.maxUsageCount),
-      startAt: form.startAt,
-      endAt: form.endAt || null,
-      minOrderAmount: form.minOrderAmount === '' ? null : Number(form.minOrderAmount),
-      maxOrderAmount: form.maxOrderAmount === '' ? null : Number(form.maxOrderAmount)
+      startAt,
+      endAt: endAt || null,
+      minOrderAmount: toNullableNumber(form.minOrderAmount),
+      maxOrderAmount: toNullableNumber(form.maxOrderAmount)
+    }
+
+    if (voucher) {
+      onSubmit({ id: voucher.id, ...shared })
+      return
+    }
+
+    onSubmit({
+      ...(form.codeMode === 'manual'
+        ? { code: form.code }
+        : { codePrefix: form.codePrefix, codeLength: Number(form.codeLength), codeSuffix: form.codeSuffix }),
+      ...shared
     })
   }
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(submit)} className='grid gap-4 sm:grid-cols-2'>
-        {!voucher && (
-          <VoucherField label={t('configsPage.vouchers.codeMode')}>
-            <Select value={codeMode} onValueChange={(value) => setCodeMode(value as typeof codeMode)}>
-              <SelectTrigger className='w-full'>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='manual'>{t('configsPage.vouchers.manualCode')}</SelectItem>
-                <SelectItem value='generated'>{t('configsPage.vouchers.generatedCode')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </VoucherField>
-        )}
-        {!voucher && codeMode === 'manual' && (
-          <VoucherField label={t('configsPage.vouchers.code')} error={errors.code?.message}>
-            <Input
-              {...register('code')}
-              value={values.code}
-              onChange={(event) => setValue('code', event.target.value.toUpperCase(), { shouldValidate: true })}
-            />
-          </VoucherField>
-        )}
-        {!voucher && codeMode === 'generated' && (
-          <>
-            <VoucherField label={t('configsPage.vouchers.codePrefix')} error={errors.codePrefix?.message}>
-              <Input
-                {...register('codePrefix')}
-                value={values.codePrefix}
-                onChange={(event) => setValue('codePrefix', event.target.value.toUpperCase(), { shouldValidate: true })}
+    <Dialog open={open} onOpenChange={(next) => (next ? onOpenChange(true) : void requestClose())}>
+      <DialogContent position='top-center' className='max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-2xl'>
+        <DialogHeader>
+          <DialogTitle>
+            {t(voucher ? 'configsPage.vouchers.editTitle' : 'configsPage.vouchers.createTitle')}
+          </DialogTitle>
+          <DialogDescription>{t('configsPage.vouchers.formDescription')}</DialogDescription>
+        </DialogHeader>
+        <FormProvider {...methods}>
+          <form noValidate onSubmit={handleSubmit(submit)} className='grid gap-x-4 gap-y-1 sm:grid-cols-2'>
+            {!voucher && (
+              <VoucherSelectField
+                name='codeMode'
+                control={control}
+                label={t('configsPage.vouchers.codeMode')}
+                isRequired
+                options={[
+                  { value: 'manual', label: t('configsPage.vouchers.manualCode') },
+                  { value: 'generated', label: t('configsPage.vouchers.generatedCode') }
+                ]}
               />
-            </VoucherField>
-            <VoucherField label={t('configsPage.vouchers.codeLength')} error={errors.codeLength?.message}>
-              <Input
-                type='number'
-                min={5}
-                max={10}
-                {...register('codeLength', { valueAsNumber: true })}
-                value={values.codeLength}
-                onChange={(event) => setValue('codeLength', Number(event.target.value), { shouldValidate: true })}
+            )}
+            {!voucher && codeMode === 'manual' && (
+              <VoucherTextField
+                name='code'
+                control={control}
+                label={t('configsPage.vouchers.code')}
+                placeholder={t('configsPage.vouchers.codePlaceholder')}
+                isRequired
+                autoFocus
+                toUpperCase
               />
-            </VoucherField>
-            <VoucherField label={t('configsPage.vouchers.codeSuffix')} error={errors.codeSuffix?.message}>
-              <Input
-                {...register('codeSuffix')}
-                value={values.codeSuffix}
-                onChange={(event) => setValue('codeSuffix', event.target.value.toUpperCase(), { shouldValidate: true })}
+            )}
+            {!voucher && codeMode === 'generated' && (
+              <>
+                <VoucherTextField
+                  name='codePrefix'
+                  control={control}
+                  label={t('configsPage.vouchers.codePrefix')}
+                  toUpperCase
+                />
+                <VoucherNumberField
+                  name='codeLength'
+                  control={control}
+                  label={t('configsPage.vouchers.codeLength')}
+                  min={5}
+                  max={10}
+                  isRequired
+                />
+                <VoucherTextField
+                  name='codeSuffix'
+                  control={control}
+                  label={t('configsPage.vouchers.codeSuffix')}
+                  toUpperCase
+                />
+              </>
+            )}
+            <VoucherSelectField
+              name='visibility'
+              control={control}
+              label={t('configsPage.vouchers.visibility')}
+              isRequired
+              options={[
+                { value: 'public', label: t('configsPage.vouchers.types.public') },
+                { value: 'private', label: t('configsPage.vouchers.types.private') }
+              ]}
+            />
+            <VoucherSelectField
+              name='discountType'
+              control={control}
+              label={t('configsPage.vouchers.discountType')}
+              isRequired
+              disabled={Boolean(voucher)}
+              options={[
+                { value: 'percent', label: t('configsPage.vouchers.kinds.percent') },
+                { value: 'cash', label: t('configsPage.vouchers.kinds.cash') }
+              ]}
+              onValueChange={(value) => {
+                if (value === 'cash') setValue('maxDiscountAmount', null)
+                void trigger(['discountValue', 'maxDiscountAmount'])
+              }}
+            />
+            <VoucherNumberField
+              name='discountValue'
+              control={control}
+              label={t('configsPage.vouchers.discountValue')}
+              suffix={discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
+              min={0}
+              isRequired
+            />
+            {discountType === 'percent' && (
+              <VoucherNumberField
+                name='maxDiscountAmount'
+                control={control}
+                label={t('configsPage.vouchers.maxDiscountAmount')}
+                placeholder={t('configsPage.vouchers.unlimited')}
+                suffix={t('configsPage.vouchers.currency')}
+                min={0}
+                nullable
               />
-            </VoucherField>
-          </>
-        )}
-        <VoucherField label={t('configsPage.vouchers.visibility')}>
-          <Select
-            value={values.visibility}
-            onValueChange={(value) => setValue('visibility', value as VoucherVisibility, { shouldValidate: true })}
-          >
-            <SelectTrigger className='w-full'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='public'>{t('configsPage.vouchers.types.public')}</SelectItem>
-              <SelectItem value='private'>{t('configsPage.vouchers.types.private')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </VoucherField>
-        <VoucherField label={t('configsPage.vouchers.discountType')}>
-          <Select
-            value={values.discountType}
-            disabled={Boolean(voucher)}
-            onValueChange={(value) => {
-              setValue('discountType', value as VoucherDiscountType)
-              if (value === 'cash') setValue('maxDiscountAmount', '')
-              void trigger(['discountValue', 'maxDiscountAmount'])
-            }}
-          >
-            <SelectTrigger className='w-full'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='percent'>{t('configsPage.vouchers.kinds.percent')}</SelectItem>
-              <SelectItem value='cash'>{t('configsPage.vouchers.kinds.cash')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </VoucherField>
-        <VoucherField label={t('configsPage.vouchers.discountValue')} error={errors.discountValue?.message}>
-          <VoucherInputWithSuffix
-            type='number'
-            min={0}
-            {...register('discountValue', { valueAsNumber: true })}
-            value={displayNumberInput(values.discountValue)}
-            suffix={values.discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
-            onChange={(event) =>
-              setValue('discountValue', parseNumberInput(event.target.value), { shouldValidate: true })
-            }
-          />
-        </VoucherField>
-        {values.discountType === 'percent' && (
-          <VoucherField label={t('configsPage.vouchers.maxDiscountAmount')} error={errors.maxDiscountAmount?.message}>
-            <VoucherInputWithSuffix
-              type='number'
-              min={0}
-              {...register('maxDiscountAmount')}
-              value={values.maxDiscountAmount ?? ''}
+            )}
+            <VoucherNumberField
+              name='minOrderAmount'
+              control={control}
+              label={t('configsPage.vouchers.minOrderAmount')}
+              placeholder={t('configsPage.vouchers.unlimited')}
               suffix={t('configsPage.vouchers.currency')}
-              onChange={(event) => setValue('maxDiscountAmount', event.target.value, { shouldValidate: true })}
-            />
-          </VoucherField>
-        )}
-        <div className='grid gap-4 sm:col-span-2 sm:grid-cols-2'>
-          <VoucherField label={t('configsPage.vouchers.minOrderAmount')} error={errors.minOrderAmount?.message}>
-            <VoucherInputWithSuffix
-              {...register('minOrderAmount')}
-              type='number'
               min={0}
-              value={values.minOrderAmount ?? ''}
-              suffix={t('configsPage.vouchers.currency')}
-              onChange={(event) => setValue('minOrderAmount', event.target.value, { shouldValidate: true })}
+              nullable
             />
-          </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.maxOrderAmount')} error={errors.maxOrderAmount?.message}>
-            <VoucherInputWithSuffix
-              {...register('maxOrderAmount')}
-              type='number'
+            <VoucherNumberField
+              name='maxOrderAmount'
+              control={control}
+              label={t('configsPage.vouchers.maxOrderAmount')}
+              placeholder={t('configsPage.vouchers.unlimited')}
+              suffix={t('configsPage.vouchers.currency')}
               min={0}
-              value={values.maxOrderAmount ?? ''}
-              suffix={t('configsPage.vouchers.currency')}
-              onChange={(event) => setValue('maxOrderAmount', event.target.value, { shouldValidate: true })}
+              nullable
             />
-          </VoucherField>
-        </div>
-        <VoucherField label={t('configsPage.vouchers.maxUsageCount')} error={errors.maxUsageCount?.message}>
-          <Input
-            type='number'
-            min={1}
-            {...register('maxUsageCount', { valueAsNumber: true })}
-            value={values.maxUsageCount}
-            onChange={(event) => setValue('maxUsageCount', Number(event.target.value), { shouldValidate: true })}
-          />
-        </VoucherField>
-        <VoucherField
-          label={t('configsPage.vouchers.validityPeriod')}
-          error={errors.startAt?.message || errors.endAt?.message}
-          className='sm:col-span-2'
-        >
-          <VoucherDateRangeField
-            startAt={values.startAt}
-            endAt={values.endAt}
-            onSelect={(next, times) => {
-              setValue('startAt', dateValue(next?.from, false, times.startTime), { shouldValidate: true })
-              setValue('endAt', dateValue(next?.to, true, times.endTime), { shouldValidate: true })
-            }}
-            startTime={timeValue(values.startAt, '00:00')}
-            endTime={timeValue(values.endAt, '23:59')}
-            onTimeChange={(field, value) => {
-              const current = field === 'start' ? values.startAt : values.endAt
-              const date = current ? parseISO(current) : undefined
-              setValue(field === 'start' ? 'startAt' : 'endAt', dateValue(date, field === 'end', value), {
-                shouldValidate: true
-              })
-            }}
-          />
-        </VoucherField>
-        <VoucherField label={t('configsPage.vouchers.description')} className='sm:col-span-2'>
-          <Textarea
-            {...register('description')}
-            value={values.description}
-            onChange={(event) => setValue('description', event.target.value)}
-          />
-        </VoucherField>
-        <DialogFooter className='sm:col-span-2'>
-          <Button type='button' variant='outline' onClick={onCancel}>
-            {t('common.button.cancel')}
-          </Button>
-          <Button type='submit' disabled={pending}>
-            {t('configsPage.dialog.save')}
-          </Button>
-        </DialogFooter>
-      </form>
-    </FormProvider>
+            <VoucherNumberField
+              name='maxUsageCount'
+              control={control}
+              label={t('configsPage.vouchers.maxUsageCount')}
+              min={1}
+              isRequired
+            />
+            <VoucherValidityFields control={control} />
+            <VoucherTextareaField
+              name='description'
+              control={control}
+              label={t('configsPage.vouchers.description')}
+              placeholder={t('configsPage.vouchers.descriptionPlaceholder')}
+              className='sm:col-span-2'
+            />
+            <VoucherFormFooter
+              label={t('configsPage.dialog.save')}
+              pending={pending}
+              onCancel={() => void requestClose()}
+            />
+          </form>
+        </FormProvider>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -1,33 +1,42 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
+import { composeDateTime } from './components/voucher-date-utils'
 import type { VoucherDiscountType, VoucherVisibility } from './types'
 
-const optionalAmount = z.union([z.string(), z.number(), z.null()])
+const optionalAmount = z.number().nullable()
 
-const addDateRules =
-  (t: TenantT, isProgram: boolean) => (data: { startAt: string; endAt: string }, ctx: z.RefinementCtx) => {
-    if (!data.startAt && !data.endAt) {
-      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.validityRequired'), path: ['startAt'] })
-    }
+type ValidityValues = {
+  startDate: string | null
+  startTime: string
+  endDate: string | null
+  endTime: string
+}
 
-    if (!data.startAt && data.endAt) {
-      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.startDateRequired'), path: ['startAt'] })
-    }
+const addDateRules = (t: TenantT, isProgram: boolean) => (data: ValidityValues, ctx: z.RefinementCtx) => {
+  const startAt = composeDateTime(data.startDate, data.startTime, false)
+  const endAt = composeDateTime(data.endDate, data.endTime, true)
 
-    if (data.startAt && data.endAt && Date.parse(data.endAt) <= Date.parse(data.startAt)) {
-      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
-    }
-
-    if (!isProgram && data.endAt && Date.parse(data.endAt) <= Date.now()) {
-      ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endAt'] })
-    }
+  if (!startAt && !endAt) {
+    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.validityRequired'), path: ['startDate'] })
   }
 
+  if (!startAt && endAt) {
+    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.startDateRequired'), path: ['startDate'] })
+  }
+
+  if (startAt && endAt && Date.parse(endAt) <= Date.parse(startAt)) {
+    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endDate'] })
+  }
+
+  if (!isProgram && endAt && Date.parse(endAt) <= Date.now()) {
+    ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.endDateValidation'), path: ['endDate'] })
+  }
+}
+
 const addAmountRules =
-  (t: TenantT) =>
-  (data: { minOrderAmount: string | number | null; maxOrderAmount: string | number | null }, ctx: z.RefinementCtx) => {
-    const min = data.minOrderAmount === '' || data.minOrderAmount === null ? undefined : Number(data.minOrderAmount)
-    const max = data.maxOrderAmount === '' || data.maxOrderAmount === null ? undefined : Number(data.maxOrderAmount)
+  (t: TenantT) => (data: { minOrderAmount: number | null; maxOrderAmount: number | null }, ctx: z.RefinementCtx) => {
+    const min = data.minOrderAmount ?? undefined
+    const max = data.maxOrderAmount ?? undefined
     const isInvalidAmount = (value: number) => !Number.isFinite(value) || value <= 0
     const invalidAmountMessage = t('common.validation.number.positive')
 
@@ -47,12 +56,13 @@ const addAmountRules =
     }
   }
 
-export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'generated' | 'edit' = 'manual') =>
+export const voucherSchema = (t: TenantT, usedCount = 0, isEdit = false) =>
   z
     .object({
+      codeMode: z.enum(['manual', 'generated']),
       code: z.string(),
       codePrefix: z.string(),
-      codeLength: z.number(),
+      codeLength: z.number({ error: t('configsPage.vouchers.generatedCodeValidation') }),
       codeSuffix: z.string(),
       description: z.string().max(500, t('common.validation.maxLength', { max: 500 })),
       visibility: z.enum(['public', 'private'] satisfies [VoucherVisibility, VoucherVisibility]),
@@ -60,12 +70,16 @@ export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'g
       discountValue: z.number({ error: t('configsPage.vouchers.discountValueValidation') }),
       maxDiscountAmount: optionalAmount,
       maxUsageCount: z.number({ error: t('configsPage.vouchers.maxUsageValidation') }),
-      startAt: z.string(),
-      endAt: z.string(),
+      startDate: z.string().nullable(),
+      startTime: z.string(),
+      endDate: z.string().nullable(),
+      endTime: z.string(),
       minOrderAmount: optionalAmount,
       maxOrderAmount: optionalAmount
     })
     .superRefine((data, ctx) => {
+      const codeMode = isEdit ? 'edit' : data.codeMode
+
       if (codeMode === 'manual' && !data.code) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.codeFormatValidation'), path: ['code'] })
       }
@@ -106,14 +120,14 @@ export const voucherSchema = (t: TenantT, usedCount = 0, codeMode: 'manual' | 'g
           path: ['discountValue']
         })
       }
-      if (data.discountType === 'cash' && data.maxDiscountAmount !== '' && data.maxDiscountAmount !== null) {
+      if (data.discountType === 'cash' && data.maxDiscountAmount !== null) {
         ctx.addIssue({
           code: 'custom',
           message: t('configsPage.vouchers.maxDiscountValidation'),
           path: ['maxDiscountAmount']
         })
       }
-      if (data.discountType === 'percent' && data.maxDiscountAmount !== '' && data.maxDiscountAmount !== null) {
+      if (data.discountType === 'percent' && data.maxDiscountAmount !== null) {
         if (Number(data.maxDiscountAmount) <= 0) {
           ctx.addIssue({
             code: 'custom',
@@ -140,8 +154,10 @@ export const programSchema = (t: TenantT) =>
   z
     .object({
       name: z.string(),
-      startAt: z.string(),
-      endAt: z.string(),
+      startDate: z.string().nullable(),
+      startTime: z.string(),
+      endDate: z.string().nullable(),
+      endTime: z.string(),
       minOrderAmount: optionalAmount,
       maxOrderAmount: optionalAmount
     })
@@ -157,7 +173,7 @@ export const generateVoucherSchema = (t: TenantT, maxQuantity: number) =>
   z
     .object({
       codePrefix: z.string().optional(),
-      codeLength: z.number(),
+      codeLength: z.number({ error: t('configsPage.vouchers.generatedCodeValidation') }),
       codeSuffix: z.string().optional(),
       quantity: z.number({ error: t('configsPage.vouchers.quantityValidation', { max: maxQuantity }) }),
       maxUsageCount: z.number({ error: t('configsPage.vouchers.maxUsageValidation') }),
