@@ -1,23 +1,34 @@
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
+import { useUnsavedCloseGuard } from '@/tenants/hoa-theo-mua/features/configs/components/generic/config-dialog-shared'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { parseISO } from 'date-fns'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useEffect, useMemo } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import type { CreateProgramPayload, UpdateProgramPayload, VoucherProgram } from '../types'
 import { programSchema } from '../validations'
-import { dateValue, displayDate, isUnlimitedAmount, timeValue } from './voucher-date-utils'
-import { VoucherDateRangeField, VoucherField, VoucherInputWithSuffix } from './voucher-form-fields'
+import { composeDateTime, displayDate, timeValue, toNullableNumber } from './voucher-date-utils'
+import { VoucherFormFooter, VoucherNumberField, VoucherTextField, VoucherValidityFields } from './voucher-form-fields'
 
 type ProgramFormValues = {
   name: string
-  startAt: string
-  endAt: string
-  minOrderAmount: string | number | null
-  maxOrderAmount: string | number | null
+  startDate: string | null
+  startTime: string
+  endDate: string | null
+  endTime: string
+  minOrderAmount: number | null
+  maxOrderAmount: number | null
 }
+
+const buildDefaultValues = (program?: VoucherProgram | null): ProgramFormValues => ({
+  name: program?.name ?? '',
+  startDate: program?.startAt || null,
+  startTime: timeValue(program?.startAt ?? '', '00:00'),
+  endDate: program?.endAt || null,
+  endTime: timeValue(program?.endAt ?? '', '23:59'),
+  minOrderAmount: program?.minOrderAmount || null,
+  maxOrderAmount: program?.maxOrderAmount || null
+})
 
 export function ProgramFormDialog({
   open,
@@ -33,57 +44,32 @@ export function ProgramFormDialog({
   pending: boolean
 }) {
   const { t } = useTenantTranslation()
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-3xl'>
-        <DialogHeader>
-          <DialogTitle>
-            {t(program ? 'configsPage.vouchers.editProgram' : 'configsPage.vouchers.createProgram')}
-          </DialogTitle>
-        </DialogHeader>
-        <ProgramForm program={program} onCancel={() => onOpenChange(false)} onSubmit={onSubmit} pending={pending} />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function ProgramForm({
-  program,
-  onCancel,
-  onSubmit,
-  pending
-}: {
-  program?: VoucherProgram | null
-  onCancel: () => void
-  onSubmit: (payload: CreateProgramPayload | UpdateProgramPayload) => void
-  pending: boolean
-}) {
-  const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
+  const defaultValues = useMemo(() => buildDefaultValues(program), [program])
   const methods = useForm<ProgramFormValues>({
     mode: 'onChange',
     resolver: zodResolver(programSchema(t)),
-    defaultValues: {
-      name: program?.name ?? '',
-      startAt: program?.startAt ?? '',
-      endAt: program?.endAt ?? '',
-      minOrderAmount: isUnlimitedAmount(program?.minOrderAmount) ? '' : program?.minOrderAmount,
-      maxOrderAmount: isUnlimitedAmount(program?.maxOrderAmount) ? '' : program?.maxOrderAmount
-    }
+    defaultValues
   })
   const {
-    register,
     control,
-    setValue,
     handleSubmit,
-    formState: { errors }
+    reset,
+    formState: { isDirty }
   } = methods
-  const form = useWatch({ control }) as ProgramFormValues
+  const requestClose = useUnsavedCloseGuard(isDirty, () => onOpenChange(false))
+
+  useEffect(() => {
+    if (open) reset(defaultValues)
+  }, [open, defaultValues, reset])
+
   const submit = async (form: ProgramFormValues) => {
-    if (form.startAt && !form.endAt) {
+    const startAt = composeDateTime(form.startDate, form.startTime, false)
+    const endAt = composeDateTime(form.endDate, form.endTime, true)
+
+    if (startAt && !endAt) {
       const confirmed = await confirm({
-        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(form.startAt) }),
+        description: t('configsPage.vouchers.unlimitedEndDateConfirm', { date: displayDate(startAt) }),
         confirmText: t('common.confirm.confirmText'),
         cancelText: t('common.button.cancel')
       })
@@ -92,80 +78,61 @@ function ProgramForm({
 
     const payload: CreateProgramPayload = {
       name: form.name.trim(),
-      startAt: form.startAt,
-      endAt: form.endAt || null,
-      minOrderAmount: form.minOrderAmount === '' || form.minOrderAmount === null ? null : Number(form.minOrderAmount),
-      maxOrderAmount: form.maxOrderAmount === '' || form.maxOrderAmount === null ? null : Number(form.maxOrderAmount)
+      startAt,
+      endAt: endAt || null,
+      minOrderAmount: toNullableNumber(form.minOrderAmount),
+      maxOrderAmount: toNullableNumber(form.maxOrderAmount)
     }
 
     onSubmit(program ? { ...payload, id: program.id } : payload)
   }
+
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(submit)} className='grid gap-4'>
-        <VoucherField
-          label={t('configsPage.vouchers.programName')}
-          error={errors.name?.message}
-          className='w-full sm:col-span-2'
-        >
-          <Input
-            {...register('name')}
-            value={form.name}
-            onChange={(event) => setValue('name', event.target.value, { shouldValidate: true })}
-          />
-        </VoucherField>
-        <VoucherField
-          label={t('configsPage.vouchers.validityPeriod')}
-          error={errors.startAt?.message || errors.endAt?.message}
-          className='sm:col-span-2'
-        >
-          <VoucherDateRangeField
-            startAt={form.startAt}
-            endAt={form.endAt}
-            onSelect={(next, times) => {
-              setValue('startAt', dateValue(next?.from, false, times.startTime), { shouldValidate: true })
-              setValue('endAt', dateValue(next?.to, true, times.endTime), { shouldValidate: true })
-            }}
-            startTime={timeValue(form.startAt, '00:00')}
-            endTime={timeValue(form.endAt, '23:59')}
-            onTimeChange={(field, value) => {
-              const current = field === 'start' ? form.startAt : form.endAt
-              const date = current ? parseISO(current) : undefined
-              setValue(field === 'start' ? 'startAt' : 'endAt', dateValue(date, field === 'end', value), {
-                shouldValidate: true
-              })
-            }}
-          />
-        </VoucherField>
-        <div className='grid w-full grid-cols-2 gap-3 sm:col-span-2'>
-          <VoucherField label={t('configsPage.vouchers.minOrderAmount')} error={errors.minOrderAmount?.message}>
-            <VoucherInputWithSuffix
-              {...register('minOrderAmount')}
-              type='number'
-              value={form.minOrderAmount ?? ''}
-              suffix={t('configsPage.vouchers.currency')}
-              onChange={(event) => setValue('minOrderAmount', event.target.value, { shouldValidate: true })}
+    <Dialog open={open} onOpenChange={(next) => (next ? onOpenChange(true) : void requestClose())}>
+      <DialogContent position='top-center' className='max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-2xl'>
+        <DialogHeader>
+          <DialogTitle>
+            {t(program ? 'configsPage.vouchers.editProgram' : 'configsPage.vouchers.createProgram')}
+          </DialogTitle>
+        </DialogHeader>
+        <FormProvider {...methods}>
+          <form noValidate onSubmit={handleSubmit(submit)} className='grid gap-x-4 gap-y-1 sm:grid-cols-2'>
+            <VoucherTextField
+              name='name'
+              control={control}
+              label={t('configsPage.vouchers.programName')}
+              placeholder={t('configsPage.vouchers.programNamePlaceholder')}
+              className='sm:col-span-2'
+              isRequired
+              autoFocus
             />
-          </VoucherField>
-          <VoucherField label={t('configsPage.vouchers.maxOrderAmount')} error={errors.maxOrderAmount?.message}>
-            <VoucherInputWithSuffix
-              {...register('maxOrderAmount')}
-              type='number'
-              value={form.maxOrderAmount ?? ''}
+            <VoucherValidityFields control={control} />
+            <VoucherNumberField
+              name='minOrderAmount'
+              control={control}
+              label={t('configsPage.vouchers.minOrderAmount')}
+              placeholder={t('configsPage.vouchers.unlimited')}
               suffix={t('configsPage.vouchers.currency')}
-              onChange={(event) => setValue('maxOrderAmount', event.target.value, { shouldValidate: true })}
+              min={0}
+              nullable
             />
-          </VoucherField>
-        </div>
-        <DialogFooter className='sm:col-span-2'>
-          <Button type='button' variant='outline' onClick={onCancel}>
-            {t('common.button.cancel')}
-          </Button>
-          <Button type='submit' disabled={pending}>
-            {t('configsPage.dialog.save')}
-          </Button>
-        </DialogFooter>
-      </form>
-    </FormProvider>
+            <VoucherNumberField
+              name='maxOrderAmount'
+              control={control}
+              label={t('configsPage.vouchers.maxOrderAmount')}
+              placeholder={t('configsPage.vouchers.unlimited')}
+              suffix={t('configsPage.vouchers.currency')}
+              min={0}
+              nullable
+            />
+            <VoucherFormFooter
+              label={t('configsPage.dialog.save')}
+              pending={pending}
+              onCancel={() => void requestClose()}
+            />
+          </form>
+        </FormProvider>
+      </DialogContent>
+    </Dialog>
   )
 }

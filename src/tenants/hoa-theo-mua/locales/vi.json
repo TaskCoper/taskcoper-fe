@@ -2638,6 +2638,7 @@
       "status": "Trạng thái",
       "namePlaceholder": "Tên voucher",
       "codePlaceholder": "Mã voucher",
+      "programNamePlaceholder": "Tên chương trình",
       "descriptionPlaceholder": "Mô tả voucher",
       "discountPlaceholder": "Giá trị giảm",
       "kinds": {
