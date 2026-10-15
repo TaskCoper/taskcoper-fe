@@ -40,4 +40,4 @@ export const displayValidityPeriod = (startAt: string, endAt: string | null, unl
 export const isUnlimitedAmount = (value: number | null | undefined): value is null | undefined | 0 => !value
 
 export const formatMoney = (value: number | null | undefined, currency: string) =>
-  value == null ? '—' : `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(value)} ${currency}`
+  value == null ? '—' : `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 3 }).format(value)} ${currency}`
