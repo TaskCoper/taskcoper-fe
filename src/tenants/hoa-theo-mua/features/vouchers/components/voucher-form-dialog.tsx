@@ -222,6 +222,7 @@ export function VoucherFormDialog({
               label={t('configsPage.vouchers.discountValue')}
               suffix={discountType === 'percent' ? '%' : t('configsPage.vouchers.currency')}
               min={0}
+              step={discountType === 'cash' ? 0.001 : 1}
               isRequired
             />
             {discountType === 'percent' && (

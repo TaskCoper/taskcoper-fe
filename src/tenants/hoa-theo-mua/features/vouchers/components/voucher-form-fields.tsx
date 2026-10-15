@@ -208,12 +208,14 @@ export function VoucherNumberField<T extends FieldValues>({
   suffix,
   min,
   max,
+  step,
   nullable
 }: VoucherControlledFieldProps<T> & {
   placeholder?: string
   suffix?: string
   min?: number
   max?: number
+  step?: number | 'any'
   nullable?: boolean
 }) {
   return (
@@ -228,6 +230,7 @@ export function VoucherNumberField<T extends FieldValues>({
           type: 'number',
           min,
           max,
+          step,
           value: value === null || value === undefined || Number.isNaN(value) ? '' : value,
           'aria-invalid': fieldState.invalid,
           disabled,
