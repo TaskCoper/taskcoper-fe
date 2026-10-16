@@ -56,26 +56,20 @@ services:
 networks:
   taskcoper-network-prod:
     name: taskcoper-network-prod
-    driver: bridge
     external: true
-    ipam:
-      driver: default
 
   taskcoper-network-dev:
     name: taskcoper-network-dev
-    driver: bridge
     external: true
-    ipam:
-      driver: default
 
   # htm-dev shares hoatheomua-be's dev network so the gateway can reach htm-taskcoper-client-dev.
-  # Owned/created by hoatheomua-be's dev compose - must already exist before `up` of the htm-dev profile.
+  # Provisioned independently of app deployment; see the tunnel deployment guide.
   hoatheomua-network-dev:
     name: hoatheomua-network-dev
     external: true
 
   # htm-prod shares hoatheomua-be's prod network on the HoaTheoMua runner.
-  # Owned/created by hoatheomua-be's prod compose — it must exist before deployment.
+  # Provisioned independently of app deployment; see the tunnel deployment guide.
   hoatheomua-network-prod:
     name: hoatheomua-network-prod
     external: true
