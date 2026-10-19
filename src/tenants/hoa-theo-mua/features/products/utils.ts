@@ -106,3 +106,14 @@ export function productDetailToProduct(detail: ProductDetail): Product {
     wholesaleBranchPriceDuplicateRaw: numToRaw(detail.wholesaleBranchPriceDuplicate)
   }
 }
+
+const NO_PARENT_PRODUCT_IDS = [-1, -2]
+
+export const isComboProduct = (product?: Pick<Product, 'productType'> | null): boolean =>
+  product?.productType?.trim().toLowerCase() === 'combo'
+
+export const hasParentProduct = (product?: Pick<Product, 'parentProductId'> | null): boolean => {
+  const parentProductId = product?.parentProductId?.trim()
+
+  return Boolean(parentProductId) && !NO_PARENT_PRODUCT_IDS.includes(Number(parentProductId))
+}

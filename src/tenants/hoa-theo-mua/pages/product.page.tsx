@@ -1,6 +1,6 @@
+import SanitizedHtml from '@/components/sanitized-html'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import SanitizedHtml from '@/components/sanitized-html'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -50,7 +50,14 @@ import {
   VariantRow
 } from '../features/products/components/product-detail/parts'
 import { useGetProduct } from '../features/products/hooks/use-get-product'
-import { formatPrice, formatQuantity, parseNumber, productDetailToProduct } from '../features/products/utils'
+import {
+  formatPrice,
+  formatQuantity,
+  hasParentProduct,
+  isComboProduct,
+  parseNumber,
+  productDetailToProduct
+} from '../features/products/utils'
 
 export default function ProductPage() {
   const { t } = useTenantTranslation()
@@ -75,11 +82,10 @@ export default function ProductPage() {
 
   const product = fetchedDetail ? productDetailToProduct(fetchedDetail) : undefined
   const variants = fetchedDetail?.children?.map((child) => productDetailToProduct(child)) ?? []
-  const isCombo = product?.productType?.trim().toLowerCase() === 'combo'
+  const isCombo = isComboProduct(product)
   const hasVariants = variants.length > 0
-  const areAllVariantsCombos =
-    hasVariants && variants.every((variant) => variant.productType?.trim().toLowerCase() === 'combo')
-  const isVariant = Boolean(product?.parentProductId?.trim())
+  const areAllVariantsCombos = hasVariants && variants.every(isComboProduct)
+  const isVariant = hasParentProduct(product)
   const canEditFactor = isVariant
   const canManageComboSpecification = isCombo || areAllVariantsCombos
   const canManageComboMaterials = !isVariant
@@ -99,11 +105,7 @@ export default function ProductPage() {
     isError: isParentComboSpecificationError
   } = useGetComboSpecification({
     id: product?.parentProductGuidId ?? '',
-    enabled:
-      canManageComboSpecification &&
-      canEditFactor &&
-      isComboSpecificationRequested &&
-      Boolean(product?.parentProductGuidId)
+    enabled: canManageComboSpecification && isVariant && isComboSpecificationRequested
   })
   const { updateComboPublication, isUpdatingComboPublication } = useUpdateComboPublication()
 
@@ -139,11 +141,11 @@ export default function ProductPage() {
   } = product
 
   const displayName = productName?.trim() || t('products.common.unnamed')
-  const comboId = product.parentProductId?.trim() || id || ''
+  const comboId = (isVariant ? product.parentProductId?.trim() : id) ?? ''
   const publicationComboId = id || ''
   const isComboPublished = product.isActive ?? comboSpecification?.isActive ?? false
   const parent = product.parent
-  const parentId = product.parentId?.trim() || parent?.id
+  const parentId = isVariant ? product.parentId?.trim() || parent?.id : undefined
   const parentName =
     product.parentProductName?.trim() ||
     parent?.productName?.trim() ||
@@ -182,11 +184,10 @@ export default function ProductPage() {
   const inventoryRows = buildRows(INVENTORY_FIELDS, product)
 
   const rawTab = searchParams.get('tab')
-  const isComboSpecificationTab = rawTab === 'quantity'
   const isValidTab =
     TAB_VALUES.includes(rawTab as (typeof TAB_VALUES)[number]) &&
-    (rawTab !== 'variants' || variants.length > 0) &&
-    (!isComboSpecificationTab || canManageComboSpecification)
+    (rawTab !== 'variants' || hasVariants) &&
+    (!isComboSpecificationRequested || canManageComboSpecification)
   const currentTab = isValidTab ? rawTab! : 'overview'
 
   const handleTabChange = (value: string) => {
@@ -242,7 +243,7 @@ export default function ProductPage() {
     { value: 'pricing', label: t('products.detail.tab.pricing') },
     { value: 'inventory', label: t('products.detail.tab.inventory') },
     ...(canManageComboSpecification ? [{ value: 'quantity', label: t('products.detail.tab.quantity') }] : []),
-    ...(variants.length > 0 ? [{ value: 'variants', label: t('products.detail.variants.title') }] : [])
+    ...(hasVariants ? [{ value: 'variants', label: t('products.detail.variants.title') }] : [])
   ]
 
   return (
@@ -602,7 +603,7 @@ export default function ProductPage() {
           )}
 
           {/* Variants */}
-          {variants.length > 0 && (
+          {hasVariants && (
             <TabsContent value='variants' className='mt-0'>
               <DetailSection
                 title={t('products.detail.variants.title')}
