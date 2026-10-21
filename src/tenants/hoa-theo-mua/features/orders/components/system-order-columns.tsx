@@ -14,6 +14,7 @@ import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import {
+  BadgeCheckIcon,
   CopyIcon,
   ExternalLinkIcon,
   EyeIcon,
@@ -59,10 +60,12 @@ const renderCurrency = (value: number | null, t: TenantT) => {
 
 export const getSystemOrderColumns = ({
   t,
-  onEdit
+  onEdit,
+  onConfirmPayment
 }: {
   t: TenantT
   onEdit: (order: SystemOrder) => void
+  onConfirmPayment: (order: SystemOrder) => void
 }): ColumnDef<SystemOrder>[] => {
   return [
     {
@@ -335,6 +338,12 @@ export const getSystemOrderColumns = ({
                     {t('systemOrders.action.viewDetails')}
                   </Link>
                 </DropdownMenuItem>
+                {order.status === OrderStatus.Pending && (
+                  <DropdownMenuItem onClick={() => onConfirmPayment(order)}>
+                    <BadgeCheckIcon className='size-4' />
+                    {t('systemOrders.action.confirmPayment')}
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild disabled={!paymentUrl?.trim()}>
                   <a href={paymentUrl} target='_blank' rel='noreferrer'>
                     <ExternalLinkIcon className='size-4' />

@@ -3454,7 +3454,12 @@
       "actions": "Thao tác",
       "openPayment": "Mở trang thanh toán",
       "openQr": "Mở mã QR",
-      "copyTracking": "Sao chép mã vận đơn"
+      "copyTracking": "Sao chép mã vận đơn",
+      "confirmPayment": "Xác nhận thanh toán",
+      "confirmPaymentTitle": "Xác nhận đơn hàng đã thanh toán?",
+      "confirmPaymentDescription": "Đơn #{{code}} ({{amount}}) sẽ được đánh dấu là đã thanh toán và hệ thống xử lý tiếp như khi nhận thanh toán thật. Thao tác này không thể hoàn tác.",
+      "confirmPaymentConfirm": "Xác nhận thanh toán",
+      "confirmPaymentSuccess": "Đã xác nhận thanh toán đơn hàng"
     },
     "copyTracking": {
       "success": "Đã sao chép mã vận đơn"

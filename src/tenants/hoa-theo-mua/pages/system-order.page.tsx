@@ -1,11 +1,13 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { formatDateTime } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import {
+  BadgeCheckIcon,
   BanknoteIcon,
   CheckIcon,
   ChevronRightIcon,
@@ -33,6 +35,7 @@ import {
 } from '../features/orders/components/detail/parts'
 import UpdateSystemOrderDialog from '../features/orders/components/update-system-order-dialog'
 import { useGetSystemOrder } from '../features/orders/hooks/use-get-system-order'
+import { useManualConfirmPayment } from '../features/orders/hooks/use-manual-confirm-payment'
 import { OrderStatus, OrderStatusLabel, OrderStatusStyle } from '../features/orders/types'
 import { numberFormatter, vndFormatter } from '../features/orders/utils'
 
@@ -44,6 +47,7 @@ export default function SystemOrderPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const { systemOrder: order, isGettingSystemOrder } = useGetSystemOrder({ id })
+  const { manualConfirmPayment, isConfirmingPayment } = useManualConfirmPayment()
 
   const [isEditing, setIsEditing] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -278,6 +282,17 @@ export default function SystemOrderPage() {
                 {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
                 {linkCopied ? t('systemOrders.detail.copied') : t('systemOrders.detail.share')}
               </Button>
+              {order.status === OrderStatus.Pending && (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  disabled={isConfirmingPayment}
+                  onClick={() => void manualConfirmPayment(order)}
+                >
+                  {isConfirmingPayment ? <Spinner className='size-3.5' /> : <BadgeCheckIcon className='size-3.5' />}
+                  {t('systemOrders.action.confirmPayment')}
+                </Button>
+              )}
               <Button size='sm' onClick={() => setIsEditing(true)}>
                 <PencilIcon className='size-3.5' />
                 {t('systemOrders.action.edit')}
