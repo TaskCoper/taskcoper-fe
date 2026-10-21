@@ -3454,7 +3454,12 @@
       "actions": "Actions",
       "openPayment": "Open payment page",
       "openQr": "Open QR code",
-      "copyTracking": "Copy tracking code"
+      "copyTracking": "Copy tracking code",
+      "confirmPayment": "Confirm payment",
+      "confirmPaymentTitle": "Confirm this order as paid?",
+      "confirmPaymentDescription": "Order #{{code}} ({{amount}}) will be marked as paid and processed exactly as if a real payment had arrived. This action cannot be undone.",
+      "confirmPaymentConfirm": "Confirm payment",
+      "confirmPaymentSuccess": "Order payment confirmed"
     },
     "copyTracking": {
       "success": "Tracking code copied"

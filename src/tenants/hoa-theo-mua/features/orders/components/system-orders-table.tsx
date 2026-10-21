@@ -6,6 +6,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { useGetSystemOrders } from '../hooks/use-get-system-orders'
+import { useManualConfirmPayment } from '../hooks/use-manual-confirm-payment'
 import type { SystemOrder } from '../types'
 import { getSystemOrderColumns } from './system-order-columns'
 import SystemOrderEditDialog from './update-system-order-dialog'
@@ -13,7 +14,11 @@ import SystemOrderEditDialog from './update-system-order-dialog'
 export function SystemOrdersTable() {
   const { t } = useTenantTranslation()
   const [editingOrder, setEditingOrder] = useState<SystemOrder | null>(null)
-  const columns = useMemo(() => getSystemOrderColumns({ t, onEdit: setEditingOrder }), [t])
+  const { manualConfirmPayment } = useManualConfirmPayment()
+  const columns = useMemo(
+    () => getSystemOrderColumns({ t, onEdit: setEditingOrder, onConfirmPayment: manualConfirmPayment }),
+    [manualConfirmPayment, t]
+  )
 
   const { page, limit } = useTableQueryParams({ columns, prefix: 'system-orders' })
 
