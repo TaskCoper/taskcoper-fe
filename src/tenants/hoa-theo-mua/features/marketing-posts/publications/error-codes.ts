@@ -31,6 +31,7 @@ const publicationErrorKeys: Record<string, string> = {
   ZALO_PERMISSION_DENIED: 'zaloPermissionDenied',
   ZALO_RATE_LIMITED: 'zaloRateLimited',
   ZALO_REQUEST_REJECTED: 'zaloRejected',
+  ZALO_INVALID_MEDIA_OR_PARAMETER: 'zaloInvalidParameter',
   ZALO_PROCESSING: 'zaloProcessing',
   ZALO_PROCESS_REFERENCE_MISSING: 'zaloUnverified',
   ZALO_PUBLICATION_UNVERIFIED: 'zaloUnverified',
@@ -100,6 +101,7 @@ const publicationErrorLookup = toLookup(publicationErrorKeys)
 const MEDIA_ERROR_PREFIX = 'MEDIA_'
 
 export const getPublicationErrorKey = (baseCode: string) => {
+  if (baseCode.startsWith('ZALO_INVALID_PARAMETER_')) return 'zaloInvalidParameter'
   const key = publicationErrorLookup.get(normalizeCode(baseCode))
   if (key) return key
 
@@ -154,4 +156,5 @@ export const isImageErrorCode = (code: string | null) => {
 
 // Provider đang chặn theo hạn mức. Retry sớm trả HTTP 429 nên nút phải chờ, không vòng lặp.
 export const isRateLimitedCode = (code: string | null) =>
-  Boolean(code) && ['META_RATE_LIMITED', 'ZALO_RATE_LIMITED'].includes(parsePublicationErrorCode(code as string).baseCode)
+  Boolean(code) &&
+  ['META_RATE_LIMITED', 'ZALO_RATE_LIMITED'].includes(parsePublicationErrorCode(code as string).baseCode)

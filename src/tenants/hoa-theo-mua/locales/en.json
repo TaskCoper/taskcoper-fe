@@ -889,6 +889,8 @@
       }
     },
     "publication": {
+      "errorHistory": "Processing error details",
+      "providerCode": "Platform error code",
       "title": "Publishing",
       "account": "Publishing account",
       "noAccount": "No account is connected for this platform yet.",
@@ -993,7 +995,8 @@
         "zaloTokenInvalid": "The Zalo token is invalid. Refresh it or reconnect the OA.",
         "zaloPermissionDenied": "The OA or app lacks publishing access. Check permissions and the OA service plan.",
         "zaloRateLimited": "Zalo is rate limiting requests. Wait before retrying.",
-        "zaloRejected": "Zalo rejected the request. Check article permissions, the OA plan and the provider code in history.",
+        "zaloRejected": "Zalo returned an error. Check the platform error code in the error details to identify the cause.",
+        "zaloInvalidParameter": "Zalo rejected the article parameters or images. Check the submitted data; the error code includes a field name when Zalo provides one.",
         "zaloProcessing": "Zalo is processing the article.",
         "zaloUnverified": "Zalo publication is unconfirmed. Check the OA and reconcile; do not create a duplicate.",
         "zaloUnavailable": "No response from Zalo. Check the job status before retrying.",

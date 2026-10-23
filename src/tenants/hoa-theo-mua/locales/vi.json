@@ -889,6 +889,8 @@
       }
     },
     "publication": {
+      "errorHistory": "Chi tiết lỗi các lần xử lý",
+      "providerCode": "Mã lỗi nền tảng",
       "title": "Đăng bài",
       "account": "Tài khoản đăng",
       "noAccount": "Chưa có tài khoản nào được kết nối cho nền tảng này.",
@@ -993,7 +995,8 @@
         "zaloTokenInvalid": "Token Zalo không còn hợp lệ. Làm mới token hoặc kết nối lại OA.",
         "zaloPermissionDenied": "OA hoặc ứng dụng chưa có quyền đăng bài. Kiểm tra quyền và gói dịch vụ OA.",
         "zaloRateLimited": "Zalo đang giới hạn yêu cầu. Chờ trước khi thử lại.",
-        "zaloRejected": "Zalo từ chối yêu cầu. Kiểm tra quyền quản lý bài viết, gói OA và mã lỗi trong lịch sử.",
+        "zaloRejected": "Zalo trả về lỗi. Xem mã lỗi nền tảng trong chi tiết lỗi để xác định nguyên nhân.",
+        "zaloInvalidParameter": "Zalo từ chối tham số hoặc ảnh của bài viết. Kiểm tra dữ liệu gửi; mã lỗi có tên trường nếu Zalo cung cấp thông tin đó.",
         "zaloProcessing": "Zalo đang xử lý bài viết.",
         "zaloUnverified": "Chưa xác nhận được bài trên Zalo. Kiểm tra OA và đối soát; không tạo lại bài để tránh trùng.",
         "zaloUnavailable": "Chưa nhận được phản hồi từ Zalo. Kiểm tra trạng thái tác vụ trước khi thử lại.",

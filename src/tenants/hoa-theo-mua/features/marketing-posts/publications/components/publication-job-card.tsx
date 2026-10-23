@@ -188,8 +188,9 @@ const MarketingPublicationJobCard = ({
   const { t } = useTenantTranslation()
   const [isReviewOpen, setIsReviewOpen] = useState(false)
   // Detail tự poll khi job còn đang chạy; danh sách chỉ dùng làm bản hiện tạm lúc chưa có detail
-  const { publication } = useGetPublication({ publicationId: fallbackJob.publicationId })
+  const { publication, detail } = useGetPublication({ publicationId: fallbackJob.publicationId })
   const job = publication ?? fallbackJob
+  const errors = detail?.attempts.filter((attempt) => attempt.errorCode) ?? []
 
   return (
     <div className='space-y-3 rounded-xl border bg-muted/10 p-4'>
@@ -238,6 +239,28 @@ const MarketingPublicationJobCard = ({
       )}
 
       {job.errorCode && <MarketingPublicationErrorNotice errorCode={job.errorCode} />}
+
+      {errors.length > 0 && (
+        <details className='rounded-lg border p-3 text-xs'>
+          <summary className='cursor-pointer font-medium'>{t('marketingPosts.publication.errorHistory')}</summary>
+          <ol className='mt-3 max-h-64 space-y-3 overflow-y-auto'>
+            {errors.map((attempt) => (
+              <li key={attempt.number} className='space-y-1'>
+                <p className='text-muted-foreground'>
+                  #{attempt.number} · {formatDateTime(attempt.startedAt, 'dateTimeShort')}
+                </p>
+                <p className='font-mono break-all'>{attempt.errorCode}</p>
+                {attempt.providerCode && (
+                  <p>
+                    {t('marketingPosts.publication.providerCode')}:{' '}
+                    <span className='font-mono'>{attempt.providerCode}</span>
+                  </p>
+                )}
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
 
       {/* Đã gửi lệnh đăng mà chưa rõ kết quả: cảnh báo nặng nhất trong màn này */}
       {job.publishMayHaveOccurred && job.status !== PublicationStatus.Succeeded && (
