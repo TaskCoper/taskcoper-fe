@@ -541,7 +541,7 @@
       }
     },
     "create": {
-      "planImportHint": "Already have a monthly posting plan? Import the Excel file and let AI create them all at once.",
+      "planImportHint": "Already have text and images? Import Excel to publish in bulk.",
       "title": "Create post",
       "description": "Write the content once, fine-tune it per platform.",
       "submit": "Create post",
@@ -610,7 +610,7 @@
       "failed": "Failed"
     },
     "action": {
-      "importPlan": "Import Excel plan",
+      "importPlan": "Import Excel & publish in bulk",
       "actions": "Actions",
       "openMenu": "Open post actions menu",
       "viewDetail": "View detail",
@@ -1070,6 +1070,94 @@
       "reload": "Reload",
       "hint": "Numbers come straight from the platform; \"-\" means the platform returned no data for that metric.",
       "unsupported": "Insights are not available for this platform yet."
+    },
+    "bulkImport": {
+      "title": "Import Excel & publish in bulk",
+      "description": "Upload posts and images using the v2 template. Valid rows create publishing jobs automatically; errors are reported per row.",
+      "templateHint": "Two data sheets: Bai_dang and Anh.",
+      "template": "Download Excel template v2",
+      "dropzone": "Choose or drop an Excel file here",
+      "fileHint": ".xlsx · Up to 10 MB · 500 posts and 10,000 image rows per file",
+      "removeFile": "Remove selected file",
+      "publishHint": "Text is preserved. An empty date publishes now; a date schedules using Vietnam time. Save default accounts before importing.",
+      "submit": "Import & publish",
+      "accepted": "File accepted; processing in the background",
+      "uploading": "Uploading…",
+      "validating": "Upload complete; checking and saving the file…",
+      "uploadPercent": "Uploading: {{percent}}%",
+      "refresh": "Refresh",
+      "export": "Download Excel results",
+      "history": "Excel import batches",
+      "historyHint": "Your 10 most recent batches. Work continues after you close the browser.",
+      "chooseBatch": "Choose an import batch",
+      "openPost": "Open post",
+      "openPublished": "View published post",
+      "existing": "Existing job; not submitted again",
+      "rowNumber": "row {{row}}",
+      "moreIssues_one": "{{count}} more error; download Excel results for details.",
+      "moreIssues_other": "{{count}} more errors; download Excel results for details.",
+      "fileIssues_one": "{{count}} image-linking error in the file",
+      "fileIssues_other": "{{count}} image-linking errors in the file",
+      "progressHint": "Rows processed measures file validation and job creation. Publishing outcomes are counted separately for each channel.",
+      "page": "Page {{page}} / {{total}}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "column": {
+        "row": "Excel row",
+        "post": "Post",
+        "status": "Status",
+        "result": "Channel results"
+      },
+      "metric": {
+        "rows": "Rows processed",
+        "succeeded": "Channels published",
+        "scheduled": "Channels scheduled",
+        "pending": "Channels pending",
+        "failed": "Channels failed",
+        "review": "Channels needing review"
+      },
+      "defaults": {
+        "title": "Default publishing accounts",
+        "description": "Save once per channel. Accepted batches keep their selected accounts even if you change defaults later.",
+        "saved": "Default accounts saved",
+        "save": "Save accounts",
+        "manage": "Manage platform accounts",
+        "none": "Not selected",
+        "unavailable": "Reconnect required",
+        "required": "Choose and save at least one default account before importing.",
+        "unsaved": "Account choices changed. Save them before importing."
+      },
+      "status": {
+        "Processing": "Processing",
+        "Scheduled": "Scheduled",
+        "NeedsReview": "Needs review",
+        "CompletedWithErrors": "Completed with errors",
+        "Completed": "Completed",
+        "Invalid": "Invalid data",
+        "Queued": "Queued",
+        "Publishing": "Publishing",
+        "Succeeded": "Published",
+        "Failed": "Failed",
+        "Pending": "Pending",
+        "Cancelled": "Cancelled",
+        "Closed": "Closed; result unresolved"
+      },
+      "error": {
+        "accountRequired": "No default account for this channel. Save an account and import the file again.",
+        "contentChanged": "This code has different content and active or published jobs. Edit the post in the app, or use a new code for a new post.",
+        "sourceDeleted": "The post for this code was deleted. Use a new code to create a new post.",
+        "processingFailed": "The row could not be processed after several attempts. Check its data and import again.",
+        "code": "Check error {{code}}.",
+        "contract": "The server response has an unexpected format. Refresh and check the batch before submitting again.",
+        "network": "File acceptance is unconfirmed. Keep the same file and retry with the same request key, or check import history first.",
+        "request": "The request could not be completed. Retry or check your connection.",
+        "loadDefaults": "Could not load default accounts.",
+        "loadDetail": "Could not load batch details.",
+        "refreshDetail": "Could not refresh results; showing the latest available data.",
+        "loadHistory": "Could not load Excel import history."
+      },
+      "invalidRows_one": "{{count}} invalid post rows. Check the Excel row details below to correct them.",
+      "invalidRows_other": "{{count}} invalid post rows. Check the Excel row details below to correct them."
     }
   },
   "navigation": {

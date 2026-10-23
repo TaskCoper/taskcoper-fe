@@ -3,7 +3,6 @@ import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type {
   GenerateMarketingPostBody,
   GetMarketingPostsParams,
-  MarketingPlanImportResult,
   MarketingPostContentHistory,
   MarketingPostCoreDetail,
   MarketingPostImageHistory,
@@ -188,22 +187,6 @@ class MarketingPostService extends BaseService {
   deleteMarketingPost = async ({ id }: { id: string }) => {
     const { data } = await this.delete<BaseResponse<{ basePostId: string; isDeleted: boolean }>>(
       `/v1/${this.baseUrl}/${id}`
-    )
-
-    return data.value
-  }
-
-  // --- Kế hoạch tháng từ Excel ---
-
-  // TODO(BE): đường dẫn và kiểu trả về là tạm đoán, BE đang làm. Đổi theo contract thật khi có.
-  // FE chỉ đẩy nguyên file lên, đọc file và cho AI sinh bài là việc của backend.
-  importMarketingPlan = async ({ file }: { file: File }) => {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const { data } = await this.post<BaseResponse<MarketingPlanImportResult>, FormData>(
-      `/v1/${this.baseUrl}/plans/import`,
-      formData
     )
 
     return data.value

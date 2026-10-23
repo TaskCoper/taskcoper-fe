@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
-import { PlusCircleIcon } from 'lucide-react'
+import { FileSpreadsheetIcon, PlusCircleIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { getMarketingPostColumns } from '../features/marketing-posts/components/marketing-post-columns'
@@ -15,6 +15,8 @@ import { useDeleteMarketingPost } from '../features/marketing-posts/hooks/use-de
 import { useGetMarketingPosts } from '../features/marketing-posts/hooks/use-get-marketing-posts'
 import { PublicationStatus } from '../features/marketing-posts/publications/types'
 import { MarketingPostPlatform } from '../features/marketing-posts/types'
+import ImportDialog from '../features/marketing-posts/imports/components/import-dialog'
+import ImportHistory from '../features/marketing-posts/imports/components/import-history'
 
 const FILTER_PREFIX = 'marketingPosts'
 
@@ -25,6 +27,7 @@ const resolveStatus = (value: string | null) => Object.values(PublicationStatus)
 
 export default function MarketingPostsPage() {
   const { t } = useTenantTranslation()
+  const [importOpen, setImportOpen] = useState(false)
 
   const { deleteMarketingPost, isDeletingMarketingPost } = useDeleteMarketingPost()
 
@@ -73,12 +76,17 @@ export default function MarketingPostsPage() {
           <p className='text-sm text-muted-foreground'>{t('marketingPosts.description')}</p>
         </div>
 
+        <ImportHistory />
         <DataTable
           table={table}
           isLoading={isGettingMarketingPosts}
           renderSubComponent={({ row }) => <MarketingPostPublicationsSubRow row={row} />}
         >
           <DataTableToolbar table={table}>
+            <Button type='button' size='sm' variant='outline' onClick={() => setImportOpen(true)}>
+              <FileSpreadsheetIcon />
+              {t('marketingPosts.bulkImport.title')}
+            </Button>
             <Button asChild size='sm'>
               <Link to={`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts/create`}>
                 <PlusCircleIcon />
@@ -87,6 +95,7 @@ export default function MarketingPostsPage() {
             </Button>
           </DataTableToolbar>
         </DataTable>
+        <ImportDialog open={importOpen} onOpenChange={setImportOpen} />
       </div>
     </div>
   )

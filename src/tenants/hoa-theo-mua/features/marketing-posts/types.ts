@@ -389,8 +389,3 @@ export interface MarketingPostOfficial {
   selectedAt: string | null
   images: MarketingPostOfficialImage[]
 }
-
-// Tạm đoán theo nhu cầu màn hình, BE chưa chốt contract
-export interface MarketingPlanImportResult {
-  planId: string
-}

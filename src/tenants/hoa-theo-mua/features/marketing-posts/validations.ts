@@ -14,12 +14,9 @@ export const MARKETING_POST_MAX_IMAGE_PAIRS = 12
 // Kế hoạch tháng chỉ là bảng chữ, 10MB là dư. BE chốt giới hạn khác thì sửa ở đây.
 export const MARKETING_PLAN_FILE_MAX_SIZE = 10 * 1024 * 1024
 export const MARKETING_PLAN_FILE_TYPES = {
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-  'application/vnd.ms-excel': ['.xls']
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
 }
-// TODO(BE): cột trong file mẫu là FE đề xuất tạm. BE chốt định dạng thì thay file ở public/templates
-// hoặc trỏ sang link BE cấp.
-export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-plan-template.xlsx'
+export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-posts-bulk-v2.xlsx'
 
 // Bước 1 chỉ lo nội dung gốc. Nền tảng tách sang bước 2 vì bài gốc lưu được trước khi
 // biết sẽ đăng lên đâu - đúng như backend tách POST /posts và POST /posts/{id}/generate.

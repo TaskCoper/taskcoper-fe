@@ -541,7 +541,7 @@
       }
     },
     "create": {
-      "planImportHint": "Có sẵn kế hoạch đăng bài cả tháng? Nhập file Excel để AI tạo hết một lượt.",
+      "planImportHint": "Có sẵn nội dung và ảnh? Nhập Excel để đăng hàng loạt.",
       "title": "Tạo bài đăng mới",
       "description": "Soạn nội dung một lần, tinh chỉnh riêng cho từng nền tảng.",
       "submit": "Tạo bài đăng",
@@ -610,7 +610,7 @@
       "failed": "Đăng lỗi"
     },
     "action": {
-      "importPlan": "Nhập kế hoạch Excel",
+      "importPlan": "Nhập Excel & đăng hàng loạt",
       "actions": "Thao tác",
       "openMenu": "Mở menu thao tác bài đăng",
       "viewDetail": "Xem chi tiết",
@@ -1070,6 +1070,94 @@
       "reload": "Tải lại",
       "hint": "Số liệu lấy trực tiếp từ nền tảng, ô \"-\" là nền tảng không trả dữ liệu cho chỉ số đó.",
       "unsupported": "Nền tảng này chưa hỗ trợ xem chỉ số."
+    },
+    "bulkImport": {
+      "title": "Nhập Excel & đăng hàng loạt",
+      "description": "Nhập bài và ảnh theo mẫu v2. Các dòng hợp lệ được tạo tác vụ đăng tự động; dòng lỗi được ghi rõ để sửa.",
+      "templateHint": "Hai sheet dữ liệu: Bai_dang và Anh.",
+      "template": "Tải mẫu Excel v2",
+      "dropzone": "Chọn hoặc kéo file Excel vào đây",
+      "fileHint": ".xlsx · Tối đa 10 MB · 500 bài và 10.000 dòng ảnh mỗi file",
+      "removeFile": "Bỏ file đã chọn",
+      "publishHint": "Nội dung được giữ nguyên. Để trống ngày giờ là đăng ngay; có ngày giờ là hẹn lịch theo giờ Việt Nam. Lưu tài khoản mặc định trước khi nhập.",
+      "submit": "Nhập & đăng",
+      "accepted": "Đã nhận file, hệ thống đang xử lý",
+      "uploading": "Đang tải file lên…",
+      "validating": "Đã tải xong, đang kiểm tra và lưu file…",
+      "uploadPercent": "Đang tải file: {{percent}}%",
+      "refresh": "Làm mới",
+      "export": "Tải Excel kết quả",
+      "history": "Các đợt nhập Excel",
+      "historyHint": "Hiển thị 10 đợt gần nhất của tài khoản. Tác vụ tiếp tục chạy khi đóng trình duyệt.",
+      "chooseBatch": "Chọn đợt nhập Excel",
+      "openPost": "Mở bài",
+      "openPublished": "Xem bài đã đăng",
+      "existing": "Đã có tác vụ, không tạo lại",
+      "rowNumber": "dòng {{row}}",
+      "moreIssues_one": "Còn {{count}} lỗi; tải Excel kết quả để xem đủ.",
+      "moreIssues_other": "Còn {{count}} lỗi; tải Excel kết quả để xem đủ.",
+      "fileIssues_one": "{{count}} lỗi liên kết ảnh trong file",
+      "fileIssues_other": "{{count}} lỗi liên kết ảnh trong file",
+      "progressHint": "Số bài đã xử lý là tiến độ đọc và tạo tác vụ. Kết quả đăng được thống kê riêng theo từng kênh.",
+      "page": "Trang {{page}} / {{total}}",
+      "previous": "Trang trước",
+      "next": "Trang sau",
+      "column": {
+        "row": "Dòng Excel",
+        "post": "Bài đăng",
+        "status": "Trạng thái",
+        "result": "Kết quả theo kênh"
+      },
+      "metric": {
+        "rows": "Bài đã xử lý",
+        "succeeded": "Kênh đã đăng",
+        "scheduled": "Kênh hẹn giờ",
+        "pending": "Kênh đang xử lý",
+        "failed": "Kênh lỗi",
+        "review": "Kênh cần đối soát"
+      },
+      "defaults": {
+        "title": "Tài khoản đăng mặc định",
+        "description": "Lưu một lần cho từng kênh. Đợt nhập đã nhận giữ nguyên tài khoản đích, kể cả khi bạn đổi mặc định sau đó.",
+        "saved": "Đã lưu tài khoản mặc định",
+        "save": "Lưu tài khoản",
+        "manage": "Quản lý tài khoản nền tảng",
+        "none": "Chưa chọn",
+        "unavailable": "Cần kết nối lại",
+        "required": "Chọn và lưu ít nhất một tài khoản mặc định trước khi nhập file.",
+        "unsaved": "Bạn đã đổi tài khoản. Lưu lựa chọn trước khi nhập file."
+      },
+      "status": {
+        "Processing": "Đang xử lý",
+        "Scheduled": "Đã hẹn giờ",
+        "NeedsReview": "Cần đối soát",
+        "CompletedWithErrors": "Hoàn tất, có lỗi",
+        "Completed": "Hoàn tất",
+        "Invalid": "Dữ liệu không hợp lệ",
+        "Queued": "Đang chờ",
+        "Publishing": "Đang đăng",
+        "Succeeded": "Đã đăng",
+        "Failed": "Lỗi",
+        "Pending": "Chờ xử lý",
+        "Cancelled": "Đã hủy",
+        "Closed": "Đã đóng, chưa rõ kết quả"
+      },
+      "error": {
+        "accountRequired": "Chưa có tài khoản mặc định cho kênh này. Lưu tài khoản rồi nhập lại file.",
+        "contentChanged": "Mã bài đã có nội dung khác và có tác vụ đang chạy hoặc đã đăng. Sửa bài trong hệ thống hoặc dùng mã mới cho bài mới.",
+        "sourceDeleted": "Bài của mã này đã bị xóa. Dùng mã mới để tạo bài mới.",
+        "processingFailed": "Chưa xử lý được dòng sau nhiều lần thử. Kiểm tra dữ liệu và nhập lại file.",
+        "code": "Cần kiểm tra lỗi {{code}}.",
+        "contract": "Phản hồi máy chủ chưa đúng định dạng. Làm mới để kiểm tra đợt nhập trước khi gửi lại.",
+        "network": "Chưa xác nhận máy chủ đã nhận file. Giữ nguyên file và thử lại để dùng cùng mã yêu cầu; có thể kiểm tra lịch sử nhập trước.",
+        "request": "Chưa thực hiện được yêu cầu. Thử lại hoặc kiểm tra kết nối.",
+        "loadDefaults": "Chưa tải được tài khoản mặc định.",
+        "loadDetail": "Chưa tải được chi tiết đợt nhập.",
+        "refreshDetail": "Chưa cập nhật được kết quả mới; đang hiển thị dữ liệu gần nhất.",
+        "loadHistory": "Chưa tải được lịch sử nhập Excel."
+      },
+      "invalidRows_one": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa.",
+      "invalidRows_other": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa."
     }
   },
   "navigation": {
