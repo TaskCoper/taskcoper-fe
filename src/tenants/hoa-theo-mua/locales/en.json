@@ -458,6 +458,11 @@
     }
   },
   "marketingPosts": {
+    "tabs": {
+      "posts": "Posts",
+      "imports": "Excel import history",
+      "postsHint": "All posts, including manually created posts and Excel imports. View batch progress in the Excel import history tab."
+    },
     "planImport": {
       "templateHint": "No file yet? Download the template and fill in the columns.",
       "downloadTemplate": "Download template",
@@ -654,6 +659,8 @@
         "retryAllDone_other": "Re-cropped all {{count}} failed images.",
         "retryAllPartial": "Re-cropped {{succeeded}}/{{total}} images; the rest still failed.",
         "historyTitle": "Crop history",
+        "loadingHistory": "Loading Excel import history...",
+        "emptyHistory": "No Excel imports yet. Choose “Import Excel & bulk publish” to get started.",
         "historyHint": "Older crops are kept, click one to go back to it.",
         "versionCount": "v{{current}}/{{total}}",
         "versionLabel": "v{{index}}",

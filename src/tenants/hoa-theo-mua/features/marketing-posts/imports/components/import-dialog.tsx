@@ -56,7 +56,7 @@ export default function ImportDialog({ open, onOpenChange }: { open: boolean; on
       setProgress(null)
       onOpenChange(false)
       toast.success(t('marketingPosts.bulkImport.accepted'))
-      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts?importBatch=${batch.id}`)
+      navigate(`/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts?marketingPostsView=imports&importBatch=${batch.id}`)
     }
   })
   const changeFile = (value: File | null) => {

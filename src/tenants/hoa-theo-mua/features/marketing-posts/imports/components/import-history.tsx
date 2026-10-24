@@ -12,7 +12,6 @@ export default function ImportHistory() {
   const list = useImportList()
   const [selected, setSelected] = useQueryState('importBatch', parseAsString)
   const id = selected ?? list.data?.[0]?.id
-  if (!list.isError && !id) return null
   return (
     <section className='space-y-4 rounded-2xl border bg-background p-4 sm:p-5'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
@@ -40,6 +39,11 @@ export default function ImportHistory() {
           </Select>
         )}
       </div>
+      {!id && !list.isError && (
+        <p role='status' className='py-8 text-center text-sm text-muted-foreground'>
+          {list.isPending ? t('marketingPosts.bulkImport.loadingHistory') : t('marketingPosts.bulkImport.emptyHistory')}
+        </p>
+      )}
       {list.isError && (
         <div role='alert' className='flex flex-wrap items-center gap-2 text-xs text-destructive'>
           {t('marketingPosts.bulkImport.error.loadHistory')}

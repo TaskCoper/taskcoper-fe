@@ -1,11 +1,12 @@
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { FileSpreadsheetIcon, PlusCircleIcon } from 'lucide-react'
-import { parseAsString, useQueryState } from 'nuqs'
+import { parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
@@ -28,6 +29,9 @@ const resolveStatus = (value: string | null) => Object.values(PublicationStatus)
 export default function MarketingPostsPage() {
   const { t } = useTenantTranslation()
   const [importOpen, setImportOpen] = useState(false)
+  const [selectedBatch] = useQueryState('importBatch', parseAsString)
+  const [view, setView] = useQueryState('marketingPostsView', parseAsStringLiteral(['posts', 'imports'] as const))
+  const activeView = view ?? (selectedBatch ? 'imports' : 'posts')
 
   const { deleteMarketingPost, isDeletingMarketingPost } = useDeleteMarketingPost()
 
@@ -71,18 +75,12 @@ export default function MarketingPostsPage() {
   return (
     <div className='h-full overflow-auto'>
       <div className='space-y-6 p-6'>
-        <div>
-          <h1 className='text-2xl font-bold'>{t('marketingPosts.title')}</h1>
-          <p className='text-sm text-muted-foreground'>{t('marketingPosts.description')}</p>
-        </div>
-
-        <ImportHistory />
-        <DataTable
-          table={table}
-          isLoading={isGettingMarketingPosts}
-          renderSubComponent={({ row }) => <MarketingPostPublicationsSubRow row={row} />}
-        >
-          <DataTableToolbar table={table}>
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
+          <div>
+            <h1 className='text-2xl font-bold'>{t('marketingPosts.title')}</h1>
+            <p className='text-sm text-muted-foreground'>{t('marketingPosts.description')}</p>
+          </div>
+          <div className='flex flex-wrap gap-2'>
             <Button type='button' size='sm' variant='outline' onClick={() => setImportOpen(true)}>
               <FileSpreadsheetIcon />
               {t('marketingPosts.bulkImport.title')}
@@ -93,8 +91,32 @@ export default function MarketingPostsPage() {
                 {t('marketingPosts.action.create')}
               </Link>
             </Button>
-          </DataTableToolbar>
-        </DataTable>
+          </div>
+        </div>
+
+        <Tabs
+          value={activeView}
+          onValueChange={(value) => void setView(value as 'posts' | 'imports')}
+          className='gap-4'
+        >
+          <TabsList className='w-full sm:w-fit'>
+            <TabsTrigger value='posts'>{t('marketingPosts.tabs.posts')}</TabsTrigger>
+            <TabsTrigger value='imports'>{t('marketingPosts.tabs.imports')}</TabsTrigger>
+          </TabsList>
+          <TabsContent value='posts'>
+            <p className='mb-4 text-sm text-muted-foreground'>{t('marketingPosts.tabs.postsHint')}</p>
+            <DataTable
+              table={table}
+              isLoading={isGettingMarketingPosts}
+              renderSubComponent={({ row }) => <MarketingPostPublicationsSubRow row={row} />}
+            >
+              <DataTableToolbar table={table} />
+            </DataTable>
+          </TabsContent>
+          <TabsContent value='imports' forceMount className='data-[state=inactive]:hidden'>
+            <ImportHistory />
+          </TabsContent>
+        </Tabs>
         <ImportDialog open={importOpen} onOpenChange={setImportOpen} />
       </div>
     </div>

@@ -458,6 +458,11 @@
     }
   },
   "marketingPosts": {
+    "tabs": {
+      "posts": "Bài đăng",
+      "imports": "Lịch sử nhập Excel",
+      "postsHint": "Tất cả bài đăng, gồm bài tạo thủ công và bài nhập từ Excel. Xem tiến độ từng đợt nhập trong tab Lịch sử nhập Excel."
+    },
     "planImport": {
       "templateHint": "Chưa có file? Tải mẫu về điền theo đúng cột.",
       "downloadTemplate": "Tải file mẫu",
@@ -654,6 +659,8 @@
         "retryAllDone_other": "Đã cắt lại xong {{count}} ảnh lỗi.",
         "retryAllPartial": "Cắt lại được {{succeeded}}/{{total}} ảnh, số còn lại vẫn lỗi.",
         "historyTitle": "Các bản đã cắt",
+        "loadingHistory": "Đang tải lịch sử nhập Excel...",
+        "emptyHistory": "Chưa có đợt nhập Excel. Chọn “Nhập Excel & đăng hàng loạt” để bắt đầu.",
         "historyHint": "Bản cũ vẫn được giữ, bấm để quay về bản ưng hơn.",
         "versionCount": "v{{current}}/{{total}}",
         "versionLabel": "v{{index}}",
