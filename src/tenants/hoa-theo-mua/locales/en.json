@@ -1079,15 +1079,15 @@
       "unsupported": "Insights are not available for this platform yet."
     },
     "bulkImport": {
-      "title": "Import Excel & publish in bulk",
-      "description": "Upload posts and images using the v2 template. Valid rows create publishing jobs automatically; errors are reported per row.",
-      "templateHint": "Two data sheets: Bai_dang and Anh.",
-      "template": "Download Excel template v2",
+      "title": "Import posts from Excel",
+      "description": "Import content and images per platform. Enable AI in the workbook or keep the original inputs.",
+      "templateHint": "Bai_dang: enable content AI. Anh: platform, keep original / process with AI, ratio and instructions.",
+      "template": "Download Excel v3 template",
       "dropzone": "Choose or drop an Excel file here",
       "fileHint": ".xlsx · Up to 10 MB · 500 posts and 10,000 image rows per file",
       "removeFile": "Remove selected file",
-      "publishHint": "Text is preserved. An empty date publishes now; a date schedules using Vietnam time. Save default accounts before importing.",
-      "submit": "Import & publish",
+      "publishHint": "Leave the date blank to save for later without publishing. Scheduled posts are queued only after successful processing. AI runs only when selected in the file and may incur costs; original images are retained.",
+      "submit": "Import & process",
       "accepted": "File accepted; processing in the background",
       "uploading": "Uploading…",
       "validating": "Upload complete; checking and saving the file…",
@@ -1121,7 +1121,8 @@
         "scheduled": "Channels scheduled",
         "pending": "Channels pending",
         "failed": "Channels failed",
-        "review": "Channels needing review"
+        "review": "Channels needing review",
+        "waiting": "Awaiting publication"
       },
       "defaults": {
         "title": "Default publishing accounts",
@@ -1131,7 +1132,7 @@
         "manage": "Manage platform accounts",
         "none": "Not selected",
         "unavailable": "Reconnect required",
-        "required": "Choose and save at least one default account before importing.",
+        "required": "Posts without a schedule can be imported without an account. Scheduled posts need a default account for each channel.",
         "unsaved": "Account choices changed. Save them before importing."
       },
       "status": {
@@ -1147,7 +1148,8 @@
         "Failed": "Failed",
         "Pending": "Pending",
         "Cancelled": "Cancelled",
-        "Closed": "Closed; result unresolved"
+        "Closed": "Closed; result unresolved",
+        "Waiting": "Awaiting publication"
       },
       "error": {
         "accountRequired": "No default account for this channel. Save an account and import the file again.",

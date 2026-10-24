@@ -156,14 +156,7 @@ export default function ImportDialog({ open, onOpenChange }: { open: boolean; on
           </Button>
           <Button
             type='button'
-            disabled={
-              !file ||
-              upload.isPending ||
-              settings.isLoading ||
-              settings.isError ||
-              defaultsDirty ||
-              !settings.data?.accounts.length
-            }
+            disabled={!file || upload.isPending || settings.isLoading || settings.isError || defaultsDirty}
             onClick={submit}
           >
             {upload.isPending ? <Spinner /> : <UploadCloudIcon />}

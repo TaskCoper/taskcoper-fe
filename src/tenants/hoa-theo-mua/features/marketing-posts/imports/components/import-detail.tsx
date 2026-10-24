@@ -116,6 +116,7 @@ export default function ImportDetail({ id }: { id: string }) {
     ['rows', `${batch.processedRows}/${batch.totalRows}`],
     ['succeeded', batch.succeeded],
     ['scheduled', batch.scheduled],
+    ['waiting', batch.waiting],
     ['pending', batch.pending],
     ['failed', batch.failed],
     ['review', batch.needsReview]
@@ -144,7 +145,7 @@ export default function ImportDetail({ id }: { id: string }) {
           </Button>
         </div>
       </div>
-      <div className='grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6' aria-live='polite'>
+      <div className='grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-7' aria-live='polite'>
         {stats.map(([key, value]) => (
           <div key={key} className='rounded-lg border bg-muted/20 p-3'>
             <p className='text-xs text-muted-foreground'>{t(`marketingPosts.bulkImport.metric.${key}`)}</p>

@@ -4,6 +4,7 @@ const count = z.number().int().nonnegative()
 const platform = z.enum(['zalo', 'facebook', 'instagram'])
 const status = z.enum(['Processing', 'Scheduled', 'NeedsReview', 'CompletedWithErrors', 'Completed'])
 const publicationStatus = z.enum([
+  'Waiting',
   'Pending',
   'Queued',
   'Publishing',
@@ -37,7 +38,8 @@ export const importSummarySchema = z.object({
   pending: count,
   scheduled: count,
   needsReview: count,
-  existing: count
+  existing: count,
+  waiting: count.default(0)
 })
 const issue = z.object({ sheet: z.string(), rowNumber: count, code: z.string(), message: z.string() })
 export const importDetailSchema = z.object({
@@ -48,7 +50,7 @@ export const importDetailSchema = z.object({
       rowNumber: count,
       code: z.string(),
       title: z.string(),
-      status: z.enum(['Invalid', 'Queued', 'Publishing', 'Scheduled', 'NeedsReview', 'Failed', 'Succeeded']),
+      status: z.enum(['Waiting', 'Invalid', 'Queued', 'Publishing', 'Scheduled', 'NeedsReview', 'Failed', 'Succeeded']),
       basePostId: z.string().uuid().nullable(),
       issues: z.array(issue),
       channels: z.array(

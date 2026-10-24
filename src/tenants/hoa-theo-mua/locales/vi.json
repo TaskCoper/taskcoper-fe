@@ -1079,15 +1079,15 @@
       "unsupported": "Nền tảng này chưa hỗ trợ xem chỉ số."
     },
     "bulkImport": {
-      "title": "Nhập Excel & đăng hàng loạt",
-      "description": "Nhập bài và ảnh theo mẫu v2. Các dòng hợp lệ được tạo tác vụ đăng tự động; dòng lỗi được ghi rõ để sửa.",
-      "templateHint": "Hai sheet dữ liệu: Bai_dang và Anh.",
-      "template": "Tải mẫu Excel v2",
+      "title": "Nhập bài từ Excel",
+      "description": "Nhập nội dung và ảnh theo từng nền tảng. Chọn dùng AI trong file hoặc giữ nguyên dữ liệu.",
+      "templateHint": "Bai_dang: bật/tắt AI nội dung. Anh: nền tảng, Giữ nguyên / Xử lý bằng AI, tỉ lệ và yêu cầu AI.",
+      "template": "Tải mẫu Excel v3",
       "dropzone": "Chọn hoặc kéo file Excel vào đây",
       "fileHint": ".xlsx · Tối đa 10 MB · 500 bài và 10.000 dòng ảnh mỗi file",
       "removeFile": "Bỏ file đã chọn",
-      "publishHint": "Nội dung được giữ nguyên. Để trống ngày giờ là đăng ngay; có ngày giờ là hẹn lịch theo giờ Việt Nam. Lưu tài khoản mặc định trước khi nhập.",
-      "submit": "Nhập & đăng",
+      "publishHint": "Để trống ngày giờ: lưu Chờ đăng, không tự xuất bản. Có lịch: chỉ hẹn đăng sau khi xử lý thành công. AI chỉ chạy khi được chọn trong file và có thể phát sinh chi phí; ảnh gốc được giữ lại.",
+      "submit": "Nhập & xử lý",
       "accepted": "Đã nhận file, hệ thống đang xử lý",
       "uploading": "Đang tải file lên…",
       "validating": "Đã tải xong, đang kiểm tra và lưu file…",
@@ -1121,7 +1121,8 @@
         "scheduled": "Kênh hẹn giờ",
         "pending": "Kênh đang xử lý",
         "failed": "Kênh lỗi",
-        "review": "Kênh cần đối soát"
+        "review": "Kênh cần đối soát",
+        "waiting": "Kênh chờ đăng"
       },
       "defaults": {
         "title": "Tài khoản đăng mặc định",
@@ -1131,7 +1132,7 @@
         "manage": "Quản lý tài khoản nền tảng",
         "none": "Chưa chọn",
         "unavailable": "Cần kết nối lại",
-        "required": "Chọn và lưu ít nhất một tài khoản mặc định trước khi nhập file.",
+        "required": "Có thể nhập bài chờ đăng khi chưa chọn tài khoản. Bài có lịch cần tài khoản mặc định cho từng kênh.",
         "unsaved": "Bạn đã đổi tài khoản. Lưu lựa chọn trước khi nhập file."
       },
       "status": {
@@ -1147,7 +1148,8 @@
         "Failed": "Lỗi",
         "Pending": "Chờ xử lý",
         "Cancelled": "Đã hủy",
-        "Closed": "Đã đóng, chưa rõ kết quả"
+        "Closed": "Đã đóng, chưa rõ kết quả",
+        "Waiting": "Chờ đăng"
       },
       "error": {
         "accountRequired": "Chưa có tài khoản mặc định cho kênh này. Lưu tài khoản rồi nhập lại file.",

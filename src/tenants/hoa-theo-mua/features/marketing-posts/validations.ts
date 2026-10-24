@@ -16,7 +16,7 @@ export const MARKETING_PLAN_FILE_MAX_SIZE = 10 * 1024 * 1024
 export const MARKETING_PLAN_FILE_TYPES = {
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
 }
-export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-posts-bulk-v2.xlsx'
+export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-posts-bulk-v3.xlsx'
 
 // Bước 1 chỉ lo nội dung gốc. Nền tảng tách sang bước 2 vì bài gốc lưu được trước khi
 // biết sẽ đăng lên đâu - đúng như backend tách POST /posts và POST /posts/{id}/generate.
