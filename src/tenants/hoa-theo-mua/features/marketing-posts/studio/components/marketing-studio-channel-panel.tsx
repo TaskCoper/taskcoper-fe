@@ -67,6 +67,11 @@ const MarketingStudioChannelPanel = ({
 
   return (
     <div className='space-y-5'>
+      {channelDraft.isScheduled && (
+        <p className='rounded-xl border bg-muted/40 p-3 text-sm text-muted-foreground'>
+          {t('marketingPosts.studio.scheduledEditNotice')}
+        </p>
+      )}
       {/* Nói thẳng lý do khóa, không thì admin bấm mãi không ăn rồi tưởng hỏng */}
       {isLocked && (
         <p className='flex items-start gap-2 rounded-xl border border-amber-300/60 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200'>
@@ -113,7 +118,7 @@ const MarketingStudioChannelPanel = ({
             </Button>
 
             <MarketingStudioRegenerate
-              isBusy={isRegenerating || isLocked}
+              isBusy={isRegenerating || isLocked || Boolean(channelDraft.isScheduled)}
               sources={channelDraft.revisions.map((revision, index) => ({
                 value: revision.generationId,
                 label: t('marketingPosts.studio.captionHistory.entry', { index: index + 1 })

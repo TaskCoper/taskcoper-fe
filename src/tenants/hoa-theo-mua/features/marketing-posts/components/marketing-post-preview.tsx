@@ -1,17 +1,18 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
-import { HeartIcon, MessageCircleIcon, SendIcon, ThumbsUpIcon } from 'lucide-react'
+import { useState } from 'react'
+import ImageLightbox from '../../../components/image-lightbox'
+import { ChevronLeftIcon, ChevronRightIcon, HeartIcon, MessageCircleIcon, SendIcon, ThumbsUpIcon } from 'lucide-react'
 import { MarketingPostChannel } from '../types'
 import type { MarketingPostImageRatio } from '../image-ratios'
 import type { MarketingStudioCaptionEdit, MarketingStudioPoolImage } from '../studio/types'
 
-// Trang chi tiết chỉ có sẵn URL ảnh chứ không biết tỉ lệ, nên tỉ lệ là tuỳ chọn:
-// thiếu thì để ảnh hiện theo kích thước thật.
 type PreviewImage = Pick<MarketingStudioPoolImage, 'id' | 'url' | 'sourceName'> & {
   ratio?: MarketingPostImageRatio
 }
 
+// Shared by detail and Studio. These layouts approximate the feed, not the platform's renderer.
 function PreviewImages({
   channel,
   images,
@@ -19,80 +20,106 @@ function PreviewImages({
 }: {
   channel: MarketingPostChannel
   images: PreviewImage[]
-  onOpenImage?: (index: number) => void
+  onOpenImage: (index: number) => void
 }) {
   const { t } = useTenantTranslation()
-
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [naturalRatio, setNaturalRatio] = useState<number>()
   if (images.length === 0) return null
 
-  const [first, ...rest] = images
+  const first = images[0]
+  const [width, height] = first.ratio?.split(':').map(Number) ?? []
+  const ratio = naturalRatio ?? (width && height ? width / height : 1)
+  const current = Math.min(activeIndex, images.length - 1)
+  const renderImage = (image: PreviewImage, index: number, intrinsic = false) => (
+    <button
+      type='button'
+      aria-label={t('marketingPosts.detail.openImage', { index: index + 1 })}
+      onClick={() => onOpenImage(index)}
+      className='block size-full min-h-0 min-w-0 cursor-zoom-in overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+    >
+      <img
+        src={image.url}
+        alt={image.sourceName}
+        onLoad={
+          index === 0
+            ? (event) => {
+                const image = event.currentTarget
+                if (image.naturalHeight) setNaturalRatio(image.naturalWidth / image.naturalHeight)
+              }
+            : undefined
+        }
+        className={cn('block w-full', intrinsic ? 'h-auto' : 'h-full object-cover')}
+      />
+    </button>
+  )
 
-  // Chỉ bọc trong nút khi nơi dùng thật sự cần bấm (trang chi tiết mở ảnh phóng to).
-  // Ở Studio thì preview chỉ để ngắm nên giữ nguyên thẻ ảnh, khỏi thêm vùng bấm thừa.
-  const renderImage = (image: PreviewImage, index: number) => {
-    const picture = <img src={image.url} alt={image.sourceName} className='size-full object-cover' />
-
-    if (!onOpenImage) return picture
-
-    return (
-      <button
-        type='button'
-        aria-label={t('marketingPosts.detail.openImage', { index: index + 1 })}
-        onClick={() => onOpenImage(index)}
-        className='size-full cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
-      >
-        {picture}
-      </button>
-    )
-  }
-
-  // Instagram chỉ hiện ảnh đầu rồi chấm tròn báo số ảnh, giống carousel thật
   if (channel === MarketingPostChannel.Instagram) {
     return (
       <div className='space-y-2'>
-        <div style={{ aspectRatio: first.ratio?.replace(':', ' / ') }} className='w-full bg-muted/40'>
-          {renderImage(first, 0)}
-        </div>
-        {rest.length > 0 && (
-          <div className='flex justify-center gap-1 pb-1'>
-            {images.map((image, index) => (
+        <div className='relative w-full overflow-hidden bg-muted/40' style={{ aspectRatio: ratio }}>
+          {images.map((image, index) => (
+            <div key={image.id} hidden={index !== current} className='size-full'>
+              {renderImage(image, index)}
+            </div>
+          ))}
+          {images.length > 1 && (
+            <>
               <span
-                key={image.id}
-                className={cn('size-1.5 rounded-full', index === 0 ? 'bg-primary' : 'bg-muted-foreground/30')}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  if (images.length === 1) {
-    return (
-      <div style={{ aspectRatio: first.ratio?.replace(':', ' / ') }} className='w-full bg-muted/40'>
-        {renderImage(first, 0)}
-      </div>
-    )
-  }
-
-  const visibleRest = rest.slice(0, 3)
-  const hiddenCount = rest.length - visibleRest.length
-
-  return (
-    <div className='space-y-0.5'>
-      <div className='aspect-video w-full bg-muted/40'>{renderImage(first, 0)}</div>
-      <div className='grid grid-cols-3 gap-0.5'>
-        {visibleRest.map((image, index) => (
-          <div key={image.id} className='relative aspect-square bg-muted/40'>
-            {renderImage(image, index + 1)}
-            {hiddenCount > 0 && index === visibleRest.length - 1 && (
-              <span className='pointer-events-none absolute inset-0 flex items-center justify-center bg-foreground/55 text-sm font-bold text-background'>
-                {t('marketingPosts.studio.preview.moreImages', { count: hiddenCount })}
+                className='pointer-events-none absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white'
+                aria-live='polite'
+              >
+                {current + 1} / {images.length}
               </span>
-            )}
-          </div>
-        ))}
+              <button
+                type='button'
+                disabled={current === 0}
+                aria-label={t('lightbox.previous')}
+                onClick={() => setActiveIndex(current - 1)}
+                className='absolute top-1/2 left-2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 shadow disabled:hidden'
+              >
+                <ChevronLeftIcon className='size-5' />
+              </button>
+              <button
+                type='button'
+                disabled={current === images.length - 1}
+                aria-label={t('lightbox.next')}
+                onClick={() => setActiveIndex(current + 1)}
+                className='absolute top-1/2 right-2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 shadow disabled:hidden'
+              >
+                <ChevronRightIcon className='size-5' />
+              </button>
+            </>
+          )}
+        </div>
       </div>
+    )
+  }
+
+  if (images.length === 1) return <div className='w-full bg-muted/40'>{renderImage(first, 0, true)}</div>
+
+  const visible = images.slice(0, 4)
+  const hiddenCount = images.length - visible.length
+  const threeImages = images.length === 3
+  const landscape = ratio > 1
+  return (
+    <div className={cn('grid grid-cols-2 gap-0.5', images.length === 2 ? 'aspect-[2/1]' : 'aspect-square grid-rows-2')}>
+      {visible.map((image, index) => (
+        <div
+          key={image.id}
+          className={cn(
+            'relative min-h-0 min-w-0 overflow-hidden bg-muted/40',
+            threeImages && index === 0 && (landscape ? 'col-span-2' : 'row-span-2')
+          )}
+        >
+          {renderImage(image, index)}
+          {hiddenCount > 0 && index === visible.length - 1 && (
+            <span className='pointer-events-none absolute inset-0 flex items-center justify-center bg-black/55 text-2xl font-bold text-white'>
+              {t('marketingPosts.studio.preview.moreImages', { count: hiddenCount })}
+            </span>
+          )}
+        </div>
+      ))}
     </div>
   )
 }
@@ -113,6 +140,7 @@ const MarketingPostPreview = ({
   onOpenImage?: (index: number) => void
 }) => {
   const { t } = useTenantTranslation()
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const channelLabel = t(`marketingPosts.channel.${channel}`)
 
   return (
@@ -147,7 +175,19 @@ const MarketingPostPreview = ({
         <p className='px-4 pb-3 text-sm text-muted-foreground'>{t('marketingPosts.studio.preview.noCaption')}</p>
       )}
 
-      <PreviewImages channel={channel} images={images} onOpenImage={onOpenImage} />
+      <PreviewImages
+        key={JSON.stringify([channel, images.map(({ id, url }) => [id, url])])}
+        channel={channel}
+        images={images}
+        onOpenImage={onOpenImage ?? setLightboxIndex}
+      />
+      {!onOpenImage && (
+        <ImageLightbox
+          slides={images.map((image) => ({ src: image.url, alt: image.sourceName }))}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+        />
+      )}
 
       <div className='flex items-center gap-5 border-t px-4 py-2.5 text-muted-foreground'>
         {channel === MarketingPostChannel.Instagram ? (
