@@ -164,6 +164,7 @@ function PlatformSection({
               <MarketingPostPreview
                 channel={platformChannels[platform.platform]}
                 caption={{
+                  title: platform.content.title,
                   content: platform.content.content,
                   hashtags: parseHashtags(platform.content.hashtag ?? '')
                 }}

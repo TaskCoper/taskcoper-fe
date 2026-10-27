@@ -107,6 +107,7 @@ export const marketingStudioTweaks = [
 ]
 
 export interface MarketingStudioCaptionEdit {
+  title: string | null
   content: string
   hashtags: string[]
 }
