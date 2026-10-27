@@ -631,6 +631,7 @@
       "zaloOa": "Zalo OA Hoa Theo Mùa"
     },
     "studio": {
+      "scheduledEditNotice": "Bài đang hẹn lịch. Sửa nội dung, hashtag hoặc ảnh đã chọn sẽ giữ nguyên giờ đăng và tài khoản. Chỉ lưu được trước giờ đăng và khi bài chưa bắt đầu xử lý. Hủy lịch trước nếu muốn tạo lại nội dung bằng AI.",
       "description": "AI đã viết lại nội dung cho từng kênh và cắt ảnh sẵn. Soát lại rồi chốt cách đăng cho từng kênh.",
       "expired": "Phiên tạo bài đã kết thúc. Ảnh gốc chỉ sống trong phiên làm việc nên cần tạo lại từ đầu.",
       "jobSummary": "{{images}} job ảnh · {{captions}} job caption",

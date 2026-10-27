@@ -631,6 +631,7 @@
       "zaloOa": "Hoa Theo Mua Zalo OA"
     },
     "studio": {
+      "scheduledEditNotice": "This post is scheduled. Editing its content, hashtags or selected images keeps the publishing time and account. Changes can only be saved before the scheduled time and before processing starts. Cancel the schedule before regenerating content with AI.",
       "description": "AI rewrote the content per channel and cropped the images. Review, then decide how each channel goes out.",
       "expired": "This creation session has ended. Source images only live within the session, so start over.",
       "jobSummary": "{{images}} image jobs · {{captions}} caption jobs",

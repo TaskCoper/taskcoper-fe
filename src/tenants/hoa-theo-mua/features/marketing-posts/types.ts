@@ -114,17 +114,18 @@ export const MarketingPostPlatformStatus = {
 
 export type MarketingPostPlatformStatus = (typeof MarketingPostPlatformStatus)[keyof typeof MarketingPostPlatformStatus]
 
-// Đã hẹn lịch, đang đăng hoặc đã lên nền tảng thì Studio khoá sửa. Đăng lỗi thì KHÔNG khoá:
+// Bài hẹn lịch còn chờ được sửa; backend thay bản chụp và giữ nguyên giờ đăng.
+// Đang đăng hoặc đã lên nền tảng thì Studio khoá sửa. Đăng lỗi thì KHÔNG khoá:
 // admin phải sửa được nội dung/ảnh (vd đổi ảnh sang JPEG cho Instagram) rồi đăng lại.
 export const isLockedForEditingStatus = (status: MarketingPostPlatformStatus) =>
-  status === MarketingPostPlatformStatus.Scheduled ||
-  status === MarketingPostPlatformStatus.Publishing ||
-  status === MarketingPostPlatformStatus.Published
+  status === MarketingPostPlatformStatus.Publishing || status === MarketingPostPlatformStatus.Published
 
 // Bài có nền tảng nào đã bước vào khâu đăng thì không cho xoá. Tính cả đăng lỗi: lần đăng
 // hỏng vẫn có thể đã lên nền tảng một phần.
 export const isPublishingStatus = (status: MarketingPostPlatformStatus) =>
-  isLockedForEditingStatus(status) || status === MarketingPostPlatformStatus.PublishFailed
+  status === MarketingPostPlatformStatus.Scheduled ||
+  isLockedForEditingStatus(status) ||
+  status === MarketingPostPlatformStatus.PublishFailed
 
 export const MarketingPostRatioCode = {
   Square1x1: 'Square1x1',

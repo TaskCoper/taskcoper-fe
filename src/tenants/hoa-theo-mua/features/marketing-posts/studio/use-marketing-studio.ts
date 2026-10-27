@@ -194,6 +194,7 @@ const toStudioState = (
       // Đã đăng ra ngoài thì khoá cứng; backend cũng chặn mọi thao tác sửa ở trạng thái này.
       // Đăng lỗi thì mở để sửa rồi đăng lại.
       isLocked: isLockedForEditingStatus(platform.status),
+      isScheduled: platform.status === MarketingPostPlatformStatus.Scheduled,
       imageIds: slots.map((slot) => toPoolImageId(slot.sourceBasePostImageId, slot.ratioCode)),
       imageVersions: Object.fromEntries(
         slots
@@ -352,6 +353,9 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
       // đăng không mount lại trong suốt lượt sinh. Không hỏi lại thì nó giữ nguyên kết quả của
       // lần đọc đầu (lúc chưa có nội dung lẫn ảnh) và khoá nút đăng vĩnh viễn dù bài đã đủ.
       queryClient.invalidateQueries({ queryKey: [...publicationKeys.previews(), post.basePostId] })
+      // Scheduled edits replace the pending job, so schedule actions must use its new ID/revision.
+      queryClient.invalidateQueries({ queryKey: [...publicationKeys.lists(), post.basePostId] })
+      queryClient.invalidateQueries({ queryKey: publicationKeys.details() })
     },
     [queryClient]
   )
@@ -492,7 +496,11 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
       marketingPostService.updateMarketingContent({
         id: id ?? '',
         platform,
-        body: { title: null, content: edit.content, hashtag: edit.hashtags.join(' ') || null }
+        body: {
+          title: marketingPost?.platforms.find((item) => item.platform === platform)?.content?.title ?? null,
+          content: edit.content,
+          hashtag: edit.hashtags.join(' ') || null
+        }
       }),
     onSuccess: (post, { platform }) => {
       onPostUpdated(post)

@@ -137,6 +137,7 @@ export interface MarketingStudioChannelDraft {
   // Bài của kênh này đã đăng ra ngoài rồi: chốt cứng, mọi thao tác sửa đều bị chặn.
   // Sửa ở đây mà ngoài kia không đổi thì hệ thống nói một đằng, bài thật một nẻo.
   isLocked: boolean
+  isScheduled?: boolean
   // Thứ tự ảnh riêng từng kênh: cùng hai ảnh nhưng Facebook để ảnh A trước, Instagram để ảnh B trước
   imageIds: string[]
   // Bản cắt mà riêng kênh này đang dùng cho từng ô ảnh (imageId -> attempt).
