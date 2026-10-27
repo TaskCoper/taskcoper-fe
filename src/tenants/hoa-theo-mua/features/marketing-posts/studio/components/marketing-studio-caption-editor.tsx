@@ -1,10 +1,12 @@
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import MarketingPostHashtagInput from '../../components/marketing-post-hashtag-input'
 import { Textarea } from '@/components/ui/textarea'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import { PlusIcon, RotateCcwIcon, XIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { parseHashtags } from '../../hashtags'
 import type { MarketingPostChannel } from '../../types'
 import { getMarketingHashtagSuggestions } from '../hashtag-suggestions'
@@ -30,6 +32,7 @@ const MarketingStudioCaptionEditor = ({
   onRevert: () => void
 }) => {
   const { t } = useTenantTranslation()
+  const titleId = useId()
   const [hashtagInput, setHashtagInput] = useState('')
   const suggestions = isLocked ? [] : getMarketingHashtagSuggestions(channel, caption.hashtags)
 
@@ -47,6 +50,16 @@ const MarketingStudioCaptionEditor = ({
 
   return (
     <div className='space-y-2.5'>
+      <div className='space-y-1.5'>
+        <Label htmlFor={titleId}>{t('marketingPosts.studio.caption.postTitle')}</Label>
+        <Input
+          id={titleId}
+          maxLength={500}
+          value={caption.title ?? ''}
+          readOnly={isLocked}
+          onChange={(event) => onChange({ ...caption, title: event.target.value })}
+        />
+      </div>
       <Textarea
         rows={7}
         value={caption.content}

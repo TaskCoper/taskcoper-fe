@@ -156,7 +156,7 @@ const toStudioState = (
       ? history.versions.map((version) => ({
           revision: version.versionNo,
           createdAt: version.createdAt,
-          caption: { content: version.content, hashtags: parseHashtags(version.hashtag ?? '') },
+          caption: { title: version.title, content: version.content, hashtags: parseHashtags(version.hashtag ?? '') },
           tweaks: [] as MarketingStudioTweak[],
           note: version.feedback ?? '',
           generationId: version.generationId,
@@ -169,6 +169,7 @@ const toStudioState = (
               revision: platform.content.versionNo,
               createdAt: platform.content.createdAt,
               caption: {
+                title: platform.content.title,
                 content: platform.content.content,
                 hashtags: parseHashtags(platform.content.hashtag ?? '')
               },
@@ -497,7 +498,7 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
         id: id ?? '',
         platform,
         body: {
-          title: marketingPost?.platforms.find((item) => item.platform === platform)?.content?.title ?? null,
+          title: edit.title?.trim() || null,
           content: edit.content,
           hashtag: edit.hashtags.join(' ') || null
         }

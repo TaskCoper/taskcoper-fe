@@ -772,6 +772,7 @@
         "submit": "Crop {{count}} images"
       },
       "caption": {
+        "postTitle": "Post title",
         "title": "Content to publish",
         "description": "Edit it directly here; hashtags are tuned per channel.",
         "edited": "This content was edited by hand and differs from what AI wrote.",

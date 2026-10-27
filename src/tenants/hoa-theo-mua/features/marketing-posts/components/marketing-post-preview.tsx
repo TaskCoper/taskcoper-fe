@@ -166,6 +166,9 @@ const MarketingPostPreview = ({
         </div>
       ) : caption ? (
         <div className='space-y-2 px-4 pb-3'>
+          {caption.title?.trim() && (
+            <p className='text-sm font-semibold whitespace-pre-line break-words'>{caption.title}</p>
+          )}
           <p className='text-sm whitespace-pre-line'>{caption.content}</p>
           {caption.hashtags.length > 0 && (
             <p className='text-sm text-sky-700 dark:text-sky-400'>{caption.hashtags.join(' ')}</p>

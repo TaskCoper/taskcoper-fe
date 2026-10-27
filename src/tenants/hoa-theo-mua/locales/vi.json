@@ -772,6 +772,7 @@
         "submit": "Cắt {{count}} ảnh"
       },
       "caption": {
+        "postTitle": "Tiêu đề bài đăng",
         "title": "Nội dung sẽ đăng",
         "description": "Sửa tay trực tiếp ở đây, hashtag chỉnh riêng cho kênh này.",
         "edited": "Nội dung này đã được sửa tay, khác với bản AI viết.",

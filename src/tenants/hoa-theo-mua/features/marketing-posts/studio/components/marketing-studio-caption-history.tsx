@@ -78,6 +78,7 @@ const MarketingStudioCaptionHistory = ({
                   </span>
                 </div>
 
+                {revision.caption.title && <p className='mt-1 truncate text-sm'>{revision.caption.title}</p>}
                 <p className='mt-0.5 truncate text-[0.7rem] text-muted-foreground'>
                   {askedFor.length > 0
                     ? t('marketingPosts.studio.captionHistory.askedFor', { asked: askedFor.join(', ') })
