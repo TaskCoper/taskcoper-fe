@@ -73,6 +73,8 @@ export interface UpdateMarketingPostBody {
 }
 
 export interface GetMarketingPostsParams {
+  publishFrom?: string
+  publishTo?: string
   pageIndex?: number
   pageSize?: number
   keyword?: string
@@ -164,6 +166,7 @@ export interface MarketingPostPublicationChild {
   imageUrls: string[]
   externalPostId: string | null
   externalPostUrl: string | null
+  scheduledAt?: string | null
   publishedAt: string | null
 }
 

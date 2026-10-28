@@ -25,9 +25,17 @@ const GENERATE_TIMEOUT_MS = 240_000
 class MarketingPostService extends BaseService {
   private readonly baseUrl = 'posts'
 
-  getMarketingPosts = async ({ pageIndex, pageSize, keyword, platform, status }: GetMarketingPostsParams) => {
+  getMarketingPosts = async ({
+    pageIndex,
+    pageSize,
+    keyword,
+    platform,
+    status,
+    publishFrom,
+    publishTo
+  }: GetMarketingPostsParams) => {
     const { data } = await this.get<BasePaginationResponse<MarketingPostListItem>>(`/v1/${this.baseUrl}`, {
-      params: { pageIndex, pageSize, keyword, platform, status }
+      params: { pageIndex, pageSize, keyword, platform, status, publishFrom, publishTo }
     })
 
     return data.value

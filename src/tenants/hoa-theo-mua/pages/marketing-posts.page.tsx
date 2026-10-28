@@ -6,7 +6,7 @@ import { useDataTable } from '@/hooks/use-data-table'
 import { useTableQueryParams } from '@/hooks/use-table-query-params'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { FileSpreadsheetIcon, PlusCircleIcon } from 'lucide-react'
-import { parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs'
+import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
@@ -42,6 +42,7 @@ export default function MarketingPostsPage() {
   const { page, limit } = useTableQueryParams({ columns, prefix: FILTER_PREFIX })
   const [searchFilter] = useQueryState(`${FILTER_PREFIX}_title`, parseAsString)
   const [platformFilter] = useQueryState(`${FILTER_PREFIX}_platform`, parseAsString)
+  const [publishTime] = useQueryState(`${FILTER_PREFIX}_publishTime`, parseAsArrayOf(parseAsString, ','))
   const [statusFilter] = useQueryState(`${FILTER_PREFIX}_status`, parseAsString)
 
   const { marketingPosts, isGettingMarketingPosts } = useGetMarketingPosts({
@@ -49,7 +50,9 @@ export default function MarketingPostsPage() {
     pageSize: limit,
     keyword: searchFilter?.trim() || undefined,
     platform: resolvePlatform(platformFilter),
-    status: resolveStatus(statusFilter)
+    status: resolveStatus(statusFilter),
+    publishFrom: publishTime?.[0] || undefined,
+    publishTo: publishTime?.[1] || undefined
   })
 
   const { table } = useDataTable({
@@ -58,7 +61,7 @@ export default function MarketingPostsPage() {
     pageCount: Math.ceil((marketingPosts?.totalCount ?? 0) / limit) || 1,
     initialState: {
       // Cột trạng thái chỉ để dựng ô lọc, trạng thái từng lần đăng đã hiện trong bảng con
-      columnVisibility: { status: false },
+      columnVisibility: { status: false, publishTime: false },
       columnPinning: { right: ['actions'] }
     },
     getRowId: (row) => row.basePostId,

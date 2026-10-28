@@ -166,6 +166,16 @@ export const getMarketingPostColumns = ({
     size: 140
   },
   {
+    id: 'publishTime',
+    accessorFn: () => '',
+    meta: { label: 'marketingPosts.column.publishTime', variant: 'dateRange' },
+    header: () => null,
+    cell: () => null,
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: true
+  },
+  {
     id: 'hashtag',
     accessorKey: 'hashtag',
     meta: { label: 'marketingPosts.column.hashtag' },

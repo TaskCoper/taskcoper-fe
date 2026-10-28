@@ -601,7 +601,9 @@
       "publishedAt": "Published at",
       "actions": "Actions",
       "platform": "Platform",
-      "hashtag": "Hashtag"
+      "hashtag": "Hashtag",
+      "scheduledAt": "Scheduled for",
+      "publishTime": "Published / scheduled date"
     },
     "channel": {
       "facebook": "Facebook",

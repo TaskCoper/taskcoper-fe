@@ -601,7 +601,9 @@
       "publishedAt": "Thời gian đăng",
       "actions": "Thao tác",
       "platform": "Nền tảng",
-      "hashtag": "Hashtag"
+      "hashtag": "Hashtag",
+      "scheduledAt": "Giờ hẹn đăng",
+      "publishTime": "Ngày đăng / hẹn đăng"
     },
     "channel": {
       "facebook": "Facebook",

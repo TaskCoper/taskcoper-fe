@@ -85,7 +85,18 @@ function PublicationRow({ publication }: { publication: MarketingPostPublication
       </TableCell>
 
       <TableCell className='whitespace-nowrap tabular-nums'>
-        {publication.publishedAt ? formatDateTime(publication.publishedAt, 'dateTimeShort') : '-'}
+        {publication.publishedAt || publication.scheduledAt ? (
+          <div>
+            <p className='text-xs text-muted-foreground'>
+              {t(publication.publishedAt ? 'marketingPosts.column.publishedAt' : 'marketingPosts.column.scheduledAt')}
+            </p>
+            <time dateTime={publication.publishedAt ?? publication.scheduledAt ?? undefined}>
+              {formatDateTime(publication.publishedAt ?? publication.scheduledAt, 'dateTimeShort')}
+            </time>
+          </div>
+        ) : (
+          '-'
+        )}
       </TableCell>
 
       <TableCell className='text-right'>
@@ -123,7 +134,7 @@ const MarketingPostPublicationsSubRow = ({ row }: { row: Row<MarketingPostListIt
             <TableHead className={headClassName}>{t('marketingPosts.column.status')}</TableHead>
             <TableHead className={headClassName}>{t('marketingPosts.column.thumbnail')}</TableHead>
             <TableHead className={headClassName}>{t('marketingPosts.detail.section.content')}</TableHead>
-            <TableHead className={headClassName}>{t('marketingPosts.column.publishedAt')}</TableHead>
+            <TableHead className={headClassName}>{t('marketingPosts.column.publishTime')}</TableHead>
             <TableHead className={cn(headClassName, 'text-right')}>
               {t('marketingPosts.detail.field.postUrl')}
             </TableHead>
