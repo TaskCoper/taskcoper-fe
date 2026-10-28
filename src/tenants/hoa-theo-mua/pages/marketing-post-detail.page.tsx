@@ -1,3 +1,4 @@
+import MarketingVideoEditor from '../features/marketing-posts/components/marketing-video-editor'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -238,6 +239,8 @@ export default function MarketingPostDetailPage() {
       </div>
     )
   }
+
+  if (marketingPost.video) return <MarketingVideoEditor key={marketingPost.basePostId} post={marketingPost} readOnly />
 
   const publications = marketingPost.children ?? []
   const activePlatform =

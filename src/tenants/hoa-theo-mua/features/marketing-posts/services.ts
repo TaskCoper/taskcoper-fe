@@ -168,17 +168,24 @@ class MarketingPostService extends BaseService {
   updateMarketingPlatformImages = async ({
     id,
     platform,
-    images
+    images,
+    imageTemplateId
   }: {
     id: string
     platform: MarketingPostPlatform
     images: MarketingPostImageSlot[]
+    imageTemplateId?: string | null
   }) => {
     const { data } = await this.put<BaseResponse<MarketingPostCoreDetail>, UpdateMarketingPlatformImagesBody>(
       `/v1/${this.baseUrl}/${id}/platforms/${platform}/images`,
-      { images }
+      { images, imageTemplateId }
     )
 
+    return data.value
+  }
+
+  prepareVideoPost = async (id: string) => {
+    const { data } = await this.post<BaseResponse<MarketingPostCoreDetail>>(`/v1/posts/${id}/video/platforms/zalo`)
     return data.value
   }
 

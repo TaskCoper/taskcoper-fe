@@ -1171,6 +1171,68 @@
       },
       "invalidRows_one": "{{count}} invalid post rows. Check the Excel row details below to correct them.",
       "invalidRows_other": "{{count}} invalid post rows. Check the Excel row details below to correct them."
+    },
+    "templates": {
+      "cover": "Cover · keep key content within 14:9",
+      "use": "Use a template",
+      "facebookNote": "This illustrates the image set and publishing order. Facebook may arrange the native grid differently.",
+      "orderNote": "Slot order and ratios follow the template. You can replace the image assigned to each slot.",
+      "loadError": "Could not load image templates.",
+      "retry": "Retry",
+      "filterCount": "Image count",
+      "all": "All",
+      "catalog": "Image set templates",
+      "unavailable": "Publishing not supported yet",
+      "assign": "Assign images to template slots",
+      "slot": "Image in slot {{index}}",
+      "missing": "Assign an image to every template slot. Extra source images stay in the pool.",
+      "applyHint": "Existing crops are reused. Only missing crops are generated when you apply; the current scheduled post stays unchanged until application succeeds.",
+      "apply": "Prepare images and apply template",
+      "progress": "Preparing image {{current}}/{{total}}",
+      "cropFailed": "Could not prepare a template image. The current selection is preserved.",
+      "saved": "Template image set saved",
+      "saveError": "Could not apply template",
+      "family": {
+        "single": "Single image",
+        "album": "Photo set",
+        "carousel": "Swipe carousel",
+        "portraitLead": "Portrait lead image",
+        "landscapeLead": "Landscape lead image",
+        "article": "Cover and article images",
+        "collection": "Product collection"
+      }
+    },
+    "video": {
+      "title": "Post video",
+      "limits": "One MP4 video, up to 50 MB. The first frame becomes its cover image.",
+      "choose": "Choose or drop an MP4 video",
+      "replace": "Upload replacement video",
+      "remove": "Remove video",
+      "cancel": "Cancel upload",
+      "invalidVideo": "Invalid video. Choose a playable MP4 up to 50 MB.",
+      "uploadFailed": "Video upload failed. Select the file and try again.",
+      "required": "Upload one valid video.",
+      "mediaType": "Post attachments",
+      "type": {
+        "images": "Images",
+        "video": "One video"
+      },
+      "phase": {
+        "preparing": "Reading video and preparing cover…",
+        "uploading": "Uploading video: {{progress}}%",
+        "cover": "Uploading cover image…"
+      },
+      "postOnly": "Videos are published as posts only. Zalo OA is currently supported; Facebook and Instagram are unavailable because they may require Reels.",
+      "captionLimit": "Zalo OA video content and hashtags must fit within 300 characters.",
+      "captionTitle": "Video post title",
+      "caption": "Video post content",
+      "hashtags": "Hashtags",
+      "save": "Save video post",
+      "saved": "Video post saved",
+      "saveFailed": "Could not save video post",
+      "saveFirst": "Save your changes before publishing or scheduling.",
+      "cancelBeforeReplace": "Cancel the schedule or resolve the publication job before replacing the video. Captions can still be edited before the schedule starts.",
+      "edit": "Edit video post"
     }
   },
   "navigation": {

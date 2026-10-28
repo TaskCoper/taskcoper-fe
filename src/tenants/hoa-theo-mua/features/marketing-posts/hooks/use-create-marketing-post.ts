@@ -24,6 +24,8 @@ export const useCreateMarketingPost = () => {
 
   const methods = useForm<CreateMarketingPostFormValues>({
     defaultValues: {
+      mediaType: 'images',
+      video: null,
       title: '',
       content: '',
       hashtags: '',
@@ -39,7 +41,7 @@ export const useCreateMarketingPost = () => {
       postIdRef.current
         ? marketingPostService.updateMarketingPost({ id: postIdRef.current, body })
         : marketingPostService.createMarketingPost({ body }),
-    onSuccess: (post, { shouldContinue }) => {
+    onSuccess: async (post, { shouldContinue }) => {
       postIdRef.current = post.basePostId
       queryClient.setQueryData(marketingPostKeys.detail(post.basePostId), post)
       queryClient.invalidateQueries({ queryKey: marketingPostKeys.lists() })
@@ -51,18 +53,29 @@ export const useCreateMarketingPost = () => {
         return
       }
 
-      navigate(`${POSTS_PATH}/create/${post.basePostId}/platforms`)
+      if (post.video) {
+        const prepared = await marketingPostService.prepareVideoPost(post.basePostId)
+        queryClient.setQueryData(marketingPostKeys.detail(post.basePostId), prepared)
+        navigate(`${POSTS_PATH}/${post.basePostId}/update`)
+      } else navigate(`${POSTS_PATH}/create/${post.basePostId}/platforms`)
     },
     onError: (error) => {
       toast.error(t('error.somethingWentWrong'), { description: getApiErrorDetail(error) })
     }
   })
 
-  const buildBody = ({ hashtags, images, ...values }: CreateMarketingPostFormValues): SaveMarketingPostBody => ({
+  const buildBody = ({
+    hashtags,
+    images,
+    mediaType,
+    video,
+    ...values
+  }: CreateMarketingPostFormValues): SaveMarketingPostBody => ({
     ...values,
     // Backend nhận hashtag là một chuỗi, gửi mảng là hỏng - bỏ trống thì gửi null để xoá hẳn
     hashtag: parseHashtags(hashtags).join(' ') || null,
-    images: images.map((image, index) => ({
+    video: mediaType === 'video' ? video : null,
+    images: (mediaType === 'video' ? [] : images).map((image, index) => ({
       imageUrl: image.url,
       sortOrder: index + 1,
       width: image.width,

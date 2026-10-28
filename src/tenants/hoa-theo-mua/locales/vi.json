@@ -1171,6 +1171,68 @@
       },
       "invalidRows_one": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa.",
       "invalidRows_other": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa."
+    },
+    "templates": {
+      "cover": "Ảnh bìa · nội dung chính trong vùng 14:9",
+      "use": "Sử dụng mẫu",
+      "facebookNote": "Bố cục minh họa bộ ảnh và thứ tự đăng. Facebook có thể sắp lưới hiển thị khác với mẫu.",
+      "orderNote": "Thứ tự và tỉ lệ các vị trí ảnh được giữ theo mẫu. Bạn có thể thay ảnh ở từng vị trí.",
+      "loadError": "Không tải được danh sách mẫu.",
+      "retry": "Thử lại",
+      "filterCount": "Số ảnh",
+      "all": "Tất cả",
+      "catalog": "Các mẫu bộ ảnh",
+      "unavailable": "Chưa hỗ trợ đăng trong hệ thống",
+      "assign": "Gán ảnh theo vị trí của mẫu",
+      "slot": "Ảnh ở vị trí {{index}}",
+      "missing": "Chọn đủ ảnh cho các vị trí của mẫu. Ảnh thừa vẫn ở trong pool.",
+      "applyHint": "Tái sử dụng ảnh đã có. Chỉ tạo thêm các bản cắt còn thiếu khi bấm áp dụng; bài đang hẹn giữ nguyên đến khi áp dụng thành công.",
+      "apply": "Tạo ảnh và áp dụng mẫu",
+      "progress": "Chuẩn bị ảnh {{current}}/{{total}}",
+      "cropFailed": "Chưa tạo được ảnh cho mẫu. Lựa chọn đang dùng vẫn được giữ nguyên.",
+      "saved": "Đã lưu bộ ảnh theo mẫu",
+      "saveError": "Không thể áp dụng mẫu",
+      "family": {
+        "single": "Một ảnh",
+        "album": "Bộ ảnh",
+        "carousel": "Ảnh vuốt ngang",
+        "portraitLead": "Ảnh dọc chủ đạo",
+        "landscapeLead": "Ảnh ngang chủ đạo",
+        "article": "Ảnh bìa và nội dung",
+        "collection": "Bộ sưu tập sản phẩm"
+      }
+    },
+    "video": {
+      "title": "Video của bài đăng",
+      "limits": "Một video MP4, tối đa 50 MB. Ảnh đại diện được lấy từ khung hình đầu.",
+      "choose": "Chọn hoặc kéo thả video MP4",
+      "replace": "Tải video thay thế",
+      "remove": "Bỏ video",
+      "cancel": "Hủy upload",
+      "invalidVideo": "Video không hợp lệ. Chọn MP4 có thể phát được, tối đa 50 MB.",
+      "uploadFailed": "Không tải được video. Bạn có thể chọn lại file và thử lại.",
+      "required": "Cần tải lên một video hợp lệ.",
+      "mediaType": "Nội dung đính kèm",
+      "type": {
+        "images": "Ảnh",
+        "video": "Một video"
+      },
+      "phase": {
+        "preparing": "Đang đọc video và tạo ảnh đại diện…",
+        "uploading": "Đang tải video: {{progress}}%",
+        "cover": "Đang tải ảnh đại diện…"
+      },
+      "postOnly": "Video chỉ đăng dạng bài post. Hiện hỗ trợ Zalo OA; Facebook và Instagram chưa bật vì có thể yêu cầu định dạng Reels.",
+      "captionLimit": "Nội dung và hashtag của bài video Zalo OA tối đa 300 ký tự.",
+      "captionTitle": "Tiêu đề bài video",
+      "caption": "Nội dung bài video",
+      "hashtags": "Hashtag",
+      "save": "Lưu bài video",
+      "saved": "Đã lưu bài video",
+      "saveFailed": "Không lưu được bài video",
+      "saveFirst": "Lưu thay đổi trước khi đăng hoặc hẹn lịch.",
+      "cancelBeforeReplace": "Cần hủy lịch hoặc xử lý tác vụ đăng trước khi thay video. Bạn vẫn có thể sửa nội dung nếu lịch chưa bắt đầu.",
+      "edit": "Sửa bài video"
     }
   },
   "navigation": {

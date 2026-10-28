@@ -59,7 +59,15 @@ function Note({ children }: { children: React.ReactNode }) {
 
 // Luồng đăng của một nền tảng: chọn tài khoản -> xem trước bản chốt -> đăng ngay hoặc đặt lịch
 // -> theo dõi job. Mỗi PlatformPost chỉ có một job hoạt động nên panel này luôn chỉ hiện một thẻ.
-const MarketingPublicationPanel = ({ id, platform }: { id?: string; platform: MarketingPostPlatform }) => {
+const MarketingPublicationPanel = ({
+  id,
+  platform,
+  disabled = false
+}: {
+  id?: string
+  platform: MarketingPostPlatform
+  disabled?: boolean
+}) => {
   const { t } = useTenantTranslation()
   const [accountId, setAccountId] = useState<string | undefined>(undefined)
   const [isPickingSchedule, setIsPickingSchedule] = useState(false)
@@ -89,7 +97,7 @@ const MarketingPublicationPanel = ({ id, platform }: { id?: string; platform: Ma
   const { preview, isGettingPreview } = useGetPublicationPreview({ id, platform, accountId: selectedAccountId })
   const scheduleIssue = isPickingSchedule ? validateScheduleAt(scheduledAt) : null
   const mediaIssues = preview ? getPublicationMediaIssues(preview.snapshot) : []
-  const canSend = Boolean(selectedAccountId && preview?.canPublish) && !hasBlockingMediaIssue(mediaIssues)
+  const canSend = !disabled && Boolean(selectedAccountId && preview?.canPublish) && !hasBlockingMediaIssue(mediaIssues)
 
   if (!isSupported) return <Note>{t('marketingPosts.publication.unsupportedPlatform')}</Note>
 

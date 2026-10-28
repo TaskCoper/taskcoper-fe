@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 export interface GetPresignedUrlParams {
   key: string
   contentType: string
+  signal?: AbortSignal
 }
 
 interface GetPresignedUrlResponse {
@@ -24,8 +25,9 @@ export const useGetPresignedUrl = () => {
     mutateAsync: getPresignedUrlAsync,
     isPending: isGettingPresignedUrl
   } = useMutation({
-    mutationFn: async ({ key, contentType }: GetPresignedUrlParams) => {
+    mutationFn: async ({ key, contentType, signal }: GetPresignedUrlParams) => {
       const { data } = await api.get<BaseResponse<GetPresignedUrlResponse>>('taskcoper-api/v1/storages/presigned-url', {
+        signal,
         params: {
           key,
           contentType
@@ -35,6 +37,7 @@ export const useGetPresignedUrl = () => {
       return data.value
     },
     onError: (error) => {
+      if (error.code === 'ERR_CANCELED') return
       toast(t('error.somethingWentWrong'), {
         description: error.response?.data?.detail
       })

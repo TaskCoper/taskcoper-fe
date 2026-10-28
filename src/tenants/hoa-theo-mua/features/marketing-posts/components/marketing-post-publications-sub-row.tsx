@@ -76,6 +76,16 @@ function PublicationRow({ publication }: { publication: MarketingPostPublication
       {/* Nội dung là bản đã đẩy lên nền tảng lúc đăng, có thể khác bản chốt hiện tại của bài */}
       <TableCell>
         <div className='max-w-120 min-w-64'>
+          {publication.video && (
+            <video
+              src={publication.video.url}
+              poster={publication.video.posterUrl}
+              controls
+              playsInline
+              preload='none'
+              className='mb-2 max-h-36 w-52 rounded bg-black'
+            />
+          )}
           {publication.title && <p className='truncate font-medium'>{publication.title}</p>}
           <p className='line-clamp-2 text-xs whitespace-pre-line text-muted-foreground'>{publication.content}</p>
           {publication.hashtag && (

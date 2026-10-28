@@ -1,3 +1,7 @@
+import MarketingStudioTemplateEditor from '../features/marketing-posts/studio/components/marketing-studio-template-editor'
+import MarketingVideoEditor from '../features/marketing-posts/components/marketing-video-editor'
+import { useGetMarketingPostDetail } from '../features/marketing-posts/hooks/use-get-marketing-post-detail'
+import { channelPlatforms } from '../features/marketing-posts/platform-channels'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,6 +28,14 @@ const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
 const CREATE_PATH = `${POSTS_PATH}/create`
 
 export default function MarketingPostStudioPage() {
+  const { draftId, id } = useParams()
+  const { marketingPost, isGettingMarketingPost } = useGetMarketingPostDetail(id ?? draftId)
+  if (isGettingMarketingPost) return <Skeleton className='m-6 h-96 rounded-xl' />
+  if (marketingPost?.video) return <MarketingVideoEditor key={marketingPost.basePostId} post={marketingPost} />
+  return <MarketingPostImageStudioPage />
+}
+
+function MarketingPostImageStudioPage() {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
   // Pool ảnh dài ra rất nhanh khi nhiều ảnh nhiều tỉ lệ, phải dính được cả hai mép
@@ -42,6 +54,7 @@ export default function MarketingPostStudioPage() {
 
   const {
     draft,
+    marketingPost,
     isEditing,
     isLoadingPost,
     lockedChannel,
@@ -198,7 +211,10 @@ export default function MarketingPostStudioPage() {
           <div ref={poolColumnRef} className='xl:sticky'>
             <MarketingStudioImagePool
               isBusy={isGenerating}
-              isLocked={isActiveChannelLocked}
+              isLocked={
+                isActiveChannelLocked ||
+                Boolean(channelDrafts.find((item) => item.channel === activeChannel)?.imageTemplateId)
+              }
               imageJobs={imageJobs}
               pool={pool}
               sourceImages={draft.images}
@@ -292,6 +308,22 @@ export default function MarketingPostStudioPage() {
                 {draft.channels.map((channel) => (
                   <TabsContent key={channel} value={channel}>
                     <MarketingStudioChannelPanel
+                      templateEditor={
+                        marketingPost &&
+                        marketingPost.platforms
+                          .filter((platform) => platform.platform === channelPlatforms[channel])
+                          .map((platform) => (
+                            <MarketingStudioTemplateEditor
+                              key={`${platform.platform}-${platform.imageTemplateId}-${platform.templateImageIds?.join(',')}`}
+                              post={marketingPost}
+                              platform={platform}
+                              disabled={
+                                isGenerating ||
+                                Boolean(channelDrafts.find((item) => item.channel === channel)?.isLocked)
+                              }
+                            />
+                          ))
+                      }
                       channel={channel}
                       channelDraft={channelDrafts.find((channelDraft) => channelDraft.channel === channel)}
                       pool={pool}

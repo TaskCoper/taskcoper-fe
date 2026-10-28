@@ -14,12 +14,14 @@ import { Link, useParams } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { marketingPostChannelPresets } from '../features/marketing-posts/channel-presets'
 import MarketingPostMarkdown from '../features/marketing-posts/components/marketing-post-markdown'
+import MarketingPostTemplatePicker from '../features/marketing-posts/components/marketing-post-template-picker'
+import { useWatch } from 'react-hook-form'
 import MarketingPostRatioPicker from '../features/marketing-posts/components/marketing-post-ratio-picker'
 import MarketingPostSystemPromptDrawer from '../features/marketing-posts/components/marketing-post-system-prompt-drawer'
 import { useSelectMarketingChannels } from '../features/marketing-posts/hooks/use-select-marketing-channels'
 import { countMarketingImageBatches, countMarketingImagePairs } from '../features/marketing-posts/validations'
 import { marketingPostChannels } from '../features/marketing-posts/mock-data'
-import type { MarketingPostChannel } from '../features/marketing-posts/types'
+import { MarketingPostPlatform, type MarketingPostChannel } from '../features/marketing-posts/types'
 
 const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
 
@@ -121,6 +123,8 @@ export default function MarketingPostPlatformsPage() {
   const { t } = useTenantTranslation()
   const { postId } = useParams()
   const { marketingPost, isGettingMarketingPost, methods, onSubmit } = useSelectMarketingChannels(postId)
+  const selectedChannels = useWatch({ control: methods.control, name: 'channels' })
+  const templates = useWatch({ control: methods.control, name: 'templates' })
   const {
     control,
     handleSubmit,
@@ -185,6 +189,54 @@ export default function MarketingPostPlatformsPage() {
           </p>
         </div>
 
+        <div className='mb-6'>
+          <h2 className='mb-3 font-bold'>{t('marketingPosts.create.section.channels')}</h2>
+
+          <Controller
+            name='channels'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-3'>
+                <div className='space-y-3'>
+                  {marketingPostChannels.map((channel) => (
+                    <ChannelCard
+                      key={channel}
+                      channel={channel}
+                      isSelected={field.value.includes(channel)}
+                      onToggle={(isSelected) =>
+                        field.onChange(
+                          isSelected
+                            ? [...field.value, channel]
+                            : field.value.filter((selected) => selected !== channel)
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+
+                {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+        </div>
+
+        {selectedChannels.map((channel) => (
+          <div key={channel} className='mb-4 space-y-2'>
+            <h2 className='text-sm font-medium'>{t(`marketingPosts.channel.${channel}`)}</h2>
+            <MarketingPostTemplatePicker
+              platform={channel === 'zaloOa' ? MarketingPostPlatform.Zalo : channel}
+              images={baseImages}
+              value={templates?.[channel] ?? null}
+              onChange={(value) => {
+                const next = { ...methods.getValues('templates') }
+                if (value) next[channel] = value
+                else delete next[channel]
+                methods.setValue('templates', next, { shouldValidate: false })
+              }}
+            />
+          </div>
+        ))}
+
         <Controller
           name='images'
           control={control}
@@ -193,7 +245,13 @@ export default function MarketingPostPlatformsPage() {
             const totalBatches = countMarketingImageBatches(field.value)
 
             return (
-              <Field data-invalid={fieldState.invalid} className='mb-6 gap-3'>
+              <Field
+                data-invalid={fieldState.invalid}
+                className={cn(
+                  'mb-6 gap-3',
+                  selectedChannels.length > 0 && selectedChannels.every((channel) => templates?.[channel]) && 'hidden'
+                )}
+              >
                 <div className='flex flex-wrap items-start justify-between gap-2'>
                   <h2 className='font-bold'>{t('marketingPosts.create.section.ratios')}</h2>
                   {field.value.length > 0 && (
@@ -254,35 +312,18 @@ export default function MarketingPostPlatformsPage() {
           }}
         />
 
-        <h2 className='mb-3 font-bold'>{t('marketingPosts.create.section.channels')}</h2>
-
-        <Controller
-          name='channels'
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-3'>
-              <div className='space-y-3'>
-                {marketingPostChannels.map((channel) => (
-                  <ChannelCard
-                    key={channel}
-                    channel={channel}
-                    isSelected={field.value.includes(channel)}
-                    onToggle={(isSelected) =>
-                      field.onChange(
-                        isSelected ? [...field.value, channel] : field.value.filter((selected) => selected !== channel)
-                      )
-                    }
-                  />
-                ))}
-              </div>
-
-              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
         <div className='mt-6 flex justify-end'>
-          <Button type='submit' disabled={isBusy}>
+          <Button
+            type='submit'
+            disabled={
+              isBusy ||
+              selectedChannels.some(
+                (channel) =>
+                  templates?.[channel] &&
+                  (!templates[channel]?.templateId || templates[channel]?.sourceImageIds.some((id) => !id))
+              )
+            }
+          >
             {isBusy && <Spinner />}
             {t('marketingPosts.create.submit')}
           </Button>

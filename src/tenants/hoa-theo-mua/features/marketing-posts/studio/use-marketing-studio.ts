@@ -1,3 +1,4 @@
+import { getImageTemplates, templatePairs, type MarketingTemplateSelections } from '../image-templates'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useIsMutating, useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -188,6 +189,7 @@ const toStudioState = (
 
     return {
       channel: platformChannels[platform.platform],
+      imageTemplateId: platform.imageTemplateId,
       revisions,
       activeRevision: official?.revision ?? revisions[revisions.length - 1]?.revision ?? 0,
       edits: {},
@@ -242,6 +244,7 @@ const toStudioState = (
       id: `caption-${platform.platform}`,
       kind: 'caption',
       channel: platformChannels[platform.platform],
+      imageTemplateId: platform.imageTemplateId,
       // `status` là của cả nền tảng: ảnh chết hết cũng thành Failed dù chữ viết xong.
       // Có content nghĩa là phần chữ xong, đừng báo hỏng oan - lỗi ảnh đã hiện ở hàng job ảnh.
       status: runningStatuses.includes(platform.status)
@@ -399,40 +402,73 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     onMutate: startWaitingForServer,
     mutationFn: async ({
       channels,
-      images
+      images,
+      templates = {}
     }: {
       channels: MarketingPostChannel[]
       images: MarketingGenerateSelection['images']
+      templates?: MarketingTemplateSelections
     }) => {
-      const platforms = channels.map((channel) => channelPlatforms[channel])
-      const batches = toBatches(toImagePairs(images))
-
-      if (batches.length === 0) {
-        return marketingPostService.generateMarketingPost({
+      const catalog = Object.keys(templates).length ? await getImageTemplates() : []
+      const plans = channels.map((channel) => {
+        const selection = templates[channel]
+        if (!selection)
+          return { platform: channelPlatforms[channel], pairs: toImagePairs(images), selection: null, template: null }
+        const template = catalog.find(
+          (item) => item.id === selection.templateId && item.platform === channelPlatforms[channel] && item.canApply
+        )
+        if (
+          !template ||
+          selection.sourceImageIds.length !== template.ratios.length ||
+          selection.sourceImageIds.some((source) => !source)
+        ) {
+          throw new Error(t('marketingPosts.templates.missing'))
+        }
+        return { platform: channelPlatforms[channel], pairs: templatePairs(template, selection), selection, template }
+      })
+      let post = await marketingPostService.generateMarketingPost({
+        id: id ?? '',
+        body: { mode: MarketingPostGenerateMode.Content, platforms: plans.map(({ platform }) => ({ platform })) }
+      })
+      // Save the complete slot plan before generating. Partial failures preserve empty slots and block publication.
+      for (const plan of plans) {
+        if (!plan.template) continue
+        post = await marketingPostService.updateMarketingPlatformImages({
           id: id ?? '',
-          body: { mode: MarketingPostGenerateMode.Content, platforms: platforms.map((platform) => ({ platform })) }
+          platform: plan.platform,
+          imageTemplateId: plan.template.id,
+          images: plan.pairs.map((pair, index) => ({
+            sourceBasePostImageId: pair.imageId,
+            ratioCode: pair.ratioCode,
+            selectedGeneratedPostImageId: null,
+            sortOrder: index + 1
+          }))
         })
       }
-
-      let post: MarketingPostCoreDetail | null = null
-
-      // Chạy tuần tự: backend khoá theo nền tảng, gọi song song là ăn 409. Lượt đầu `all`
-      // để có nội dung, các lượt sau `images` - không thì mỗi lượt AI lại viết lại bài.
+      const unique = [
+        ...new Map(
+          plans.flatMap((plan) => plan.pairs).map((pair) => [`${pair.imageId}:${pair.ratioCode}`, pair])
+        ).values()
+      ]
+      const batches = toBatches(unique)
       for (const [index, batch] of batches.entries()) {
         setBatchProgress({ current: index + 1, total: batches.length })
-
-        const ratios = toBatchRatioRequests(batch)
-
+        const platforms = plans
+          .map((plan) => ({
+            platform: plan.platform,
+            ratios: toBatchRatioRequests(
+              batch.filter((pair) =>
+                plan.pairs.some((wanted) => wanted.imageId === pair.imageId && wanted.ratioCode === pair.ratioCode)
+              )
+            )
+          }))
+          .filter((plan) => plan.ratios.length > 0)
         post = await marketingPostService.generateMarketingPost({
           id: id ?? '',
-          body: {
-            mode: index === 0 ? MarketingPostGenerateMode.All : MarketingPostGenerateMode.Images,
-            platforms: platforms.map((platform) => ({ platform, ratios }))
-          }
+          body: { mode: MarketingPostGenerateMode.Images, platforms }
         })
       }
-
-      return post as MarketingPostCoreDetail
+      return post
     },
     onSettled: () => {
       setBatchProgress(null)
@@ -559,8 +595,15 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
   })
 
   const { mutate: savePlatformImages, isPending: isSavingImages } = useMutation({
-    mutationFn: ({ platform, images }: { platform: MarketingPostPlatform; images: MarketingPostImageSlot[] }) =>
-      marketingPostService.updateMarketingPlatformImages({ id: id ?? '', platform, images }),
+    mutationFn: ({
+      platform,
+      images,
+      imageTemplateId
+    }: {
+      platform: MarketingPostPlatform
+      images: MarketingPostImageSlot[]
+      imageTemplateId?: string | null
+    }) => marketingPostService.updateMarketingPlatformImages({ id: id ?? '', platform, images, imageTemplateId }),
     onSuccess: (post) => {
       onPostUpdated(post)
       // selectedPlatforms trong kho ảnh đổi theo, phải nạp lại
@@ -671,8 +714,13 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
 
   const commitSlots = useCallback(
     (channel: MarketingPostChannel, slots: MarketingPostImageSlot[]) =>
-      savePlatformImages({ platform: channelPlatforms[channel], images: slots }),
-    [savePlatformImages]
+      savePlatformImages({
+        platform: channelPlatforms[channel],
+        images: slots,
+        imageTemplateId:
+          marketingPost?.platforms.find((item) => item.platform === channelPlatforms[channel])?.imageTemplateId ?? null
+      }),
+    [savePlatformImages, marketingPost]
   )
 
   const buildRatioRequests = useCallback(
@@ -1123,6 +1171,7 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
   )
 
   return {
+    marketingPost,
     draft: state?.draft ?? null,
     isEditing: Boolean(postId),
     isLoadingPost: isGettingMarketingPost,

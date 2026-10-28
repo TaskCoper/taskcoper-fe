@@ -1,12 +1,17 @@
 import { MarketingPostRatioCode } from './types'
 
-// Danh sách bám theo RatioCode của backend: 2:1 bên đó không có nên bỏ, 3:4 bên đó có nên thêm.
+// Ratios supported by the image-generation contract.
 export const MarketingPostImageRatio = {
   Square: '1:1',
   Portrait: '4:5',
   PortraitClassic: '3:4',
   Story: '9:16',
-  Landscape: '16:9'
+  Landscape: '16:9',
+  PortraitTall: '1:2',
+  PortraitStrip: '1:3',
+  LandscapeWide: '2:1',
+  LandscapeStrip: '3:1',
+  LandscapeFeed: '1.91:1'
 } as const
 
 export type MarketingPostImageRatio = (typeof MarketingPostImageRatio)[keyof typeof MarketingPostImageRatio]
@@ -25,7 +30,12 @@ export const marketingPostImageRatioCodes: Record<MarketingPostImageRatio, Marke
   [MarketingPostImageRatio.Portrait]: MarketingPostRatioCode.Portrait4x5,
   [MarketingPostImageRatio.PortraitClassic]: MarketingPostRatioCode.Portrait3x4,
   [MarketingPostImageRatio.Story]: MarketingPostRatioCode.Story9x16,
-  [MarketingPostImageRatio.Landscape]: MarketingPostRatioCode.Landscape16x9
+  [MarketingPostImageRatio.Landscape]: MarketingPostRatioCode.Landscape16x9,
+  [MarketingPostImageRatio.PortraitTall]: MarketingPostRatioCode.Portrait1x2,
+  [MarketingPostImageRatio.PortraitStrip]: MarketingPostRatioCode.Portrait1x3,
+  [MarketingPostImageRatio.LandscapeWide]: MarketingPostRatioCode.Landscape2x1,
+  [MarketingPostImageRatio.LandscapeStrip]: MarketingPostRatioCode.Landscape3x1,
+  [MarketingPostImageRatio.LandscapeFeed]: MarketingPostRatioCode.Landscape1_91x1
 }
 
 // Kích thước AI xuất ra cho từng tỉ lệ. Dùng để dựng ảnh mock và hiện gợi ý cho admin.
@@ -34,7 +44,12 @@ export const marketingPostImageRatioSizes: Record<MarketingPostImageRatio, { wid
   [MarketingPostImageRatio.Portrait]: { width: 1080, height: 1350 },
   [MarketingPostImageRatio.PortraitClassic]: { width: 1080, height: 1440 },
   [MarketingPostImageRatio.Story]: { width: 1080, height: 1920 },
-  [MarketingPostImageRatio.Landscape]: { width: 1920, height: 1080 }
+  [MarketingPostImageRatio.Landscape]: { width: 1920, height: 1080 },
+  [MarketingPostImageRatio.PortraitTall]: { width: 1080, height: 2160 },
+  [MarketingPostImageRatio.PortraitStrip]: { width: 1080, height: 3240 },
+  [MarketingPostImageRatio.LandscapeWide]: { width: 2160, height: 1080 },
+  [MarketingPostImageRatio.LandscapeStrip]: { width: 3240, height: 1080 },
+  [MarketingPostImageRatio.LandscapeFeed]: { width: 1080, height: 566 }
 }
 
 // Chiều ngược lại: đọc ảnh backend trả về thì chỉ có mã chữ, cần đổi lại thành tỉ lệ để dựng khung
