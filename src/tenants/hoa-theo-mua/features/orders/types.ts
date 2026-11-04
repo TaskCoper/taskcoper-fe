@@ -3,6 +3,7 @@ import type { NhanhOrderStatusValue } from './nhanh-order-status'
 
 export const OrderStatus = {
   Paid: 'Paid',
+  FulfillmentFailed: 'FulfillmentFailed',
   Pending: 'Pending',
   Cancelled: 'Cancelled'
 } as const
@@ -11,6 +12,7 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export const OrderStatusLabel: Record<OrderStatus, I18nKey> = {
   [OrderStatus.Paid]: 'orders.status.paid' as I18nKey,
+  [OrderStatus.FulfillmentFailed]: 'orders.status.fulfillmentFailed' as I18nKey,
   [OrderStatus.Pending]: 'orders.status.pending' as I18nKey,
   [OrderStatus.Cancelled]: 'orders.status.cancelled' as I18nKey
 }
@@ -23,6 +25,11 @@ export const OrderSnapshotFormType = {
 export type OrderSnapshotFormType = (typeof OrderSnapshotFormType)[keyof typeof OrderSnapshotFormType]
 
 export const OrderStatusStyle: Record<OrderStatus, { dot: string; badge: string }> = {
+  [OrderStatus.FulfillmentFailed]: {
+    dot: 'bg-orange-500',
+    badge:
+      'border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-400'
+  },
   [OrderStatus.Paid]: {
     dot: 'bg-emerald-500',
     badge:

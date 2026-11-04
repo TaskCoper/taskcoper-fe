@@ -6,7 +6,7 @@ import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import ImageLightbox from '@/tenants/hoa-theo-mua/components/image-lightbox'
 import { LockIcon, PinIcon, PinOffIcon, XIcon, ZoomInIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { MarketingPostChannel } from '../../types'
 import { marketingPostChannelRules } from '../channel-rules'
 import { isMarketingStudioCaptionEdited, resolveChannelImages, resolveMarketingStudioCaption } from '../checklist'
@@ -23,6 +23,7 @@ import MarketingStudioRegenerate from './marketing-studio-regenerate'
 
 const MarketingStudioChannelPanel = ({
   channel,
+  templateEditor,
   channelDraft,
   pool,
   isRegenerating,
@@ -32,9 +33,11 @@ const MarketingStudioChannelPanel = ({
   onUpdateCaption,
   onRevertCaption,
   onTogglePin,
-  onSelectRevision
+  onSelectRevision,
+  onPendingInputChange
 }: {
   channel: MarketingPostChannel
+  templateEditor?: ReactNode
   channelDraft?: MarketingStudioChannelDraft
   pool: MarketingStudioPoolImage[]
   isRegenerating: boolean
@@ -45,6 +48,7 @@ const MarketingStudioChannelPanel = ({
   onRevertCaption: () => void
   onTogglePin: () => void
   onSelectRevision: (revision: number) => void
+  onPendingInputChange: (pending: boolean) => void
 }) => {
   const { t } = useTenantTranslation()
   const { captionMax, maxImages } = marketingPostChannelRules[channel]
@@ -144,10 +148,13 @@ const MarketingStudioChannelPanel = ({
               isLocked={isLocked || isRegenerating}
               onChange={onUpdateCaption}
               onRevert={onRevertCaption}
+              onPendingInputChange={onPendingInputChange}
             />
           )
         )}
       </section>
+
+      {templateEditor}
 
       <section className='space-y-3 rounded-2xl border bg-card p-5 shadow-sm'>
         <div className='flex flex-wrap items-center justify-between gap-2'>
@@ -180,7 +187,12 @@ const MarketingStudioChannelPanel = ({
             <SortableContent asChild>
               <div className='flex flex-wrap gap-2'>
                 {selectedImages.map((image, index) => (
-                  <SortableItem key={image.id} value={image.id} disabled={isLocked} asChild>
+                  <SortableItem
+                    key={image.id}
+                    value={image.id}
+                    disabled={isLocked || Boolean(channelDraft.imageTemplateId)}
+                    asChild
+                  >
                     <div className='relative size-18 overflow-hidden rounded-lg border bg-muted/30'>
                       <SortableItemHandle asChild>
                         <button
@@ -201,7 +213,7 @@ const MarketingStudioChannelPanel = ({
                         variant='ghost'
                         size='icon'
                         aria-label={t('marketingPosts.studio.selected.remove', { name: image.sourceName })}
-                        disabled={isLocked}
+                        disabled={isLocked || Boolean(channelDraft.imageTemplateId)}
                         onClick={() => onToggleImage(image.id)}
                         className='absolute top-0.5 right-0.5 size-5 rounded-full bg-background/85 hover:bg-background'
                       >

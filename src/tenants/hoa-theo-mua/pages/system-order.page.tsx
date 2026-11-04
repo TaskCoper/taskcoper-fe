@@ -47,7 +47,7 @@ export default function SystemOrderPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const { systemOrder: order, isGettingSystemOrder } = useGetSystemOrder({ id })
-  const { manualConfirmPayment, isConfirmingPayment } = useManualConfirmPayment()
+  const { manualConfirmPayment, isConfirmingPayment, canConfirmPayment } = useManualConfirmPayment()
 
   const [isEditing, setIsEditing] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -80,7 +80,8 @@ export default function SystemOrderPage() {
   const items = order.details ?? []
   const orderCode = order.orderId?.split('-')[0]?.toUpperCase() ?? ''
   const customerName = order.fullName?.trim() || t('systemOrders.detail.untitled')
-  const isPaid = order.status === OrderStatus.Paid
+  const isPaid = order.status === OrderStatus.Paid || order.status === OrderStatus.FulfillmentFailed
+  const canConfirmOrderPayment = canConfirmPayment && order.status === OrderStatus.Pending && !order.transaction
   const statusText = OrderStatusLabel[order.status] ? t(OrderStatusLabel[order.status]) : order.status
   const statusStyle = OrderStatusStyle[order.status] ?? OrderStatusStyle[OrderStatus.Pending]
   const itemCount = items.reduce((sum, item) => sum + (item.number ?? 0), 0)
@@ -269,7 +270,7 @@ export default function SystemOrderPage() {
               </div>
             </div>
 
-            <div className='flex shrink-0 items-center gap-2'>
+            <div className='flex flex-wrap items-center gap-2'>
               {order.paymentUrl?.trim() && (
                 <Button variant='outline' size='sm' asChild>
                   <a href={order.paymentUrl} target='_blank' rel='noreferrer'>
@@ -282,7 +283,7 @@ export default function SystemOrderPage() {
                 {linkCopied ? <CheckIcon className='size-3.5 text-emerald-500' /> : <Link2Icon className='size-3.5' />}
                 {linkCopied ? t('systemOrders.detail.copied') : t('systemOrders.detail.share')}
               </Button>
-              {order.status === OrderStatus.Pending && (
+              {canConfirmOrderPayment && (
                 <Button
                   variant='outline'
                   size='sm'
@@ -435,6 +436,27 @@ export default function SystemOrderPage() {
 
           {/* Payment */}
           <TabsContent value='payment' className='mt-0 space-y-8'>
+            {canConfirmOrderPayment && (
+              <DetailSection
+                title={t('systemOrders.action.paymentExceptionTitle')}
+                description={t('systemOrders.action.paymentExceptionDescription')}
+              >
+                <div className='flex flex-col items-start gap-4 rounded-xl border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between'>
+                  <p className='text-sm text-muted-foreground'>
+                    {t('systemOrders.action.paymentExceptionAmount', { amount: currency(order.totalFee) })}
+                  </p>
+                  <Button
+                    type='button'
+                    className='shrink-0'
+                    disabled={isConfirmingPayment}
+                    onClick={() => void manualConfirmPayment(order)}
+                  >
+                    {isConfirmingPayment ? <Spinner /> : <BadgeCheckIcon className='size-4' />}
+                    {t('systemOrders.action.confirmPayment')}
+                  </Button>
+                </div>
+              </DetailSection>
+            )}
             <DetailSection
               title={t('systemOrders.detail.section.payment')}
               description={t('systemOrders.detail.sectionDesc.payment')}

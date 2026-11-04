@@ -19,10 +19,12 @@ function RatioPreview({ ratio, isSelected }: { ratio: MarketingPostImageRatio; i
 const MarketingPostRatioPicker = ({
   value,
   onChange,
-  describedBy
+  describedBy,
+  fitContainer = false
 }: {
   value: MarketingPostImageRatio[]
   onChange: (ratios: MarketingPostImageRatio[]) => void
+  fitContainer?: boolean
   describedBy?: string
 }) => {
   const toggleRatio = (ratio: MarketingPostImageRatio) => {
@@ -30,7 +32,13 @@ const MarketingPostRatioPicker = ({
   }
 
   return (
-    <div aria-describedby={describedBy} className='grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5'>
+    <div
+      aria-describedby={describedBy}
+      className={cn(
+        'grid gap-2',
+        fitContainer ? 'grid-cols-2 @xs:grid-cols-3 @sm:grid-cols-5' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+      )}
+    >
       {marketingPostImageRatios.map((ratio) => {
         const isSelected = value.includes(ratio)
         const { width, height } = marketingPostImageRatioSizes[ratio]

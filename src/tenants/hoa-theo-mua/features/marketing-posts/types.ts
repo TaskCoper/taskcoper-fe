@@ -73,6 +73,8 @@ export interface UpdateMarketingPostBody {
 }
 
 export interface GetMarketingPostsParams {
+  publishFrom?: string
+  publishTo?: string
   pageIndex?: number
   pageSize?: number
   keyword?: string
@@ -132,13 +134,25 @@ export const MarketingPostRatioCode = {
   Portrait4x5: 'Portrait4x5',
   Portrait3x4: 'Portrait3x4',
   Story9x16: 'Story9x16',
-  Landscape16x9: 'Landscape16x9'
+  Landscape16x9: 'Landscape16x9',
+  Portrait1x2: 'Portrait1x2',
+  Portrait1x3: 'Portrait1x3',
+  Landscape2x1: 'Landscape2x1',
+  Landscape3x1: 'Landscape3x1',
+  Landscape1_91x1: 'Landscape1_91x1'
 } as const
 
 export type MarketingPostRatioCode = (typeof MarketingPostRatioCode)[keyof typeof MarketingPostRatioCode]
 
 // Phần chung của bài gốc giữa danh sách và chi tiết
+export interface MarketingPostVideo {
+  url: string
+  fileName: string
+  posterUrl: string
+}
+
 export interface MarketingPostSummary {
+  video?: MarketingPostVideo | null
   basePostId: string
   title: string
   content: string
@@ -153,6 +167,7 @@ export interface MarketingPostSummary {
 // `publicationId` null và `status` là trạng thái nền tảng. Hai bộ trạng thái trùng tên `Failed`
 // nhưng nghĩa khác nhau (đăng hỏng / sinh nội dung hỏng), nên phải xét `publicationId` trước.
 export interface MarketingPostPublicationChild {
+  video?: MarketingPostVideo | null
   publicationId: string | null
   platformPostId: string
   platformAccountId: string | null
@@ -164,6 +179,7 @@ export interface MarketingPostPublicationChild {
   imageUrls: string[]
   externalPostId: string | null
   externalPostUrl: string | null
+  scheduledAt?: string | null
   publishedAt: string | null
 }
 
@@ -211,6 +227,9 @@ export interface MarketingPostOfficialImage {
 }
 
 export interface MarketingPostPlatformDetail {
+  editRevision?: string
+  imageTemplateId?: string | null
+  templateImageIds?: string[]
   platformPostId: string
   platform: MarketingPostPlatform
   status: MarketingPostPlatformStatus
@@ -237,6 +256,7 @@ export interface MarketingPostImagePayload {
 }
 
 export interface SaveMarketingPostBody {
+  video?: MarketingPostVideo | null
   title: string
   content: string
   hashtag: string | null
@@ -361,6 +381,7 @@ export interface MarketingPostImageSlot {
 }
 
 export interface UpdateMarketingPlatformImagesBody {
+  imageTemplateId?: string | null
   images: MarketingPostImageSlot[]
 }
 
@@ -389,9 +410,4 @@ export interface MarketingPostOfficial {
   hashtag: string | null
   selectedAt: string | null
   images: MarketingPostOfficialImage[]
-}
-
-// Tạm đoán theo nhu cầu màn hình, BE chưa chốt contract
-export interface MarketingPlanImportResult {
-  planId: string
 }

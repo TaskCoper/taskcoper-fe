@@ -39,8 +39,18 @@ const MarketingStudioPublishPanel = ({
   isGenerating,
   isEditing,
   failedImageCount,
-  notReadyReasons
+  notReadyReasons,
+  hasUnsavedChanges,
+  isSaving,
+  canSave,
+  onSave,
+  onDiscard
 }: {
+  hasUnsavedChanges: boolean
+  isSaving: boolean
+  canSave: boolean
+  onSave: () => void
+  onDiscard: () => void
   postId?: string
   channelDrafts: MarketingStudioChannelDraft[]
   pool: MarketingStudioPoolImage[]
@@ -88,7 +98,7 @@ const MarketingStudioPublishPanel = ({
   // Lệnh đăng gọi tới Meta nên chạy vài giây; khoá nút lại trong lúc đó vừa cho thấy nó đã ăn,
   // vừa chặn bấm lần hai (lần hai chỉ ăn 409 vì hash bản chốt đã bị khoá)
   const isSending = busyChannels.length > 0
-  const canSend = readyChannels.length > 0 && !isGenerating && !isSending
+  const canSend = readyChannels.length > 0 && !isGenerating && !isSending && !hasUnsavedChanges && !isSaving
 
   const sendAll = () => {
     if (!canSend) return
@@ -107,8 +117,20 @@ const MarketingStudioPublishPanel = ({
         </p>
       </div>
 
-      {/* Sửa gì trong Studio cũng lưu ngay lúc sửa, không còn bước chốt nào nữa */}
-      <p className='text-xs text-muted-foreground'>{t('marketingPosts.studio.publish.autoSaved')}</p>
+      <p role='status' className='text-xs text-muted-foreground'>
+        {t(
+          hasUnsavedChanges ? 'marketingPosts.studio.publish.unsaved' : 'marketingPosts.studio.publish.manualSaveHint'
+        )}
+      </p>
+      <Button type='button' className='w-full' disabled={!canSave || isSaving || isGenerating} onClick={onSave}>
+        {isSaving && <Spinner />}
+        {t(isSaving ? 'marketingPosts.studio.publish.saving' : 'marketingPosts.studio.publish.save')}
+      </Button>
+      {hasUnsavedChanges && (
+        <Button type='button' variant='outline' className='w-full' disabled={isSaving} onClick={onDiscard}>
+          {t('marketingPosts.studio.publish.discardEdits')}
+        </Button>
+      )}
 
       {/* Ảnh cắt hỏng không chặn đăng - admin có quyền bỏ qua, nhưng phải biết là nó còn đó */}
       {failedImageCount > 0 && (
@@ -138,13 +160,15 @@ const MarketingStudioPublishPanel = ({
               </ul>
             )}
 
-            <MarketingStudioChannelPublish
-              postId={postId}
-              channel={channelDraft.channel}
-              isBlockedByChecklist={hasBlockingIssue(issues)}
-              onRegister={register}
-              onBusyChange={registerBusy}
-            />
+            <fieldset disabled={hasUnsavedChanges || isSaving}>
+              <MarketingStudioChannelPublish
+                postId={postId}
+                channel={channelDraft.channel}
+                isBlockedByChecklist={hasBlockingIssue(issues) || hasUnsavedChanges || isSaving || isGenerating}
+                onRegister={register}
+                onBusyChange={registerBusy}
+              />
+            </fieldset>
           </div>
         ))}
       </div>

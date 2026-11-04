@@ -65,6 +65,7 @@ export const publicationSnapshotPlatforms: Record<number, MarketingPostPlatform>
 // Bản chụp cố định của thứ sẽ được đăng. Trigger PostgreSQL chặn sửa, nên retry một job Failed
 // dùng lại đúng snapshot này chứ không tự lấy bản chốt mới.
 export interface PublicationSnapshot {
+  video?: { url: string; fileName: string; posterUrl: string } | null
   basePostId: string
   title: string | null
   content: string

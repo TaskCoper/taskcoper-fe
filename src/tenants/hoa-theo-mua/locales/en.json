@@ -458,6 +458,11 @@
     }
   },
   "marketingPosts": {
+    "tabs": {
+      "posts": "Posts",
+      "imports": "Excel import history",
+      "postsHint": "All posts, including manually created posts and Excel imports. View batch progress in the Excel import history tab."
+    },
     "planImport": {
       "templateHint": "No file yet? Download the template and fill in the columns.",
       "downloadTemplate": "Download template",
@@ -541,7 +546,7 @@
       }
     },
     "create": {
-      "planImportHint": "Already have a monthly posting plan? Import the Excel file and let AI create them all at once.",
+      "planImportHint": "Already have text and images? Import Excel to publish in bulk.",
       "title": "Create post",
       "description": "Write the content once, fine-tune it per platform.",
       "submit": "Create post",
@@ -596,7 +601,9 @@
       "publishedAt": "Published at",
       "actions": "Actions",
       "platform": "Platform",
-      "hashtag": "Hashtag"
+      "hashtag": "Hashtag",
+      "scheduledAt": "Scheduled for",
+      "publishTime": "Published / scheduled date"
     },
     "channel": {
       "facebook": "Facebook",
@@ -610,7 +617,7 @@
       "failed": "Failed"
     },
     "action": {
-      "importPlan": "Import Excel plan",
+      "importPlan": "Import Excel & publish in bulk",
       "actions": "Actions",
       "openMenu": "Open post actions menu",
       "viewDetail": "View detail",
@@ -655,6 +662,8 @@
         "retryAllDone_other": "Re-cropped all {{count}} failed images.",
         "retryAllPartial": "Re-cropped {{succeeded}}/{{total}} images; the rest still failed.",
         "historyTitle": "Crop history",
+        "loadingHistory": "Loading Excel import history...",
+        "emptyHistory": "No Excel imports yet. Choose “Import Excel & bulk publish” to get started.",
         "historyHint": "Older crops are kept, click one to go back to it.",
         "versionCount": "v{{current}}/{{total}}",
         "versionLabel": "v{{index}}",
@@ -728,10 +737,19 @@
         "editTitle": "Status & save",
         "editDescription": "Change how this post goes out.",
         "save": "Save changes",
-        "autoSaved": "Every change in the Studio is saved automatically - no final save needed.",
         "noReadyChannel": "No channel is ready yet. Pick an account and clear the items listed above.",
         "submitAll": "Send {{count}} channels",
-        "submitting": "Sending publish request…"
+        "submitting": "Sending publish request…",
+        "manualSaveHint": "Changes only take effect when you press Save changes.",
+        "unsaved": "Unsaved changes. Save before publishing or scheduling.",
+        "saving": "Saving…",
+        "saveSuccess": "Changes saved",
+        "discardEdits": "Discard changes",
+        "saveBeforeAction": "Save or discard your changes before running this action.",
+        "leaveTitle": "Leave without saving?",
+        "leaveDescription": "Your unsaved changes will be discarded. The saved post and its schedule will stay as they are.",
+        "leave": "Leave without saving",
+        "keepEditing": "Keep editing"
       },
       "publishMode": {
         "draft": "Save draft",
@@ -1072,6 +1090,159 @@
       "reload": "Reload",
       "hint": "Numbers come straight from the platform; \"-\" means the platform returned no data for that metric.",
       "unsupported": "Insights are not available for this platform yet."
+    },
+    "bulkImport": {
+      "title": "Import posts from Excel",
+      "description": "Import content and images per platform. Enable AI in the workbook or keep the original inputs.",
+      "templateHint": "Bai_dang: enable content AI. Anh: platform, keep original / process with AI, ratio and instructions.",
+      "template": "Download Excel v3 template",
+      "dropzone": "Choose or drop an Excel file here",
+      "fileHint": ".xlsx · Up to 10 MB · 500 posts and 10,000 image rows per file",
+      "removeFile": "Remove selected file",
+      "publishHint": "Leave the date blank to save for later without publishing. Scheduled posts are queued only after successful processing. AI runs only when selected in the file and may incur costs; original images are retained.",
+      "submit": "Import & process",
+      "accepted": "File accepted; processing in the background",
+      "uploading": "Uploading…",
+      "validating": "Upload complete; checking and saving the file…",
+      "uploadPercent": "Uploading: {{percent}}%",
+      "refresh": "Refresh",
+      "export": "Download Excel results",
+      "history": "Excel import batches",
+      "historyHint": "Your 10 most recent batches. Work continues after you close the browser.",
+      "chooseBatch": "Choose an import batch",
+      "openPost": "Open post",
+      "openPublished": "View published post",
+      "existing": "Existing job; not submitted again",
+      "rowNumber": "row {{row}}",
+      "moreIssues_one": "{{count}} more error; download Excel results for details.",
+      "moreIssues_other": "{{count}} more errors; download Excel results for details.",
+      "fileIssues_one": "{{count}} image-linking error in the file",
+      "fileIssues_other": "{{count}} image-linking errors in the file",
+      "progressHint": "Rows processed measures file validation and job creation. Publishing outcomes are counted separately for each channel.",
+      "page": "Page {{page}} / {{total}}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "column": {
+        "row": "Excel row",
+        "post": "Post",
+        "status": "Status",
+        "result": "Channel results"
+      },
+      "metric": {
+        "rows": "Rows processed",
+        "succeeded": "Channels published",
+        "scheduled": "Channels scheduled",
+        "pending": "Channels pending",
+        "failed": "Channels failed",
+        "review": "Channels needing review",
+        "waiting": "Awaiting publication"
+      },
+      "defaults": {
+        "title": "Default publishing accounts",
+        "description": "Save once per channel. Accepted batches keep their selected accounts even if you change defaults later.",
+        "saved": "Default accounts saved",
+        "save": "Save accounts",
+        "manage": "Manage platform accounts",
+        "none": "Not selected",
+        "unavailable": "Reconnect required",
+        "required": "Posts without a schedule can be imported without an account. Scheduled posts need a default account for each channel.",
+        "unsaved": "Account choices changed. Save them before importing."
+      },
+      "status": {
+        "Processing": "Processing",
+        "Scheduled": "Scheduled",
+        "NeedsReview": "Needs review",
+        "CompletedWithErrors": "Completed with errors",
+        "Completed": "Completed",
+        "Invalid": "Invalid data",
+        "Queued": "Queued",
+        "Publishing": "Publishing",
+        "Succeeded": "Published",
+        "Failed": "Failed",
+        "Pending": "Pending",
+        "Cancelled": "Cancelled",
+        "Closed": "Closed; result unresolved",
+        "Waiting": "Awaiting publication"
+      },
+      "error": {
+        "accountRequired": "No default account for this channel. Save an account and import the file again.",
+        "contentChanged": "This code has different content and active or published jobs. Edit the post in the app, or use a new code for a new post.",
+        "sourceDeleted": "The post for this code was deleted. Use a new code to create a new post.",
+        "processingFailed": "The row could not be processed after several attempts. Check its data and import again.",
+        "code": "Check error {{code}}.",
+        "contract": "The server response has an unexpected format. Refresh and check the batch before submitting again.",
+        "network": "File acceptance is unconfirmed. Keep the same file and retry with the same request key, or check import history first.",
+        "request": "The request could not be completed. Retry or check your connection.",
+        "loadDefaults": "Could not load default accounts.",
+        "loadDetail": "Could not load batch details.",
+        "refreshDetail": "Could not refresh results; showing the latest available data.",
+        "loadHistory": "Could not load Excel import history."
+      },
+      "invalidRows_one": "{{count}} invalid post rows. Check the Excel row details below to correct them.",
+      "invalidRows_other": "{{count}} invalid post rows. Check the Excel row details below to correct them."
+    },
+    "templates": {
+      "cover": "Cover · keep key content within 14:9",
+      "use": "Use a template",
+      "facebookNote": "This illustrates the image set and publishing order. Facebook may arrange the native grid differently.",
+      "orderNote": "Slot order and ratios follow the template. You can replace the image assigned to each slot.",
+      "loadError": "Could not load image templates.",
+      "retry": "Retry",
+      "filterCount": "Image count",
+      "all": "All",
+      "catalog": "Image set templates",
+      "unavailable": "Publishing not supported yet",
+      "assign": "Assign images to template slots",
+      "slot": "Image in slot {{index}}",
+      "missing": "Assign an image to every template slot. Extra source images stay in the pool.",
+      "applyHint": "Prepare the image slots here, then press Save changes to update the post.",
+      "apply": "Prepare images and apply template",
+      "progress": "Preparing image {{current}}/{{total}}",
+      "cropFailed": "Could not prepare a template image. The current selection is preserved.",
+      "saved": "Template image set saved",
+      "saveError": "Could not apply template",
+      "family": {
+        "single": "Single image",
+        "album": "Photo set",
+        "carousel": "Swipe carousel",
+        "portraitLead": "Portrait lead image",
+        "landscapeLead": "Landscape lead image",
+        "article": "Cover and article images",
+        "collection": "Product collection"
+      },
+      "prepared": "Images prepared. Press Save changes to apply them to the post."
+    },
+    "video": {
+      "title": "Post video",
+      "limits": "One MP4 video, up to 50 MB. The first frame becomes its cover image.",
+      "choose": "Choose or drop an MP4 video",
+      "replace": "Upload replacement video",
+      "remove": "Remove video",
+      "cancel": "Cancel upload",
+      "invalidVideo": "Invalid video. Choose a playable MP4 up to 50 MB.",
+      "uploadFailed": "Video upload failed. Select the file and try again.",
+      "required": "Upload one valid video.",
+      "mediaType": "Post attachments",
+      "type": {
+        "images": "Images",
+        "video": "One video"
+      },
+      "phase": {
+        "preparing": "Reading video and preparing cover…",
+        "uploading": "Uploading video: {{progress}}%",
+        "cover": "Uploading cover image…"
+      },
+      "postOnly": "Videos are published as posts only. Zalo OA is currently supported; Facebook and Instagram are unavailable because they may require Reels.",
+      "captionLimit": "Zalo OA video content and hashtags must fit within 300 characters.",
+      "captionTitle": "Video post title",
+      "caption": "Video post content",
+      "hashtags": "Hashtags",
+      "save": "Save video post",
+      "saved": "Video post saved",
+      "saveFailed": "Could not save video post",
+      "saveFirst": "Save your changes before publishing or scheduling.",
+      "cancelBeforeReplace": "Cancel the schedule or resolve the publication job before replacing the video. Captions can still be edited before the schedule starts.",
+      "edit": "Edit video post"
     }
   },
   "navigation": {
@@ -1420,6 +1591,7 @@
     },
     "status": {
       "paid": "Paid",
+      "fulfillmentFailed": "Paid · assistance needed",
       "pending": "Pending",
       "cancelled": "Cancelled"
     }
@@ -3462,9 +3634,13 @@
       "copyTracking": "Copy tracking code",
       "confirmPayment": "Confirm payment",
       "confirmPaymentTitle": "Confirm this order as paid?",
-      "confirmPaymentDescription": "Order #{{code}} ({{amount}}) will be marked as paid and processed exactly as if a real payment had arrived. This action cannot be undone.",
-      "confirmPaymentConfirm": "Confirm payment",
-      "confirmPaymentSuccess": "Order payment confirmed"
+      "confirmPaymentDescription": "Have you checked the bank account and received the full {{amount}} for order {{code}}? Confirming records the payment and continues syncing the order to Nhanh.vn. An admin books the courier separately.",
+      "confirmPaymentConfirm": "Payment verified, confirm",
+      "confirmPaymentSuccess": "Order payment confirmed",
+      "confirmPaymentFailed": "Could not confirm payment. Check the order status before trying again.",
+      "paymentExceptionTitle": "Confirm an unmatched bank transfer",
+      "paymentExceptionDescription": "Use when the customer has transferred the money but changed the transfer description, leaving the payment unconfirmed. Confirm only after checking the funds actually received.",
+      "paymentExceptionAmount": "Amount to verify: {{amount}}."
     },
     "copyTracking": {
       "success": "Tracking code copied"

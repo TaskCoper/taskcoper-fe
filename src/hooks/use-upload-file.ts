@@ -9,6 +9,7 @@ import { useGetPresignedUrl } from './use-get-presigned-url'
 
 interface UploadFileVariables {
   file: File
+  signal?: AbortSignal
   onProgress?: (progress: number) => void
 }
 
@@ -19,16 +20,19 @@ export const useUploadFile = (
   const { getPresignedUrlAsync } = useGetPresignedUrl()
 
   const mutation = useMutation({
-    mutationFn: async ({ file, onProgress }: UploadFileVariables) => {
+    mutationFn: async ({ file, onProgress, signal }: UploadFileVariables) => {
       if (!file) throw new Error('Missing file')
 
       const { key, contentType } = prepareFileUpload(file)
       const { presignedUrl, uploadMethod } = await getPresignedUrlAsync({
         key,
-        contentType
+        contentType,
+        signal
       })
 
       const axiosConfig = {
+        signal,
+        timeout: 180_000,
         headers: {
           'Content-Type': contentType
           // 'x-amz-meta-owner': me.id

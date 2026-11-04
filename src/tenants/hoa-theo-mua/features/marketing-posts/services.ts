@@ -3,7 +3,6 @@ import { BaseService } from '@/tenants/hoa-theo-mua/services/base.service'
 import type {
   GenerateMarketingPostBody,
   GetMarketingPostsParams,
-  MarketingPlanImportResult,
   MarketingPostContentHistory,
   MarketingPostCoreDetail,
   MarketingPostImageHistory,
@@ -26,9 +25,17 @@ const GENERATE_TIMEOUT_MS = 240_000
 class MarketingPostService extends BaseService {
   private readonly baseUrl = 'posts'
 
-  getMarketingPosts = async ({ pageIndex, pageSize, keyword, platform, status }: GetMarketingPostsParams) => {
+  getMarketingPosts = async ({
+    pageIndex,
+    pageSize,
+    keyword,
+    platform,
+    status,
+    publishFrom,
+    publishTo
+  }: GetMarketingPostsParams) => {
     const { data } = await this.get<BasePaginationResponse<MarketingPostListItem>>(`/v1/${this.baseUrl}`, {
-      params: { pageIndex, pageSize, keyword, platform, status }
+      params: { pageIndex, pageSize, keyword, platform, status, publishFrom, publishTo }
     })
 
     return data.value
@@ -161,17 +168,38 @@ class MarketingPostService extends BaseService {
   updateMarketingPlatformImages = async ({
     id,
     platform,
-    images
+    images,
+    imageTemplateId
   }: {
     id: string
     platform: MarketingPostPlatform
     images: MarketingPostImageSlot[]
+    imageTemplateId?: string | null
   }) => {
     const { data } = await this.put<BaseResponse<MarketingPostCoreDetail>, UpdateMarketingPlatformImagesBody>(
       `/v1/${this.baseUrl}/${id}/platforms/${platform}/images`,
-      { images }
+      { images, imageTemplateId }
     )
 
+    return data.value
+  }
+
+  savePostEdits = async (
+    id: string,
+    platforms: {
+      platform: MarketingPostPlatform
+      expectedRevision: string
+      generationId?: string
+      content?: UpdateMarketingContentBody
+      images?: { imageTemplateId: string | null; images: MarketingPostImageSlot[] }
+    }[]
+  ) => {
+    const { data } = await this.put<BaseResponse<MarketingPostCoreDetail>>(`/v1/posts/${id}/edits`, { platforms })
+    return data.value
+  }
+
+  prepareVideoPost = async (id: string) => {
+    const { data } = await this.post<BaseResponse<MarketingPostCoreDetail>>(`/v1/posts/${id}/video/platforms/zalo`)
     return data.value
   }
 
@@ -188,22 +216,6 @@ class MarketingPostService extends BaseService {
   deleteMarketingPost = async ({ id }: { id: string }) => {
     const { data } = await this.delete<BaseResponse<{ basePostId: string; isDeleted: boolean }>>(
       `/v1/${this.baseUrl}/${id}`
-    )
-
-    return data.value
-  }
-
-  // --- Kế hoạch tháng từ Excel ---
-
-  // TODO(BE): đường dẫn và kiểu trả về là tạm đoán, BE đang làm. Đổi theo contract thật khi có.
-  // FE chỉ đẩy nguyên file lên, đọc file và cho AI sinh bài là việc của backend.
-  importMarketingPlan = async ({ file }: { file: File }) => {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const { data } = await this.post<BaseResponse<MarketingPlanImportResult>, FormData>(
-      `/v1/${this.baseUrl}/plans/import`,
-      formData
     )
 
     return data.value

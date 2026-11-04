@@ -14,12 +14,14 @@ import { Link, useParams } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { marketingPostChannelPresets } from '../features/marketing-posts/channel-presets'
 import MarketingPostMarkdown from '../features/marketing-posts/components/marketing-post-markdown'
+import MarketingPostTemplatePicker from '../features/marketing-posts/components/marketing-post-template-picker'
+import { useWatch } from 'react-hook-form'
 import MarketingPostRatioPicker from '../features/marketing-posts/components/marketing-post-ratio-picker'
 import MarketingPostSystemPromptDrawer from '../features/marketing-posts/components/marketing-post-system-prompt-drawer'
 import { useSelectMarketingChannels } from '../features/marketing-posts/hooks/use-select-marketing-channels'
 import { countMarketingImageBatches, countMarketingImagePairs } from '../features/marketing-posts/validations'
 import { marketingPostChannels } from '../features/marketing-posts/mock-data'
-import type { MarketingPostChannel } from '../features/marketing-posts/types'
+import { MarketingPostPlatform, type MarketingPostChannel } from '../features/marketing-posts/types'
 
 const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
 
@@ -121,6 +123,8 @@ export default function MarketingPostPlatformsPage() {
   const { t } = useTenantTranslation()
   const { postId } = useParams()
   const { marketingPost, isGettingMarketingPost, methods, onSubmit } = useSelectMarketingChannels(postId)
+  const selectedChannels = useWatch({ control: methods.control, name: 'channels' })
+  const templates = useWatch({ control: methods.control, name: 'templates' })
   const {
     control,
     handleSubmit,
@@ -129,7 +133,7 @@ export default function MarketingPostPlatformsPage() {
 
   if (isGettingMarketingPost) {
     return (
-      <div className='mx-auto w-full max-w-3xl space-y-6 px-6 py-6'>
+      <div className='mx-auto w-full max-w-8xl space-y-6 px-4 py-6 sm:px-6'>
         <Skeleton className='h-8 w-40' />
         <Skeleton className='h-24 w-full rounded-2xl' />
         <Skeleton className='h-64 w-full rounded-2xl' />
@@ -157,12 +161,13 @@ export default function MarketingPostPlatformsPage() {
     )
   }
 
+  const usesManualRatios = selectedChannels.length === 0 || selectedChannels.some((channel) => !templates?.[channel])
   const isBusy = isSubmitting
   const baseImages = [...marketingPost.baseImages].sort((a, b) => a.sortOrder - b.sortOrder)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='h-full overflow-auto'>
-      <div className='mx-auto w-full max-w-3xl px-6 py-6'>
+      <div className='mx-auto w-full max-w-8xl px-4 py-6 sm:px-6'>
         <Button type='button' variant='ghost' size='sm' asChild className='mb-4'>
           <Link to={`${POSTS_PATH}/create`}>
             <ArrowLeftIcon data-icon='inline-start' />
@@ -185,104 +190,145 @@ export default function MarketingPostPlatformsPage() {
           </p>
         </div>
 
-        <Controller
-          name='images'
-          control={control}
-          render={({ field, fieldState }) => {
-            const totalPairs = countMarketingImagePairs(field.value)
-            const totalBatches = countMarketingImageBatches(field.value)
+        <div
+          className={cn('grid items-start gap-6', usesManualRatios && 'xl:grid-cols-[minmax(20rem,1fr)_minmax(0,2fr)]')}
+        >
+          <section className='min-w-0 space-y-3'>
+            <h2 className='font-bold'>{t('marketingPosts.create.section.channels')}</h2>
 
-            return (
-              <Field data-invalid={fieldState.invalid} className='mb-6 gap-3'>
-                <div className='flex flex-wrap items-start justify-between gap-2'>
-                  <h2 className='font-bold'>{t('marketingPosts.create.section.ratios')}</h2>
-                  {field.value.length > 0 && (
-                    <Badge variant='secondary' className='font-normal'>
-                      {totalBatches > 1
-                        ? t('marketingPosts.create.field.totalOutputsBatched', {
-                            outputs: totalPairs,
-                            batches: totalBatches
-                          })
-                        : t('marketingPosts.create.field.totalOutputs', { outputs: totalPairs })}
-                    </Badge>
-                  )}
-                </div>
-
-                {baseImages.map((image, index) => {
-                  const selected = field.value.find((current) => current.id === image.id)
-
-                  return (
-                    <div key={image.id} className='rounded-2xl border bg-card p-4 shadow-sm'>
-                      <div className='flex items-start gap-3'>
-                        <img
-                          src={image.imageUrl}
-                          alt={t('marketingPosts.detail.imageAlt', { index: index + 1 })}
-                          className='size-14 shrink-0 rounded-lg border bg-muted/40 object-cover'
-                        />
-                        <div className='min-w-0 flex-1'>
-                          <p className='text-sm font-medium'>
-                            {t('marketingPosts.detail.imageAlt', { index: index + 1 })}
-                          </p>
-                          {image.width && image.height && (
-                            <p className='mt-0.5 text-xs text-muted-foreground tabular-nums'>
-                              {image.width} × {image.height}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className='mt-3'>
-                        <MarketingPostRatioPicker
-                          value={selected?.ratios ?? []}
-                          onChange={(ratios) =>
+            <Controller
+              name='channels'
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-3'>
+                  <div className={cn('grid items-start gap-4', !usesManualRatios && 'md:grid-cols-2 xl:grid-cols-3')}>
+                    {marketingPostChannels.map((channel) => (
+                      <section
+                        key={channel}
+                        aria-label={t(`marketingPosts.channel.${channel}`)}
+                        className='min-w-0 space-y-3'
+                      >
+                        <ChannelCard
+                          channel={channel}
+                          isSelected={field.value.includes(channel)}
+                          onToggle={(isSelected) =>
                             field.onChange(
-                              field.value.map((current) => (current.id === image.id ? { ...current, ratios } : current))
+                              isSelected
+                                ? [...field.value, channel]
+                                : field.value.filter((selected) => selected !== channel)
                             )
                           }
                         />
-                        {selected && selected.ratios.length === 0 && (
-                          <p className='mt-2 text-xs text-destructive'>
-                            {t('marketingPosts.validation.images.ratioRequired')}
-                          </p>
+                        {field.value.includes(channel) && (
+                          <MarketingPostTemplatePicker
+                            platform={channel === 'zaloOa' ? MarketingPostPlatform.Zalo : channel}
+                            images={baseImages}
+                            value={templates?.[channel] ?? null}
+                            onChange={(value) => {
+                              const next = { ...methods.getValues('templates') }
+                              if (value) next[channel] = value
+                              else delete next[channel]
+                              methods.setValue('templates', next, { shouldValidate: false })
+                            }}
+                          />
                         )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </Field>
-            )
-          }}
-        />
+                      </section>
+                    ))}
+                  </div>
 
-        <h2 className='mb-3 font-bold'>{t('marketingPosts.create.section.channels')}</h2>
+                  {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </section>
 
-        <Controller
-          name='channels'
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className='gap-3'>
-              <div className='space-y-3'>
-                {marketingPostChannels.map((channel) => (
-                  <ChannelCard
-                    key={channel}
-                    channel={channel}
-                    isSelected={field.value.includes(channel)}
-                    onToggle={(isSelected) =>
-                      field.onChange(
-                        isSelected ? [...field.value, channel] : field.value.filter((selected) => selected !== channel)
+          <Controller
+            name='images'
+            control={control}
+            render={({ field, fieldState }) => {
+              const totalPairs = countMarketingImagePairs(field.value)
+              const totalBatches = countMarketingImageBatches(field.value)
+
+              return (
+                <Field data-invalid={fieldState.invalid} className={cn('min-w-0 gap-3', !usesManualRatios && 'hidden')}>
+                  <div className='flex flex-wrap items-start justify-between gap-2'>
+                    <h2 className='font-bold'>{t('marketingPosts.create.section.ratios')}</h2>
+                    {field.value.length > 0 && (
+                      <Badge variant='secondary' className='font-normal'>
+                        {totalBatches > 1
+                          ? t('marketingPosts.create.field.totalOutputsBatched', {
+                              outputs: totalPairs,
+                              batches: totalBatches
+                            })
+                          : t('marketingPosts.create.field.totalOutputs', { outputs: totalPairs })}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className='grid items-start gap-4 2xl:grid-cols-2'>
+                    {baseImages.map((image, index) => {
+                      const selected = field.value.find((current) => current.id === image.id)
+
+                      return (
+                        <div key={image.id} className='@container min-w-0 rounded-2xl border bg-card p-4 shadow-sm'>
+                          <div className='flex items-start gap-3'>
+                            <img
+                              src={image.imageUrl}
+                              alt={t('marketingPosts.detail.imageAlt', { index: index + 1 })}
+                              className='size-14 shrink-0 rounded-lg border bg-muted/40 object-cover'
+                            />
+                            <div className='min-w-0 flex-1'>
+                              <p className='text-sm font-medium'>
+                                {t('marketingPosts.detail.imageAlt', { index: index + 1 })}
+                              </p>
+                              {image.width && image.height && (
+                                <p className='mt-0.5 text-xs text-muted-foreground tabular-nums'>
+                                  {image.width} × {image.height}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className='mt-3'>
+                            <MarketingPostRatioPicker
+                              fitContainer
+                              value={selected?.ratios ?? []}
+                              onChange={(ratios) =>
+                                field.onChange(
+                                  field.value.map((current) =>
+                                    current.id === image.id ? { ...current, ratios } : current
+                                  )
+                                )
+                              }
+                            />
+                            {selected && selected.ratios.length === 0 && (
+                              <p className='mt-2 text-xs text-destructive'>
+                                {t('marketingPosts.validation.images.ratioRequired')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       )
-                    }
-                  />
-                ))}
-              </div>
+                    })}
+                  </div>
+                </Field>
+              )
+            }}
+          />
+        </div>
 
-              {fieldState.invalid && <FieldError className='text-xs' errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <div className='mt-6 flex justify-end'>
-          <Button type='submit' disabled={isBusy}>
+        <div className='sticky bottom-0 z-10 mt-6 flex justify-end border-t bg-background/95 py-4 backdrop-blur-sm'>
+          <Button
+            type='submit'
+            disabled={
+              isBusy ||
+              selectedChannels.some(
+                (channel) =>
+                  templates?.[channel] &&
+                  (!templates[channel]?.templateId || templates[channel]?.sourceImageIds.some((id) => !id))
+              )
+            }
+          >
             {isBusy && <Spinner />}
             {t('marketingPosts.create.submit')}
           </Button>

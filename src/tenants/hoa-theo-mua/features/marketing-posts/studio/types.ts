@@ -127,6 +127,7 @@ export interface MarketingStudioCaptionRevision {
 }
 
 export interface MarketingStudioChannelDraft {
+  imageTemplateId?: string | null
   channel: MarketingPostChannel
   revisions: MarketingStudioCaptionRevision[]
   activeRevision: number

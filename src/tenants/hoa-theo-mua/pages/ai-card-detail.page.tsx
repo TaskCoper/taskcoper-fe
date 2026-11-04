@@ -15,6 +15,7 @@ import AiCardOutputImage from '../features/ai-custom/components/ai-card-output-i
 import { useDownloadAiCard } from '../features/ai-custom/hooks/use-download-ai-card'
 import { useGetAiCardDetail } from '../features/ai-custom/hooks/use-get-ai-card-detail'
 import { AiCardWritingMode } from '../features/ai-custom/types'
+import { OrderStatusLabel, type OrderStatus } from '../features/orders/types'
 
 const AI_CARD_DETAIL_TABS = ['message', 'design', 'pricing', 'source', 'attachments'] as const
 const LEGACY_CARD_SECTIONS_ENABLED = false
@@ -404,11 +405,9 @@ export default function AiCardDetailPage() {
                                   </Link>
                                 </TableCell>
                                 <TableCell>
-                                  {order.status === 'Paid'
-                                    ? t('orders.status.paid')
-                                    : order.status === 'Pending'
-                                      ? t('orders.status.pending')
-                                      : '-'}
+                                  {OrderStatusLabel[order.status as OrderStatus]
+                                    ? t(OrderStatusLabel[order.status as OrderStatus])
+                                    : '-'}
                                 </TableCell>
                                 <TableCell className='whitespace-nowrap'>
                                   {formatDateTime(order.createdAt, 'dateTimeShort')}

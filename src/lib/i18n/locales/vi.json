@@ -369,6 +369,7 @@
         "noResults": "Không tìm thấy kết quả",
         "placeholder": "Tìm kiếm...",
         "selectedCount": "Đã chọn {{count}}",
+        "selectedCount_one": "Đã chọn {{count}}",
         "selectedCount_other": "Đã chọn {{count}}"
       },
       "invalidFileType": "Loại tệp không hợp lệ",
@@ -379,6 +380,7 @@
       "mobileSidebarDescription": "Hiển thị thanh bên trên thiết bị di động.",
       "month": "Tháng",
       "more": "+{{count}} nữa",
+      "more_one": "+{{count}} nữa",
       "more_other": "+{{count}} nữa",
       "moreLabel": "Thêm",
       "noDataAvailable": "Không có dữ liệu",
@@ -517,6 +519,7 @@
       "selectDateRange": "Chọn khoảng ngày",
       "selected": "đã chọn",
       "selectedCount": "Đã chọn {{count}}",
+      "selectedCount_one": "Đã chọn {{count}}",
       "selectedCount_other": "Đã chọn {{count}}",
       "selectField": "Chọn trường",
       "selectJoinOperator": "Chọn toán tử nối",
@@ -727,6 +730,7 @@
     "ratingFilter": "Đánh giá",
     "reset": "Đặt lại",
     "resultsCount": "{{count}} kết quả",
+    "resultsCount_one": "{{count}} kết quả",
     "resultsCount_other": "{{count}} kết quả",
     "searchByAi": "Tìm kiếm bằng AI",
     "searchPlaceholder": "Tìm kiếm cố vấn...",
@@ -761,6 +765,7 @@
         },
         "streak": "🔥 {{days}} ngày liên tiếp",
         "tasksCompleted": "{{count}} việc hoàn thành",
+        "tasksCompleted_one": "{{count}} việc hoàn thành",
         "tasksCompleted_other": "{{count}} việc hoàn thành",
         "title": "Năng suất"
       },
@@ -768,16 +773,19 @@
         "done": "Xong",
         "inProgress": "Đang làm",
         "remaining": "Còn {{count}} ngày",
+        "remaining_one": "Còn {{count}} ngày",
         "remaining_other": "Còn {{count}} ngày",
         "title": "Sprint 12",
         "toDo": "Cần làm"
       },
       "taskCard": {
         "comments": "{{count}} bình luận",
+        "comments_one": "{{count}} bình luận",
         "comments_other": "{{count}} bình luận",
         "date": "12 Th1",
         "description": "Hoàn thiện các thành phần dashboard và token hệ thống thiết kế cho bản phát hành v2.0.",
         "members": "{{count}} thành viên",
+        "members_one": "{{count}} thành viên",
         "members_other": "{{count}} thành viên",
         "priority": "Ưu tiên cao",
         "status": "Hoàn thành",
@@ -791,6 +799,7 @@
         "codeReview": "Xem xét mã",
         "live": "Trực tiếp",
         "online": "{{count}} trực tuyến",
+        "online_one": "{{count}} trực tuyến",
         "online_other": "{{count}} trực tuyến",
         "title": "Hoạt động nhóm"
       },
@@ -807,6 +816,7 @@
         "designSync": "Đồng bộ thiết kế",
         "designSyncAt": "15:00",
         "events": "{{count}} sự kiện",
+        "events_one": "{{count}} sự kiện",
         "events_other": "{{count}} sự kiện",
         "now": "Bây giờ",
         "sprintReview": "Đánh giá Sprint",
@@ -933,6 +943,7 @@
     "dialog": {
       "detailedIntroduction": "Giới thiệu chi tiết",
       "portfolioFiles": "Tệp Portfolio ({{count}})",
+      "portfolioFiles_one": "Tệp Portfolio ({{count}})",
       "portfolioFiles_other": "Tệp Portfolio ({{count}})",
       "reviewed": "Đã xét duyệt {{date}}",
       "reviewerNote": "Ghi chú của người xét duyệt",
@@ -996,6 +1007,7 @@
       "button": "Nộp đơn",
       "buttonUploading": "Đang tải lên…",
       "partialUpload": "{{count}} / {{total}} tệp đã tải lên",
+      "partialUpload_one": "{{count}} / {{total}} tệp đã tải lên",
       "partialUpload_other": "{{count}} / {{total}} tệp đã tải lên",
       "partialUploadFailed": "Thất bại: {{names}}",
       "uploadingParallel": "Đang tải lên {{total}} tệp song song…"
@@ -1240,11 +1252,13 @@
   "network": {
     "domainSelect": {
       "domainsSelected": "{{count}} lĩnh vực đã chọn",
+      "domainsSelected_one": "{{count}} lĩnh vực đã chọn",
       "domainsSelected_other": "{{count}} lĩnh vực đã chọn",
       "loading": "Đang tải…",
       "loadingMore": "Đang tải thêm…",
       "noDomainsFound": "Không tìm thấy lĩnh vực.",
       "overflowMore": "+{{count}} khác",
+      "overflowMore_one": "+{{count}} khác",
       "overflowMore_other": "+{{count}} khác",
       "removeAriaLabel": "Xóa {{name}}"
     },
@@ -1261,6 +1275,7 @@
     "latest": "Bài mới",
     "liveUpdated": "Cập nhật hàng tuần",
     "minRead": "{{count}} phút",
+    "minRead_one": "{{count}} phút",
     "minRead_other": "{{count}} phút",
     "newsletter": {
       "cta": "Đăng ký",
@@ -1700,6 +1715,7 @@
       },
       "addRole": "Thêm vai trò",
       "memberCount": "({{count}} thành viên)",
+      "memberCount_one": "({{count}} thành viên)",
       "memberCount_other": "({{count}} thành viên)",
       "noRolesDefined": "Chưa có vai trò nào"
     },
@@ -2138,6 +2154,7 @@
     "tooltipTasksCompleted": "Task đã hoàn thành",
     "tooltipTasksCreated": "Task đã tạo",
     "tooltipTotalActivities": "{{count}} hoạt động tổng",
+    "tooltipTotalActivities_one": "{{count}} hoạt động tổng",
     "tooltipTotalActivities_other": "{{count}} hoạt động tổng",
     "topContributorsPercentage": "Top đóng góp (%)",
     "topContributorsPercentageTooltip": "Phần trăm",

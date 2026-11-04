@@ -2,6 +2,7 @@ import { DataTableColumnHeader } from '@/components/data-table/data-table-column
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Spinner } from '@/components/ui/spinner'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,11 +62,15 @@ const renderCurrency = (value: number | null, t: TenantT) => {
 export const getSystemOrderColumns = ({
   t,
   onEdit,
-  onConfirmPayment
+  onConfirmPayment,
+  isConfirmingPayment,
+  canConfirmPayment
 }: {
   t: TenantT
   onEdit: (order: SystemOrder) => void
   onConfirmPayment: (order: SystemOrder) => void
+  isConfirmingPayment: boolean
+  canConfirmPayment: boolean
 }): ColumnDef<SystemOrder>[] => {
   return [
     {
@@ -315,6 +320,19 @@ export const getSystemOrderColumns = ({
 
         return (
           <div className='flex items-center justify-end gap-0.5'>
+            {canConfirmPayment && order.status === OrderStatus.Pending && (
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                className='mr-1 whitespace-nowrap'
+                disabled={isConfirmingPayment}
+                onClick={() => onConfirmPayment(order)}
+              >
+                {isConfirmingPayment ? <Spinner /> : <BadgeCheckIcon className='size-3.5' />}
+                {t('systemOrders.action.confirmPayment')}
+              </Button>
+            )}
             <Button
               variant='ghost'
               size='icon-sm'
@@ -338,12 +356,6 @@ export const getSystemOrderColumns = ({
                     {t('systemOrders.action.viewDetails')}
                   </Link>
                 </DropdownMenuItem>
-                {order.status === OrderStatus.Pending && (
-                  <DropdownMenuItem onClick={() => onConfirmPayment(order)}>
-                    <BadgeCheckIcon className='size-4' />
-                    {t('systemOrders.action.confirmPayment')}
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuItem asChild disabled={!paymentUrl?.trim()}>
                   <a href={paymentUrl} target='_blank' rel='noreferrer'>
                     <ExternalLinkIcon className='size-4' />
@@ -377,7 +389,7 @@ export const getSystemOrderColumns = ({
       enableSorting: false,
       enableHiding: false,
       enableColumnFilter: false,
-      size: 72
+      size: canConfirmPayment ? 260 : 72
     }
   ]
 }

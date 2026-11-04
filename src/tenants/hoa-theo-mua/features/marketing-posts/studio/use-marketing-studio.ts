@@ -1,3 +1,5 @@
+import { usePostEditDraft } from './use-post-edit-draft'
+import { getImageTemplates, templatePairs, type MarketingTemplateSelections } from '../image-templates'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { useIsMutating, useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -54,9 +56,6 @@ import {
 import { MARKETING_POST_MAX_IMAGE_PAIRS } from '../validations'
 
 const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
-
-// Gõ tới đâu lưu tới đó thì mỗi phím là một request. Chờ ngưng gõ rồi mới lưu một lần.
-const CAPTION_SAVE_DELAY_MS = 1200
 
 // Backend đang sinh dở thì nền tảng ở hai trạng thái này
 const runningStatuses: MarketingPostPlatformStatus[] = [
@@ -188,6 +187,7 @@ const toStudioState = (
 
     return {
       channel: platformChannels[platform.platform],
+      imageTemplateId: platform.imageTemplateId,
       revisions,
       activeRevision: official?.revision ?? revisions[revisions.length - 1]?.revision ?? 0,
       edits: {},
@@ -242,6 +242,7 @@ const toStudioState = (
       id: `caption-${platform.platform}`,
       kind: 'caption',
       channel: platformChannels[platform.platform],
+      imageTemplateId: platform.imageTemplateId,
       // `status` là của cả nền tảng: ảnh chết hết cũng thành Failed dù chữ viết xong.
       // Có content nghĩa là phần chữ xong, đừng báo hỏng oan - lỗi ảnh đã hiện ở hàng job ảnh.
       status: runningStatuses.includes(platform.status)
@@ -272,11 +273,8 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
   const [batchProgress, setBatchProgress] = useState<{ current: number; total: number } | null>(null)
   // Thử lại hàng loạt ảnh lỗi cũng chạy từng ô một, banner phải nói đang tới ô thứ mấy
   const [failedRetryProgress, setFailedRetryProgress] = useState<{ current: number; total: number } | null>(null)
-  // Chữ đang gõ dở, chưa kịp lưu. Lưu xong thì xoá đi để đọc thẳng từ server.
-  const [captionEdits, setCaptionEdits] = useState<Partial<Record<MarketingPostChannel, MarketingStudioCaptionEdit>>>(
-    {}
-  )
-  const saveTimersRef = useRef<Partial<Record<MarketingPostChannel, ReturnType<typeof setTimeout>>>>({})
+  const editDraft = usePostEditDraft(marketingPost)
+  const stageEdit = editDraft.stage
 
   const { data: imageHistory } = useQuery({
     queryKey: marketingPostKeys.imageHistory(id ?? ''),
@@ -399,40 +397,73 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     onMutate: startWaitingForServer,
     mutationFn: async ({
       channels,
-      images
+      images,
+      templates = {}
     }: {
       channels: MarketingPostChannel[]
       images: MarketingGenerateSelection['images']
+      templates?: MarketingTemplateSelections
     }) => {
-      const platforms = channels.map((channel) => channelPlatforms[channel])
-      const batches = toBatches(toImagePairs(images))
-
-      if (batches.length === 0) {
-        return marketingPostService.generateMarketingPost({
+      const catalog = Object.keys(templates).length ? await getImageTemplates() : []
+      const plans = channels.map((channel) => {
+        const selection = templates[channel]
+        if (!selection)
+          return { platform: channelPlatforms[channel], pairs: toImagePairs(images), selection: null, template: null }
+        const template = catalog.find(
+          (item) => item.id === selection.templateId && item.platform === channelPlatforms[channel] && item.canApply
+        )
+        if (
+          !template ||
+          selection.sourceImageIds.length !== template.ratios.length ||
+          selection.sourceImageIds.some((source) => !source)
+        ) {
+          throw new Error(t('marketingPosts.templates.missing'))
+        }
+        return { platform: channelPlatforms[channel], pairs: templatePairs(template, selection), selection, template }
+      })
+      let post = await marketingPostService.generateMarketingPost({
+        id: id ?? '',
+        body: { mode: MarketingPostGenerateMode.Content, platforms: plans.map(({ platform }) => ({ platform })) }
+      })
+      // Save the complete slot plan before generating. Partial failures preserve empty slots and block publication.
+      for (const plan of plans) {
+        if (!plan.template) continue
+        post = await marketingPostService.updateMarketingPlatformImages({
           id: id ?? '',
-          body: { mode: MarketingPostGenerateMode.Content, platforms: platforms.map((platform) => ({ platform })) }
+          platform: plan.platform,
+          imageTemplateId: plan.template.id,
+          images: plan.pairs.map((pair, index) => ({
+            sourceBasePostImageId: pair.imageId,
+            ratioCode: pair.ratioCode,
+            selectedGeneratedPostImageId: null,
+            sortOrder: index + 1
+          }))
         })
       }
-
-      let post: MarketingPostCoreDetail | null = null
-
-      // Chạy tuần tự: backend khoá theo nền tảng, gọi song song là ăn 409. Lượt đầu `all`
-      // để có nội dung, các lượt sau `images` - không thì mỗi lượt AI lại viết lại bài.
+      const unique = [
+        ...new Map(
+          plans.flatMap((plan) => plan.pairs).map((pair) => [`${pair.imageId}:${pair.ratioCode}`, pair])
+        ).values()
+      ]
+      const batches = toBatches(unique)
       for (const [index, batch] of batches.entries()) {
         setBatchProgress({ current: index + 1, total: batches.length })
-
-        const ratios = toBatchRatioRequests(batch)
-
+        const platforms = plans
+          .map((plan) => ({
+            platform: plan.platform,
+            ratios: toBatchRatioRequests(
+              batch.filter((pair) =>
+                plan.pairs.some((wanted) => wanted.imageId === pair.imageId && wanted.ratioCode === pair.ratioCode)
+              )
+            )
+          }))
+          .filter((plan) => plan.ratios.length > 0)
         post = await marketingPostService.generateMarketingPost({
           id: id ?? '',
-          body: {
-            mode: index === 0 ? MarketingPostGenerateMode.All : MarketingPostGenerateMode.Images,
-            platforms: platforms.map((platform) => ({ platform, ratios }))
-          }
+          body: { mode: MarketingPostGenerateMode.Images, platforms }
         })
       }
-
-      return post as MarketingPostCoreDetail
+      return post
     },
     onSettled: () => {
       setBatchProgress(null)
@@ -492,41 +523,6 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     onError: onMutationError
   })
 
-  const { mutate: saveContent, isPending: isSavingContent } = useMutation({
-    mutationFn: ({ platform, edit }: { platform: MarketingPostPlatform; edit: MarketingStudioCaptionEdit }) =>
-      marketingPostService.updateMarketingContent({
-        id: id ?? '',
-        platform,
-        body: {
-          title: edit.title?.trim() || null,
-          content: edit.content,
-          hashtag: edit.hashtags.join(' ') || null
-        }
-      }),
-    onSuccess: (post, { platform }) => {
-      onPostUpdated(post)
-      refreshContentVersions(platform)
-      // Server giữ bản này rồi, bỏ bản nháp ở máy để không che mất dữ liệu thật
-      setCaptionEdits((previous) => {
-        const next = { ...previous }
-        delete next[platformChannels[platform]]
-
-        return next
-      })
-    },
-    onError: onMutationError
-  })
-
-  const { mutate: selectContent, isPending: isSelectingContent } = useMutation({
-    mutationFn: ({ platform, generationId }: { platform: MarketingPostPlatform; generationId: string }) =>
-      marketingPostService.selectMarketingContent({ id: id ?? '', platform, generationId }),
-    onSuccess: (post, { platform }) => {
-      onPostUpdated(post)
-      refreshContentVersions(platform)
-    },
-    onError: onMutationError
-  })
-
   const { mutate: regenerateImageVersion, isPending: isRegeneratingImage } = useMutation({
     mutationFn: ({
       sourceBasePostImageId,
@@ -558,13 +554,14 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     onError: onMutationError
   })
 
-  const { mutate: savePlatformImages, isPending: isSavingImages } = useMutation({
-    mutationFn: ({ platform, images }: { platform: MarketingPostPlatform; images: MarketingPostImageSlot[] }) =>
-      marketingPostService.updateMarketingPlatformImages({ id: id ?? '', platform, images }),
+  const { mutate: saveEdits, isPending: isSavingEdits } = useMutation({
+    mutationFn: () => marketingPostService.savePostEdits(id ?? '', editDraft.read()),
     onSuccess: (post) => {
       onPostUpdated(post)
-      // selectedPlatforms trong kho ảnh đổi theo, phải nạp lại
+      editDraft.clear()
+      post.platforms.forEach((platform) => refreshContentVersions(platform.platform))
       refreshImageHistory()
+      toast.success(t('marketingPosts.studio.publish.saveSuccess'))
     },
     onError: onMutationError
   })
@@ -638,9 +635,47 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     [t]
   )
 
+  const channelDrafts = useMemo(
+    () =>
+      (state?.channelDrafts ?? []).map((item) => {
+        const pending = editDraft.edits[item.channel]
+        const revision = pending?.generationId
+          ? (item.revisions.find((entry) => entry.generationId === pending.generationId)?.revision ??
+            item.activeRevision)
+          : item.activeRevision
+        const imageIds =
+          pending?.images?.images.map((slot) => toPoolImageId(slot.sourceBasePostImageId, slot.ratioCode)) ??
+          item.imageIds
+        const imageVersions = pending?.images
+          ? Object.fromEntries(
+              pending.images.images.flatMap((slot) => {
+                const image = pool.find(
+                  (entry) => entry.id === toPoolImageId(slot.sourceBasePostImageId, slot.ratioCode)
+                )
+                const version = image?.versions.find(
+                  (entry) => entry.generatedPostImageId === slot.selectedGeneratedPostImageId
+                )
+                return version ? [[image!.id, version.attempt]] : []
+              })
+            )
+          : item.imageVersions
+        return {
+          ...item,
+          activeRevision: revision,
+          imageIds,
+          imageVersions,
+          imageTemplateId: pending?.images ? pending.images.imageTemplateId : item.imageTemplateId,
+          isPinned: pinnedChannels.includes(item.channel),
+          isLocked: item.isLocked || isSavingEdits,
+          edits: pending?.content ? { [revision]: pending.content } : {}
+        }
+      }),
+    [state, editDraft.edits, pool, pinnedChannels, isSavingEdits]
+  )
+
   const findChannelDraft = useCallback(
-    (channel: MarketingPostChannel) => state?.channelDrafts.find((item) => item.channel === channel),
-    [state]
+    (channel: MarketingPostChannel) => channelDrafts.find((item) => item.channel === channel),
+    [channelDrafts]
   )
 
   // Ô ảnh của một kênh dưới dạng backend hiểu. PUT thay toàn bộ tập nên luôn phải dựng đủ.
@@ -670,9 +705,15 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
   )
 
   const commitSlots = useCallback(
-    (channel: MarketingPostChannel, slots: MarketingPostImageSlot[]) =>
-      savePlatformImages({ platform: channelPlatforms[channel], images: slots }),
-    [savePlatformImages]
+    (channel: MarketingPostChannel, slots: MarketingPostImageSlot[], templateId?: string | null) => {
+      stageEdit(channel, {
+        images: {
+          images: slots,
+          imageTemplateId: templateId === undefined ? (findChannelDraft(channel)?.imageTemplateId ?? null) : templateId
+        }
+      })
+    },
+    [stageEdit, findChannelDraft]
   )
 
   const buildRatioRequests = useCallback(
@@ -763,37 +804,24 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
 
   const updateCaption = useCallback(
     (channel: MarketingPostChannel, edit: MarketingStudioCaptionEdit) => {
-      setCaptionEdits((previous) => ({ ...previous, [channel]: edit }))
-
-      clearTimeout(saveTimersRef.current[channel])
-      saveTimersRef.current[channel] = setTimeout(() => {
-        if (!edit.content.trim()) return
-
-        saveContent({ platform: channelPlatforms[channel], edit })
-      }, CAPTION_SAVE_DELAY_MS)
+      stageEdit(channel, { content: edit })
     },
-    [saveContent]
+    [stageEdit]
   )
 
-  const revertCaption = useCallback((channel: MarketingPostChannel) => {
-    clearTimeout(saveTimersRef.current[channel])
-    setCaptionEdits((previous) => {
-      const next = { ...previous }
-      delete next[channel]
-
-      return next
-    })
-  }, [])
+  const revertCaption = useCallback(
+    (channel: MarketingPostChannel) => {
+      stageEdit(channel, { content: undefined })
+    },
+    [stageEdit]
+  )
 
   const selectCaptionRevision = useCallback(
     (channel: MarketingPostChannel, revision: number) => {
       const target = findChannelDraft(channel)?.revisions.find((item) => item.revision === revision)
-
-      if (!target) return
-
-      selectContent({ platform: channelPlatforms[channel], generationId: target.generationId })
+      if (target) stageEdit(channel, { generationId: target.generationId, content: undefined })
     },
-    [findChannelDraft, selectContent]
+    [findChannelDraft, stageEdit]
   )
 
   // --- Ảnh (mốc 6) ---
@@ -1069,25 +1097,34 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
 
   const discardDraft = useCallback(() => deleteBasePost(), [deleteBasePost])
 
-  useEffect(() => {
-    const timers = saveTimersRef.current
-
-    return () => Object.values(timers).forEach((timer) => clearTimeout(timer))
-  }, [])
-
-  const channelDrafts = useMemo(
+  const editingPlatforms = useMemo(
     () =>
-      (state?.channelDrafts ?? []).map((item) => {
-        const edit = captionEdits[item.channel]
-
+      (marketingPost?.platforms ?? []).map((platform) => {
+        const pending = editDraft.edits[platformChannels[platform.platform]]?.images
+        if (!pending) return platform
         return {
-          ...item,
-          isPinned: pinnedChannels.includes(item.channel),
-          // Bản gõ dở đè lên bản chốt cho tới khi lưu xong
-          edits: edit ? { [item.activeRevision]: edit } : {}
+          ...platform,
+          imageTemplateId: pending.imageTemplateId,
+          templateImageIds: pending.images.map((slot) => slot.sourceBasePostImageId),
+          images: pending.images.flatMap((slot) => {
+            if (!slot.selectedGeneratedPostImageId) return []
+            const image = pool.find((item) => item.id === toPoolImageId(slot.sourceBasePostImageId, slot.ratioCode))
+            const version = image?.versions.find(
+              (item) => item.generatedPostImageId === slot.selectedGeneratedPostImageId
+            )
+            return [
+              {
+                ...slot,
+                selectedGeneratedPostImageId: slot.selectedGeneratedPostImageId,
+                imageUrl: version?.url ?? '',
+                pixelWidth: image?.width ?? 0,
+                pixelHeight: image?.height ?? 0
+              }
+            ]
+          })
         }
       }),
-    [state, pinnedChannels, captionEdits]
+    [marketingPost, editDraft.edits, pool]
   )
 
   const availableChannels = useMemo(
@@ -1123,10 +1160,20 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
   )
 
   return {
+    marketingPost,
+    editingPlatforms,
+    canSaveEdits:
+      editDraft.isDirty &&
+      Object.values(editDraft.edits).every((edit) => !edit.content || Boolean(edit.content.content.trim())),
     draft: state?.draft ?? null,
     isEditing: Boolean(postId),
     isLoadingPost: isGettingMarketingPost,
-    isDirty: Object.keys(captionEdits).length > 0,
+    isDirty: editDraft.isDirty,
+    saveEdits,
+    discardEdits: editDraft.clear,
+    stageImages: commitSlots,
+    pendingEdits: editDraft.edits,
+    isSavingEdits,
     lockedChannel: null,
     pool,
     channelDrafts,
@@ -1135,11 +1182,11 @@ export const useMarketingStudio = ({ draftId, postId }: { draftId?: string; post
     busyKey,
     // Khoá nút theo đúng cái banner đang báo: server xong là mở lại ngay, không chờ
     // kết nối HTTP đóng
-    isGenerating: Boolean(busyKey) || isRegeneratingImage || isSavingBasePost,
+    isGenerating: Boolean(busyKey) || isRegeneratingImage || isSavingBasePost || isSavingEdits,
     batchProgress,
     failedRetryProgress,
     runSelectionGenerate,
-    isFinalizing: isDeletingBasePost || isSavingImages || isSavingContent || isSelectingContent,
+    isFinalizing: isDeletingBasePost || isSavingEdits,
     failedImageCount,
     notReadyReasons,
     availableChannels,

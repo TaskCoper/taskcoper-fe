@@ -14,10 +14,17 @@ import SystemOrderEditDialog from './update-system-order-dialog'
 export function SystemOrdersTable() {
   const { t } = useTenantTranslation()
   const [editingOrder, setEditingOrder] = useState<SystemOrder | null>(null)
-  const { manualConfirmPayment } = useManualConfirmPayment()
+  const { manualConfirmPayment, isConfirmingPayment, canConfirmPayment } = useManualConfirmPayment()
   const columns = useMemo(
-    () => getSystemOrderColumns({ t, onEdit: setEditingOrder, onConfirmPayment: manualConfirmPayment }),
-    [manualConfirmPayment, t]
+    () =>
+      getSystemOrderColumns({
+        t,
+        onEdit: setEditingOrder,
+        onConfirmPayment: manualConfirmPayment,
+        isConfirmingPayment,
+        canConfirmPayment
+      }),
+    [canConfirmPayment, isConfirmingPayment, manualConfirmPayment, t]
   )
 
   const { page, limit } = useTableQueryParams({ columns, prefix: 'system-orders' })

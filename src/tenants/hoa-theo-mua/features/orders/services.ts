@@ -81,9 +81,9 @@ class OrderService extends BaseService {
   }
 
   manualConfirmPayment = async ({ orderId }: { orderId: string }) => {
-    const { data } = await this.post<string>('/v1/sepay/manual-confirm-payment', { orderId })
+    const { data } = await this.post<BaseResponse<string>>('/v1/sepay/manual-confirm-payment', { orderId })
 
-    return data
+    return data.value
   }
 }
 

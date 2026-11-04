@@ -14,18 +14,17 @@ export const MARKETING_POST_MAX_IMAGE_PAIRS = 12
 // Kế hoạch tháng chỉ là bảng chữ, 10MB là dư. BE chốt giới hạn khác thì sửa ở đây.
 export const MARKETING_PLAN_FILE_MAX_SIZE = 10 * 1024 * 1024
 export const MARKETING_PLAN_FILE_TYPES = {
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-  'application/vnd.ms-excel': ['.xls']
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
 }
-// TODO(BE): cột trong file mẫu là FE đề xuất tạm. BE chốt định dạng thì thay file ở public/templates
-// hoặc trỏ sang link BE cấp.
-export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-plan-template.xlsx'
+export const MARKETING_PLAN_TEMPLATE_URL = '/templates/marketing-posts-bulk-v3.xlsx'
 
 // Bước 1 chỉ lo nội dung gốc. Nền tảng tách sang bước 2 vì bài gốc lưu được trước khi
 // biết sẽ đăng lên đâu - đúng như backend tách POST /posts và POST /posts/{id}/generate.
 export const createMarketingPostSchema = (t: TenantT) => {
   return z
     .object({
+      mediaType: z.enum(['images', 'video']),
+      video: z.object({ url: z.url(), fileName: z.string(), posterUrl: z.url() }).nullable(),
       title: z
         .string()
         .trim()
@@ -57,6 +56,16 @@ export const createMarketingPostSchema = (t: TenantT) => {
         .max(MARKETING_POST_IMAGE_MAX, t('marketingPosts.validation.images.max', { max: MARKETING_POST_IMAGE_MAX }))
     })
     .strict()
+    .superRefine((value, context) => {
+      if (value.mediaType === 'video' && !value.video)
+        context.addIssue({ code: 'custom', path: ['video'], message: t('marketingPosts.video.required') })
+      if (
+        value.mediaType === 'video' &&
+        [...[value.content, value.hashtags].filter(Boolean).join('\n\n')].length > 300
+      ) {
+        context.addIssue({ code: 'custom', path: ['content'], message: t('marketingPosts.video.captionLimit') })
+      }
+    })
 }
 
 export type CreateMarketingPostFormValues = z.infer<ReturnType<typeof createMarketingPostSchema>>
@@ -66,6 +75,12 @@ export const selectMarketingChannelsSchema = (t: TenantT) => {
   return z
     .object({
       channels: z.array(z.enum(MarketingPostChannel)).min(1, t('marketingPosts.validation.channels.required')),
+      templates: z
+        .partialRecord(
+          z.enum(MarketingPostChannel),
+          z.object({ templateId: z.string().min(1), sourceImageIds: z.array(z.string().min(1)).min(1) })
+        )
+        .optional(),
       images: z
         .array(
           z.object({

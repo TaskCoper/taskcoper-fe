@@ -458,6 +458,11 @@
     }
   },
   "marketingPosts": {
+    "tabs": {
+      "posts": "Bài đăng",
+      "imports": "Lịch sử nhập Excel",
+      "postsHint": "Tất cả bài đăng, gồm bài tạo thủ công và bài nhập từ Excel. Xem tiến độ từng đợt nhập trong tab Lịch sử nhập Excel."
+    },
     "planImport": {
       "templateHint": "Chưa có file? Tải mẫu về điền theo đúng cột.",
       "downloadTemplate": "Tải file mẫu",
@@ -541,7 +546,7 @@
       }
     },
     "create": {
-      "planImportHint": "Có sẵn kế hoạch đăng bài cả tháng? Nhập file Excel để AI tạo hết một lượt.",
+      "planImportHint": "Có sẵn nội dung và ảnh? Nhập Excel để đăng hàng loạt.",
       "title": "Tạo bài đăng mới",
       "description": "Soạn nội dung một lần, tinh chỉnh riêng cho từng nền tảng.",
       "submit": "Tạo bài đăng",
@@ -596,7 +601,9 @@
       "publishedAt": "Thời gian đăng",
       "actions": "Thao tác",
       "platform": "Nền tảng",
-      "hashtag": "Hashtag"
+      "hashtag": "Hashtag",
+      "scheduledAt": "Giờ hẹn đăng",
+      "publishTime": "Ngày đăng / hẹn đăng"
     },
     "channel": {
       "facebook": "Facebook",
@@ -610,7 +617,7 @@
       "failed": "Đăng lỗi"
     },
     "action": {
-      "importPlan": "Nhập kế hoạch Excel",
+      "importPlan": "Nhập Excel & đăng hàng loạt",
       "actions": "Thao tác",
       "openMenu": "Mở menu thao tác bài đăng",
       "viewDetail": "Xem chi tiết",
@@ -655,6 +662,8 @@
         "retryAllDone_other": "Đã cắt lại xong {{count}} ảnh lỗi.",
         "retryAllPartial": "Cắt lại được {{succeeded}}/{{total}} ảnh, số còn lại vẫn lỗi.",
         "historyTitle": "Các bản đã cắt",
+        "loadingHistory": "Đang tải lịch sử nhập Excel...",
+        "emptyHistory": "Chưa có đợt nhập Excel. Chọn “Nhập Excel & đăng hàng loạt” để bắt đầu.",
         "historyHint": "Bản cũ vẫn được giữ, bấm để quay về bản ưng hơn.",
         "versionCount": "v{{current}}/{{total}}",
         "versionLabel": "v{{index}}",
@@ -728,10 +737,19 @@
         "editTitle": "Trạng thái & lưu",
         "editDescription": "Đổi cách đăng của bài này.",
         "save": "Lưu thay đổi",
-        "autoSaved": "Mọi thay đổi trong Studio được lưu tự động, không cần bấm chốt.",
         "noReadyChannel": "Chưa kênh nào sẵn sàng đăng. Chọn tài khoản và xử lý các mục còn thiếu ở trên.",
         "submitAll": "Chốt đăng {{count}} kênh",
-        "submitting": "Đang gửi lệnh đăng…"
+        "submitting": "Đang gửi lệnh đăng…",
+        "manualSaveHint": "Thay đổi chỉ có hiệu lực khi bạn bấm Lưu thay đổi.",
+        "unsaved": "Có thay đổi chưa lưu. Lưu trước khi đăng hoặc hẹn lịch.",
+        "saving": "Đang lưu…",
+        "saveSuccess": "Đã lưu thay đổi",
+        "discardEdits": "Bỏ thay đổi",
+        "saveBeforeAction": "Lưu hoặc bỏ thay đổi đang sửa trước khi thực hiện thao tác này.",
+        "leaveTitle": "Rời trang khi chưa lưu?",
+        "leaveDescription": "Các thay đổi chưa lưu sẽ bị bỏ. Bài đã lưu và lịch đăng hiện tại vẫn giữ nguyên.",
+        "leave": "Rời trang, bỏ thay đổi",
+        "keepEditing": "Tiếp tục sửa"
       },
       "publishMode": {
         "draft": "Lưu nháp",
@@ -1072,6 +1090,159 @@
       "reload": "Tải lại",
       "hint": "Số liệu lấy trực tiếp từ nền tảng, ô \"-\" là nền tảng không trả dữ liệu cho chỉ số đó.",
       "unsupported": "Nền tảng này chưa hỗ trợ xem chỉ số."
+    },
+    "bulkImport": {
+      "title": "Nhập bài từ Excel",
+      "description": "Nhập nội dung và ảnh theo từng nền tảng. Chọn dùng AI trong file hoặc giữ nguyên dữ liệu.",
+      "templateHint": "Bai_dang: bật/tắt AI nội dung. Anh: nền tảng, Giữ nguyên / Xử lý bằng AI, tỉ lệ và yêu cầu AI.",
+      "template": "Tải mẫu Excel v3",
+      "dropzone": "Chọn hoặc kéo file Excel vào đây",
+      "fileHint": ".xlsx · Tối đa 10 MB · 500 bài và 10.000 dòng ảnh mỗi file",
+      "removeFile": "Bỏ file đã chọn",
+      "publishHint": "Để trống ngày giờ: lưu Chờ đăng, không tự xuất bản. Có lịch: chỉ hẹn đăng sau khi xử lý thành công. AI chỉ chạy khi được chọn trong file và có thể phát sinh chi phí; ảnh gốc được giữ lại.",
+      "submit": "Nhập & xử lý",
+      "accepted": "Đã nhận file, hệ thống đang xử lý",
+      "uploading": "Đang tải file lên…",
+      "validating": "Đã tải xong, đang kiểm tra và lưu file…",
+      "uploadPercent": "Đang tải file: {{percent}}%",
+      "refresh": "Làm mới",
+      "export": "Tải Excel kết quả",
+      "history": "Các đợt nhập Excel",
+      "historyHint": "Hiển thị 10 đợt gần nhất của tài khoản. Tác vụ tiếp tục chạy khi đóng trình duyệt.",
+      "chooseBatch": "Chọn đợt nhập Excel",
+      "openPost": "Mở bài",
+      "openPublished": "Xem bài đã đăng",
+      "existing": "Đã có tác vụ, không tạo lại",
+      "rowNumber": "dòng {{row}}",
+      "moreIssues_one": "Còn {{count}} lỗi; tải Excel kết quả để xem đủ.",
+      "moreIssues_other": "Còn {{count}} lỗi; tải Excel kết quả để xem đủ.",
+      "fileIssues_one": "{{count}} lỗi liên kết ảnh trong file",
+      "fileIssues_other": "{{count}} lỗi liên kết ảnh trong file",
+      "progressHint": "Số bài đã xử lý là tiến độ đọc và tạo tác vụ. Kết quả đăng được thống kê riêng theo từng kênh.",
+      "page": "Trang {{page}} / {{total}}",
+      "previous": "Trang trước",
+      "next": "Trang sau",
+      "column": {
+        "row": "Dòng Excel",
+        "post": "Bài đăng",
+        "status": "Trạng thái",
+        "result": "Kết quả theo kênh"
+      },
+      "metric": {
+        "rows": "Bài đã xử lý",
+        "succeeded": "Kênh đã đăng",
+        "scheduled": "Kênh hẹn giờ",
+        "pending": "Kênh đang xử lý",
+        "failed": "Kênh lỗi",
+        "review": "Kênh cần đối soát",
+        "waiting": "Kênh chờ đăng"
+      },
+      "defaults": {
+        "title": "Tài khoản đăng mặc định",
+        "description": "Lưu một lần cho từng kênh. Đợt nhập đã nhận giữ nguyên tài khoản đích, kể cả khi bạn đổi mặc định sau đó.",
+        "saved": "Đã lưu tài khoản mặc định",
+        "save": "Lưu tài khoản",
+        "manage": "Quản lý tài khoản nền tảng",
+        "none": "Chưa chọn",
+        "unavailable": "Cần kết nối lại",
+        "required": "Có thể nhập bài chờ đăng khi chưa chọn tài khoản. Bài có lịch cần tài khoản mặc định cho từng kênh.",
+        "unsaved": "Bạn đã đổi tài khoản. Lưu lựa chọn trước khi nhập file."
+      },
+      "status": {
+        "Processing": "Đang xử lý",
+        "Scheduled": "Đã hẹn giờ",
+        "NeedsReview": "Cần đối soát",
+        "CompletedWithErrors": "Hoàn tất, có lỗi",
+        "Completed": "Hoàn tất",
+        "Invalid": "Dữ liệu không hợp lệ",
+        "Queued": "Đang chờ",
+        "Publishing": "Đang đăng",
+        "Succeeded": "Đã đăng",
+        "Failed": "Lỗi",
+        "Pending": "Chờ xử lý",
+        "Cancelled": "Đã hủy",
+        "Closed": "Đã đóng, chưa rõ kết quả",
+        "Waiting": "Chờ đăng"
+      },
+      "error": {
+        "accountRequired": "Chưa có tài khoản mặc định cho kênh này. Lưu tài khoản rồi nhập lại file.",
+        "contentChanged": "Mã bài đã có nội dung khác và có tác vụ đang chạy hoặc đã đăng. Sửa bài trong hệ thống hoặc dùng mã mới cho bài mới.",
+        "sourceDeleted": "Bài của mã này đã bị xóa. Dùng mã mới để tạo bài mới.",
+        "processingFailed": "Chưa xử lý được dòng sau nhiều lần thử. Kiểm tra dữ liệu và nhập lại file.",
+        "code": "Cần kiểm tra lỗi {{code}}.",
+        "contract": "Phản hồi máy chủ chưa đúng định dạng. Làm mới để kiểm tra đợt nhập trước khi gửi lại.",
+        "network": "Chưa xác nhận máy chủ đã nhận file. Giữ nguyên file và thử lại để dùng cùng mã yêu cầu; có thể kiểm tra lịch sử nhập trước.",
+        "request": "Chưa thực hiện được yêu cầu. Thử lại hoặc kiểm tra kết nối.",
+        "loadDefaults": "Chưa tải được tài khoản mặc định.",
+        "loadDetail": "Chưa tải được chi tiết đợt nhập.",
+        "refreshDetail": "Chưa cập nhật được kết quả mới; đang hiển thị dữ liệu gần nhất.",
+        "loadHistory": "Chưa tải được lịch sử nhập Excel."
+      },
+      "invalidRows_one": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa.",
+      "invalidRows_other": "{{count}} bài sai dữ liệu. Xem chi tiết dòng Excel bên dưới để sửa."
+    },
+    "templates": {
+      "cover": "Ảnh bìa · nội dung chính trong vùng 14:9",
+      "use": "Sử dụng mẫu",
+      "facebookNote": "Bố cục minh họa bộ ảnh và thứ tự đăng. Facebook có thể sắp lưới hiển thị khác với mẫu.",
+      "orderNote": "Thứ tự và tỉ lệ các vị trí ảnh được giữ theo mẫu. Bạn có thể thay ảnh ở từng vị trí.",
+      "loadError": "Không tải được danh sách mẫu.",
+      "retry": "Thử lại",
+      "filterCount": "Số ảnh",
+      "all": "Tất cả",
+      "catalog": "Các mẫu bộ ảnh",
+      "unavailable": "Chưa hỗ trợ đăng trong hệ thống",
+      "assign": "Gán ảnh theo vị trí của mẫu",
+      "slot": "Ảnh ở vị trí {{index}}",
+      "missing": "Chọn đủ ảnh cho các vị trí của mẫu. Ảnh thừa vẫn ở trong pool.",
+      "applyHint": "Chuẩn bị các vị trí ảnh ở đây, sau đó bấm Lưu thay đổi để cập nhật bài đăng.",
+      "apply": "Tạo ảnh và áp dụng mẫu",
+      "progress": "Chuẩn bị ảnh {{current}}/{{total}}",
+      "cropFailed": "Chưa tạo được ảnh cho mẫu. Lựa chọn đang dùng vẫn được giữ nguyên.",
+      "saved": "Đã lưu bộ ảnh theo mẫu",
+      "saveError": "Không thể áp dụng mẫu",
+      "family": {
+        "single": "Một ảnh",
+        "album": "Bộ ảnh",
+        "carousel": "Ảnh vuốt ngang",
+        "portraitLead": "Ảnh dọc chủ đạo",
+        "landscapeLead": "Ảnh ngang chủ đạo",
+        "article": "Ảnh bìa và nội dung",
+        "collection": "Bộ sưu tập sản phẩm"
+      },
+      "prepared": "Đã chuẩn bị ảnh. Bấm Lưu thay đổi để áp dụng vào bài đăng."
+    },
+    "video": {
+      "title": "Video của bài đăng",
+      "limits": "Một video MP4, tối đa 50 MB. Ảnh đại diện được lấy từ khung hình đầu.",
+      "choose": "Chọn hoặc kéo thả video MP4",
+      "replace": "Tải video thay thế",
+      "remove": "Bỏ video",
+      "cancel": "Hủy upload",
+      "invalidVideo": "Video không hợp lệ. Chọn MP4 có thể phát được, tối đa 50 MB.",
+      "uploadFailed": "Không tải được video. Bạn có thể chọn lại file và thử lại.",
+      "required": "Cần tải lên một video hợp lệ.",
+      "mediaType": "Nội dung đính kèm",
+      "type": {
+        "images": "Ảnh",
+        "video": "Một video"
+      },
+      "phase": {
+        "preparing": "Đang đọc video và tạo ảnh đại diện…",
+        "uploading": "Đang tải video: {{progress}}%",
+        "cover": "Đang tải ảnh đại diện…"
+      },
+      "postOnly": "Video chỉ đăng dạng bài post. Hiện hỗ trợ Zalo OA; Facebook và Instagram chưa bật vì có thể yêu cầu định dạng Reels.",
+      "captionLimit": "Nội dung và hashtag của bài video Zalo OA tối đa 300 ký tự.",
+      "captionTitle": "Tiêu đề bài video",
+      "caption": "Nội dung bài video",
+      "hashtags": "Hashtag",
+      "save": "Lưu bài video",
+      "saved": "Đã lưu bài video",
+      "saveFailed": "Không lưu được bài video",
+      "saveFirst": "Lưu thay đổi trước khi đăng hoặc hẹn lịch.",
+      "cancelBeforeReplace": "Cần hủy lịch hoặc xử lý tác vụ đăng trước khi thay video. Bạn vẫn có thể sửa nội dung nếu lịch chưa bắt đầu.",
+      "edit": "Sửa bài video"
     }
   },
   "navigation": {
@@ -1420,6 +1591,7 @@
     },
     "status": {
       "paid": "Đã thanh toán",
+      "fulfillmentFailed": "Đã thanh toán · cần hỗ trợ",
       "pending": "Chờ thanh toán",
       "cancelled": "Đã hủy"
     }
@@ -3462,9 +3634,13 @@
       "copyTracking": "Sao chép mã vận đơn",
       "confirmPayment": "Xác nhận thanh toán",
       "confirmPaymentTitle": "Xác nhận đơn hàng đã thanh toán?",
-      "confirmPaymentDescription": "Đơn #{{code}} ({{amount}}) sẽ được đánh dấu là đã thanh toán và hệ thống xử lý tiếp như khi nhận thanh toán thật. Thao tác này không thể hoàn tác.",
-      "confirmPaymentConfirm": "Xác nhận thanh toán",
-      "confirmPaymentSuccess": "Đã xác nhận thanh toán đơn hàng"
+      "confirmPaymentDescription": "Bạn đã kiểm tra tài khoản ngân hàng và nhận đủ {{amount}} cho đơn {{code}}? Xác nhận sẽ ghi nhận thanh toán và tiếp tục đồng bộ đơn sang Nhanh.vn. Việc đặt tài xế do Admin xử lý riêng.",
+      "confirmPaymentConfirm": "Đã đối soát, xác nhận thanh toán",
+      "confirmPaymentSuccess": "Đã xác nhận thanh toán đơn hàng",
+      "confirmPaymentFailed": "Chưa xác nhận được thanh toán. Kiểm tra lại trạng thái đơn trước khi thử lại.",
+      "paymentExceptionTitle": "Xác nhận chuyển khoản ngoại lệ",
+      "paymentExceptionDescription": "Dùng khi khách đã chuyển khoản nhưng sửa nội dung giao dịch, khiến hệ thống chưa tự ghi nhận thanh toán. Chỉ xác nhận sau khi đã đối soát khoản tiền thực nhận.",
+      "paymentExceptionAmount": "Số tiền cần đối soát: {{amount}}."
     },
     "copyTracking": {
       "success": "Đã sao chép mã vận đơn"

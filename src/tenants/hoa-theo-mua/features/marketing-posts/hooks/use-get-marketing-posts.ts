@@ -9,9 +9,11 @@ export const useGetMarketingPosts = ({
   pageSize = DEFAULT_PAGE_SIZE,
   keyword,
   platform,
-  status
+  status,
+  publishFrom,
+  publishTo
 }: GetMarketingPostsParams) => {
-  const params = { pageIndex, pageSize, keyword, platform, status }
+  const params = { pageIndex, pageSize, keyword, platform, status, publishFrom, publishTo }
   const { data: marketingPosts, isLoading: isGettingMarketingPosts } = useQuery({
     queryKey: marketingPostKeys.list(params),
     queryFn: () => marketingPostService.getMarketingPosts(params),

@@ -1,3 +1,9 @@
+import { useUnsavedPostGuard } from '../features/marketing-posts/hooks/use-unsaved-post-guard'
+import { toast } from 'sonner'
+import MarketingStudioTemplateEditor from '../features/marketing-posts/studio/components/marketing-studio-template-editor'
+import MarketingVideoEditor from '../features/marketing-posts/components/marketing-video-editor'
+import { useGetMarketingPostDetail } from '../features/marketing-posts/hooks/use-get-marketing-post-detail'
+import { channelPlatforms } from '../features/marketing-posts/platform-channels'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -8,7 +14,7 @@ import { cn } from '@/shared/utils'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { ArrowLeftIcon, SparklesIcon, XIcon } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import MarketingStudioChannelPanel from '../features/marketing-posts/studio/components/marketing-studio-channel-panel'
@@ -24,6 +30,14 @@ const POSTS_PATH = `/${HOA_THEO_MUA_ROUTE_PREFIX}/ai-marketing/posts`
 const CREATE_PATH = `${POSTS_PATH}/create`
 
 export default function MarketingPostStudioPage() {
+  const { draftId, id } = useParams()
+  const { marketingPost, isGettingMarketingPost } = useGetMarketingPostDetail(id ?? draftId)
+  if (isGettingMarketingPost) return <Skeleton className='m-6 h-96 rounded-xl' />
+  if (marketingPost?.video) return <MarketingVideoEditor key={marketingPost.basePostId} post={marketingPost} />
+  return <MarketingPostImageStudioPage />
+}
+
+function MarketingPostImageStudioPage() {
   const { t } = useTenantTranslation()
   const { confirm } = useConfirmStore()
   // Pool ảnh dài ra rất nhanh khi nhiều ảnh nhiều tỉ lệ, phải dính được cả hai mép
@@ -42,6 +56,14 @@ export default function MarketingPostStudioPage() {
 
   const {
     draft,
+    marketingPost,
+    editingPlatforms,
+    isDirty,
+    saveEdits,
+    discardEdits,
+    stageImages,
+    canSaveEdits,
+    isSavingEdits,
     isEditing,
     isLoadingPost,
     lockedChannel,
@@ -75,6 +97,37 @@ export default function MarketingPostStudioPage() {
     regenerateChannel,
     regenerateAll
   } = useMarketingStudio({ draftId, postId: id })
+
+  const [templatePending, setTemplatePending] = useState<Partial<Record<string, boolean>>>({})
+  const [templateBusy, setTemplateBusy] = useState<Partial<Record<string, boolean>>>({})
+  const [pendingInputs, setPendingInputs] = useState<Partial<Record<string, boolean>>>({})
+  const [resetKey, setResetKey] = useState(0)
+  const pendingTemplate = Object.values(templatePending).some(Boolean)
+  const preparingTemplate = Object.values(templateBusy).some(Boolean)
+  const hasPendingInput = Object.values(pendingInputs).some(Boolean)
+  const hasUnsavedChanges = isDirty || pendingTemplate || preparingTemplate || hasPendingInput
+  useUnsavedPostGuard(hasUnsavedChanges)
+  const runSavedAction = (action: () => void) => {
+    if (hasUnsavedChanges) {
+      toast.info(t('marketingPosts.studio.publish.saveBeforeAction'))
+      return
+    }
+    action()
+  }
+  const discardLocalEdits = async () => {
+    const discard = await confirm({
+      title: t('marketingPosts.studio.publish.discardEdits'),
+      description: t('marketingPosts.studio.publish.leaveDescription'),
+      confirmText: t('marketingPosts.studio.publish.discardEdits'),
+      cancelText: t('common.button.cancel')
+    })
+    if (!discard) return
+    discardEdits()
+    setTemplatePending({})
+    setTemplateBusy({})
+    setPendingInputs({})
+    setResetKey((key) => key + 1)
+  }
 
   useEffect(() => {
     if (!pendingGenerate || hasStartedRef.current) return
@@ -198,21 +251,26 @@ export default function MarketingPostStudioPage() {
           <div ref={poolColumnRef} className='xl:sticky'>
             <MarketingStudioImagePool
               isBusy={isGenerating}
-              isLocked={isActiveChannelLocked}
+              isLocked={
+                isActiveChannelLocked ||
+                Boolean(channelDrafts.find((item) => item.channel === activeChannel)?.imageTemplateId)
+              }
               imageJobs={imageJobs}
               pool={pool}
               sourceImages={draft.images}
               channelDrafts={channelDrafts}
               activeChannel={activeChannel}
               onToggleImage={(imageId) => activeChannel && toggleChannelImage(activeChannel, imageId)}
-              onRegenerateImage={(jobId, request) => regenerateImage(jobId, activeChannel, request)}
-              onRetryFailedImages={retryFailedImages}
-              onCloneRatio={(jobId, ratio) => cloneImageRatio(jobId, activeChannel, ratio)}
+              onRegenerateImage={(jobId, request) =>
+                runSavedAction(() => regenerateImage(jobId, activeChannel, request))
+              }
+              onRetryFailedImages={() => runSavedAction(retryFailedImages)}
+              onCloneRatio={(jobId, ratio) => runSavedAction(() => cloneImageRatio(jobId, activeChannel, ratio))}
               onSelectImageVersion={(imageId, attempt) =>
                 activeChannel && selectImageVersion(activeChannel, imageId, attempt)
               }
-              onAddImageRatios={addImageRatios}
-              onAddSourceImages={addSourceImages}
+              onAddImageRatios={(entries) => runSavedAction(() => addImageRatios(entries))}
+              onAddSourceImages={(images) => runSavedAction(() => addSourceImages(images))}
             />
           </div>
 
@@ -290,8 +348,38 @@ export default function MarketingPostStudioPage() {
                 </div>
 
                 {draft.channels.map((channel) => (
-                  <TabsContent key={channel} value={channel}>
+                  <TabsContent
+                    key={channel}
+                    value={channel}
+                    forceMount
+                    className={activeChannel !== channel ? 'hidden' : undefined}
+                  >
                     <MarketingStudioChannelPanel
+                      key={`${resetKey}-${channel}`}
+                      onPendingInputChange={(pending) =>
+                        setPendingInputs((previous) => ({ ...previous, [channel]: pending }))
+                      }
+                      templateEditor={
+                        marketingPost &&
+                        editingPlatforms
+                          .filter((platform) => platform.platform === channelPlatforms[channel])
+                          .map((platform) => (
+                            <MarketingStudioTemplateEditor
+                              key={`${resetKey}-${platform.platform}-${platform.imageTemplateId}-${platform.templateImageIds?.join(',')}`}
+                              post={marketingPost}
+                              platform={platform}
+                              onApply={(images, templateId) => stageImages(channel, images, templateId)}
+                              onPendingChange={(pending) =>
+                                setTemplatePending((previous) => ({ ...previous, [channel]: pending }))
+                              }
+                              onBusyChange={(busy) => setTemplateBusy((previous) => ({ ...previous, [channel]: busy }))}
+                              disabled={
+                                isGenerating ||
+                                Boolean(channelDrafts.find((item) => item.channel === channel)?.isLocked)
+                              }
+                            />
+                          ))
+                      }
                       channel={channel}
                       channelDraft={channelDrafts.find((channelDraft) => channelDraft.channel === channel)}
                       pool={pool}
@@ -301,7 +389,7 @@ export default function MarketingPostStudioPage() {
                         isGenerating &&
                         !channelDrafts.find((channelDraft) => channelDraft.channel === channel)?.revisions.length
                       }
-                      onRegenerate={(options) => regenerateChannel(channel, options)}
+                      onRegenerate={(options) => runSavedAction(() => regenerateChannel(channel, options))}
                       onReorderImages={(imageIds) => reorderChannelImages(channel, imageIds)}
                       onToggleImage={(imageId) => toggleChannelImage(channel, imageId)}
                       onUpdateCaption={(edit) => updateCaption(channel, edit)}
@@ -321,7 +409,7 @@ export default function MarketingPostStudioPage() {
               isBusy={isGenerating}
               pinnedCount={channelDrafts.filter((channelDraft) => channelDraft.isPinned).length}
               channelCount={channelDrafts.length}
-              onRegenerateAll={regenerateAll}
+              onRegenerateAll={(source) => runSavedAction(() => regenerateAll(source))}
             />
             <MarketingStudioPublishPanel
               postId={id ?? draftId}
@@ -331,6 +419,11 @@ export default function MarketingPostStudioPage() {
               isEditing={isEditing}
               failedImageCount={failedImageCount}
               notReadyReasons={notReadyReasons}
+              hasUnsavedChanges={hasUnsavedChanges}
+              isSaving={isSavingEdits || preparingTemplate}
+              canSave={(canSaveEdits || hasPendingInput) && !pendingTemplate}
+              onSave={() => saveEdits()}
+              onDiscard={discardLocalEdits}
             />
           </div>
         </div>

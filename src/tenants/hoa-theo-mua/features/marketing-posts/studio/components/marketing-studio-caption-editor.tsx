@@ -21,7 +21,8 @@ const MarketingStudioCaptionEditor = ({
   isEdited,
   isLocked,
   onChange,
-  onRevert
+  onRevert,
+  onPendingInputChange
 }: {
   channel: MarketingPostChannel
   caption: MarketingStudioCaptionEdit
@@ -30,6 +31,7 @@ const MarketingStudioCaptionEditor = ({
   isLocked: boolean
   onChange: (edit: MarketingStudioCaptionEdit) => void
   onRevert: () => void
+  onPendingInputChange: (pending: boolean) => void
 }) => {
   const { t } = useTenantTranslation()
   const titleId = useId()
@@ -46,6 +48,7 @@ const MarketingStudioCaptionEditor = ({
 
     setHashtags([...caption.hashtags, ...parsed])
     setHashtagInput('')
+    onPendingInputChange(false)
   }
 
   return (
@@ -102,7 +105,10 @@ const MarketingStudioCaptionEditor = ({
       {!isLocked && (
         <MarketingPostHashtagInput
           value={hashtagInput}
-          onChange={(event) => setHashtagInput(event.target.value)}
+          onChange={(event) => {
+            setHashtagInput(event.target.value)
+            onPendingInputChange(Boolean(event.target.value.trim()))
+          }}
           onKeyDown={(event) => {
             if (event.key !== 'Enter' && event.key !== ',') return
 

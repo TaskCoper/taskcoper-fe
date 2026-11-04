@@ -17,6 +17,7 @@ const toFormValues = (
   selection?: SelectMarketingChannelsFormValues
 ): SelectMarketingChannelsFormValues => ({
   channels: selection?.channels ?? [],
+  templates: selection?.templates ?? {},
   images: [...marketingPost.baseImages]
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((image) => ({
@@ -34,7 +35,7 @@ export const useSelectMarketingChannels = (postId?: string) => {
   const selection = (location.state as { selection?: SelectMarketingChannelsFormValues } | null)?.selection
 
   const methods = useForm<SelectMarketingChannelsFormValues>({
-    defaultValues: { channels: [], images: [] },
+    defaultValues: { channels: [], images: [], templates: {} },
     values: marketingPost ? toFormValues(marketingPost, selection) : undefined,
     resolver: zodResolver(selectMarketingChannelsSchema(t))
   })
