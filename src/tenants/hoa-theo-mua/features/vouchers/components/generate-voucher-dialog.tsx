@@ -4,7 +4,7 @@ import { useUnsavedCloseGuard } from '@/tenants/hoa-theo-mua/features/configs/co
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
-import type { GenerateVouchersPayload, VoucherProgram } from '../types'
+import type { GenerateVouchersPayload, VoucherApplyTo, VoucherDiscountType, VoucherProgram } from '../types'
 import { generateVoucherSchema } from '../validations'
 import {
   VoucherFormFooter,
@@ -22,7 +22,8 @@ type GenerateFormValues = {
   codeSuffix?: string
   quantity: number
   maxUsageCount: number
-  discountType: 'percent' | 'cash'
+  applyTo: VoucherApplyTo
+  discountType: VoucherDiscountType
   discountValue: number
   maxDiscountAmount?: number | null
   description?: string
@@ -34,6 +35,7 @@ const defaultValues: GenerateFormValues = {
   codeSuffix: '',
   quantity: 1,
   maxUsageCount: 1,
+  applyTo: 'product',
   discountType: 'percent',
   discountValue: 20,
   maxDiscountAmount: null,
@@ -68,6 +70,7 @@ export function GenerateDialog({
     formState: { isDirty }
   } = methods
   const discountType = useWatch({ control, name: 'discountType' })
+  const applyTo = useWatch({ control, name: 'applyTo' })
   const requestClose = useUnsavedCloseGuard(isDirty, () => onOpenChange(false))
 
   useEffect(() => {
@@ -118,10 +121,28 @@ export function GenerateDialog({
               isRequired
             />
             <VoucherSelectField
+              name='applyTo'
+              control={control}
+              label={t('configsPage.vouchers.applyTo')}
+              isRequired
+              options={[
+                { value: 'product', label: t('configsPage.vouchers.applyTypes.product') },
+                { value: 'shipping', label: t('configsPage.vouchers.applyTypes.shipping') }
+              ]}
+              onValueChange={(value) => {
+                if (value === 'shipping') {
+                  setValue('discountType', 'cash', { shouldDirty: true })
+                  setValue('maxDiscountAmount', null)
+                }
+                void trigger(['discountType', 'discountValue', 'maxDiscountAmount'])
+              }}
+            />
+            <VoucherSelectField
               name='discountType'
               control={control}
               label={t('configsPage.vouchers.discountType')}
               isRequired
+              disabled={applyTo === 'shipping'}
               options={[
                 { value: 'percent', label: t('configsPage.vouchers.kinds.percent') },
                 { value: 'cash', label: t('configsPage.vouchers.kinds.cash') }

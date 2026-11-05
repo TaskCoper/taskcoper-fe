@@ -100,6 +100,21 @@ export const getVoucherColumns = ({
     size: 150
   },
   {
+    id: 'applyTo',
+    accessorKey: 'applyTo',
+    meta: { label: 'configsPage.vouchers.applyTo' },
+    header: ({ column }) => <DataTableColumnHeader column={column} label='configsPage.vouchers.applyTo' />,
+    cell: ({ row }) => (
+      <Badge variant='outline' className='whitespace-nowrap font-normal'>
+        {t(`configsPage.vouchers.applyTypes.${row.original.applyTo ?? 'product'}`)}
+      </Badge>
+    ),
+    enableSorting: false,
+    enableHiding: true,
+    enableColumnFilter: false,
+    size: 160
+  },
+  {
     id: 'discountValue',
     accessorKey: 'discountValue',
     meta: { label: 'configsPage.vouchers.discountValue' },
