@@ -55,6 +55,14 @@ export function VoucherDetailDialog({
               value={<Badge variant='secondary'>{t(`configsPage.vouchers.types.${voucher.visibility}`)}</Badge>}
             />
             <DetailItem
+              label={t('configsPage.vouchers.applyTo')}
+              value={
+                <Badge variant='secondary'>
+                  {t(`configsPage.vouchers.applyTypes.${voucher.applyTo ?? 'product'}`)}
+                </Badge>
+              }
+            />
+            <DetailItem
               label={t('configsPage.vouchers.status')}
               value={
                 <Badge variant={voucher.isActive ? 'default' : 'outline'}>

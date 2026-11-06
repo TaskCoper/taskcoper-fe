@@ -3335,6 +3335,12 @@
       "unlimited": "Không giới hạn",
       "visibility": "Phạm vi hiển thị",
       "voucherType": "Loại voucher",
+      "applyTo": "Áp dụng cho",
+      "applyTypes": {
+        "product": "Giá trị sản phẩm",
+        "shipping": "Phí vận chuyển"
+      },
+      "shippingCashOnlyValidation": "Voucher phí vận chuyển chỉ hỗ trợ giảm số tiền cố định.",
       "codeMode": "Cách tạo mã",
       "manualCode": "Nhập mã thủ công",
       "generatedCode": "Tự sinh mã",
