@@ -156,10 +156,29 @@ export default function SystemOrderPage() {
       ]
     : []
 
+  const voucherCode = order.voucherCode?.trim()
+  const voucherRows: DetailRow[] = voucherCode
+    ? [
+        { label: 'systemOrders.detail.voucherCode', value: voucherCode, mono: true },
+        {
+          label: 'systemOrders.detail.voucherApplyTo',
+          value:
+            order.applyTo == null
+              ? empty
+              : t(`configsPage.vouchers.applyTypes.${order.applyTo}`, { defaultValue: order.applyTo })
+        },
+        {
+          label: 'systemOrders.detail.discountAmount',
+          value: order.discountAmount == null ? empty : `-${currency(order.discountAmount)}`
+        }
+      ]
+    : []
+
   const feeRows: DetailRow[] = [
     { label: 'systemOrders.column.productFee', value: currency(order.productFee) },
     { label: 'systemOrders.column.shippingFee', value: currency(order.shippingFee) },
     { label: 'systemOrders.detail.vat', value: currency(order.vatFee) },
+    ...voucherRows,
     { label: 'systemOrders.column.amount', value: currency(order.totalFee) }
   ]
 
