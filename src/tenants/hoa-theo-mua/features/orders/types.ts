@@ -1,4 +1,5 @@
 import type { I18nKey } from '@/lib/i18n/types'
+import type { VoucherApplyTo } from '../vouchers/types'
 import type { NhanhOrderStatusValue } from './nhanh-order-status'
 
 export const OrderStatus = {
@@ -427,6 +428,11 @@ export interface SystemOrderDetail extends SystemOrderCoordinates, SystemOrderFe
   receiptAddress: string | null
   receiptEmail: string | null
   vatFee: number | null
+
+  // Voucher - all null when the order did not use a voucher
+  voucherCode: string | null
+  applyTo: VoucherApplyTo | null
+  discountAmount: number | null
 
   details: SystemOrderItem[] | null
 }
