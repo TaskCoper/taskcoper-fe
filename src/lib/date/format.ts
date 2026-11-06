@@ -12,6 +12,16 @@ export type RelativeFormatOptions = FormatOptions & {
   addSuffix?: boolean
 }
 
+/**
+ * Convert a Unix timestamp in **seconds** to a `Date` so it can be passed to the formatters
+ * (they treat plain numbers as milliseconds). Returns `null` for empty or invalid values.
+ */
+export const fromUnixSeconds = (seconds: number | null | undefined): Date | null => {
+  if (seconds == null || !Number.isFinite(seconds)) return null
+  const date = new Date(seconds * 1000)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
 const toDate = (input: FormatInput): Date | null => {
   if (input == null || input === '') return null
   const date = input instanceof Date ? input : new Date(input)

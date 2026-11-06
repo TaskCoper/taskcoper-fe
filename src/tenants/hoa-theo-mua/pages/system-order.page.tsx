@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StatCard from '@/features/projects/core/components/stat-card'
-import { formatDateTime } from '@/lib/date'
+import { formatDateTime, fromUnixSeconds } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import {
@@ -97,7 +97,12 @@ export default function SystemOrderPage() {
     { label: 'systemOrders.detail.paymentMethod', value: paymentMethod },
     { label: 'systemOrders.detail.remark', value: text(order.remark) },
     ...(order.orderTime
-      ? [{ label: 'systemOrders.detail.orderTime', value: numberFormatter.format(order.orderTime) }]
+      ? [
+          {
+            label: 'systemOrders.detail.orderTime',
+            value: formatDateTime(fromUnixSeconds(order.orderTime), 'dateTimeShort') || empty
+          }
+        ]
       : []),
     ...(order.tagsId?.length ? [{ label: 'systemOrders.detail.tags', value: order.tagsId.join(', ') }] : [])
   ]
