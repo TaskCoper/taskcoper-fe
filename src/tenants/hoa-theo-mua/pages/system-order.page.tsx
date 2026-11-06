@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StatCard from '@/features/projects/core/components/stat-card'
-import { formatDateTime } from '@/lib/date'
+import { formatDateTime, fromUnixSeconds } from '@/lib/date'
 import { useTenantTranslation } from '@/lib/i18n/use-tenant-translation'
 import { cn } from '@/shared/utils'
 import {
@@ -97,7 +97,12 @@ export default function SystemOrderPage() {
     { label: 'systemOrders.detail.paymentMethod', value: paymentMethod },
     { label: 'systemOrders.detail.remark', value: text(order.remark) },
     ...(order.orderTime
-      ? [{ label: 'systemOrders.detail.orderTime', value: numberFormatter.format(order.orderTime) }]
+      ? [
+          {
+            label: 'systemOrders.detail.orderTime',
+            value: formatDateTime(fromUnixSeconds(order.orderTime), 'dateTimeShort') || empty
+          }
+        ]
       : []),
     ...(order.tagsId?.length ? [{ label: 'systemOrders.detail.tags', value: order.tagsId.join(', ') }] : [])
   ]
@@ -156,10 +161,29 @@ export default function SystemOrderPage() {
       ]
     : []
 
+  const voucherCode = order.voucherCode?.trim()
+  const voucherRows: DetailRow[] = voucherCode
+    ? [
+        { label: 'systemOrders.detail.voucherCode', value: voucherCode, mono: true },
+        {
+          label: 'systemOrders.detail.voucherApplyTo',
+          value:
+            order.applyTo == null
+              ? empty
+              : t(`configsPage.vouchers.applyTypes.${order.applyTo}`, { defaultValue: order.applyTo })
+        },
+        {
+          label: 'systemOrders.detail.discountAmount',
+          value: order.discountAmount == null ? empty : `-${currency(order.discountAmount)}`
+        }
+      ]
+    : []
+
   const feeRows: DetailRow[] = [
     { label: 'systemOrders.column.productFee', value: currency(order.productFee) },
     { label: 'systemOrders.column.shippingFee', value: currency(order.shippingFee) },
     { label: 'systemOrders.detail.vat', value: currency(order.vatFee) },
+    ...voucherRows,
     { label: 'systemOrders.column.amount', value: currency(order.totalFee) }
   ]
 

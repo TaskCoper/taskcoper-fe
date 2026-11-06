@@ -2,12 +2,14 @@ import type { BasePaginationResponse } from '@/lib/axios'
 
 export type VoucherVisibility = 'public' | 'private'
 export type VoucherDiscountType = 'cash' | 'percent'
+export type VoucherApplyTo = 'product' | 'shipping'
 
 export interface Voucher {
   id: string
   code: string
   description: string | null
   visibility: VoucherVisibility
+  applyTo: VoucherApplyTo
   isActive: boolean
   discountType: VoucherDiscountType
   discountValue: number
@@ -42,6 +44,7 @@ export interface ProgramVoucherItem {
   id: string
   code: string
   description: string | null
+  applyTo: VoucherApplyTo
   isActive: boolean
   discountType: VoucherDiscountType
   discountValue: number
@@ -90,6 +93,7 @@ export interface CreateVoucherPayload {
   codeSuffix?: string
   description?: string
   visibility: VoucherVisibility
+  applyTo: VoucherApplyTo
   discountType: VoucherDiscountType
   discountValue: number
   maxDiscountAmount?: number | null
@@ -125,6 +129,7 @@ export interface GenerateVouchersPayload {
   codeSuffix?: string
   quantity: number
   maxUsageCount: number
+  applyTo: VoucherApplyTo
   discountType: VoucherDiscountType
   discountValue: number
   maxDiscountAmount?: number | null

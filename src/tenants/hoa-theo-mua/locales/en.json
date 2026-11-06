@@ -3335,6 +3335,12 @@
       "unlimited": "Unlimited",
       "visibility": "Visibility",
       "voucherType": "Voucher Type",
+      "applyTo": "Applies to",
+      "applyTypes": {
+        "product": "Product value",
+        "shipping": "Shipping fee"
+      },
+      "shippingCashOnlyValidation": "Shipping vouchers only support fixed cash discounts.",
       "codeMode": "Code creation",
       "manualCode": "Enter code manually",
       "generatedCode": "Generate code",
@@ -3717,6 +3723,9 @@
       "paymentMethod": "Payment method",
       "paymentUrl": "Payment link",
       "sepayUrl": "SePay link",
+      "voucherCode": "Voucher code",
+      "voucherApplyTo": "Voucher applies to",
+      "discountAmount": "Voucher discount",
       "remark": "Remark",
       "orderTime": "Order time",
       "tags": "Tags",

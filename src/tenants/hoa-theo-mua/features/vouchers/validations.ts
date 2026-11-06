@@ -1,7 +1,7 @@
 import type { TenantT } from '@/lib/i18n/use-tenant-translation'
 import z from 'zod'
 import { composeDateTime } from './components/voucher-date-utils'
-import type { VoucherDiscountType, VoucherVisibility } from './types'
+import type { VoucherApplyTo, VoucherDiscountType, VoucherVisibility } from './types'
 
 const optionalAmount = z.number().nullable()
 
@@ -66,6 +66,7 @@ export const voucherSchema = (t: TenantT, usedCount = 0, isEdit = false) =>
       codeSuffix: z.string(),
       description: z.string().max(500, t('common.validation.maxLength', { max: 500 })),
       visibility: z.enum(['public', 'private'] satisfies [VoucherVisibility, VoucherVisibility]),
+      applyTo: z.enum(['product', 'shipping'] satisfies [VoucherApplyTo, VoucherApplyTo]),
       discountType: z.enum(['percent', 'cash'] satisfies [VoucherDiscountType, VoucherDiscountType]),
       discountValue: z.number({ error: t('configsPage.vouchers.discountValueValidation') }),
       maxDiscountAmount: optionalAmount,
@@ -111,6 +112,13 @@ export const voucherSchema = (t: TenantT, usedCount = 0, isEdit = false) =>
           code: 'custom',
           message: t('configsPage.vouchers.generatedCodeValidation'),
           path: ['codeLength']
+        })
+      }
+      if (data.applyTo === 'shipping' && data.discountType !== 'cash') {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.vouchers.shippingCashOnlyValidation'),
+          path: ['discountType']
         })
       }
       if (data.discountValue < 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
@@ -177,6 +185,7 @@ export const generateVoucherSchema = (t: TenantT, maxQuantity: number) =>
       codeSuffix: z.string().optional(),
       quantity: z.number({ error: t('configsPage.vouchers.quantityValidation', { max: maxQuantity }) }),
       maxUsageCount: z.number({ error: t('configsPage.vouchers.maxUsageValidation') }),
+      applyTo: z.enum(['product', 'shipping'] satisfies [VoucherApplyTo, VoucherApplyTo]),
       discountType: z.enum(['percent', 'cash'] satisfies [VoucherDiscountType, VoucherDiscountType]),
       discountValue: z.number({ error: t('configsPage.vouchers.discountValueValidation') }),
       maxDiscountAmount: z.union([z.number(), z.null()]).optional(),
@@ -219,6 +228,13 @@ export const generateVoucherSchema = (t: TenantT, maxQuantity: number) =>
       }
       if (data.maxUsageCount <= 0) {
         ctx.addIssue({ code: 'custom', message: t('configsPage.vouchers.maxUsageValidation'), path: ['maxUsageCount'] })
+      }
+      if (data.applyTo === 'shipping' && data.discountType !== 'cash') {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('configsPage.vouchers.shippingCashOnlyValidation'),
+          path: ['discountType']
+        })
       }
       if (data.discountValue < 0 || (data.discountType === 'percent' && data.discountValue > 100)) {
         ctx.addIssue({

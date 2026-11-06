@@ -1,4 +1,4 @@
-export { formatDate, formatDateTime, formatRelative, formatTime } from './format'
+export { formatDate, formatDateTime, formatRelative, formatTime, fromUnixSeconds } from './format'
 export type { FormatInput, FormatOptions, RelativeFormatOptions } from './format'
 export { getCurrentAppLocale, getDateFnsLocale, resolveAppLocale } from './locale'
 export type { AppLocale } from './locale'

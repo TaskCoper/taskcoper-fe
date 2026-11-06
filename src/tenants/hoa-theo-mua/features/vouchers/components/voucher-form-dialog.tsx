@@ -5,7 +5,14 @@ import { useUnsavedCloseGuard } from '@/tenants/hoa-theo-mua/features/configs/co
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
-import type { CreateVoucherPayload, UpdateVoucherItem, Voucher, VoucherDiscountType, VoucherVisibility } from '../types'
+import type {
+  CreateVoucherPayload,
+  UpdateVoucherItem,
+  Voucher,
+  VoucherApplyTo,
+  VoucherDiscountType,
+  VoucherVisibility
+} from '../types'
 import { voucherSchema } from '../validations'
 import { composeDateTime, displayDate, timeValue, toNullableNumber } from './voucher-date-utils'
 import {
@@ -25,6 +32,7 @@ type VoucherFormValues = {
   codeSuffix: string
   description: string
   visibility: VoucherVisibility
+  applyTo: VoucherApplyTo
   discountType: VoucherDiscountType
   discountValue: number
   maxDiscountAmount: number | null
@@ -45,6 +53,7 @@ const buildDefaultValues = (voucher?: Voucher | null): VoucherFormValues => ({
   codeSuffix: '',
   description: voucher?.description ?? '',
   visibility: voucher?.visibility ?? 'public',
+  applyTo: voucher?.applyTo ?? 'product',
   discountType: voucher?.discountType ?? 'percent',
   discountValue: voucher?.discountValue ?? 20,
   maxDiscountAmount: voucher?.maxDiscountAmount || null,
@@ -88,6 +97,7 @@ export function VoucherFormDialog({
   } = methods
   const codeMode = useWatch({ control, name: 'codeMode' })
   const discountType = useWatch({ control, name: 'discountType' })
+  const applyTo = useWatch({ control, name: 'applyTo' })
   const requestClose = useUnsavedCloseGuard(isDirty, () => onOpenChange(false))
 
   useEffect(() => {
@@ -110,6 +120,7 @@ export function VoucherFormDialog({
     const shared = {
       description: form.description,
       visibility: form.visibility,
+      applyTo: form.applyTo,
       discountType: form.discountType,
       discountValue: Number(form.discountValue),
       maxDiscountAmount: form.discountType === 'percent' ? toNullableNumber(form.maxDiscountAmount) : null,
@@ -202,11 +213,29 @@ export function VoucherFormDialog({
               ]}
             />
             <VoucherSelectField
+              name='applyTo'
+              control={control}
+              label={t('configsPage.vouchers.applyTo')}
+              isRequired
+              disabled={Boolean(voucher)}
+              options={[
+                { value: 'product', label: t('configsPage.vouchers.applyTypes.product') },
+                { value: 'shipping', label: t('configsPage.vouchers.applyTypes.shipping') }
+              ]}
+              onValueChange={(value) => {
+                if (value === 'shipping') {
+                  setValue('discountType', 'cash', { shouldDirty: true })
+                  setValue('maxDiscountAmount', null)
+                }
+                void trigger(['discountType', 'discountValue', 'maxDiscountAmount'])
+              }}
+            />
+            <VoucherSelectField
               name='discountType'
               control={control}
               label={t('configsPage.vouchers.discountType')}
               isRequired
-              disabled={Boolean(voucher)}
+              disabled={Boolean(voucher) || applyTo === 'shipping'}
               options={[
                 { value: 'percent', label: t('configsPage.vouchers.kinds.percent') },
                 { value: 'cash', label: t('configsPage.vouchers.kinds.cash') }
