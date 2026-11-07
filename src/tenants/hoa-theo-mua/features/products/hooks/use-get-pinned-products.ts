@@ -1,28 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 import { productKeys } from '../query-keys'
 import productService from '../services'
-import type { PinnedProduct } from '../types'
 
 /**
- * Order the scope by `position` on read instead of trusting the array order the API happens to send.
- * Server data can hold duplicate positions (many rows share `INITIAL_POSITION`) and `position` is
- * nullable, so without this a refetch can reshuffle the board. `Array.prototype.sort` is stable, so
- * ties keep server order, and nulls sort last rather than jumping to the front.
+ * Danh sách sản phẩm đã ghim của một scope. Không có `categoryId` → danh sách ghim global (cấp
+ * Product); có `categoryId` → danh sách ghim của category đó. Key có `categoryId` để hai scope không
+ * dùng chung cache, và `queryFn` là closure để truyền `categoryId` (truyền thẳng service thì nó nhận
+ * context của React Query và gửi `CategoryId=undefined`).
  *
- * Defined at module scope so React Query can memoise the `select` result - an inline arrow would
- * produce a new array identity on every render and defeat referential equality for consumers.
- */
-const sortByPosition = (items: PinnedProduct[]) =>
-  [...items].sort((a, b) => (a.position ?? Number.POSITIVE_INFINITY) - (b.position ?? Number.POSITIVE_INFINITY))
-
-/**
- * Pinned products for a scope. No `categoryId` → the global (Product-level) pin list; a `categoryId`
- * → that category's junction pin list. The key includes `categoryId` so the scopes never share a
- * cache entry, and the closure `queryFn` forwards it (a bare service reference would receive React
- * Query's context object and send `CategoryId=undefined`).
+ * Không sort lại ở FE: BE đã trả theo (position, tên, id) và cũng dùng đúng thứ tự đó khi tính move,
+ * nên thứ tự mảng trong cache chính là thứ tự hiển thị. Sort lại theo `position` sẽ làm optimistic
+ * update (chỉ đổi thứ tự mảng, không đổi `position`) bị sắp ngược về chỗ cũ.
  *
- * `isPinnedProductsError` is surfaced so a failed load can render a retry instead of the "no pins
- * yet" empty state, which would otherwise be indistinguishable from a genuinely empty scope.
+ * Trả `isPinnedProductsError` để load lỗi hiện nút thử lại thay vì empty state "chưa ghim gì", vì hai
+ * trường hợp này không thể phân biệt được.
  */
 export const useGetPinnedProducts = (categoryId?: string) => {
   const {
@@ -32,8 +23,7 @@ export const useGetPinnedProducts = (categoryId?: string) => {
     refetch: refetchPinnedProducts
   } = useQuery({
     queryKey: productKeys.pinned(categoryId),
-    queryFn: () => productService.getPinnedProducts({ categoryId }),
-    select: sortByPosition
+    queryFn: () => productService.getPinnedProducts({ categoryId })
   })
 
   return { pinnedProducts, isGettingPinnedProducts, isPinnedProductsError, refetchPinnedProducts }

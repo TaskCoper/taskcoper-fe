@@ -1675,9 +1675,8 @@
         "submit": "Ghim {{count}} sản phẩm",
         "submitEmpty": "Ghim sản phẩm",
         "success": "Đã ghim {{count}} sản phẩm.",
-        "partial": "Đã ghim {{succeeded}}/{{total}} sản phẩm, {{failed}} sản phẩm lỗi.",
         "membershipFailed": "Không thêm được sản phẩm vào danh mục. Hãy gán danh mục cho sản phẩm rồi ghim lại.",
-        "limitReached": "Chỉ chọn tối đa {{count}} sản phẩm mỗi lần."
+        "limitReached": "Mỗi danh sách ghim tối đa {{max}} sản phẩm, bạn chỉ chọn thêm được {{count}} sản phẩm."
       }
     },
     "pinDialog": {

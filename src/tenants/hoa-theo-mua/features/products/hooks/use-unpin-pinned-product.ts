@@ -33,13 +33,8 @@ export const useUnpinPinnedProduct = (categoryId?: string) => {
   const { mutate: restore } = useMutation({
     mutationKey,
     scope,
-    mutationFn: async ({
-      product,
-      plan
-    }: PinnedScopeVariables & { product: PinnedProduct; plan: PinnedReorderPlan }) => {
-      await productService.pinProduct({ body: { productId: product.productId, isPin: true, categoryId } })
-      await Promise.all(plan.updates.map((update) => productService.moveProduct({ ...update, categoryId })))
-    },
+    mutationFn: ({ product, plan }: PinnedScopeVariables & { product: PinnedProduct; plan: PinnedReorderPlan }) =>
+      productService.pinProduct({ body: { productId: product.productId, isPin: true, categoryId, ...plan.anchor } }),
 
     onMutate: async ({ plan }) => {
       await queryClient.cancelQueries({ queryKey })
