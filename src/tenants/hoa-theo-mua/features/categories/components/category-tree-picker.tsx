@@ -153,23 +153,27 @@ interface TreeRowProps {
   onSelect: () => void
   guides?: ReactNode
   meta?: ReactNode
+  subLabel?: ReactNode
 }
 
 /** A single selectable row: optional tree guides/toggle up front, then icon + label + meta + check. */
-function TreeRow({ icon, label, isSelected, onSelect, guides, meta }: TreeRowProps) {
+function TreeRow({ icon, label, isSelected, onSelect, guides, meta, subLabel }: TreeRowProps) {
   return (
-    <div className='flex h-8 items-stretch'>
+    <div className='flex min-h-8 items-stretch'>
       {guides}
       <button
         type='button'
         onClick={onSelect}
         className={cn(
-          'cursor-pointer flex min-w-0 flex-1 items-center gap-1.5 rounded-xl px-1.5 text-sm hover:bg-accent',
+          'cursor-pointer flex min-w-0 flex-1 items-center gap-1.5 rounded-xl px-1.5 py-1 text-left text-sm hover:bg-accent',
           isSelected && 'bg-accent font-medium'
         )}
       >
         {icon}
-        <span className='min-w-0 truncate'>{label}</span>
+        <span className='flex min-w-0 flex-col overflow-hidden'>
+          <span className='truncate'>{label}</span>
+          {subLabel}
+        </span>
         {meta && <span className='ml-auto flex shrink-0 items-center gap-1.5 pl-1.5'>{meta}</span>}
         <CheckIcon
           className={cn(
@@ -270,13 +274,9 @@ function CategoryTreeNode({
         label={name || t('productCategories.column.noName')}
         isSelected={selectedValue === category.categoryId}
         onSelect={() => onSelect(category.categoryId)}
+        subLabel={<CategoryWindow category={category} t={t} />}
         meta={
-          category.type === CategoryProductType.Campaign ? (
-            <>
-              <CategoryWindow category={category} t={t} />
-              <CategoryTypeBadge type={category.type} t={t} />
-            </>
-          ) : undefined
+          category.type === CategoryProductType.Campaign ? <CategoryTypeBadge type={category.type} t={t} /> : undefined
         }
       />
 

@@ -8,24 +8,14 @@ import type { PinnedReorderPlan, PinnedScopeVariables } from '../reorder-utils'
 import productService from '../services'
 import type { PinnedProduct } from '../types'
 
-export type { PinnedPositionUpdate } from '../reorder-utils'
-
 /**
- * Persist a reorder plan for one pinned scope.
+ * Lưu một reorder plan cho một pinned scope: mỗi lần kéo là một request `move` kèm mốc
+ * (`afterProductId` / `beforeProductId`), BE tự tính position.
  *
- * The plan comes from `planMove` / `planInsert`, which mint a single position in the common case, so
- * an ordinary drag costs **one** `move` PUT rather than re-numbering the whole scope. A full
- * re-number only happens when the server data is degenerate (duplicate / null positions) or the
- * neighbours have no integer between them - and it repairs the scope permanently.
- *
- * The optimistic cache write does **not** happen in here. A `useMutation`'s `onMutate` is always
- * reached through `mutate()`'s internal `async execute()`, which awaits at least one prior hook
- * before calling ours - so the write lands one React-scheduler tick after the event that triggered
- * it, in its own render. On a drag, that's a tick *after* dnd-kit has already reset the dragged
- * card's transform, so the card visibly snaps back to its old slot for a frame before jumping to the
- * new one. `usePinnedBoard` writes the plan into the cache itself, synchronously, inside the same
- * `onDragEnd`/menu-action call stack that ends the drag - this mutation only persists it over the
- * network and rolls the snapshot back on failure.
+ * Optimistic update KHÔNG nằm ở đây. `onMutate` của `useMutation` luôn chạy sau ít nhất một tick của
+ * React scheduler, tức là sau khi dnd-kit đã reset transform của card đang kéo, nên card sẽ giật về
+ * chỗ cũ một frame rồi mới nhảy sang chỗ mới. `usePinnedBoard` tự ghi plan vào cache một cách đồng bộ
+ * ngay trong `onDragEnd` / menu action; mutation này chỉ gọi API và rollback snapshot khi lỗi.
  */
 export const useReorderPinnedProducts = (categoryId?: string) => {
   const queryClient = useQueryClient()
@@ -39,7 +29,7 @@ export const useReorderPinnedProducts = (categoryId?: string) => {
     // Serialises the *network* calls for this scope so rapid drags queue instead of racing.
     scope: { id: productKeys.pinnedScope(categoryId) },
     mutationFn: ({ plan }: PinnedScopeVariables & { plan: PinnedReorderPlan; previous?: PinnedProduct[] }) =>
-      Promise.all(plan.updates.map((update) => productService.moveProduct({ ...update, categoryId }))),
+      productService.moveProduct({ id: plan.productId, categoryId, ...plan.anchor }),
 
     onError: (error, variables) => {
       // With several drags queued an older snapshot would clobber a newer optimistic state, so only
@@ -62,14 +52,8 @@ export const useReorderPinnedProducts = (categoryId?: string) => {
     }
   })
 
-  /**
-   * Callers pass the plan plus the pre-write snapshot (for rollback) - both belong to the eager
-   * cache write the caller already made. `pendingIds` is derived here so only the moved cards show a
-   * spinner.
-   */
   const reorderPinnedProducts = useCallback(
-    (plan: PinnedReorderPlan, previous?: PinnedProduct[]) =>
-      mutate({ plan, previous, pendingIds: plan.updates.map((update) => update.id) }),
+    (plan: PinnedReorderPlan, previous?: PinnedProduct[]) => mutate({ plan, previous, pendingIds: [plan.productId] }),
     [mutate]
   )
 

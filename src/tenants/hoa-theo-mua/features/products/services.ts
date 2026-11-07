@@ -1,16 +1,16 @@
 import type { BasePaginationResponse, BaseResponse } from '@/lib/axios'
 import { BaseService } from '../../services/base.service'
-import type { GetProductsParams } from './hooks/use-get-products'
 import type {
+  AddComboSpecificationItemsPayload,
   ComboSpecification,
   DeleteComboSpecificationItemsPayload,
-  MaterialProductLabel,
   MaterialOption,
-  AddComboSpecificationItemsPayload,
+  MaterialProductLabel,
   UpdateComboSpecificationItemsPayload,
   UpdateComboSpecificationPayload
 } from './combos/types'
-import type { PinnedProduct, ProductDetail } from './types'
+import type { GetProductsParams } from './hooks/use-get-products'
+import type { PinnedAnchor, PinnedProduct, ProductDetail } from './types'
 import { productDetailToProduct } from './utils'
 
 class ProductService extends BaseService {
@@ -187,20 +187,36 @@ class ProductService extends BaseService {
     return data.value
   }
 
-  moveProduct = async ({ id, position, categoryId }: { id: string; position: number; categoryId?: string }) => {
-    // `categoryId` selects which (isPin, position) pair the backend writes: absent → the Product-level
-    // position, present → the junction (product ↔ category) position. `undefined` is dropped by JSON
-    // serialization, so a global move sends a clean `{ position }` body.
+  moveProduct = async ({
+    id,
+    categoryId,
+    afterProductId,
+    beforeProductId
+  }: { id: string; categoryId?: string } & PinnedAnchor) => {
     const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/${id}/move`, {
-      position,
-      categoryId
+      categoryId,
+      afterProductId,
+      beforeProductId
     })
 
     return data.value
   }
 
-  pinProduct = async ({ body }: { body: { productId: string; isPin: boolean; categoryId?: string } }) => {
+  pinProduct = async ({
+    body
+  }: {
+    body: { productId: string; isPin: boolean; categoryId?: string } & PinnedAnchor
+  }) => {
     const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/pin`, body)
+
+    return data.value
+  }
+
+  pinProducts = async ({ productIds, categoryId }: { productIds: string[]; categoryId?: string }) => {
+    const { data } = await this.put<BaseResponse<string>>(`/v1/${this.baseUrl}/pin/bulk`, {
+      productIds,
+      categoryId
+    })
 
     return data.value
   }

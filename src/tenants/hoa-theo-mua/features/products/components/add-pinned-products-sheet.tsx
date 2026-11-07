@@ -16,8 +16,7 @@ import type { Product } from '../types'
 import { formatPrice, parseNumber } from '../utils'
 import { ProductPickerRow } from './product-picker-row'
 
-/** Guards against a runaway selection turning into hundreds of sequential PUTs. */
-const MAX_BULK_PIN = 32
+const MAX_PINNED_PRODUCTS = 32
 
 interface AddPinnedProductsSheetProps {
   open: boolean
@@ -125,7 +124,8 @@ function AddPinnedProductsBody({ categoryId, categoryName, pinnedIds }: AddPinne
   }
 
   const selectedCount = selected.size
-  const isOverLimit = selectedCount > MAX_BULK_PIN
+  const remainingSlots = Math.max(0, MAX_PINNED_PRODUCTS - pinnedIds.size)
+  const isOverLimit = selectedCount > remainingSlots
 
   return (
     <>
@@ -227,7 +227,9 @@ function AddPinnedProductsBody({ categoryId, categoryName, pinnedIds }: AddPinne
         </div>
 
         {isOverLimit && (
-          <p className='text-xs text-destructive'>{t('products.pinned.add.limitReached', { count: MAX_BULK_PIN })}</p>
+          <p className='text-xs text-destructive'>
+            {t('products.pinned.add.limitReached', { max: MAX_PINNED_PRODUCTS, count: remainingSlots })}
+          </p>
         )}
       </div>
 

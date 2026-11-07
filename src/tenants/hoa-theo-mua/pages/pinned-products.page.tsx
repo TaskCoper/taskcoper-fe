@@ -5,7 +5,7 @@ import { cn } from '@/shared/utils'
 import { DndContext, DragOverlay, closestCenter } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs'
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useMemo, useState, type CSSProperties } from 'react'
 import { HOA_THEO_MUA_ROUTE_PREFIX } from '../config'
 import { useGetSortableCategories } from '../features/categories/hooks/use-get-sortable-categories'
 import { locateNode } from '../features/categories/tree-utils'
@@ -19,9 +19,12 @@ import { PinnedProductsEmptyState } from '../features/products/components/pinned
 import { SortablePinnedProductCard } from '../features/products/components/sortable-pinned-product-card'
 import { usePinnedBoard } from '../features/products/hooks/use-pinned-board'
 
-const GRID_CLASS = 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'
+const GRID_CLASS = 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[repeat(var(--grid-cols),minmax(0,1fr))]'
 const LIST_CLASS = 'flex flex-col gap-2'
 const VIEWS = ['grid', 'list'] as const
+
+const DEFAULT_GRID_COLS = 4
+const MAX_GRID_COLS = 6
 
 export default function PinnedProductsPage() {
   const { t } = useTenantTranslation()
@@ -41,18 +44,23 @@ export default function PinnedProductsPage() {
     [sortableCategories, categoryId]
   )
 
+  const metadata = useMemo(() => (scope ? parseCategoryMetadata(scope.node.metaData) : null), [scope])
+
+  // Số cột theo cấu hình lưới của danh mục đang chọn; scope trang chủ hoặc danh mục chưa cấu hình thì dùng mặc định.
+  const gridCols = metadata?.cols && metadata.cols > 0 ? Math.min(metadata.cols, MAX_GRID_COLS) : DEFAULT_GRID_COLS
+
   // The storefront renders each category's products as a fixed `rows × cols` grid, so anything past
   // that count is pinned but never seen. No equivalent config exists for the homepage list, so the
   // global scope gets no divider rather than a guessed one.
   const foldCount = useMemo(() => {
-    if (!scope) return null
+    if (!metadata) return null
 
-    const { rows, cols } = parseCategoryMetadata(scope.node.metaData)
+    const { rows, cols } = metadata
     if (!rows || !cols) return null
 
     const count = rows * cols
     return count > 0 ? count : null
-  }, [scope])
+  }, [metadata])
 
   const pinnedIds = useMemo(() => new Set(board.items.map((product) => product.productId)), [board.items])
 
@@ -73,6 +81,7 @@ export default function PinnedProductsPage() {
   )
 
   const containerClass = view === 'list' ? LIST_CLASS : GRID_CLASS
+  const containerStyle = view === 'list' ? undefined : ({ '--grid-cols': gridCols } as CSSProperties)
 
   const renderBoard = () => {
     if (board.isError) {
@@ -89,9 +98,9 @@ export default function PinnedProductsPage() {
 
     if (board.isLoading) {
       return (
-        <div className={containerClass}>
+        <div className={containerClass} style={containerStyle}>
           {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className={cn('w-full rounded-xl', view === 'list' ? 'h-20' : 'aspect-3/4')} />
+            <Skeleton key={index} className={cn('w-full rounded-xl', view === 'list' ? 'h-20' : 'aspect-5/6')} />
           ))}
         </div>
       )
@@ -116,7 +125,7 @@ export default function PinnedProductsPage() {
     // because they address absolute positions in the full list.
     if (board.isFiltering) {
       return (
-        <div className={containerClass}>
+        <div className={containerClass} style={containerStyle}>
           {board.visibleItems.map((product) => {
             const index = board.items.findIndex((item) => item.productId === product.productId)
 
@@ -150,7 +159,7 @@ export default function PinnedProductsPage() {
           items={board.itemIds}
           strategy={view === 'list' ? verticalListSortingStrategy : rectSortingStrategy}
         >
-          <div className={containerClass}>
+          <div className={containerClass} style={containerStyle}>
             {board.items.map((product, index) => (
               <Fragment key={product.productId}>
                 {/* Hidden mid-drag: the divider is a plain grid cell, not a sortable item, so its

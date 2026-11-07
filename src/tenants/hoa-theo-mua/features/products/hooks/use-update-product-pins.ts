@@ -5,7 +5,6 @@ import { toast } from 'sonner'
 import { MembershipUnavailableError, ensureCategoryMembership } from '../category-membership'
 import { getErrorDescription } from '../error-description'
 import { productKeys } from '../query-keys'
-import { resolveAppendPositionFor } from '../reorder-utils'
 import productService from '../services'
 
 /** One pin/unpin change for a product in a single scope. `categoryId` absent → the global target. */
@@ -25,10 +24,10 @@ export interface UpdateProductPinsInput {
 }
 
 /**
- * Apply a batch of pin/unpin changes for one product across scopes (global + any categories). Each
- * change hits `PUT /v1/products/pin` with its own `categoryId` (or none), so one dialog can pin the
- * product to several places and unpin it from others at once. Newly-pinned targets are appended to
- * the end of their scope's list so positions stay distinct.
+ * Áp một loạt thay đổi pin/unpin của một sản phẩm lên nhiều scope (global + các category). Mỗi thay
+ * đổi gọi `PUT /v1/products/pin` với `categoryId` riêng (hoặc không có), nên một dialog có thể ghim
+ * sản phẩm vào nhiều nơi và bỏ ghim ở nơi khác cùng lúc. Không gửi mốc nên BE tự đặt sản phẩm vừa
+ * ghim xuống cuối danh sách của scope.
  */
 export const useUpdateProductPins = () => {
   const queryClient = useQueryClient()
@@ -37,27 +36,12 @@ export const useUpdateProductPins = () => {
   const { mutate: updateProductPins, isPending: isUpdatingProductPins } = useMutation({
     mutationKey: productKeys.pinUpdate(),
     mutationFn: async ({ productId, changes }: UpdateProductPinsInput) => {
-      // Sequential so each scope's append-position read reflects the pin that just landed.
       for (const change of changes) {
         if (change.isPin && change.categoryId && change.requiresMembership) {
           await ensureCategoryMembership(queryClient, change.categoryId, [productId])
         }
 
         await productService.pinProduct({ body: { productId, isPin: change.isPin, categoryId: change.categoryId } })
-        if (!change.isPin) continue
-
-        try {
-          const pinned = await queryClient.fetchQuery({
-            queryKey: productKeys.pinned(change.categoryId),
-            queryFn: () => productService.getPinnedProducts({ categoryId: change.categoryId })
-          })
-          const position = resolveAppendPositionFor(pinned, productId)
-          if (position !== null) {
-            await productService.moveProduct({ id: productId, position, categoryId: change.categoryId })
-          }
-        } catch {
-          // Couldn't resolve the scope's list - leave the server default; a later drag re-numbers cleanly.
-        }
       }
     },
     onError: (error) => {

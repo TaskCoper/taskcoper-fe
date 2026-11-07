@@ -1675,9 +1675,8 @@
         "submit": "Pin {{count}} products",
         "submitEmpty": "Pin products",
         "success": "Pinned {{count}} products.",
-        "partial": "Pinned {{succeeded}} of {{total}}; {{failed}} failed.",
         "membershipFailed": "Couldn't add the products to the category. Assign the category to them first, then pin.",
-        "limitReached": "Select at most {{count}} products at a time."
+        "limitReached": "A pinned list holds at most {{max}} products, so you can add {{count}} more."
       }
     },
     "pinDialog": {
@@ -1695,6 +1694,7 @@
       "willJoinCategory": "Will join category"
     },
     "common": {
+      "noCode": "No product code",
       "noData": "None",
       "unnamed": "Unnamed product"
     },

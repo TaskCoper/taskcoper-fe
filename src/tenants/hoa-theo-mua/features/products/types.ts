@@ -239,6 +239,8 @@ export interface PinnedProduct {
   position: number | null
 }
 
+export type PinnedAnchor = { afterProductId?: string; beforeProductId?: string }
+
 type ProductRawFieldKey =
   | 'warrantyMonthsRaw'
   | 'weightRaw'

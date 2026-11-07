@@ -146,22 +146,24 @@ function CategoryTreeMultiNode({
 
   return (
     <div className='space-y-1'>
-      <div className='flex h-8 items-stretch'>
+      <div className='flex min-h-8 items-stretch'>
         {guides}
         <button
           type='button'
           onClick={() => onToggle(category.categoryId)}
           className={cn(
-            'cursor-pointer flex min-w-0 flex-1 items-center gap-1.5 rounded-xl px-1.5 text-sm hover:bg-accent',
+            'cursor-pointer flex min-w-0 flex-1 items-center gap-1.5 rounded-xl px-1.5 py-1 text-left text-sm hover:bg-accent',
             isSelected && 'bg-accent font-medium'
           )}
         >
           <Checkbox checked={isSelected} className='pointer-events-none shrink-0' />
           {icon}
-          <span className='min-w-0 truncate'>{name || t('productCategories.column.noName')}</span>
+          <span className='flex min-w-0 flex-col overflow-hidden'>
+            <span className='truncate'>{name || t('productCategories.column.noName')}</span>
+            <CategoryWindow category={category} t={t} />
+          </span>
           {category.type === CategoryProductType.Campaign && (
             <span className='ml-auto flex shrink-0 items-center gap-1.5 pl-1.5'>
-              <CategoryWindow category={category} t={t} />
               <CategoryTypeBadge type={category.type} t={t} />
             </span>
           )}
