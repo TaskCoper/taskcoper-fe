@@ -62,7 +62,7 @@ export function PinnedProductCard({
     </span>
   )
 
-  const title = <p className={cn('font-medium', isList ? 'truncate' : 'line-clamp-2')}>{name}</p>
+  const title = <p className={cn('font-medium', isList ? 'truncate' : 'line-clamp-2 min-h-[2lh]')}>{name}</p>
 
   const priceRow = (
     <div className={cn('flex items-baseline gap-2', isList ? '' : 'mt-1')}>
@@ -132,7 +132,7 @@ export function PinnedProductCard({
       <div
         className={cn(
           'relative shrink-0 overflow-hidden bg-muted',
-          isList ? 'size-14 rounded-md' : 'aspect-square w-full'
+          isList ? 'size-14 rounded-md' : 'aspect-4/3 w-full'
         )}
       >
         {href && !isOverlay ? (
@@ -173,7 +173,7 @@ export function PinnedProductCard({
           ) : (
             title
           )}
-          {productCode?.trim() && <p className='truncate text-xs text-muted-foreground'>{productCode}</p>}
+          <p className='truncate text-xs text-muted-foreground'>{productCode?.trim() || t('products.common.noCode')}</p>
         </div>
 
         {priceRow}

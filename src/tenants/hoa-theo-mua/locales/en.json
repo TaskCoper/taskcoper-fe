@@ -1694,6 +1694,7 @@
       "willJoinCategory": "Will join category"
     },
     "common": {
+      "noCode": "No product code",
       "noData": "None",
       "unnamed": "Unnamed product"
     },
