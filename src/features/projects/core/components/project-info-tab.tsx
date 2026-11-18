@@ -191,7 +191,7 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
         onSubmit={handleSubmit(onSubmit)}
         onChange={debouncedAutoSubmit}
         id='update-project-info-form'
-        className='grid grid-cols-1 lg:grid-cols-12 lg:gap-6 max-w-7xl mx-auto'
+        className='grid grid-cols-1 lg:grid-cols-12 lg:gap-6'
       >
         <div className='col-span-1 lg:col-span-8'>
           <div className='relative h-48 sm:h-52'>

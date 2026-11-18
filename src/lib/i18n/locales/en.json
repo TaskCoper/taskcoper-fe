@@ -1828,7 +1828,7 @@
       "description": "Manage general information and project permission configuration.",
       "tabs": {
         "activity": "Activity",
-        "info": "Project Information",
+        "info": "Information",
         "invites": "Invites",
         "members": "Members",
         "permissions": "Roles & Permissions"
