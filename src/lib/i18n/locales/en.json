@@ -2275,7 +2275,11 @@
       "insufficient": "Not enough data yet (at least 3 assigned tasks needed).",
       "completion": "Completion",
       "onTime": "On time",
-      "outOf100": "/ 100"
+      "outOf100": "/ 100",
+      "teamTitle": "Member performance",
+      "member": "Member",
+      "empty": "No members yet.",
+      "noScore": "—"
     },
     "chartCompleted": "Completed",
     "chartCreated": "Created",

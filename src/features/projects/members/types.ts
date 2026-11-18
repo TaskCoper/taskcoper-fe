@@ -51,6 +51,13 @@ export interface ProjectMemberPerformance {
   onTimeCompletedTasks: number
 }
 
+export interface ProjectMemberPerformanceRow extends ProjectMemberPerformance {
+  userId: string
+  firstName: string
+  lastName: string
+  avatar: string | null
+}
+
 export interface ProjectMemberRequest {
   projectManagementId: string
   userId: string

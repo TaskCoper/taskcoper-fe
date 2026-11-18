@@ -3,7 +3,13 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '../core/types'
 import type { GetProjectMemberRequestsParams } from './hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from './hooks/use-get-project-members'
-import type { InviteMembersPayload, ProjectMemberDetail, ProjectMemberPerformance, ProjectMemberRequest } from './types'
+import type {
+  InviteMembersPayload,
+  ProjectMemberDetail,
+  ProjectMemberPerformance,
+  ProjectMemberPerformanceRow,
+  ProjectMemberRequest
+} from './types'
 
 class ProjectMemberService {
   private readonly baseUrl = 'projects'
@@ -73,6 +79,25 @@ class ProjectMemberService {
     )
 
     return data.value
+  }
+
+  getProjectMembersPerformance = async ({
+    projectIdentifier,
+    from,
+    to
+  }: {
+    projectIdentifier?: string
+    from?: string
+    to?: string
+  }) => {
+    if (!projectIdentifier || !from || !to) return []
+
+    const { data } = await api.get<BasePaginationResponse<ProjectMemberPerformanceRow>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/performance`,
+      { params: { from, to } }
+    )
+
+    return data.value.items
   }
 
   inviteMembers = async ({ body }: { body: InviteMembersPayload }) => {

@@ -109,6 +109,8 @@ export const queryKeys = {
         from?: string
         to?: string
       }) => [...queryKeys.projects.members.all(projectIdentifier), 'performance', userId, from, to] as const,
+      performanceAll: ({ projectIdentifier, from, to }: { projectIdentifier?: string; from?: string; to?: string }) =>
+        [...queryKeys.projects.members.all(projectIdentifier), 'performance-all', from, to] as const,
       allRequests: (projectIdentifier?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'member-requests'] as const,
       requests: ({

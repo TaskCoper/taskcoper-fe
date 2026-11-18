@@ -14,6 +14,7 @@ import {
   type ChartDateFilterParams,
   type ProjectTaskStatisticsParams
 } from '@/features/projects/charts/validations'
+import ProjectMembersPerformanceCard from '@/features/projects/members/components/project-members-performance-card'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { formatDate, useDateFormat } from '@/lib/date'
@@ -366,6 +367,8 @@ export default function ProjectPerformancePage() {
           <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
         </div>
 
+        <ProjectMembersPerformanceCard projectIdentifier={identifier} />
+
         {/* Statistics cards */}
         <div className='space-y-4'>
           <div className='flex flex-wrap gap-4'>
@@ -375,8 +378,6 @@ export default function ProjectPerformancePage() {
                 value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
                 icon={<LayersPlus className='size-4.5 text-white' />}
                 color='slate'
-                trendValue={3}
-                trendDirection='down'
               />
             </div>
 
@@ -386,8 +387,6 @@ export default function ProjectPerformancePage() {
                 value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
                 icon={<ListTreeIcon className='size-4.5 text-white' />}
                 color='orange'
-                trendValue={2}
-                trendDirection='up'
               />
             </div>
 
@@ -397,8 +396,6 @@ export default function ProjectPerformancePage() {
                 value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
                 icon={<CircleCheckBigIcon className='size-4.5 text-white' />}
                 color='green'
-                trendValue={4}
-                trendDirection='up'
               />
             </div>
 
@@ -408,8 +405,6 @@ export default function ProjectPerformancePage() {
                 value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
                 icon={<MessageCircleIcon className='size-4.5 text-white' />}
                 color='blue'
-                trendValue={12}
-                trendDirection='up'
               />
             </div>
 
@@ -419,8 +414,6 @@ export default function ProjectPerformancePage() {
                 value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
                 icon={<PaperclipIcon className='size-4.5 text-white' />}
                 color='purple'
-                trendValue={0}
-                trendDirection='neutral'
               />
             </div>
           </div>

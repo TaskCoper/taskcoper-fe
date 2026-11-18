@@ -2259,7 +2259,11 @@
       "insufficient": "Chưa đủ dữ liệu (cần tối thiểu 3 task được giao).",
       "completion": "Hoàn thành",
       "onTime": "Đúng hạn",
-      "outOf100": "/ 100"
+      "outOf100": "/ 100",
+      "teamTitle": "Hiệu suất thành viên",
+      "member": "Thành viên",
+      "empty": "Chưa có thành viên.",
+      "noScore": "—"
     },
     "chartCompleted": "Đã hoàn thành",
     "chartCreated": "Đã tạo",
