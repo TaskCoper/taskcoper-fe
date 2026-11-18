@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProjectInfoTab from '@/features/projects/core/components/project-info-tab'
-import ProjectActivityFeed from '@/features/projects/activities/components/project-activity-feed'
+import ProjectActivityPanel from '@/features/projects/activities/components/project-activity-panel'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import ProjectRequestsTab from '@/features/projects/members/components/project-invitations-tab'
 import ProjectMembersTab from '@/features/projects/members/components/project-members-tab'
@@ -29,7 +29,7 @@ export default function ProjectSettingsPage() {
       value: 'activity',
       label: t('project.settings.tabs.activity'),
       icon: <ActivityIcon />,
-      content: <ProjectActivityFeed projectIdentifier={identifier} />
+      content: <ProjectActivityPanel projectIdentifier={identifier} />
     },
     {
       value: 'members',

@@ -1673,7 +1673,10 @@
     "description": "Quản lý dự án và công việc của bạn",
     "activity": {
       "title": "Hoạt động gần đây",
-      "empty": "Chưa có hoạt động"
+      "empty": "Chưa có hoạt động",
+      "searchPlaceholder": "Tìm hoạt động...",
+      "dateRange": "Khoảng ngày",
+      "allActors": "Tất cả thành viên"
     },
     "info": {
       "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",

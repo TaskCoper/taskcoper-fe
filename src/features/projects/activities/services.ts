@@ -5,7 +5,15 @@ import type { ProjectActivity } from './types'
 class ProjectActivityService {
   private readonly baseUrl = 'projects'
 
-  getProjectActivities = async ({ projectIdentifier, pageIndex, pageSize }: GetProjectActivitiesParams) => {
+  getProjectActivities = async ({
+    projectIdentifier,
+    pageIndex,
+    pageSize,
+    searchTerm,
+    from,
+    to,
+    actorUserId
+  }: GetProjectActivitiesParams) => {
     if (!projectIdentifier) return null
 
     const { data } = await api.get<BasePaginationResponse<ProjectActivity>>(
@@ -13,7 +21,11 @@ class ProjectActivityService {
       {
         params: {
           pageIndex,
-          pageSize
+          pageSize,
+          searchTerm,
+          from,
+          to,
+          actorUserId
         }
       }
     )

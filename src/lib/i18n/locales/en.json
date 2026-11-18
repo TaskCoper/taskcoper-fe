@@ -1688,7 +1688,10 @@
     "description": "Manage your projects and tasks",
     "activity": {
       "title": "Recent activity",
-      "empty": "No activity yet"
+      "empty": "No activity yet",
+      "searchPlaceholder": "Search activity...",
+      "dateRange": "Date range",
+      "allActors": "All members"
     },
     "info": {
       "domainDescription": "Help classify your project better",

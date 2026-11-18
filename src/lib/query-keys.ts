@@ -134,8 +134,24 @@ export const queryKeys = {
 
     activities: {
       all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'activities'] as const,
-      list: ({ projectIdentifier, pageIndex, pageSize }: GetProjectActivitiesParams) =>
-        [...queryKeys.projects.activities.all(projectIdentifier), pageIndex, pageSize] as const
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        searchTerm,
+        from,
+        to,
+        actorUserId
+      }: GetProjectActivitiesParams) =>
+        [
+          ...queryKeys.projects.activities.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          searchTerm,
+          from,
+          to,
+          actorUserId
+        ] as const
     },
 
     resources: {
