@@ -1675,8 +1675,12 @@
       "title": "Hoạt động gần đây",
       "empty": "Chưa có hoạt động",
       "searchPlaceholder": "Tìm hoạt động...",
-      "dateRange": "Khoảng ngày",
-      "allActors": "Tất cả thành viên"
+      "allActors": "Tất cả thành viên",
+      "panelTitle": "Hoạt động dự án",
+      "panelDescription": "Toàn bộ hoạt động được ghi lại trong dự án",
+      "columnActor": "Thành viên",
+      "columnActivity": "Hoạt động",
+      "columnDate": "Thời gian"
     },
     "info": {
       "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",

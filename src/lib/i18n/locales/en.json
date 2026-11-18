@@ -1690,8 +1690,12 @@
       "title": "Recent activity",
       "empty": "No activity yet",
       "searchPlaceholder": "Search activity...",
-      "dateRange": "Date range",
-      "allActors": "All members"
+      "allActors": "All members",
+      "panelTitle": "Project activity",
+      "panelDescription": "All activity recorded in this project",
+      "columnActor": "Member",
+      "columnActivity": "Activity",
+      "columnDate": "Date"
     },
     "info": {
       "domainDescription": "Help classify your project better",
