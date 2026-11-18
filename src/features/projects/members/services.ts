@@ -3,7 +3,7 @@ import { getDefaultPaginationResponse } from '@/shared/utils'
 import type { ProjectMember } from '../core/types'
 import type { GetProjectMemberRequestsParams } from './hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from './hooks/use-get-project-members'
-import type { InviteMembersPayload, ProjectMemberDetail, ProjectMemberRequest } from './types'
+import type { InviteMembersPayload, ProjectMemberDetail, ProjectMemberPerformance, ProjectMemberRequest } from './types'
 
 class ProjectMemberService {
   private readonly baseUrl = 'projects'
@@ -49,6 +49,27 @@ class ProjectMemberService {
     if (!projectIdentifier || !userId) return null
     const { data } = await api.get<BaseResponse<ProjectMemberDetail>>(
       `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}`
+    )
+
+    return data.value
+  }
+
+  getProjectMemberPerformance = async ({
+    projectIdentifier,
+    userId,
+    from,
+    to
+  }: {
+    projectIdentifier?: string
+    userId?: string
+    from?: string
+    to?: string
+  }) => {
+    if (!projectIdentifier || !userId || !from || !to) return null
+
+    const { data } = await api.get<BaseResponse<ProjectMemberPerformance>>(
+      `/v1/${this.baseUrl}/${projectIdentifier}/members/${userId}/performance`,
+      { params: { from, to } }
     )
 
     return data.value

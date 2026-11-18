@@ -2254,6 +2254,13 @@
     }
   },
   "projectPerformance": {
+    "memberScore": {
+      "title": "Điểm hiệu suất",
+      "insufficient": "Chưa đủ dữ liệu (cần tối thiểu 3 task được giao).",
+      "completion": "Hoàn thành",
+      "onTime": "Đúng hạn",
+      "outOf100": "/ 100"
+    },
     "chartCompleted": "Đã hoàn thành",
     "chartCreated": "Đã tạo",
     "contributions": "Tổng cộng {{count}} hoạt động trong năm {{year}}",

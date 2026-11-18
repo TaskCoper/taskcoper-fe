@@ -98,6 +98,17 @@ export const queryKeys = {
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
       detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
         [...queryKeys.projects.members.all(projectIdentifier), 'detail', userId] as const,
+      performance: ({
+        projectIdentifier,
+        userId,
+        from,
+        to
+      }: {
+        projectIdentifier?: string
+        userId?: string
+        from?: string
+        to?: string
+      }) => [...queryKeys.projects.members.all(projectIdentifier), 'performance', userId, from, to] as const,
       allRequests: (projectIdentifier?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'member-requests'] as const,
       requests: ({

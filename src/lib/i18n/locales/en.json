@@ -2270,6 +2270,13 @@
     }
   },
   "projectPerformance": {
+    "memberScore": {
+      "title": "Performance score",
+      "insufficient": "Not enough data yet (at least 3 assigned tasks needed).",
+      "completion": "Completion",
+      "onTime": "On time",
+      "outOf100": "/ 100"
+    },
     "chartCompleted": "Completed",
     "chartCreated": "Created",
     "contributions": "{{count}} total activities in {{year}}",
