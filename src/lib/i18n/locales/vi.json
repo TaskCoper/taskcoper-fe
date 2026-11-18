@@ -2254,6 +2254,10 @@
     }
   },
   "projectPerformance": {
+    "tabs": {
+      "overview": "Tổng thể dự án",
+      "members": "Theo thành viên"
+    },
     "memberScore": {
       "title": "Điểm hiệu suất",
       "insufficient": "Chưa đủ dữ liệu (cần tối thiểu 3 task được giao).",

@@ -2270,6 +2270,10 @@
     }
   },
   "projectPerformance": {
+    "tabs": {
+      "overview": "Project overview",
+      "members": "By member"
+    },
     "memberScore": {
       "title": "Performance score",
       "insufficient": "Not enough data yet (at least 3 assigned tasks needed).",
