@@ -56,6 +56,7 @@ export interface ProjectMemberPerformanceRow extends ProjectMemberPerformance {
   firstName: string
   lastName: string
   avatar: string | null
+  slug: string
 }
 
 export interface ProjectMemberRequest {

@@ -6,6 +6,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import { GaugeIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { useGetProjectMembersPerformance } from '../hooks/use-get-project-members-performance'
 
 interface ProjectMembersPerformanceCardProps {
@@ -16,6 +17,7 @@ const toPercent = (rate: number) => `${Math.round(rate * 100)}%`
 
 export default function ProjectMembersPerformanceCard({ projectIdentifier }: ProjectMembersPerformanceCardProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const from = useMemo(() => startOfMonth(new Date()).toISOString(), [])
   const to = useMemo(() => endOfMonth(new Date()).toISOString(), [])
@@ -54,7 +56,11 @@ export default function ProjectMembersPerformanceCard({ projectIdentifier }: Pro
             </thead>
             <tbody>
               {membersPerformance.map((member) => (
-                <tr key={member.userId} className='border-b last:border-0'>
+                <tr
+                  key={member.userId}
+                  className='cursor-pointer border-b transition-colors last:border-0 hover:bg-muted/50'
+                  onClick={() => navigate(`/projects/${projectIdentifier}/members/${member.slug}`)}
+                >
                   <td className='py-2'>
                     <div className='flex items-center gap-2'>
                       <Avatar className='size-7'>
