@@ -1820,6 +1820,7 @@
     "settings": {
       "description": "Manage general information and project permission configuration.",
       "tabs": {
+        "activity": "Activity",
         "info": "Project Information",
         "invites": "Invites",
         "members": "Members",

@@ -1804,6 +1804,7 @@
     "settings": {
       "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
       "tabs": {
+        "activity": "Hoạt động",
         "info": "Thông tin Dự án",
         "invites": "Lời mời",
         "members": "Thành viên",

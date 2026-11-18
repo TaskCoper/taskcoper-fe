@@ -1,10 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ProjectInfoTab from '@/features/projects/core/components/project-info-tab'
+import ProjectActivityFeed from '@/features/projects/activities/components/project-activity-feed'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import ProjectRequestsTab from '@/features/projects/members/components/project-invitations-tab'
 import ProjectMembersTab from '@/features/projects/members/components/project-members-tab'
 import ProjectPermissionsTab from '@/features/projects/roles/components/project-permissions-tab'
-import { InfoIcon, KeySquareIcon, MailIcon, UsersRoundIcon } from 'lucide-react'
+import { Activity as ActivityIcon, InfoIcon, KeySquareIcon, MailIcon, UsersRoundIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useSearchParams } from 'react-router'
 
@@ -23,6 +24,12 @@ export default function ProjectSettingsPage() {
       label: t('project.settings.tabs.info'),
       icon: <InfoIcon />,
       content: <ProjectInfoTab projectIdentifier={identifier} />
+    },
+    {
+      value: 'activity',
+      label: t('project.settings.tabs.activity'),
+      icon: <ActivityIcon />,
+      content: <ProjectActivityFeed projectIdentifier={identifier} />
     },
     {
       value: 'members',
