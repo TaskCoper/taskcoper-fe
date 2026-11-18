@@ -2757,6 +2757,8 @@
     "comment": {
       "addComment": "Viết bình luận...",
       "comment": "Bình luận và Hoạt động",
+      "showDetails": "Hiện chi tiết",
+      "hideDetails": "Ẩn chi tiết",
       "deleteComment": {
         "confirmText": "Xóa bình luận",
         "description": "Bình luận sẽ bị xóa vĩnh viễn và bạn không thể hoàn tác.",

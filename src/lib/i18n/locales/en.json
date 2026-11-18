@@ -2774,6 +2774,8 @@
     "comment": {
       "addComment": "Add comment...",
       "comment": "Comments and Activity",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
       "deleteComment": {
         "confirmText": "Delete comment",
         "description": "The comment will be permanently deleted and you cannot undo.",
