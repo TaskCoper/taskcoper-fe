@@ -22,6 +22,7 @@ import type { GetProjectTopContributorsParams } from '@/features/projects/charts
 import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
 import type { GetProjectMemberRequestsParams } from '@/features/projects/members/hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
+import type { GetProjectActivitiesParams } from '@/features/projects/activities/hooks/use-get-project-activities'
 import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
 import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
 import type { GetProjectRoleParams } from '@/features/projects/roles/hooks/use-get-project-role'
@@ -129,6 +130,12 @@ export const queryKeys = {
       list: (identifier?: string) => [...queryKeys.projects.positionTitles.all(identifier)] as const,
       member: (projectIdentifier?: string, userId?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'member-position-titles', userId] as const
+    },
+
+    activities: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'activities'] as const,
+      list: ({ projectIdentifier, pageIndex, pageSize }: GetProjectActivitiesParams) =>
+        [...queryKeys.projects.activities.all(projectIdentifier), pageIndex, pageSize] as const
     },
 
     resources: {

@@ -1671,6 +1671,10 @@
       }
     },
     "description": "Quản lý dự án và công việc của bạn",
+    "activity": {
+      "title": "Hoạt động gần đây",
+      "empty": "Chưa có hoạt động"
+    },
     "info": {
       "domainDescription": "Giúp phân loại dự án của bạn tốt hơn",
       "domains": "Lĩnh vực",

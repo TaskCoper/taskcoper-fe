@@ -1686,6 +1686,10 @@
       }
     },
     "description": "Manage your projects and tasks",
+    "activity": {
+      "title": "Recent activity",
+      "empty": "No activity yet"
+    },
     "info": {
       "domainDescription": "Help classify your project better",
       "domains": "Domains",
