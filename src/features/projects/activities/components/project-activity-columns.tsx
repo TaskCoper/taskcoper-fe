@@ -7,17 +7,22 @@ import i18next from 'i18next'
 import { SearchIcon } from 'lucide-react'
 import type { ProjectActivity } from '../types'
 
+// i18next.t is strictly typed to the (very large) resource-key union, which TypeScript can fail to
+// resolve in a clean build; cast to a loose string-returning helper so the dynamic verb key and the
+// static labels compile. Key correctness is still enforced by `yarn i18n:check`.
+const t = i18next.t as unknown as (key: string, options?: { defaultValue?: string }) => string
+
 export const getColumns = (): ColumnDef<ProjectActivity>[] => [
   {
     id: 'searchTerm',
     accessorFn: (row) => `${row.actor.firstName} ${row.actor.lastName}`,
     meta: {
-      label: i18next.t('project.activity.columnActor'),
-      placeholder: i18next.t('project.activity.searchPlaceholder'),
+      label: 'project.activity.columnActor',
+      placeholder: 'project.activity.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label={i18next.t('project.activity.columnActor')} />,
+    header: ({ column }) => <DataTableColumnHeader column={column} label={'project.activity.columnActor'} />,
     cell: ({ row }) => {
       const { firstName, lastName, avatar } = row.original.actor
 
@@ -41,14 +46,12 @@ export const getColumns = (): ColumnDef<ProjectActivity>[] => [
     id: 'activity',
     accessorFn: (row) => row.verb,
     meta: {
-      label: i18next.t('project.activity.columnActivity')
+      label: 'project.activity.columnActivity'
     },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label={i18next.t('project.activity.columnActivity')} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} label={'project.activity.columnActivity'} />,
     cell: ({ row }) => (
       <p className='text-sm text-foreground/80'>
-        {i18next.t(`activities.${row.original.verb}`, { defaultValue: row.original.verb })}
+        {t(`activities.${row.original.verb}`, { defaultValue: row.original.verb })}
       </p>
     ),
     enableColumnFilter: false,
@@ -58,11 +61,11 @@ export const getColumns = (): ColumnDef<ProjectActivity>[] => [
     id: 'occurredOnUtc',
     accessorKey: 'occurredOnUtc',
     meta: {
-      label: i18next.t('project.activity.columnDate'),
+      label: 'project.activity.columnDate',
       variant: 'dateRange'
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} label={i18next.t('project.activity.columnDate')} className='mx-auto' />
+      <DataTableColumnHeader column={column} label={'project.activity.columnDate'} className='mx-auto' />
     ),
     cell: ({ row }) => <p className='text-center text-sm'>{formatDate(row.original.occurredOnUtc, 'dateTimeShort')}</p>,
     enableColumnFilter: true,
