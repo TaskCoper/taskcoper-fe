@@ -9,22 +9,27 @@ import { SearchIcon } from 'lucide-react'
 import AuditLogDetailDialog from './audit-log-detail-dialog'
 import type { AuditLog } from '../types'
 
+// i18next.t is strictly typed to the (very large) resource-key union, which TypeScript can fail to
+// resolve in a clean build; cast to a loose string-returning helper so dynamic keys (action/entity)
+// and the static labels compile. Key correctness is still enforced by `yarn i18n:check`.
+const t = i18next.t as unknown as (key: string, options?: { defaultValue?: string }) => string
+
 export const getColumns = (): ColumnDef<AuditLog>[] => [
   {
     id: 'searchTerm',
     accessorFn: (row) => (row.actor ? `${row.actor.firstName} ${row.actor.lastName}` : ''),
     meta: {
-      label: i18next.t('project.auditLog.columnActor'),
-      placeholder: i18next.t('project.auditLog.searchPlaceholder'),
+      label: 'project.auditLog.columnActor',
+      placeholder: 'project.auditLog.searchPlaceholder',
       variant: 'text',
       icon: SearchIcon
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label={i18next.t('project.auditLog.columnActor')} />,
+    header: ({ column }) => <DataTableColumnHeader column={column} label={'project.auditLog.columnActor'} />,
     cell: ({ row }) => {
       const actor = row.original.actor
 
       if (!actor) {
-        return <p className='text-sm text-muted-foreground'>{i18next.t('project.auditLog.systemActor')}</p>
+        return <p className='text-sm text-muted-foreground'>{t('project.auditLog.systemActor')}</p>
       }
 
       return (
@@ -47,14 +52,12 @@ export const getColumns = (): ColumnDef<AuditLog>[] => [
     id: 'action',
     accessorFn: (row) => row.action,
     meta: {
-      label: i18next.t('project.auditLog.columnAction')
+      label: 'project.auditLog.columnAction'
     },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label={i18next.t('project.auditLog.columnAction')} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} label={'project.auditLog.columnAction'} />,
     cell: ({ row }) => (
       <p className='text-sm text-foreground/80'>
-        {i18next.t(`project.auditLog.actions.${row.original.action}`, { defaultValue: row.original.action })}
+        {t(`project.auditLog.actions.${row.original.action}`, { defaultValue: row.original.action })}
       </p>
     ),
     enableColumnFilter: false,
@@ -64,14 +67,12 @@ export const getColumns = (): ColumnDef<AuditLog>[] => [
     id: 'entityType',
     accessorFn: (row) => row.entityType,
     meta: {
-      label: i18next.t('project.auditLog.columnEntity')
+      label: 'project.auditLog.columnEntity'
     },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label={i18next.t('project.auditLog.columnEntity')} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} label={'project.auditLog.columnEntity'} />,
     cell: ({ row }) => (
       <Badge variant='secondary' className='font-normal'>
-        {i18next.t(`project.auditLog.entities.${row.original.entityType}`, { defaultValue: row.original.entityType })}
+        {t(`project.auditLog.entities.${row.original.entityType}`, { defaultValue: row.original.entityType })}
       </Badge>
     ),
     enableColumnFilter: false,
@@ -82,11 +83,11 @@ export const getColumns = (): ColumnDef<AuditLog>[] => [
     id: 'occurredOnUtc',
     accessorKey: 'occurredOnUtc',
     meta: {
-      label: i18next.t('project.auditLog.columnDate'),
+      label: 'project.auditLog.columnDate',
       variant: 'dateRange'
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} label={i18next.t('project.auditLog.columnDate')} className='mx-auto' />
+      <DataTableColumnHeader column={column} label={'project.auditLog.columnDate'} className='mx-auto' />
     ),
     cell: ({ row }) => <p className='text-center text-sm'>{formatDate(row.original.occurredOnUtc, 'dateTimeShort')}</p>,
     enableColumnFilter: true,
@@ -96,9 +97,9 @@ export const getColumns = (): ColumnDef<AuditLog>[] => [
   {
     id: 'details',
     meta: {
-      label: i18next.t('project.auditLog.columnDetails')
+      label: 'project.auditLog.columnDetails'
     },
-    header: () => <span className='sr-only'>{i18next.t('project.auditLog.columnDetails')}</span>,
+    header: () => <span className='sr-only'>{t('project.auditLog.columnDetails')}</span>,
     cell: ({ row }) => (
       <div className='flex justify-end'>
         <AuditLogDetailDialog auditLog={row.original} />
