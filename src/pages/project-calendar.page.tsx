@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FieldLabel } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
@@ -9,11 +8,9 @@ import CalendarViewContainer from '@/features/meetings/components/calendar/calen
 import { useGetProjectMeetings } from '@/features/meetings/hooks/use-get-project-meetings'
 import { MeetingStatus, type MeetingBooking } from '@/features/meetings/types'
 import { getStatusCheckboxClassName } from '@/features/meetings/utils'
-import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetProjectPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-project-purchased-mentor-packages'
 import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { cn } from '@/shared/utils'
-import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -67,8 +64,6 @@ export default function ProjectCalendarPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  const [bookMeetingOpen, setBookMeetingOpen] = useState(false)
-
   const [dateRange, setDateRange] = useState({ activeFrom: '', activeTo: '' })
   const [selectedPackageBookingIds, setSelectedPackageBookingIds] = useQueryState(
     'pkgs',
@@ -81,7 +76,6 @@ export default function ProjectCalendarPage() {
   )
 
   const { check, isLoadingPermissions } = useGetMyProjectPermissions({ projectIdentifier: identifier })
-  const canBookMeeting = check('CALENDAR', 'canWrite', 'canBookMeeting')
   const canViewMeetingDetails = check('CALENDAR', 'canRead', 'canViewMeetingDetails')
 
   const { projectMeetings, isLoadingProjectMeetings } = useGetProjectMeetings({
@@ -113,21 +107,6 @@ export default function ProjectCalendarPage() {
 
   const sidebarContent = (
     <div className='mt-2'>
-      {hasPackages && canBookMeeting && (
-        <div className='px-3'>
-          <BookMeetingFromCalendarDialog
-            open={bookMeetingOpen}
-            onOpenChange={setBookMeetingOpen}
-            packages={projectMentorPackages.value.items}
-          >
-            <Button className='w-full' size='sm'>
-              <CalendarPlusIcon />
-              {t('purchasedPackage.bookSchedule')}
-            </Button>
-          </BookMeetingFromCalendarDialog>
-        </div>
-      )}
-
       <Separator className='mt-4' />
 
       <div className='flex flex-col justify-between gap-8 mt-4 px-2'>

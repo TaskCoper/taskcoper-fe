@@ -309,7 +309,6 @@ export default function ProjectInfoTab({ projectIdentifier }: ProjectInfoTabProp
                 searchValue={searchTerm}
                 onSearchChange={handleSearchTermChange}
                 label='project.updateProjectDomains.searchLabel'
-                isRequired
                 getId={(domain) => domain.id}
                 getValueId={(item) => item.id}
                 getLabel={(domain) => domain.name}

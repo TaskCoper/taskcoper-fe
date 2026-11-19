@@ -20,7 +20,6 @@ import TaskCard from '@/features/projects/tasks/core/components/task-card'
 import { useConfirmStore } from '@/lib/zustand/confirm.store'
 import { cn } from '@/shared/utils'
 import {
-  CalendarDaysIcon,
   GaugeIcon,
   HardDriveIcon,
   InfoIcon,
@@ -156,13 +155,14 @@ export default function ProjectDetailSidebar({ onTaskCountChange, ...props }: Pr
           hasSecondSidebar: false,
           sectionKey: 'PERFORMANCE'
         },
-        {
-          title: t('project.sidebar.calendar'),
-          url: 'calendar',
-          icon: CalendarDaysIcon,
-          hasSecondSidebar: false,
-          sectionKey: 'CALENDAR'
-        },
+        // Calendar section hidden (meetings/availability removed — single-version cleanup)
+        // {
+        //   title: t('project.sidebar.calendar'),
+        //   url: 'calendar',
+        //   icon: CalendarDaysIcon,
+        //   hasSecondSidebar: false,
+        //   sectionKey: 'CALENDAR'
+        // },
         // {
         //   title: t('project.sidebar.chat'),
         //   url: 'chat',

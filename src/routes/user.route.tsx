@@ -10,14 +10,13 @@ import { useTranslation } from 'react-i18next'
 import { type RouteObject } from 'react-router'
 
 const ProjectsPage = lazy(() => import('@/pages/users/projects.page'))
-const CalendarPage = lazy(() => import('@/pages/users/calendar.page'))
 const VerifyEmailPage = lazy(() => import('@/pages/users/verify-email.page'))
 
 const ProjectTasksPage = lazy(() => import('@/pages/project-tasks.page'))
 const ProjectInfoPage = lazy(() => import('@/pages/project-info.page'))
 const ProjectStoragePage = lazy(() => import('@/pages/project-storage.page'))
 const ProjectPerformancePage = lazy(() => import('@/pages/project-performance.page'))
-const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
+// const ProjectCalendarPage = lazy(() => import('@/pages/project-calendar.page'))
 const TaskDialogPage = lazy(() => import('@/pages/task-dialog.page'))
 const ProjectRevenuePage = lazy(() => import('@/pages/project-revenue.page'))
 const ProjectSettingsPage = lazy(() => import('@/pages/project-settings.page'))
@@ -30,27 +29,11 @@ const NetworkPage = lazy(() => import('@/pages/users/network.page'))
 const NewsPage = lazy(() => import('@/pages/users/news.page'))
 const ProfilePage = lazy(() => import('@/pages/users/profile.page'))
 
-const MentorApplicationPage = lazy(() => import('@/pages/users/mentor-application.page'))
-const MentorApplicationsPage = lazy(() => import('@/pages/users/mentor-applications.page'))
-const SchedulesPage = lazy(() => import('@/pages/users/schedules.page'))
-const CheckoutPage = lazy(() => import('@/pages/users/checkout.page'))
-const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
+// const TransactionsPage = lazy(() => import('@/pages/users/transactions.page'))
 
-const MentorPackagesDashboardPage = lazy(() => import('@/pages/users/mentor-packages-dashboard.page'))
-const MentorPackagesPage = lazy(() => import('@/pages/users/mentor-packages.page'))
-const MentorPackagePage = lazy(() => import('@/pages/users/mentor-package.page'))
-const MentorPackageBookPage = lazy(() => import('@/pages/users/mentor-package-book.page'))
+// const PackageFeedbackPage = lazy(() => import('@/pages/users/package-feedback.page'))
 
-const PurchaseHistoryPage = lazy(() => import('@/pages/users/purchase-history.page'))
-const PurchasedPackagePage = lazy(() => import('@/pages/users/purchased-package.page'))
-const PackageFeedbackPage = lazy(() => import('@/pages/users/package-feedback.page'))
-const PackageRequestsPage = lazy(() => import('@/pages/users/package-requests.page'))
-const PackageRequestPage = lazy(() => import('@/pages/users/package-request.page'))
-
-const MentorVouchersPage = lazy(() => import('@/pages/users/mentor-vouchers.page'))
-const MentorVoucherPage = lazy(() => import('@/pages/users/mentor-voucher.page'))
-
-const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
+// const MeetingDialogPage = lazy(() => import('@/pages/users/meeting-dialog.page'))
 
 const GoogleCallbackPage = lazy(() => import('@/pages/google-callback.page'))
 
@@ -91,18 +74,18 @@ export const userRoutes: RouteObject[] = [
             path: 'integrations/google/callback',
             element: <GoogleCallbackPage />
           },
-          {
-            path: 'payments/checkout',
-            element: <CheckoutPage />
-          },
+          // {
+          //   path: 'payments/checkout',
+          //   element: <CheckoutPage />
+          // },
 
           {
             element: <UserDefaultLayout />,
             children: [
-              {
-                path: 'purchases/:packageId/feedback',
-                element: <PackageFeedbackPage />
-              },
+              // {
+              //   path: 'purchases/:packageId/feedback',
+              //   element: <PackageFeedbackPage />
+              // },
               {
                 path: 'users/:userIdentifier',
                 element: <ProfilePage />
@@ -122,79 +105,79 @@ export const userRoutes: RouteObject[] = [
                       </PageWrapper>
                     )
                   },
-                  {
-                    path: 'transactions',
-                    element: (
-                      <PageWrapper titleKey='pageTitle.transactions'>
-                        <TransactionsPage />
-                      </PageWrapper>
-                    )
-                  },
-                  {
-                    path: 'purchases',
-                    element: <PurchaseHistoryPage />
-                  },
-                  {
-                    path: 'purchases/:packageId',
-                    element: <PurchasedPackagePage />,
-                    children: [
-                      {
-                        path: 'meetings/:meetingId',
-                        element: <MeetingDialogPage />
-                      }
-                    ]
-                  },
-                  {
-                    path: 'calendar',
-                    element: <CalendarPage />,
-                    children: [
-                      {
-                        path: ':meetingId',
-                        element: <MeetingDialogPage />
-                      }
-                    ]
-                  },
-                  {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
-                    children: [
-                      {
-                        path: 'calendar/schedules',
-                        element: <SchedulesPage />
-                      }
-                    ]
-                  },
+                  // {
+                  //   path: 'transactions',
+                  //   element: (
+                  //     <PageWrapper titleKey='pageTitle.transactions'>
+                  //       <TransactionsPage />
+                  //     </PageWrapper>
+                  //   )
+                  // },
+                  // {
+                  //   path: 'purchases',
+                  //   element: <PurchaseHistoryPage />
+                  // },
+                  // {
+                  //   path: 'purchases/:packageId',
+                  //   element: <PurchasedPackagePage />,
+                  //   children: [
+                  //     {
+                  //       path: 'meetings/:meetingId',
+                  //       element: <MeetingDialogPage />
+                  //     }
+                  //   ]
+                  // },
+                  // {
+                  //   path: 'calendar',
+                  //   element: <CalendarPage />,
+                  //   children: [
+                  //     {
+                  //       path: ':meetingId',
+                  //       element: <MeetingDialogPage />
+                  //     }
+                  //   ]
+                  // },
+                  // {
+                  //   element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                  //   children: [
+                  //     {
+                  //       path: 'calendar/schedules',
+                  //       element: <SchedulesPage />
+                  //     }
+                  //   ]
+                  // },
                   {
                     element: (
                       <PageWrapper titleKey='pageTitle.calendar'>
                         <ComingSoonView titleKey='pageTitle.calendarComingSoon' />
                       </PageWrapper>
                     )
-                  },
-                  {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['User']} />,
-                    children: [
-                      {
-                        path: 'applications/submit',
-                        element: <MentorApplicationPage />
-                      },
-                      { path: 'applications', element: <MentorApplicationsPage /> },
-                      { path: 'requests/:requestId', element: <PackageRequestPage /> }
-                    ]
-                  },
-                  {
-                    element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
-                    children: [
-                      { path: 'packages', element: <MentorPackagesPage /> },
-                      { path: 'packages/:packageId', element: <MentorPackagePage /> },
-                      { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
-                      { path: 'vouchers', element: <MentorVouchersPage /> },
-                      { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> },
-                      { path: 'requests', element: <PackageRequestsPage /> }
-                    ]
                   }
+                  // {
+                  //   element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['User']} />,
+                  //   children: [
+                  //     {
+                  //       path: 'applications/submit',
+                  //       element: <MentorApplicationPage />
+                  //     },
+                  //     { path: 'applications', element: <MentorApplicationsPage /> },
+                  //     { path: 'requests/:requestId', element: <PackageRequestPage /> }
+                  //   ]
+                  // },
+                  // {
+                  //   element: <RoleGuardLayout allowedRoles={['user']} allowedUserRoles={['Mentor']} />,
+                  //   children: [
+                  //     { path: 'packages', element: <MentorPackagesPage /> },
+                  //     { path: 'packages/:packageId', element: <MentorPackagePage /> },
+                  //     { path: 'packages/dashboard', element: <MentorPackagesDashboardPage /> },
+                  //     { path: 'vouchers', element: <MentorVouchersPage /> },
+                  //     { path: 'vouchers/:voucherId', element: <MentorVoucherPage /> },
+                  //     { path: 'requests', element: <PackageRequestsPage /> }
+                  //   ]
+                  // }
                 ]
               },
-              { path: 'packages/:packageId/book', element: <MentorPackageBookPage /> },
+              // { path: 'packages/:packageId/book', element: <MentorPackageBookPage /> },
               {
                 path: 'projects/:identifier',
                 element: <ProjectDetailLayout />,
@@ -243,6 +226,7 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
+                  /* Calendar section hidden (meetings/availability removed — single-version cleanup)
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='CALENDAR' />,
                     handle: { sidebarItem: 'calendar' },
@@ -259,6 +243,7 @@ export const userRoutes: RouteObject[] = [
                       }
                     ]
                   },
+                  */
                   {
                     element: <ProjectPermissionGuardLayout sectionKey='PERFORMANCE' />,
                     handle: { sidebarItem: 'performance' },

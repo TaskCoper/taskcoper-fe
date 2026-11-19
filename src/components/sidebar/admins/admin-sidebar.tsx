@@ -3,16 +3,7 @@ import { TeamSwitcher } from '@/components/sidebar/admins/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import {
-  AudioWaveform,
-  CircleUserRound,
-  Command,
-  FileClockIcon,
-  FoldersIcon,
-  GalleryVerticalEnd,
-  GaugeIcon,
-  PercentIcon
-} from 'lucide-react'
+import { AudioWaveform, CircleUserRound, Command, FoldersIcon, GalleryVerticalEnd, GaugeIcon } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
@@ -89,30 +80,6 @@ export function AdminSidebar({ basePath, ...props }: AdminSidebarProps) {
             {
               title: t('adminSidebar.system.users.permissions'),
               url: `${basePath}/users/permissions`
-            }
-          ]
-        },
-        {
-          title: t('mentorApplication.sidebar.title'),
-          url: `${basePath}/applications`,
-          icon: FileClockIcon,
-          isActive: pathname.startsWith(`${basePath}/applications`),
-          items: [
-            {
-              title: t('mentorApplication.sidebar.list'),
-              url: `${basePath}/applications`
-            }
-          ]
-        },
-        {
-          title: t('adminSidebar.system.commissions.title'),
-          url: `${basePath}/commisions`,
-          icon: PercentIcon,
-          isActive: pathname.startsWith(`${basePath}/commisions`),
-          items: [
-            {
-              title: t('adminSidebar.system.commissions.config'),
-              url: `${basePath}/commisions`
             }
           ]
         }

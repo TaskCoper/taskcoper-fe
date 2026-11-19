@@ -234,6 +234,7 @@ export const SECTION_PERMISSION_CONFIG = defineSectionPermissionConfig([
       ]
     }
   },
+  /* Calendar section hidden from the RBAC matrix (meetings/availability removed — single-version cleanup)
   {
     sectionKey: SectionKey.CALENDAR,
     canRead: {
@@ -318,6 +319,7 @@ export const SECTION_PERMISSION_CONFIG = defineSectionPermissionConfig([
       ]
     }
   },
+  */
   {
     sectionKey: SectionKey.STORAGE,
     canRead: {

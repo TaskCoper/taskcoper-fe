@@ -37,7 +37,6 @@ export interface ErrorResponse {
 
 const PUBLIC_ROUTE_PATHS = new Set([
   '/',
-  '/commissions',
   '/forgot-password',
   '/redirect',
   '/sign-in',

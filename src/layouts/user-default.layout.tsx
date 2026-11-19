@@ -11,7 +11,7 @@ import NotificationsPopover from '@/features/notifications/components/notificati
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
 import { useGetOrg } from '@/hooks/use-get-org'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon, UsersRoundIcon } from 'lucide-react'
+import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon } from 'lucide-react'
 import { createElement, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
@@ -30,12 +30,12 @@ const navigations = [
   //   icon: FolderClosedIcon,
   //   url: '/featured-projects'
   // },
-  {
-    id: 300,
-    label: 'header.expertNetwork',
-    icon: UsersRoundIcon,
-    url: '/network'
-  },
+  // {
+  //   id: 300,
+  //   label: 'header.expertNetwork',
+  //   icon: UsersRoundIcon,
+  //   url: '/network'
+  // },
   // {
   //   id: 400,
   //   label: 'header.startupCommunity',

@@ -6,10 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
-import UpdateMentorShortBioDialog from '@/features/mentors/components/dialogs/update-mentor-short-bio-dialog'
 import AllTab from '@/features/users/components/tabs/all-tab'
-import MentorPackagesTab from '@/features/users/components/tabs/mentor-packages-tab'
-import ScheduleTab from '@/features/users/components/tabs/schedule-tab'
 import { useGetUser } from '@/features/users/hooks/use-get-user'
 import { useUpdateMe } from '@/features/users/hooks/use-update-me'
 import { Role } from '@/features/users/types'
@@ -236,27 +233,6 @@ export default function ProfilePage() {
         value: 'all',
         content: <AllTab userDetail={user} />,
         roles: [Role.Mentor, Role.User, Role.Lecturer, Role.Admin]
-      },
-      {
-        id: 50,
-        label: t('user.tabs.schedule'),
-        value: 'schedule',
-        content: <ScheduleTab userDetail={user} />,
-        roles: [Role.Lecturer, Role.Admin]
-      },
-      {
-        id: 100,
-        label: t('user.tabs.schedule'),
-        value: 'schedule',
-        content: <ScheduleTab userDetail={user} />,
-        roles: [Role.Mentor]
-      },
-      {
-        id: 150,
-        label: t('user.tabs.packages'),
-        value: 'packages',
-        content: <MentorPackagesTab userDetail={user} />,
-        roles: [Role.Mentor]
       }
     ]
 
@@ -571,29 +547,6 @@ export default function ProfilePage() {
                     <p className='text-sm text-foreground/80'>{user?.timeZone}</p>
                   </div>
                 </div>
-
-                {user?.mentor &&
-                  (isViewingOwnProfile ? (
-                    <UpdateMentorShortBioDialog user={user}>
-                      <button
-                        type='button'
-                        className='text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm'
-                      >
-                        <p
-                          className={cn(
-                            'line-clamp-2 text-[14.5px] text-foreground/60 italic text-center sm:text-left',
-                            'hover:bg-muted-foreground/10 cursor-pointer rounded-sm px-1 -mx-1'
-                          )}
-                        >
-                          {user.mentor.shortBio}
-                        </p>
-                      </button>
-                    </UpdateMentorShortBioDialog>
-                  ) : (
-                    <p className='line-clamp-2 text-[14.5px] text-foreground/60 italic text-center sm:text-left'>
-                      {user.mentor.shortBio}
-                    </p>
-                  ))}
               </div>
             </div>
 
