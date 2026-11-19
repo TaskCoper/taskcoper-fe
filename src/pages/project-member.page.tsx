@@ -8,6 +8,7 @@ import ProjectTaskStatsPopover from '@/features/projects/charts/components/proje
 import { useGetProjectTaskStats } from '@/features/projects/charts/hooks/use-get-project-task-stats'
 import { projectTaskStatisticsSchema, type ProjectTaskStatisticsParams } from '@/features/projects/charts/validations'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
+import MemberPerformanceScoreCard from '@/features/projects/members/components/member-performance-score-card'
 import ProjectMemberTaskTable from '@/features/projects/members/components/project-member-task-table'
 import { useGetProjectMember } from '@/features/projects/members/hooks/use-get-project-member'
 import { MemberStatus, MemberStatusLabel } from '@/features/projects/members/types'
@@ -320,6 +321,8 @@ export default function ProjectMemberPage() {
         </div>
 
         <div className='col-span-9 space-y-4'>
+          <MemberPerformanceScoreCard projectIdentifier={identifier} userId={user?.id} from={formFrom} to={formTo} />
+
           <Card className='shadow-none rounded-lg p-4 gap-10'>
             <div className='space-y-4'>
               <div className='flex justify-between items-start gap-2'>

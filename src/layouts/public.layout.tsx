@@ -11,15 +11,7 @@ import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread
 import { useGetOrg } from '@/hooks/use-get-org'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import {
-  BellIcon,
-  BellRingIcon,
-  HomeIcon,
-  MenuIcon,
-  MessageCircleIcon,
-  NewspaperIcon,
-  UsersRoundIcon
-} from 'lucide-react'
+import { BellIcon, BellRingIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon } from 'lucide-react'
 import { createElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
@@ -28,7 +20,7 @@ import logo from '/images/taskcoper.png'
 const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: string }[] = [
   { id: 100, label: 'header.home', icon: HomeIcon, url: '/' },
   // { id: 200, label: 'header.featuredProjects', icon: FolderClosedIcon, url: '/featured-projects' },
-  { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
+  // { id: 300, label: 'header.expertNetwork', icon: UsersRoundIcon, url: '/network' },
   // { id: 400, label: 'header.startupCommunity', icon: GlobeIcon, url: '/community' },
   { id: 500, label: 'header.news', icon: NewspaperIcon, url: '/news' }
 ]

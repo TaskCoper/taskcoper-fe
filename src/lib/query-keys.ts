@@ -22,6 +22,8 @@ import type { GetProjectTopContributorsParams } from '@/features/projects/charts
 import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-projects'
 import type { GetProjectMemberRequestsParams } from '@/features/projects/members/hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
+import type { GetProjectActivitiesParams } from '@/features/projects/activities/hooks/use-get-project-activities'
+import type { GetProjectAuditLogsParams } from '@/features/projects/audit-logs/hooks/use-get-project-audit-logs'
 import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
 import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
 import type { GetProjectRoleParams } from '@/features/projects/roles/hooks/use-get-project-role'
@@ -97,6 +99,19 @@ export const queryKeys = {
         [...queryKeys.projects.members.all(identifier), searchTerm, pageIndex, pageSize, excludeIds] as const,
       detail: ({ projectIdentifier, userId }: { projectIdentifier?: string; userId?: string }) =>
         [...queryKeys.projects.members.all(projectIdentifier), 'detail', userId] as const,
+      performance: ({
+        projectIdentifier,
+        userId,
+        from,
+        to
+      }: {
+        projectIdentifier?: string
+        userId?: string
+        from?: string
+        to?: string
+      }) => [...queryKeys.projects.members.all(projectIdentifier), 'performance', userId, from, to] as const,
+      performanceAll: ({ projectIdentifier, from, to }: { projectIdentifier?: string; from?: string; to?: string }) =>
+        [...queryKeys.projects.members.all(projectIdentifier), 'performance-all', from, to] as const,
       allRequests: (projectIdentifier?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'member-requests'] as const,
       requests: ({
@@ -129,6 +144,52 @@ export const queryKeys = {
       list: (identifier?: string) => [...queryKeys.projects.positionTitles.all(identifier)] as const,
       member: (projectIdentifier?: string, userId?: string) =>
         [...queryKeys.projects.detail(projectIdentifier), 'member-position-titles', userId] as const
+    },
+
+    activities: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'activities'] as const,
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        searchTerm,
+        from,
+        to,
+        actorUserId
+      }: GetProjectActivitiesParams) =>
+        [
+          ...queryKeys.projects.activities.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          searchTerm,
+          from,
+          to,
+          actorUserId
+        ] as const
+    },
+
+    auditLogs: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'audit-logs'] as const,
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        searchTerm,
+        from,
+        to,
+        actorUserId,
+        entityType
+      }: GetProjectAuditLogsParams) =>
+        [
+          ...queryKeys.projects.auditLogs.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          searchTerm,
+          from,
+          to,
+          actorUserId,
+          entityType
+        ] as const
     },
 
     resources: {

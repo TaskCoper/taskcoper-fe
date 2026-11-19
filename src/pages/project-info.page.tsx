@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
+import ProjectActivityFeed from '@/features/projects/activities/components/project-activity-feed'
+import { useGetMyProjectPermissions } from '@/features/projects/roles/hooks/use-get-my-project-permissions'
 import { useDateFormat } from '@/lib/date'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { BookOpenIcon, CameraIcon, ChevronsRightIcon, ImageOffIcon, MailIcon, PhoneIcon, UsersIcon } from 'lucide-react'
@@ -21,6 +23,8 @@ export default function ProjectInfoPage() {
   const { formatDate } = useDateFormat()
 
   const { project, isLoadingProject } = useGetProject({ identifier })
+  const { check } = useGetMyProjectPermissions({ projectIdentifier: identifier })
+  const canReadTasks = check('TASKS', 'canRead')
 
   const progressLabel = new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
     style: 'percent',
@@ -132,6 +136,8 @@ export default function ProjectInfoPage() {
               </Card>
             </div>
           </div>
+
+          {canReadTasks ? <ProjectActivityFeed projectIdentifier={identifier} className='mt-8' /> : null}
         </div>
 
         <div className='col-span-1 lg:col-span-4 space-y-6'>

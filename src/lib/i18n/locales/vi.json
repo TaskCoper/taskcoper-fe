@@ -366,6 +366,7 @@
         "noResults": "Không tìm thấy kết quả",
         "placeholder": "Tìm kiếm...",
         "selectedCount": "Đã chọn {{count}}",
+        "selectedCount_one": "Đã chọn {{count}}",
         "selectedCount_other": "Đã chọn {{count}}"
       },
       "invalidFileType": "Loại tệp không hợp lệ",
@@ -376,6 +377,7 @@
       "mobileSidebarDescription": "Hiển thị thanh bên trên thiết bị di động.",
       "month": "Tháng",
       "more": "+{{count}} nữa",
+      "more_one": "+{{count}} nữa",
       "more_other": "+{{count}} nữa",
       "moreLabel": "Thêm",
       "noDataAvailable": "Không có dữ liệu",
@@ -517,6 +519,7 @@
       "selectDateRange": "Chọn khoảng ngày",
       "selected": "đã chọn",
       "selectedCount": "Đã chọn {{count}}",
+      "selectedCount_one": "Đã chọn {{count}}",
       "selectedCount_other": "Đã chọn {{count}}",
       "selectField": "Chọn trường",
       "selectJoinOperator": "Chọn toán tử nối",
@@ -727,6 +730,7 @@
     "ratingFilter": "Đánh giá",
     "reset": "Đặt lại",
     "resultsCount": "{{count}} kết quả",
+    "resultsCount_one": "{{count}} kết quả",
     "resultsCount_other": "{{count}} kết quả",
     "searchByAi": "Tìm kiếm bằng AI",
     "searchPlaceholder": "Tìm kiếm cố vấn...",
@@ -761,6 +765,7 @@
         },
         "streak": "🔥 {{days}} ngày liên tiếp",
         "tasksCompleted": "{{count}} việc hoàn thành",
+        "tasksCompleted_one": "{{count}} việc hoàn thành",
         "tasksCompleted_other": "{{count}} việc hoàn thành",
         "title": "Năng suất"
       },
@@ -768,16 +773,19 @@
         "done": "Xong",
         "inProgress": "Đang làm",
         "remaining": "Còn {{count}} ngày",
+        "remaining_one": "Còn {{count}} ngày",
         "remaining_other": "Còn {{count}} ngày",
         "title": "Sprint 12",
         "toDo": "Cần làm"
       },
       "taskCard": {
         "comments": "{{count}} bình luận",
+        "comments_one": "{{count}} bình luận",
         "comments_other": "{{count}} bình luận",
         "date": "12 Th1",
         "description": "Hoàn thiện các thành phần dashboard và token hệ thống thiết kế cho bản phát hành v2.0.",
         "members": "{{count}} thành viên",
+        "members_one": "{{count}} thành viên",
         "members_other": "{{count}} thành viên",
         "priority": "Ưu tiên cao",
         "status": "Hoàn thành",
@@ -791,6 +799,7 @@
         "codeReview": "Xem xét mã",
         "live": "Trực tiếp",
         "online": "{{count}} trực tuyến",
+        "online_one": "{{count}} trực tuyến",
         "online_other": "{{count}} trực tuyến",
         "title": "Hoạt động nhóm"
       },
@@ -807,6 +816,7 @@
         "designSync": "Đồng bộ thiết kế",
         "designSyncAt": "15:00",
         "events": "{{count}} sự kiện",
+        "events_one": "{{count}} sự kiện",
         "events_other": "{{count}} sự kiện",
         "now": "Bây giờ",
         "sprintReview": "Đánh giá Sprint",
@@ -927,6 +937,7 @@
     "dialog": {
       "detailedIntroduction": "Giới thiệu chi tiết",
       "portfolioFiles": "Tệp Portfolio ({{count}})",
+      "portfolioFiles_one": "Tệp Portfolio ({{count}})",
       "portfolioFiles_other": "Tệp Portfolio ({{count}})",
       "reviewed": "Đã xét duyệt {{date}}",
       "reviewerNote": "Ghi chú của người xét duyệt",
@@ -990,6 +1001,7 @@
       "button": "Nộp đơn",
       "buttonUploading": "Đang tải lên…",
       "partialUpload": "{{count}} / {{total}} tệp đã tải lên",
+      "partialUpload_one": "{{count}} / {{total}} tệp đã tải lên",
       "partialUpload_other": "{{count}} / {{total}} tệp đã tải lên",
       "partialUploadFailed": "Thất bại: {{names}}",
       "uploadingParallel": "Đang tải lên {{total}} tệp song song…"
@@ -1246,11 +1258,13 @@
   "network": {
     "domainSelect": {
       "domainsSelected": "{{count}} lĩnh vực đã chọn",
+      "domainsSelected_one": "{{count}} lĩnh vực đã chọn",
       "domainsSelected_other": "{{count}} lĩnh vực đã chọn",
       "loading": "Đang tải…",
       "loadingMore": "Đang tải thêm…",
       "noDomainsFound": "Không tìm thấy lĩnh vực.",
       "overflowMore": "+{{count}} khác",
+      "overflowMore_one": "+{{count}} khác",
       "overflowMore_other": "+{{count}} khác",
       "removeAriaLabel": "Xóa {{name}}"
     },
@@ -1267,6 +1281,7 @@
     "latest": "Bài mới",
     "liveUpdated": "Cập nhật hàng tuần",
     "minRead": "{{count}} phút",
+    "minRead_one": "{{count}} phút",
     "minRead_other": "{{count}} phút",
     "newsletter": {
       "cta": "Đăng ký",
@@ -1456,6 +1471,17 @@
     "transactions": "Giao dịch"
   },
   "project": {
+    "activity": {
+      "allActors": "Tất cả thành viên",
+      "columnActivity": "Hoạt động",
+      "columnActor": "Thành viên",
+      "columnDate": "Thời gian",
+      "empty": "Chưa có hoạt động",
+      "panelDescription": "Toàn bộ hoạt động được ghi lại trong dự án",
+      "panelTitle": "Hoạt động dự án",
+      "searchPlaceholder": "Tìm hoạt động...",
+      "title": "Hoạt động gần đây"
+    },
     "addCoverImage": "Thêm ảnh bìa",
     "addProjectRevenue": {
       "amount": {
@@ -1530,6 +1556,39 @@
           "minLength": "Vui lòng chọn dự án"
         }
       }
+    },
+    "auditLog": {
+      "actions": {
+        "MemberPermissionUpdated": "Cập nhật quyền thành viên",
+        "MemberRemoved": "Xóa thành viên",
+        "MemberRolesUpdated": "Cập nhật vai trò thành viên",
+        "ProjectDeleted": "Xóa dự án",
+        "ProjectUpdated": "Cập nhật dự án",
+        "RoleCreated": "Tạo vai trò",
+        "RoleDeleted": "Xóa vai trò",
+        "RoleUpdated": "Cập nhật vai trò"
+      },
+      "after": "Sau",
+      "allActors": "Tất cả thành viên",
+      "allEntities": "Tất cả đối tượng",
+      "before": "Trước",
+      "columnAction": "Hành động",
+      "columnActor": "Thành viên",
+      "columnDate": "Thời gian",
+      "columnDetails": "Chi tiết",
+      "columnEntity": "Đối tượng",
+      "entities": {
+        "Project": "Dự án",
+        "ProjectMember": "Thành viên",
+        "ProjectRole": "Vai trò"
+      },
+      "noValue": "—",
+      "panelDescription": "Ai đã thay đổi gì trong thành viên, vai trò và cài đặt của dự án",
+      "panelTitle": "Nhật ký kiểm toán",
+      "reason": "Lý do",
+      "searchPlaceholder": "Tìm trong nhật ký kiểm toán...",
+      "systemActor": "Hệ thống",
+      "viewDetails": "Chi tiết"
     },
     "coverImageAlt": "{{name}} Ảnh bìa",
     "createProject": {
@@ -1708,6 +1767,7 @@
       },
       "addRole": "Thêm vai trò",
       "memberCount": "({{count}} thành viên)",
+      "memberCount_one": "({{count}} thành viên)",
       "memberCount_other": "({{count}} thành viên)",
       "noRolesDefined": "Chưa có vai trò nào"
     },
@@ -1719,7 +1779,9 @@
     "settings": {
       "description": "Quản lý thông tin chung và cấu hình quyền hạn dự án.",
       "tabs": {
-        "info": "Thông tin Dự án",
+        "activity": "Hoạt động",
+        "auditLog": "Nhật ký kiểm toán",
+        "info": "Thông tin",
         "invites": "Lời mời",
         "members": "Thành viên",
         "permissions": "Vai trò & Quyền"
@@ -2154,6 +2216,17 @@
       "tooltipDefault": "{{count}} hoạt động vào {{date}}",
       "tooltipNoCount": "Không"
     },
+    "memberScore": {
+      "completion": "Hoàn thành",
+      "empty": "Chưa có thành viên.",
+      "insufficient": "Chưa đủ dữ liệu (cần tối thiểu 3 task được giao).",
+      "member": "Thành viên",
+      "noScore": "—",
+      "onTime": "Đúng hạn",
+      "outOf100": "/ 100",
+      "teamTitle": "Hiệu suất thành viên",
+      "title": "Điểm hiệu suất"
+    },
     "noTaskStatistics": "Không có thống kê công việc cho khoảng thời gian này.",
     "popover": {
       "actionDescription": "Chọn ngày và chế độ xem.",
@@ -2172,6 +2245,10 @@
     "statFiles": "Tệp đã tải lên",
     "statSubtasks": "Công việc con đã tạo",
     "statTasks": "Công việc đã tạo",
+    "tabs": {
+      "members": "Theo thành viên",
+      "overview": "Tổng thể dự án"
+    },
     "taskStatistics": "Thống kê công việc",
     "title": "Hiệu suất dự án",
     "tooltipComments": "Bình luận",
@@ -2181,6 +2258,7 @@
     "tooltipTasksCompleted": "Task đã hoàn thành",
     "tooltipTasksCreated": "Task đã tạo",
     "tooltipTotalActivities": "{{count}} hoạt động tổng",
+    "tooltipTotalActivities_one": "{{count}} hoạt động tổng",
     "tooltipTotalActivities_other": "{{count}} hoạt động tổng",
     "topContributorsPercentage": "Top đóng góp (%)",
     "topContributorsPercentageTooltip": "Phần trăm",
@@ -2633,6 +2711,8 @@
         "description": "Bình luận sẽ bị xóa vĩnh viễn và bạn không thể hoàn tác.",
         "title": "Bạn muốn xoá bình luận?"
       },
+      "hideDetails": "Ẩn chi tiết",
+      "showDetails": "Hiện chi tiết",
       "validation": {
         "content": {
           "maxLength": "Tối đa 10000 ký tự",

@@ -9,8 +9,6 @@ import type { RouteObject } from 'react-router'
 
 const SystemProjectsPage = lazy(() => import('@/pages/super-admins/system-projects.page'))
 const SystemUsersPage = lazy(() => import('@/pages/super-admins/system-users.page'))
-const SystemMentorApplicationsPage = lazy(() => import('@/pages/super-admins/system-mentor-applications.page'))
-const CommissionsPage = lazy(() => import('@/pages/super-admins/commissions.page'))
 const DashboardPage = lazy(() => import('@/pages/super-admins/dashboard.page'))
 
 function AdminRoutePlaceholder({ titleKey }: { titleKey: I18nKey }) {
@@ -58,25 +56,25 @@ export const adminRoutes: RouteObject[] = [
                     element: <SystemUsersPage />
                   }
                 ]
-              },
-              {
-                path: 'applications',
-                children: [
-                  {
-                    index: true,
-                    element: <SystemMentorApplicationsPage />
-                  }
-                ]
-              },
-              {
-                path: 'commisions',
-                children: [
-                  {
-                    index: true,
-                    element: <CommissionsPage />
-                  }
-                ]
               }
+              // {
+              //   path: 'applications',
+              //   children: [
+              //     {
+              //       index: true,
+              //       element: <SystemMentorApplicationsPage />
+              //     }
+              //   ]
+              // },
+              // {
+              //   path: 'commisions',
+              //   children: [
+              //     {
+              //       index: true,
+              //       element: <CommissionsPage />
+              //     }
+              //   ]
+              // }
             ]
           }
         ]

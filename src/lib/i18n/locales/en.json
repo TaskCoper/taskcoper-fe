@@ -1471,6 +1471,17 @@
     "transactions": "Transactions"
   },
   "project": {
+    "activity": {
+      "allActors": "All members",
+      "columnActivity": "Activity",
+      "columnActor": "Member",
+      "columnDate": "Date",
+      "empty": "No activity yet",
+      "panelDescription": "All activity recorded in this project",
+      "panelTitle": "Project activity",
+      "searchPlaceholder": "Search activity...",
+      "title": "Recent activity"
+    },
     "addCoverImage": "Add cover image",
     "addProjectRevenue": {
       "amount": {
@@ -1545,6 +1556,39 @@
           "minLength": "Project is required"
         }
       }
+    },
+    "auditLog": {
+      "actions": {
+        "MemberPermissionUpdated": "Updated member permissions",
+        "MemberRemoved": "Removed member",
+        "MemberRolesUpdated": "Updated member roles",
+        "ProjectDeleted": "Deleted project",
+        "ProjectUpdated": "Updated project",
+        "RoleCreated": "Created role",
+        "RoleDeleted": "Deleted role",
+        "RoleUpdated": "Updated role"
+      },
+      "after": "After",
+      "allActors": "All members",
+      "allEntities": "All targets",
+      "before": "Before",
+      "columnAction": "Action",
+      "columnActor": "Member",
+      "columnDate": "Date",
+      "columnDetails": "Details",
+      "columnEntity": "Target",
+      "entities": {
+        "Project": "Project",
+        "ProjectMember": "Member",
+        "ProjectRole": "Role"
+      },
+      "noValue": "—",
+      "panelDescription": "Who changed what in this project's members, roles and settings",
+      "panelTitle": "Audit log",
+      "reason": "Reason",
+      "searchPlaceholder": "Search audit log...",
+      "systemActor": "System",
+      "viewDetails": "Details"
     },
     "coverImageAlt": "{{name}} Cover",
     "createProject": {
@@ -1735,7 +1779,9 @@
     "settings": {
       "description": "Manage general information and project permission configuration.",
       "tabs": {
-        "info": "Project Information",
+        "activity": "Activity",
+        "auditLog": "Audit log",
+        "info": "Information",
         "invites": "Invites",
         "members": "Members",
         "permissions": "Roles & Permissions"
@@ -2170,6 +2216,17 @@
       "tooltipDefault": "{{count}} activities on {{date}}",
       "tooltipNoCount": "No"
     },
+    "memberScore": {
+      "completion": "Completion",
+      "empty": "No members yet.",
+      "insufficient": "Not enough data yet (at least 3 assigned tasks needed).",
+      "member": "Member",
+      "noScore": "—",
+      "onTime": "On time",
+      "outOf100": "/ 100",
+      "teamTitle": "Member performance",
+      "title": "Performance score"
+    },
     "noTaskStatistics": "No task statistics for this range.",
     "popover": {
       "actionDescription": "Choose date and view mode.",
@@ -2188,6 +2245,10 @@
     "statFiles": "Uploaded files",
     "statSubtasks": "Created subtasks",
     "statTasks": "Created tasks",
+    "tabs": {
+      "members": "By member",
+      "overview": "Project overview"
+    },
     "taskStatistics": "Task statistics",
     "title": "Project Performance",
     "tooltipComments": "Comments",
@@ -2650,6 +2711,8 @@
         "description": "The comment will be permanently deleted and you cannot undo.",
         "title": "Delete comment?"
       },
+      "hideDetails": "Hide details",
+      "showDetails": "Show details",
       "validation": {
         "content": {
           "maxLength": "Max 10000 characters",

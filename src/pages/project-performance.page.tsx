@@ -1,6 +1,7 @@
 import Heatmap, { type CalendarHeatmapData } from '@/components/heatmap'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import ChartDateFilterPopover from '@/features/projects/charts/components/chart-date-filter-popover'
 import ProjectTaskStatsPopover from '@/features/projects/charts/components/project-task-stats-popover'
@@ -14,6 +15,7 @@ import {
   type ChartDateFilterParams,
   type ProjectTaskStatisticsParams
 } from '@/features/projects/charts/validations'
+import ProjectMembersPerformanceCard from '@/features/projects/members/components/project-members-performance-card'
 import StatCard from '@/features/projects/core/components/stat-card'
 import { useGetProject } from '@/features/projects/core/hooks/use-get-project'
 import { formatDate, useDateFormat } from '@/lib/date'
@@ -366,105 +368,102 @@ export default function ProjectPerformancePage() {
           <p className='text-sm text-muted-foreground'>{t('projectPerformance.description')}</p>
         </div>
 
-        {/* Statistics cards */}
-        <div className='space-y-4'>
-          <div className='flex flex-wrap gap-4'>
-            <div className='flex-1 min-w-50'>
-              <StatCard
-                title={t('projectPerformance.statTasks')}
-                value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
-                icon={<LayersPlus className='size-4.5 text-white' />}
-                color='slate'
-                trendValue={3}
-                trendDirection='down'
-              />
-            </div>
+        <Tabs defaultValue='overview' className='w-full'>
+          <TabsList>
+            <TabsTrigger value='overview'>{t('projectPerformance.tabs.overview')}</TabsTrigger>
+            <TabsTrigger value='members'>{t('projectPerformance.tabs.members')}</TabsTrigger>
+          </TabsList>
 
-            <div className='flex-1 min-w-50'>
-              <StatCard
-                title={t('projectPerformance.statSubtasks')}
-                value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
-                icon={<ListTreeIcon className='size-4.5 text-white' />}
-                color='orange'
-                trendValue={2}
-                trendDirection='up'
-              />
-            </div>
-
-            <div className='flex-1 min-w-50'>
-              <StatCard
-                title={t('projectPerformance.statCompleted')}
-                value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
-                icon={<CircleCheckBigIcon className='size-4.5 text-white' />}
-                color='green'
-                trendValue={4}
-                trendDirection='up'
-              />
-            </div>
-
-            <div className='flex-1 min-w-50'>
-              <StatCard
-                title={t('projectPerformance.statComments')}
-                value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
-                icon={<MessageCircleIcon className='size-4.5 text-white' />}
-                color='blue'
-                trendValue={12}
-                trendDirection='up'
-              />
-            </div>
-
-            <div className='flex-1 min-w-50'>
-              <StatCard
-                title={t('projectPerformance.statFiles')}
-                value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
-                icon={<PaperclipIcon className='size-4.5 text-white' />}
-                color='purple'
-                trendValue={0}
-                trendDirection='neutral'
-              />
-            </div>
-          </div>
-
-          {/* Bar chart */}
-          <div className='w-full'>
-            <Card className='p-4 shadow-none gap-4'>
-              <div className='flex justify-between items-start gap-2'>
-                <div>
-                  <p className='font-semibold'>{t('projectPerformance.taskStatistics')}</p>
-                  <p className='text-xs text-muted-foreground'>{taskStatsRangeLabel}</p>
+          <TabsContent value='overview' className='mt-4 space-y-6'>
+            {/* Statistics cards */}
+            <div className='space-y-4'>
+              <div className='flex flex-wrap gap-4'>
+                <div className='flex-1 min-w-50'>
+                  <StatCard
+                    title={t('projectPerformance.statTasks')}
+                    value={currentProjectActivityStats?.[0]?.totalTasksCreated ?? 0}
+                    icon={<LayersPlus className='size-4.5 text-white' />}
+                    color='slate'
+                  />
                 </div>
 
-                <FormProvider {...methods}>
-                  <ProjectTaskStatsPopover
-                    // parentMilestones={parentMilestones?.value.items ?? []}
-                    onApplyFilters={setAppliedFilters}
+                <div className='flex-1 min-w-50'>
+                  <StatCard
+                    title={t('projectPerformance.statSubtasks')}
+                    value={currentProjectActivityStats?.[0]?.totalSubtasksCreated ?? 0}
+                    icon={<ListTreeIcon className='size-4.5 text-white' />}
+                    color='orange'
                   />
-                </FormProvider>
+                </div>
+
+                <div className='flex-1 min-w-50'>
+                  <StatCard
+                    title={t('projectPerformance.statCompleted')}
+                    value={currentProjectActivityStats?.[0]?.totalTasksCompleted ?? 0}
+                    icon={<CircleCheckBigIcon className='size-4.5 text-white' />}
+                    color='green'
+                  />
+                </div>
+
+                <div className='flex-1 min-w-50'>
+                  <StatCard
+                    title={t('projectPerformance.statComments')}
+                    value={currentProjectActivityStats?.[0]?.totalCommentsCreated ?? 0}
+                    icon={<MessageCircleIcon className='size-4.5 text-white' />}
+                    color='blue'
+                  />
+                </div>
+
+                <div className='flex-1 min-w-50'>
+                  <StatCard
+                    title={t('projectPerformance.statFiles')}
+                    value={currentProjectActivityStats?.[0]?.totalFilesUploaded ?? 0}
+                    icon={<PaperclipIcon className='size-4.5 text-white' />}
+                    color='purple'
+                  />
+                </div>
               </div>
 
-              {taskStatsChartData.length > 0 ? (
-                <ChartContainer config={projectTaskStatsChartConfig} className='max-h-32 w-full'>
-                  <BarChart accessibilityLayer data={taskStatsChartData} barCategoryGap={18} barGap={6}>
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey='period'
-                      tickLine={false}
-                      tickMargin={10}
-                      axisLine={false}
-                      tickFormatter={(value) => `${value}`}
-                    />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator='line' />} />
-                    <Bar dataKey='created' fill='var(--color-created)' radius={4} barSize={14} />
-                    <Bar dataKey='completed' fill='var(--color-completed)' radius={4} barSize={14} />
-                  </BarChart>
-                </ChartContainer>
-              ) : (
-                <p className='text-sm text-muted-foreground text-center py-10'>
-                  {t('projectPerformance.noTaskStatistics')}
-                </p>
-              )}
+              {/* Bar chart */}
+              <div className='w-full'>
+                <Card className='p-4 shadow-none gap-4'>
+                  <div className='flex justify-between items-start gap-2'>
+                    <div>
+                      <p className='font-semibold'>{t('projectPerformance.taskStatistics')}</p>
+                      <p className='text-xs text-muted-foreground'>{taskStatsRangeLabel}</p>
+                    </div>
 
-              {/* <div className='flex flex-col items-start gap-1'>
+                    <FormProvider {...methods}>
+                      <ProjectTaskStatsPopover
+                        // parentMilestones={parentMilestones?.value.items ?? []}
+                        onApplyFilters={setAppliedFilters}
+                      />
+                    </FormProvider>
+                  </div>
+
+                  {taskStatsChartData.length > 0 ? (
+                    <ChartContainer config={projectTaskStatsChartConfig} className='max-h-32 w-full'>
+                      <BarChart accessibilityLayer data={taskStatsChartData} barCategoryGap={18} barGap={6}>
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                          dataKey='period'
+                          tickLine={false}
+                          tickMargin={10}
+                          axisLine={false}
+                          tickFormatter={(value) => `${value}`}
+                        />
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator='line' />} />
+                        <Bar dataKey='created' fill='var(--color-created)' radius={4} barSize={14} />
+                        <Bar dataKey='completed' fill='var(--color-completed)' radius={4} barSize={14} />
+                      </BarChart>
+                    </ChartContainer>
+                  ) : (
+                    <p className='text-sm text-muted-foreground text-center py-10'>
+                      {t('projectPerformance.noTaskStatistics')}
+                    </p>
+                  )}
+
+                  {/* <div className='flex flex-col items-start gap-1'>
                 <div className='flex gap-2 leading-none font-medium text-sm'>
                   {(t as (key: string, options?: Record<string, string | number>) => string)(
                     'projectPerformance.trendingUp',
@@ -479,77 +478,83 @@ export default function ProjectPerformancePage() {
                   )}
                 </div>
               </div> */}
-            </Card>
-          </div>
+                </Card>
+              </div>
 
-          <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
-            <div className='flex-2'>
-              <BarChartHorizontal
-                data={topOnTimeCompletersData}
-                config={topOnTimeCompletersPercentageConfig}
-                description={topOnTimeCompletersRangeLabel}
-                dataKey='completed'
-                xAxisKey='name'
-                title={t('projectPerformance.topOnTimeCompleters')}
-                color='var(--color-completed)'
-                menu={
-                  <ChartDateFilterPopover
-                    from={onTimeCompletersFilters.from}
-                    to={onTimeCompletersFilters.to}
-                    isViewInMonth={onTimeCompletersFilters.isViewInMonth}
-                    onApplyFilters={setOnTimeCompletersFilters}
+              <div className='flex flex-col lg:flex-row gap-4 w-full h-full'>
+                <div className='flex-2'>
+                  <BarChartHorizontal
+                    data={topOnTimeCompletersData}
+                    config={topOnTimeCompletersPercentageConfig}
+                    description={topOnTimeCompletersRangeLabel}
+                    dataKey='completed'
+                    xAxisKey='name'
+                    title={t('projectPerformance.topOnTimeCompleters')}
+                    color='var(--color-completed)'
+                    menu={
+                      <ChartDateFilterPopover
+                        from={onTimeCompletersFilters.from}
+                        to={onTimeCompletersFilters.to}
+                        isViewInMonth={onTimeCompletersFilters.isViewInMonth}
+                        onApplyFilters={setOnTimeCompletersFilters}
+                      />
+                    }
                   />
-                }
-              />
-            </div>
+                </div>
 
-            <div className='flex-1'>
-              <PieChartLabel
-                data={topContributorsPieData}
-                config={topContributorsPieConfig}
-                description={topContributorsRangeLabel}
-                dataKey='completed'
-                nameKey='name'
-                title={t('projectPerformance.topContributorsPercentage')}
-                menu={
-                  <ChartDateFilterPopover
-                    from={topContributorsFilters.from}
-                    to={topContributorsFilters.to}
-                    isViewInMonth={topContributorsFilters.isViewInMonth}
-                    onApplyFilters={setTopContributorsFilters}
+                <div className='flex-1'>
+                  <PieChartLabel
+                    data={topContributorsPieData}
+                    config={topContributorsPieConfig}
+                    description={topContributorsRangeLabel}
+                    dataKey='completed'
+                    nameKey='name'
+                    title={t('projectPerformance.topContributorsPercentage')}
+                    menu={
+                      <ChartDateFilterPopover
+                        from={topContributorsFilters.from}
+                        to={topContributorsFilters.to}
+                        isViewInMonth={topContributorsFilters.isViewInMonth}
+                        onApplyFilters={setTopContributorsFilters}
+                      />
+                    }
                   />
-                }
-              />
-            </div>
-          </div>
+                </div>
+              </div>
 
-          {/* Contributions heatmap */}
-          <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
-            <div className='flex-4 space-y-2'>
-              <p className='text-sm text-muted-foreground'>
-                {(t as (key: string, options?: Record<string, string | number>) => string)(
-                  'projectPerformance.contributions',
-                  { count: totalContributions, year: selectedYear }
-                )}
-              </p>
-              <Heatmap data={heatmapData} renderTooltip={renderTooltip} startMonth={heatmapStartMonth} />
-            </div>
+              {/* Contributions heatmap */}
+              <div className='flex flex-col lg:flex-row gap-4 w-full h-full mt-6'>
+                <div className='flex-4 space-y-2'>
+                  <p className='text-sm text-muted-foreground'>
+                    {(t as (key: string, options?: Record<string, string | number>) => string)(
+                      'projectPerformance.contributions',
+                      { count: totalContributions, year: selectedYear }
+                    )}
+                  </p>
+                  <Heatmap data={heatmapData} renderTooltip={renderTooltip} startMonth={heatmapStartMonth} />
+                </div>
 
-            <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
-              {YEAR_OPTIONS.map((year) => (
-                <Button
-                  key={year}
-                  className='justify-start'
-                  variant={year === selectedYear ? 'default' : 'ghost'}
-                  size='sm'
-                  onClick={() => setSelectedYear(year)}
-                >
-                  <span className='text-xs font-normal'>{year}</span>
-                </Button>
-              ))}
+                <div className='flex-1 flex flex-col gap-2 mt-6 lg:mt-0'>
+                  {YEAR_OPTIONS.map((year) => (
+                    <Button
+                      key={year}
+                      className='justify-start'
+                      variant={year === selectedYear ? 'default' : 'ghost'}
+                      size='sm'
+                      onClick={() => setSelectedYear(year)}
+                    >
+                      <span className='text-xs font-normal'>{year}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </TabsContent>
+
+          <TabsContent value='members' className='mt-4'>
+            <ProjectMembersPerformanceCard projectIdentifier={identifier} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

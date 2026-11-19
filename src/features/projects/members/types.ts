@@ -42,6 +42,24 @@ export interface ProjectMemberDetail extends ProjectMember {
   status: MemberStatus
 }
 
+export interface ProjectMemberPerformance {
+  score: number | null
+  hasEnoughData: boolean
+  completionRate: number
+  onTimeRate: number
+  assignedTasks: number
+  completedTasks: number
+  onTimeCompletedTasks: number
+}
+
+export interface ProjectMemberPerformanceRow extends ProjectMemberPerformance {
+  userId: string
+  firstName: string
+  lastName: string
+  avatar: string | null
+  slug: string
+}
+
 export interface ProjectMemberRequest {
   projectManagementId: string
   userId: string

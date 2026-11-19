@@ -24,9 +24,10 @@ export const createProjectSchema = (t: TFunction) => {
       // description: z.string().max(255, t('project.createProject.validation.description.maxLength')),
       // startDate: z.iso.datetime({ message: t('project.createProject.validation.startDate.invalid') }),
       // endDate: z.iso.datetime({ message: t('project.createProject.validation.endDate.invalid') }),
-      domainIds: z
-        .array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
-        .min(1, t('project.updateProjectDomains.validation.domainIds.minLength'))
+      // Domain selection temporarily removed from the create flow (single-version cleanup).
+      // Kept as an empty-allowed array so the form still submits; BE DomainIds is nullable.
+      // To restore: add back `.min(1, ...)` and the domain field in create-project-form.tsx.
+      domainIds: z.array(z.string().regex(UUID_REGEX, t('project.updateProjectDomains.validation.domainIds.invalid')))
     })
     .strict()
 }
@@ -82,7 +83,8 @@ export const updateProjectSchema = (t: TFunction) => {
         .refine((v) => v === null || z.email().safeParse(v).success, {
           error: t('common.validation.email.invalid')
         }),
-      domainIds: z.array(domainSchema(t)).min(1, t('project.updateProjectDomains.validation.domainIds.minLength')),
+      // Domain optional on edit too, to match the create flow (single-version cleanup).
+      domainIds: z.array(domainSchema(t)),
       schoolSubject: z
         .string()
         .trim()

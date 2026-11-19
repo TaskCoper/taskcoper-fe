@@ -94,6 +94,8 @@ export default function TaskDialogPage() {
   const [showDescriptionToggle, setShowDescriptionToggle] = useState(false)
   const [descriptionElement, setDescriptionElement] = useState<HTMLDivElement | null>(null)
   const [isEditComment, setIsEditComment] = useState(false)
+  // Trello-style combined feed: comments + activity in one stream; toggle hides the activity entries.
+  const [showActivity, setShowActivity] = useState(true)
   const [open, setOpen] = useState(true)
   const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null)
   const [openTaskDetailMenu, setOpenTaskDetailMenu] = useState(false)
@@ -971,9 +973,18 @@ export default function TaskDialogPage() {
             </div>
 
             <div className='col-span-5 p-6 bg-muted space-y-4 overflow-y-auto'>
-              <div className='flex items-center gap-2'>
-                <MessageSquareText className='size-4' />
-                <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex items-center gap-2'>
+                  <MessageSquareText className='size-4' />
+                  <p className='text-sm font-bold truncate'>{t('task.comment.comment')}</p>
+                </div>
+                <button
+                  type='button'
+                  className='text-xs text-muted-foreground underline cursor-pointer whitespace-nowrap'
+                  onClick={() => setShowActivity((prev) => !prev)}
+                >
+                  {showActivity ? t('task.comment.hideDetails') : t('task.comment.showDetails')}
+                </button>
               </div>
 
               {isEditComment ? (
@@ -1034,15 +1045,17 @@ export default function TaskDialogPage() {
 
               {task?.taskId && identifier && milestoneIdentifier ? (
                 <div className='space-y-6 pb-6'>
-                  {comments?.value.items.map((comment) => (
-                    <CommentCard
-                      key={comment.commentId}
-                      comment={comment}
-                      taskId={task.taskId}
-                      projectIdentifier={identifier}
-                      parentMilestoneIdentifier={milestoneIdentifier}
-                    />
-                  ))}
+                  {comments?.value.items
+                    .filter((comment) => showActivity || !comment.isTaskLog)
+                    .map((comment) => (
+                      <CommentCard
+                        key={comment.commentId}
+                        comment={comment}
+                        taskId={task.taskId}
+                        projectIdentifier={identifier}
+                        parentMilestoneIdentifier={milestoneIdentifier}
+                      />
+                    ))}
                 </div>
               ) : null}
             </div>

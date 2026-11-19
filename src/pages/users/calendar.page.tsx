@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FieldLabel } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
@@ -11,11 +10,9 @@ import CalendarViewContainer from '@/features/meetings/components/calendar/calen
 import { useGetMyMeetings } from '@/features/meetings/hooks/use-get-my-meetings'
 import { MeetingStatus, type MeetingBooking } from '@/features/meetings/types'
 import { getStatusCheckboxClassName } from '@/features/meetings/utils'
-import BookMeetingFromCalendarDialog from '@/features/mentor-packages/components/book-meeting-from-calendar-dialog'
 import { useGetPurchasedMentorPackages } from '@/features/mentor-packages/hooks/use-get-purchased-mentor-packages'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn } from '@/shared/utils'
-import { CalendarPlusIcon } from 'lucide-react'
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -91,7 +88,6 @@ export default function CalendarPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [bookMeetingOpen, setBookMeetingOpen] = useState(false)
   const [dateRange, setDateRange] = useState({ activeFrom: '', activeTo: '' })
   const [selectedPackageBookingIds, setSelectedPackageBookingIds] = useQueryState(
     'pkgs',
@@ -144,28 +140,8 @@ export default function CalendarPage() {
     setStatusFilters(ordered.length === 0 ? null : ordered)
   }
 
-  const hasPackages =
-    personalPackages.value.totalCount > 0 ||
-    memberProjectPackages.value.totalCount > 0 ||
-    projectPackages.value.totalCount > 0
-
   const sidebarContent = (
     <div className='mt-2'>
-      {hasPackages && (
-        <div className='px-3'>
-          <BookMeetingFromCalendarDialog
-            open={bookMeetingOpen}
-            onOpenChange={setBookMeetingOpen}
-            packages={[...personalPackages.value.items, ...projectPackages.value.items]}
-          >
-            <Button className='w-full' size='sm'>
-              <CalendarPlusIcon />
-              {t('purchasedPackage.bookSchedule')}
-            </Button>
-          </BookMeetingFromCalendarDialog>
-        </div>
-      )}
-
       <Separator className='mt-4' />
 
       <div className='flex flex-col justify-between gap-8 mt-4 px-2'>

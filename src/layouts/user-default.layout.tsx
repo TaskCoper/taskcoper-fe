@@ -12,7 +12,7 @@ import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread
 import { useGetOrg } from '@/hooks/use-get-org'
 import type { I18nKey } from '@/lib/i18n/types'
 import { cn, getAvatarFallback } from '@/shared/utils'
-import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon, UsersRoundIcon } from 'lucide-react'
+import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon } from 'lucide-react'
 import { createElement, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router'
@@ -31,12 +31,12 @@ const navigations: { id: number; label: I18nKey; icon: typeof HomeIcon; url: str
   //   icon: FolderClosedIcon,
   //   url: '/featured-projects'
   // },
-  {
-    id: 300,
-    label: 'header.expertNetwork',
-    icon: UsersRoundIcon,
-    url: '/network'
-  },
+  // {
+  //   id: 300,
+  //   label: 'header.expertNetwork',
+  //   icon: UsersRoundIcon,
+  //   url: '/network'
+  // },
   // {
   //   id: 400,
   //   label: 'header.startupCommunity',

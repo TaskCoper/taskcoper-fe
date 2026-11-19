@@ -90,7 +90,6 @@ export default function UpdateProjectDomainsDialog({ children, isPending }: Upda
             searchValue={searchTerm}
             onSearchChange={setSearchTerm}
             label='project.updateProjectDomains.searchLabel'
-            isRequired
             displayError={false}
             getId={(domain) => domain.id}
             getValueId={(item) => item.id}
