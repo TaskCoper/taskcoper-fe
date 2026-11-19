@@ -1831,7 +1831,8 @@
         "info": "Information",
         "invites": "Invites",
         "members": "Members",
-        "permissions": "Roles & Permissions"
+        "permissions": "Roles & Permissions",
+        "auditLog": "Audit log"
       },
       "title": "Project settings"
     },
@@ -2267,6 +2268,39 @@
     "views": {
       "board": "Kanban View",
       "table": "Table View"
+    },
+    "auditLog": {
+      "panelTitle": "Audit log",
+      "panelDescription": "Who changed what in this project's members, roles and settings",
+      "searchPlaceholder": "Search audit log...",
+      "columnActor": "Member",
+      "columnAction": "Action",
+      "columnEntity": "Target",
+      "columnDate": "Date",
+      "columnDetails": "Details",
+      "allActors": "All members",
+      "allEntities": "All targets",
+      "systemActor": "System",
+      "viewDetails": "Details",
+      "before": "Before",
+      "after": "After",
+      "noValue": "—",
+      "reason": "Reason",
+      "actions": {
+        "MemberRolesUpdated": "Updated member roles",
+        "MemberPermissionUpdated": "Updated member permissions",
+        "MemberRemoved": "Removed member",
+        "RoleCreated": "Created role",
+        "RoleUpdated": "Updated role",
+        "RoleDeleted": "Deleted role",
+        "ProjectUpdated": "Updated project",
+        "ProjectDeleted": "Deleted project"
+      },
+      "entities": {
+        "Project": "Project",
+        "ProjectRole": "Role",
+        "ProjectMember": "Member"
+      }
     }
   },
   "projectPerformance": {

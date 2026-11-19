@@ -1815,7 +1815,8 @@
         "info": "Thông tin",
         "invites": "Lời mời",
         "members": "Thành viên",
-        "permissions": "Vai trò & Quyền"
+        "permissions": "Vai trò & Quyền",
+        "auditLog": "Nhật ký kiểm toán"
       },
       "title": "Cài đặt dự án"
     },
@@ -2251,6 +2252,39 @@
     "views": {
       "board": "Bảng Kanban",
       "table": "Bảng dữ liệu"
+    },
+    "auditLog": {
+      "panelTitle": "Nhật ký kiểm toán",
+      "panelDescription": "Ai đã thay đổi gì trong thành viên, vai trò và cài đặt của dự án",
+      "searchPlaceholder": "Tìm trong nhật ký kiểm toán...",
+      "columnActor": "Thành viên",
+      "columnAction": "Hành động",
+      "columnEntity": "Đối tượng",
+      "columnDate": "Thời gian",
+      "columnDetails": "Chi tiết",
+      "allActors": "Tất cả thành viên",
+      "allEntities": "Tất cả đối tượng",
+      "systemActor": "Hệ thống",
+      "viewDetails": "Chi tiết",
+      "before": "Trước",
+      "after": "Sau",
+      "noValue": "—",
+      "reason": "Lý do",
+      "actions": {
+        "MemberRolesUpdated": "Cập nhật vai trò thành viên",
+        "MemberPermissionUpdated": "Cập nhật quyền thành viên",
+        "MemberRemoved": "Xóa thành viên",
+        "RoleCreated": "Tạo vai trò",
+        "RoleUpdated": "Cập nhật vai trò",
+        "RoleDeleted": "Xóa vai trò",
+        "ProjectUpdated": "Cập nhật dự án",
+        "ProjectDeleted": "Xóa dự án"
+      },
+      "entities": {
+        "Project": "Dự án",
+        "ProjectRole": "Vai trò",
+        "ProjectMember": "Thành viên"
+      }
     }
   },
   "projectPerformance": {

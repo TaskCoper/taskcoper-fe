@@ -23,6 +23,7 @@ import type { GetProjectsParams } from '@/features/projects/core/hooks/use-get-p
 import type { GetProjectMemberRequestsParams } from '@/features/projects/members/hooks/use-get-project-member-requests'
 import type { GetProjectMembersParams } from '@/features/projects/members/hooks/use-get-project-members'
 import type { GetProjectActivitiesParams } from '@/features/projects/activities/hooks/use-get-project-activities'
+import type { GetProjectAuditLogsParams } from '@/features/projects/audit-logs/hooks/use-get-project-audit-logs'
 import type { GetProjectResourcesParams } from '@/features/projects/resources/hooks/use-get-project-resources'
 import type { GetProjectRevenueParams } from '@/features/projects/revenue/hooks/use-get-project-revenue'
 import type { GetProjectRoleParams } from '@/features/projects/roles/hooks/use-get-project-role'
@@ -164,6 +165,30 @@ export const queryKeys = {
           from,
           to,
           actorUserId
+        ] as const
+    },
+
+    auditLogs: {
+      all: (projectIdentifier?: string) => [...queryKeys.projects.detail(projectIdentifier), 'audit-logs'] as const,
+      list: ({
+        projectIdentifier,
+        pageIndex,
+        pageSize,
+        searchTerm,
+        from,
+        to,
+        actorUserId,
+        entityType
+      }: GetProjectAuditLogsParams) =>
+        [
+          ...queryKeys.projects.auditLogs.all(projectIdentifier),
+          pageIndex,
+          pageSize,
+          searchTerm,
+          from,
+          to,
+          actorUserId,
+          entityType
         ] as const
     },
 
