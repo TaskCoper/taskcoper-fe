@@ -7,15 +7,12 @@ import type { ProjectMemberRequest } from '../types'
 
 export interface GetProjectMemberRequestsParams {
   projectIdentifier?: string
-  isInviteUser: boolean
-  // true for invite user, false for request user
   pageIndex?: number
   pageSize?: number
   searchTerm?: string
 }
 
 export const useGetProjectMemberRequests = ({
-  isInviteUser,
   pageIndex = DEFAULT_PAGE_INDEX,
   pageSize = DEFAULT_PAGE_SIZE,
   projectIdentifier,
@@ -26,7 +23,6 @@ export const useGetProjectMemberRequests = ({
     isLoading: isLoadingMemberRequests
   } = useQuery({
     queryKey: queryKeys.projects.members.requests({
-      isInviteUser,
       pageIndex,
       pageSize,
       projectIdentifier,
@@ -34,7 +30,6 @@ export const useGetProjectMemberRequests = ({
     }),
     queryFn: () =>
       projectMemberService.getProjectMemberRequests({
-        isInviteUser,
         pageIndex,
         pageSize,
         projectIdentifier,
