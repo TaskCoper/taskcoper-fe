@@ -62,7 +62,6 @@ export default function ProjectInvitationsTab({ projectIdentifier }: ProjectInvi
 
   const { memberRequest, isLoadingMemberRequests } = useGetProjectMemberRequests({
     projectIdentifier,
-    isInviteUser: true,
     pageIndex: page,
     pageSize: limit,
     searchTerm

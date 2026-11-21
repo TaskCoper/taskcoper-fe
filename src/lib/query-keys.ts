@@ -116,14 +116,12 @@ export const queryKeys = {
         [...queryKeys.projects.detail(projectIdentifier), 'member-requests'] as const,
       requests: ({
         projectIdentifier,
-        isInviteUser,
         pageIndex,
         pageSize,
         searchTerm
       }: GetProjectMemberRequestsParams) =>
         [
           ...queryKeys.projects.members.allRequests(projectIdentifier),
-          isInviteUser,
           pageIndex,
           pageSize,
           searchTerm

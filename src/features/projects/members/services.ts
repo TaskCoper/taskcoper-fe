@@ -32,7 +32,6 @@ class ProjectMemberService {
     searchTerm,
     pageIndex,
     pageSize,
-    isInviteUser,
     projectIdentifier
   }: GetProjectMemberRequestsParams) => {
     if (!projectIdentifier) return getDefaultPaginationResponse<ProjectMemberRequest>()
@@ -42,8 +41,7 @@ class ProjectMemberService {
         params: {
           searchTerm,
           pageIndex,
-          pageSize,
-          isInviteUser
+          pageSize
         }
       }
     )
