@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { useGetMe } from '@/features/auth/hooks/use-get-me'
 import NotificationsPopover from '@/features/notifications/components/notifications-popover'
 import { useGetUnreadCount } from '@/features/notifications/hooks/use-get-unread-count'
+import { useNotificationsRealtime } from '@/features/notifications/hooks/use-notifications-realtime'
 import { useGetOrg } from '@/hooks/use-get-org'
 import { cn, getAvatarFallback } from '@/shared/utils'
 import { BellIcon, HomeIcon, MenuIcon, MessageCircleIcon, NewspaperIcon } from 'lucide-react'
@@ -62,6 +63,9 @@ export default function UserDefaultLayout() {
   const { unreadCount, isLoadingUnreadCount } = useGetUnreadCount({
     enabled: !!me && !isVerificationRequired
   })
+
+  // Live notification bell: refresh unread count + list when the backend pushes NotificationNotify.
+  useNotificationsRealtime()
 
   return (
     <div className='flex h-screen w-full flex-col overflow-hidden'>
