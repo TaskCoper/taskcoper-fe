@@ -39,6 +39,7 @@ const navigations: PublicNavItem[] = [
 export default function PublicLayout() {
   const { t } = useTranslation()
   const location = useLocation()
+  const isHomePage = location.pathname === '/'
   const [open, setOpen] = useState(false)
   const [openNotificationsPopover, setOpenNotificationsPopover] = useState(false)
 
@@ -53,11 +54,16 @@ export default function PublicLayout() {
   })
 
   return (
-    <div className='h-dvh min-h-screen flex flex-col bg-dot'>
-      <header className='fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background to-background/70'>
-        <div className='px-4 h-14 flex items-center justify-between'>
+    <div className={cn('min-h-screen flex flex-col', isHomePage ? 'home-public-layout' : 'h-dvh bg-dot')}>
+      <header
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50',
+          isHomePage ? 'home-public-header' : 'bg-linear-to-b from-background to-background/70'
+        )}
+      >
+        <div className={isHomePage ? 'home-header-inner' : 'px-4 h-14 flex items-center justify-between'}>
           <div className='flex items-center gap-3'>
-            <Link to={tenantConfig.logoUrl} className='shrink-0'>
+            <Link to={tenantConfig.logoUrl} className={cn('shrink-0', isHomePage && 'home-brand-lockup')}>
               <img src={logo} alt={t('common.alt.logo')} className='h-7' />
             </Link>
 
@@ -75,7 +81,7 @@ export default function PublicLayout() {
               </div>
             ) : null}
 
-            <div className='hidden lg:flex items-center gap-2'>
+            <div className={cn('hidden lg:flex items-center gap-2', isHomePage && 'hidden!')}>
               {visibleNavigations.map((navigation) => {
                 const isActive = location.pathname === navigation.url
 
@@ -95,6 +101,14 @@ export default function PublicLayout() {
               <EnvironmentTag />
             </div>
           </div>
+
+          {isHomePage ? (
+            <nav className='home-header-nav' aria-label={t('common.ui.menu')}>
+              <a href='#features'>{t('home.landing.nav.features')}</a>
+              <a href='#workflow'>{t('home.landing.nav.workflow')}</a>
+              <Link to='/news'>{t('header.news')}</Link>
+            </nav>
+          ) : null}
 
           {isGettingMe ? (
             <div className='hidden md:flex items-center gap-2'>
@@ -185,16 +199,21 @@ export default function PublicLayout() {
             </div>
           ) : (
             <div className='flex items-center gap-2 sm:gap-3'>
-              <Link to='/sign-in'>
-                <Button variant='ghost' size='sm' className='text-slate-700 text-xs sm:text-sm'>
-                  {t('home.header.signIn')}
-                </Button>
-              </Link>
-              <Link to='/sign-up'>
-                <Button size='sm' className='shadow-lg shadow-primary/20 text-xs sm:text-sm'>
-                  {t('home.header.getStarted')}
-                </Button>
-              </Link>
+              <Button
+                asChild
+                variant='ghost'
+                size='sm'
+                className={cn('text-slate-700 text-xs sm:text-sm', isHomePage && 'home-header-sign-in')}
+              >
+                <Link to='/sign-in'>{t('home.header.signIn')}</Link>
+              </Button>
+              <Button
+                asChild
+                size='sm'
+                className={cn('text-xs sm:text-sm', isHomePage ? 'home-header-action' : 'shadow-lg shadow-primary/20')}
+              >
+                <Link to='/sign-up'>{t('home.header.getStarted')}</Link>
+              </Button>
             </div>
           )}
         </div>

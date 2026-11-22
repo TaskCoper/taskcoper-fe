@@ -366,6 +366,7 @@
         "noResults": "Không tìm thấy kết quả",
         "placeholder": "Tìm kiếm...",
         "selectedCount": "Đã chọn {{count}}",
+        "selectedCount_one": "Đã chọn {{count}}",
         "selectedCount_other": "Đã chọn {{count}}"
       },
       "invalidFileType": "Loại tệp không hợp lệ",
@@ -376,6 +377,7 @@
       "mobileSidebarDescription": "Hiển thị thanh bên trên thiết bị di động.",
       "month": "Tháng",
       "more": "+{{count}} nữa",
+      "more_one": "+{{count}} nữa",
       "more_other": "+{{count}} nữa",
       "moreLabel": "Thêm",
       "noDataAvailable": "Không có dữ liệu",
@@ -506,6 +508,7 @@
       "selectDateRange": "Chọn khoảng ngày",
       "selected": "đã chọn",
       "selectedCount": "Đã chọn {{count}}",
+      "selectedCount_one": "Đã chọn {{count}}",
       "selectedCount_other": "Đã chọn {{count}}",
       "selectField": "Chọn trường",
       "selectJoinOperator": "Chọn toán tử nối",
@@ -716,6 +719,7 @@
     "ratingFilter": "Đánh giá",
     "reset": "Đặt lại",
     "resultsCount": "{{count}} kết quả",
+    "resultsCount_one": "{{count}} kết quả",
     "resultsCount_other": "{{count}} kết quả",
     "searchByAi": "Tìm kiếm bằng AI",
     "searchPlaceholder": "Tìm kiếm cố vấn...",
@@ -815,6 +819,147 @@
       "title": "Nền tảng Quản lý dự án",
       "titleHighlight": "Số 1 Việt Nam",
       "trustBadge": "Được tin dùng bởi hơn 500 nhóm trên toàn thế giới"
+    },
+    "landing": {
+      "closing": {
+        "cta": "Bắt đầu cùng TaskCoper",
+        "description": "Dành ít thời gian hơn để sắp xếp. Dành nhiều tâm sức hơn cho những điều đội ngũ muốn tạo ra.",
+        "eyebrow": "Việc hay, làm cùng nhau",
+        "title": "Dự án tiếp theo của bạn bắt đầu từ đây."
+      },
+      "demo": {
+        "activityDescription": "Khánh đã hoàn thành công việc này.",
+        "addTask": "Thêm công việc",
+        "board": "Bảng việc",
+        "boardDescription": "Bảng công việc minh hoạ, có thể cuộn ngang",
+        "chooseView": "Chọn cách xem dự án minh hoạ",
+        "comments": "Bình luận",
+        "days": {
+          "fri": "Thứ 6",
+          "mon": "Thứ 2",
+          "thu": "Thứ 5",
+          "tue": "Thứ 3",
+          "wed": "Thứ 4"
+        },
+        "done": "Hoàn thành",
+        "finished": "Đã xong",
+        "inProgress": "Đang thực hiện",
+        "labels": {
+          "content": "Nội dung",
+          "design": "Thiết kế",
+          "development": "Phát triển",
+          "planning": "Kế hoạch"
+        },
+        "memberName": "Linh Nguyễn",
+        "members": "Thành viên",
+        "myTasks": "Việc của tôi",
+        "overview": "Tổng quan",
+        "progressCount": "{{completed}} / {{total}}",
+        "progressDescription": "2 trong 6 công việc minh hoạ đã hoàn thành.",
+        "project": "Ra mắt thương hiệu",
+        "projectDescription": "Một mục tiêu chung. Từng bước tiến rõ ràng.",
+        "projectEyebrow": "Cùng nhau tạo khác biệt",
+        "projectProgress": "Tiến độ dự án",
+        "projects": "Dự án",
+        "sample": "Dữ liệu minh hoạ",
+        "sampleMembers": "Ba thành viên minh hoạ",
+        "swipe": "Vuốt ngang để khám phá",
+        "switchHint": "Thử chuyển chế độ xem ở phía trên",
+        "tasks": {
+          "brand": "Hoàn thiện định hướng thương hiệu",
+          "content": "Lên kế hoạch nội dung",
+          "design": "Thiết kế trang giới thiệu",
+          "development": "Xây dựng bộ giao diện",
+          "kickoff": "Thống nhất mục tiêu dự án",
+          "research": "Tìm hiểu nhu cầu khách hàng"
+        },
+        "team": "Đội ngũ của bạn",
+        "teamMember": "Thành viên đội ngũ",
+        "thisWeek": "Tuần này",
+        "timeline": "Tiến độ",
+        "timelineDescription": "Lịch tiến độ minh hoạ, có thể cuộn ngang",
+        "todo": "Cần làm",
+        "totalTasks": "Tổng công việc",
+        "website": "Website mới",
+        "workspace": "Không gian làm việc",
+        "workspaceAddress": "taskcoper.com / workspace"
+      },
+      "features": {
+        "collaboration": {
+          "description": "Trao đổi và phản hồi ngay tại công việc liên quan. Thông tin có ngữ cảnh, cả đội cùng nắm bắt.",
+          "replyMessage": "Mình đã xem và góp ý rồi.",
+          "replyName": "Minh Anh",
+          "sampleHint": "Mọi trao đổi, đúng ngữ cảnh",
+          "sampleMessage": "Bản thiết kế đã sẵn sàng rồi nhé!",
+          "sampleName": "Linh Nguyễn",
+          "title": "Kết nối ngay trong việc."
+        },
+        "description": "Từ việc nhỏ mỗi ngày đến mục tiêu dài hạn, giữ mọi người và mọi công việc trên cùng một hành trình.",
+        "eyebrow": "Mọi điều đội ngũ cần",
+        "organization": {
+          "description": "Chia nhỏ kế hoạch, phân công trách nhiệm và làm rõ ưu tiên. Để ai cũng biết bước tiếp theo của mình.",
+          "sampleOne": "Thống nhất mục tiêu",
+          "sampleThree": "Chuẩn bị nội dung",
+          "sampleTwo": "Thiết kế giao diện mới",
+          "title": "Mỗi việc, đúng người."
+        },
+        "progress": {
+          "description": "Theo dõi thời hạn và các cột mốc trong một góc nhìn chung. Chủ động điều chỉnh trước khi công việc bị chậm nhịp.",
+          "sample": "Hành trình ra mắt sản phẩm",
+          "title": "Tiến độ trong tầm mắt.",
+          "today": "Hôm nay"
+        },
+        "title": "Ít phân tán hơn.",
+        "titleAccent": "Nhiều tiến triển hơn."
+      },
+      "footer": {
+        "changeLanguage": "Chuyển ngôn ngữ trang web",
+        "note": "Được tạo nên cho những đội ngũ cùng tiến bước.",
+        "tagline": "Một không gian. Nhiều điều cùng làm nên."
+      },
+      "hero": {
+        "asideCaption": "Một nơi để mọi việc kết nối.",
+        "asideEyebrow": "Từ ý tưởng đến kết quả",
+        "asideTitle": "Mỗi người một thế mạnh.",
+        "asideValue": "Cùng nhau làm nên chuyện.",
+        "cta": "Khởi động dự án",
+        "description": "Kế hoạch rõ ràng. Công việc thông suốt. Một không gian để đội ngũ của bạn biến ý tưởng thành kết quả.",
+        "eyebrow": "Không gian làm việc cho đội nhóm",
+        "noteOne": "Cho dự án cá nhân",
+        "noteTwo": "Cho cả đội ngũ",
+        "secondaryCta": "Khám phá không gian",
+        "title": "Cùng một nhịp.",
+        "titleAccent": "Tiến xa hơn."
+      },
+      "nav": {
+        "features": "Tính năng",
+        "workflow": "Cách hoạt động"
+      },
+      "principles": {
+        "clarity": "Nhìn rõ ưu tiên",
+        "connection": "Giữ kết nối đội ngũ",
+        "progress": "Cùng nhau hoàn thành"
+      },
+      "workflow": {
+        "cta": "Khám phá không gian làm việc",
+        "description": "Một quy trình đơn giản để tổ chức công việc. Đủ rõ ràng để bắt đầu, đủ linh hoạt để phát triển cùng đội ngũ.",
+        "eyebrow": "Bắt đầu thật tự nhiên",
+        "steps": {
+          "create": {
+            "description": "Khởi tạo dự án và mời những người đồng đội cùng tham gia.",
+            "title": "Tạo không gian chung"
+          },
+          "deliver": {
+            "description": "Theo dõi tiến độ, trao đổi và ghi nhận từng công việc hoàn thành.",
+            "title": "Tiến về đích cùng nhau"
+          },
+          "organize": {
+            "description": "Xác định việc cần làm, người phụ trách và thời hạn hoàn thành.",
+            "title": "Biến kế hoạch thành công việc"
+          }
+        },
+        "title": "Từ một ý tưởng, đến điều cả đội tự hào."
+      }
     },
     "stats": {
       "projects": "Dự án",
@@ -916,6 +1061,7 @@
     "dialog": {
       "detailedIntroduction": "Giới thiệu chi tiết",
       "portfolioFiles": "Tệp Portfolio ({{count}})",
+      "portfolioFiles_one": "Tệp Portfolio ({{count}})",
       "portfolioFiles_other": "Tệp Portfolio ({{count}})",
       "reviewed": "Đã xét duyệt {{date}}",
       "reviewerNote": "Ghi chú của người xét duyệt",
@@ -979,6 +1125,7 @@
       "button": "Nộp đơn",
       "buttonUploading": "Đang tải lên…",
       "partialUpload": "{{count}} / {{total}} tệp đã tải lên",
+      "partialUpload_one": "{{count}} / {{total}} tệp đã tải lên",
       "partialUpload_other": "{{count}} / {{total}} tệp đã tải lên",
       "partialUploadFailed": "Thất bại: {{names}}",
       "uploadingParallel": "Đang tải lên {{total}} tệp song song…"
@@ -1223,11 +1370,13 @@
   "network": {
     "domainSelect": {
       "domainsSelected": "{{count}} lĩnh vực đã chọn",
+      "domainsSelected_one": "{{count}} lĩnh vực đã chọn",
       "domainsSelected_other": "{{count}} lĩnh vực đã chọn",
       "loading": "Đang tải…",
       "loadingMore": "Đang tải thêm…",
       "noDomainsFound": "Không tìm thấy lĩnh vực.",
       "overflowMore": "+{{count}} khác",
+      "overflowMore_one": "+{{count}} khác",
       "overflowMore_other": "+{{count}} khác",
       "removeAriaLabel": "Xóa {{name}}"
     },
@@ -1244,6 +1393,7 @@
     "latest": "Bài mới",
     "liveUpdated": "Cập nhật hàng tuần",
     "minRead": "{{count}} phút",
+    "minRead_one": "{{count}} phút",
     "minRead_other": "{{count}} phút",
     "newsletter": {
       "cta": "Đăng ký",
@@ -1654,6 +1804,7 @@
       },
       "addRole": "Thêm vai trò",
       "memberCount": "({{count}} thành viên)",
+      "memberCount_one": "({{count}} thành viên)",
       "memberCount_other": "({{count}} thành viên)",
       "noRolesDefined": "Chưa có vai trò nào"
     },
@@ -2092,6 +2243,7 @@
     "tooltipTasksCompleted": "Task đã hoàn thành",
     "tooltipTasksCreated": "Task đã tạo",
     "tooltipTotalActivities": "{{count}} hoạt động tổng",
+    "tooltipTotalActivities_one": "{{count}} hoạt động tổng",
     "tooltipTotalActivities_other": "{{count}} hoạt động tổng",
     "topContributorsPercentage": "Top đóng góp (%)",
     "topContributorsPercentageTooltip": "Phần trăm",

@@ -45,6 +45,7 @@ jobs:
       repository: ${{ github.repository }}
       profile: dev
       tag: dev-latest
+      run-on: taskcoper-node
     secrets: inherit
 
   deploy-client-prod:
@@ -60,4 +61,5 @@ jobs:
       repository: ${{ github.repository }}
       profile: prod
       tag: prod-latest
+      run-on: taskcoper-node
     secrets: inherit
