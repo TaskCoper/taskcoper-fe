@@ -837,6 +837,147 @@
       "titleHighlight": "No. 1 in Vietnam",
       "trustBadge": "Trusted by 500+ teams worldwide"
     },
+    "landing": {
+      "closing": {
+        "cta": "Get started with TaskCoper",
+        "description": "Spend less time organizing the work. Put more of your energy into what your team wants to create.",
+        "eyebrow": "Great things take a team",
+        "title": "Your next great project starts here."
+      },
+      "demo": {
+        "activityDescription": "Khanh completed this task.",
+        "addTask": "Add task",
+        "board": "Board",
+        "boardDescription": "Sample task board, scroll horizontally to explore",
+        "chooseView": "Choose a sample project view",
+        "comments": "Comments",
+        "days": {
+          "fri": "Fri",
+          "mon": "Mon",
+          "thu": "Thu",
+          "tue": "Tue",
+          "wed": "Wed"
+        },
+        "done": "Done",
+        "finished": "Completed",
+        "inProgress": "In progress",
+        "labels": {
+          "content": "Content",
+          "design": "Design",
+          "development": "Development",
+          "planning": "Planning"
+        },
+        "memberName": "Linh Nguyen",
+        "members": "Members",
+        "myTasks": "My tasks",
+        "overview": "Overview",
+        "progressCount": "{{completed}} / {{total}}",
+        "progressDescription": "2 of the 6 sample tasks are complete.",
+        "project": "Brand launch",
+        "projectDescription": "A shared goal. A clear way forward.",
+        "projectEyebrow": "Make something that matters",
+        "projectProgress": "Project progress",
+        "projects": "Projects",
+        "sample": "Sample workspace",
+        "sampleMembers": "Three sample team members",
+        "swipe": "Swipe to explore the board",
+        "switchHint": "Try a different view above",
+        "tasks": {
+          "brand": "Finalize the brand direction",
+          "content": "Plan the launch content",
+          "design": "Design the landing page",
+          "development": "Build the component library",
+          "kickoff": "Align on project goals",
+          "research": "Understand our customers"
+        },
+        "team": "Your team",
+        "teamMember": "Team member",
+        "thisWeek": "This week",
+        "timeline": "Timeline",
+        "timelineDescription": "Sample project timeline, scroll horizontally to explore",
+        "todo": "To do",
+        "totalTasks": "Total tasks",
+        "website": "New website",
+        "workspace": "Workspace",
+        "workspaceAddress": "taskcoper.com / workspace"
+      },
+      "features": {
+        "collaboration": {
+          "description": "Share feedback right where the work happens. Keep decisions connected to tasks and everyone in the loop.",
+          "replyMessage": "Just added my thoughts.",
+          "replyName": "Minh Anh",
+          "sampleHint": "Good conversations, in the right place",
+          "sampleMessage": "The new design is ready to review!",
+          "sampleName": "Linh Nguyen",
+          "title": "Conversations in context."
+        },
+        "description": "From everyday tasks to your next big milestone, keep your people and their work moving in the same direction.",
+        "eyebrow": "Everything to move together",
+        "organization": {
+          "description": "Break down the plan, share responsibility and set clear priorities. So everyone knows what to work on next.",
+          "sampleOne": "Align on project goals",
+          "sampleThree": "Prepare the launch content",
+          "sampleTwo": "Design the new experience",
+          "title": "Every task, an owner."
+        },
+        "progress": {
+          "description": "Keep deadlines and milestones in one shared view. Find the right moment to adjust before work falls behind.",
+          "sample": "The product launch journey",
+          "title": "See the way forward.",
+          "today": "Today"
+        },
+        "title": "Less scattered.",
+        "titleAccent": "More accomplished."
+      },
+      "footer": {
+        "changeLanguage": "Change website language",
+        "note": "Made for teams moving forward, together.",
+        "tagline": "One workspace. So much to build together."
+      },
+      "hero": {
+        "asideCaption": "A place where it all comes together.",
+        "asideEyebrow": "From an idea to a shared win",
+        "asideTitle": "Different strengths.",
+        "asideValue": "One way forward.",
+        "cta": "Start your project",
+        "description": "Clear plans. Connected people. One thoughtful workspace to turn your team’s ideas into things that matter.",
+        "eyebrow": "A shared space for great teamwork",
+        "noteOne": "For personal projects",
+        "noteTwo": "For your whole team",
+        "secondaryCta": "Explore the workspace",
+        "title": "Work in sync.",
+        "titleAccent": "Go further."
+      },
+      "nav": {
+        "features": "Features",
+        "workflow": "How it works"
+      },
+      "principles": {
+        "clarity": "Clarity in every task",
+        "connection": "Connection across your team",
+        "progress": "Progress you can see"
+      },
+      "workflow": {
+        "cta": "Explore the workspace",
+        "description": "A simple way to organize work. Clear enough to get going, flexible enough to grow with your team.",
+        "eyebrow": "A natural place to start",
+        "steps": {
+          "create": {
+            "description": "Create a project and invite the people you want to build it with.",
+            "title": "Make a space for your team"
+          },
+          "deliver": {
+            "description": "Follow progress, share feedback and celebrate each completed task.",
+            "title": "Move forward, together"
+          },
+          "organize": {
+            "description": "Define the tasks, their owners and when they need to be done.",
+            "title": "Give the plan a clear next step"
+          }
+        },
+        "title": "From a small idea to a shared achievement."
+      }
+    },
     "stats": {
       "projects": "Projects",
       "support": "Support",
