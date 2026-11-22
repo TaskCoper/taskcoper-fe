@@ -86,11 +86,7 @@ export default function SiteHeader({ fixed = false }: { fixed?: boolean }) {
                 variant='ghost'
                 className={cn('site-header-link', isActive(navigation.url) && 'site-header-link-active')}
               >
-                <Link
-                  to={navigation.url}
-                  reloadDocument={navigation.url.includes('#')}
-                  aria-current={isActive(navigation.url) ? 'page' : undefined}
-                >
+                <Link to={navigation.url} aria-current={isActive(navigation.url) ? 'page' : undefined}>
                   {t(navigation.label)}
                 </Link>
               </Button>
@@ -172,11 +168,7 @@ export default function SiteHeader({ fixed = false }: { fixed?: boolean }) {
                     onClick={() => setOpenMenu(false)}
                     className={cn('justify-start', isActive(navigation.url) && 'bg-primary/10 text-primary')}
                   >
-                    <Link
-                      to={navigation.url}
-                      reloadDocument={navigation.url.includes('#')}
-                      aria-current={isActive(navigation.url) ? 'page' : undefined}
-                    >
+                    <Link to={navigation.url} aria-current={isActive(navigation.url) ? 'page' : undefined}>
                       <Icon className='size-4' />
                       {t(navigation.label)}
                     </Link>
