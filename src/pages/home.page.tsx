@@ -15,8 +15,9 @@ import {
   MoveUpRight,
   Users
 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 
 function FeatureIllustration({ kind }: { kind: 'tasks' | 'progress' | 'team' }) {
   const { t } = useTranslation()
@@ -87,6 +88,13 @@ function FeatureIllustration({ kind }: { kind: 'tasks' | 'progress' | 'team' }) 
 
 export default function HomePage() {
   const { t, i18n } = useTranslation()
+  const { hash } = useLocation()
+
+  useEffect(() => {
+    if (['#features', '#workflow', '#product'].includes(hash)) {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start', behavior: 'instant' })
+    }
+  }, [hash])
   const isVietnamese = i18n.resolvedLanguage?.startsWith('vi')
   const features = [
     {
