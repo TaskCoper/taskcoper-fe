@@ -26,6 +26,8 @@ export default function NotificationItem({ notification }: NotificationItemProps
     Type: string
   }
 
+  const isInvitation = !!payload?.Action?.agree && !!payload?.Action?.reject
+
   const onRespond = (isAccepted: boolean) => {
     respondToInvitation({
       projectId: payload.ProjectId,
@@ -62,7 +64,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
         <p className='text-xs text-muted-foreground/80'>{formatRelative(notification.createdAt)}</p>
       </div>
 
-      {!notification.isInteract && payload ? (
+      {!notification.isInteract && isInvitation ? (
         <div className='flex items-center gap-2 mt-2'>
           <Button
             variant='outline'
