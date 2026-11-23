@@ -39,6 +39,8 @@ import { useToggleWatchTask } from '@/features/projects/tasks/core/hooks/use-tog
 import { useUpdateTask } from '@/features/projects/tasks/core/hooks/use-update-task'
 import { TaskPriorityLabel } from '@/features/projects/tasks/core/types'
 import { updateTaskSchema, type UpdateTaskFormValues } from '@/features/projects/tasks/core/validations'
+import TaskDependenciesSection from '@/features/projects/tasks/dependencies/components/task-dependencies-section'
+import { useTaskDependencies } from '@/features/projects/tasks/dependencies/hooks'
 import AssigneePopover from '@/features/projects/tasks/members/components/assignee-popover'
 import { useGetTaskMembers } from '@/features/projects/tasks/members/hooks/use-get-task-members'
 import { useGetTaskSubtasks } from '@/features/projects/tasks/subtasks/hooks/use-get-subtasks'
@@ -105,6 +107,9 @@ export default function TaskDialogPage() {
   const sensors = useDndSensors()
 
   const { task, isLoadingTask } = useGetTask({ taskIdentifier })
+  const dependencies = useTaskDependencies(task?.taskId)
+  const completionBlocked =
+    !task?.isCompleted && (!!dependencies.data?.isBlocked || dependencies.isPending || dependencies.isError)
   const { comments, isLoadingComments } = useGetTaskComments({ taskId: task?.taskId })
   const { subtasks, isLoadingSubtasks } = useGetTaskSubtasks({ taskId: task?.taskId })
   const { taskMembers, isLoadingTaskMembers } = useGetTaskMembers({ taskId: task?.taskId })
@@ -510,7 +515,9 @@ export default function TaskDialogPage() {
                 <div className='flex gap-2'>
                   <Checkbox
                     checked={task?.isCompleted}
-                    disabled={!canToggleTaskStatus}
+                    disabled={!canToggleTaskStatus || completionBlocked || isUpdatingTask}
+                    aria-label={t('task.dependency.completeTask')}
+                    title={dependencies.data?.isBlocked ? t('task.dependency.blockedHint') : undefined}
                     onCheckedChange={(checked) => {
                       const result = updateTaskSchema(t).safeParse({
                         ...updateTaskMethods.getValues(),
@@ -789,6 +796,16 @@ export default function TaskDialogPage() {
                   </div>
                 ) : null}
               </div>
+
+              {task?.taskId && identifier && milestoneIdentifier ? (
+                <TaskDependenciesSection
+                  taskId={task.taskId}
+                  projectIdentifier={identifier}
+                  parentMilestoneIdentifier={milestoneIdentifier}
+                  canUpdate={canUpdate}
+                  isCompleted={task.isCompleted}
+                />
+              ) : null}
 
               <div className='flex gap-3'>
                 <TextAlignStartIcon className='mt-0.5 size-4' />

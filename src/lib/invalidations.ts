@@ -1,4 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
+import { taskDependencyKeys } from '@/features/projects/tasks/dependencies/query-keys'
 import { queryKeys } from './query-keys'
 
 // Composed cache-invalidation helpers for the recurring fan-out patterns in
@@ -27,6 +28,8 @@ export interface TaskScope {
 export function invalidateTaskTree(qc: QueryClient, scope: TaskScope) {
   const { taskId, projectIdentifier, parentMilestoneIdentifier, userId } = scope
 
+  qc.invalidateQueries({ queryKey: taskDependencyKeys.all })
+
   if (taskId) {
     qc.invalidateQueries({ queryKey: queryKeys.tasks.detail(taskId) })
   }
@@ -53,6 +56,7 @@ export interface MilestoneScope {
  */
 export function invalidateMilestoneTree(qc: QueryClient, scope: MilestoneScope) {
   const { projectIdentifier, parentMilestoneIdentifier } = scope
+  qc.invalidateQueries({ queryKey: taskDependencyKeys.all })
   if (!parentMilestoneIdentifier) return
 
   qc.invalidateQueries({ queryKey: queryKeys.milestones.byParent(projectIdentifier, parentMilestoneIdentifier) })

@@ -29,7 +29,10 @@ export const useGetMyNotifications = ({
       return currentLoaded < totalCount ? pageIndex + 1 : undefined
     },
     initialPageParam: 1,
-    enabled
+    enabled,
+    staleTime: 0,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true
   })
 
   const notifications = data?.pages.flatMap((page) => page.value.items) || []

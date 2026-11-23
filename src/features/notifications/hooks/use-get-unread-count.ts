@@ -17,7 +17,10 @@ export const useGetUnreadCount = ({ enabled = true }: UseGetUnreadCountOptions =
   } = useQuery({
     queryKey: queryKeys.notifications.unreadCount.byUser(user?.id),
     queryFn: () => notificationService.getUnreadCount(),
-    enabled: enabled && isAuthenticated
+    enabled: enabled && isAuthenticated,
+    staleTime: 0,
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true
   })
 
   return { unreadCount, isLoadingUnreadCount, error }

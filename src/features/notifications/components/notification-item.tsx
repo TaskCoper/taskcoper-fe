@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { useDateFormat } from '@/lib/date'
 import { cn } from '@/shared/utils'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { useRespondToInvitation } from '../../projects/members/hooks/use-respond-to-invitation'
 import { useReadNotification } from '../hooks/use-read-notification'
 import { NotificationMarkedType, NotificationTypeLabel, type Notification } from '../types'
@@ -24,6 +25,10 @@ export default function NotificationItem({ notification }: NotificationItemProps
     ProjectId: string
     ProjectManagementId: string
     Type: string
+    action?: string
+    taskId?: string
+    projectId?: string
+    milestoneId?: string
   }
 
   const isInvitation = !!payload?.Action?.agree && !!payload?.Action?.reject
@@ -63,6 +68,14 @@ export default function NotificationItem({ notification }: NotificationItemProps
         <div className='size-1 bg-muted-foreground/50 rounded-full' />
         <p className='text-xs text-muted-foreground/80'>{formatRelative(notification.createdAt)}</p>
       </div>
+
+      {payload.action === 'TaskReady' && payload.taskId && payload.projectId && payload.milestoneId ? (
+        <Button variant='outline' size='sm' className='mt-2 h-7' asChild>
+          <Link to={`/projects/${payload.projectId}/milestones/${payload.milestoneId}/tasks/${payload.taskId}`}>
+            {t('task.dependency.openTask')}
+          </Link>
+        </Button>
+      ) : null}
 
       {!notification.isInteract && isInvitation ? (
         <div className='flex items-center gap-2 mt-2'>
