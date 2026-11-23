@@ -2713,6 +2713,29 @@
       "description": "Bạn có chắc chắn muốn xóa {{taskName}} không?",
       "title": "Xóa thẻ"
     },
+    "dependency": {
+      "add": "Thêm task tiền đề",
+      "blocked": "Đang chờ task tiền đề",
+      "blockedHint": "Cần hoàn thành tất cả task tiền đề trước khi hoàn thành task này.",
+      "blocks": "Các task phụ thuộc vào task này",
+      "choose": "Task này đang chờ…",
+      "completed": "Đã hoàn thành",
+      "completeTask": "Hoàn thành task",
+      "empty": "Chưa có task tiền đề",
+      "hint": "Liên kết các task cần hoàn thành trước. Deadline được giữ nguyên.",
+      "incomplete": "Chưa hoàn thành",
+      "loadError": "Không tải được quan hệ phụ thuộc.",
+      "loadMore": "Xem thêm",
+      "noResults": "Không có task phù hợp.",
+      "openTask": "Mở task",
+      "ready": "Đã giải quyết tất cả task tiền đề",
+      "removeNamed": "Gỡ task tiền đề: {{name}}",
+      "retry": "Thử lại",
+      "search": "Tìm task trong dự án",
+      "title": "Quan hệ phụ thuộc",
+      "updateError": "Không cập nhật được quan hệ phụ thuộc.",
+      "waitingFor": "Đang chờ"
+    },
     "description": {
       "addDescription": "Thêm mô tả chi tiết hơn..."
     },

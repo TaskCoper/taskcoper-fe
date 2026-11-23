@@ -2719,6 +2719,29 @@
       "description": "Are you sure you want to delete {{taskName}}?",
       "title": "Delete task"
     },
+    "dependency": {
+      "add": "Add prerequisite",
+      "blocked": "Waiting for prerequisites",
+      "blockedHint": "Complete all prerequisite tasks before completing this task.",
+      "blocks": "Tasks depending on this task",
+      "choose": "This task waits for…",
+      "completed": "Completed",
+      "completeTask": "Complete task",
+      "empty": "No prerequisites",
+      "hint": "Link work that must be completed first. Deadlines remain unchanged.",
+      "incomplete": "Not completed",
+      "loadError": "Could not load task dependencies.",
+      "loadMore": "Load more",
+      "noResults": "No matching tasks.",
+      "openTask": "Open task",
+      "ready": "All prerequisites resolved",
+      "removeNamed": "Remove prerequisite: {{name}}",
+      "retry": "Retry",
+      "search": "Search tasks in this project",
+      "title": "Dependencies",
+      "updateError": "Could not update task dependency.",
+      "waitingFor": "Waiting for"
+    },
     "description": {
       "addDescription": "Add more detailed description..."
     },
